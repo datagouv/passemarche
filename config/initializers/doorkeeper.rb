@@ -6,11 +6,11 @@ Doorkeeper.configure do
   orm :active_record
 
   # This block will be called to check whether the resource owner is authenticated or not.
+  # For API-only authentication with client credentials, we don't need resource owner authentication
   resource_owner_authenticator do
-    raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
-    # Put your resource owner authentication logic here.
-    # Example implementation:
-    #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
+    # For client credentials flow, there's no resource owner
+    # Return a virtual resource owner for system-level authentication
+    Struct.new(:id, :name).new('system', 'Fast Track API System')
   end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
@@ -79,7 +79,8 @@ Doorkeeper.configure do
   # want to use API mode that will skip all the views management and change the way how
   # Doorkeeper responds to a requests.
   #
-  # api_only
+  # Enable API-only mode for client credentials flow
+  api_only
 
   # Enforce token request content type to application/x-www-form-urlencoded.
   # It is not enabled by default to not break prior versions of the gem.
@@ -96,7 +97,8 @@ Doorkeeper.configure do
   # Prefer access_token_expires_in 100.years or similar,
   # which would be functionally equivalent and avoid the risk of unexpected behavior by callers.
   #
-  # access_token_expires_in 2.hours
+  # Access token expiration time for API access
+  access_token_expires_in 24.hours
 
   # Assign custom TTL for access tokens. Will be used instead of access_token_expires_in
   # option if defined. In case the block returns `nil` value Doorkeeper fallbacks to
@@ -165,7 +167,8 @@ Doorkeeper.configure do
   # using the same credentials at the same time (e.g. web servers spanning
   # multiple machines and/or processes).
   #
-  # revoke_previous_client_credentials_token
+  # Revoke previous tokens when new ones are issued for same client
+  revoke_previous_client_credentials_token
 
   # Only allow one valid access token obtained via authorization code
   # per client. If a new access token is obtained before the old one
@@ -244,8 +247,9 @@ Doorkeeper.configure do
   # For more information go to
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
-  # default_scopes  :public
-  # optional_scopes :write, :update
+  # Define scopes for API access
+  default_scopes :api_access
+  optional_scopes :api_read, :api_write
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.
@@ -254,7 +258,8 @@ Doorkeeper.configure do
   # values should be the array of scopes for that grant type.
   # Note: scopes should be from configured_scopes (i.e. default or optional)
   #
-  # scopes_by_grant_type password: [:write], client_credentials: [:update]
+  # Restrict scopes for client credentials flow
+  scopes_by_grant_type client_credentials: %i[api_access api_read api_write]
 
   # Forbids creating/updating applications with arbitrary scopes that are
   # not in configuration, i.e. +default_scopes+ or +optional_scopes+.
@@ -367,7 +372,8 @@ Doorkeeper.configure do
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.2
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w[authorization_code client_credentials]
+  # Only enable client credentials flow for API-only authentication
+  grant_flows %w[client_credentials]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must
