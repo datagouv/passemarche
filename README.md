@@ -110,6 +110,16 @@ bin/dev
 bin/rails server
 ```
 
+### Application de démonstration (Fake Editor App)
+```bash
+# Démarrer l'application de démonstration OAuth2
+cd fake_editor_app
+bundle install
+bundle exec rackup -p 4567
+
+# Accéder au dashboard : http://localhost:4567
+```
+
 ### Base de données
 ```bash
 # Migrations
@@ -215,6 +225,39 @@ fr:
     workflow:      # Processus en 3 étapes
 ```
 
+## 🎭 Application de Démonstration (Fake Editor App)
+
+Une application Sinatra complète qui démontre l'intégration OAuth2 avec Voie Rapide.
+
+### Fonctionnalités
+- **Authentification OAuth2** : Client Credentials flow
+- **Dashboard visuel** : Statut et détails des tokens en temps réel
+- **Gestion des tokens** : Authentification, rafraîchissement, nettoyage
+- **Base SQLite** : Stockage local des tokens
+- **Interface utilisateur** : Design inspiré du DSFR
+
+### Démarrage rapide
+```bash
+# 1. Démarrer Voie Rapide
+bin/dev
+
+# 2. Dans un autre terminal, démarrer l'app de démo
+cd fake_editor_app
+bundle install
+bundle exec rackup -p 4567
+
+# 3. Accéder au dashboard
+# http://localhost:4567
+```
+
+### Utilisation
+1. Cliquer sur **"S'authentifier"** pour obtenir un token OAuth2
+2. Visualiser les détails du token (expiration, scope, etc.)
+3. Utiliser **"Rafraîchir le Token"** pour renouveler
+4. Tester l'intégration complète avec l'API
+
+Voir [fake_editor_app/README.md](fake_editor_app/README.md) pour plus de détails.
+
 ## 🧪 Tests
 
 ### Types de tests
@@ -227,6 +270,7 @@ fr:
 - ✅ Page d'accueil avec DSFR
 - ✅ Intégration i18n
 - ✅ Configuration de base
+- ✅ Authentification OAuth2
 - ✅ Qualité de code (RuboCop)
 
 ### Exécution des tests
@@ -277,6 +321,7 @@ bin/rubocop && bundle exec rspec && bundle exec cucumber
 - [**Guide d'Intégration API**](docs/API_INTEGRATION.md) - Documentation complète pour les éditeurs
 - [Authentification OAuth2](docs/API_INTEGRATION.md#authentification-oauth2) - Flux Client Credentials
 - [Exemples d'Intégration](docs/API_INTEGRATION.md#exemples-dintégration) - JavaScript, PHP, Python
+- [**Fake Editor App**](fake_editor_app/README.md) - Application de démonstration OAuth2
 
 ### Ressources utiles
 - [Rails 8.0 Guide](https://guides.rubyonrails.org/)

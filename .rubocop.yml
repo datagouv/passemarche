@@ -4,6 +4,7 @@ AllCops:
     - bin/*
     - vendor/**/*
     - db/**/*.rb
+    - tmp/**/*
 
 Metrics/MethodLength:
   Max: 30
