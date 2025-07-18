@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_18_091906) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_18_092448) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "editors", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "client_id", null: false
+    t.string "client_secret", null: false
+    t.boolean "authorized", default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_editors_on_client_id", unique: true
+    t.index ["name"], name: "index_editors_on_name", unique: true
+  end
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
