@@ -273,6 +273,11 @@ bin/rubocop && bundle exec rspec && bundle exec cucumber
 
 ## 📚 Documentation
 
+### Documentation API et Intégration
+- [**Guide d'Intégration API**](docs/API_INTEGRATION.md) - Documentation complète pour les éditeurs
+- [Authentification OAuth2](docs/API_INTEGRATION.md#authentification-oauth2) - Flux Client Credentials
+- [Exemples d'Intégration](docs/API_INTEGRATION.md#exemples-dintégration) - JavaScript, PHP, Python
+
 ### Ressources utiles
 - [Rails 8.0 Guide](https://guides.rubyonrails.org/)
 - [DSFR - Système de Design de l'État](https://www.systeme-de-design.gouv.fr/)
