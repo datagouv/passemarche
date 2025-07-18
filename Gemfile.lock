@@ -135,6 +135,8 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
+    doorkeeper (5.8.2)
+      railties (>= 5)
     dotenv (3.1.8)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -435,6 +437,7 @@ DEPENDENCIES
   cucumber-rails (~> 3.1)
   database_cleaner-active_record (~> 2.2)
   debug
+  doorkeeper (~> 5.7)
   factory_bot_rails (~> 6.4)
   importmap-rails
   jbuilder
