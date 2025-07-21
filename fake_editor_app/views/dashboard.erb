@@ -1,0 +1,108 @@
+<div class="dashboard">
+  <h2>Dashboard d'Authentification</h2>
+
+  <% if @error %>
+    <div class="alert alert-error">
+      <strong>Erreur:</strong> <%= @error %>
+    </div>
+  <% end %>
+
+  <div class="config-section">
+    <h3>Configuration</h3>
+    <div class="config-item">
+      <strong>Fast Track URL:</strong> <%= ENV['FAST_TRACK_URL'] %>
+    </div>
+    <div class="config-item">
+      <strong>Client ID:</strong> <%= ENV['CLIENT_ID'] %>
+    </div>
+    <div class="config-item">
+      <strong>Client Secret:</strong> <%= ENV['CLIENT_SECRET'] ? '***' + ENV['CLIENT_SECRET'][-4..-1] : 'Non configuré' %>
+    </div>
+  </div>
+
+  <div class="token-section">
+    <h3>Statut d'Authentification</h3>
+    
+    <% if @current_token %>
+      <div class="token-info">
+        <div class="status-badge status-success">
+          ✅ Authentifié
+        </div>
+        
+        <div class="token-details">
+          <div class="token-field">
+            <strong>Token:</strong>
+            <code class="token-display"><%= @current_token.access_token[0..20] %>...</code>
+          </div>
+          
+          <div class="token-field">
+            <strong>Type:</strong> <%= @current_token.token_type %>
+          </div>
+          
+          <div class="token-field">
+            <strong>Scope:</strong> <%= @current_token.scope %>
+          </div>
+          
+          <div class="token-field">
+            <strong>Créé le:</strong> <%= @current_token.created_at.strftime('%d/%m/%Y à %H:%M:%S') %>
+          </div>
+          
+          <div class="token-field">
+            <strong>Expire le:</strong> <%= @current_token.expires_at.strftime('%d/%m/%Y à %H:%M:%S') %>
+          </div>
+          
+          <div class="token-field">
+            <strong>Statut:</strong> 
+            <% if @current_token.valid? %>
+              <span class="status-valid">✅ Valide (expire dans <%= @current_token.time_until_expiry %>s)</span>
+            <% else %>
+              <span class="status-expired">❌ Expiré</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="token-info">
+        <div class="status-badge status-error">
+          ❌ Non authentifié
+        </div>
+        <p>Aucun token d'accès disponible.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="actions-section">
+    <h3>Actions</h3>
+    
+    <% if @current_token && @current_token.valid? %>
+      <form method="post" action="/refresh" class="inline-form">
+        <button type="submit" class="btn btn-primary">
+          🔄 Rafraîchir le Token
+        </button>
+      </form>
+    <% else %>
+      <form method="post" action="/authenticate" class="inline-form">
+        <button type="submit" class="btn btn-success">
+          🔑 S'authentifier
+        </button>
+      </form>
+    <% end %>
+    
+    <form method="get" action="/clear" class="inline-form">
+      <button type="submit" class="btn btn-danger">
+        🗑️ Effacer les Tokens
+      </button>
+    </form>
+  </div>
+
+  <div class="instructions-section">
+    <h3>Instructions</h3>
+    <ol>
+      <li>Assurez-vous que <strong>Voie Rapide</strong> est lancé sur <code><%= ENV['FAST_TRACK_URL'] %></code></li>
+      <li>Cliquez sur <strong>"S'authentifier"</strong> pour obtenir un token OAuth2</li>
+      <li>Le token sera affiché ci-dessus avec ses détails</li>
+      <li>Utilisez <strong>"Rafraîchir le Token"</strong> pour obtenir un nouveau token</li>
+      <li>Utilisez <strong>"Effacer les Tokens"</strong> pour nettoyer la base de données</li>
+    </ol>
+  </div>
+</div>

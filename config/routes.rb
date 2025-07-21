@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  # OAuth2 token endpoint for editor authentication
+  use_doorkeeper do
+    # Only expose token endpoint for client credentials flow
+    skip_controllers :authorizations, :applications, :authorized_applications
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

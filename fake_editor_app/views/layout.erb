@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= @title || "Fake Editor App - Voie Rapide Demo" %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>🎭 Fake Editor App</h1>
+      <p>Démonstration d'intégration avec Voie Rapide</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <%= yield %>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Application de démonstration pour l'intégration OAuth2 avec Voie Rapide</p>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

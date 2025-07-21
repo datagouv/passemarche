@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+ruby '3.2.1'
+
+gem 'dotenv'
+gem 'httparty'
+gem 'puma'
+gem 'rackup'
+gem 'sequel'
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'sqlite3'
+
+group :development do
+  gem 'rerun'
+  gem 'rubocop'
+end
