@@ -1,0 +1,21 @@
+<h1>Public Market Configuration</h1>
+
+<div class="market-info">
+  <h2>Market: <%= @public_market.identifier %></h2>
+  <p>Status: <%= @public_market.completed? ? 'Completed' : 'In Progress' %></p>
+  <p>Editor: <%= @public_market.editor.name %></p>
+</div>
+
+<div class="configuration-form">
+  <p><strong>Configuration page content will be designed and implemented in the next step.</strong></p>
+  
+  <% if @public_market.completed? %>
+    <div class="alert alert-info">
+      <p>This market configuration was completed on <%= @public_market.completed_at.strftime("%B %d, %Y at %I:%M %p") %>.</p>
+    </div>
+  <% else %>
+    <div class="alert alert-warning">
+      <p>This market is still being configured.</p>
+    </div>
+  <% end %>
+</div>
