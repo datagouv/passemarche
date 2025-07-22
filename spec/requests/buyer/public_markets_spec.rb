@@ -15,16 +15,16 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'displays the market identifier' do
-        expect(response.body).to include(public_market.identifier)
+      it 'displays the page title with editor name' do
+        expect(response.body).to include("#{public_market.editor.name} - Configuration de marché")
       end
 
-      it 'displays the editor name' do
-        expect(response.body).to include(public_market.editor.name)
+      it 'displays the editor name in welcome text' do
+        expect(response.body).to include("#{public_market.editor.name} vous permet de mettre en place")
       end
 
-      it 'shows in progress status for incomplete markets' do
-        expect(response.body).to include('In Progress')
+      it 'shows the CTA button with editor name' do
+        expect(response.body).to include("Débuter l'activation de #{public_market.editor.name}")
       end
     end
 
@@ -53,13 +53,12 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'shows completed status' do
-        expect(response.body).to include('Completed')
+      it 'displays the page title with editor name' do
+        expect(response.body).to include("#{public_market.editor.name} - Configuration de marché")
       end
 
-      it 'displays completion date' do
-        completion_date = public_market.completed_at.strftime('%B %d, %Y')
-        expect(response.body).to include(completion_date)
+      it 'displays the CTA button with editor name' do
+        expect(response.body).to include("Débuter l'activation de #{public_market.editor.name}")
       end
     end
   end

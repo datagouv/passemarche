@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-fr-scheme="system">
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <title><%= content_for(:title) || t('application.title') %></title>
@@ -11,18 +11,13 @@
 
     <%= yield :head %>
 
-    <%# DSFR CSS - Version 1.13.0 %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/utility/utility.min.css">
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
@@ -30,7 +25,7 @@
   <body>
     <header role="banner" class="fr-header">
       <div class="fr-header__body">
-        <div class="fr-container">
+        <div class="fr-container-fluid fr-pl-13w fr-pr-15w">
           <div class="fr-header__body-row">
             <div class="fr-header__brand fr-enlarge-link">
               <div class="fr-header__brand-top">
@@ -41,12 +36,12 @@
                     </p>
                   <% end %>
                 </div>
-                <div class="fr-header__navbar">
-                  <p class="fr-header__service-title">
-                    <%= link_to t('header.service_title'), root_path, title: t('header.home_title') %>
-                  </p>
-                  <p class="fr-header__service-tagline"><%= t('header.service_tagline') %></p>
-                </div>
+              </div>
+              <div class="fr-header__service">
+                <p class="fr-header__service-title">
+                  <%= link_to t('header.service_title'), root_path, title: t('header.home_title') %>
+                </p>
+                <p class="fr-header__service-tagline"><%= t('header.service_tagline') %></p>
               </div>
             </div>
           </div>
@@ -55,13 +50,13 @@
     </header>
 
     <main role="main" id="content">
-      <div class="fr-container fr-py-4w">
+      <div class="fr-container-fluid fr-pt-4w fr-pb-12w fr-pl-15w fr-pr-15w">
         <%= yield %>
       </div>
     </main>
 
     <footer class="fr-footer" role="contentinfo">
-      <div class="fr-container">
+      <div class="fr-container-fluid fr-pl-13w fr-pr-15w">
         <div class="fr-footer__body">
           <div class="fr-footer__brand fr-enlarge-link">
             <p class="fr-logo">
@@ -69,29 +64,55 @@
             </p>
           </div>
           <div class="fr-footer__content">
-            <p class="fr-footer__content-desc">
-              <%= t('footer.description') %>
-            </p>
-            <ul class="fr-footer__content-list">
+            <ul class="fr-footer__content-list fr-mb-3w">
               <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#"><%= t('footer.links.accessibility') %></a>
+                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">info.gouv.fr</a>
               </li>
               <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#"><%= t('footer.links.legal') %></a>
+                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">service-public.fr</a>
               </li>
               <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#"><%= t('footer.links.privacy') %></a>
+                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">legifrance.gouv.fr</a>
               </li>
               <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#"><%= t('footer.links.cookies') %></a>
+                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">data.gouv.fr</a>
               </li>
             </ul>
           </div>
         </div>
+        <div class="fr-footer__bottom">
+          <ul class="fr-footer__bottom-list">
+            <li class="fr-footer__bottom-item">
+              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.accessibility') %></a>
+            </li>
+            <li class="fr-footer__bottom-item">
+              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.legal') %></a>
+            </li>
+            <li class="fr-footer__bottom-item">
+              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.privacy') %></a>
+            </li>
+            <li class="fr-footer__bottom-item">
+              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.cookies') %></a>
+            </li>
+            <li class="fr-footer__bottom-item">
+              <a class="fr-footer__bottom-link" href="#" target="_blank" rel="noopener">Plan du site</a>
+            </li>
+            <li class="fr-footer__bottom-item">
+              <a class="fr-footer__bottom-link" href="#" target="_blank" rel="noopener">Paramètres d'affichage</a>
+            </li>
+          </ul>
+          <ul class="fr-footer__bottom-list">
+            <li class="fr-footer__bottom-item">
+              <span class="fr-footer__bottom-link">
+                Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous 
+                <a href="#" target="_blank" rel="noopener">licence etalab-2.0</a>
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </footer>
 
-    <%# DSFR JavaScript - Version 1.13.0 %>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.module.min.js"></script>
     <script type="text/javascript" nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.nomodule.min.js"></script>
   </body>

@@ -6,9 +6,9 @@ fr:
     title: "Voie Rapide"
     
   header:
-    home_title: "Accueil - Voie Rapide"
-    service_title: "Voie Rapide"
-    service_tagline: "Simplifiez vos candidatures aux marchés publics"
+    home_title: "Accueil - Nom du site / service"
+    service_title: "Nom du site / service"
+    service_tagline: "Baseline - précisions sur l'organisation"
     logo_alt: "République Française"
     
   footer:

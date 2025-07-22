@@ -1,21 +1,57 @@
-<h1>Public Market Configuration</h1>
+<% content_for :title, "#{@public_market.editor.name} - Configuration de marché" %>
 
-<div class="market-info">
-  <h2>Market: <%= @public_market.identifier %></h2>
-  <p>Status: <%= @public_market.completed? ? 'Completed' : 'In Progress' %></p>
-  <p>Editor: <%= @public_market.editor.name %></p>
-</div>
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-lg-8">
+    <div class="fr-mb-6w">
+      <h1 class="fr-h1 fr-mb-2w">Bienvenue,</h1>
+      <p class="fr-text--lg fr-mb-0">
+        <%= @public_market.editor.name %> vous permet de mettre en place une 
+        candidature simplifiée pour les entreprises et vous apporte 
+        la garantie de recueillir des informations authentiques et à 
+        jour sur l'entreprise candidate.
+      </p>
+    </div>
 
-<div class="configuration-form">
-  <p><strong>Configuration page content will be designed and implemented in the next step.</strong></p>
-  
-  <% if @public_market.completed? %>
-    <div class="alert alert-info">
-      <p>This market configuration was completed on <%= @public_market.completed_at.strftime("%B %d, %Y at %I:%M %p") %>.</p>
+    <div class="fr-mb-4w">
+      <h2 class="fr-card__title fr-mb-3w">Les informations du marché</h2>
+      
+      <div class="fr-mb-2w">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du marché</h3>
+        <p class="fr-text--sm fr-mb-0">
+          Système d'acquisition dynamique (SAD) pour la fourniture de matériels et 
+          consommables informatiques neufs et reconditionnés, de matériels de 
+          visioconférence, de matériels adaptés et la valorisation et de traitement des 
+          matériels réformés
+        </p>
+      </div>
+
+      <div class="fr-mb-2w">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du lot</h3>
+        <p class="fr-text--sm fr-mb-0">Consommables informatiques neufs et reconditionnés</p>
+      </div>
+
+      <div class="fr-mb-2w">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Date et heure limite de remise des plis</h3>
+        <p class="fr-text--sm fr-mb-0">28/02/2035 12:00 (heure de Paris)</p>
+      </div>
+
+      <div class="fr-mb-0">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Typologie de marché</h3>
+        <p class="fr-text--sm fr-mb-0">Fournitures</p>
+      </div>
     </div>
-  <% else %>
-    <div class="alert alert-warning">
-      <p>This market is still being configured.</p>
+
+    <div class="fr-mb-4w">
+      <button class="fr-btn fr-btn--lg">
+        Débuter l'activation de <%= @public_market.editor.name %>
+        <span class="fr-icon-arrow-right-line fr-icon--sm fr-ml-1w" aria-hidden="true"></span>
+      </button>
     </div>
-  <% end %>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-height-full fr-background-alt--blue-france">
+    <div class="fr-p-3w  fr-text--center fr-height-full fr-display-flex fr-align-items-center fr-justify-content-center">
+      <%= image_tag "form-logo.png", alt: "Logo de formulaire", class: "fr-responsive-img" %>
+    </div>
+  </div>
 </div>
