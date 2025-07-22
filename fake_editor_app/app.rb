@@ -95,4 +95,30 @@ class FakeEditorApp < Sinatra::Base
     end
     erb :dashboard
   end
+
+  post '/create_market' do
+    current_token = Token.current_token
+
+    unless current_token&.valid?
+      @error = "Token d'accès non valide. Veuillez vous authentifier d'abord."
+      @current_token = current_token
+      return erb :dashboard
+    end
+
+    market_data = @fast_track_client.create_public_market(current_token.access_token)
+
+    @success = "Marché créé avec succès! Identifiant: #{market_data['identifier']}"
+    @configuration_url = market_data['configuration_url']
+    @current_token = current_token
+
+    erb :dashboard
+  rescue StandardError => e
+    @error = "Erreur lors de la création du marché: #{e.message}"
+    @current_token = begin
+      Token.current_token
+    rescue StandardError
+      nil
+    end
+    erb :dashboard
+  end
 end

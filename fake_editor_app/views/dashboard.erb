@@ -7,6 +7,23 @@
     </div>
   <% end %>
 
+  <% if @success %>
+    <div class="alert alert-success">
+      <strong>Succès:</strong> <%= @success %>
+    </div>
+  <% end %>
+
+  <% if @configuration_url %>
+    <div class="alert alert-info">
+      <strong>URL de configuration:</strong> 
+      <a href="<%= @configuration_url %>" target="_blank" class="config-link">
+        <%= @configuration_url %>
+      </a>
+      <br>
+      <em>Cliquez sur le lien pour accéder à la page de configuration</em>
+    </div>
+  <% end %>
+
   <div class="config-section">
     <h3>Configuration</h3>
     <div class="config-item">
@@ -80,6 +97,12 @@
           🔄 Rafraîchir le Token
         </button>
       </form>
+      
+      <form method="post" action="/create_market" class="inline-form">
+        <button type="submit" class="btn btn-success">
+          🚀 Créer un Marché Public
+        </button>
+      </form>
     <% else %>
       <form method="post" action="/authenticate" class="inline-form">
         <button type="submit" class="btn btn-success">
@@ -101,7 +124,10 @@
       <li>Assurez-vous que <strong>Voie Rapide</strong> est lancé sur <code><%= ENV['FAST_TRACK_URL'] %></code></li>
       <li>Cliquez sur <strong>"S'authentifier"</strong> pour obtenir un token OAuth2</li>
       <li>Le token sera affiché ci-dessus avec ses détails</li>
-      <li>Utilisez <strong>"Rafraîchir le Token"</strong> pour obtenir un nouveau token</li>
+      <li>Une fois authentifié, cliquez sur <strong>"🚀 Créer un Marché Public"</strong> pour démarrer le processus</li>
+      <li>Un identifiant de marché sera généré et vous recevrez l'URL de configuration</li>
+      <li>Cliquez sur l'URL pour accéder à la page de configuration DSFR</li>
+      <li>Utilisez <strong>"Rafraîchir le Token"</strong> si nécessaire</li>
       <li>Utilisez <strong>"Effacer les Tokens"</strong> pour nettoyer la base de données</li>
     </ol>
   </div>

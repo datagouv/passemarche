@@ -44,4 +44,18 @@ class FastTrackClient
 
     response.parsed_response
   end
+
+  def create_public_market(access_token)
+    response = self.class.post(
+      "#{@base_url}/api/v1/public_markets",
+      headers: {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      }
+    )
+
+    raise "Public market creation failed: #{response.code} - #{response.message}" unless response.success?
+
+    response.parsed_response
+  end
 end
