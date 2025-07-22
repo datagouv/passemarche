@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Editor < ApplicationRecord
+  has_many :public_markets, dependent: :destroy
+
   validates :name, presence: true, uniqueness: true
   validates :client_id, presence: true, uniqueness: true
   validates :client_secret, presence: true
