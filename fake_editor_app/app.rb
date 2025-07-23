@@ -99,21 +99,54 @@ class FakeEditorApp < Sinatra::Base
   post '/create_market' do
     current_token = Token.current_token
 
-    unless current_token&.valid?
-      @error = "Token d'accès non valide. Veuillez vous authentifier d'abord."
-      @current_token = current_token
-      return erb :dashboard
-    end
+    return render_dashboard_with_error("Token d'accès non valide. Veuillez vous authentifier d'abord.", current_token) unless current_token&.valid?
 
-    market_data = @fast_track_client.create_public_market(current_token.access_token)
+    market_data = extract_market_data_from_params
+    validation_error = validate_market_data(market_data)
 
-    @success = "Marché créé avec succès! Identifiant: #{market_data['identifier']}"
-    @configuration_url = market_data['configuration_url']
-    @current_token = current_token
+    return render_dashboard_with_error(validation_error, current_token) if validation_error
 
-    erb :dashboard
+    api_response = @fast_track_client.create_public_market(current_token.access_token, market_data)
+    render_dashboard_with_success(api_response, current_token)
   rescue StandardError => e
-    @error = "Erreur lors de la création du marché: #{e.message}"
+    handle_market_creation_error(e)
+  end
+
+  private
+
+  def extract_market_data_from_params
+    {
+      market_name: params[:market_name],
+      lot_name: params[:lot_name] && params[:lot_name].empty? ? nil : params[:lot_name],
+      deadline: params[:deadline],
+      market_type: params[:market_type]
+    }
+  end
+
+  def validate_market_data(market_data)
+    required_fields = %i[market_name deadline market_type]
+    missing_fields = required_fields.select { |field| market_data[field].to_s.strip.empty? }
+
+    return nil if missing_fields.empty?
+
+    'Veuillez remplir tous les champs obligatoires (nom du marché, date limite, typologie).'
+  end
+
+  def render_dashboard_with_error(error_message, token = nil)
+    @error = error_message
+    @current_token = token
+    erb :dashboard
+  end
+
+  def render_dashboard_with_success(api_response, token)
+    @success = "Marché créé avec succès! Identifiant: #{api_response['identifier']}"
+    @configuration_url = api_response['configuration_url']
+    @current_token = token
+    erb :dashboard
+  end
+
+  def handle_market_creation_error(error)
+    @error = "Erreur lors de la création du marché: #{error.message}"
     @current_token = begin
       Token.current_token
     rescue StandardError

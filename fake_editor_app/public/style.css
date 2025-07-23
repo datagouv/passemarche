@@ -246,6 +246,57 @@ body {
   margin-top: 2rem;
 }
 
+/* Market Form */
+.market-form-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+  margin-bottom: 1rem;
+}
+
+.market-form-section h4 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.market-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.market-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.market-form .required {
+  color: #dc3545;
+}
+
+.market-form input,
+.market-form select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.market-form input:focus,
+.market-form select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.market-form input::placeholder {
+  color: #6c757d;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header h1 {
@@ -267,5 +318,9 @@ body {
   
   .token-field strong {
     min-width: auto;
+  }
+  
+  .market-form-section {
+    padding: 1rem;
   }
 }

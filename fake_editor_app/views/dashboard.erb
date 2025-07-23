@@ -98,11 +98,41 @@
         </button>
       </form>
       
-      <form method="post" action="/create_market" class="inline-form">
-        <button type="submit" class="btn btn-success">
-          🚀 Créer un Marché Public
-        </button>
-      </form>
+      <div class="market-form-section">
+        <h4>Créer un Marché Public</h4>
+        <form method="post" action="/create_market" class="market-form">
+          <div class="form-group">
+            <label for="market_name">Nom du marché <span class="required">*</span></label>
+            <input type="text" id="market_name" name="market_name" required 
+                   placeholder="ex: Fourniture de matériels informatiques">
+          </div>
+          
+          <div class="form-group">
+            <label for="lot_name">Nom du lot (optionnel)</label>
+            <input type="text" id="lot_name" name="lot_name" 
+                   placeholder="ex: Consommables informatiques">
+          </div>
+          
+          <div class="form-group">
+            <label for="deadline">Date et heure limite <span class="required">*</span></label>
+            <input type="datetime-local" id="deadline" name="deadline" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="market_type">Typologie de marché <span class="required">*</span></label>
+            <select id="market_type" name="market_type" required>
+              <option value="">Sélectionner une typologie</option>
+              <option value="Fournitures">Fournitures</option>
+              <option value="Services">Services</option>
+              <option value="Travaux">Travaux</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn btn-success">
+            🚀 Créer le Marché Public
+          </button>
+        </form>
+      </div>
     <% else %>
       <form method="post" action="/authenticate" class="inline-form">
         <button type="submit" class="btn btn-success">
