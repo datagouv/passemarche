@@ -23,95 +23,15 @@
   </head>
 
   <body>
-    <header role="banner" class="fr-header">
-      <div class="fr-header__body">
-        <div class="fr-container-fluid fr-pl-13w fr-pr-15w">
-          <div class="fr-header__body-row">
-            <div class="fr-header__brand fr-enlarge-link">
-              <div class="fr-header__brand-top">
-                <div class="fr-header__logo">
-                  <%= link_to root_path, title: t('header.home_title') do %>
-                    <p class="fr-logo">
-                      République<br>Française
-                    </p>
-                  <% end %>
-                </div>
-              </div>
-              <div class="fr-header__service">
-                <p class="fr-header__service-title">
-                  <%= link_to t('header.service_title'), root_path, title: t('header.home_title') %>
-                </p>
-                <p class="fr-header__service-tagline"><%= t('header.service_tagline') %></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <%= render 'shared/header' %>
 
     <main role="main" id="content">
-      <div class="fr-container-fluid fr-pt-4w fr-pb-12w fr-pl-15w fr-pr-15w">
+      <div class="fr-container fr-pt-4w fr-pb-12w">
         <%= yield %>
       </div>
     </main>
 
-    <footer class="fr-footer" role="contentinfo">
-      <div class="fr-container-fluid fr-pl-13w fr-pr-15w">
-        <div class="fr-footer__body">
-          <div class="fr-footer__brand fr-enlarge-link">
-            <p class="fr-logo">
-              République<br>Française
-            </p>
-          </div>
-          <div class="fr-footer__content">
-            <ul class="fr-footer__content-list fr-mb-3w">
-              <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">info.gouv.fr</a>
-              </li>
-              <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">service-public.fr</a>
-              </li>
-              <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">legifrance.gouv.fr</a>
-              </li>
-              <li class="fr-footer__content-item">
-                <a class="fr-footer__content-link" href="#" target="_blank" rel="noopener">data.gouv.fr</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="fr-footer__bottom">
-          <ul class="fr-footer__bottom-list">
-            <li class="fr-footer__bottom-item">
-              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.accessibility') %></a>
-            </li>
-            <li class="fr-footer__bottom-item">
-              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.legal') %></a>
-            </li>
-            <li class="fr-footer__bottom-item">
-              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.privacy') %></a>
-            </li>
-            <li class="fr-footer__bottom-item">
-              <a class="fr-footer__bottom-link" href="#"><%= t('footer.links.cookies') %></a>
-            </li>
-            <li class="fr-footer__bottom-item">
-              <a class="fr-footer__bottom-link" href="#" target="_blank" rel="noopener">Plan du site</a>
-            </li>
-            <li class="fr-footer__bottom-item">
-              <a class="fr-footer__bottom-link" href="#" target="_blank" rel="noopener">Paramètres d'affichage</a>
-            </li>
-          </ul>
-          <ul class="fr-footer__bottom-list">
-            <li class="fr-footer__bottom-item">
-              <span class="fr-footer__bottom-link">
-                Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous 
-                <a href="#" target="_blank" rel="noopener">licence etalab-2.0</a>
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </footer>
+    <%= render 'shared/footer' %>
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.module.min.js"></script>
     <script type="text/javascript" nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.nomodule.min.js"></script>

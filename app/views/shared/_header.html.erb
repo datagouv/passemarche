@@ -1,0 +1,25 @@
+<header role="banner" class="fr-header">
+  <div class="fr-header__body">
+    <div class="fr-container">
+      <div class="fr-header__body-row">
+        <div class="fr-header__brand fr-enlarge-link">
+          <div class="fr-header__brand-top">
+            <div class="fr-header__logo">
+              <%= link_to root_path, title: t('header.home_title') do %>
+                <p class="fr-logo">
+                  République<br>Française
+                </p>
+              <% end %>
+            </div>
+          </div>
+          <div class="fr-header__service">
+            <p class="fr-header__service-title">
+              <%= link_to t('header.service_title'), root_path, title: t('header.home_title') %>
+            </p>
+            <p class="fr-header__service-tagline"><%= t('header.service_tagline') %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
