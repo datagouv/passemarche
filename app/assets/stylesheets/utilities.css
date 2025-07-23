@@ -1,0 +1,13 @@
+/* Utility classes for centering content */
+.center-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem;
+}
+
+.center-content img {
+  max-width: 100%;
+  height: auto;
+}
