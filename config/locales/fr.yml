@@ -46,3 +46,15 @@ fr:
         candidature:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
+          
+  activerecord:
+    errors:
+      models:
+        public_market:
+          attributes:
+            market_name:
+              blank: "ne peut pas être vide"
+            deadline:
+              blank: "ne peut pas être vide"
+            market_type:
+              blank: "ne peut pas être vide"

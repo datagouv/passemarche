@@ -75,3 +75,15 @@ en:
         candidature:
           title: "3. Application"
           description: "Receive your application certificate"
+          
+  activerecord:
+    errors:
+      models:
+        public_market:
+          attributes:
+            market_name:
+              blank: "can't be blank"
+            deadline:
+              blank: "can't be blank"
+            market_type:
+              blank: "can't be blank"
