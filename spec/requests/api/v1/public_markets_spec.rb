@@ -22,10 +22,25 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
   end
 
   describe 'POST /api/v1/public_markets' do
+    let(:market_params) do
+      {
+        public_market: {
+          market_name: 'Test Market Name',
+          lot_name: 'Test Lot Name',
+          deadline: 1.month.from_now.iso8601,
+          market_type: 'Fournitures'
+        }
+      }
+    end
+
     context 'with valid OAuth token' do
       before do
         post '/api/v1/public_markets',
-             headers: { 'Authorization' => "Bearer #{access_token.token}" }
+             params: market_params.to_json,
+             headers: {
+               'Authorization' => "Bearer #{access_token.token}",
+               'Content-Type' => 'application/json'
+             }
       end
 
       it 'creates a new public market' do
@@ -107,6 +122,37 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       it 'returns error message' do
         json_response = JSON.parse(response.body)
         expect(json_response['error']).to eq('Editor not found')
+      end
+    end
+
+    context 'with missing required fields' do
+      let(:invalid_params) do
+        {
+          public_market: {
+            market_name: '',
+            deadline: '',
+            market_type: ''
+          }
+        }
+      end
+
+      before do
+        post '/api/v1/public_markets',
+             params: invalid_params.to_json,
+             headers: {
+               'Authorization' => "Bearer #{access_token.token}",
+               'Content-Type' => 'application/json'
+             }
+      end
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns validation errors' do
+        json_response = JSON.parse(response.body)
+        expect(json_response['errors']).to be_an(Array)
+        expect(json_response['errors']).not_to be_empty
       end
     end
   end

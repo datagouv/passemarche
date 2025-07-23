@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_22_080739) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_23_103134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,6 +74,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_22_080739) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "market_name"
+    t.string "lot_name"
+    t.datetime "deadline"
+    t.string "market_type"
     t.index ["editor_id"], name: "index_public_markets_on_editor_id"
     t.index ["identifier"], name: "index_public_markets_on_identifier", unique: true
   end

@@ -4,6 +4,9 @@ class PublicMarket < ApplicationRecord
   belongs_to :editor
 
   validates :identifier, presence: true, uniqueness: true
+  validates :market_name, presence: true
+  validates :deadline, presence: true
+  validates :market_type, presence: true
 
   before_validation :generate_identifier, on: :create
 

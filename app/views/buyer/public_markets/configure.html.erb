@@ -17,27 +17,26 @@
       
       <div class="fr-mb-2w">
         <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du marché</h3>
-        <p class="fr-text--sm fr-mb-0">
-          Système d'acquisition dynamique (SAD) pour la fourniture de matériels et 
-          consommables informatiques neufs et reconditionnés, de matériels de 
-          visioconférence, de matériels adaptés et la valorisation et de traitement des 
-          matériels réformés
-        </p>
+        <p class="fr-text--sm fr-mb-0"><%= @public_market.market_name %></p>
       </div>
 
-      <div class="fr-mb-2w">
-        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du lot</h3>
-        <p class="fr-text--sm fr-mb-0">Consommables informatiques neufs et reconditionnés</p>
-      </div>
+      <% if @public_market.lot_name.present? %>
+        <div class="fr-mb-2w">
+          <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du lot</h3>
+          <p class="fr-text--sm fr-mb-0"><%= @public_market.lot_name %></p>
+        </div>
+      <% end %>
 
       <div class="fr-mb-2w">
         <h3 class="fr-text--md fr-mb-1w fr-text--bold">Date et heure limite de remise des plis</h3>
-        <p class="fr-text--sm fr-mb-0">28/02/2035 12:00 (heure de Paris)</p>
+        <p class="fr-text--sm fr-mb-0">
+          <%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)
+        </p>
       </div>
 
       <div class="fr-mb-0">
         <h3 class="fr-text--md fr-mb-1w fr-text--bold">Typologie de marché</h3>
-        <p class="fr-text--sm fr-mb-0">Fournitures</p>
+        <p class="fr-text--sm fr-mb-0"><%= @public_market.market_type %></p>
       </div>
     </div>
 

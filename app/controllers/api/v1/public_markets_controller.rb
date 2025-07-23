@@ -6,7 +6,7 @@ module Api
       def create
         return render json: { error: 'Editor not found' }, status: :forbidden unless current_editor
 
-        public_market = current_editor.public_markets.build
+        public_market = current_editor.public_markets.build(public_market_params)
 
         if public_market.save
           render json: success_response(public_market), status: :created
@@ -16,6 +16,10 @@ module Api
       end
 
       private
+
+      def public_market_params
+        params.require(:public_market).permit(:market_name, :lot_name, :deadline, :market_type)
+      end
 
       def success_response(public_market)
         {
