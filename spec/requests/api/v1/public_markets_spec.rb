@@ -36,11 +36,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
     context 'with valid OAuth token' do
       before do
         post '/api/v1/public_markets',
-             params: market_params.to_json,
-             headers: {
-               'Authorization' => "Bearer #{access_token.token}",
-               'Content-Type' => 'application/json'
-             }
+          params: market_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token.token}",
+            'Content-Type' => 'application/json'
+          }
       end
 
       it 'creates a new public market' do
@@ -48,19 +48,19 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
 
       it 'returns the public market identifier' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['identifier']).to match(/^VR-\d{4}-[A-Z0-9]{12}$/)
       end
 
       it 'returns the configuration URL' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         identifier = json_response['identifier']
         expected_url = "http://www.example.com/buyer/public_markets/#{identifier}/configure"
         expect(json_response['configuration_url']).to eq(expected_url)
       end
 
       it 'associates the market with the correct editor' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         public_market = PublicMarket.find_by(identifier: json_response['identifier'])
         expect(public_market.editor).to eq(editor)
       end
@@ -76,7 +76,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
 
       it 'returns error message' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('Not authorized')
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
     context 'with invalid OAuth token' do
       before do
         post '/api/v1/public_markets',
-             headers: { 'Authorization' => 'Bearer invalid_token' }
+          headers: { 'Authorization' => 'Bearer invalid_token' }
       end
 
       it 'returns unauthorized status' do
@@ -112,7 +112,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
 
       before do
         post '/api/v1/public_markets',
-             headers: { 'Authorization' => "Bearer #{other_access_token.token}" }
+          headers: { 'Authorization' => "Bearer #{other_access_token.token}" }
       end
 
       it 'returns forbidden status' do
@@ -120,7 +120,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
 
       it 'returns error message' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('Editor not found')
       end
     end
@@ -138,11 +138,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
 
       before do
         post '/api/v1/public_markets',
-             params: invalid_params.to_json,
-             headers: {
-               'Authorization' => "Bearer #{access_token.token}",
-               'Content-Type' => 'application/json'
-             }
+          params: invalid_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token.token}",
+            'Content-Type' => 'application/json'
+          }
       end
 
       it 'returns unprocessable entity status' do
@@ -150,7 +150,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
 
       it 'returns validation errors' do
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['errors']).to be_an(Array)
         expect(json_response['errors']).not_to be_empty
       end
