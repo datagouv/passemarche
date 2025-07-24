@@ -40,11 +40,30 @@
       </div>
     </div>
 
-    <div class="fr-mb-4w">
-      <%= link_to buyer_public_market_path(@public_market.identifier, step: :required_documents), class: "fr-btn fr-btn--lg" do %>
-        Débuter l'activation de <%= @public_market.editor.name %>
-      <% end %>
-    </div>
+    <%= form_with model: @public_market, url: buyer_public_market_path(@public_market.identifier, step: :configure), 
+                  local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
+      
+      <div class="fr-mb-3w">
+        <% if @public_market.defense.nil? %>
+          <!-- Editor didn't provide - show enabled checkbox -->
+          <div class="fr-checkbox-group">
+            <%= form.check_box :defense, { class: "fr-checkbox" }, "true", "" %>
+            <%= form.label :defense, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
+          </div>
+        <% else %>
+          <!-- Editor provided - show disabled checkbox -->
+          <div class="fr-checkbox-group fr-checkbox-group--disabled">
+            <%= check_box_tag :defense, "1", @public_market.defense, disabled: true, class: "fr-checkbox" %>
+            <%= label_tag :defense, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
+            <span class="fr-hint-text">Cette désignation a été définie par <%= @public_market.editor.name %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="fr-mb-4w">
+        <%= form.submit "Débuter l'activation de #{@public_market.editor.name}", class: "fr-btn fr-btn--lg" %>
+      </div>
+    <% end %>
   </div>
 
   <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">

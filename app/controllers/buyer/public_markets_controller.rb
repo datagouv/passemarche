@@ -16,6 +16,8 @@ module Buyer
 
     def update
       case params[:step].to_sym
+      when :configure
+        handle_configure_step
       when :optional_documents
         # Handle optional documents form submission (future implementation)
         redirect_to buyer_public_market_path(@public_market.identifier, step: :summary)
@@ -28,6 +30,17 @@ module Buyer
     end
 
     private
+
+    def handle_configure_step
+      # Only update is_defense if it wasn't set by editor (nil means not provided by editor)
+      @public_market.update!(configure_params) if @public_market.is_defense.nil? && params[:public_market].present?
+
+      redirect_to buyer_public_market_path(@public_market.identifier, step: :required_documents)
+    end
+
+    def configure_params
+      params.expect(public_market: [:defense])
+    end
 
     def find_public_market
       @public_market = PublicMarket.find_by!(identifier: params[:identifier])

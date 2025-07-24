@@ -22,7 +22,9 @@ When('I visit the summary page for my public market') do
 end
 
 When('I navigate to required documents page') do
-  click_link 'Débuter l\'activation de'
+  # Find submit button by partial value match
+  submit_button = page.find('input[type=submit]', match: :first)
+  submit_button.click
 end
 
 When('I navigate to optional documents page') do
@@ -75,8 +77,17 @@ Then('I should see a {string} button') do |button_text|
   expect(page).to have_link(button_text)
 end
 
-When('I click on {string}') do |link_text|
-  click_link link_text
+When('I click on {string}') do |link_or_button_text|
+  # Handle partial text matching for buttons with dynamic content
+  if link_or_button_text == "Débuter l'activation de"
+    # Find submit button by partial value match
+    submit_button = page.find('input[type=submit]', match: :first)
+    submit_button.click
+  elsif page.has_button?(link_or_button_text)
+    click_button link_or_button_text
+  else
+    click_link link_or_button_text
+  end
 end
 
 # Stepper verification steps

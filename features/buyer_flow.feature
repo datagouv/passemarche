@@ -19,7 +19,7 @@ Feature: Buyer Configuration Flow
     Then I should see "Bienvenue,"
     And I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "Débuter l'activation de"
+    And I should see "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité"
     
     When I click on "Débuter l'activation de"
     Then I should be on the required documents page

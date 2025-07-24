@@ -28,7 +28,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           market_name: 'Test Market Name',
           lot_name: 'Test Lot Name',
           deadline: 1.month.from_now.iso8601,
-          market_type: 'Fournitures'
+          market_type: 'supplies'
         }
       }
     end
@@ -153,6 +153,74 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         json_response = response.parsed_body
         expect(json_response['errors']).to be_an(Array)
         expect(json_response['errors']).not_to be_empty
+      end
+    end
+
+    context 'with defense parameter' do
+      context 'when defense is true' do
+        let(:defense_params) do
+          market_params.deep_merge(
+            public_market: { defense: true }
+          )
+        end
+
+        before do
+          post '/api/v1/public_markets',
+            params: defense_params.to_json,
+            headers: {
+              'Authorization' => "Bearer #{access_token.token}",
+              'Content-Type' => 'application/json'
+            }
+        end
+
+        it 'creates market with defense flag set to true' do
+          expect(response).to have_http_status(:created)
+          json_response = response.parsed_body
+          public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+          expect(public_market.defense).to be(true)
+        end
+      end
+
+      context 'when defense is false' do
+        let(:defense_params) do
+          market_params.deep_merge(
+            public_market: { defense: false }
+          )
+        end
+
+        before do
+          post '/api/v1/public_markets',
+            params: defense_params.to_json,
+            headers: {
+              'Authorization' => "Bearer #{access_token.token}",
+              'Content-Type' => 'application/json'
+            }
+        end
+
+        it 'creates market with defense flag set to false' do
+          expect(response).to have_http_status(:created)
+          json_response = response.parsed_body
+          public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+          expect(public_market.defense).to be(false)
+        end
+      end
+
+      context 'when defense is not provided' do
+        before do
+          post '/api/v1/public_markets',
+            params: market_params.to_json,
+            headers: {
+              'Authorization' => "Bearer #{access_token.token}",
+              'Content-Type' => 'application/json'
+            }
+        end
+
+        it 'creates market with defense flag as nil' do
+          expect(response).to have_http_status(:created)
+          json_response = response.parsed_body
+          public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+          expect(public_market.defense).to be_nil
+        end
       end
     end
   end

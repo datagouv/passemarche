@@ -16,7 +16,7 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   private
 
   def public_market_params
-    params.expect(public_market: %i[market_name lot_name deadline market_type])
+    params.expect(public_market: %i[market_name lot_name deadline market_type defense])
   end
 
   def success_response(public_market)

@@ -34,7 +34,12 @@
                   </tr>
                   <tr>
                     <td class="fr-text--bold">Type de marché</td>
-                    <td><%= @public_market.market_type %></td>
+                    <td>
+                      <%= @public_market.market_type %>
+                      <% if @public_market.defense == true %>
+                        <span class="fr-badge fr-badge--warning fr-ml-1w">Défense</span>
+                      <% end %>
+                    </td>
                   </tr>
                   <tr>
                     <td class="fr-text--bold">Identifiant</td>
