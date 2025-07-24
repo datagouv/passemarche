@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   def index; end
 
   def create_demo_market
-    return redirect_to root_path, alert: t('demo.development_only') unless Rails.env.development?
+    return redirect_to root_path, alert: t('demo.unavailable') unless demo_available?
 
     demo_editor = find_or_create_demo_editor
     public_market = create_random_market(demo_editor)
@@ -16,6 +16,10 @@ class HomeController < ApplicationController
   end
 
   private
+
+  def demo_available?
+    Rails.env.development? || Rails.env.sandbox?
+  end
 
   def find_or_create_demo_editor
     Editor.find_or_create_by(client_id: 'demo_editor_client') do |editor|

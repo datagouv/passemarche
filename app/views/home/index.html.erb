@@ -16,7 +16,7 @@
       </p>
     </div>
 
-    <% if Rails.env.development? %>
+    <% if Rails.env.development? || Rails.env.sandbox? %>
       <div class="fr-mt-3w fr-mb-2w">
         <div class="fr-callout fr-callout--brown-caramel">
           <h3 class="fr-callout__title">
