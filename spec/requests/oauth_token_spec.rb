@@ -29,7 +29,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:ok)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['access_token']).to be_present
         expect(json_response['token_type']).to eq('Bearer')
         expect(json_response['expires_in']).to eq(86_400) # 24 hours
@@ -47,7 +47,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:ok)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['scope']).to eq('api_read')
       end
 
@@ -61,7 +61,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:ok)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['scope']).to eq('api_read api_write')
       end
 
@@ -73,7 +73,7 @@ RSpec.describe 'OAuth Token', type: :request do
           client_secret: editor.client_secret
         }
 
-        first_token = JSON.parse(response.body)['access_token']
+        first_token = response.parsed_body['access_token']
         expect(first_token).to be_present
 
         # Get second token
@@ -83,7 +83,7 @@ RSpec.describe 'OAuth Token', type: :request do
           client_secret: editor.client_secret
         }
 
-        second_token = JSON.parse(response.body)['access_token']
+        second_token = response.parsed_body['access_token']
 
         # Verify token revocation behavior (per revoke_previous_client_credentials_token config)
         expect(Doorkeeper::AccessToken.find_by(token: first_token)).to be_revoked
@@ -101,7 +101,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:unauthorized)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_client')
         expect(json_response['error_description']).to be_present
       end
@@ -115,7 +115,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:unauthorized)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_client')
       end
 
@@ -154,7 +154,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:unauthorized)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_client')
       end
     end
@@ -183,7 +183,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:unauthorized)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_client')
       end
     end
@@ -197,7 +197,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:bad_request)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_request')
         expect(json_response['error_description']).to be_present
       end
@@ -231,7 +231,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:bad_request)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('unsupported_grant_type')
       end
 
@@ -246,7 +246,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:bad_request)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('unsupported_grant_type')
       end
     end
@@ -262,7 +262,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:bad_request)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_scope')
         expect(json_response['error_description']).to be_present
       end
@@ -277,7 +277,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:bad_request)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('invalid_scope')
       end
     end
@@ -285,12 +285,12 @@ RSpec.describe 'OAuth Token', type: :request do
     context 'with content type variations' do
       it 'accepts application/x-www-form-urlencoded' do
         post '/oauth/token',
-             params: {
-               grant_type: 'client_credentials',
-               client_id: editor.client_id,
-               client_secret: editor.client_secret
-             },
-             headers: { 'Content-Type' => 'application/x-www-form-urlencoded' }
+          params: {
+            grant_type: 'client_credentials',
+            client_id: editor.client_id,
+            client_secret: editor.client_secret
+          },
+          headers: { 'Content-Type' => 'application/x-www-form-urlencoded' }
 
         expect(response).to have_http_status(:ok)
       end
@@ -308,14 +308,14 @@ RSpec.describe 'OAuth Token', type: :request do
 
     context 'token expiration and lifecycle' do
       it 'creates token with correct expiration time' do
-        travel_to Time.current do
+        freeze_time do
           post '/oauth/token', params: {
             grant_type: 'client_credentials',
             client_id: editor.client_id,
             client_secret: editor.client_secret
           }
 
-          token = JSON.parse(response.body)['access_token']
+          token = response.parsed_body['access_token']
           access_token = Doorkeeper::AccessToken.find_by(token: token)
 
           expect(access_token.expires_at.to_i).to eq(24.hours.from_now.to_i)
@@ -332,7 +332,7 @@ RSpec.describe 'OAuth Token', type: :request do
           scope: 'api_read'
         }
 
-        read_token = JSON.parse(response.body)['access_token']
+        read_token = response.parsed_body['access_token']
 
         # Get token with api_write scope
         post '/oauth/token', params: {
@@ -342,7 +342,7 @@ RSpec.describe 'OAuth Token', type: :request do
           scope: 'api_write'
         }
 
-        write_token = JSON.parse(response.body)['access_token']
+        write_token = response.parsed_body['access_token']
 
         # With different scopes, tokens are treated separately
         # Only tokens with same scope/client combination get revoked
@@ -371,7 +371,7 @@ RSpec.describe 'OAuth Token', type: :request do
           }
 
           expect(response).to have_http_status(:ok)
-          tokens << JSON.parse(response.body)['access_token']
+          tokens << response.parsed_body['access_token']
         end
 
         # Verify token revocation behavior - all tokens except the last should be revoked
@@ -410,7 +410,7 @@ RSpec.describe 'OAuth Token', type: :request do
           client_secret: 'wrong_secret'
         }
 
-        error1 = JSON.parse(response.body)
+        error1 = response.parsed_body
 
         post '/oauth/token', params: {
           grant_type: 'client_credentials',
@@ -418,7 +418,7 @@ RSpec.describe 'OAuth Token', type: :request do
           client_secret: 'wrong_secret'
         }
 
-        error2 = JSON.parse(response.body)
+        error2 = response.parsed_body
 
         expect(error1['error']).to eq(error2['error'])
         expect(error1['error']).to eq('invalid_client')
@@ -452,7 +452,7 @@ RSpec.describe 'OAuth Token', type: :request do
           client_secret: editor.client_secret
         }
 
-        initial_token = JSON.parse(response.body)['access_token']
+        initial_token = response.parsed_body['access_token']
 
         # Simulate token expiration by updating created_at and expires_in
         access_token = Doorkeeper::AccessToken.find_by(token: initial_token)
@@ -465,7 +465,7 @@ RSpec.describe 'OAuth Token', type: :request do
           client_secret: editor.client_secret
         }
 
-        new_token = JSON.parse(response.body)['access_token']
+        new_token = response.parsed_body['access_token']
         expect(new_token).not_to eq(initial_token)
       end
 
@@ -479,7 +479,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         expect(response).to have_http_status(:bad_request)
 
-        json_response = JSON.parse(response.body)
+        json_response = response.parsed_body
         expect(json_response['error']).to eq('unsupported_grant_type')
       end
     end
@@ -492,7 +492,7 @@ RSpec.describe 'OAuth Token', type: :request do
         client_id: editor.client_id,
         client_secret: editor.client_secret
       }
-      JSON.parse(response.body)['access_token']
+      response.parsed_body['access_token']
     end
 
     it 'stores the correct application association' do
@@ -509,7 +509,7 @@ RSpec.describe 'OAuth Token', type: :request do
         scope: 'api_read api_write'
       }
 
-      token = JSON.parse(response.body)['access_token']
+      token = response.parsed_body['access_token']
       access_token = Doorkeeper::AccessToken.find_by(token: token)
 
       expect(access_token.scopes.to_a).to contain_exactly('api_read', 'api_write')

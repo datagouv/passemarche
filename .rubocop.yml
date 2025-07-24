@@ -1,42 +1,188 @@
+plugins:
+  - rubocop-rails
+  - rubocop-performance
+
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
   NewCops: enable
-  Exclude: 
-    - bin/*
-    - vendor/**/*
-    - db/**/*.rb
-    - tmp/**/*
+  SuggestExtensions: false
+  Exclude:
+    - "Gemfile"
+    - "Guardfile"
+    - "Rakefile"
+    - "bin/**/*"
+    - "db/**/*"
+    - "config/**/*"
+    - "vendor/**/*"
+    - "tmp/**/*"
 
-Metrics/MethodLength:
-  Max: 30
+# Layout Rules
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/LineLength:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: space
+
+# Lint Rules
+Lint/MissingSuper:
+  Enabled: false
+
+Lint/InheritException:
+  Enabled: false
+
+Lint/SuppressedException:
+  Exclude:
+    - "spec/**/*_spec.rb"
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "spec/**/*"
+
+# Metrics Rules
+Metrics/AbcSize:
+  Max: 17
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/spec_helper.rb"
+    - "spec/support/shared_examples/*"
+    - "spec/factories/**/*"
+  AllowedMethods:
+    - "describe"
+    - "context"
+    - "namespace"
+    - "shared_examples"
+    - "let"
+    - "path"
+    - "get"
+    - "response"
+
+Metrics/ClassLength:
+  Max: 200
 
 Metrics/CyclomaticComplexity:
   Max: 15
 
-Metrics/PerceivedComplexity:
+Metrics/MethodLength:
   Max: 15
-
-Metrics/ClassLength:
-  Max: 300
+  CountAsOne:
+    - hash
+    - array
 
 Metrics/ModuleLength:
   Max: 200
 
-Metrics/AbcSize:
-  Max: 17
+Metrics/PerceivedComplexity:
+  Max: 15
+
+# Naming Rules
+Naming/MethodParameterName:
+  AllowedNames:
+    - "_"
+    - "nb"
+    - "id"
+    - "to"
+    - "cc"
+
+Naming/PredicateMethod:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+# Rails Rules
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - staging
+    - sandbox
+    - development
+    - test
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/FindEach:
+  Enabled: false
+
+Rails/OutputSafety:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - "spec/**/*_spec.rb"
+
+Rails/UnusedIgnoredColumns:
+  Enabled: false
+
+Rails/RedundantActiveRecordAllMethod:
+  Exclude:
+    - "spec/**/*"
+
+# Note: RSpec-specific rules removed as rubocop-rspec is not in dependencies
+# Add rubocop-rspec gem if RSpec rules are needed
+
+# Style Rules
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockComments:
+  Exclude:
+    - "spec/spec_helper.rb"
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
+Style/ClassAndModuleChildren:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
 
-Metrics/BlockLength:
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MethodCalledOnDoEndBlock:
+  Enabled: false
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+
+Style/OpenStructUse:
   Exclude:
-    - config/**/*.rb
-    - Guardfile
-    - spec/**/*.rb
+    - "spec/**/*_spec.rb"
 
-Layout/LineLength:
-  Max: 300
+Style/SignalException:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: single_quotes
+
+# Note: Capybara-specific rules removed as rubocop-capybara is not in dependencies
+# Add rubocop-capybara gem if Capybara rules are needed
+
+# Additional Rules
+Lint/AmbiguousBlockAssociation:
   Exclude:
-    - config/**/*.rb
-    - Guardfile
-
-
+    - "spec/**/*_spec.rb"
