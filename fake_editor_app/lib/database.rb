@@ -13,6 +13,11 @@ FileUtils.mkdir_p(db_dir)
 # Initialize SQLite connection
 DB = Sequel.sqlite(db_path)
 
+# Configure Sequel to use UTC and not try to use Rails time zone methods
+Sequel.datetime_class = DateTime
+Sequel.application_timezone = :utc
+Sequel.database_timezone = :utc
+
 # Create tables if they don't exist
 DB.create_table?(:tokens) do
   primary_key :id
@@ -26,7 +31,7 @@ end
 
 class Token < Sequel::Model(DB[:tokens])
   def self.current_token
-    where { expires_at > Time.zone.now }.order(:created_at).last
+    where { expires_at > DateTime.now }.order(:created_at).last
   end
 
   def self.store_token(access_token:, expires_in:, token_type:, scope:)
@@ -39,8 +44,8 @@ class Token < Sequel::Model(DB[:tokens])
       expires_in: expires_in,
       token_type: token_type,
       scope: scope,
-      created_at: Time.zone.now,
-      expires_at: Time.zone.now + expires_in.to_i
+      created_at: DateTime.now,
+      expires_at: DateTime.now + Rational(expires_in.to_i, 86400)
     )
   end
 
@@ -49,7 +54,7 @@ class Token < Sequel::Model(DB[:tokens])
   end
 
   def expired?
-    expires_at < Time.zone.now
+    expires_at < DateTime.now
   end
 
   def valid?
@@ -59,6 +64,6 @@ class Token < Sequel::Model(DB[:tokens])
   def time_until_expiry
     return 0 if expired?
 
-    (expires_at - Time.zone.now).to_i
+    ((expires_at - DateTime.now) * 86400).to_i
   end
 end
