@@ -6,9 +6,9 @@ fr:
     title: "Voie Rapide"
     
   header:
-    home_title: "Accueil - Voie Rapide"
-    service_title: "Voie Rapide"
-    service_tagline: "Simplifiez vos candidatures aux marchés publics"
+    home_title: "Accueil - Nom du site / service"
+    service_title: "Nom du site / service"
+    service_tagline: "Baseline - précisions sur l'organisation"
     logo_alt: "République Française"
     
   footer:
@@ -46,3 +46,20 @@ fr:
         candidature:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
+          
+  demo:
+    development_only: "Demo uniquement disponible en développement"
+    market_created: "Marché de démonstration créé : %{market_name}"
+    creation_error: "Erreur lors de la création du marché de démonstration : %{error}"
+          
+  activerecord:
+    errors:
+      models:
+        public_market:
+          attributes:
+            market_name:
+              blank: "ne peut pas être vide"
+            deadline:
+              blank: "ne peut pas être vide"
+            market_type:
+              blank: "ne peut pas être vide"

@@ -1,22 +1,28 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  # OAuth2 token endpoint for editor authentication
   use_doorkeeper do
-    # Only expose token endpoint for client credentials flow
     skip_controllers :authorizations, :applications, :authorized_applications
   end
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :api do
+    namespace :v1 do
+      resources :public_markets, only: [:create]
+    end
+  end
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  namespace :buyer do
+    resources :public_markets, param: :identifier, only: [] do
+      member do
+        get :configure
+      end
+    end
+  end
+
   get 'up' => 'rails/health#show', as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Home page
+  
+  # Demo functionality (development only)
+  post 'demo/create_market', to: 'home#create_demo_market', as: :create_demo_market
+  
   root 'home#index'
 end

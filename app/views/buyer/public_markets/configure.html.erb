@@ -1,0 +1,56 @@
+<% content_for :title, "#{@public_market.editor.name} - Configuration de marché" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-lg-8">
+    <div class="fr-mb-6w">
+      <h1 class="fr-h1 fr-mb-2w">Bienvenue,</h1>
+      <p class="fr-text--lg fr-mb-0">
+        <%= @public_market.editor.name %> vous permet de mettre en place une 
+        candidature simplifiée pour les entreprises et vous apporte 
+        la garantie de recueillir des informations authentiques et à 
+        jour sur l'entreprise candidate.
+      </p>
+    </div>
+
+    <div class="fr-mb-4w">
+      <h2 class="fr-card__title fr-mb-3w">Les informations du marché</h2>
+      
+      <div class="fr-mb-2w">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du marché</h3>
+        <p class="fr-text--sm fr-mb-0"><%= @public_market.market_name %></p>
+      </div>
+
+      <% if @public_market.lot_name.present? %>
+        <div class="fr-mb-2w">
+          <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du lot</h3>
+          <p class="fr-text--sm fr-mb-0"><%= @public_market.lot_name %></p>
+        </div>
+      <% end %>
+
+      <div class="fr-mb-2w">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Date et heure limite de remise des plis</h3>
+        <p class="fr-text--sm fr-mb-0">
+          <%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)
+        </p>
+      </div>
+
+      <div class="fr-mb-0">
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Typologie de marché</h3>
+        <p class="fr-text--sm fr-mb-0"><%= @public_market.market_type %></p>
+      </div>
+    </div>
+
+    <div class="fr-mb-4w">
+      <button class="fr-btn fr-btn--lg">
+        Débuter l'activation de <%= @public_market.editor.name %>
+        <span class="fr-icon-arrow-right-line fr-icon--sm fr-ml-1w" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
+    </div>
+  </div>
+</div>

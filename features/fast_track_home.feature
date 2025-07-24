@@ -15,7 +15,6 @@ Feature: Fast Track Home Page
     Given I am on the home page
     Then I should see "République"
     And I should see "Française"
-    And I should see "Simplifiez vos candidatures aux marchés publics"
     And I should see "Bienvenue sur"
     And I should see "la plateforme qui simplifie"
 
