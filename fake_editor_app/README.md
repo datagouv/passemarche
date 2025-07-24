@@ -20,7 +20,7 @@ Fournir un exemple concret d'intégration OAuth2 avec Voie Rapide, incluant :
 
 ## 📋 Prérequis
 
-- Ruby 3.2.1
+- Ruby 3.4.5
 - Voie Rapide en cours d'exécution sur http://localhost:3000
 - Éditeur demo configuré dans Voie Rapide
 

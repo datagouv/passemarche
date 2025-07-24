@@ -1,6 +1,6 @@
 # Voie Rapide
 
-[![Ruby](https://img.shields.io/badge/Ruby-3.2.1-red.svg)](https://www.ruby-lang.org/)
+[![Ruby](https://img.shields.io/badge/Ruby-3.4.5-red.svg)](https://www.ruby-lang.org/)
 [![Rails](https://img.shields.io/badge/Rails-8.0.2-red.svg)](https://rubyonrails.org/)
 [![DSFR](https://img.shields.io/badge/DSFR-1.13.0-blue.svg)](https://www.systeme-de-design.gouv.fr/)
 
@@ -46,7 +46,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 ## 🛠 Technologies utilisées
 
 ### Backend
-- **Ruby 3.2.1** - Langage de programmation
+- **Ruby 3.4.5** - Langage de programmation
 - **Rails 8.0.2** - Framework web
 - **PostgreSQL** - Base de données principale
 - **Solid Cable/Cache/Queue** - Infrastructure Rails database-backed
@@ -67,7 +67,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ## 📋 Prérequis
 
-- Ruby 3.2.1
+- Ruby 3.4.5
 - PostgreSQL 12+
 - Git
 
