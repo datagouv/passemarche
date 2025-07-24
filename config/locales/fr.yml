@@ -47,6 +47,11 @@ fr:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
           
+  demo:
+    development_only: "Demo uniquement disponible en développement"
+    market_created: "Marché de démonstration créé : %{market_name}"
+    creation_error: "Erreur lors de la création du marché de démonstration : %{error}"
+          
   activerecord:
     errors:
       models:
