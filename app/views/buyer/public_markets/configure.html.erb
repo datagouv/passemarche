@@ -41,10 +41,9 @@
     </div>
 
     <div class="fr-mb-4w">
-      <button class="fr-btn fr-btn--lg">
+      <%= link_to buyer_public_market_path(@public_market.identifier, step: :required_documents), class: "fr-btn fr-btn--lg" do %>
         Débuter l'activation de <%= @public_market.editor.name %>
-        <span class="fr-icon-arrow-right-line fr-icon--sm fr-ml-1w" aria-hidden="true"></span>
-      </button>
+      <% end %>
     </div>
   </div>
 

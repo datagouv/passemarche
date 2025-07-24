@@ -1,0 +1,111 @@
+<% content_for :title, "#{@public_market.editor.name} - Résumé de la configuration" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-lg-8">
+    <div class="fr-mb-6w">
+      <h1 class="fr-h1 fr-mb-2w">Résumé de la configuration</h1>
+      <p class="fr-text--lg fr-mb-0">
+        Vérifiez les paramètres de votre marché avant de finaliser la configuration.
+      </p>
+    </div>
+
+    <div class="fr-mb-4w">
+      <h2 class="fr-card__title fr-mb-3w">Informations du marché</h2>
+      
+      <div class="fr-table fr-table--no-caption">
+        <div class="fr-table__wrapper">
+          <div class="fr-table__container">
+            <div class="fr-table__content">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="fr-text--bold">Nom du marché</td>
+                    <td><%= @public_market.market_name %></td>
+                  </tr>
+                  <% if @public_market.lot_name.present? %>
+                    <tr>
+                      <td class="fr-text--bold">Nom du lot</td>
+                      <td><%= @public_market.lot_name %></td>
+                    </tr>
+                  <% end %>
+                  <tr>
+                    <td class="fr-text--bold">Date limite</td>
+                    <td><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</td>
+                  </tr>
+                  <tr>
+                    <td class="fr-text--bold">Type de marché</td>
+                    <td><%= @public_market.market_type %></td>
+                  </tr>
+                  <tr>
+                    <td class="fr-text--bold">Identifiant</td>
+                    <td><code><%= @public_market.identifier %></code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-mb-4w">
+      <h2 class="fr-card__title fr-mb-3w">Documents configurés</h2>
+      
+      <div class="fr-mb-3w">
+        <h3 class="fr-text--md fr-mb-2w fr-text--bold">Documents obligatoires</h3>
+        <ul class="fr-badges-group">
+          <li>
+            <p class="fr-badge fr-badge--info">Extrait Kbis</p>
+          </li>
+          <li>
+            <p class="fr-badge fr-badge--info">Attestation fiscale</p>
+          </li>
+          <li>
+            <p class="fr-badge fr-badge--info">Attestation sociale</p>
+          </li>
+          <li>
+            <p class="fr-badge fr-badge--info">Assurance responsabilité civile</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="fr-mb-3w">
+        <h3 class="fr-text--md fr-mb-2w fr-text--bold">Documents optionnels</h3>
+        <div class="fr-callout fr-callout--brown-caramel">
+          <p class="fr-callout__text">
+            <span class="fr-icon-information-line fr-mr-1w" aria-hidden="true"></span>
+            Aucun document optionnel sélectionné pour ce marché.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-mb-4w">
+      <div class="fr-callout fr-callout--success">
+        <h3 class="fr-callout__title">
+          <span class="fr-icon-checkbox-circle-line" aria-hidden="true"></span>
+          Configuration terminée
+        </h3>
+        <p class="fr-callout__text">
+          Votre marché est maintenant configuré et prêt à recevoir des candidatures.
+          Les entreprises pourront accéder au formulaire de candidature via votre plateforme.
+        </p>
+      </div>
+
+      <button class="fr-btn fr-btn--lg fr-btn--success" disabled>
+        Finaliser la configuration
+      </button>
+      
+      <p class="fr-text--sm fr-mt-2w fr-text--mention-grey">
+        <span class="fr-icon-information-line fr-mr-1w" aria-hidden="true"></span>
+        Bouton temporairement désactivé - fonctionnalité en cours de développement
+      </p>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
+    </div>
+  </div>
+</div>

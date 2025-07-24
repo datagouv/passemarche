@@ -12,11 +12,7 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-    resources :public_markets, param: :identifier, only: [] do
-      member do
-        get :configure
-      end
-    end
+    resources :public_markets, param: :identifier, only: [:show, :update]
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check

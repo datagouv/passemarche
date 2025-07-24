@@ -25,8 +25,10 @@ When('I create a public market with the following details:') do |table|
 
   @response_status = last_response.status
   @response_body = JSON.parse(last_response.body) if last_response.body.present?
+  @last_api_response = @response_body # For buyer flow steps compatibility
 rescue JSON::ParserError
   @response_body = nil
+  @last_api_response = nil
 end
 
 When('I create another public market with the following details:') do |table|
@@ -151,5 +153,5 @@ Then('the configuration URL should point to the buyer configuration page') do
   identifier = @response_body['identifier']
   configuration_url = @response_body['configuration_url']
 
-  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
+  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}")
 end
