@@ -26,7 +26,7 @@ end
 
 class Token < Sequel::Model(DB[:tokens])
   def self.current_token
-    where { expires_at > Time.now }.order(:created_at).last
+    where { expires_at > Time.zone.now }.order(:created_at).last
   end
 
   def self.store_token(access_token:, expires_in:, token_type:, scope:)
@@ -39,8 +39,8 @@ class Token < Sequel::Model(DB[:tokens])
       expires_in: expires_in,
       token_type: token_type,
       scope: scope,
-      created_at: Time.now,
-      expires_at: Time.now + expires_in.to_i
+      created_at: Time.zone.now,
+      expires_at: Time.zone.now + expires_in.to_i
     )
   end
 
@@ -49,7 +49,7 @@ class Token < Sequel::Model(DB[:tokens])
   end
 
   def expired?
-    expires_at < Time.now
+    expires_at < Time.zone.now
   end
 
   def valid?
@@ -59,6 +59,6 @@ class Token < Sequel::Model(DB[:tokens])
   def time_until_expiry
     return 0 if expired?
 
-    (expires_at - Time.now).to_i
+    (expires_at - Time.zone.now).to_i
   end
 end

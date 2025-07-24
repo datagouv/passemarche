@@ -4,23 +4,23 @@ World(FactoryBot::Syntax::Methods)
 
 Given('an authorized and active editor exists with credentials {string} and {string}') do |client_id, client_secret|
   @editor = FactoryBot.create(:editor, :authorized_and_active,
-                              client_id: client_id,
-                              client_secret: client_secret)
+    client_id: client_id,
+    client_secret: client_secret)
   @editor.ensure_doorkeeper_application!
 end
 
 Given('an unauthorized editor exists with credentials {string} and {string}') do |client_id, client_secret|
   @unauthorized_editor = FactoryBot.create(:editor,
-                                           client_id: client_id,
-                                           client_secret: client_secret,
-                                           authorized: false)
+    client_id: client_id,
+    client_secret: client_secret,
+    authorized: false)
   @unauthorized_editor.ensure_doorkeeper_application!
 end
 
 Given('an inactive editor exists with credentials {string} and {string}') do |client_id, client_secret|
   @inactive_editor = FactoryBot.create(:editor, :inactive,
-                                       client_id: client_id,
-                                       client_secret: client_secret)
+    client_id: client_id,
+    client_secret: client_secret)
   @inactive_editor.ensure_doorkeeper_application!
 end
 
