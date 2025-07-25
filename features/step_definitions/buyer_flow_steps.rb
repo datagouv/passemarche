@@ -81,6 +81,10 @@ Then('I should see a button {string}') do |button_text|
   expect(page).to have_button(button_text, exact: false)
 end
 
+Then('I should see a disabled button {string}') do |button_text|
+  expect(page).to have_button(button_text, disabled: true, exact: false)
+end
+
 When('I click on {string}') do |link_or_button_text|
   # Handle partial text matching for buttons with dynamic content
   if link_or_button_text == "Débuter l'activation de"

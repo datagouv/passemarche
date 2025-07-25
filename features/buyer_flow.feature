@@ -50,7 +50,7 @@ Feature: Buyer Configuration Flow
     And I should see "Documents optionnels"
     And I should see "Aucun document optionnel sélectionné"
     And I should see "Configuration terminée"
-    And I should see a button "Finaliser la configuration"
+    And I should see a disabled button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market

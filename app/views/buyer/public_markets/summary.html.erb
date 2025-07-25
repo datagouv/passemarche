@@ -98,8 +98,13 @@
       </div>
 
       <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
-        <%= form.submit "Finaliser la configuration", class: "fr-btn fr-btn--lg fr-btn--success" %>
+        <%= form.submit "Finaliser la configuration", class: "fr-btn fr-btn--lg fr-btn--success", disabled: true %>
       <% end %>
+      
+      <p class="fr-text--sm fr-mt-2w fr-text--mention-grey">
+        <span class="fr-icon-information-line fr-mr-1w" aria-hidden="true"></span>
+        Bouton temporairement désactivé - fonctionnalité en cours de développement
+      </p>
     </div>
   </div>
 
