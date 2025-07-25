@@ -23,8 +23,8 @@ Feature: Buyer Configuration Flow
     
     When I click on "Débuter l'activation de"
     Then I should be on the required documents page
-    And I should see "Étape 1 sur 2 : Champs obligatoires"
-    And I should see "Champs obligatoires"
+    And I should see "Vérification des informations obligatoires"
+    And I should see "Les documents et informations obligatoires"
     And I should see "Certificat de naissance de licorne"
     And I should see "Déclaration allergie aux pizzas"
     And I should see "Niveau d'addiction au café"
@@ -33,8 +33,8 @@ Feature: Buyer Configuration Flow
     
     When I click on "Continuer vers les champs supplémentaires"
     Then I should be on the optional documents page
-    And I should see "Étape 2 sur 2 : Champs supplémentaires"
-    And I should see "Sélectionnez les champs supplémentaires"
+    And I should see "Sélection des informations complémentaires"
+    And I should see "Les documents et informations complémentaires"
     And I should see "Permis de pilotage de fusée"
     And I should see "Certificat de furtivité ninja"
     And I should see "Permis de dressage de dragons"
@@ -44,9 +44,9 @@ Feature: Buyer Configuration Flow
     When I click on "Autoriser la candidature via"
     Then I should be on the summary page
     And I should see "Résumé de la configuration"
-    And I should see "Champs obligatoires"
-    And I should see "Champs supplémentaires"
-    And I should see "Aucun champ supplémentaire sélectionné"
+    And I should see "Documents obligatoires"
+    And I should see "Documents optionnels"
+    And I should see "Aucun document optionnel sélectionné"
     And I should see "Configuration terminée"
     And I should see a disabled button "Finaliser la configuration"
 
@@ -54,11 +54,11 @@ Feature: Buyer Configuration Flow
     Given I am on the summary page for my public market
     When I go back to optional documents page
     Then I should be on the optional documents page
-    And I should see "Étape 2 sur 2 : Documents optionnels"
+    And I should see "Sélection des informations complémentaires"
     
     When I click on "Précédent"
     Then I should be on the required documents page
-    And I should see "Étape 1 sur 2 : Documents requis"
+    And I should see "Vérification des informations obligatoires"
     
     When I click on "Précédent"
     Then I should be on the configure page
@@ -71,12 +71,10 @@ Feature: Buyer Configuration Flow
     And I should see "supplies"
     
     When I navigate to required documents page
-    Then I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    Then I should be on the required documents page
     
     When I navigate to optional documents page
-    Then I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    Then I should be on the optional documents page
     
     When I navigate to summary page
     Then I should see "Fourniture de matériel informatique"
@@ -85,11 +83,11 @@ Feature: Buyer Configuration Flow
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
-    Then I should see "Étape 1 sur 2 : Champs obligatoires"
+    Then I should see "Vérification des informations obligatoires"
     And the stepper should indicate step 1 as current
     
     When I navigate to optional documents page
-    Then I should see "Étape 2 sur 2 : Champs supplémentaires"
+    Then I should see "Sélection des informations complémentaires"
     And the stepper should indicate step 2 as current
 
   Scenario: Navigation directe vers différentes étapes
@@ -98,11 +96,11 @@ Feature: Buyer Configuration Flow
     
     When I visit the required documents page for my public market
     Then I should be on the required documents page
-    And I should see "Champs obligatoires"
+    And I should see "Les documents et informations obligatoires"
     
     When I visit the optional documents page for my public market
     Then I should be on the optional documents page
-    And I should see "Champs supplémentaires"
+    And I should see "Les documents et informations complémentaires"
     
     When I visit the summary page for my public market
     Then I should be on the summary page

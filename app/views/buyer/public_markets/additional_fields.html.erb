@@ -1,0 +1,87 @@
+<% content_for :title, "#{@public_market.editor.name} - #{t('buyer.public_markets.steps.additional_fields')}" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12">
+    <div class="fr-stepper">
+      <h2 class="fr-stepper__title">
+        <%= t('buyer.public_markets.steps.additional_fields') %>
+        <span class="fr-stepper__state">Étape 2 sur 2</span>
+      </h2>
+      <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="2">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
+  <div class="fr-col-12">
+    <div class="fr-mb-6w">
+      <h1 class="fr-h1 fr-mb-2w"><%= t('buyer.public_markets.additional_fields.title') %></h1>
+      <p class="fr-text--lg fr-mb-0">
+        <%= t('buyer.public_markets.additional_fields.subtitle') %>
+      </p>
+    </div>
+
+
+    <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
+      <div class="fr-mb-4w">
+        <div class="fr-accordions-group fr-mt-4w">
+          <% @optional_fields.each_with_index do |(category, fields), index| %>
+            <section class="fr-accordion">
+              <h3 class="fr-accordion__title">
+                <button type="button" class="fr-accordion__btn" aria-expanded="<%= index == 0 ? 'true' : 'false' %>" aria-controls="accordion-optional-<%= category %>">
+                  <%= t("form_fields.categories.#{category}") %>
+                </button>
+              </h3>
+              <div class="fr-collapse <%= 'fr-collapse--expanded' if index == 0 %>" id="accordion-optional-<%= category %>">
+                <div class="fr-accordion__body fr-background-alt--grey fr-pl-6v fr-pr-6v fr-pt-4v fr-pb-4v">
+                  <div class="fr-accordion__inner">
+                    <div class="fr-fieldset__content">
+                  <% fields.each do |field_key| %>
+                    <% field_config = @public_market.available_field_types[field_key.to_sym] %>
+                    <% source_type = field_config&.dig(:source_type) %>
+                    <div class="fr-fieldset__element">
+                      <div class="fr-checkbox-group">
+                        <%= check_box_tag "selected_optional_fields[]", field_key, 
+                            @public_market.selected_optional_fields&.include?(field_key),
+                            { id: "field_#{field_key}", class: "fr-checkbox" } %>
+                        <%= label_tag "field_#{field_key}", class: "fr-label" do %>
+                          <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                            <div style="flex: 1; margin-right: 1rem;">
+                              <%= t("form_fields.fields.#{field_key}.name") %>
+                              <br>
+                              <span class="fr-hint-text"><%= t("form_fields.fields.#{field_key}.description") %></span>
+                            </div>
+                            <div style="flex-shrink: 0;">
+                              <% if source_type %>
+                                <% source_info = @public_market.source_types[source_type.to_sym] %>
+                                <span class="fr-badge <%= source_info[:badge_class] %>">
+                                  <%= source_info[:label] %>
+                                </span>
+                              <% end %>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="fr-mb-4w">
+        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
+          <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
+            Précédent
+          <% end %>
+          <%= form.submit "Autoriser la candidature via #{@public_market.editor.name}", class: "fr-btn fr-btn--lg" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

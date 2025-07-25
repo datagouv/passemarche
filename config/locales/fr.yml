@@ -160,17 +160,15 @@ fr:
       wizard_completed: "Marché configuré avec succès"
       steps:
         configure: "Configuration"
-        required_fields: "Champs obligatoires" 
-        additional_fields: "Champs supplémentaires"
+        required_fields: "Vérification des informations obligatoires" 
+        additional_fields: "Sélection des informations complémentaires"
         summary: "Résumé"
       required_fields:
-        title: "Champs obligatoires"
-        subtitle: "Voici la liste des champs qui seront automatiquement demandés aux entreprises candidates pour ce marché."
-        info_title: "Information"
-        info_text: "Ces champs seront automatiquement demandés à toutes les entreprises candidates. Aucune configuration supplémentaire n'est nécessaire."
+        title: "Les documents et informations obligatoires"
+        subtitle: "Ces documents et informations sont obligatoires et démandés systématiquement aux candidats. "
       additional_fields:
-        title: "Champs supplémentaires"
-        subtitle: "Sélectionnez les champs supplémentaires que vous souhaitez demander aux entreprises candidates pour ce marché."
+        title: "Les documents et informations complémentaires"
+        subtitle: "Ces documents et informations sont facultatifs, vous pouvez en sélectionner un ou plusieurs. "
         config_title: "Configuration"
         config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs obligatoires."
       

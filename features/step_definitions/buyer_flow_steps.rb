@@ -104,10 +104,12 @@ Then('the stepper should indicate step {int} as current') do |step_number|
 
   case step_number
   when 1
-    expect(page).to have_content('Étape 1 sur 2 : Champs obligatoires')
+    expect(page).to have_content('Vérification des informations obligatoires')
+    expect(page).to have_content('Étape 1 sur 3')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="1"]')
   when 2
-    expect(page).to have_content('Étape 2 sur 2 : Champs supplémentaires')
+    expect(page).to have_content('Sélection des informations complémentaires')
+    expect(page).to have_content('Étape 2 sur 2')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="2"]')
   end
 end
