@@ -23,32 +23,30 @@ Feature: Buyer Configuration Flow
     
     When I click on "Débuter l'activation de"
     Then I should be on the required documents page
-    And I should see "Étape 1 sur 2 : Documents requis"
-    And I should see "Documents obligatoires"
-    And I should see "Extrait Kbis"
-    And I should see "Attestation fiscale"
-    And I should see "Attestation sociale"
-    And I should see "Assurance responsabilité civile"
+    And I should see "Étape 1 sur 2 : Champs obligatoires"
+    And I should see "Champs obligatoires"
+    And I should see "Certificat de naissance de licorne"
+    And I should see "Déclaration allergie aux pizzas"
+    And I should see "Niveau d'addiction au café"
     And I should see a "Précédent" button
-    And I should see "Continuer vers les documents optionnels"
+    And I should see "Continuer vers les champs supplémentaires"
     
-    When I click on "Continuer vers les documents optionnels"
+    When I click on "Continuer vers les champs supplémentaires"
     Then I should be on the optional documents page
-    And I should see "Étape 2 sur 2 : Documents optionnels"
-    And I should see "Sélectionnez les documents supplémentaires"
-    And I should see "Références clients"
-    And I should see "Bilans comptables"
-    And I should see "Certifications qualité"
-    And I should see "Moyens techniques"
+    And I should see "Étape 2 sur 2 : Champs supplémentaires"
+    And I should see "Sélectionnez les champs supplémentaires"
+    And I should see "Permis de pilotage de fusée"
+    And I should see "Certificat de furtivité ninja"
+    And I should see "Permis de dressage de dragons"
     And I should see a "Précédent" button
     And I should see a button "Autoriser la candidature via"
     
     When I click on "Autoriser la candidature via"
     Then I should be on the summary page
     And I should see "Résumé de la configuration"
-    And I should see "Documents obligatoires"
-    And I should see "Documents optionnels"
-    And I should see "Aucun document optionnel sélectionné"
+    And I should see "Champs obligatoires"
+    And I should see "Champs supplémentaires"
+    And I should see "Aucun champ supplémentaire sélectionné"
     And I should see "Configuration terminée"
     And I should see a disabled button "Finaliser la configuration"
 
@@ -87,11 +85,11 @@ Feature: Buyer Configuration Flow
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
-    Then I should see "Étape 1 sur 2 : Documents requis"
+    Then I should see "Étape 1 sur 2 : Champs obligatoires"
     And the stepper should indicate step 1 as current
     
     When I navigate to optional documents page
-    Then I should see "Étape 2 sur 2 : Documents optionnels"
+    Then I should see "Étape 2 sur 2 : Champs supplémentaires"
     And the stepper should indicate step 2 as current
 
   Scenario: Navigation directe vers différentes étapes
@@ -100,11 +98,11 @@ Feature: Buyer Configuration Flow
     
     When I visit the required documents page for my public market
     Then I should be on the required documents page
-    And I should see "Documents obligatoires"
+    And I should see "Champs obligatoires"
     
     When I visit the optional documents page for my public market
     Then I should be on the optional documents page
-    And I should see "Documents optionnels"
+    And I should see "Champs supplémentaires"
     
     When I visit the summary page for my public market
     Then I should be on the summary page

@@ -4,11 +4,18 @@ module Buyer
   class PublicMarketsController < ApplicationController
     include Wicked::Wizard
 
-    steps :configure, :required_documents, :optional_documents, :summary
+    steps :configure, :required_fields, :additional_fields, :summary
 
     before_action :find_public_market
 
     def show
+      case step
+      when :required_fields
+        @required_fields = @public_market.fields_by_category(@public_market.effective_required_fields)
+      when :additional_fields  
+        @optional_fields = @public_market.fields_by_category(@public_market.effective_optional_fields)
+      end
+      
       render_wizard
     end
 
@@ -16,14 +23,12 @@ module Buyer
       case step
       when :configure
         handle_configure_step
-      when :required_documents
-        # Handle required documents (future implementation)
-        jump_to(:optional_documents)
-      when :optional_documents
-        # Handle optional documents form submission (future implementation)
-        jump_to(:summary)
+      when :required_fields
+        jump_to(:additional_fields)
+      when :additional_fields
+        handle_additional_fields_step
       when :summary
-        # Handle finalization (future implementation)
+        @public_market.mark_form_configuration_completed!
         @public_market.complete!
         redirect_to finish_wizard_path, notice: t('buyer.public_markets.wizard_completed')
       end
@@ -38,6 +43,12 @@ module Buyer
 
       defense_value = params[:public_market][:defense] == 'true'
       @public_market.update!(defense: defense_value)
+    end
+
+    def handle_additional_fields_step
+      selected_fields = params[:selected_optional_fields] || []
+      @public_market.update!(selected_optional_fields: selected_fields)
+      jump_to(:summary)
     end
 
     def configure_params

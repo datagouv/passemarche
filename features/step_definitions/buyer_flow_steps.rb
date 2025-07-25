@@ -8,12 +8,12 @@ end
 
 When('I visit the required documents page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :required_documents)
+  visit step_buyer_public_market_path(@market_identifier, :required_fields)
 end
 
 When('I visit the optional documents page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :optional_documents)
+  visit step_buyer_public_market_path(@market_identifier, :additional_fields)
 end
 
 When('I visit the summary page for my public market') do
@@ -28,11 +28,11 @@ When('I navigate to required documents page') do
 end
 
 When('I navigate to optional documents page') do
-  if page.has_content?('Continuer vers les documents optionnels')
-    click_link 'Continuer vers les documents optionnels'
+  if page.has_content?('Continuer vers les champs supplémentaires')
+    click_link 'Continuer vers les champs supplémentaires'
   else
     @market_identifier = @last_api_response['identifier']
-    visit step_buyer_public_market_path(@market_identifier, :optional_documents)
+    visit step_buyer_public_market_path(@market_identifier, :additional_fields)
   end
 end
 
@@ -47,7 +47,7 @@ end
 
 When('I go back to optional documents page') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :optional_documents)
+  visit step_buyer_public_market_path(@market_identifier, :additional_fields)
 end
 
 Given('I am on the summary page for my public market') do
@@ -61,11 +61,11 @@ Then('I should be on the configure page') do
 end
 
 Then('I should be on the required documents page') do
-  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :required_documents))
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :required_fields))
 end
 
 Then('I should be on the optional documents page') do
-  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :optional_documents))
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :additional_fields))
 end
 
 Then('I should be on the summary page') do
@@ -104,10 +104,10 @@ Then('the stepper should indicate step {int} as current') do |step_number|
 
   case step_number
   when 1
-    expect(page).to have_content('Étape 1 sur 2 : Documents requis')
+    expect(page).to have_content('Étape 1 sur 2 : Champs obligatoires')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="1"]')
   when 2
-    expect(page).to have_content('Étape 2 sur 2 : Documents optionnels')
+    expect(page).to have_content('Étape 2 sur 2 : Champs supplémentaires')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="2"]')
   end
 end
@@ -150,12 +150,12 @@ Then('market information should be consistent across all pages') do
   expect(page).to have_content(lot_name)
 
   # Check required documents page
-  visit step_buyer_public_market_path(@market_identifier, :required_documents)
+  visit step_buyer_public_market_path(@market_identifier, :required_fields)
   expect(page).to have_content(market_name)
   expect(page).to have_content(lot_name)
 
   # Check optional documents page
-  visit step_buyer_public_market_path(@market_identifier, :optional_documents)
+  visit step_buyer_public_market_path(@market_identifier, :additional_fields)
   expect(page).to have_content(market_name)
   expect(page).to have_content(lot_name)
 
@@ -167,15 +167,13 @@ end
 
 # Document verification steps
 Then('I should see required documents listed') do
-  expect(page).to have_content('Extrait Kbis')
-  expect(page).to have_content('Attestation fiscale')
-  expect(page).to have_content('Attestation sociale')
-  expect(page).to have_content('Assurance responsabilité civile')
+  expect(page).to have_content('Certificat de naissance de licorne')
+  expect(page).to have_content('Déclaration allergie aux pizzas')
+  expect(page).to have_content('Niveau d\'addiction au café')
 end
 
 Then('I should see optional documents available for selection') do
-  expect(page).to have_content('Références clients')
-  expect(page).to have_content('Bilans comptables')
-  expect(page).to have_content('Certifications qualité')
-  expect(page).to have_content('Moyens techniques')
+  expect(page).to have_content('Permis de pilotage de fusée')
+  expect(page).to have_content('Certificat de furtivité ninja')
+  expect(page).to have_content('Permis de dressage de dragons')
 end

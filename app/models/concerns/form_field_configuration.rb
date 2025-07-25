@@ -50,10 +50,6 @@ module FormFieldConfiguration
     self.class.configuration[:defense_requirements]
   end
 
-  def field_categories
-    self.class.configuration[:field_categories]
-  end
-
   def source_types
     self.class.configuration[:source_types]
   end
