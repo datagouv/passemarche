@@ -80,6 +80,10 @@ module FormFieldConfiguration
     end
   end
 
+  def all_fields
+    (effective_required_fields + effective_optional_fields).uniq
+  end
+
   def fields_by_category(field_keys)
     field_keys
       .select { |key| available_field_types[key.to_sym] }

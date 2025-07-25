@@ -1,52 +1,49 @@
-<% content_for :title, "#{@public_market.editor.name} - Résumé de la configuration" %>
+<% content_for :title, "#{@public_market.editor.name} - Synthèse de ma candidature" %>
 
-<div class="fr-grid-row fr-grid-row--gutters">
-  <div class="fr-col-12 fr-col-lg-8">
+<div class="fr-grid-row fr-grid-row--center">
+  <div class="fr-col-12 fr-col-lg-10">
     <div class="fr-mb-6w">
-      <h1 class="fr-h1 fr-mb-2w">Résumé de la configuration</h1>
+      <h1 class="fr-h1 fr-mb-2w">Synthèse de ma candidature</h1>
       <p class="fr-text--lg fr-mb-0">
         Vérifiez les paramètres de votre marché avant de finaliser la configuration.
       </p>
     </div>
 
     <div class="fr-mb-4w">
-      <h2 class="fr-card__title fr-mb-3w">Informations du marché</h2>
-      
-      <div class="fr-table fr-table--no-caption">
-        <div class="fr-table__wrapper">
-          <div class="fr-table__container">
-            <div class="fr-table__content">
-              <table>
-                <tbody>
-                  <tr>
-                    <td class="fr-text--bold">Nom du marché</td>
-                    <td><%= @public_market.market_name %></td>
-                  </tr>
-                  <% if @public_market.lot_name.present? %>
-                    <tr>
-                      <td class="fr-text--bold">Nom du lot</td>
-                      <td><%= @public_market.lot_name %></td>
-                    </tr>
-                  <% end %>
-                  <tr>
-                    <td class="fr-text--bold">Date limite</td>
-                    <td><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</td>
-                  </tr>
-                  <tr>
-                    <td class="fr-text--bold">Type de marché</td>
-                    <td>
-                      <%= @public_market.market_type %>
-                      <% if @public_market.defense == true %>
-                        <span class="fr-badge fr-badge--warning fr-ml-1w">Défense</span>
-                      <% end %>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="fr-text--bold">Identifiant</td>
-                    <td><code><%= @public_market.identifier %></code></td>
-                  </tr>
-                </tbody>
-              </table>
+      <div class="fr-card fr-mb-4w">
+        <div class="fr-card__header">
+          <h2 class="fr-card__title fr-mb-0 fr-py-3w fr-px-4w" style="background-color: var(--background-action-high-blue-france); color: white; font-weight: bold;">
+            Informations du marché
+          </h2>
+        </div>
+        <div class="fr-card__body">
+          <div class="fr-p-4w">
+            <div class="fr-mb-3w">
+              <div class="fr-text--bold fr-mb-1w">Nom du marché</div>
+              <div><%= @public_market.market_name %></div>
+            </div>
+            <% if @public_market.lot_name.present? %>
+              <div class="fr-mb-3w">
+                <div class="fr-text--bold fr-mb-1w">Nom du lot</div>
+                <div><%= @public_market.lot_name %></div>
+              </div>
+            <% end %>
+            <div class="fr-mb-3w">
+              <div class="fr-text--bold fr-mb-1w">Date limite</div>
+              <div><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</div>
+            </div>
+            <div class="fr-mb-3w">
+              <div class="fr-text--bold fr-mb-1w">Type de marché</div>
+              <div>
+                <%= @public_market.market_type %>
+                <% if @public_market.defense == true %>
+                  <span class="fr-badge fr-badge--warning fr-ml-1w">Défense</span>
+                <% end %>
+              </div>
+            </div>
+            <div>
+              <div class="fr-text--bold fr-mb-1w">Identifiant</div>
+              <div><code><%= @public_market.identifier %></code></div>
             </div>
           </div>
         </div>
@@ -54,49 +51,54 @@
     </div>
 
     <div class="fr-mb-4w">
-      <h2 class="fr-card__title fr-mb-3w">Documents configurés</h2>
-      
-      <div class="fr-mb-3w">
-        <h3 class="fr-text--md fr-mb-2w fr-text--bold">Documents obligatoires</h3>
-        <ul class="fr-badges-group">
-          <li>
-            <p class="fr-badge fr-badge--info">Extrait Kbis</p>
-          </li>
-          <li>
-            <p class="fr-badge fr-badge--info">Attestation fiscale</p>
-          </li>
-          <li>
-            <p class="fr-badge fr-badge--info">Attestation sociale</p>
-          </li>
-          <li>
-            <p class="fr-badge fr-badge--info">Assurance responsabilité civile</p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="fr-mb-3w">
-        <h3 class="fr-text--md fr-mb-2w fr-text--bold">Documents optionnels</h3>
-        <div class="fr-callout fr-callout--brown-caramel">
-          <p class="fr-callout__text">
-            <span class="fr-icon-information-line fr-mr-1w" aria-hidden="true"></span>
-            Aucun document optionnel sélectionné pour ce marché.
-          </p>
-        </div>
+      <div class="fr-mb-4w">
+        <% fields_by_category = @public_market.fields_by_category(@public_market.all_fields) %>
+        <% if fields_by_category.any? %>
+          <div>
+            <% fields_by_category.each do |category, field_keys| %>
+              <div class="fr-card fr-mb-4w">
+                <div class="fr-card__header">
+                  <h4 class="fr-card__title fr-mb-0 fr-py-3w fr-px-4w" style="background-color: var(--background-action-high-blue-france); color: white; font-weight: bold;">
+                    <%= t("form_fields.categories.#{category}") %>
+                  </h4>
+                </div>
+                <div class="fr-card__body fr-p-2w">
+                  <div class="fr-p-2w fr-background-alt--grey">
+                    <ul class="fr-list">
+                      <% field_keys.each_with_index do |field_key, index| %>
+                        <% field_config = @public_market.available_field_types[field_key.to_sym] %>
+                        <% source_type = field_config&.dig(:source_type) %>
+                        <li class="fr-list__item fr-pt-4v fr-pb-4v">
+                          <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                            <div style="flex: 1; margin-right: 1rem;">
+                              <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
+                              <br>
+                              <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
+                            </div>
+                            <div style="flex-shrink: 0;">
+                              <% if source_type %>
+                                <% source_info = @public_market.source_types[source_type.to_sym] %>
+                                <span class="fr-badge <%= source_info[:badge_class] %>">
+                                  <%= source_info[:label] %>
+                                </span>
+                              <% end %>
+                            </div>
+                          </div>
+                        </li>
+                      <% end %>
+                    <ul class="fr-list">
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="fr-text--sm fr-text--mention-grey">Aucun champ configuré.</p>
+        <% end %>
       </div>
     </div>
 
     <div class="fr-mb-4w">
-      <div class="fr-callout fr-callout--success">
-        <h3 class="fr-callout__title">
-          <span class="fr-icon-checkbox-circle-line" aria-hidden="true"></span>
-          Configuration terminée
-        </h3>
-        <p class="fr-callout__text">
-          Votre marché est maintenant configuré et prêt à recevoir des candidatures.
-          Les entreprises pourront accéder au formulaire de candidature via votre plateforme.
-        </p>
-      </div>
-
       <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
         <%= form.submit "Finaliser la configuration", class: "fr-btn fr-btn--lg fr-btn--success", disabled: true %>
       <% end %>
@@ -105,12 +107,6 @@
         <span class="fr-icon-information-line fr-mr-1w" aria-hidden="true"></span>
         Bouton temporairement désactivé - fonctionnalité en cours de développement
       </p>
-    </div>
-  </div>
-
-  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
-    <div class="center-content">
-      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
     </div>
   </div>
 </div>

@@ -43,11 +43,9 @@ Feature: Buyer Configuration Flow
     
     When I click on "Autoriser la candidature via"
     Then I should be on the summary page
-    And I should see "Résumé de la configuration"
-    And I should see "Documents obligatoires"
-    And I should see "Documents optionnels"
-    And I should see "Aucun document optionnel sélectionné"
-    And I should see "Configuration terminée"
+    And I should see "Synthèse de ma candidature"
+    And I should see "Informations du marché"
+    And I should see "Identité de la licorne (test)"
     And I should see a disabled button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent
@@ -104,7 +102,7 @@ Feature: Buyer Configuration Flow
     
     When I visit the summary page for my public market
     Then I should be on the summary page
-    And I should see "Résumé de la configuration"
+    And I should see "Synthèse de ma candidature"
 
   Scenario: Marquer un marché comme défense en cochant la case
     Given I visit the configure page for my public market
