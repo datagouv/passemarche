@@ -34,10 +34,8 @@ module Buyer
     private
 
     def handle_configure_step
-      # Only update defense if it wasn't set by editor (nil means not provided by editor)
       return unless @public_market.defense.nil? && params[:public_market].present?
 
-      # Rails checkbox helper sends "true" when checked, "" when unchecked
       defense_value = params[:public_market][:defense] == 'true'
       @public_market.update!(defense: defense_value)
     end
