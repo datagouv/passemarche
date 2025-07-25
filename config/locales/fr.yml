@@ -171,6 +171,9 @@ fr:
         subtitle: "Ces documents et informations sont facultatifs, vous pouvez en sélectionner un ou plusieurs. "
         config_title: "Configuration"
         config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs obligatoires."
+        question: "Je veux demander des informations et documents complémentaires au candidat"
+        yes_option: "Oui"
+        no_option: "Non"
       
   admin:
     editors:

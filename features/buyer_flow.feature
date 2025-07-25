@@ -128,3 +128,9 @@ Feature: Buyer Configuration Flow
     And I visit the configure page for my public market
     Then the defense checkbox should be disabled and checked
     And I should see "Cette désignation a été définie par"
+
+  Scenario: Sélection de documents supplémentaires avec question oui/non
+    When I visit the optional documents page for my public market
+    Then I should see "Je veux demander des informations et documents complémentaires au candidat"
+    And I should see "Oui"
+    And I should see "Non"

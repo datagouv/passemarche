@@ -11,3 +11,8 @@
   max-width: 100%;
   height: auto;
 }
+
+/* DSFR utility class for hiding elements */
+.fr-hidden {
+  display: none !important;
+}

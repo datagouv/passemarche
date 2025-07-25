@@ -5,7 +5,7 @@
     <div class="fr-stepper">
       <h2 class="fr-stepper__title">
         <%= t('buyer.public_markets.steps.required_fields') %>
-        <span class="fr-stepper__state">Étape 1 sur 3</span>
+        <span class="fr-stepper__state">Étape 1 sur 2</span>
       </h2>
       <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2">
         <div class="fr-stepper__step">
@@ -36,30 +36,30 @@
               </button>
             </h3>
             <div class="fr-collapse <%= 'fr-collapse--expanded' if index == 0 %>" id="accordion-required-<%= category %>">
-              <div class="fr-accordion__body fr-background-alt--grey fr-pl-6v fr-pr-6v fr-pt-4v fr-pb-4v">
+              <div class="fr-accordion__body fr-background-alt--grey fr-pl-6v fr-pr-6v">
                 <div class="fr-accordion__inner">
                   <ul class="fr-list">
-                <% fields.each do |field_key| %>
-                  <% field_config = @public_market.available_field_types[field_key.to_sym] %>
-                  <% source_type = field_config&.dig(:source_type) %>
-                  <li class="fr-list__item">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                      <div style="flex: 1; margin-right: 1rem;">
-                        <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
-                        <br>
-                        <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
-                      </div>
-                      <div style="flex-shrink: 0;">
-                        <% if source_type %>
-                          <% source_info = @public_market.source_types[source_type.to_sym] %>
-                          <span class="fr-badge <%= source_info[:badge_class] %>">
-                            <%= source_info[:label] %>
-                          </span>
-                        <% end %>
-                      </div>
-                    </div>
-                  </li>
-                <% end %>
+                    <% fields.each do |field_key| %>
+                      <% field_config = @public_market.available_field_types[field_key.to_sym] %>
+                      <% source_type = field_config&.dig(:source_type) %>
+                      <li class="fr-list__item fr-pt-4v fr-pb-4v">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                          <div style="flex: 1; margin-right: 1rem;">
+                            <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
+                            <br>
+                            <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
+                          </div>
+                          <div style="flex-shrink: 0;">
+                            <% if source_type %>
+                              <% source_info = @public_market.source_types[source_type.to_sym] %>
+                              <span class="fr-badge <%= source_info[:badge_class] %>">
+                                <%= source_info[:label] %>
+                              </span>
+                            <% end %>
+                          </div>
+                        </div>
+                      </li>
+                    <% end %>
                   </ul>
                 </div>
               </div>
