@@ -109,3 +109,26 @@ Feature: Buyer Configuration Flow
     When I visit the summary page for my public market
     Then I should be on the summary page
     And I should see "Résumé de la configuration"
+
+  Scenario: Marquer un marché comme défense en cochant la case
+    Given I visit the configure page for my public market
+    When I check the "defense" checkbox
+    And I click on "Débuter l'activation de"
+    Then the public market should be marked as defense
+    And I should be on the required documents page
+
+  Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
+    Given I visit the configure page for my public market
+    When I click on "Débuter l'activation de"
+    Then the public market should not be marked as defense
+    And I should be on the required documents page
+
+  Scenario: Marché avec défense pré-configuré par l'éditeur
+    When I create a defense public market with the following details:
+      | market_name | Fourniture de matériel militaire |
+      | deadline    | 2025-12-31T23:59:59Z            |
+      | market_type | supplies                        |
+      | defense     | true                            |
+    And I visit the configure page for my public market
+    Then the defense checkbox should be disabled and checked
+    And I should see "Cette désignation a été définie par"

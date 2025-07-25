@@ -155,3 +155,25 @@ Then('the configuration URL should point to the buyer configuration page') do
 
   expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
 end
+
+When('I create a defense public market with the following details:') do |table|
+  @public_market_params = table.rows_hash
+
+  # Clear previous headers
+  header 'Authorization', nil
+
+  # Use the token from previous step
+  token = @access_token || @previous_token
+
+  header 'Authorization', "Bearer #{token}" if token
+  header 'Content-Type', 'application/json'
+
+  post '/api/v1/public_markets', { public_market: @public_market_params }.to_json
+
+  @response_status = last_response.status
+  @response_body = JSON.parse(last_response.body) if last_response.body.present?
+  @last_api_response = @response_body # For buyer flow steps compatibility
+rescue JSON::ParserError
+  @response_body = nil
+  @last_api_response = nil
+end

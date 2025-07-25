@@ -108,6 +108,31 @@ Then('the stepper should indicate step {int} as current') do |step_number|
   end
 end
 
+# Defense checkbox steps
+When('I check the {string} checkbox') do |checkbox_name|
+  if checkbox_name == 'defense'
+    check('public_market_defense')
+  else
+    check(checkbox_name)
+  end
+end
+
+Then('the public market should be marked as defense') do
+  @market_identifier = @last_api_response['identifier']
+  public_market = PublicMarket.find_by(identifier: @market_identifier)
+  expect(public_market.defense).to be(true)
+end
+
+Then('the public market should not be marked as defense') do
+  @market_identifier = @last_api_response['identifier']
+  public_market = PublicMarket.find_by(identifier: @market_identifier)
+  expect(public_market.defense).to be(false)
+end
+
+Then('the defense checkbox should be disabled and checked') do
+  expect(page).to have_field('defense', checked: true, disabled: true)
+end
+
 # Content verification steps are in fast_track_steps.rb
 
 # Market information verification across pages
