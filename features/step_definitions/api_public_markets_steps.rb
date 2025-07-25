@@ -12,10 +12,8 @@ end
 When('I create a public market with the following details:') do |table|
   @public_market_params = table.rows_hash
 
-  # Clear previous headers
   header 'Authorization', nil
 
-  # Use the token from previous step
   token = @access_token || @previous_token
 
   header 'Authorization', "Bearer #{token}" if token
@@ -25,8 +23,10 @@ When('I create a public market with the following details:') do |table|
 
   @response_status = last_response.status
   @response_body = JSON.parse(last_response.body) if last_response.body.present?
+  @last_api_response = @response_body
 rescue JSON::ParserError
   @response_body = nil
+  @last_api_response = nil
 end
 
 When('I create another public market with the following details:') do |table|
@@ -83,7 +83,6 @@ end
 Then('the response should contain validation errors') do
   expect(@response_body).to have_key('errors')
   expect(@response_body['errors']).not_to be_empty
-  # Check that it contains validation error messages
   errors_text = @response_body['errors'].join(' ')
   expect(errors_text).to match(/vide|blank|Translation missing/i)
 end
@@ -114,7 +113,6 @@ end
 Then('the identifier should match the format {string}') do |_format|
   identifier = @response_body['identifier']
 
-  # Format: VR-YYYY-XXXXXXXXXXXX
   expect(identifier).to match(/^VR-\d{4}-[A-Z0-9]{12}$/)
 end
 
@@ -143,7 +141,6 @@ end
 Then('the configuration URL should use the correct host') do
   configuration_url = @response_body['configuration_url']
 
-  # The test uses rack-test which uses 'example.org' as the host
   expect(configuration_url).to start_with('http://example.org')
 end
 
@@ -152,4 +149,24 @@ Then('the configuration URL should point to the buyer configuration page') do
   configuration_url = @response_body['configuration_url']
 
   expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
+end
+
+When('I create a defense public market with the following details:') do |table|
+  @public_market_params = table.rows_hash
+
+  header 'Authorization', nil
+
+  token = @access_token || @previous_token
+
+  header 'Authorization', "Bearer #{token}" if token
+  header 'Content-Type', 'application/json'
+
+  post '/api/v1/public_markets', { public_market: @public_market_params }.to_json
+
+  @response_status = last_response.status
+  @response_body = JSON.parse(last_response.body) if last_response.body.present?
+  @last_api_response = @response_body
+rescue JSON::ParserError
+  @response_body = nil
+  @last_api_response = nil
 end

@@ -16,7 +16,7 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   private
 
   def public_market_params
-    params.expect(public_market: %i[market_name lot_name deadline market_type])
+    params.expect(public_market: %i[market_name lot_name deadline market_type defense])
   end
 
   def success_response(public_market)
@@ -27,8 +27,9 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   end
 
   def configuration_url_for(public_market)
-    Rails.application.routes.url_helpers.configure_buyer_public_market_url(
+    Rails.application.routes.url_helpers.step_buyer_public_market_url(
       public_market.identifier,
+      :configure,
       host: request.host_with_port
     )
   end

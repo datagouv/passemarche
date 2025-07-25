@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   namespace :buyer do
     resources :public_markets, param: :identifier, only: [] do
       member do
-        get :configure
+        get ':id', to: 'public_markets#show', as: :step
+        put ':id', to: 'public_markets#update'
+        patch ':id', to: 'public_markets#update'
       end
     end
   end

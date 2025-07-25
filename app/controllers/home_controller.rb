@@ -9,7 +9,7 @@ class HomeController < ApplicationController
     demo_editor = find_or_create_demo_editor
     public_market = create_random_market(demo_editor)
 
-    redirect_to configure_buyer_public_market_path(public_market.identifier),
+    redirect_to step_buyer_public_market_path(public_market.identifier, :configure),
       notice: t('demo.market_created', market_name: public_market.market_name)
   rescue StandardError => e
     redirect_to root_path, alert: t('demo.creation_error', error: e.message)
