@@ -20,6 +20,10 @@ class PublicMarket < ApplicationRecord
     update!(completed_at: Time.current)
   end
 
+  def mark_form_configuration_completed!
+    update!(completed_at: Time.current)
+  end
+
   private
 
   def generate_identifier
