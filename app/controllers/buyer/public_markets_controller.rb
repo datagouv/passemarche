@@ -2,40 +2,42 @@
 
 module Buyer
   class PublicMarketsController < ApplicationController
-    # TODO: Implement Wicked wizard integration
-    # include Wicked::Wizard
-    # steps :configure, :required_documents, :optional_documents, :summary
+    include Wicked::Wizard
+
+    steps :configure, :required_documents, :optional_documents, :summary
 
     before_action :find_public_market
 
     def show
-      return redirect_to_first_step if params[:step].blank?
-
-      render_step_or_redirect
+      render_wizard
     end
 
     def update
-      case params[:step].to_sym
+      case step
       when :configure
         handle_configure_step
+      when :required_documents
+        # Handle required documents (future implementation)
+        jump_to(:optional_documents)
       when :optional_documents
         # Handle optional documents form submission (future implementation)
-        redirect_to buyer_public_market_path(@public_market.identifier, step: :summary)
+        jump_to(:summary)
       when :summary
         # Handle finalization (future implementation)
-        redirect_to root_path
-      else
-        redirect_to buyer_public_market_path(@public_market.identifier, step: :configure)
+        @public_market.complete!
+        redirect_to finish_wizard_path, notice: t('buyer.public_markets.wizard_completed')
       end
+
+      render_wizard @public_market
     end
 
     private
 
     def handle_configure_step
-      # Only update is_defense if it wasn't set by editor (nil means not provided by editor)
-      @public_market.update!(configure_params) if @public_market.is_defense.nil? && params[:public_market].present?
+      # Only update defense if it wasn't set by editor (nil means not provided by editor)
+      return unless @public_market.defense.nil? && params[:public_market].present?
 
-      redirect_to buyer_public_market_path(@public_market.identifier, step: :required_documents)
+      @public_market.assign_attributes(configure_params)
     end
 
     def configure_params
@@ -48,17 +50,8 @@ module Buyer
       render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
     end
 
-    def redirect_to_first_step
-      redirect_to buyer_public_market_path(@public_market.identifier, step: :configure)
-    end
-
-    def render_step_or_redirect
-      case params[:step].to_sym
-      when :configure, :required_documents, :optional_documents, :summary
-        render params[:step]
-      else
-        redirect_to_first_step
-      end
+    def finish_wizard_path
+      root_path
     end
   end
 end

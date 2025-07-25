@@ -41,7 +41,7 @@ Feature: Buyer Configuration Flow
     And I should see "Certifications qualité"
     And I should see "Moyens techniques"
     And I should see a "Précédent" button
-    And I should see "Autoriser la candidature via"
+    And I should see a button "Autoriser la candidature via"
     
     When I click on "Autoriser la candidature via"
     Then I should be on the summary page
@@ -50,7 +50,7 @@ Feature: Buyer Configuration Flow
     And I should see "Documents optionnels"
     And I should see "Aucun document optionnel sélectionné"
     And I should see "Configuration terminée"
-    And I should see "Finaliser la configuration"
+    And I should see a button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market

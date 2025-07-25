@@ -55,7 +55,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       it 'returns the configuration URL' do
         json_response = response.parsed_body
         identifier = json_response['identifier']
-        expected_url = "http://www.example.com/buyer/public_markets/#{identifier}"
+        expected_url = "http://www.example.com/buyer/public_markets/#{identifier}/configure"
         expect(json_response['configuration_url']).to eq(expected_url)
       end
 

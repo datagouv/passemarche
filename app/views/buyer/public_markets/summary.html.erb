@@ -97,14 +97,9 @@
         </p>
       </div>
 
-      <button class="fr-btn fr-btn--lg fr-btn--success" disabled>
-        Finaliser la configuration
-      </button>
-      
-      <p class="fr-text--sm fr-mt-2w fr-text--mention-grey">
-        <span class="fr-icon-information-line fr-mr-1w" aria-hidden="true"></span>
-        Bouton temporairement désactivé - fonctionnalité en cours de développement
-      </p>
+      <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
+        <%= form.submit "Finaliser la configuration", class: "fr-btn fr-btn--lg fr-btn--success" %>
+      <% end %>
     </div>
   </div>
 

@@ -153,5 +153,5 @@ Then('the configuration URL should point to the buyer configuration page') do
   identifier = @response_body['identifier']
   configuration_url = @response_body['configuration_url']
 
-  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}")
+  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
 end

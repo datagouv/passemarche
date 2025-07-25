@@ -3,22 +3,22 @@
 # Navigation steps
 When('I visit the configure page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit buyer_public_market_path(@market_identifier)
+  visit step_buyer_public_market_path(@market_identifier, :configure)
 end
 
 When('I visit the required documents page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit buyer_public_market_path(@market_identifier, step: :required_documents)
+  visit step_buyer_public_market_path(@market_identifier, :required_documents)
 end
 
 When('I visit the optional documents page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit buyer_public_market_path(@market_identifier, step: :optional_documents)
+  visit step_buyer_public_market_path(@market_identifier, :optional_documents)
 end
 
 When('I visit the summary page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit buyer_public_market_path(@market_identifier, step: :summary)
+  visit step_buyer_public_market_path(@market_identifier, :summary)
 end
 
 When('I navigate to required documents page') do
@@ -32,7 +32,7 @@ When('I navigate to optional documents page') do
     click_link 'Continuer vers les documents optionnels'
   else
     @market_identifier = @last_api_response['identifier']
-    visit buyer_public_market_path(@market_identifier, step: :optional_documents)
+    visit step_buyer_public_market_path(@market_identifier, :optional_documents)
   end
 end
 
@@ -41,40 +41,44 @@ When('I navigate to summary page') do
     click_link 'Autoriser la candidature via'
   else
     @market_identifier = @last_api_response['identifier']
-    visit buyer_public_market_path(@market_identifier, step: :summary)
+    visit step_buyer_public_market_path(@market_identifier, :summary)
   end
 end
 
 When('I go back to optional documents page') do
   @market_identifier = @last_api_response['identifier']
-  visit buyer_public_market_path(@market_identifier, step: :optional_documents)
+  visit step_buyer_public_market_path(@market_identifier, :optional_documents)
 end
 
 Given('I am on the summary page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit buyer_public_market_path(@market_identifier, step: :summary)
+  visit step_buyer_public_market_path(@market_identifier, :summary)
 end
 
 # Page verification steps
 Then('I should be on the configure page') do
-  expect(page).to have_current_path(buyer_public_market_path(@market_identifier, step: :configure))
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :configure))
 end
 
 Then('I should be on the required documents page') do
-  expect(page).to have_current_path(buyer_public_market_path(@market_identifier, step: :required_documents))
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :required_documents))
 end
 
 Then('I should be on the optional documents page') do
-  expect(page).to have_current_path(buyer_public_market_path(@market_identifier, step: :optional_documents))
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :optional_documents))
 end
 
 Then('I should be on the summary page') do
-  expect(page).to have_current_path(buyer_public_market_path(@market_identifier, step: :summary))
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :summary))
 end
 
 # Button and link interaction steps
 Then('I should see a {string} button') do |button_text|
   expect(page).to have_link(button_text)
+end
+
+Then('I should see a button {string}') do |button_text|
+  expect(page).to have_button(button_text, exact: false)
 end
 
 When('I click on {string}') do |link_or_button_text|
@@ -112,22 +116,22 @@ Then('market information should be consistent across all pages') do
   lot_name = 'Lot 1 - Ordinateurs portables'
 
   # Check configure page
-  visit buyer_public_market_path(@market_identifier, step: :configure)
+  visit step_buyer_public_market_path(@market_identifier, :configure)
   expect(page).to have_content(market_name)
   expect(page).to have_content(lot_name)
 
   # Check required documents page
-  visit buyer_public_market_path(@market_identifier, step: :required_documents)
+  visit step_buyer_public_market_path(@market_identifier, :required_documents)
   expect(page).to have_content(market_name)
   expect(page).to have_content(lot_name)
 
   # Check optional documents page
-  visit buyer_public_market_path(@market_identifier, step: :optional_documents)
+  visit step_buyer_public_market_path(@market_identifier, :optional_documents)
   expect(page).to have_content(market_name)
   expect(page).to have_content(lot_name)
 
   # Check summary page
-  visit buyer_public_market_path(@market_identifier, step: :summary)
+  visit step_buyer_public_market_path(@market_identifier, :summary)
   expect(page).to have_content(market_name)
   expect(page).to have_content(lot_name)
 end
