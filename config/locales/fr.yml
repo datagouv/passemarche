@@ -109,9 +109,70 @@ fr:
     market_created: "Marché de démonstration créé : %{market_name}"
     creation_error: "Erreur lors de la création du marché de démonstration : %{error}"
     
+  form_fields:
+    categories:
+      unicorn_identity: "Identité de la licorne (test)"
+      pizza_exclusions: "Motifs d'exclusion liés aux pizzas (démo)"
+      coffee_compliance: "Conformité café et croissants (fictif)"
+      rocket_certifications: "Certifications fusées spatiales (exemple)"
+      ninja_qualifications: "Qualifications ninja professionnelles (test)"
+    
+    fields:
+      unicorn_birth_certificate:
+        name: "Certificat de naissance de licorne"
+        description: "Document officiel prouvant l'existence magique (test)"
+      unicorn_horn_measurement:
+        name: "Mesure de corne de licorne"
+        description: "Taille en centimètres magiques (auto-rempli)"
+      pizza_allergy_declaration:
+        name: "Déclaration allergie aux pizzas"
+        description: "Intolérance aux anchois et à l'ananas (promis juré)"
+      pineapple_pizza_stance:
+        name: "Position sur pizza à l'ananas"
+        description: "Pour ou contre cette abomination culinaire"
+      coffee_addiction_level:
+        name: "Niveau d'addiction au café"
+        description: "De 1 (décaféiné) à 10 (perfusion directe)"
+      croissant_eating_frequency:
+        name: "Fréquence de consommation de croissants"
+        description: "Nombre de viennoiseries par semaine (sous serment)"
+      rocket_piloting_license:
+        name: "Permis de pilotage de fusée"
+        description: "Autorisation de vol spatial (certifié NASA fictive)"
+      moon_landing_experience:
+        name: "Expérience d'alunissage"
+        description: "Nombre de fois posé sur la Lune (boule de cristal)"
+      ninja_stealth_certificate:
+        name: "Certificat de furtivité ninja"
+        description: "Diplôme d'invisibilité professionnelle (source magique)"
+      invisible_skill_proof:
+        name: "Preuve de compétences invisibles"
+        description: "Attestation de talents cachés (promis juré)"
+      dragon_taming_permit:
+        name: "Permis de dressage de dragons"
+        description: "Autorisation de domestication de reptiles volants"
+      time_travel_authorization:
+        name: "Autorisation de voyage temporel"
+        description: "Permis de modification du continuum espace-temps"
+
   buyer:
     public_markets:
       wizard_completed: "Marché configuré avec succès"
+      steps:
+        configure: "Configuration"
+        required_fields: "Champs obligatoires" 
+        additional_fields: "Champs supplémentaires"
+        summary: "Résumé"
+      required_fields:
+        title: "Champs obligatoires"
+        subtitle: "Voici la liste des champs qui seront automatiquement demandés aux entreprises candidates pour ce marché."
+        info_title: "Information"
+        info_text: "Ces champs seront automatiquement demandés à toutes les entreprises candidates. Aucune configuration supplémentaire n'est nécessaire."
+      additional_fields:
+        title: "Champs supplémentaires"
+        subtitle: "Sélectionnez les champs supplémentaires que vous souhaitez demander aux entreprises candidates pour ce marché."
+        config_title: "Configuration"
+        config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs obligatoires."
       
   admin:
     editors:
@@ -119,6 +180,35 @@ fr:
       updated: "Éditeur mis à jour avec succès."
       deleted: "Éditeur supprimé avec succès."
           
+  activemodel:
+    models:
+      field: "Champ"
+    attributes:
+      field:
+        source_types:
+          authentic_source:
+            label: "De source authentique"
+            badge_class: "fr-badge--success"
+          honor_declaration:
+            label: "Sur déclaration d'honneur"
+            badge_class: "fr-badge--info"
+        field_types:
+          document_upload:
+            label: "Document à télécharger"
+            icon_class: "fr-icon-upload-line"
+          auto_populated:
+            label: "Renseigné automatiquement"
+            icon_class: "fr-icon-check-line"
+          honor_declaration:
+            label: "Déclaration sur l'honneur"
+            icon_class: "fr-icon-edit-line"
+          checkbox_field:
+            label: "Case à cocher"
+            icon_class: "fr-icon-checkbox-line"
+          text_field:
+            label: "Champ de texte"
+            icon_class: "fr-icon-text"
+            
   activerecord:
     errors:
       models:
