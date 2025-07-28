@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublicMarket < ApplicationRecord
+  include FormFieldConfiguration
+
   belongs_to :editor
 
   validates :identifier, presence: true, uniqueness: true

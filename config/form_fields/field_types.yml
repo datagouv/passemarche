@@ -1,0 +1,61 @@
+# Field Types Configuration
+# Defines available field types with their properties, categories, and source types
+
+development: &development
+  unicorn_birth_certificate:
+    type: document_upload
+    category: unicorn_identity
+    source_type: authentic_source
+  unicorn_horn_measurement:
+    type: auto_populated
+    category: unicorn_identity
+    source_type: authentic_source
+  pizza_allergy_declaration:
+    type: honor_declaration
+    category: pizza_exclusions
+    source_type: honor_declaration
+  pineapple_pizza_stance:
+    type: checkbox_field
+    category: pizza_exclusions
+    source_type: honor_declaration
+  coffee_addiction_level:
+    type: text_field
+    category: coffee_compliance
+    source_type: authentic_source
+  croissant_eating_frequency:
+    type: honor_declaration
+    category: coffee_compliance
+    source_type: honor_declaration
+  rocket_piloting_license:
+    type: document_upload
+    category: rocket_certifications
+    source_type: authentic_source
+  moon_landing_experience:
+    type: checkbox_field
+    category: rocket_certifications
+    source_type: authentic_source
+  ninja_stealth_certificate:
+    type: document_upload
+    category: ninja_qualifications
+    source_type: authentic_source
+  invisible_skill_proof:
+    type: honor_declaration
+    category: ninja_qualifications
+    source_type: honor_declaration
+  dragon_taming_permit:
+    type: document_upload
+    category: unicorn_identity
+    source_type: authentic_source
+  time_travel_authorization:
+    type: checkbox_field
+    category: rocket_certifications
+    source_type: authentic_source
+
+test:
+  <<: *development
+
+sandbox: 
+  <<: *development
+
+production: 
+  <<: *development
