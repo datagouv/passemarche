@@ -5,8 +5,7 @@ require 'fileutils'
 
 # Initialize database connection with proper path resolution
 db_dir = File.expand_path('..', __dir__)
-db_path = File.join(db_dir, 'fake_editor.db')
-
+db_path = File.join(db_dir, ENV.fetch('DB_PATH', 'fake_editor.db'))
 # Ensure directory exists and is writable
 FileUtils.mkdir_p(db_dir)
 
@@ -45,7 +44,7 @@ class Token < Sequel::Model(DB[:tokens])
       token_type: token_type,
       scope: scope,
       created_at: DateTime.now,
-      expires_at: DateTime.now + Rational(expires_in.to_i, 86400)
+      expires_at: DateTime.now + Rational(expires_in.to_i, 86_400)
     )
   end
 
@@ -64,6 +63,6 @@ class Token < Sequel::Model(DB[:tokens])
   def time_until_expiry
     return 0 if expired?
 
-    ((expires_at - DateTime.now) * 86400).to_i
+    ((expires_at - DateTime.now) * 86_400).to_i
   end
 end
