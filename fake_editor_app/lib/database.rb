@@ -5,9 +5,7 @@ require 'fileutils'
 
 # Initialize database connection with proper path resolution
 db_dir = File.expand_path('..', __dir__)
-db_path = File.join(db_dir, ENV.fetch('DB_PATH', 'fake_editor.db'))
-# Ensure directory exists and is writable
-FileUtils.mkdir_p(db_dir)
+db_path = ENV['DB_PATH'] || File.join(db_dir, 'fake_editor.db')
 
 # Initialize SQLite connection
 DB = Sequel.sqlite(db_path)
