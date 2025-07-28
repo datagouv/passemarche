@@ -11,7 +11,7 @@ FactoryBot.define do
     market_type { 'Fournitures' }
 
     trait :completed do
-      completed_at { Time.current }
+      completed_at { Time.zone.now }
     end
 
     trait :without_lot do

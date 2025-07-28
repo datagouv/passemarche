@@ -22,9 +22,9 @@ RSpec.describe PublicMarket, type: :model do
     let(:public_market) { create(:public_market, completed_at: nil) }
 
     it 'sets completed_at to current time' do
-      time_before = Time.current
+      time_before = Time.zone.now
       public_market.complete!
-      time_after = Time.current
+      time_after = Time.zone.now
 
       expect(public_market.completed_at).to be_between(time_before, time_after)
     end

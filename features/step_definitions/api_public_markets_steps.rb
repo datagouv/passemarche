@@ -120,7 +120,7 @@ Then('the year part should be the current year') do
   identifier = @response_body['identifier']
   year_part = identifier.split('-')[1]
 
-  expect(year_part).to eq(Time.current.year.to_s)
+  expect(year_part).to eq(Time.zone.now.year.to_s)
 end
 
 Then('the suffix should be a 12-character alphanumeric code') do
