@@ -106,25 +106,25 @@ Feature: Buyer Configuration Flow
 
   Scenario: Marquer un marché comme défense en cochant la case
     Given I visit the configure page for my public market
-    When I check the "defense" checkbox
+    When I check the "defense_industry" checkbox
     And I click on "Débuter l'activation de"
-    Then the public market should be marked as defense
+    Then the public market should be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
     Given I visit the configure page for my public market
     When I click on "Débuter l'activation de"
-    Then the public market should not be marked as defense
+    Then the public market should not be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Marché avec défense pré-configuré par l'éditeur
-    When I create a defense public market with the following details:
+    When I create a defense_industry public market with the following details:
       | market_name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
       | market_type | supplies                        |
-      | defense     | true                            |
+      | defense_industry     | true                            |
     And I visit the configure page for my public market
-    Then the defense checkbox should be disabled and checked
+    Then the defense_industry checkbox should be disabled and checked
     And I should see "Cette désignation a été définie par"
 
   Scenario: Sélection de documents supplémentaires avec question oui/non

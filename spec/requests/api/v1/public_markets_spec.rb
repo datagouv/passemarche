@@ -156,11 +156,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
 
-    context 'with defense parameter' do
-      context 'when defense is true' do
+    context 'with defense_industry parameter' do
+      context 'when defense_industry is true' do
         let(:defense_params) do
           market_params.deep_merge(
-            public_market: { defense: true }
+            public_market: { defense_industry: true }
           )
         end
 
@@ -173,18 +173,18 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
             }
         end
 
-        it 'creates market with defense flag set to true' do
+        it 'creates market with defense_industry flag set to true' do
           expect(response).to have_http_status(:created)
           json_response = response.parsed_body
           public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense).to be(true)
+          expect(public_market.defense_industry).to be(true)
         end
       end
 
-      context 'when defense is false' do
+      context 'when defense_industry is false' do
         let(:defense_params) do
           market_params.deep_merge(
-            public_market: { defense: false }
+            public_market: { defense_industry: false }
           )
         end
 
@@ -197,15 +197,15 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
             }
         end
 
-        it 'creates market with defense flag set to false' do
+        it 'creates market with defense_industry flag set to false' do
           expect(response).to have_http_status(:created)
           json_response = response.parsed_body
           public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense).to be(false)
+          expect(public_market.defense_industry).to be(false)
         end
       end
 
-      context 'when defense is not provided' do
+      context 'when defense_industry is not provided' do
         before do
           post '/api/v1/public_markets',
             params: market_params.to_json,
@@ -215,11 +215,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
             }
         end
 
-        it 'creates market with defense flag as nil' do
+        it 'creates market with defense_industry flag as nil' do
           expect(response).to have_http_status(:created)
           json_response = response.parsed_body
           public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense).to be_nil
+          expect(public_market.defense_industry).to be_nil
         end
       end
     end

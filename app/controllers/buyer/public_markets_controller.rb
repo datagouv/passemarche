@@ -39,10 +39,10 @@ module Buyer
     private
 
     def handle_configure_step
-      return unless @public_market.defense.nil? && params[:public_market].present?
+      return unless @public_market.defense_industry.nil? && params[:public_market].present?
 
-      defense_value = params[:public_market][:defense] == 'true'
-      @public_market.update!(defense: defense_value)
+      defense_value = params[:public_market][:defense_industry] == 'true'
+      @public_market.update!(defense_industry: defense_value)
     end
 
     def handle_additional_fields_step
@@ -52,7 +52,7 @@ module Buyer
     end
 
     def configure_params
-      params.expect(public_market: [:defense])
+      params.expect(public_market: [:defense_industry])
     end
 
     def find_public_market

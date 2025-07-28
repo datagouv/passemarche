@@ -51,20 +51,20 @@ RSpec.describe PublicMarket, type: :model do
   end
 
   describe 'FormFieldConfiguration concern' do
-    let(:public_market) { create(:public_market, market_type: 'supplies', defense: false) }
+    let(:public_market) { create(:public_market, market_type: 'supplies', defense_industry: false) }
 
     describe '#effective_required_fields' do
-      context 'with supplies market type and no defense' do
+      context 'with supplies market type and no defense_industry' do
         it 'returns market type specific required fields' do
           expected_fields = %w[unicorn_birth_certificate pizza_allergy_declaration coffee_addiction_level]
           expect(public_market.effective_required_fields).to eq(expected_fields)
         end
       end
 
-      context 'with supplies market type and defense true' do
-        before { public_market.update!(defense: true) }
+      context 'with supplies market type and defense_industry true' do
+        before { public_market.update!(defense_industry: true) }
 
-        it 'returns union of market type and defense required fields' do
+        it 'returns union of market type and defense_industry required fields' do
           expected_fields = %w[unicorn_birth_certificate pizza_allergy_declaration coffee_addiction_level ninja_stealth_certificate invisible_skill_proof]
           expect(public_market.effective_required_fields).to match_array(expected_fields)
         end
@@ -90,17 +90,17 @@ RSpec.describe PublicMarket, type: :model do
     end
 
     describe '#effective_optional_fields' do
-      context 'with supplies market type and no defense' do
+      context 'with supplies market type and no defense_industry' do
         it 'returns market type specific optional fields' do
           expected_fields = %w[rocket_piloting_license ninja_stealth_certificate dragon_taming_permit]
           expect(public_market.effective_optional_fields).to eq(expected_fields)
         end
       end
 
-      context 'with supplies market type and defense true' do
-        before { public_market.update!(defense: true) }
+      context 'with supplies market type and defense_industry true' do
+        before { public_market.update!(defense_industry: true) }
 
-        it 'returns union of market type and defense optional fields' do
+        it 'returns union of market type and defense_industry optional fields' do
           expected_fields = %w[rocket_piloting_license ninja_stealth_certificate dragon_taming_permit time_travel_authorization]
           expect(public_market.effective_optional_fields).to match_array(expected_fields)
         end

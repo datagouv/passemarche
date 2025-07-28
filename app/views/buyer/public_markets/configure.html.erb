@@ -44,15 +44,15 @@
                   local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
       
       <div class="fr-mb-3w">
-        <% if @public_market.defense.nil? %>
+        <% if @public_market.defense_industry.nil? %>
           <div class="fr-checkbox-group">
-            <%= form.check_box :defense, { class: "fr-checkbox" }, "true", "" %>
-            <%= form.label :defense, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
+            <%= form.check_box :defense_industry, { class: "fr-checkbox" }, "true", "" %>
+            <%= form.label :defense_industry, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
           </div>
         <% else %>
           <div class="fr-checkbox-group fr-checkbox-group--disabled">
-            <%= check_box_tag :defense, "1", @public_market.defense, disabled: true, class: "fr-checkbox" %>
-            <%= label_tag :defense, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
+            <%= check_box_tag :defense_industry, "1", @public_market.defense_industry, disabled: true, class: "fr-checkbox" %>
+            <%= label_tag :defense_industry, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
             <span class="fr-hint-text">Cette désignation a été définie par <%= @public_market.editor.name %></span>
           </div>
         <% end %>

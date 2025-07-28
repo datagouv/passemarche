@@ -151,7 +151,7 @@ Then('the configuration URL should point to the buyer configuration page') do
   expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
 end
 
-When('I create a defense public market with the following details:') do |table|
+When('I create a defense_industry public market with the following details:') do |table|
   @public_market_params = table.rows_hash
 
   header 'Authorization', nil

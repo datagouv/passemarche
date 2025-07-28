@@ -61,7 +61,7 @@ module FormFieldConfiguration
   def effective_required_fields
     base_fields = market_type_requirements.dig(market_type.to_sym, :required_fields) || []
 
-    if defense?
+    if defense_industry?
       defense_fields = defense_requirements[:required_fields] || []
       (base_fields + defense_fields).uniq
     else
@@ -72,7 +72,7 @@ module FormFieldConfiguration
   def effective_optional_fields
     base_fields = market_type_requirements.dig(market_type.to_sym, :available_optional_fields) || []
 
-    if defense?
+    if defense_industry?
       defense_fields = defense_requirements[:available_optional_fields] || []
       (base_fields + defense_fields).uniq
     else

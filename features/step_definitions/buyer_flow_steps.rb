@@ -116,27 +116,27 @@ end
 
 # Defense checkbox steps
 When('I check the {string} checkbox') do |checkbox_name|
-  if checkbox_name == 'defense'
-    check('public_market_defense')
+  if checkbox_name == 'defense_industry'
+    check('public_market_defense_industry')
   else
     check(checkbox_name)
   end
 end
 
-Then('the public market should be marked as defense') do
+Then('the public market should be marked as defense_industry') do
   @market_identifier = @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
-  expect(public_market.defense).to be(true)
+  expect(public_market.defense_industry).to be(true)
 end
 
-Then('the public market should not be marked as defense') do
+Then('the public market should not be marked as defense_industry') do
   @market_identifier = @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
-  expect(public_market.defense).to be(false)
+  expect(public_market.defense_industry).to be(false)
 end
 
-Then('the defense checkbox should be disabled and checked') do
-  expect(page).to have_field('defense', checked: true, disabled: true)
+Then('the defense_industry checkbox should be disabled and checked') do
+  expect(page).to have_field('defense_industry', checked: true, disabled: true)
 end
 
 # Content verification steps are in fast_track_steps.rb
