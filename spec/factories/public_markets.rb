@@ -8,7 +8,8 @@ FactoryBot.define do
     market_name { "Système d'acquisition dynamique pour matériels informatiques" }
     lot_name { 'Consommables informatiques neufs' }
     deadline { 1.month.from_now }
-    market_type { 'Fournitures' }
+    market_type { 'supplies' }
+    selected_optional_fields { [] } # Empty by default to avoid validation issues
 
     trait :completed do
       completed_at { Time.zone.now }

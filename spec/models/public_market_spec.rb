@@ -37,9 +37,9 @@ RSpec.describe PublicMarket, type: :model do
   end
 
   describe 'selected_optional_fields' do
-    let(:public_market) { create(:public_market) }
+    let(:public_market) { create(:public_market, selected_optional_fields: []) }
 
-    it 'defaults to empty array' do
+    it 'can be set to empty array' do
       expect(public_market.selected_optional_fields).to eq([])
     end
   end

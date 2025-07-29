@@ -233,6 +233,8 @@ fr:
             
   activerecord:
     errors:
+      messages:
+        record_invalid: "La validation a échoué : %{errors}"
       models:
         public_market:
           attributes:

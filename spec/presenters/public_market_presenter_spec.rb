@@ -10,11 +10,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     it 'organizes required fields by category and subcategory' do
       result = presenter.required_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
-      expect(result.keys).to include('unicorn_identity', 'pizza_exclusions', 'coffee_compliance')
+      expect(result.keys).to include('company_identity', 'exclusion_criteria')
 
-      unicorn_identity = result['unicorn_identity']
-      expect(unicorn_identity).to be_a(Hash)
-      expect(unicorn_identity['basic_documents']).to include('unicorn_birth_certificate')
+      company_identity = result['company_identity']
+      expect(company_identity).to be_a(Hash)
+      expect(company_identity['basic_information']).to include('siret')
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     it 'organizes optional fields by category and subcategory' do
       result = presenter.optional_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
-      expect(result.keys).to include('rocket_certifications', 'ninja_qualifications', 'unicorn_identity')
+      expect(result.keys).to include('economic_capacity', 'technical_capacity')
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       expect(result).to be_a(Hash)
 
       all_field_keys = result.values.flat_map(&:values).flatten
-      expect(all_field_keys).to include('unicorn_birth_certificate', 'rocket_piloting_license')
+      expect(all_field_keys).to include('siret', 'annual_turnover')
     end
   end
 
@@ -50,9 +50,9 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
 
   describe '#field_by_key' do
     it 'delegates to the service' do
-      field = presenter.field_by_key('unicorn_birth_certificate')
+      field = presenter.field_by_key('siret')
       expect(field).to be_a(Field)
-      expect(field.key).to eq('unicorn_birth_certificate')
+      expect(field.key).to eq('siret')
     end
   end
 
@@ -72,8 +72,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       required_keys = presenter.required_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
       optional_keys = presenter.optional_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
 
-      expect(required_keys).to include('ninja_stealth_certificate', 'invisible_skill_proof')
-      expect(optional_keys).to include('time_travel_authorization')
+      expect(required_keys).to include('defense_supply_chain')
+      expect(optional_keys).to include('company_category')
     end
   end
 end
