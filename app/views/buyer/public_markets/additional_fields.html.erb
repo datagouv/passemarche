@@ -24,7 +24,6 @@
 
 
     <div data-controller="additional-fields">
-      <!-- Yes/No Question Section -->
       <div class="fr-mb-4w fr-border-default--grey">
         <div class="fr-p-4w">
           <h3 class="fr-h6 fr-mb-3w"><%= t('buyer.public_markets.additional_fields.question') %></h3>
@@ -44,7 +43,6 @@
       </div>
 
       <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
-        <!-- Accordion Section (hidden by default) -->
         <div class="fr-mb-4w" data-additional-fields-target="accordion">
           <div class="fr-accordions-group fr-mt-4w">
           <% @optional_fields.each_with_index do |(category, subcategories), index| %>
@@ -60,13 +58,13 @@
                     <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
                       <div class="<%= 'fr-mb-3w' unless subcat_index == subcategories.size - 1 %>">
                         <div class="fr-background-alt--grey fr-pl-6v fr-pr-6v fr-pt-4v fr-pb-4v">
-                          <% if @public_market.should_display_subcategory?(subcategories) %>
+                          <% if @presenter.should_display_subcategory?(subcategories) %>
                             <h4 class="fr-text--lg fr-text--bold fr-mb-2w"><%= t("form_fields.subcategories.#{subcategory}") %></h4>
                           <% end %>
-                          <div class="fr-fieldset__content <%= 'fr-mb-3w' if @public_market.should_display_subcategory?(subcategories) %>">
+                          <div class="fr-fieldset__content <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
                           <% fields.each do |field_key| %>
-                            <% field_config = @public_market.available_field_types[field_key.to_sym] %>
-                            <% source_type = field_config&.dig(:source_type) %>
+                            <% field = @presenter.field_by_key(field_key) %>
+                            <% source_type = field&.source_type %>
                             <div class="fr-fieldset__element">
                               <div class="fr-checkbox-group fr-pt-4v fr-pb-4v">
                                 <%= check_box_tag "selected_optional_fields[]", field_key, 
@@ -80,8 +78,8 @@
                                       <span class="fr-hint-text"><%= t("form_fields.fields.#{field_key}.description") %></span>
                                     </div>
                                     <div style="flex-shrink: 0;">
-                                      <% if source_type %>
-                                        <% source_info = @public_market.source_types[source_type.to_sym] %>
+                                      <% if field && source_type %>
+                                        <% source_info = field.source_info %>
                                         <span class="fr-badge <%= source_info[:badge_class] %>">
                                           <%= source_info[:label] %>
                                         </span>

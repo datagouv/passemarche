@@ -7,13 +7,14 @@ module Buyer
     steps :configure, :required_fields, :additional_fields, :summary
 
     before_action :find_public_market
+    before_action :initialize_presenter
 
     def show
       case step
       when :required_fields
-        @required_fields = @public_market.fields_by_category_and_subcategory(@public_market.effective_required_fields)
+        @required_fields = @presenter.required_fields_by_category_and_subcategory
       when :additional_fields
-        @optional_fields = @public_market.fields_by_category_and_subcategory(@public_market.effective_optional_fields)
+        @optional_fields = @presenter.optional_fields_by_category_and_subcategory
       end
 
       render_wizard
@@ -28,7 +29,6 @@ module Buyer
       when :additional_fields
         handle_additional_fields_step
       when :summary
-        @public_market.mark_form_configuration_completed!
         @public_market.complete!
         redirect_to finish_wizard_path, notice: t('buyer.public_markets.wizard_completed')
       end
@@ -59,6 +59,10 @@ module Buyer
       @public_market = PublicMarket.find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
+    end
+
+    def initialize_presenter
+      @presenter = PublicMarketPresenter.new(@public_market)
     end
 
     def finish_wizard_path

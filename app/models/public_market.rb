@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PublicMarket < ApplicationRecord
-  include FormFieldConfiguration
-
   belongs_to :editor
 
   validates :identifier, presence: true, uniqueness: true
@@ -17,10 +15,6 @@ class PublicMarket < ApplicationRecord
   end
 
   def complete!
-    update!(completed_at: Time.zone.now)
-  end
-
-  def mark_form_configuration_completed!
     update!(completed_at: Time.zone.now)
   end
 
