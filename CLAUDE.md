@@ -91,6 +91,18 @@ Your code must be 100% clean. No exceptions.
 - No intermediate saving in v1
 - Critical download flow for attestations
 
+### Commit Message Style
+
+Use **Conventional Commits** format:
+
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, etc.)
+- `refactor:` - Code refactoring
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks
+
 ## Development Commands
 
 ### Setup
