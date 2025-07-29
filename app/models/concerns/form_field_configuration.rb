@@ -12,9 +12,6 @@ module FormFieldConfiguration
     def load_configuration
       merged_config = {}
 
-      load_config_file('requirements.yml') { |config| merged_config.merge!(config) }
-      load_config_file('field_categories.yml') { |config| merged_config[:field_categories] = config }
-      load_config_file('source_types.yml') { |config| merged_config[:source_types] = config }
       load_config_file('field_types.yml') { |config| merged_config[:available_field_types] = config }
 
       deep_symbolize_config(merged_config)
@@ -42,16 +39,8 @@ module FormFieldConfiguration
   end
   # rubocop:enable Metrics/BlockLength
 
-  def market_type_requirements
-    self.class.configuration[:market_type_requirements]
-  end
-
-  def defense_requirements
-    self.class.configuration[:defense_requirements]
-  end
-
   def source_types
-    self.class.configuration[:source_types]
+    I18n.t('form_fields.source_types')
   end
 
   def available_field_types
@@ -59,25 +48,31 @@ module FormFieldConfiguration
   end
 
   def effective_required_fields
-    base_fields = market_type_requirements.dig(market_type.to_sym, :required_fields) || []
+    fields = []
 
-    if defense_industry?
-      defense_fields = defense_requirements[:required_fields] || []
-      (base_fields + defense_fields).uniq
-    else
-      base_fields
+    available_field_types.each do |field_key, config|
+      # Add if required for this market type
+      fields << field_key.to_s if config[:required_for]&.include?(market_type.to_s)
+
+      # Add if defense required and this is defense industry
+      fields << field_key.to_s if defense_industry? && config[:defense_required]
     end
+
+    fields.uniq
   end
 
   def effective_optional_fields
-    base_fields = market_type_requirements.dig(market_type.to_sym, :available_optional_fields) || []
+    fields = []
 
-    if defense_industry?
-      defense_fields = defense_requirements[:available_optional_fields] || []
-      (base_fields + defense_fields).uniq
-    else
-      base_fields
+    available_field_types.each do |field_key, config|
+      # Add if optional for this market type
+      fields << field_key.to_s if config[:optional_for]&.include?(market_type.to_s)
+
+      # Add if defense optional and this is defense industry
+      fields << field_key.to_s if defense_industry? && config[:defense_optional]
     end
+
+    fields.uniq
   end
 
   def all_fields

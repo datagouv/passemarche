@@ -130,6 +130,14 @@ fr:
       professional_certifications: "Certifications professionnelles"
       skill_attestations: "Attestations de compétences"
     
+    source_types:
+      authentic_source:
+        label: "De source authentique"
+        badge_class: "fr-badge--success"
+      honor_declaration:
+        label: "Déclaré sur l'honneur"
+        badge_class: "fr-badge--info"
+    
     fields:
       unicorn_birth_certificate:
         name: "Certificat de naissance de licorne"
