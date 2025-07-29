@@ -28,39 +28,46 @@
     </div>
 
       <div class="fr-accordions-group fr-mt-4w">
-        <% @required_fields.each_with_index do |(category, fields), index| %>
+        <% @required_fields.each_with_index do |(category, subcategories), index| %>
           <section class="fr-accordion">
             <h3 class="fr-accordion__title">
-              <button class="fr-accordion__btn" aria-expanded="<%= index == 0 ? 'true' : 'false' %>" aria-controls="accordion-required-<%= category %>">
+              <button type="button" class="fr-accordion__btn" aria-expanded="<%= index == 0 ? 'true' : 'false' %>" aria-controls="accordion-required-<%= category %>">
                 <%= t("form_fields.categories.#{category}") %>
               </button>
             </h3>
             <div class="fr-collapse <%= 'fr-collapse--expanded' if index == 0 %>" id="accordion-required-<%= category %>">
-              <div class="fr-accordion__body fr-background-alt--grey fr-pl-6v fr-pr-6v">
+              <div class="fr-accordion__body">
                 <div class="fr-accordion__inner">
-                  <ul class="fr-list">
-                    <% fields.each do |field_key| %>
-                      <% field_config = @public_market.available_field_types[field_key.to_sym] %>
-                      <% source_type = field_config&.dig(:source_type) %>
-                      <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                          <div style="flex: 1; margin-right: 1rem;">
-                            <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
-                            <br>
-                            <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
-                          </div>
-                          <div style="flex-shrink: 0;">
-                            <% if source_type %>
-                              <% source_info = @public_market.source_types[source_type.to_sym] %>
-                              <span class="fr-badge <%= source_info[:badge_class] %>">
-                                <%= source_info[:label] %>
-                              </span>
-                            <% end %>
-                          </div>
-                        </div>
-                      </li>
+                  <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
+                    <div class="fr-background-alt--grey fr-pl-6v fr-pr-6v fr-pt-4v fr-pb-4v <%= 'fr-mb-3w' unless subcat_index == subcategories.size - 1 %>">
+                    <% if @public_market.should_display_subcategory?(subcategories) %>
+                      <h4 class="fr-text--lg fr-text--bold fr-mb-2w"><%= t("form_fields.subcategories.#{subcategory}") %></h4>
                     <% end %>
-                  </ul>
+                    <ul class="fr-list <%= 'fr-mb-3w' if @public_market.should_display_subcategory?(subcategories) %>">
+                      <% fields.each do |field_key| %>
+                        <% field_config = @public_market.available_field_types[field_key.to_sym] %>
+                        <% source_type = field_config&.dig(:source_type) %>
+                        <li class="fr-list__item fr-pt-4v fr-pb-4v">
+                          <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                            <div style="flex: 1; margin-right: 1rem;">
+                              <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
+                              <br>
+                              <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
+                            </div>
+                            <div style="flex-shrink: 0;">
+                              <% if source_type %>
+                                <% source_info = @public_market.source_types[source_type.to_sym] %>
+                                <span class="fr-badge <%= source_info[:badge_class] %>">
+                                  <%= source_info[:label] %>
+                                </span>
+                              <% end %>
+                            </div>
+                          </div>
+                        </li>
+                      <% end %>
+                    </ul>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             </div>

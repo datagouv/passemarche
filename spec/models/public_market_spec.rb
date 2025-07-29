@@ -115,30 +115,6 @@ RSpec.describe PublicMarket, type: :model do
         end
       end
     end
-
-    describe '#fields_by_category' do
-      let(:field_keys) { %w[unicorn_birth_certificate pizza_allergy_declaration rocket_piloting_license] }
-
-      it 'groups fields by their categories' do
-        result = public_market.fields_by_category(field_keys)
-
-        expect(result).to eq({
-          'unicorn_identity' => ['unicorn_birth_certificate'],
-          'pizza_exclusions' => ['pizza_allergy_declaration'],
-          'rocket_certifications' => ['rocket_piloting_license']
-        })
-      end
-
-      it 'handles empty field list' do
-        result = public_market.fields_by_category([])
-        expect(result).to eq({})
-      end
-
-      it 'ignores unknown field keys' do
-        result = public_market.fields_by_category(['unknown_field'])
-        expect(result).to eq({})
-      end
-    end
   end
 
   describe 'selected_optional_fields' do

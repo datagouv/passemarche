@@ -84,9 +84,33 @@ module FormFieldConfiguration
     (effective_required_fields + effective_optional_fields).uniq
   end
 
-  def fields_by_category(field_keys)
+  def fields_by_category_and_subcategory(field_keys)
     field_keys
-      .select { |key| available_field_types[key.to_sym] }
-      .group_by { |key| available_field_types[key.to_sym][:category] }
+      .filter_map { |key| field_with_category_info(key) }
+      .group_by { |field_info| field_info[:category] }
+      .transform_values { |fields| group_by_subcategory(fields) }
+  end
+
+  def should_display_subcategory?(category_subcategories)
+    category_subcategories.keys.size > 1
+  end
+
+  private
+
+  def field_with_category_info(key)
+    field_config = available_field_types[key.to_sym]
+    return unless field_config
+
+    {
+      key: key,
+      category: field_config[:category],
+      subcategory: field_config[:subcategory]
+    }
+  end
+
+  def group_by_subcategory(fields)
+    fields
+      .group_by { |field| field[:subcategory] }
+      .transform_values { |grouped_fields| grouped_fields.map { |f| f[:key] } }
   end
 end

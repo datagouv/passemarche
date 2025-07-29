@@ -5,50 +5,62 @@ development: &development
   unicorn_birth_certificate:
     type: document_upload
     category: unicorn_identity
+    subcategory: basic_documents
     source_type: authentic_source
   unicorn_horn_measurement:
-    type: auto_populated
+    type: text_field
     category: unicorn_identity
+    subcategory: physical_characteristics
     source_type: authentic_source
   pizza_allergy_declaration:
-    type: honor_declaration
+    type: checkbox_field
     category: pizza_exclusions
+    subcategory: health_declarations
     source_type: honor_declaration
   pineapple_pizza_stance:
     type: checkbox_field
     category: pizza_exclusions
+    subcategory: preferences
     source_type: honor_declaration
   coffee_addiction_level:
     type: text_field
     category: coffee_compliance
+    subcategory: consumption_metrics
     source_type: authentic_source
   croissant_eating_frequency:
-    type: honor_declaration
+    type: text_field
     category: coffee_compliance
+    subcategory: consumption_metrics
     source_type: honor_declaration
   rocket_piloting_license:
     type: document_upload
     category: rocket_certifications
+    subcategory: licenses_and_permits
     source_type: authentic_source
   moon_landing_experience:
     type: checkbox_field
     category: rocket_certifications
+    subcategory: experience_records
     source_type: authentic_source
   ninja_stealth_certificate:
     type: document_upload
     category: ninja_qualifications
+    subcategory: professional_certifications
     source_type: authentic_source
   invisible_skill_proof:
-    type: honor_declaration
+    type: checkbox_field
     category: ninja_qualifications
+    subcategory: skill_attestations
     source_type: honor_declaration
   dragon_taming_permit:
     type: document_upload
     category: unicorn_identity
+    subcategory: special_permits
     source_type: authentic_source
   time_travel_authorization:
     type: checkbox_field
     category: rocket_certifications
+    subcategory: special_authorizations
     source_type: authentic_source
 
 test:

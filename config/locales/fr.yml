@@ -117,6 +117,19 @@ fr:
       rocket_certifications: "Certifications fusées spatiales (exemple)"
       ninja_qualifications: "Qualifications ninja professionnelles (test)"
     
+    subcategories:
+      basic_documents: "Documents de base"
+      physical_characteristics: "Caractéristiques physiques"
+      special_permits: "Autorisations spéciales"
+      health_declarations: "Déclarations de santé"
+      preferences: "Préférences"
+      consumption_metrics: "Métriques de consommation"
+      licenses_and_permits: "Licences et permis"
+      experience_records: "Relevés d'expérience"
+      special_authorizations: "Autorisations spéciales"
+      professional_certifications: "Certifications professionnelles"
+      skill_attestations: "Attestations de compétences"
+    
     fields:
       unicorn_birth_certificate:
         name: "Certificat de naissance de licorne"

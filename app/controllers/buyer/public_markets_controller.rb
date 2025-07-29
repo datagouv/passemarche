@@ -11,9 +11,9 @@ module Buyer
     def show
       case step
       when :required_fields
-        @required_fields = @public_market.fields_by_category(@public_market.effective_required_fields)
+        @required_fields = @public_market.fields_by_category_and_subcategory(@public_market.effective_required_fields)
       when :additional_fields
-        @optional_fields = @public_market.fields_by_category(@public_market.effective_optional_fields)
+        @optional_fields = @public_market.fields_by_category_and_subcategory(@public_market.effective_optional_fields)
       end
 
       render_wizard

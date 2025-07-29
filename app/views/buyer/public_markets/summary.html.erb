@@ -52,42 +52,49 @@
 
     <div class="fr-mb-4w">
       <div class="fr-mb-4w">
-        <% fields_by_category = @public_market.fields_by_category(@public_market.all_fields) %>
+        <% fields_by_category = @public_market.fields_by_category_and_subcategory(@public_market.all_fields) %>
         <% if fields_by_category.any? %>
           <div>
-            <% fields_by_category.each do |category, field_keys| %>
+            <% fields_by_category.each do |category, subcategories| %>
               <div class="fr-card fr-mb-4w">
                 <div class="fr-card__header">
                   <h4 class="fr-card__title fr-mb-0 fr-py-3w fr-px-4w" style="background-color: var(--background-action-high-blue-france); color: white; font-weight: bold;">
                     <%= t("form_fields.categories.#{category}") %>
                   </h4>
                 </div>
-                <div class="fr-card__body fr-p-2w">
-                  <div class="fr-p-2w fr-background-alt--grey">
-                    <ul class="fr-list">
-                      <% field_keys.each_with_index do |field_key, index| %>
-                        <% field_config = @public_market.available_field_types[field_key.to_sym] %>
-                        <% source_type = field_config&.dig(:source_type) %>
-                        <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                          <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                            <div style="flex: 1; margin-right: 1rem;">
-                              <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
-                              <br>
-                              <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
-                            </div>
-                            <div style="flex-shrink: 0;">
-                              <% if source_type %>
-                                <% source_info = @public_market.source_types[source_type.to_sym] %>
-                                <span class="fr-badge <%= source_info[:badge_class] %>">
-                                  <%= source_info[:label] %>
-                                </span>
-                              <% end %>
-                            </div>
-                          </div>
-                        </li>
-                      <% end %>
-                    <ul class="fr-list">
-                  </div>
+                <div class="fr-card__body fr-mt-3w fr-mb-3w">
+                  <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
+                    <div class="<%= 'fr-mb-3w' unless subcat_index == subcategories.size - 1 %>">
+                      <div class="fr-background-alt--grey fr-pl-6v fr-pr-6v fr-pt-4v fr-pb-4v">
+                        <% if @public_market.should_display_subcategory?(subcategories) %>
+                          <h5 class="fr-text--lg fr-text--bold fr-mb-2w"><%= t("form_fields.subcategories.#{subcategory}") %></h5>
+                        <% end %>
+                        <ul class="fr-list <%= 'fr-mb-3w' if @public_market.should_display_subcategory?(subcategories) %>">
+                          <% fields.each do |field_key| %>
+                            <% field_config = @public_market.available_field_types[field_key.to_sym] %>
+                            <% source_type = field_config&.dig(:source_type) %>
+                            <li class="fr-list__item fr-pt-4v fr-pb-4v">
+                              <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                                <div style="flex: 1; margin-right: 1rem;">
+                                  <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
+                                  <br>
+                                  <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
+                                </div>
+                                <div style="flex-shrink: 0;">
+                                  <% if source_type %>
+                                    <% source_info = @public_market.source_types[source_type.to_sym] %>
+                                    <span class="fr-badge <%= source_info[:badge_class] %>">
+                                      <%= source_info[:label] %>
+                                    </span>
+                                  <% end %>
+                                </div>
+                              </div>
+                            </li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             <% end %>
