@@ -45,10 +45,12 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ## 🛠 Technologies utilisées
 
+### Requirements
+- ruby 3.4.5
+- postrgresql >= 15
+
 ### Backend
-- **Ruby 3.4.5** - Langage de programmation
 - **Rails 8.0.2** - Framework web
-- **PostgreSQL** - Base de données principale
 - **Solid Cable/Cache/Queue** - Infrastructure Rails database-backed
 
 ### Frontend
@@ -79,24 +81,10 @@ git clone [URL_DU_PROJET]
 cd voie_rapide
 ```
 
-### 2. Installer les dépendances
-```bash
-# Installer les gems Ruby
-bundle install
-```
+### 3. Installer/configurer
 
-### 3. Configurer la base de données
 ```bash
-# Préparer la base de données
-bin/rails db:prepare
-
-# Ou pour un reset complet
-bin/rails db:reset
-```
-
-### 4. Charger les données de test (optionnel)
-```bash
-bin/rails db:seed
+./bin/install
 ```
 
 ## 🔧 Commandes de développement
@@ -278,7 +266,7 @@ Voir [fake_editor_app/README.md](fake_editor_app/README.md) pour plus de détail
 # Tests RSpec uniquement
 bundle exec rspec
 
-# Tests Cucumber uniquement  
+# Tests Cucumber uniquement
 CUCUMBER_PUBLISH_QUIET=true bundle exec cucumber
 
 # Suite complète
