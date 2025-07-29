@@ -9,15 +9,15 @@
 %>
 
 <%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
-  <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-    <div style="flex: 1; margin-right: 1rem;">
-      <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
+  <div class="field-layout-container">
+    <div class="field-layout-content">
+      <strong><%= I18n.t("activemodel.attributes.field.fields.#{field_key}.name") %></strong>
       <br>
-      <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
+      <span class="fr-text--sm fr-text--mention-grey"><%= I18n.t("activemodel.attributes.field.fields.#{field_key}.description") %></span>
     </div>
-    <div style="flex-shrink: 0;">
+    <div class="field-layout-badge">
       <% if field && source_type %>
-        <% source_info = field.source_info %>
+        <% source_info = I18n.t("activemodel.attributes.field.source_types.#{source_type}") %>
         <span class="fr-badge <%= source_info[:badge_class] %>">
           <%= source_info[:label] %>
         </span>

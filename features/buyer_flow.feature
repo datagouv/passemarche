@@ -25,9 +25,9 @@ Feature: Buyer Configuration Flow
     Then I should be on the required documents page
     And I should see "Vérification des informations obligatoires"
     And I should see "Les documents et informations obligatoires"
-    And I should see "Certificat de naissance de licorne"
-    And I should see "Déclaration allergie aux pizzas"
-    And I should see "Niveau d'addiction au café"
+    And I should see "Identification de l'entreprise"
+    And I should see "Nom de l'entreprise"
+    And I should see "Condamnation définitive pour certaines infractions au code pénale"
     And I should see a "Précédent" button
     And I should see "Continuer vers les champs supplémentaires"
     
@@ -35,9 +35,9 @@ Feature: Buyer Configuration Flow
     Then I should be on the optional documents page
     And I should see "Sélection des informations complémentaires"
     And I should see "Les documents et informations complémentaires"
-    And I should see "Permis de pilotage de fusée"
-    And I should see "Certificat de furtivité ninja"
-    And I should see "Permis de dressage de dragons"
+    And I should see "Chiffre d'affaires global annuel"
+    And I should see "Manquement dans l'exécution d'un contrat antérieur"
+    And I should see "Influence"
     And I should see a "Précédent" button
     And I should see a button "Autoriser la candidature via"
     
@@ -45,7 +45,7 @@ Feature: Buyer Configuration Flow
     Then I should be on the summary page
     And I should see "Synthèse de ma candidature"
     And I should see "Informations du marché"
-    And I should see "Identité de la licorne (test)"
+    And I should see "Identité de l'entreprise"
     And I should see a disabled button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent

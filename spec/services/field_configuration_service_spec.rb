@@ -49,7 +49,7 @@ RSpec.describe FieldConfigurationService, type: :service do
         fields = service.effective_optional_fields
         field_keys = fields.map(&:key)
         # Check that we get optional fields for supplies market type
-        expect(field_keys).to include('annual_turnover', 'company_category')
+        expect(field_keys).to include('annual_turnover', 'prior_contract_breach')
         expect(field_keys.size).to be > 10
         expect(fields).to all(be_a(Field))
       end

@@ -28,13 +28,13 @@
         <div class="fr-p-4w">
           <h3 class="fr-h6 fr-mb-3w"><%= t('buyer.public_markets.additional_fields.question') %></h3>
           <div class="fr-radio-group fr-mb-1w">
-            <input type="radio" id="additional-yes" name="additional_fields_choice" value="yes" class="fr-radio" data-action="change->additional-fields#selectYes" data-additional-fields-target="yesOption">
+            <input type="radio" id="additional-yes" name="additional_fields_choice" value="yes" class="fr-radio" data-action="change->additional-fields#showAdditionalFieldsAndEnableSubmit" data-additional-fields-target="yesOption">
             <label class="fr-label" for="additional-yes">
               <%= t('buyer.public_markets.additional_fields.yes_option') %>
             </label>
           </div>
           <div class="fr-radio-group">
-            <input type="radio" id="additional-no" name="additional_fields_choice" value="no" class="fr-radio" data-action="change->additional-fields#selectNo" data-additional-fields-target="noOption">
+            <input type="radio" id="additional-no" name="additional_fields_choice" value="no" class="fr-radio" data-action="change->additional-fields#hideAdditionalFieldsAndEnableSubmit" data-additional-fields-target="noOption">
             <label class="fr-label" for="additional-no">
               <%= t('buyer.public_markets.additional_fields.no_option') %>
             </label>

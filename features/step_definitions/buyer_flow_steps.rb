@@ -169,13 +169,13 @@ end
 
 # Document verification steps
 Then('I should see required documents listed') do
-  expect(page).to have_content('Certificat de naissance de licorne')
-  expect(page).to have_content('Déclaration allergie aux pizzas')
-  expect(page).to have_content('Niveau d\'addiction au café')
+  expect(page).to have_content('Identification de l\'entreprise')
+  expect(page).to have_content('Nom de l\'entreprise')
+  expect(page).to have_content('Condamnation définitive pour certaines infractions au code pénale')
 end
 
 Then('I should see optional documents available for selection') do
-  expect(page).to have_content('Permis de pilotage de fusée')
-  expect(page).to have_content('Certificat de furtivité ninja')
-  expect(page).to have_content('Permis de dressage de dragons')
+  expect(page).to have_content('Chiffre d\'affaires global annuel')
+  expect(page).to have_content('Manquement dans l\'exécution d\'un contrat antérieur')
+  expect(page).to have_content('Influence')
 end

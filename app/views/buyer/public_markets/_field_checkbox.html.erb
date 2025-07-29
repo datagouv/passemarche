@@ -13,15 +13,15 @@
     <%= check_box_tag "selected_optional_fields[]", field_key, is_checked,
         { id: "field_#{field_key}", class: "fr-checkbox" } %>
     <%= label_tag "field_#{field_key}", class: "fr-label" do %>
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-        <div style="flex: 1; margin-right: 1rem;">
-          <%= t("form_fields.fields.#{field_key}.name") %>
+      <div class="field-layout-container">
+        <div class="field-layout-content">
+          <%= I18n.t("activemodel.attributes.field.fields.#{field_key}.name") %>
           <br>
-          <span class="fr-hint-text"><%= t("form_fields.fields.#{field_key}.description") %></span>
+          <span class="fr-hint-text"><%= I18n.t("activemodel.attributes.field.fields.#{field_key}.description") %></span>
         </div>
-        <div style="flex-shrink: 0;">
+        <div class="field-layout-badge">
           <% if field && source_type %>
-            <% source_info = field.source_info %>
+            <% source_info = I18n.t("activemodel.attributes.field.source_types.#{source_type}") %>
             <span class="fr-badge <%= source_info[:badge_class] %>">
               <%= source_info[:label] %>
             </span>

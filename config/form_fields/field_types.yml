@@ -1,187 +1,62 @@
 # Field Types Configuration
 # Defines available field types with their properties, categories, and source types
+# Requirements are now defined in field_requirements.yml
 
-development: &development
-  unicorn_birth_certificate:
-    type: document_upload
-    category: unicorn_identity
-    subcategory: basic_documents
-    source_type: authentic_source
-    required_for: [supplies, works]
-    optional_for: []
-  unicorn_horn_measurement:
-    type: text_field
-    category: unicorn_identity
-    subcategory: physical_characteristics
-    source_type: authentic_source
-    required_for: [services]
-    optional_for: []
-  pizza_allergy_declaration:
-    type: checkbox_field
-    category: pizza_exclusions
-    subcategory: health_declarations
-    source_type: honor_declaration
-    required_for: [supplies]
-    optional_for: []
-  pineapple_pizza_stance:
-    type: checkbox_field
-    category: pizza_exclusions
-    subcategory: preferences
-    source_type: honor_declaration
-    required_for: [services]
-    optional_for: []
-  coffee_addiction_level:
-    type: text_field
-    category: coffee_compliance
-    subcategory: consumption_metrics
-    source_type: authentic_source
-    required_for: [supplies]
-    optional_for: [works]
-  croissant_eating_frequency:
-    type: text_field
-    category: coffee_compliance
-    subcategory: consumption_metrics
-    source_type: honor_declaration
-    required_for: [works]
-    optional_for: []
-  rocket_piloting_license:
-    type: document_upload
-    category: rocket_certifications
-    subcategory: licenses_and_permits
-    source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, works]
-  moon_landing_experience:
-    type: checkbox_field
-    category: rocket_certifications
-    subcategory: experience_records
-    source_type: authentic_source
-    required_for: []
-    optional_for: [services]
-  ninja_stealth_certificate:
-    type: document_upload
-    category: ninja_qualifications
-    subcategory: professional_certifications
-    source_type: authentic_source
-    required_for: [works]
-    optional_for: [supplies]
-    defense_required: true
-  invisible_skill_proof:
-    type: checkbox_field
-    category: ninja_qualifications
-    subcategory: skill_attestations
-    source_type: honor_declaration
-    required_for: []
-    optional_for: [services]
-    defense_required: true
-  dragon_taming_permit:
-    type: document_upload
-    category: unicorn_identity
-    subcategory: special_permits
-    source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, works]
-    defense_optional: true
-  time_travel_authorization:
-    type: checkbox_field
-    category: rocket_certifications
-    subcategory: special_authorizations
-    source_type: authentic_source
-    required_for: []
-    optional_for: [services]
-    defense_optional: true
-
-sandbox: &sandbox
+default: &default
   # Identité de l'entreprise - Company Identity (Always Required)
   siret:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   main_activity:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   company_name:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   manager_name:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   postal_address:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   headquarters_address:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   email:
     type: text_field
     category: company_identity
     subcategory: contact_information
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   phone_number:
     type: text_field
     category: company_identity
     subcategory: contact_information
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   company_category:
     type: text_field
     category: company_identity
     subcategory: basic_information
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   # Motifs d'exclusion - Exclusion Criteria (Always Required)
   criminal_conviction:
@@ -189,110 +64,66 @@ sandbox: &sandbox
     category: exclusion_criteria
     subcategory: criminal_convictions
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   equality_violation:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: criminal_convictions
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   labor_law_violation:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: criminal_convictions
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   negotiation_obligation_breach:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: criminal_convictions
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   judicial_liquidation:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: tax_payment_issues
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   personal_bankruptcy:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: tax_payment_issues
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   tax_payment_declaration:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: tax_payment_issues
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   legal_obligations_compliance:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: social_declaration_defaults
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   social_contributions_compliance:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: social_declaration_defaults
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   disabled_workers_employment:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: social_declaration_defaults
     source_type: authentic_source
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   foreign_workers_list:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: social_declaration_defaults
     source_type: honor_declaration
-    required_for: [supplies, services, works]
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   # Optional Exclusion Criteria
   prior_contract_breach:
@@ -300,60 +131,36 @@ sandbox: &sandbox
     category: exclusion_criteria
     subcategory: transparency_competition
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   undue_influence:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: transparency_competition
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   collusion_presumption:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: transparency_competition
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   conflict_of_interest:
     type: checkbox_field
     category: exclusion_criteria
     subcategory: transparency_competition
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   greenhouse_gas_report:
     type: document_upload
     category: exclusion_criteria
     subcategory: buyer_discretion
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   vigilance_plan:
     type: document_upload
     category: exclusion_criteria
     subcategory: buyer_discretion
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   # Defense Market Specific
   defense_supply_chain:
@@ -361,10 +168,6 @@ sandbox: &sandbox
     category: defense_security
     subcategory: defense_requirements
     source_type: honor_declaration
-    required_for: []
-    optional_for: []
-    defense_required: true
-    defense_optional: false
 
   # Economic and Financial Capacity
   annual_turnover:
@@ -372,40 +175,24 @@ sandbox: &sandbox
     category: economic_capacity
     subcategory: financial_data
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   sector_turnover:
     type: text_field
     category: economic_capacity
     subcategory: financial_data
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   financial_statements:
     type: document_upload
     category: economic_capacity
     subcategory: financial_data
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   professional_risk_insurance:
     type: document_upload
     category: economic_capacity
     subcategory: financial_data
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   # Technical and Professional Capacity
   average_annual_workforce:
@@ -413,20 +200,12 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: workforce
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   team_presentation:
     type: document_upload
     category: technical_capacity
     subcategory: workforce
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   # Professional Certificates - All markets
   qualibat_certificate:
@@ -434,40 +213,24 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   qualifelec_certificate:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   rge_certificate:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   opqibi_certificate:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   # Professional Certificates - Supplies and Services only
   bio_certification:
@@ -475,20 +238,12 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services]
-    defense_required: false
-    defense_optional: true
 
   ess_certification:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [supplies, services]
-    defense_required: false
-    defense_optional: true
 
   # Professional Certificates - Services only
   qualiopi_certificate:
@@ -496,10 +251,6 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [services]
-    defense_required: false
-    defense_optional: true
 
   # Professional Certificates - Works only
   cqp_tp_certificate:
@@ -507,30 +258,18 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [works]
-    defense_required: false
-    defense_optional: true
 
   cibtp_cnetp_certificate:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [works]
-    defense_required: false
-    defense_optional: true
 
   pro_btp_certificate:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
-    required_for: []
-    optional_for: [works]
-    defense_required: false
-    defense_optional: true
 
   # Achievements - Services and Supplies
   main_deliveries_three_years:
@@ -538,20 +277,12 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: achievements
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services]
-    defense_required: false
-    defense_optional: true
 
   delivery_attestations_three_years:
     type: document_upload
     category: technical_capacity
     subcategory: achievements
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services]
-    defense_required: false
-    defense_optional: true
 
   # Achievements - Works
   main_works_five_years:
@@ -559,20 +290,12 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: achievements
     source_type: honor_declaration
-    required_for: []
-    optional_for: [works]
-    defense_required: false
-    defense_optional: true
 
   works_attestations_five_years:
     type: document_upload
     category: technical_capacity
     subcategory: achievements
     source_type: honor_declaration
-    required_for: []
-    optional_for: [works]
-    defense_required: false
-    defense_optional: true
 
   # Equipment and Quality
   technical_equipment_description:
@@ -580,30 +303,18 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: equipment_quality
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   quality_measures_description:
     type: text_field
     category: technical_capacity
     subcategory: equipment_quality
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   samples_photos_descriptions:
     type: document_upload
     category: technical_capacity
     subcategory: equipment_quality
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   # Quality Assurance and Environmental Management
   supply_chain_management:
@@ -611,33 +322,27 @@ sandbox: &sandbox
     category: technical_capacity
     subcategory: quality_environment
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   environmental_management_measures:
     type: text_field
     category: technical_capacity
     subcategory: quality_environment
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services, works]
-    defense_required: false
-    defense_optional: true
 
   complex_products_control:
     type: document_upload
     category: technical_capacity
     subcategory: quality_environment
     source_type: honor_declaration
-    required_for: []
-    optional_for: [supplies, services]
-    defense_required: false
-    defense_optional: true
+
+development:
+  <<: *default
 
 test:
-  <<: *sandbox
+  <<: *default
+
+sandbox:
+  <<: *default
 
 production: 
-  <<: *development
+  <<: *default

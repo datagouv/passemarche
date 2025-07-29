@@ -6,6 +6,7 @@ RSpec.describe 'Field Configuration Integrity', type: :configuration do
   let(:service) { FieldConfigurationService.new(market_type: 'supplies', defense_industry: false) }
   let(:all_fields) { service.all_fields }
   let(:field_keys) { all_fields.map(&:key) }
+  let(:field_requirement) { service.field_requirement }
 
   describe 'YAML configuration completeness' do
     it 'has all required field attributes' do
@@ -34,14 +35,10 @@ RSpec.describe 'Field Configuration Integrity', type: :configuration do
       end
     end
 
-    it 'has valid market type associations' do
-      valid_market_types = %w[supplies services works]
-      all_fields.each do |field|
-        (field.required_for + field.optional_for).each do |market_type|
-          expect(valid_market_types).to include(market_type),
-            "Invalid market type '#{market_type}' in field '#{field.key}'. Valid types: #{valid_market_types}"
-        end
-      end
+    it 'has valid field requirements configuration' do
+      expect(field_requirement).to be_valid
+      expect(field_requirement.required_field_keys).not_to be_empty
+      expect(field_requirement.optional_field_keys).not_to be_empty
     end
   end
 
@@ -116,11 +113,11 @@ RSpec.describe 'Field Configuration Integrity', type: :configuration do
     end
 
     it 'has no fields that are both required and optional for the same market type' do
-      all_fields.each do |field|
-        overlap = field.required_for & field.optional_for
-        expect(overlap).to be_empty,
-          "Field '#{field.key}' is both required and optional for market types: #{overlap}"
-      end
+      required_keys = field_requirement.required_field_keys
+      optional_keys = field_requirement.optional_field_keys
+      overlap = required_keys & optional_keys
+      expect(overlap).to be_empty,
+        "Fields cannot be both required and optional: #{overlap}"
     end
 
     it 'has consistent category groupings' do
@@ -135,17 +132,18 @@ RSpec.describe 'Field Configuration Integrity', type: :configuration do
     end
 
     it 'has defense fields properly configured' do
-      defense_required_fields = all_fields.select(&:required_for_defense?)
-      defense_optional_fields = all_fields.select(&:optional_for_defense?)
+      defense_service = FieldConfigurationService.new(market_type: 'supplies', defense_industry: true)
+      defense_requirement = defense_service.field_requirement
 
-      expect(defense_required_fields).not_to be_empty,
-        'No defense required fields configured'
-      expect(defense_optional_fields).not_to be_empty,
+      defense_required_keys = defense_requirement.required_field_keys - field_requirement.required_field_keys
+      defense_optional_keys = defense_requirement.defense_optional_field_keys
+
+      expect(defense_required_keys).not_to be_empty,
+        'No defense-specific required fields configured'
+      expect(defense_optional_keys).not_to be_empty,
         'No defense optional fields configured'
 
       # Defense fields shouldn't overlap
-      defense_required_keys = defense_required_fields.map(&:key)
-      defense_optional_keys = defense_optional_fields.map(&:key)
       overlap = defense_required_keys & defense_optional_keys
       expect(overlap).to be_empty,
         "Fields cannot be both defense required and defense optional: #{overlap}"

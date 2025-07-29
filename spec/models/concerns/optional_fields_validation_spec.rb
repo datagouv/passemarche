@@ -128,7 +128,7 @@ RSpec.describe OptionalFieldsValidation, type: :concern do
         it 'adds validation error' do
           expect(instance).not_to be_valid
           expect(instance.errors[:selected_optional_fields]).to include(
-            a_string_matching(/contains defense industry fields but defense_industry is false/)
+            a_string_matching(/contains fields not available for market type 'supplies' without defense industry/)
           )
         end
       end

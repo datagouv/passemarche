@@ -9,11 +9,7 @@ RSpec.describe Field, type: :model do
       type: 'document_upload',
       category: 'unicorn_identity',
       subcategory: 'basic_documents',
-      source_type: 'authentic_source',
-      required_for: %w[supplies works],
-      optional_for: [],
-      defense_required: false,
-      defense_optional: false
+      source_type: 'authentic_source'
     )
   end
 
@@ -39,40 +35,20 @@ RSpec.describe Field, type: :model do
     end
   end
 
-  describe '#required_for_market_type?' do
-    it 'returns true when market type is in required_for array' do
-      expect(field.required_for_market_type?('supplies')).to be true
-      expect(field.required_for_market_type?(:supplies)).to be true
+  describe 'localization via Rails I18n' do
+    it 'supports localized field names via human_attribute_name' do
+      expect(Field.human_attribute_name("fields.#{field.key}.name")).to be_a(String)
     end
 
-    it 'returns false when market type is not in required_for array' do
-      expect(field.required_for_market_type?('services')).to be false
-    end
-  end
-
-  describe '#optional_for_market_type?' do
-    it 'returns true when market type is in optional_for array' do
-      field.optional_for = ['services']
-      expect(field.optional_for_market_type?('services')).to be true
+    it 'supports localized descriptions via human_attribute_name' do
+      expect(Field.human_attribute_name("fields.#{field.key}.description")).to be_a(String)
     end
 
-    it 'returns false when market type is not in optional_for array' do
-      expect(field.optional_for_market_type?('services')).to be false
-    end
-  end
-
-  describe 'localization methods' do
-    it 'returns localized name' do
-      expect(field.localized_name).to eq(I18n.t('form_fields.fields.unicorn_birth_certificate.name'))
-    end
-
-    it 'returns localized description' do
-      expect(field.localized_description).to eq(I18n.t('form_fields.fields.unicorn_birth_certificate.description'))
-    end
-
-    it 'returns source info' do
-      expected_source_info = I18n.t('form_fields.source_types.authentic_source')
-      expect(field.source_info).to eq(expected_source_info)
+    it 'supports source type info via I18n' do
+      source_info = I18n.t("activemodel.attributes.field.source_types.#{field.source_type}")
+      expect(source_info).to be_a(Hash)
+      expect(source_info).to have_key(:label)
+      expect(source_info).to have_key(:badge_class)
     end
   end
 

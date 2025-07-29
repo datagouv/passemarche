@@ -49,13 +49,18 @@ module OptionalFieldsValidation
 
   def validate_defense_fields_not_selected
     service = field_configuration_service
-    defense_fields = service.all_fields.select(&:optional_for_defense?).map(&:key)
+    defense_fields = get_defense_optional_field_keys(service)
     inappropriate_fields = selected_optional_fields & defense_fields
 
     return if inappropriate_fields.empty?
 
     errors.add(:selected_optional_fields,
       "contains defense industry fields but defense_industry is false: #{inappropriate_fields.join(', ')}")
+  end
+
+  def get_defense_optional_field_keys(service)
+    # Get defense optional fields from the field requirement model
+    service.field_requirement.defense_optional_field_keys
   end
 
   def no_duplicate_selected_fields

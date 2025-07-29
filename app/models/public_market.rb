@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PublicMarket < ApplicationRecord
+  include FieldConstants
   include OptionalFieldsValidation
 
   belongs_to :editor
@@ -8,7 +9,7 @@ class PublicMarket < ApplicationRecord
   validates :identifier, presence: true, uniqueness: true
   validates :market_name, presence: true
   validates :deadline, presence: true
-  validates :market_type, inclusion: { in: %w[supplies services works] }
+  validates :market_type, inclusion: { in: MARKET_TYPES }
 
   before_validation :generate_identifier, on: :create
 
