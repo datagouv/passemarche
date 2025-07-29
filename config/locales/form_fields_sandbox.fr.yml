@@ -1,0 +1,219 @@
+# Sandbox Form Fields French Translations
+# Based on real French public procurement requirements
+
+fr:
+  form_fields:
+    categories:
+      company_identity: "Identité de l'entreprise"
+      exclusion_criteria: "Motifs d'exclusion"
+      defense_security: "Défense et sécurité"
+      economic_capacity: "Capacité économique et financière"
+      technical_capacity: "Capacité technique et professionnelle"
+    
+    subcategories:
+      basic_information: "Informations de base"
+      contact_information: "Informations de contact"
+      criminal_convictions: "Condamnations pénales"
+      tax_payment_issues: "Paiement des taxes et impôts"
+      social_declaration_defaults: "Défaut de déclaration en matière sociale"
+      transparency_competition: "Transparence et concurrence"
+      buyer_discretion: "À l'appréciation de l'acheteur"
+      defense_requirements: "Exigences défense"
+      financial_data: "Données financières"
+      workforce: "Effectifs"
+      professional_certificates: "Certificats de qualification professionnelle"
+      achievements: "Réalisations"
+      equipment_quality: "Outillage et qualité"
+      quality_environment: "Assurance qualité et environnement"
+    
+    fields:
+      # Company Identity
+      siret:
+        name: "SIRET"
+        description: "Numéro d'identification de votre entreprise"
+      main_activity:
+        name: "Activité principale"
+        description: "Activité principale exercée par votre entreprise"
+      company_name:
+        name: "Raison sociale"
+        description: "Dénomination sociale de votre entreprise"
+      manager_name:
+        name: "Nom et prénom du dirigeant"
+        description: "Nom complet du représentant légal"
+      postal_address:
+        name: "Adresse postale"
+        description: "Adresse postale complète de l'entreprise"
+      headquarters_address:
+        name: "Adresse du siège social"
+        description: "Adresse officielle du siège social"
+      email:
+        name: "Email"
+        description: "Adresse email de contact professionnel"
+      phone_number:
+        name: "Numéro de téléphone"
+        description: "Numéro de téléphone professionnel"
+      company_category:
+        name: "Catégorie de l'entreprise"
+        description: "Microentreprise, PME, ETI ou grande entreprise"
+      
+      # Exclusion Criteria - Criminal Convictions
+      criminal_conviction:
+        name: "Condamnation pour infractions au code pénal"
+        description: "Mon entreprise a été condamnée pour certaines infractions au code pénal"
+      equality_violation:
+        name: "Condamnation pour discrimination"
+        description: "Mon entreprise a été condamnée pour manquement à l'égalité professionnelle H/F ou discrimination"
+      labor_law_violation:
+        name: "Condamnation droit du travail"
+        description: "Mon entreprise a été condamnée pour méconnaissance d'obligations en droit du travail"
+      negotiation_obligation_breach:
+        name: "Manquement négociation égalité H/F"
+        description: "Manquement à l'obligation de négociation périodique sur la rémunération et l'égalité professionnelle"
+      
+      # Exclusion Criteria - Tax and Payment Issues
+      judicial_liquidation:
+        name: "Procédure de liquidation judiciaire"
+        description: "Mon entreprise est en procédure de liquidation judiciaire"
+      personal_bankruptcy:
+        name: "Faillite personnelle"
+        description: "Je suis en faillite personnelle et je n'ai pas le droit de gérer une entreprise"
+      tax_payment_declaration:
+        name: "Non-paiement impôts et taxes"
+        description: "Mon entreprise ne s'est pas acquittée des impôts, taxes, contributions exigibles"
+      
+      # Exclusion Criteria - Social Declaration Defaults
+      legal_obligations_compliance:
+        name: "Non-respect obligations légales/fiscales"
+        description: "Mon entreprise n'est pas à jour de ses obligations légales ou fiscales"
+      social_contributions_compliance:
+        name: "Non-paiement cotisations sociales"
+        description: "Mon entreprise n'est pas à jour de ses cotisations sociales"
+      disabled_workers_employment:
+        name: "Travailleur handicapé (OETH)"
+        description: "Respect des obligations d'emploi de travailleurs handicapés"
+      foreign_workers_list:
+        name: "Liste nominative des travailleurs étrangers"
+        description: "Liste des salariés étrangers soumis à autorisation de travail"
+      
+      # Optional Exclusion Criteria
+      prior_contract_breach:
+        name: "Manquement contrat antérieur"
+        description: "Sanctions pour manquement grave lors de l'exécution d'un contrat public antérieur"
+      undue_influence:
+        name: "Influence indue"
+        description: "Tentative d'influencer la décision ou d'obtenir des informations confidentielles"
+      collusion_presumption:
+        name: "Présomption d'entente"
+        description: "Soupçon d'entente avec d'autres opérateurs pour fausser la concurrence"
+      conflict_of_interest:
+        name: "Conflit d'intérêts"
+        description: "Situation pouvant faire naître un doute sur l'impartialité de la procédure"
+      greenhouse_gas_report:
+        name: "Bilan de gaz à effet de serre"
+        description: "Document présentant le bilan carbone de l'entreprise"
+      vigilance_plan:
+        name: "Plan de vigilance"
+        description: "Plan identifiant les risques et prévenant les atteintes aux droits humains et à l'environnement"
+      
+      # Defense Specific
+      defense_supply_chain:
+        name: "Chaîne d'approvisionnement défense"
+        description: "Description des sources d'approvisionnement et de leur implantation géographique"
+      
+      # Economic and Financial Capacity
+      annual_turnover:
+        name: "Chiffre d'affaires global annuel"
+        description: "Votre chiffre d'affaires sur les trois dernières années"
+      sector_turnover:
+        name: "Chiffre d'affaires sectoriel"
+        description: "Chiffre d'affaires dans le domaine concerné par le marché"
+      financial_statements:
+        name: "Bilans ou extraits de bilans"
+        description: "Vos bilans ou extraits de bilans des trois dernières années comptables clôturées"
+      professional_risk_insurance:
+        name: "Assurance risques professionnels"
+        description: "Déclarations bancaires ou preuve d'assurance des risques professionnels"
+      
+      # Technical and Professional Capacity - Workforce
+      average_annual_workforce:
+        name: "Effectifs moyens annuels"
+        description: "Indiquez vos effectifs moyens annuels au cours des trois dernières années"
+      team_presentation:
+        name: "Présentation de l'équipe"
+        description: "CV des techniciens et organismes techniques qui participeront au marché"
+      
+      # Professional Certificates - All markets
+      qualibat_certificate:
+        name: "Certificat Qualibat"
+        description: "Certification de qualification et de classification du bâtiment"
+      qualifelec_certificate:
+        name: "Certificat Qualifelec"
+        description: "Qualification des entreprises du génie électrique et énergétique"
+      rge_certificate:
+        name: "Certificat RGE"
+        description: "Reconnu Garant de l'Environnement"
+      opqibi_certificate:
+        name: "Certification OPQIBI"
+        description: "Qualification de l'ingénierie"
+      
+      # Professional Certificates - Supplies and Services
+      bio_certification:
+        name: "Certification bio"
+        description: "Certification agriculture biologique"
+      ess_certification:
+        name: "Certification entreprises ESS"
+        description: "Certification Économie Sociale et Solidaire"
+      
+      # Professional Certificates - Services only
+      qualiopi_certificate:
+        name: "Certificat Qualiopi"
+        description: "Certification qualité des organismes de formation"
+      
+      # Professional Certificates - Works only
+      cqp_tp_certificate:
+        name: "Certificat CQP TP"
+        description: "Certificat de Qualification Professionnelle Travaux Publics"
+      cibtp_cnetp_certificate:
+        name: "Certificats CIBTP - CNETP"
+        description: "Cotisations congés intempéries BTP"
+      pro_btp_certificate:
+        name: "Attestation Pro BTP"
+        description: "Attestation de régularité des cotisations retraite Pro BTP"
+      
+      # Achievements - Services and Supplies
+      main_deliveries_three_years:
+        name: "Principales livraisons (3 ans)"
+        description: "Décrivez les principales réalisations effectuées au cours des trois dernières années"
+      delivery_attestations_three_years:
+        name: "Attestations de bonne exécution (3 ans)"
+        description: "Documents attestant de la bonne réalisation des prestations"
+      
+      # Achievements - Works
+      main_works_five_years:
+        name: "Principaux travaux (5 ans)"
+        description: "Décrivez les principaux travaux effectués au cours des cinq dernières années"
+      works_attestations_five_years:
+        name: "Attestations de bonne exécution (5 ans)"
+        description: "Documents attestant de la bonne réalisation des travaux"
+      
+      # Equipment and Quality
+      technical_equipment_description:
+        name: "Description outillage et matériel"
+        description: "Décrivez l'outillage, le matériel, les équipements techniques pour l'exécution du marché"
+      quality_measures_description:
+        name: "Mesures qualité"
+        description: "Décrivez les mesures employées pour assurer la qualité"
+      samples_photos_descriptions:
+        name: "Échantillons et photos"
+        description: "Échantillons, photographies ou descriptions des fournitures"
+      
+      # Quality Assurance and Environmental Management
+      supply_chain_management:
+        name: "Gestion chaîne d'approvisionnement"
+        description: "Décrivez les systèmes de gestion et de suivi de la chaîne d'approvisionnement"
+      environmental_management_measures:
+        name: "Mesures gestion environnementale"
+        description: "Décrivez les mesures de gestion environnementale que vous appliquerez"
+      complex_products_control:
+        name: "Contrôle produits complexes"
+        description: "Attestations de contrôle des produits ou services complexes par un organisme officiel"
