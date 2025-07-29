@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  devise_for :admins, skip: [:registrations, :passwords, :confirmations, :unlocks]
   use_doorkeeper do
     skip_controllers :authorizations, :applications, :authorized_applications
   end

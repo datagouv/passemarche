@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 ruby '3.4.5'
 
 gem 'bootsnap', require: false
+gem 'devise'
 gem 'doorkeeper', '~> 5.7'
 gem 'importmap-rails'
 gem 'jbuilder'
