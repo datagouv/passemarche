@@ -29,49 +29,25 @@
 
       <div class="fr-accordions-group fr-mt-4w">
         <% @required_fields.each_with_index do |(category, subcategories), index| %>
-          <section class="fr-accordion">
-            <h3 class="fr-accordion__title">
-              <button type="button" class="fr-accordion__btn" aria-expanded="<%= index == 0 ? 'true' : 'false' %>" aria-controls="accordion-required-<%= category %>">
-                <%= t("form_fields.categories.#{category}") %>
-              </button>
-            </h3>
-            <div class="fr-collapse <%= 'fr-collapse--expanded' if index == 0 %>" id="accordion-required-<%= category %>">
-              <div class="fr-accordion__body">
-                <div class="fr-accordion__inner">
-                  <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
-                    <div class="fr-background-alt--grey fr-pl-6v fr-pr-6v fr-pt-4v fr-pb-4v <%= 'fr-mb-3w' unless subcat_index == subcategories.size - 1 %>">
-                    <% if @presenter.should_display_subcategory?(subcategories) %>
-                      <h4 class="fr-text--lg fr-text--bold fr-mb-2w"><%= t("form_fields.subcategories.#{subcategory}") %></h4>
-                    <% end %>
-                    <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
-                      <% fields.each do |field_key| %>
-                        <% field = @presenter.field_by_key(field_key) %>
-                        <% source_type = field&.source_type %>
-                        <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                          <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                            <div style="flex: 1; margin-right: 1rem;">
-                              <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
-                              <br>
-                              <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
-                            </div>
-                            <div style="flex-shrink: 0;">
-                              <% if field && source_type %>
-                                <% source_info = field.source_info %>
-                                <span class="fr-badge <%= source_info[:badge_class] %>">
-                                  <%= source_info[:label] %>
-                                </span>
-                              <% end %>
-                            </div>
-                          </div>
-                        </li>
-                      <% end %>
-                    </ul>
-                    </div>
+          <%= render 'category_accordion', category: category, index: index, id_prefix: 'accordion-required' do %>
+            <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
+              <%= render 'subcategory_section', 
+                    subcategory: subcategory, 
+                    subcategories: subcategories, 
+                    is_last: (subcat_index == subcategories.size - 1) do %>
+                <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
+                  <% fields.each do |field_key| %>
+                    <% field = @presenter.field_by_key(field_key) %>
+                    <%= render 'field_display', 
+                          field_key: field_key, 
+                          field: field, 
+                          html_tag: :li, 
+                          wrapper_classes: 'fr-list__item' %>
                   <% end %>
-                </div>
-              </div>
-            </div>
-          </section>
+                </ul>
+              <% end %>
+            <% end %>
+          <% end %>
         <% end %>
       </div>
     </div>

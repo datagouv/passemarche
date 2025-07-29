@@ -1,0 +1,27 @@
+<%
+  field_key ||= nil
+  field ||= nil
+  html_tag ||= :div
+  wrapper_classes ||= ""
+  content_classes ||= "fr-pt-4v fr-pb-4v"
+  
+  source_type = field&.source_type
+%>
+
+<%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+    <div style="flex: 1; margin-right: 1rem;">
+      <strong><%= t("form_fields.fields.#{field_key}.name") %></strong>
+      <br>
+      <span class="fr-text--sm fr-text--mention-grey"><%= t("form_fields.fields.#{field_key}.description") %></span>
+    </div>
+    <div style="flex-shrink: 0;">
+      <% if field && source_type %>
+        <% source_info = field.source_info %>
+        <span class="fr-badge <%= source_info[:badge_class] %>">
+          <%= source_info[:label] %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+<% end %>
