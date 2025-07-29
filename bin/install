@@ -1,0 +1,9 @@
+#!/bin/bash
+
+bundle install
+echo "CREATE ROLE voie_rapide WITH SUPERUSER LOGIN CREATEDB;" > tmp/setup_db.sql
+psql -f tmp/setup_db.sql
+bin/rails db:create
+bin/rails db:migrate
+bin/rails db:seed:replant
+
