@@ -5,9 +5,9 @@
     <div class="fr-stepper">
       <h2 class="fr-stepper__title">
         <%= t('buyer.public_markets.steps.required_fields') %>
-        <span class="fr-stepper__state">Étape 1 sur 2</span>
+        <span class="fr-stepper__state">Étape 1 sur 3</span>
       </h2>
-      <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2">
+      <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3">
         <div class="fr-stepper__step">
           <p class="fr-stepper__details">
             <span class="fr-text--bold">Étape suivante :</span> <%= t('buyer.public_markets.steps.additional_fields') %>
@@ -52,14 +52,16 @@
       </div>
     </div>
 
-    <div class="fr-mb-4w">
-      <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
-        <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
-          Précédent
-        <% end %>
-        <%= link_to next_wizard_path, class: "fr-btn fr-btn--lg" do %>
-          Continuer vers les champs supplémentaires
-        <% end %>
+    <div class="fr-col-12">
+      <div class="fr-mb-4w">
+        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
+          <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
+            Précédent
+          <% end %>
+          <%= link_to next_wizard_path, class: "fr-btn fr-btn--icon-right" do %>
+            Suivant
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

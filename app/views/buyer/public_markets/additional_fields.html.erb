@@ -5,9 +5,14 @@
     <div class="fr-stepper">
       <h2 class="fr-stepper__title">
         <%= t('buyer.public_markets.steps.additional_fields') %>
-        <span class="fr-stepper__state">Étape 2 sur 2</span>
+        <span class="fr-stepper__state">Étape 2 sur 3</span>
       </h2>
-      <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="2">
+      <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3">
+        <div class="fr-stepper__step">
+          <p class="fr-stepper__details">
+            <span class="fr-text--bold">Étape suivante :</span> <%= t('buyer.public_markets.steps.summary') %>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -70,11 +75,11 @@
           <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
             Précédent
           <% end %>
-          <%= form.submit "Autoriser la candidature via #{@public_market.editor.name}", 
+          <%= form.submit "Suivant", 
               class: "fr-btn fr-btn--lg", 
               data: { additional_fields_target: "submitButton" },
               disabled: true,
-              title: "Sélectionnez au moins un champ supplémentaire pour continuer" %>
+              title: "Suivant" %>
         </div>
       <% end %>
     </div>

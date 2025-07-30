@@ -16,7 +16,6 @@ class Field
   validates :type, inclusion: { in: FIELD_TYPES }
   validates :source_type, inclusion: { in: SOURCE_TYPES }
 
-
   def document_upload?
     type == 'document_upload'
   end

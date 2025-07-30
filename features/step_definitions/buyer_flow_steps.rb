@@ -28,8 +28,8 @@ When('I navigate to required documents page') do
 end
 
 When('I navigate to optional documents page') do
-  if page.has_content?('Continuer vers les champs supplémentaires')
-    click_link 'Continuer vers les champs supplémentaires'
+  if page.has_content?('Suivant')
+    click_link 'Suivant'
   else
     @market_identifier = @last_api_response['identifier']
     visit step_buyer_public_market_path(@market_identifier, :additional_fields)
@@ -37,8 +37,8 @@ When('I navigate to optional documents page') do
 end
 
 When('I navigate to summary page') do
-  if page.has_content?('Autoriser la candidature via')
-    click_link 'Autoriser la candidature via'
+  if page.has_content?('Suivant')
+    click_button 'Suivant'
   else
     @market_identifier = @last_api_response['identifier']
     visit step_buyer_public_market_path(@market_identifier, :summary)
@@ -78,7 +78,7 @@ Then('I should see a {string} button') do |button_text|
 end
 
 Then('I should see a button {string}') do |button_text|
-  expect(page).to have_button(button_text, exact: false)
+  expect(page).to have_button(button_text, exact: false, disabled: :all)
 end
 
 Then('I should see a disabled button {string}') do |button_text|
@@ -91,6 +91,20 @@ When('I click on {string}') do |link_or_button_text|
     # Find submit button by partial value match
     submit_button = page.find('input[type=submit]', match: :first)
     submit_button.click
+  elsif link_or_button_text == 'Suivant'
+    # Handle the Suivant button - it might be a link or a submit button
+    if page.has_content?('Je veux demander des informations et documents complémentaires au candidat')
+      # We're on additional fields page - select "No" to enable the submit button
+      choose 'additional-no'
+      sleep 0.2 # Wait for JS to enable the button
+      find('input[type="submit"][value="Suivant"]').click
+    elsif page.has_link?('Suivant')
+      # It's a link (on required fields page)
+      click_link 'Suivant'
+    elsif page.has_css?('input[type="submit"]')
+      # Try to find any submit button
+      find('input[type="submit"]').click
+    end
   elsif page.has_button?(link_or_button_text)
     click_button link_or_button_text
   else
@@ -105,11 +119,11 @@ Then('the stepper should indicate step {int} as current') do |step_number|
   case step_number
   when 1
     expect(page).to have_content('Vérification des informations obligatoires')
-    expect(page).to have_content('Étape 1 sur 2')
+    expect(page).to have_content('Étape 1 sur 3')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="1"]')
   when 2
     expect(page).to have_content('Sélection des informations complémentaires')
-    expect(page).to have_content('Étape 2 sur 2')
+    expect(page).to have_content('Étape 2 sur 3')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="2"]')
   end
 end

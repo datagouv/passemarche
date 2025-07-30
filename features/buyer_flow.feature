@@ -29,9 +29,9 @@ Feature: Buyer Configuration Flow
     And I should see "Nom de l'entreprise"
     And I should see "Condamnation définitive pour certaines infractions au code pénale"
     And I should see a "Précédent" button
-    And I should see "Continuer vers les champs supplémentaires"
+    And I should see "Suivant"
     
-    When I click on "Continuer vers les champs supplémentaires"
+    When I click on "Suivant"
     Then I should be on the optional documents page
     And I should see "Sélection des informations complémentaires"
     And I should see "Les documents et informations complémentaires"
@@ -39,9 +39,9 @@ Feature: Buyer Configuration Flow
     And I should see "Manquement dans l'exécution d'un contrat antérieur"
     And I should see "Influence"
     And I should see a "Précédent" button
-    And I should see a button "Autoriser la candidature via"
+    And I should see a button "Suivant"
     
-    When I click on "Autoriser la candidature via"
+    When I click on "Suivant"
     Then I should be on the summary page
     And I should see "Synthèse de ma candidature"
     And I should see "Informations du marché"

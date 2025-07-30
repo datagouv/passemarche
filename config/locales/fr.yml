@@ -168,7 +168,7 @@ fr:
         configure: "Configuration"
         required_fields: "Vérification des informations obligatoires" 
         additional_fields: "Sélection des informations complémentaires"
-        summary: "Résumé"
+        summary: "Synthèse"
       required_fields:
         title: "Les documents et informations obligatoires"
         subtitle: "Ces documents et informations sont obligatoires et démandés systématiquement aux candidats. "
