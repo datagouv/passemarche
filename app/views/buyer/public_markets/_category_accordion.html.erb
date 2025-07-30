@@ -1,0 +1,26 @@
+<%
+  category ||= nil
+  index ||= 0
+  id_prefix ||= "accordion"
+  expanded_by_default = true if expanded_by_default.nil?
+  
+  is_expanded = expanded_by_default && index == 0
+  accordion_id = "#{id_prefix}-#{category}"
+%>
+
+<section class="fr-accordion">
+  <h3 class="fr-accordion__title">
+    <button type="button" class="fr-accordion__btn" 
+            aria-expanded="<%= is_expanded ? 'true' : 'false' %>" 
+            aria-controls="<%= accordion_id %>">
+      <%= t("form_fields.categories.#{category}") %>
+    </button>
+  </h3>
+  <div class="fr-collapse <%= 'fr-collapse--expanded' if is_expanded %>" id="<%= accordion_id %>">
+    <div class="fr-accordion__body">
+      <div class="fr-accordion__inner">
+        <%= yield if block_given? %>
+      </div>
+    </div>
+  </div>
+</section>

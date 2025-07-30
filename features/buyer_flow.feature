@@ -23,44 +23,40 @@ Feature: Buyer Configuration Flow
     
     When I click on "Débuter l'activation de"
     Then I should be on the required documents page
-    And I should see "Étape 1 sur 2 : Documents requis"
-    And I should see "Documents obligatoires"
-    And I should see "Extrait Kbis"
-    And I should see "Attestation fiscale"
-    And I should see "Attestation sociale"
-    And I should see "Assurance responsabilité civile"
+    And I should see "Vérification des informations obligatoires"
+    And I should see "Les documents et informations obligatoires"
+    And I should see "Identification de l'entreprise"
+    And I should see "Nom de l'entreprise"
+    And I should see "Condamnation définitive pour certaines infractions au code pénale"
     And I should see a "Précédent" button
-    And I should see "Continuer vers les documents optionnels"
+    And I should see "Suivant"
     
-    When I click on "Continuer vers les documents optionnels"
+    When I click on "Suivant"
     Then I should be on the optional documents page
-    And I should see "Étape 2 sur 2 : Documents optionnels"
-    And I should see "Sélectionnez les documents supplémentaires"
-    And I should see "Références clients"
-    And I should see "Bilans comptables"
-    And I should see "Certifications qualité"
-    And I should see "Moyens techniques"
+    And I should see "Sélection des informations complémentaires"
+    And I should see "Les documents et informations complémentaires"
+    And I should see "Chiffre d'affaires global annuel"
+    And I should see "Manquement dans l'exécution d'un contrat antérieur"
+    And I should see "Influence"
     And I should see a "Précédent" button
-    And I should see a button "Autoriser la candidature via"
+    And I should see a button "Suivant"
     
-    When I click on "Autoriser la candidature via"
+    When I click on "Suivant"
     Then I should be on the summary page
-    And I should see "Résumé de la configuration"
-    And I should see "Documents obligatoires"
-    And I should see "Documents optionnels"
-    And I should see "Aucun document optionnel sélectionné"
-    And I should see "Configuration terminée"
+    And I should see "Synthèse de ma candidature"
+    And I should see "Informations du marché"
+    And I should see "Identité de l'entreprise"
     And I should see a disabled button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market
     When I go back to optional documents page
     Then I should be on the optional documents page
-    And I should see "Étape 2 sur 2 : Documents optionnels"
+    And I should see "Sélection des informations complémentaires"
     
     When I click on "Précédent"
     Then I should be on the required documents page
-    And I should see "Étape 1 sur 2 : Documents requis"
+    And I should see "Vérification des informations obligatoires"
     
     When I click on "Précédent"
     Then I should be on the configure page
@@ -73,12 +69,10 @@ Feature: Buyer Configuration Flow
     And I should see "supplies"
     
     When I navigate to required documents page
-    Then I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    Then I should be on the required documents page
     
     When I navigate to optional documents page
-    Then I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    Then I should be on the optional documents page
     
     When I navigate to summary page
     Then I should see "Fourniture de matériel informatique"
@@ -87,11 +81,11 @@ Feature: Buyer Configuration Flow
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
-    Then I should see "Étape 1 sur 2 : Documents requis"
+    Then I should see "Vérification des informations obligatoires"
     And the stepper should indicate step 1 as current
     
     When I navigate to optional documents page
-    Then I should see "Étape 2 sur 2 : Documents optionnels"
+    Then I should see "Sélection des informations complémentaires"
     And the stepper should indicate step 2 as current
 
   Scenario: Navigation directe vers différentes étapes
@@ -100,35 +94,41 @@ Feature: Buyer Configuration Flow
     
     When I visit the required documents page for my public market
     Then I should be on the required documents page
-    And I should see "Documents obligatoires"
+    And I should see "Les documents et informations obligatoires"
     
     When I visit the optional documents page for my public market
     Then I should be on the optional documents page
-    And I should see "Documents optionnels"
+    And I should see "Les documents et informations complémentaires"
     
     When I visit the summary page for my public market
     Then I should be on the summary page
-    And I should see "Résumé de la configuration"
+    And I should see "Synthèse de ma candidature"
 
   Scenario: Marquer un marché comme défense en cochant la case
     Given I visit the configure page for my public market
-    When I check the "defense" checkbox
+    When I check the "defense_industry" checkbox
     And I click on "Débuter l'activation de"
-    Then the public market should be marked as defense
+    Then the public market should be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
     Given I visit the configure page for my public market
     When I click on "Débuter l'activation de"
-    Then the public market should not be marked as defense
+    Then the public market should not be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Marché avec défense pré-configuré par l'éditeur
-    When I create a defense public market with the following details:
+    When I create a defense_industry public market with the following details:
       | market_name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
       | market_type | supplies                        |
-      | defense     | true                            |
+      | defense_industry     | true                            |
     And I visit the configure page for my public market
-    Then the defense checkbox should be disabled and checked
+    Then the defense_industry checkbox should be disabled and checked
     And I should see "Cette désignation a été définie par"
+
+  Scenario: Sélection de documents supplémentaires avec question oui/non
+    When I visit the optional documents page for my public market
+    Then I should see "Je veux demander des informations et documents complémentaires au candidat"
+    And I should see "Oui"
+    And I should see "Non"

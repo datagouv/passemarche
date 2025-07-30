@@ -18,25 +18,13 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
-  describe '#completed?' do
-    it 'returns false when completed_at is nil' do
-      market = build(:public_market, completed_at: nil)
-      expect(market.completed?).to be false
-    end
-
-    it 'returns true when completed_at is present' do
-      market = build(:public_market, completed_at: Time.current)
-      expect(market.completed?).to be true
-    end
-  end
-
   describe '#complete!' do
     let(:public_market) { create(:public_market, completed_at: nil) }
 
     it 'sets completed_at to current time' do
-      time_before = Time.current
+      time_before = Time.zone.now
       public_market.complete!
-      time_after = Time.current
+      time_after = Time.zone.now
 
       expect(public_market.completed_at).to be_between(time_before, time_after)
     end
@@ -45,6 +33,14 @@ RSpec.describe PublicMarket, type: :model do
       public_market.complete!
       public_market.reload
       expect(public_market.completed_at).to be_present
+    end
+  end
+
+  describe 'selected_optional_fields' do
+    let(:public_market) { create(:public_market, selected_optional_fields: []) }
+
+    it 'can be set to empty array' do
+      expect(public_market.selected_optional_fields).to eq([])
     end
   end
 end

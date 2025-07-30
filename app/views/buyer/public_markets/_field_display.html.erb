@@ -1,0 +1,27 @@
+<%
+  field_key ||= nil
+  field ||= nil
+  html_tag ||= :div
+  wrapper_classes ||= ""
+  content_classes ||= "fr-pt-4v fr-pb-4v"
+  
+  source_type = field&.source_type
+%>
+
+<%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
+  <div class="field-layout-container">
+    <div class="field-layout-content">
+      <strong><%= I18n.t("activemodel.attributes.field.fields.#{field_key}.name") %></strong>
+      <br>
+      <span class="fr-text--sm fr-text--mention-grey"><%= I18n.t("activemodel.attributes.field.fields.#{field_key}.description") %></span>
+    </div>
+    <div class="field-layout-badge">
+      <% if field && source_type %>
+        <% source_info = I18n.t("activemodel.attributes.field.source_types.#{source_type}") %>
+        <span class="fr-badge <%= source_info[:badge_class] %>">
+          <%= source_info[:label] %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+<% end %>

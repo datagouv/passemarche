@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 class PublicMarket < ApplicationRecord
+  include FieldConstants
+  include FieldsValidation
+
   belongs_to :editor
 
   validates :identifier, presence: true, uniqueness: true
   validates :market_name, presence: true
   validates :deadline, presence: true
-  validates :market_type, presence: true
+  validates :market_type, inclusion: { in: MARKET_TYPES }
 
   before_validation :generate_identifier, on: :create
 
@@ -15,7 +18,7 @@ class PublicMarket < ApplicationRecord
   end
 
   def complete!
-    update!(completed_at: Time.current)
+    update!(completed_at: Time.zone.now)
   end
 
   private
@@ -23,9 +26,18 @@ class PublicMarket < ApplicationRecord
   def generate_identifier
     return if identifier.present?
 
-    year = Time.current.year
-    unique_number = (Time.current.to_f * 1_000_000).to_i + SecureRandom.random_number(1000)
-    suffix = unique_number.to_s(36).upcase.rjust(12, '0')[-12..]
-    self.identifier = "VR-#{year}-#{suffix}"
+    self.identifier = build_identifier
+  end
+
+  def build_identifier
+    now = Time.zone.now
+    year = now.year
+    suffix = generate_unique_suffix(now)
+    "VR-#{year}-#{suffix}"
+  end
+
+  def generate_unique_suffix(time)
+    unique_number = (time.to_f * 1_000_000).to_i + SecureRandom.random_number(1000)
+    unique_number.to_s(36).upcase.rjust(12, '0')[-12..]
   end
 end

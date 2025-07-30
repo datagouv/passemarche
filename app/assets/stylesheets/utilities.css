@@ -11,3 +11,20 @@
   max-width: 100%;
   height: auto;
 }
+
+/* Field display layout classes */
+.field-layout-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.field-layout-content {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.field-layout-badge {
+  flex-shrink: 0;
+}

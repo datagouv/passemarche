@@ -9,17 +9,17 @@
 #   end
 
 # Create demo editor for fake_editor_app in development
-if Rails.env.development?
+if Rails.env.development? || Rails.env.sandbox?
   demo_editor = Editor.find_or_create_by(client_id: 'demo_editor_client') do |editor|
     editor.name = 'Demo Editor App'
     editor.client_secret = 'demo_editor_secret'
     editor.authorized = true
     editor.active = true
   end
-  
+
   # Sync with Doorkeeper
   demo_editor.sync_to_doorkeeper!
-  
+
   puts "✅ Demo editor created: #{demo_editor.name} (#{demo_editor.client_id})"
 end
 

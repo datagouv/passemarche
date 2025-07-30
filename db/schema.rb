@@ -86,9 +86,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_29_125349) do
     t.string "lot_name"
     t.datetime "deadline"
     t.string "market_type"
-    t.boolean "defense"
+    t.boolean "defense_industry"
+    t.text "selected_optional_fields", default: [], array: true
     t.index ["editor_id"], name: "index_public_markets_on_editor_id"
     t.index ["identifier"], name: "index_public_markets_on_identifier", unique: true
+    t.index ["selected_optional_fields"], name: "index_public_markets_on_selected_optional_fields", using: :gin
   end
 
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"

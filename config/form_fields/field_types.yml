@@ -1,0 +1,330 @@
+default: &default
+  siret:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  main_activity:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  company_name:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  manager_name:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  postal_address:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  headquarters_address:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  email:
+    type: text_field
+    category: company_identity
+    subcategory: contact_information
+    source_type: honor_declaration
+
+  phone_number:
+    type: text_field
+    category: company_identity
+    subcategory: contact_information
+    source_type: honor_declaration
+
+  company_category:
+    type: text_field
+    category: company_identity
+    subcategory: basic_information
+    source_type: authentic_source
+
+  criminal_conviction:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: criminal_convictions
+    source_type: honor_declaration
+
+  equality_violation:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: criminal_convictions
+    source_type: honor_declaration
+
+  labor_law_violation:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: criminal_convictions
+    source_type: honor_declaration
+
+  negotiation_obligation_breach:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: criminal_convictions
+    source_type: honor_declaration
+
+  judicial_liquidation:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: tax_payment_issues
+    source_type: honor_declaration
+
+  personal_bankruptcy:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: tax_payment_issues
+    source_type: honor_declaration
+
+  tax_payment_declaration:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: tax_payment_issues
+    source_type: honor_declaration
+
+  legal_obligations_compliance:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: social_declaration_defaults
+    source_type: authentic_source
+
+  social_contributions_compliance:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: social_declaration_defaults
+    source_type: authentic_source
+
+  disabled_workers_employment:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: social_declaration_defaults
+    source_type: authentic_source
+
+  foreign_workers_list:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: social_declaration_defaults
+    source_type: honor_declaration
+
+  prior_contract_breach:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: transparency_competition
+    source_type: honor_declaration
+
+  undue_influence:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: transparency_competition
+    source_type: honor_declaration
+
+  collusion_presumption:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: transparency_competition
+    source_type: honor_declaration
+
+  conflict_of_interest:
+    type: checkbox_field
+    category: exclusion_criteria
+    subcategory: transparency_competition
+    source_type: honor_declaration
+
+  greenhouse_gas_report:
+    type: document_upload
+    category: exclusion_criteria
+    subcategory: buyer_discretion
+    source_type: honor_declaration
+
+  vigilance_plan:
+    type: document_upload
+    category: exclusion_criteria
+    subcategory: buyer_discretion
+    source_type: honor_declaration
+
+  defense_supply_chain:
+    type: text_field
+    category: defense_security
+    subcategory: defense_requirements
+    source_type: honor_declaration
+
+  annual_turnover:
+    type: text_field
+    category: economic_capacity
+    subcategory: financial_data
+    source_type: authentic_source
+
+  sector_turnover:
+    type: text_field
+    category: economic_capacity
+    subcategory: financial_data
+    source_type: honor_declaration
+
+  financial_statements:
+    type: document_upload
+    category: economic_capacity
+    subcategory: financial_data
+    source_type: authentic_source
+
+  professional_risk_insurance:
+    type: document_upload
+    category: economic_capacity
+    subcategory: financial_data
+    source_type: honor_declaration
+
+  average_annual_workforce:
+    type: text_field
+    category: technical_capacity
+    subcategory: workforce
+    source_type: authentic_source
+
+  team_presentation:
+    type: document_upload
+    category: technical_capacity
+    subcategory: workforce
+    source_type: honor_declaration
+
+  qualibat_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  qualifelec_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  rge_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  opqibi_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  bio_certification:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  ess_certification:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  qualiopi_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  cqp_tp_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  cibtp_cnetp_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  pro_btp_certificate:
+    type: document_upload
+    category: technical_capacity
+    subcategory: professional_certificates
+    source_type: authentic_source
+
+  main_deliveries_three_years:
+    type: text_field
+    category: technical_capacity
+    subcategory: achievements
+    source_type: honor_declaration
+
+  delivery_attestations_three_years:
+    type: document_upload
+    category: technical_capacity
+    subcategory: achievements
+    source_type: honor_declaration
+
+  main_works_five_years:
+    type: text_field
+    category: technical_capacity
+    subcategory: achievements
+    source_type: honor_declaration
+
+  works_attestations_five_years:
+    type: document_upload
+    category: technical_capacity
+    subcategory: achievements
+    source_type: honor_declaration
+
+  technical_equipment_description:
+    type: text_field
+    category: technical_capacity
+    subcategory: equipment_quality
+    source_type: honor_declaration
+
+  quality_measures_description:
+    type: text_field
+    category: technical_capacity
+    subcategory: equipment_quality
+    source_type: honor_declaration
+
+  samples_photos_descriptions:
+    type: document_upload
+    category: technical_capacity
+    subcategory: equipment_quality
+    source_type: honor_declaration
+
+  supply_chain_management:
+    type: text_field
+    category: technical_capacity
+    subcategory: quality_environment
+    source_type: honor_declaration
+
+  environmental_management_measures:
+    type: text_field
+    category: technical_capacity
+    subcategory: quality_environment
+    source_type: honor_declaration
+
+  complex_products_control:
+    type: document_upload
+    category: technical_capacity
+    subcategory: quality_environment
+    source_type: honor_declaration
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+sandbox:
+  <<: *default
+
+production: 
+  <<: *default
