@@ -1,0 +1,64 @@
+<div class="fr-container">
+  <div class="fr-grid-row">
+    <div class="fr-col-12 fr-col-md-8">
+      <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <%= link_to "Éditeurs", admin_editors_path, class: "fr-breadcrumb__link" %>
+          </li>
+          <li>
+            <%= link_to @editor.name, admin_editor_path(@editor), class: "fr-breadcrumb__link" %>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Modifier</a>
+          </li>
+        </ol>
+      </nav>
+
+      <h1>Modifier <%= @editor.name %></h1>
+
+      <%= form_with model: [:admin, @editor], local: true do |form| %>
+        <% if @editor.errors.any? %>
+          <div class="fr-alert fr-alert--error">
+            <p>Erreurs :</p>
+            <ul>
+              <% @editor.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="fr-input-group">
+          <%= form.label :name, "Nom", class: "fr-label" %>
+          <%= form.text_field :name, class: "fr-input" %>
+        </div>
+
+        <div class="fr-input-group">
+          <%= form.label :client_id, "Client ID", class: "fr-label" %>
+          <%= form.text_field :client_id, class: "fr-input" %>
+        </div>
+
+        <div class="fr-input-group">
+          <%= form.label :client_secret, "Client Secret", class: "fr-label" %>
+          <%= form.text_field :client_secret, class: "fr-input" %>
+        </div>
+
+        <div class="fr-checkbox-group">
+          <%= form.check_box :authorized, class: "fr-checkbox" %>
+          <%= form.label :authorized, "Autorisé", class: "fr-label" %>
+        </div>
+
+        <div class="fr-checkbox-group">
+          <%= form.check_box :active, class: "fr-checkbox" %>
+          <%= form.label :active, "Actif", class: "fr-label" %>
+        </div>
+
+        <div class="fr-mt-3w">
+          <%= form.submit "Mettre à jour", class: "fr-btn" %>
+          <%= link_to "Annuler", admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

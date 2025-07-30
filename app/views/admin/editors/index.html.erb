@@ -1,0 +1,54 @@
+<div class="fr-container">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      <h1>Gestion des éditeurs</h1>
+      
+      <div class="fr-mb-3w">
+        <%= link_to "Ajouter un éditeur", new_admin_editor_path, class: "fr-btn" %>
+      </div>
+
+      <div class="fr-table">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Nom</th>
+              <th scope="col">Client ID</th>
+              <th scope="col">Autorisé</th>
+              <th scope="col">Actif</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @editors.each do |editor| %>
+              <tr>
+                <td><%= editor.name %></td>
+                <td><%= editor.client_id %></td>
+                <td>
+                  <% if editor.authorized %>
+                    <span class="fr-badge fr-badge--success">Oui</span>
+                  <% else %>
+                    <span class="fr-badge fr-badge--error">Non</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if editor.active %>
+                    <span class="fr-badge fr-badge--success">Oui</span>
+                  <% else %>
+                    <span class="fr-badge fr-badge--error">Non</span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to "Voir", admin_editor_path(editor), class: "fr-btn fr-btn--sm" %>
+                  <%= link_to "Modifier", edit_admin_editor_path(editor), class: "fr-btn fr-btn--sm fr-btn--secondary" %>
+                  <%= link_to "Supprimer", admin_editor_path(editor), method: :delete, 
+                              data: { confirm: "Êtes-vous sûr ?" }, 
+                              class: "fr-btn fr-btn--sm fr-btn--tertiary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

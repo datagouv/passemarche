@@ -1,0 +1,67 @@
+<div class="fr-container">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <%= link_to "Éditeurs", admin_editors_path, class: "fr-breadcrumb__link" %>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page"><%= @editor.name %></a>
+          </li>
+        </ol>
+      </nav>
+
+      <h1><%= @editor.name %></h1>
+
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-md-6">
+          <div class="fr-card">
+            <div class="fr-card__body">
+              <h2 class="fr-card__title">Informations</h2>
+              <div class="fr-card__content">
+                <p><strong>Client ID :</strong> <%= @editor.client_id %></p>
+                <p><strong>Autorisé :</strong> 
+                  <% if @editor.authorized %>
+                    <span class="fr-badge fr-badge--success">Oui</span>
+                  <% else %>
+                    <span class="fr-badge fr-badge--error">Non</span>
+                  <% end %>
+                </p>
+                <p><strong>Actif :</strong> 
+                  <% if @editor.active %>
+                    <span class="fr-badge fr-badge--success">Oui</span>
+                  <% else %>
+                    <span class="fr-badge fr-badge--error">Non</span>
+                  <% end %>
+                </p>
+                <p><strong>Créé le :</strong> <%= l(@editor.created_at, format: :long) %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fr-col-12 fr-col-md-6">
+          <div class="fr-card">
+            <div class="fr-card__body">
+              <h2 class="fr-card__title">Statistiques</h2>
+              <div class="fr-card__content">
+                <p><strong>Total des marchés :</strong> <%= @statistics[:total_markets] %></p>
+                <p><strong>Marchés complétés :</strong> <%= @statistics[:completed_markets] %></p>
+                <p><strong>Marchés actifs :</strong> <%= @statistics[:active_markets] %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-mt-3w">
+        <%= link_to "Modifier", edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
+        <%= link_to "Supprimer", admin_editor_path(@editor), method: :delete,
+                    data: { confirm: "Êtes-vous sûr de vouloir supprimer cet éditeur ?" },
+                    class: "fr-btn fr-btn--tertiary" %>
+        <%= link_to "Retour à la liste", admin_editors_path, class: "fr-btn fr-btn--tertiary-no-outline" %>
+      </div>
+    </div>
+  </div>
+</div>

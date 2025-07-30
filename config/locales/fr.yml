@@ -1,6 +1,63 @@
 # frozen_string_literal: true
 
 fr:
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%A %d %B %Y à %H:%M"
+      only_date: "%d/%m/%Y"
+      
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%A %d %B %Y"
+    day_names:
+      - dimanche
+      - lundi
+      - mardi
+      - mercredi
+      - jeudi
+      - vendredi
+      - samedi
+    abbr_day_names:
+      - dim
+      - lun
+      - mar
+      - mer
+      - jeu
+      - ven
+      - sam
+    month_names:
+      - ~
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
+    abbr_month_names:
+      - ~
+      - jan
+      - fév
+      - mar
+      - avr
+      - mai
+      - jun
+      - jul
+      - aoû
+      - sep
+      - oct
+      - nov
+      - déc
+      
   application:
     name: "Voie Rapide"
     title: "Voie Rapide"
@@ -55,6 +112,12 @@ fr:
   buyer:
     public_markets:
       wizard_completed: "Marché configuré avec succès"
+      
+  admin:
+    editors:
+      created: "Éditeur créé avec succès."
+      updated: "Éditeur mis à jour avec succès."
+      deleted: "Éditeur supprimé avec succès."
           
   activerecord:
     errors:

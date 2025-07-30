@@ -22,3 +22,11 @@ if Rails.env.development?
   
   puts "✅ Demo editor created: #{demo_editor.name} (#{demo_editor.client_id})"
 end
+
+# Create admin account for all environments
+admin_user = Admin.find_or_create_by(email: 'admin@voie-rapide.gouv.fr') do |admin|
+  admin.password = 'password123'
+  admin.password_confirmation = 'password123'
+end
+
+puts "✅ Admin user created: #{admin_user.email}"
