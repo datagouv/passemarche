@@ -49,6 +49,12 @@
 
       <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
         <div class="fr-mb-4w" data-additional-fields-target="accordion">
+          <div class="fr-mb-4w">
+            <h3 class="fr-h5 fr-mb-2w">Vous souhaitez demander des informations complémentaires aux candidats</h3>
+            <p class="fr-text--lg fr-mb-0">
+              Vous devez sélectionner au moins une information complémentaire avant de poursuivre.
+            </p>
+          </div>
           <div class="fr-accordions-group fr-mt-4w">
           <% @optional_fields.each_with_index do |(category, subcategories), index| %>
             <%= render 'category_accordion', category: category, index: index, id_prefix: 'accordion-optional' do %>
