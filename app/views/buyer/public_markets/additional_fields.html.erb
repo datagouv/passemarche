@@ -70,7 +70,11 @@
           <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
             Précédent
           <% end %>
-          <%= form.submit "Autoriser la candidature via #{@public_market.editor.name}", class: "fr-btn fr-btn--lg", data: { additional_fields_target: "submitButton" } %>
+          <%= form.submit "Autoriser la candidature via #{@public_market.editor.name}", 
+              class: "fr-btn fr-btn--lg", 
+              data: { additional_fields_target: "submitButton" },
+              disabled: true,
+              title: "Sélectionnez au moins un champ supplémentaire pour continuer" %>
         </div>
       <% end %>
     </div>

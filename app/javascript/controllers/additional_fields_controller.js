@@ -10,12 +10,14 @@ export default class extends Controller {
 
   showAdditionalFieldsAndEnableSubmit() {
     this._showAccordion()
-    this._enableSubmit()
+    this._disableSubmit()
+    this._addCheckboxListeners()
   }
 
   hideAdditionalFieldsAndEnableSubmit() {
     this._hideAccordion()
     this._clearAllSelections()
+    this._removeCheckboxListeners()
     this._enableSubmit()
   }
 
@@ -40,5 +42,30 @@ export default class extends Controller {
     checkboxes.forEach(checkbox => {
       checkbox.checked = false
     })
+  }
+
+  _addCheckboxListeners() {
+    const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', this._handleCheckboxChange.bind(this))
+    })
+  }
+
+  _removeCheckboxListeners() {
+    const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
+    checkboxes.forEach(checkbox => {
+      checkbox.removeEventListener('change', this._handleCheckboxChange.bind(this))
+    })
+  }
+
+  _handleCheckboxChange() {
+    const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
+    const hasCheckedBoxes = Array.from(checkboxes).some(checkbox => checkbox.checked)
+    
+    if (hasCheckedBoxes) {
+      this._enableSubmit()
+    } else {
+      this._disableSubmit()
+    }
   }
 }
