@@ -63,7 +63,7 @@
                       subcategory: subcategory, 
                       subcategories: subcategories, 
                       is_last: (subcat_index == subcategories.size - 1) do %>
-                  <div class="fr-fieldset__content <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
+                  <div class="fr-fieldset__content">
                     <% fields.each do |field_key| %>
                       <% field = @presenter.field_by_key(field_key) %>
                       <%= render 'field_checkbox', field_key: field_key, field: field %>

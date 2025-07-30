@@ -9,7 +9,7 @@
 %>
 
 <div class="fr-fieldset__element">
-  <div class="fr-checkbox-group fr-pt-4v fr-pb-4v">
+  <div class="fr-checkbox-group">
     <%= check_box_tag "selected_optional_fields[]", field_key, is_checked,
         { id: "field_#{field_key}", class: "fr-checkbox" } %>
     <%= label_tag "field_#{field_key}", class: "fr-label" do %>
