@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module OptionalFieldsValidation
+module FieldsValidation
   extend ActiveSupport::Concern
 
   included do

@@ -2,7 +2,7 @@
 
 class PublicMarket < ApplicationRecord
   include FieldConstants
-  include OptionalFieldsValidation
+  include FieldsValidation
 
   belongs_to :editor
 

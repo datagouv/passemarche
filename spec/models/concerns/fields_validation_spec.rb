@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe OptionalFieldsValidation, type: :concern do
+RSpec.describe FieldsValidation, type: :concern do
   before do
-    class TestOptionalFieldsValidation
+    class TestFieldsValidation
       include ActiveModel::Model
       include ActiveModel::Attributes
       include ActiveModel::Validations
@@ -14,7 +14,7 @@ RSpec.describe OptionalFieldsValidation, type: :concern do
 
       define_model_callbacks :save
 
-      include OptionalFieldsValidation
+      include FieldsValidation
 
       attribute :market_type, :string, default: 'supplies'
       attribute :defense_industry, :boolean, default: false
@@ -33,10 +33,10 @@ RSpec.describe OptionalFieldsValidation, type: :concern do
   end
 
   after do
-    Object.send(:remove_const, :TestOptionalFieldsValidation) if defined?(TestOptionalFieldsValidation)
+    Object.send(:remove_const, :TestFieldsValidation) if defined?(TestFieldsValidation)
   end
 
-  let(:instance) { TestOptionalFieldsValidation.new }
+  let(:instance) { TestFieldsValidation.new }
 
   describe 'validations' do
     context 'with valid configuration' do

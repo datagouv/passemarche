@@ -1,9 +1,4 @@
-# Field Types Configuration
-# Defines available field types with their properties, categories, and source types
-# Requirements are now defined in field_requirements.yml
-
 default: &default
-  # Identité de l'entreprise - Company Identity (Always Required)
   siret:
     type: text_field
     category: company_identity
@@ -58,7 +53,6 @@ default: &default
     subcategory: basic_information
     source_type: authentic_source
 
-  # Motifs d'exclusion - Exclusion Criteria (Always Required)
   criminal_conviction:
     type: checkbox_field
     category: exclusion_criteria
@@ -125,7 +119,6 @@ default: &default
     subcategory: social_declaration_defaults
     source_type: honor_declaration
 
-  # Optional Exclusion Criteria
   prior_contract_breach:
     type: checkbox_field
     category: exclusion_criteria
@@ -162,14 +155,12 @@ default: &default
     subcategory: buyer_discretion
     source_type: honor_declaration
 
-  # Defense Market Specific
   defense_supply_chain:
     type: text_field
     category: defense_security
     subcategory: defense_requirements
     source_type: honor_declaration
 
-  # Economic and Financial Capacity
   annual_turnover:
     type: text_field
     category: economic_capacity
@@ -194,7 +185,6 @@ default: &default
     subcategory: financial_data
     source_type: honor_declaration
 
-  # Technical and Professional Capacity
   average_annual_workforce:
     type: text_field
     category: technical_capacity
@@ -207,7 +197,6 @@ default: &default
     subcategory: workforce
     source_type: honor_declaration
 
-  # Professional Certificates - All markets
   qualibat_certificate:
     type: document_upload
     category: technical_capacity
@@ -232,7 +221,6 @@ default: &default
     subcategory: professional_certificates
     source_type: authentic_source
 
-  # Professional Certificates - Supplies and Services only
   bio_certification:
     type: document_upload
     category: technical_capacity
@@ -245,14 +233,12 @@ default: &default
     subcategory: professional_certificates
     source_type: authentic_source
 
-  # Professional Certificates - Services only
   qualiopi_certificate:
     type: document_upload
     category: technical_capacity
     subcategory: professional_certificates
     source_type: authentic_source
 
-  # Professional Certificates - Works only
   cqp_tp_certificate:
     type: document_upload
     category: technical_capacity
@@ -271,7 +257,6 @@ default: &default
     subcategory: professional_certificates
     source_type: authentic_source
 
-  # Achievements - Services and Supplies
   main_deliveries_three_years:
     type: text_field
     category: technical_capacity
@@ -284,7 +269,6 @@ default: &default
     subcategory: achievements
     source_type: honor_declaration
 
-  # Achievements - Works
   main_works_five_years:
     type: text_field
     category: technical_capacity
@@ -297,7 +281,6 @@ default: &default
     subcategory: achievements
     source_type: honor_declaration
 
-  # Equipment and Quality
   technical_equipment_description:
     type: text_field
     category: technical_capacity
@@ -316,7 +299,6 @@ default: &default
     subcategory: equipment_quality
     source_type: honor_declaration
 
-  # Quality Assurance and Environmental Management
   supply_chain_management:
     type: text_field
     category: technical_capacity
