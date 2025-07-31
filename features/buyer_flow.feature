@@ -12,7 +12,7 @@ Feature: Buyer Configuration Flow
       | name | Fourniture de matériel informatique |
       | lot_name    | Lot 1 - Ordinateurs portables       |
       | deadline    | 2025-12-31T23:59:59Z                |
-      | market_type | supplies                            |
+      | market_types | supplies                            |
 
   Scenario: Navigation complète du flux acheteur - aller simple
     When I visit the configure page for my public market
@@ -25,9 +25,9 @@ Feature: Buyer Configuration Flow
     Then I should be on the required documents page
     And I should see "Vérification des informations obligatoires"
     And I should see "Les documents et informations obligatoires"
-    And I should see "Identification de l'entreprise"
+    And I should see "Identité de l'entreprise"
     And I should see "Nom de l'entreprise"
-    And I should see "Condamnation définitive pour certaines infractions au code pénale"
+    And I should see "Condamnation pénale"
     And I should see a "Précédent" button
     And I should see "Suivant"
     
@@ -35,9 +35,9 @@ Feature: Buyer Configuration Flow
     Then I should be on the optional documents page
     And I should see "Sélection des informations complémentaires"
     And I should see "Les documents et informations complémentaires"
-    And I should see "Chiffre d'affaires global annuel"
-    And I should see "Manquement dans l'exécution d'un contrat antérieur"
-    And I should see "Influence"
+    And I should see "Chiffre d'affaires annuel"
+    And I should see "Rupture antérieure de contrat"
+    And I should see "Influence indue"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
     
@@ -66,7 +66,7 @@ Feature: Buyer Configuration Flow
     When I visit the configure page for my public market
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "supplies"
+    And I should see "Fournitures"
     
     When I navigate to required documents page
     Then I should be on the required documents page
@@ -77,7 +77,7 @@ Feature: Buyer Configuration Flow
     When I navigate to summary page
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "supplies"
+    And I should see "Fournitures"
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
@@ -121,7 +121,7 @@ Feature: Buyer Configuration Flow
     When I create a defense_industry public market with the following details:
       | name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
-      | market_type | supplies                        |
+      | market_types | supplies                        |
       | defense_industry     | true                            |
     And I visit the configure page for my public market
     Then the defense_industry checkbox should be disabled and checked

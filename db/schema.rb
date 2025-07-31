@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_31_091454) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_01_120632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -124,13 +124,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_31_091454) do
     t.string "name"
     t.string "lot_name"
     t.datetime "deadline"
-    t.string "market_type"
-    t.boolean "defense_industry"
-    t.text "selected_optional_fields", default: [], array: true
     t.text "market_type_codes", default: [], array: true
     t.index ["editor_id"], name: "index_public_markets_on_editor_id"
     t.index ["identifier"], name: "index_public_markets_on_identifier", unique: true
-    t.index ["selected_optional_fields"], name: "index_public_markets_on_selected_optional_fields", using: :gin
   end
 
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"

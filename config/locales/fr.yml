@@ -108,6 +108,12 @@ fr:
     unavailable: "Demo uniquement disponible en développement et sandbox"
     market_created: "Marché de démonstration créé : %{name}"
     creation_error: "Erreur lors de la création du marché de démonstration : %{error}"
+  
+  market_types:
+    supplies: "Fournitures"
+    services: "Services"
+    works: "Travaux"
+    defense: "Défense et sécurité"
     
   form_fields:
     categories:

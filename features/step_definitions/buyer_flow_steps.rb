@@ -3,22 +3,22 @@
 # Navigation steps
 When('I visit the configure page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :configure)
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: :configure)
 end
 
 When('I visit the required documents page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :required_fields)
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: :required_fields)
 end
 
 When('I visit the optional documents page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :additional_fields)
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: :additional_fields)
 end
 
 When('I visit the summary page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(@market_identifier, :summary)
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: :summary)
 end
 
 When('I navigate to required documents page') do
@@ -131,7 +131,7 @@ end
 # Defense checkbox steps
 When('I check the {string} checkbox') do |checkbox_name|
   if checkbox_name == 'defense_industry'
-    check('public_market_defense_industry')
+    check('public_market_add_defense_market_type')
   else
     check(checkbox_name)
   end
@@ -140,13 +140,13 @@ end
 Then('the public market should be marked as defense_industry') do
   @market_identifier = @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
-  expect(public_market.defense_industry).to be(true)
+  expect(public_market.market_type_codes).to include('defense')
 end
 
 Then('the public market should not be marked as defense_industry') do
   @market_identifier = @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
-  expect(public_market.defense_industry).to be(false)
+  expect(public_market.market_type_codes).not_to include('defense')
 end
 
 Then('the defense_industry checkbox should be disabled and checked') do

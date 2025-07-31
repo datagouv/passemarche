@@ -2,7 +2,6 @@
 
 class PublicMarket < ApplicationRecord
   include FieldConstants
-  include FieldsValidation
 
   belongs_to :editor
 
@@ -11,7 +10,6 @@ class PublicMarket < ApplicationRecord
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
-  validates :market_type, inclusion: { in: MARKET_TYPES }, allow_blank: true
   validate :must_have_valid_market_type_codes
 
   before_validation :generate_identifier, on: :create
@@ -28,18 +26,6 @@ class PublicMarket < ApplicationRecord
     market_type_codes.any?('defense')
   end
 
-  def required_attributes
-    market_attributes.ordered
-  end
-
-  def available_attributes
-    MarketAttribute.joins(:market_types)
-      .where(market_types: { code: market_type_codes })
-      .distinct
-      .active
-      .ordered
-  end
-
   private
 
   def must_have_valid_market_type_codes
@@ -47,7 +33,7 @@ class PublicMarket < ApplicationRecord
 
     check_valid_market_type_codes
 
-    errors.add(:market_type_codes, :cannot_be_alone) if market_type_codes.one? && !market_type_codes.first == 'defense'
+    errors.add(:market_type_codes, :cannot_be_alone) if market_type_codes.one? && market_type_codes.first == 'defense'
   end
 
   def check_valid_market_type_codes

@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe PublicMarket, type: :model do
   describe 'associations' do
     it { should belong_to(:editor) }
-    it { should have_and_belong_to_many(:market_types) }
     it { should have_and_belong_to_many(:market_attributes) }
   end
 
@@ -27,7 +26,7 @@ RSpec.describe PublicMarket, type: :model do
       end
     end
 
-    it { should validate_presence_of(:market_name) }
+    it { should validate_presence_of(:name) }
     it { should validate_presence_of(:deadline) }
   end
 
@@ -60,11 +59,13 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
-  describe 'selected_optional_fields' do
-    let(:public_market) { create(:public_market, selected_optional_fields: []) }
+  describe 'market_attributes association' do
+    let(:public_market) { create(:public_market) }
+    let(:market_attribute) { create(:market_attribute) }
 
-    it 'can be set to empty array' do
-      expect(public_market.selected_optional_fields).to eq([])
+    it 'can have market attributes associated' do
+      public_market.market_attributes << market_attribute
+      expect(public_market.market_attributes).to include(market_attribute)
     end
   end
 end

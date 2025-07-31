@@ -39,20 +39,22 @@ module Buyer
     private
 
     def handle_configure_step
-      return unless @public_market.defense_industry.nil? && params[:public_market].present?
+      return if params[:public_market].blank?
 
-      defense_value = params[:public_market][:defense_industry] == 'true'
-      @public_market.update!(defense_industry: defense_value)
+      return unless params[:public_market][:add_defense_market_type] == 'true'
+
+      return if @public_market.market_type_codes.include?('defense')
+
+      @public_market.market_type_codes << 'defense'
+      @public_market.save!
     end
 
     def handle_additional_fields_step
-      selected_fields = params[:selected_optional_fields] || []
-      @public_market.update!(selected_optional_fields: selected_fields)
+      selected_attribute_keys = params[:selected_attribute_keys] || []
+      selected_attributes = MarketAttribute.where(key: selected_attribute_keys)
+      @public_market.market_attributes = selected_attributes
+      @public_market.save!
       jump_to(:summary)
-    end
-
-    def configure_params
-      params.expect(public_market: [:defense_industry])
     end
 
     def find_public_market

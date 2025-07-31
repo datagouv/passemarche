@@ -5,7 +5,6 @@ FactoryBot.define do
     initialize_with { MarketType.find_or_create_by(code: code) }
 
     code { 'supplies' }
-    active { true }
 
     trait :services do
       code { 'services' }
@@ -20,7 +19,7 @@ FactoryBot.define do
     end
 
     trait :inactive do
-      active { false }
+      deleted_at { Time.current }
     end
   end
 end

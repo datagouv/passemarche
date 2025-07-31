@@ -16,7 +16,7 @@ class MarketAttribute < ApplicationRecord
   scope :required, -> { where(required: true) }
   scope :additional, -> { where(required: false) }
   scope :from_api, -> { where(from_api: true) }
-  scope :active, -> { where(deleted_at: true) }
+  scope :active, -> { where(deleted_at: nil) }
 
   scope :ordered, lambda {
     order(:required, :category_key, :subcategory_key, :key)

@@ -48,9 +48,13 @@
             <div class="fr-mb-3w">
               <div class="fr-text--bold fr-mb-1w">Type de marché</div>
               <div>
-                <%= @public_market.market_type %>
-                <% if @public_market.defense_industry == true %>
-                  <span class="fr-badge fr-badge--warning fr-ml-1w">Défense</span>
+                <% @public_market.market_type_codes.each do |market_type_code| %>
+                  <span class="fr-badge fr-badge--<%= market_type_code == 'defense' ? 'warning' : 'info' %> fr-ml-1w">
+                    <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+                  </span>
+                <% end %>
+                <% if @public_market.market_type_codes.empty? %>
+                  <span class="fr-text--sm">Aucun type de marché défini</span>
                 <% end %>
               </div>
             </div>

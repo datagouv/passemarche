@@ -8,7 +8,6 @@ FactoryBot.define do
     subcategory_key { 'basic_information' }
     from_api { false }
     required { false }
-    active { true }
 
     trait :required do
       required { true }
@@ -19,7 +18,7 @@ FactoryBot.define do
     end
 
     trait :inactive do
-      active { false }
+      deleted_at { Time.current }
     end
 
     trait :text_input do

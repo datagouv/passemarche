@@ -21,6 +21,9 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
     )
   end
 
+  let!(:supplies_market_type) { create(:market_type, code: 'supplies') }
+  let!(:defense_market_type) { create(:market_type, :defense) }
+
   describe 'POST /api/v1/public_markets' do
     let(:market_params) do
       {
@@ -28,7 +31,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           name: 'Test Market Name',
           lot_name: 'Test Lot Name',
           deadline: 1.month.from_now.iso8601,
-          market_type: 'supplies'
+          market_type_codes: ['supplies']
         }
       }
     end
@@ -131,7 +134,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           public_market: {
             name: '',
             deadline: '',
-            market_type: ''
+            market_type_codes: []
           }
         }
       end
@@ -156,11 +159,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
 
-    context 'with defense_industry parameter' do
-      context 'when defense_industry is true' do
+    context 'with defense market type' do
+      context 'when defense is included with supplies' do
         let(:defense_params) do
           market_params.deep_merge(
-            public_market: { defense_industry: true }
+            public_market: { market_type_codes: %w[supplies defense] }
           )
         end
 
@@ -173,39 +176,39 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
             }
         end
 
-        it 'creates market with defense_industry flag set to true' do
+        it 'creates market with defense market type' do
           expect(response).to have_http_status(:created)
           json_response = response.parsed_body
           public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense_industry).to be(true)
+          expect(public_market.defense_industry?).to be(true)
+          expect(public_market.market_type_codes).to include('supplies', 'defense')
         end
       end
 
-      context 'when defense_industry is false' do
-        let(:defense_params) do
+      context 'when defense is provided alone' do
+        let(:defense_alone_params) do
           market_params.deep_merge(
-            public_market: { defense_industry: false }
+            public_market: { market_type_codes: ['defense'] }
           )
         end
 
         before do
           post '/api/v1/public_markets',
-            params: defense_params.to_json,
+            params: defense_alone_params.to_json,
             headers: {
               'Authorization' => "Bearer #{access_token.token}",
               'Content-Type' => 'application/json'
             }
         end
 
-        it 'creates market with defense_industry flag set to false' do
-          expect(response).to have_http_status(:created)
+        it 'returns validation error' do
+          expect(response).to have_http_status(:unprocessable_entity)
           json_response = response.parsed_body
-          public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense_industry).to be(false)
+          expect(json_response['errors']).to include('Market type codes ne peut pas être seul')
         end
       end
 
-      context 'when defense_industry is not provided' do
+      context 'when defense is not provided' do
         before do
           post '/api/v1/public_markets',
             params: market_params.to_json,
@@ -215,11 +218,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
             }
         end
 
-        it 'creates market with defense_industry flag as nil' do
+        it 'creates market without defense market type' do
           expect(response).to have_http_status(:created)
           json_response = response.parsed_body
           public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense_industry).to be_nil
+          expect(public_market.defense_industry?).to be(false)
         end
       end
     end

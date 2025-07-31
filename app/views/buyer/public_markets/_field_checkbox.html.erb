@@ -4,24 +4,29 @@
   checked ||= false
   public_market ||= @public_market
   
-  source_type = field&.source_type
-  is_checked = checked || public_market&.selected_optional_fields&.include?(field_key)
+  source_type = if field&.from_api
+                  'authentic_source'
+                else
+                  'honor_declaration'
+                end
+
+  is_checked = checked || public_market&.market_attributes&.any? { |attr| attr.key == field_key.to_s }
 %>
 
 <div class="fr-fieldset__element">
   <div class="fr-checkbox-group">
-    <%= check_box_tag "selected_optional_fields[]", field_key, is_checked,
+    <%= check_box_tag "selected_attribute_keys[]", field_key, is_checked,
         { id: "field_#{field_key}", class: "fr-checkbox" } %>
     <%= label_tag "field_#{field_key}", class: "fr-label" do %>
       <div class="field-layout-container">
         <div class="field-layout-content">
-          <%= I18n.t("activemodel.attributes.field.fields.#{field_key}.name") %>
+          <%= I18n.t("form_fields.fields.#{field_key}.name") %>
           <br>
-          <span class="fr-hint-text"><%= I18n.t("activemodel.attributes.field.fields.#{field_key}.description") %></span>
+          <span class="fr-hint-text"><%= I18n.t("form_fields.fields.#{field_key}.description") %></span>
         </div>
         <div class="field-layout-badge">
           <% if field && source_type %>
-            <% source_info = I18n.t("activemodel.attributes.field.source_types.#{source_type}") %>
+            <% source_info = I18n.t("form_fields.source_types.#{source_type}") %>
             <span class="fr-badge <%= source_info[:badge_class] %>">
               <%= source_info[:label] %>
             </span>
