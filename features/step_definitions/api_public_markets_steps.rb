@@ -58,7 +58,7 @@ Then('the public market should be saved in the database') do
   public_market = PublicMarket.find_by(identifier: identifier)
 
   expect(public_market).to be_present
-  expect(public_market.market_name).to eq(@public_market_params['market_name'])
+  expect(public_market.name).to eq(@public_market_params['name'])
   expect(public_market.lot_name).to eq(@public_market_params['lot_name'])
   expect(public_market.deadline.iso8601).to eq(@public_market_params['deadline'])
   expect(public_market.market_type).to eq(@public_market_params['market_type'])

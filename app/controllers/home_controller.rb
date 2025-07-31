@@ -10,7 +10,7 @@ class HomeController < ApplicationController
     public_market = create_random_market(demo_editor)
 
     redirect_to step_buyer_public_market_path(public_market.identifier, :configure),
-      notice: t('demo.market_created', market_name: public_market.market_name)
+      notice: t('demo.market_created', name: public_market.name)
   rescue StandardError => e
     redirect_to root_path, alert: t('demo.creation_error', error: e.message)
   end
@@ -31,7 +31,7 @@ class HomeController < ApplicationController
   end
 
   def create_random_market(editor)
-    market_names = [
+    names = [
       'Fourniture de matériel informatique',
       'Services de nettoyage des locaux',
       'Travaux de rénovation énergétique',
@@ -44,7 +44,7 @@ class HomeController < ApplicationController
     market_types = %w[supplies services works]
 
     editor.public_markets.create!(
-      market_name: market_names.sample,
+      name: names.sample,
       lot_name: rand(1..3) == 1 ? "Lot #{rand(1..5)}" : nil,
       deadline: rand(30..180).days.from_now,
       market_type: market_types.sample

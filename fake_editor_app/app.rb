@@ -116,7 +116,7 @@ class FakeEditorApp < Sinatra::Base
 
   def extract_market_data_from_params
     {
-      market_name: params[:market_name],
+      name: params[:name],
       lot_name: params[:lot_name] && params[:lot_name].empty? ? nil : params[:lot_name],
       deadline: params[:deadline],
       market_type: params[:market_type]
@@ -124,7 +124,7 @@ class FakeEditorApp < Sinatra::Base
   end
 
   def validate_market_data(market_data)
-    required_fields = %i[market_name deadline market_type]
+    required_fields = %i[name deadline market_type]
     missing_fields = required_fields.select { |field| market_data[field].to_s.strip.empty? }
 
     return nil if missing_fields.empty?

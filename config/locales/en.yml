@@ -81,7 +81,7 @@ en:
       models:
         public_market:
           attributes:
-            market_name:
+            name:
               blank: "can't be blank"
             deadline:
               blank: "can't be blank"

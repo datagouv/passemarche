@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_29_125349) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_31_091454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,45 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_29_125349) do
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_editors_on_client_id", unique: true
     t.index ["name"], name: "index_editors_on_name", unique: true
+  end
+
+  create_table "market_attributes", force: :cascade do |t|
+    t.string "key", null: false
+    t.integer "input_type", default: 0, null: false
+    t.string "category_key", null: false
+    t.string "subcategory_key", null: false
+    t.boolean "from_api", default: false, null: false
+    t.boolean "required", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_market_attributes_on_deleted_at"
+    t.index ["input_type"], name: "index_market_attributes_on_input_type"
+    t.index ["key"], name: "index_market_attributes_on_key", unique: true
+    t.index ["required"], name: "index_market_attributes_on_required"
+  end
+
+  create_table "market_attributes_public_markets", id: false, force: :cascade do |t|
+    t.bigint "public_market_id", null: false
+    t.bigint "market_attribute_id", null: false
+    t.index ["market_attribute_id", "public_market_id"], name: "index_market_attributes_public_markets_lookup"
+    t.index ["public_market_id", "market_attribute_id"], name: "index_public_markets_attributes_unique", unique: true
+  end
+
+  create_table "market_attributes_types", id: false, force: :cascade do |t|
+    t.bigint "market_type_id", null: false
+    t.bigint "market_attribute_id", null: false
+    t.index ["market_attribute_id", "market_type_id"], name: "index_market_attributes_types_lookup"
+    t.index ["market_type_id", "market_attribute_id"], name: "index_market_types_attributes_unique", unique: true
+  end
+
+  create_table "market_types", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_market_types_on_code", unique: true
+    t.index ["deleted_at"], name: "index_market_types_on_deleted_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -82,12 +121,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_29_125349) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "market_name"
+    t.string "name"
     t.string "lot_name"
     t.datetime "deadline"
     t.string "market_type"
     t.boolean "defense_industry"
     t.text "selected_optional_fields", default: [], array: true
+    t.text "market_type_codes", default: [], array: true
     t.index ["editor_id"], name: "index_public_markets_on_editor_id"
     t.index ["identifier"], name: "index_public_markets_on_identifier", unique: true
     t.index ["selected_optional_fields"], name: "index_public_markets_on_selected_optional_fields", using: :gin

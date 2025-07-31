@@ -12,7 +12,7 @@ Feature: API Public Markets Management
 
   Scenario: Créer un marché public avec succès
     When I create a public market with the following details:
-      | market_name | Fourniture de matériel informatique |
+      | name | Fourniture de matériel informatique |
       | lot_name    | Lot 1 - Ordinateurs portables       |
       | deadline    | 2025-12-31T23:59:59Z                |
       | market_type | supplies                            |
@@ -23,7 +23,7 @@ Feature: API Public Markets Management
 
   Scenario: Créer un marché public avec tous les champs optionnels
     When I create a public market with the following details:
-      | market_name | Services de maintenance            |
+      | name | Services de maintenance            |
       | deadline    | 2025-06-30T18:00:00Z              |
       | market_type | services                          |
     Then the response status should be 201
@@ -33,7 +33,7 @@ Feature: API Public Markets Management
   Scenario: Échec de création sans token d'authentification
     Given I do not have an access token
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
       | market_type | supplies            |
     Then the response status should be 401
@@ -42,7 +42,7 @@ Feature: API Public Markets Management
   Scenario: Échec de création avec un token invalide
     Given I have an invalid access token
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
       | market_type | supplies            |
     Then the response status should be 401
@@ -58,25 +58,25 @@ Feature: API Public Markets Management
 
   Scenario: Échec de création sans deadline
     When I create a public market with the following details:
-      | market_name | Test Market |
+      | name | Test Market |
       | market_type | supplies    |
     Then the response status should be 422
     And the response should contain validation errors
 
   Scenario: Échec de création sans type de marché
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
     Then the response status should be 422
     And the response should contain validation errors
 
   Scenario: Créer plusieurs marchés publics pour le même éditeur
     When I create a public market with the following details:
-      | market_name | Premier marché     |
+      | name | Premier marché     |
       | deadline    | 2025-12-31T23:59:59Z |
       | market_type | supplies            |
     And I create another public market with the following details:
-      | market_name | Deuxième marché    |
+      | name | Deuxième marché    |
       | deadline    | 2025-11-30T23:59:59Z |
       | market_type | services            |
     Then both public markets should be created successfully
@@ -85,7 +85,7 @@ Feature: API Public Markets Management
 
   Scenario: Format de l'identifiant généré
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
       | market_type | supplies            |
     Then the identifier should match the format "VR-YYYY-XXXXXXXXXXXX"
@@ -94,7 +94,7 @@ Feature: API Public Markets Management
 
   Scenario: URL de configuration générée correctement
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
       | market_type | supplies            |
     Then the configuration URL should contain the identifier

@@ -25,7 +25,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
     let(:market_params) do
       {
         public_market: {
-          market_name: 'Test Market Name',
+          name: 'Test Market Name',
           lot_name: 'Test Lot Name',
           deadline: 1.month.from_now.iso8601,
           market_type: 'supplies'
@@ -129,7 +129,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       let(:invalid_params) do
         {
           public_market: {
-            market_name: '',
+            name: '',
             deadline: '',
             market_type: ''
           }

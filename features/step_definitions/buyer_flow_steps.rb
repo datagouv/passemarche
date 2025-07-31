@@ -157,27 +157,27 @@ end
 
 # Market information verification across pages
 Then('market information should be consistent across all pages') do
-  market_name = 'Fourniture de matériel informatique'
+  name = 'Fourniture de matériel informatique'
   lot_name = 'Lot 1 - Ordinateurs portables'
 
   # Check configure page
   visit step_buyer_public_market_path(@market_identifier, :configure)
-  expect(page).to have_content(market_name)
+  expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 
   # Check required documents page
   visit step_buyer_public_market_path(@market_identifier, :required_fields)
-  expect(page).to have_content(market_name)
+  expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 
   # Check optional documents page
   visit step_buyer_public_market_path(@market_identifier, :additional_fields)
-  expect(page).to have_content(market_name)
+  expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 
   # Check summary page
   visit step_buyer_public_market_path(@market_identifier, :summary)
-  expect(page).to have_content(market_name)
+  expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 end
 

@@ -9,7 +9,7 @@ Feature: Buyer Configuration Flow
     Given an authorized and active editor exists with credentials "test_editor_id" and "test_editor_secret"
     And I have a valid access token
     And I create a public market with the following details:
-      | market_name | Fourniture de matériel informatique |
+      | name | Fourniture de matériel informatique |
       | lot_name    | Lot 1 - Ordinateurs portables       |
       | deadline    | 2025-12-31T23:59:59Z                |
       | market_type | supplies                            |
@@ -119,7 +119,7 @@ Feature: Buyer Configuration Flow
 
   Scenario: Marché avec défense pré-configuré par l'éditeur
     When I create a defense_industry public market with the following details:
-      | market_name | Fourniture de matériel militaire |
+      | name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
       | market_type | supplies                        |
       | defense_industry     | true                            |
