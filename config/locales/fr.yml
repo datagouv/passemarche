@@ -103,11 +103,6 @@ fr:
         candidature:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
-          
-  demo:
-    unavailable: "Demo uniquement disponible en développement et sandbox"
-    market_created: "Marché de démonstration créé : %{name}"
-    creation_error: "Erreur lors de la création du marché de démonstration : %{error}"
   
   market_types:
     supplies: "Fournitures"

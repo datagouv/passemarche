@@ -119,13 +119,14 @@
           </div>
           
           <div class="form-group">
-            <label for="market_type">Typologie de marché <span class="required">*</span></label>
-            <select id="market_type" name="market_type" required>
-              <option value="">Sélectionner une typologie</option>
+            <label for="market_type_codes">Typologie de marché <span class="required">*</span></label>
+            <select id="market_type_codes" name="market_type_codes[]" multiple required style="height: 120px;">
               <option value="supplies">Fournitures</option>
               <option value="services">Services</option>
               <option value="works">Travaux</option>
+              <option value="defense">Défense et sécurité</option>
             </select>
+            <small style="display: block; margin-top: 5px; color: #666;">Maintenez Ctrl/Cmd pour sélectionner plusieurs typologies</small>
           </div>
           
           <button type="submit" class="btn btn-success">

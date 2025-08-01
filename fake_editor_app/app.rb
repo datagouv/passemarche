@@ -115,21 +115,22 @@ class FakeEditorApp < Sinatra::Base
   private
 
   def extract_market_data_from_params
+    market_type_codes_array = Array(params[:market_type_codes]).compact
+
     {
       name: params[:name],
       lot_name: params[:lot_name] && params[:lot_name].empty? ? nil : params[:lot_name],
       deadline: params[:deadline],
-      market_type: params[:market_type]
+      market_type_codes: market_type_codes_array
     }
   end
 
   def validate_market_data(market_data)
-    required_fields = %i[name deadline market_type]
-    missing_fields = required_fields.select { |field| market_data[field].to_s.strip.empty? }
+    return 'Veuillez remplir le nom du marché.' if market_data[:name].to_s.strip.empty?
+    return 'Veuillez remplir la date limite.' if market_data[:deadline].to_s.strip.empty?
+    return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].nil? || market_data[:market_type_codes].empty?
 
-    return nil if missing_fields.empty?
-
-    'Veuillez remplir tous les champs obligatoires (nom du marché, date limite, typologie).'
+    nil
   end
 
   def render_dashboard_with_error(error_message, token = nil)

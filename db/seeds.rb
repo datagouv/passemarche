@@ -35,16 +35,14 @@ puts "✅ Admin user created: #{admin_user.email}"
 puts "\n🏗️  Creating MarketType records..."
 
 market_types_data = [
-  { code: 'supplies', active: true },
-  { code: 'services', active: true },
-  { code: 'works', active: true },
-  { code: 'defense', active: true }
+  { code: 'supplies' },
+  { code: 'services' },
+  { code: 'works' },
+  { code: 'defense' }
 ]
 
 market_types_data.each do |data|
-  market_type = MarketType.find_or_create_by(code: data[:code]) do |mt|
-    mt.active = data[:active]
-  end
+  market_type = MarketType.find_or_create_by(code: data[:code])
   puts "✅ MarketType created: #{market_type.code}"
 end
 
@@ -73,7 +71,6 @@ field_types.each do |field_key, field_config|
     attr.category_key = field_config['category']
     attr.subcategory_key = field_config['subcategory']
     attr.from_api = field_config['source_type'] == 'authentic_source'
-    attr.active = true
     attr.required = false # Will be set based on market type relationships
   end
   puts "✅ MarketAttribute created: #{market_attribute.key} (#{market_attribute.category_key})"
