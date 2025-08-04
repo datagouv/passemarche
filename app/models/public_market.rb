@@ -6,10 +6,13 @@ class PublicMarket < ApplicationRecord
 
   belongs_to :editor
 
+  has_and_belongs_to_many :market_attributes
+
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
-  validates :market_type, inclusion: { in: MARKET_TYPES }
+  validates :market_type, inclusion: { in: MARKET_TYPES }, allow_blank: true
+  validate :must_have_valid_market_type_codes
 
   before_validation :generate_identifier, on: :create
 
@@ -21,7 +24,39 @@ class PublicMarket < ApplicationRecord
     update!(completed_at: Time.zone.now)
   end
 
+  def defense_industry?
+    market_type_codes.any?('defense')
+  end
+
+  def required_attributes
+    market_attributes.ordered
+  end
+
+  def available_attributes
+    MarketAttribute.joins(:market_types)
+      .where(market_types: { code: market_type_codes })
+      .distinct
+      .active
+      .ordered
+  end
+
   private
+
+  def must_have_valid_market_type_codes
+    errors.add(:market_type_codes, :empty) if market_type_codes.empty?
+
+    check_valid_market_type_codes
+
+    errors.add(:market_type_codes, :cannot_be_alone) if market_type_codes.one? && !market_type_codes.first == 'defense'
+  end
+
+  def check_valid_market_type_codes
+    market_type_codes.each do |code|
+      MarketType.find_by(code: code).tap do |mt|
+        errors.add(:market_type_codes, :invalid, code: code) unless mt
+      end
+    end
+  end
 
   def generate_identifier
     return if identifier.present?

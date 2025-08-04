@@ -401,6 +401,7 @@ fr:
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
+        cannot_be_alone: "ne peut pas être seul"
       models:
         public_market:
           attributes:
@@ -410,3 +411,6 @@ fr:
               blank: "ne peut pas être vide"
             market_type:
               blank: "ne peut pas être vide"
+            market_types:
+              blank: "ne peut pas être vide"
+              cannot_be_alone: "le marché de défense ne peut pas être seul"

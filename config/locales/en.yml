@@ -86,4 +86,4 @@ en:
             deadline:
               blank: "can't be blank"
             market_type:
-              blank: "can't be blank"
+              empty: "can't be empty"
