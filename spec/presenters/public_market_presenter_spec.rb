@@ -19,6 +19,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       subcategory_key: 'basic_information',
       required: true)
     market_type.market_attributes << attr
+    public_market.market_attributes << attr
     attr
   end
 
@@ -29,6 +30,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       subcategory_key: 'criminal_convictions',
       required: true)
     market_type.market_attributes << attr
+    public_market.market_attributes << attr
     attr
   end
 
@@ -39,6 +41,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       subcategory_key: 'financial_data',
       required: false)
     market_type.market_attributes << attr
+    public_market.market_attributes << attr
     attr
   end
 
@@ -49,12 +52,13 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       subcategory_key: 'workforce',
       required: false)
     market_type.market_attributes << attr
+    public_market.market_attributes << attr
     attr
   end
 
-  describe '#required_fields_by_category_and_subcategory' do
-    it 'organizes required fields by category and subcategory' do
-      result = presenter.required_fields_by_category_and_subcategory
+  describe '#available_required_fields_by_category_and_subcategory' do
+    it 'organizes available required fields by category and subcategory' do
+      result = presenter.available_required_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
       expect(result.keys).to include('company_identity', 'exclusion_criteria')
 
@@ -64,9 +68,9 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
-  describe '#optional_fields_by_category_and_subcategory' do
-    it 'organizes optional fields by category and subcategory' do
-      result = presenter.optional_fields_by_category_and_subcategory
+  describe '#available_optional_fields_by_category_and_subcategory' do
+    it 'organizes available optional fields by category and subcategory' do
+      result = presenter.available_optional_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
       expect(result.keys).to include('economic_capacity', 'technical_capacity')
     end
@@ -127,6 +131,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
         subcategory_key: 'defense_requirements',
         required: true)
       defense_market_type.market_attributes << attr
+      defense_public_market.market_attributes << attr
       attr
     end
 
@@ -137,12 +142,13 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
         subcategory_key: 'basic_information',
         required: false)
       defense_market_type.market_attributes << attr
+      defense_public_market.market_attributes << attr
       attr
     end
 
     it 'includes defense fields in required and optional collections' do
-      required_keys = defense_presenter.required_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
-      optional_keys = defense_presenter.optional_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
+      required_keys = defense_presenter.available_required_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
+      optional_keys = defense_presenter.available_optional_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
 
       expect(required_keys).to include('test_defense_supply_chain')
       expect(optional_keys).to include('test_company_category')

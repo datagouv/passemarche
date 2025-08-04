@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Navigation steps
 When('I visit the configure page for my public market') do
   @market_identifier = @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :configure)
@@ -22,7 +21,6 @@ When('I visit the summary page for my public market') do
 end
 
 When('I navigate to required documents page') do
-  # Find submit button by partial value match
   submit_button = page.find('input[type=submit]', match: :first)
   submit_button.click
 end
@@ -55,7 +53,6 @@ Given('I am on the summary page for my public market') do
   visit step_buyer_public_market_path(@market_identifier, :summary)
 end
 
-# Page verification steps
 Then('I should be on the configure page') do
   expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :configure))
 end
@@ -72,7 +69,6 @@ Then('I should be on the summary page') do
   expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :summary))
 end
 
-# Button and link interaction steps
 Then('I should see a {string} button') do |button_text|
   expect(page).to have_link(button_text)
 end
@@ -86,23 +82,17 @@ Then('I should see a disabled button {string}') do |button_text|
 end
 
 When('I click on {string}') do |link_or_button_text|
-  # Handle partial text matching for buttons with dynamic content
   if link_or_button_text == "Débuter l'activation de"
-    # Find submit button by partial value match
     submit_button = page.find('input[type=submit]', match: :first)
     submit_button.click
   elsif link_or_button_text == 'Suivant'
-    # Handle the Suivant button - it might be a link or a submit button
     if page.has_content?('Je veux demander des informations et documents complémentaires au candidat')
-      # We're on additional fields page - select "No" to enable the submit button
       choose 'additional-no'
-      sleep 0.2 # Wait for JS to enable the button
+      sleep 0.2
       find('input[type="submit"][value="Suivant"]').click
     elsif page.has_link?('Suivant')
-      # It's a link (on required fields page)
       click_link 'Suivant'
     elsif page.has_css?('input[type="submit"]')
-      # Try to find any submit button
       find('input[type="submit"]').click
     end
   elsif page.has_button?(link_or_button_text)
@@ -112,7 +102,6 @@ When('I click on {string}') do |link_or_button_text|
   end
 end
 
-# Stepper verification steps
 Then('the stepper should indicate step {int} as current') do |step_number|
   expect(page).to have_css('.fr-stepper')
 
@@ -128,7 +117,6 @@ Then('the stepper should indicate step {int} as current') do |step_number|
   end
 end
 
-# Defense checkbox steps
 When('I check the {string} checkbox') do |checkbox_name|
   if checkbox_name == 'defense_industry'
     check('public_market_add_defense_market_type')
@@ -153,35 +141,40 @@ Then('the defense_industry checkbox should be disabled and checked') do
   expect(page).to have_field('defense_industry', checked: true, disabled: true)
 end
 
-# Content verification steps are in fast_track_steps.rb
+Then('the public market should have all required attributes from its market types') do
+  public_market = PublicMarket.find_by!(identifier: @market_identifier)
 
-# Market information verification across pages
+  market_types = MarketType.where(code: public_market.market_type_codes)
+  expected_required_attributes = market_types
+    .flat_map(&:required_attributes)
+    .uniq
+
+  actual_attributes = public_market.market_attributes.to_a
+
+  expect(actual_attributes).to match_array(expected_required_attributes)
+end
+
 Then('market information should be consistent across all pages') do
   name = 'Fourniture de matériel informatique'
   lot_name = 'Lot 1 - Ordinateurs portables'
 
-  # Check configure page
   visit step_buyer_public_market_path(@market_identifier, :configure)
   expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 
-  # Check required documents page
   visit step_buyer_public_market_path(@market_identifier, :required_fields)
   expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 
-  # Check optional documents page
   visit step_buyer_public_market_path(@market_identifier, :additional_fields)
   expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 
-  # Check summary page
   visit step_buyer_public_market_path(@market_identifier, :summary)
   expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 end
 
-# Document verification steps
 Then('I should see required documents listed') do
   expect(page).to have_content('Identification de l\'entreprise')
   expect(page).to have_content('Nom de l\'entreprise')

@@ -29,7 +29,7 @@ Feature: Buyer Configuration Flow
     And I should see "Nom de l'entreprise"
     And I should see "Condamnation pénale"
     And I should see a "Précédent" button
-    And I should see "Suivant"
+    And I should see a button "Suivant"
     
     When I click on "Suivant"
     Then I should be on the optional documents page
@@ -132,3 +132,9 @@ Feature: Buyer Configuration Flow
     Then I should see "Je veux demander des informations et documents complémentaires au candidat"
     And I should see "Oui"
     And I should see "Non"
+
+  Scenario: Les attributs obligatoires sont automatiquement ajoutés à l'étape required_fields
+    When I visit the required documents page for my public market
+    And I click on "Suivant"
+    Then the public market should have all required attributes from its market types
+    And I should be on the optional documents page

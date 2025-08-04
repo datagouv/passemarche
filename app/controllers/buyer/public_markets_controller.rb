@@ -12,9 +12,9 @@ module Buyer
     def show
       case step
       when :required_fields
-        @required_fields = @presenter.required_fields_by_category_and_subcategory
+        @required_fields = @presenter.available_required_fields_by_category_and_subcategory
       when :additional_fields
-        @optional_fields = @presenter.optional_fields_by_category_and_subcategory
+        @optional_fields = @presenter.available_optional_fields_by_category_and_subcategory
       end
 
       render_wizard
@@ -25,7 +25,7 @@ module Buyer
       when :configure
         handle_configure_step
       when :required_fields
-        jump_to(:additional_fields)
+        handle_required_fields_step
       when :additional_fields
         handle_additional_fields_step
       when :summary
@@ -49,10 +49,22 @@ module Buyer
       @public_market.save!
     end
 
+    def handle_required_fields_step
+      @public_market.market_attributes = @presenter.available_required_market_attributes
+      @public_market.save!
+
+      jump_to(:additional_fields)
+    end
+
     def handle_additional_fields_step
       selected_attribute_keys = params[:selected_attribute_keys] || []
-      selected_attributes = MarketAttribute.where(key: selected_attribute_keys)
-      @public_market.market_attributes = selected_attributes
+      selected_optional_attributes = MarketAttribute.where(key: selected_attribute_keys)
+
+      existing_required_attributes = @public_market.market_attributes.required
+
+      all_attributes = (existing_required_attributes + selected_optional_attributes).uniq
+
+      @public_market.market_attributes = all_attributes
       @public_market.save!
       jump_to(:summary)
     end

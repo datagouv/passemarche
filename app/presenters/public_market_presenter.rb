@@ -5,12 +5,12 @@ class PublicMarketPresenter
     @public_market = public_market
   end
 
-  def required_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(required_market_attributes)
+  def available_required_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(available_required_market_attributes)
   end
 
-  def optional_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(optional_market_attributes)
+  def available_optional_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(available_optional_market_attributes)
   end
 
   def all_fields_by_category_and_subcategory
@@ -29,18 +29,18 @@ class PublicMarketPresenter
     all_market_attributes.find { |attr| attr.key == key.to_s }
   end
 
-  private
-
-  def required_market_attributes
+  def available_required_market_attributes
     available_attributes(@public_market).required
   end
 
-  def optional_market_attributes
+  private
+
+  def available_optional_market_attributes
     available_attributes(@public_market).additional
   end
 
   def all_market_attributes
-    available_attributes(@public_market)
+    @public_market.market_attributes.active.ordered
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)
