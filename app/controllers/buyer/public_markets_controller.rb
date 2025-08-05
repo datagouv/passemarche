@@ -4,7 +4,7 @@ module Buyer
   class PublicMarketsController < ApplicationController
     include Wicked::Wizard
 
-    steps :configure, :required_fields, :additional_fields, :summary
+    steps :setup, :required_fields, :additional_fields, :summary
 
     before_action :find_public_market
     before_action :initialize_presenter
@@ -22,8 +22,8 @@ module Buyer
 
     def update
       case step
-      when :configure
-        handle_configure_step
+      when :setup
+        handle_setup_step
       when :required_fields
         handle_required_fields_step
       when :additional_fields
@@ -38,7 +38,7 @@ module Buyer
 
     private
 
-    def handle_configure_step
+    def handle_setup_step
       return if params[:public_market].blank?
 
       return unless params[:public_market][:add_defense_market_type] == 'true'
