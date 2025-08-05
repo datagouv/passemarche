@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-When('I visit the configure page for my public market') do
+When('I visit the setup page for my public market') do
   @market_identifier = @last_api_response['identifier']
-  visit step_buyer_public_market_path(identifier: @market_identifier, id: :configure)
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: :setup)
 end
 
 When('I visit the required documents page for my public market') do
@@ -53,8 +53,8 @@ Given('I am on the summary page for my public market') do
   visit step_buyer_public_market_path(@market_identifier, :summary)
 end
 
-Then('I should be on the configure page') do
-  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :configure))
+Then('I should be on the setup page') do
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :setup))
 end
 
 Then('I should be on the required documents page') do
@@ -158,7 +158,7 @@ Then('market information should be consistent across all pages') do
   name = 'Fourniture de matériel informatique'
   lot_name = 'Lot 1 - Ordinateurs portables'
 
-  visit step_buyer_public_market_path(@market_identifier, :configure)
+  visit step_buyer_public_market_path(@market_identifier, :setup)
   expect(page).to have_content(name)
   expect(page).to have_content(lot_name)
 

@@ -160,7 +160,7 @@ Then('the configuration URL should point to the buyer configuration page') do
   identifier = @response_body['identifier']
   configuration_url = @response_body['configuration_url']
 
-  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
+  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/setup")
 end
 
 When('I create a defense_industry public market with the following details:') do |table|

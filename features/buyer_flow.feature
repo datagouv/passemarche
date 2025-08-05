@@ -15,7 +15,7 @@ Feature: Buyer Configuration Flow
       | market_types | supplies                            |
 
   Scenario: Navigation complète du flux acheteur - aller simple
-    When I visit the configure page for my public market
+    When I visit the setup page for my public market
     Then I should see "Bienvenue,"
     And I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
@@ -59,11 +59,11 @@ Feature: Buyer Configuration Flow
     And I should see "Vérification des informations obligatoires"
     
     When I click on "Précédent"
-    Then I should be on the configure page
+    Then I should be on the setup page
     And I should see "Bienvenue,"
 
   Scenario: Vérification de la cohérence des informations du marché à travers les étapes
-    When I visit the configure page for my public market
+    When I visit the setup page for my public market
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
     And I should see "Fournitures"
@@ -89,8 +89,8 @@ Feature: Buyer Configuration Flow
     And the stepper should indicate step 2 as current
 
   Scenario: Navigation directe vers différentes étapes
-    When I visit the configure page for my public market
-    Then I should be on the configure page
+    When I visit the setup page for my public market
+    Then I should be on the setup page
     
     When I visit the required documents page for my public market
     Then I should be on the required documents page
@@ -105,14 +105,14 @@ Feature: Buyer Configuration Flow
     And I should see "Synthèse de ma candidature"
 
   Scenario: Marquer un marché comme défense en cochant la case
-    Given I visit the configure page for my public market
+    Given I visit the setup page for my public market
     When I check the "defense_industry" checkbox
     And I click on "Débuter l'activation de"
     Then the public market should be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
-    Given I visit the configure page for my public market
+    Given I visit the setup page for my public market
     When I click on "Débuter l'activation de"
     Then the public market should not be marked as defense_industry
     And I should be on the required documents page
@@ -123,7 +123,7 @@ Feature: Buyer Configuration Flow
       | deadline    | 2025-12-31T23:59:59Z            |
       | market_types | supplies                        |
       | defense_industry     | true                            |
-    And I visit the configure page for my public market
+    And I visit the setup page for my public market
     Then the defense_industry checkbox should be disabled and checked
     And I should see "Cette désignation a été définie par"
 

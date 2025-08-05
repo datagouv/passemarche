@@ -29,7 +29,7 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   def configuration_url_for(public_market)
     Rails.application.routes.url_helpers.step_buyer_public_market_url(
       public_market.identifier,
-      :configure,
+      :setup,
       host: request.host_with_port
     )
   end

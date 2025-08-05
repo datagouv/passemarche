@@ -166,7 +166,7 @@ fr:
     public_markets:
       wizard_completed: "Marché configuré avec succès"
       steps:
-        configure: "Configuration"
+        setup: "Configuration initiale"
         required_fields: "Vérification des informations obligatoires" 
         additional_fields: "Sélection des informations complémentaires"
         summary: "Synthèse"
