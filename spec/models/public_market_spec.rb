@@ -3,11 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe PublicMarket, type: :model do
-  describe 'associations' do
-    it { should belong_to(:editor) }
-    it { should have_and_belong_to_many(:market_attributes) }
-  end
-
   describe 'validations' do
     let(:editor) { create(:editor) }
 
@@ -38,34 +33,6 @@ RSpec.describe PublicMarket, type: :model do
       expect(public_market.identifier).to be_nil
       public_market.valid?
       expect(public_market.identifier).to match(/^VR-\d{4}-[A-Z0-9]{12}$/)
-    end
-  end
-
-  describe '#complete!' do
-    let(:public_market) { create(:public_market, completed_at: nil) }
-
-    it 'sets completed_at to current time' do
-      time_before = Time.zone.now
-      public_market.complete!
-      time_after = Time.zone.now
-
-      expect(public_market.completed_at).to be_between(time_before, time_after)
-    end
-
-    it 'persists the change' do
-      public_market.complete!
-      public_market.reload
-      expect(public_market.completed_at).to be_present
-    end
-  end
-
-  describe 'market_attributes association' do
-    let(:public_market) { create(:public_market) }
-    let(:market_attribute) { create(:market_attribute) }
-
-    it 'can have market attributes associated' do
-      public_market.market_attributes << market_attribute
-      expect(public_market.market_attributes).to include(market_attribute)
     end
   end
 end

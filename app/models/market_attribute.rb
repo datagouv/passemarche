@@ -21,8 +21,4 @@ class MarketAttribute < ApplicationRecord
   scope :ordered, lambda {
     order(:required, :category_key, :subcategory_key, :key)
   }
-
-  def from_authentic_source?
-    from_api?
-  end
 end

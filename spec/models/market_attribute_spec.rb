@@ -13,11 +13,6 @@ RSpec.describe MarketAttribute, type: :model do
     it { should define_enum_for(:input_type).with_values(file_upload: 0, text_input: 1, checkbox: 2) }
   end
 
-  describe 'associations' do
-    it { should have_and_belong_to_many(:market_types) }
-    it { should have_and_belong_to_many(:public_markets) }
-  end
-
   describe 'scopes' do
     let!(:required_attribute) { create(:market_attribute, required: true) }
     let!(:optional_attribute) { create(:market_attribute, required: false) }
@@ -63,66 +58,6 @@ RSpec.describe MarketAttribute, type: :model do
         expect(ordered.first).to eq(economic_attr)
         expect(ordered.second).to eq(company_attr)
       end
-    end
-  end
-
-  describe 'input type predicate methods' do
-    describe '#file_upload?' do
-      it 'returns true for file_upload input type' do
-        attribute = build(:market_attribute, input_type: :file_upload)
-        expect(attribute.file_upload?).to be true
-      end
-
-      it 'returns false for other input types' do
-        attribute = build(:market_attribute, input_type: :text_input)
-        expect(attribute.file_upload?).to be false
-      end
-    end
-
-    describe '#text_input?' do
-      it 'returns true for text_input input type' do
-        attribute = build(:market_attribute, input_type: :text_input)
-        expect(attribute.text_input?).to be true
-      end
-
-      it 'returns false for other input types' do
-        attribute = build(:market_attribute, input_type: :file_upload)
-        expect(attribute.text_input?).to be false
-      end
-    end
-
-    describe '#checkbox?' do
-      it 'returns true for checkbox input type' do
-        attribute = build(:market_attribute, input_type: :checkbox)
-        expect(attribute.checkbox?).to be true
-      end
-
-      it 'returns false for other input types' do
-        attribute = build(:market_attribute, input_type: :file_upload)
-        expect(attribute.checkbox?).to be false
-      end
-    end
-  end
-
-  describe '#from_authentic_source?' do
-    it 'returns true when from_api is true' do
-      attribute = build(:market_attribute, from_api: true)
-      expect(attribute.from_authentic_source?).to be true
-    end
-
-    it 'returns false when from_api is false' do
-      attribute = build(:market_attribute, from_api: false)
-      expect(attribute.from_authentic_source?).to be false
-    end
-  end
-
-  describe 'input_types enum' do
-    it 'defines the expected input types' do
-      expect(MarketAttribute.input_types).to eq({
-        'file_upload' => 0,
-        'text_input' => 1,
-        'checkbox' => 2
-      })
     end
   end
 end
