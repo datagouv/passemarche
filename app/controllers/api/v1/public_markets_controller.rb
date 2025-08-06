@@ -2,21 +2,18 @@
 
 class Api::V1::PublicMarketsController < Api::V1::BaseController
   def create
-    return render json: { error: 'Editor not found' }, status: :forbidden unless current_editor
-
-    public_market = current_editor.public_markets.build(public_market_params)
-
-    if public_market.save
-      render json: success_response(public_market), status: :created
-    else
-      render json: { errors: public_market.errors.full_messages }, status: :unprocessable_entity
-    end
+    public_market = PublicMarketCreationService.call(current_editor, public_market_params)
+    render json: success_response(public_market), status: :created
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { error: e.message }, status: :forbidden
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   private
 
   def public_market_params
-    params.expect(public_market: %i[market_name lot_name deadline market_type defense_industry])
+    params.expect(public_market: [:name, :lot_name, :deadline, { market_type_codes: [] }])
   end
 
   def success_response(public_market)
@@ -29,7 +26,7 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   def configuration_url_for(public_market)
     Rails.application.routes.url_helpers.step_buyer_public_market_url(
       public_market.identifier,
-      :configure,
+      :setup,
       host: request.host_with_port
     )
   end

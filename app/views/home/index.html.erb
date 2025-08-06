@@ -16,27 +16,6 @@
       </p>
     </div>
 
-    <% if Rails.env.development? || Rails.env.sandbox? %>
-      <div class="fr-mt-3w fr-mb-2w">
-        <div class="fr-callout fr-callout--brown-caramel">
-          <h3 class="fr-callout__title">
-            <span class="fr-icon-tools-line" aria-hidden="true"></span>
-            Mode Démonstration
-          </h3>
-          <p class="fr-callout__text">
-            Testez rapidement la fonctionnalité en créant un marché avec des données aléatoires.
-          </p>
-          <%= button_to create_demo_market_path, 
-                        method: :post, 
-                        class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line",
-                        data: { 
-                          confirm: "Créer un marché de démonstration avec des données aléatoires ?" 
-                        } do %>
-            Créer un marché de démonstration
-          <% end %>
-        </div>
-      </div>
-    <% end %>
 
     <div class="fr-mt-4w">
       <h2><%= t('home.features.title') %></h2>

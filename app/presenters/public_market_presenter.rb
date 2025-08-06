@@ -3,23 +3,18 @@
 class PublicMarketPresenter
   def initialize(public_market)
     @public_market = public_market
-    @service = FieldConfigurationService.new(
-      market_type: public_market.market_type,
-      defense_industry: public_market.defense_industry?
-    )
   end
 
-  def required_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(@service.effective_required_fields)
+  def available_required_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(available_required_market_attributes)
   end
 
-  def optional_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(@service.effective_optional_fields)
+  def available_optional_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(available_optional_market_attributes)
   end
 
   def all_fields_by_category_and_subcategory
-    all_fields = @service.effective_required_fields + @service.effective_optional_fields
-    organize_fields_by_category_and_subcategory(all_fields)
+    organize_fields_by_category_and_subcategory(all_market_attributes)
   end
 
   def should_display_subcategory?(subcategories)
@@ -30,19 +25,37 @@ class PublicMarketPresenter
     I18n.t('form_fields.source_types')
   end
 
-  delegate :field_by_key, to: :@service
+  def field_by_key(key)
+    all_market_attributes.find { |attr| attr.key == key.to_s }
+  end
+
+  def available_required_market_attributes
+    available_attributes.required
+  end
 
   private
 
-  def organize_fields_by_category_and_subcategory(fields)
-    fields
-      .group_by(&:category)
-      .transform_values { |category_fields| group_by_subcategory(category_fields) }
+  def available_optional_market_attributes
+    available_attributes.additional
   end
 
-  def group_by_subcategory(fields)
-    fields
-      .group_by(&:subcategory)
-      .transform_values { |subcategory_fields| subcategory_fields.map(&:key) }
+  def all_market_attributes
+    @public_market.market_attributes.active.ordered
+  end
+
+  def organize_fields_by_category_and_subcategory(market_attributes)
+    market_attributes
+      .group_by(&:category_key)
+      .transform_values { |category_attrs| group_by_subcategory(category_attrs) }
+  end
+
+  def group_by_subcategory(market_attributes)
+    market_attributes
+      .group_by(&:subcategory_key)
+      .transform_values { |subcategory_attrs| subcategory_attrs.map(&:key) }
+  end
+
+  def available_attributes
+    @available_attributes ||= MarketAttributeFilteringService.call(@public_market)
   end
 end

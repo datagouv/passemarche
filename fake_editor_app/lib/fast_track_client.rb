@@ -46,18 +46,26 @@ class FastTrackClient
   end
 
   def create_public_market(access_token, market_data)
+    payload = { public_market: market_data }
+
     response = self.class.post(
       "#{@base_url}/api/v1/public_markets",
-      body: {
-        public_market: market_data
-      }.to_json,
+      body: payload.to_json,
       headers: {
         'Authorization' => "Bearer #{access_token}",
         'Content-Type' => 'application/json'
       }
     )
 
-    raise "Public market creation failed: #{response.code} - #{response.message}" unless response.success?
+    unless response.success?
+      error_details = response.parsed_response
+      error_msg = if error_details.is_a?(Hash) && error_details['errors']
+                    "#{response.code} - #{error_details['errors'].join(', ')}"
+                  else
+                    "#{response.code} - #{response.message}"
+                  end
+      raise "Public market creation failed: #{error_msg}"
+    end
 
     response.parsed_response
   end

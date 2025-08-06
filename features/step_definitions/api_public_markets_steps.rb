@@ -12,6 +12,12 @@ end
 When('I create a public market with the following details:') do |table|
   @public_market_params = table.rows_hash
 
+  # Convert market_types from string to array and rename to market_type_codes
+  if @public_market_params['market_types']
+    @public_market_params['market_type_codes'] = [@public_market_params['market_types']]
+    @public_market_params.delete('market_types')
+  end
+
   header 'Authorization', nil
 
   token = @access_token || @previous_token
@@ -58,10 +64,16 @@ Then('the public market should be saved in the database') do
   public_market = PublicMarket.find_by(identifier: identifier)
 
   expect(public_market).to be_present
-  expect(public_market.market_name).to eq(@public_market_params['market_name'])
+  expect(public_market.name).to eq(@public_market_params['name'])
   expect(public_market.lot_name).to eq(@public_market_params['lot_name'])
   expect(public_market.deadline.iso8601).to eq(@public_market_params['deadline'])
-  expect(public_market.market_type).to eq(@public_market_params['market_type'])
+
+  # Check market types
+  if @public_market_params['market_type_codes']
+    expected_codes = @public_market_params['market_type_codes']
+    actual_codes = public_market.market_type_codes
+    expect(actual_codes).to match_array(expected_codes)
+  end
 end
 
 Then('the public market should have no lot name') do
@@ -148,11 +160,22 @@ Then('the configuration URL should point to the buyer configuration page') do
   identifier = @response_body['identifier']
   configuration_url = @response_body['configuration_url']
 
-  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/configure")
+  expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/setup")
 end
 
 When('I create a defense_industry public market with the following details:') do |table|
   @public_market_params = table.rows_hash
+
+  market_type_codes = [@public_market_params['market_types']] if @public_market_params['market_types']
+  market_type_codes ||= []
+
+  if @public_market_params['defense_industry'] == 'true'
+    market_type_codes << 'defense' unless market_type_codes.include?('defense')
+    @public_market_params.delete('defense_industry')
+  end
+
+  @public_market_params['market_type_codes'] = market_type_codes if market_type_codes.any?
+  @public_market_params.delete('market_types')
 
   header 'Authorization', nil
 

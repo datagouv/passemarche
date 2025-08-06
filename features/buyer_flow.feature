@@ -9,13 +9,13 @@ Feature: Buyer Configuration Flow
     Given an authorized and active editor exists with credentials "test_editor_id" and "test_editor_secret"
     And I have a valid access token
     And I create a public market with the following details:
-      | market_name | Fourniture de matériel informatique |
+      | name | Fourniture de matériel informatique |
       | lot_name    | Lot 1 - Ordinateurs portables       |
       | deadline    | 2025-12-31T23:59:59Z                |
-      | market_type | supplies                            |
+      | market_types | supplies                            |
 
   Scenario: Navigation complète du flux acheteur - aller simple
-    When I visit the configure page for my public market
+    When I visit the setup page for my public market
     Then I should see "Bienvenue,"
     And I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
@@ -25,19 +25,19 @@ Feature: Buyer Configuration Flow
     Then I should be on the required documents page
     And I should see "Vérification des informations obligatoires"
     And I should see "Les documents et informations obligatoires"
-    And I should see "Identification de l'entreprise"
+    And I should see "Identité de l'entreprise"
     And I should see "Nom de l'entreprise"
-    And I should see "Condamnation définitive pour certaines infractions au code pénale"
+    And I should see "Condamnation pénale"
     And I should see a "Précédent" button
-    And I should see "Suivant"
+    And I should see a button "Suivant"
     
     When I click on "Suivant"
     Then I should be on the optional documents page
     And I should see "Sélection des informations complémentaires"
     And I should see "Les documents et informations complémentaires"
-    And I should see "Chiffre d'affaires global annuel"
-    And I should see "Manquement dans l'exécution d'un contrat antérieur"
-    And I should see "Influence"
+    And I should see "Chiffre d'affaires annuel"
+    And I should see "Rupture antérieure de contrat"
+    And I should see "Influence indue"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
     
@@ -59,14 +59,14 @@ Feature: Buyer Configuration Flow
     And I should see "Vérification des informations obligatoires"
     
     When I click on "Précédent"
-    Then I should be on the configure page
+    Then I should be on the setup page
     And I should see "Bienvenue,"
 
   Scenario: Vérification de la cohérence des informations du marché à travers les étapes
-    When I visit the configure page for my public market
+    When I visit the setup page for my public market
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "supplies"
+    And I should see "Fournitures"
     
     When I navigate to required documents page
     Then I should be on the required documents page
@@ -77,7 +77,7 @@ Feature: Buyer Configuration Flow
     When I navigate to summary page
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "supplies"
+    And I should see "Fournitures"
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
@@ -89,8 +89,8 @@ Feature: Buyer Configuration Flow
     And the stepper should indicate step 2 as current
 
   Scenario: Navigation directe vers différentes étapes
-    When I visit the configure page for my public market
-    Then I should be on the configure page
+    When I visit the setup page for my public market
+    Then I should be on the setup page
     
     When I visit the required documents page for my public market
     Then I should be on the required documents page
@@ -105,25 +105,25 @@ Feature: Buyer Configuration Flow
     And I should see "Synthèse de ma candidature"
 
   Scenario: Marquer un marché comme défense en cochant la case
-    Given I visit the configure page for my public market
+    Given I visit the setup page for my public market
     When I check the "defense_industry" checkbox
     And I click on "Débuter l'activation de"
     Then the public market should be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
-    Given I visit the configure page for my public market
+    Given I visit the setup page for my public market
     When I click on "Débuter l'activation de"
     Then the public market should not be marked as defense_industry
     And I should be on the required documents page
 
   Scenario: Marché avec défense pré-configuré par l'éditeur
     When I create a defense_industry public market with the following details:
-      | market_name | Fourniture de matériel militaire |
+      | name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
-      | market_type | supplies                        |
+      | market_types | supplies                        |
       | defense_industry     | true                            |
-    And I visit the configure page for my public market
+    And I visit the setup page for my public market
     Then the defense_industry checkbox should be disabled and checked
     And I should see "Cette désignation a été définie par"
 
@@ -132,3 +132,9 @@ Feature: Buyer Configuration Flow
     Then I should see "Je veux demander des informations et documents complémentaires au candidat"
     And I should see "Oui"
     And I should see "Non"
+
+  Scenario: Les attributs obligatoires sont automatiquement ajoutés à l'étape required_fields
+    When I visit the required documents page for my public market
+    And I click on "Suivant"
+    Then the public market should have all required attributes from its market types
+    And I should be on the optional documents page

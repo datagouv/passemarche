@@ -12,10 +12,10 @@ Feature: API Public Markets Management
 
   Scenario: Créer un marché public avec succès
     When I create a public market with the following details:
-      | market_name | Fourniture de matériel informatique |
-      | lot_name    | Lot 1 - Ordinateurs portables       |
-      | deadline    | 2025-12-31T23:59:59Z                |
-      | market_type | supplies                            |
+      | name  | Fourniture de matériel informatique |
+      | lot_name     | Lot 1 - Ordinateurs portables       |
+      | deadline     | 2025-12-31T23:59:59Z                |
+      | market_types | supplies                            |
     Then the response status should be 201
     And I should receive a public market identifier starting with "VR-"
     And I should receive a configuration URL
@@ -23,9 +23,9 @@ Feature: API Public Markets Management
 
   Scenario: Créer un marché public avec tous les champs optionnels
     When I create a public market with the following details:
-      | market_name | Services de maintenance            |
+      | name | Services de maintenance            |
       | deadline    | 2025-06-30T18:00:00Z              |
-      | market_type | services                          |
+      | market_types | services                          |
     Then the response status should be 201
     And I should receive a public market identifier
     And the public market should have no lot name
@@ -33,18 +33,18 @@ Feature: API Public Markets Management
   Scenario: Échec de création sans token d'authentification
     Given I do not have an access token
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
-      | market_type | supplies            |
+      | market_types | supplies            |
     Then the response status should be 401
     And I should receive an authentication error
 
   Scenario: Échec de création avec un token invalide
     Given I have an invalid access token
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
-      | market_type | supplies            |
+      | market_types | supplies            |
     Then the response status should be 401
     And I should receive an authentication error
 
@@ -52,51 +52,51 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | lot_name    | Lot 1              |
       | deadline    | 2025-12-31T23:59:59Z |
-      | market_type | supplies            |
+      | market_types | supplies            |
     Then the response status should be 422
     And the response should contain validation errors
 
   Scenario: Échec de création sans deadline
     When I create a public market with the following details:
-      | market_name | Test Market |
-      | market_type | supplies    |
+      | name | Test Market |
+      | market_types | supplies    |
     Then the response status should be 422
     And the response should contain validation errors
 
   Scenario: Échec de création sans type de marché
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
     Then the response status should be 422
     And the response should contain validation errors
 
   Scenario: Créer plusieurs marchés publics pour le même éditeur
     When I create a public market with the following details:
-      | market_name | Premier marché     |
+      | name | Premier marché     |
       | deadline    | 2025-12-31T23:59:59Z |
-      | market_type | supplies            |
+      | market_types | supplies            |
     And I create another public market with the following details:
-      | market_name | Deuxième marché    |
+      | name | Deuxième marché    |
       | deadline    | 2025-11-30T23:59:59Z |
-      | market_type | services            |
+      | market_types | services            |
     Then both public markets should be created successfully
     And each public market should have a unique identifier
     And both markets should belong to the same editor
 
   Scenario: Format de l'identifiant généré
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
-      | market_type | supplies            |
+      | market_types | supplies            |
     Then the identifier should match the format "VR-YYYY-XXXXXXXXXXXX"
     And the year part should be the current year
     And the suffix should be a 12-character alphanumeric code
 
   Scenario: URL de configuration générée correctement
     When I create a public market with the following details:
-      | market_name | Test Market        |
+      | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
-      | market_type | supplies            |
+      | market_types | supplies            |
     Then the configuration URL should contain the identifier
     And the configuration URL should use the correct host
     And the configuration URL should point to the buyer configuration page

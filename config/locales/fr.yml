@@ -103,11 +103,12 @@ fr:
         candidature:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
-          
-  demo:
-    unavailable: "Demo uniquement disponible en développement et sandbox"
-    market_created: "Marché de démonstration créé : %{market_name}"
-    creation_error: "Erreur lors de la création du marché de démonstration : %{error}"
+  
+  market_types:
+    supplies: "Fournitures"
+    services: "Services"
+    works: "Travaux"
+    defense: "Défense et sécurité"
     
   form_fields:
     categories:
@@ -165,7 +166,7 @@ fr:
     public_markets:
       wizard_completed: "Marché configuré avec succès"
       steps:
-        configure: "Configuration"
+        setup: "Configuration initiale"
         required_fields: "Vérification des informations obligatoires" 
         additional_fields: "Sélection des informations complémentaires"
         summary: "Synthèse"
@@ -401,12 +402,16 @@ fr:
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
+        cannot_be_alone: "ne peut pas être seul"
       models:
         public_market:
           attributes:
-            market_name:
+            name:
               blank: "ne peut pas être vide"
             deadline:
               blank: "ne peut pas être vide"
             market_type:
               blank: "ne peut pas être vide"
+            market_types:
+              blank: "ne peut pas être vide"
+              cannot_be_alone: "le marché de défense ne peut pas être seul"

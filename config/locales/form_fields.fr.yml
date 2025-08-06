@@ -3,6 +3,14 @@
 
 fr:
   form_fields:
+    source_types:
+      authentic_source:
+        label: "Source authentique"
+        badge_class: "fr-badge--success"
+      honor_declaration:
+        label: "Déclaration sur l'honneur"
+        badge_class: "fr-badge--info"
+
     categories:
       company_identity: "Identité de l'entreprise"
       exclusion_criteria: "Motifs d'exclusion"

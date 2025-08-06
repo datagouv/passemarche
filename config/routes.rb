@@ -28,8 +28,5 @@ Rails.application.routes.draw do
 
   get 'up' => 'rails/health#show', as: :rails_health_check
   
-  # Demo functionality (development only)
-  post 'demo/create_market', to: 'home#create_demo_market', as: :create_demo_market
-  
   root 'home#index'
 end
