@@ -107,6 +107,20 @@ RSpec.describe MarketConfigurationService do
 
         expect(public_market.reload.market_attributes).to eq([required_attribute])
       end
+
+      it 'removes previously selected optional attributes when unticked' do
+        # First, add both required and optional attributes
+        public_market.market_attributes = [required_attribute, optional_attribute]
+        public_market.save!
+
+        # Then simulate user unticking the optional attribute
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :additional_fields, params)
+
+        # Should only have required attributes left
+        expect(public_market.reload.market_attributes).to eq([required_attribute])
+        expect(public_market.reload.market_attributes).not_to include(optional_attribute)
+      end
     end
 
     context 'with summary step' do

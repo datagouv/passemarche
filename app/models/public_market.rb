@@ -34,6 +34,13 @@ class PublicMarket < ApplicationRecord
     save!
   end
 
+  def sync_optional_market_attributes(selected_attributes)
+    required_attributes = market_attributes.required
+    all_attributes = (required_attributes + Array(selected_attributes)).uniq
+    self.market_attributes = all_attributes
+    save!
+  end
+
   private
 
   def must_have_valid_market_type_codes

@@ -45,7 +45,7 @@ class MarketConfigurationService < ApplicationService
   def snapshot_additional_fields
     selected_attribute_keys = params[:selected_attribute_keys] || []
     selected_optional_attributes = MarketAttribute.where(key: selected_attribute_keys)
-    public_market.add_market_attributes(selected_optional_attributes)
+    public_market.sync_optional_market_attributes(selected_optional_attributes)
 
     { public_market: public_market, next_step: :summary }
   end
