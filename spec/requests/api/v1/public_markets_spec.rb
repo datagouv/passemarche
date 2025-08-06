@@ -115,7 +115,11 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
 
       before do
         post '/api/v1/public_markets',
-          headers: { 'Authorization' => "Bearer #{other_access_token.token}" }
+          params: market_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{other_access_token.token}",
+            'Content-Type' => 'application/json'
+          }
       end
 
       it 'returns forbidden status' do

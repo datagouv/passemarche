@@ -18,7 +18,7 @@ RSpec.describe ApplicationService do
   describe '.call' do
     it 'creates an instance and calls the call method' do
       result = test_service_class.call('test_value')
-      
+
       expect(result).to eq('test_value')
     end
   end
