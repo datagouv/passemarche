@@ -8,6 +8,7 @@ class PublicMarket < ApplicationRecord
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
+  validates :market_type_codes, presence: true, length: { minimum: 1 }
   validate :must_have_valid_market_type_codes
 
   before_validation :generate_identifier, on: :create
@@ -27,8 +28,6 @@ class PublicMarket < ApplicationRecord
   private
 
   def must_have_valid_market_type_codes
-    errors.add(:market_type_codes, :empty) if market_type_codes.empty?
-
     check_valid_market_type_codes
 
     errors.add(:market_type_codes, :cannot_be_alone) if market_type_codes.one? && market_type_codes.first == 'defense'
