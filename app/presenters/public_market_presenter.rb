@@ -30,13 +30,13 @@ class PublicMarketPresenter
   end
 
   def available_required_market_attributes
-    available_attributes(@public_market).required
+    available_attributes.required
   end
 
   private
 
   def available_optional_market_attributes
-    available_attributes(@public_market).additional
+    available_attributes.additional
   end
 
   def all_market_attributes
@@ -55,11 +55,7 @@ class PublicMarketPresenter
       .transform_values { |subcategory_attrs| subcategory_attrs.map(&:key) }
   end
 
-  def available_attributes(public_market)
-    MarketAttribute.joins(:market_types)
-      .where(market_types: { code: public_market.market_type_codes })
-      .distinct
-      .active
-      .ordered
+  def available_attributes
+    @available_attributes ||= MarketAttributeFilteringService.call(@public_market)
   end
 end
