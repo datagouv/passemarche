@@ -415,3 +415,5 @@ fr:
             market_types:
               blank: "ne peut pas être vide"
               cannot_be_alone: "le marché de défense ne peut pas être seul"
+            market_type_codes:
+              invalid_codes: "contient des codes invalides : %{codes}"

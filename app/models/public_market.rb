@@ -50,10 +50,14 @@ class PublicMarket < ApplicationRecord
   end
 
   def check_valid_market_type_codes
-    market_types = MarketType.where(code: market_type_codes)
-    market_type_codes.each do |code|
-      next if market_types.exists?(code: code)
-    end
+    return if market_type_codes.blank?
+
+    valid_codes = MarketType.where(code: market_type_codes).pluck(:code)
+    invalid_codes = market_type_codes - valid_codes
+
+    return if invalid_codes.empty?
+
+    errors.add(:market_type_codes, :invalid_codes, codes: invalid_codes.join(', '))
   end
 
   def generate_identifier

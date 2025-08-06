@@ -13,6 +13,10 @@ RSpec.describe PublicMarketCreationService do
     }
   end
 
+  before do
+    MarketType.find_or_create_by(code: 'supplies')
+  end
+
   describe '.call' do
     context 'with valid parameters' do
       it 'creates a public market' do

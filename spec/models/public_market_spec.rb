@@ -23,6 +23,33 @@ RSpec.describe PublicMarket, type: :model do
 
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:deadline) }
+
+    describe 'market_type_codes validation' do
+      let(:supplies_market_type) { create(:market_type, code: 'supplies') }
+      let(:services_market_type) { create(:market_type, code: 'services') }
+
+      before do
+        supplies_market_type
+        services_market_type
+      end
+
+      it 'accepts valid market type codes' do
+        public_market = build(:public_market, editor: editor, market_type_codes: ['supplies'])
+        expect(public_market).to be_valid
+      end
+
+      it 'rejects invalid market type codes' do
+        public_market = build(:public_market, editor: editor, market_type_codes: ['invalid_code'])
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:market_type_codes]).to include('contient des codes invalides : invalid_code')
+      end
+
+      it 'rejects mix of valid and invalid codes' do
+        public_market = build(:public_market, editor: editor, market_type_codes: %w[supplies invalid_code])
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:market_type_codes]).to include('contient des codes invalides : invalid_code')
+      end
+    end
   end
 
   describe 'identifier generation' do

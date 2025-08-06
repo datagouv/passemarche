@@ -15,6 +15,10 @@ RSpec.describe UniqueAssociationValidator do
     end
   end
 
+  before do
+    MarketType.find_or_create_by(code: 'supplies')
+  end
+
   describe '.validates_uniqueness_of_association' do
     let(:editor) { create(:editor) }
     let(:market_attribute1) { create(:market_attribute, key: 'attribute1') }
