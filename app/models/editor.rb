@@ -20,36 +20,10 @@ class Editor < ApplicationRecord
   end
 
   def ensure_doorkeeper_application!
-    return doorkeeper_application if doorkeeper_application
-
-    create_doorkeeper_application!
+    EditorSyncService.call(self)
   end
 
   def sync_to_doorkeeper!
-    if doorkeeper_application
-      update_doorkeeper_application!
-    else
-      create_doorkeeper_application!
-    end
-  end
-
-  private
-
-  def create_doorkeeper_application!
-    CustomDoorkeeperApplication.create!(
-      name: name,
-      uid: client_id,
-      secret: client_secret,
-      redirect_uri: '',
-      scopes: 'api_access api_read api_write'
-    )
-  end
-
-  def update_doorkeeper_application!
-    doorkeeper_application.update!(
-      name: name,
-      secret: client_secret,
-      scopes: 'api_access api_read api_write'
-    )
+    EditorUpdateSyncService.call(self)
   end
 end
