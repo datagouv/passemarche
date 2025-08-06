@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class MarketAttribute < ApplicationRecord
+  include UniqueAssociationValidator
+
   has_and_belongs_to_many :market_types
   has_and_belongs_to_many :public_markets
 
   validates :key, presence: true, uniqueness: true
   validates :category_key, :subcategory_key, presence: true
+  validates_uniqueness_of_association :market_types, :public_markets
 
   enum :input_type, {
     file_upload: 0,

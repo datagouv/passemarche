@@ -36,9 +36,8 @@ class MarketConfigurationService < ApplicationService
   end
 
   def snapshot_required_fields
-    presenter = PublicMarketPresenter.new(public_market)
-    public_market.market_attributes = presenter.available_required_market_attributes
-    public_market.save!
+    required_attributes = MarketAttributeFilteringService.call(@public_market).required
+    public_market.add_market_attributes(required_attributes)
 
     { public_market: public_market, next_step: :additional_fields }
   end
@@ -46,11 +45,7 @@ class MarketConfigurationService < ApplicationService
   def snapshot_additional_fields
     selected_attribute_keys = params[:selected_attribute_keys] || []
     selected_optional_attributes = MarketAttribute.where(key: selected_attribute_keys)
-    existing_required_attributes = public_market.market_attributes.required
-    all_attributes = (existing_required_attributes + selected_optional_attributes).uniq
-
-    public_market.market_attributes = all_attributes
-    public_market.save!
+    public_market.add_market_attributes(selected_optional_attributes)
 
     { public_market: public_market, next_step: :summary }
   end

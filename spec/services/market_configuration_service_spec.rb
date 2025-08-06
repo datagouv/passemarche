@@ -60,6 +60,20 @@ RSpec.describe MarketConfigurationService do
         expect(result[:next_step]).to eq(:additional_fields)
         expect(public_market.reload.market_attributes).to include(required_attribute)
       end
+
+      it 'preserves existing optional attributes when revisiting step' do
+        # First, simulate user going through additional_fields step
+        public_market.market_attributes = [required_attribute, optional_attribute]
+        public_market.save!
+
+        # Then simulate user going back to required_fields step
+        result = described_class.call(public_market, :required_fields, {})
+
+        expect(result).to be_a(Hash)
+        expect(result[:next_step]).to eq(:additional_fields)
+        # Should preserve both required and optional attributes
+        expect(public_market.reload.market_attributes).to include(required_attribute, optional_attribute)
+      end
     end
 
     context 'with additional_fields step' do

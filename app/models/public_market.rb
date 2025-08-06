@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublicMarket < ApplicationRecord
+  include UniqueAssociationValidator
+
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
@@ -10,6 +12,7 @@ class PublicMarket < ApplicationRecord
   validates :deadline, presence: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validate :must_have_valid_market_type_codes
+  validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
 
@@ -23,6 +26,12 @@ class PublicMarket < ApplicationRecord
 
   def defense_industry?
     market_type_codes.any?('defense')
+  end
+
+  def add_market_attributes(new_attributes)
+    all_attributes = (market_attributes.to_a + Array(new_attributes)).uniq
+    self.market_attributes = all_attributes
+    save!
   end
 
   private
