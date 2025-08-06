@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PublicMarket < ApplicationRecord
-  include FieldConstants
-
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
