@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Admin::Editors', type: :request do
-  let(:admin) { create(:admin) }
+  let(:admin_user) { create(:admin_user) }
   let(:editor) { create(:editor) }
 
   before do
-    sign_in admin, scope: :admin
+    sign_in admin_user, scope: :admin_user
   end
 
   describe 'GET /admin/editors' do

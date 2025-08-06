@@ -1,5 +1,5 @@
 class Admin::EditorsController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_admin_user!
   before_action :set_editor, only: %i[show edit update destroy]
 
   def index
@@ -26,7 +26,7 @@ class Admin::EditorsController < ApplicationController
     if @editor.save
       redirect_to admin_editor_path(@editor), notice: t('admin.editors.created')
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -34,7 +34,7 @@ class Admin::EditorsController < ApplicationController
     if @editor.update(editor_params)
       redirect_to admin_editor_path(@editor), notice: t('admin.editors.updated')
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

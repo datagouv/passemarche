@@ -7,7 +7,7 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   rescue ActiveRecord::RecordNotFound => e
     render json: { error: e.message }, status: :forbidden
   rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
 
   private

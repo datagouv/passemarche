@@ -24,7 +24,7 @@ if Rails.env.development? || Rails.env.sandbox?
 end
 
 # Create admin account for all environments
-admin_user = Admin.find_or_create_by(email: 'admin@voie-rapide.gouv.fr') do |admin|
+admin_user = AdminUser.find_or_create_by(email: 'admin@voie-rapide.gouv.fr') do |admin|
   admin.password = 'password123'
   admin.password_confirmation = 'password123'
 end

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :editors
     root 'editors#index'
   end
-  devise_for :admins, skip: [:registrations, :passwords, :confirmations, :unlocks]
+  devise_for :admin_users, skip: %i[registrations passwords confirmations unlocks]
   use_doorkeeper do
     skip_controllers :authorizations, :applications, :authorized_applications
   end
@@ -27,6 +27,6 @@ Rails.application.routes.draw do
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check
-  
+
   root 'home#index'
 end
