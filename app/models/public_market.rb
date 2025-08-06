@@ -34,10 +34,9 @@ class PublicMarket < ApplicationRecord
   end
 
   def check_valid_market_type_codes
+    market_types = MarketType.where(code: market_type_codes)
     market_type_codes.each do |code|
-      MarketType.find_by(code: code).tap do |mt|
-        errors.add(:market_type_codes, :invalid, code: code) unless mt
-      end
+      next if market_types.exists?(code: code)
     end
   end
 
