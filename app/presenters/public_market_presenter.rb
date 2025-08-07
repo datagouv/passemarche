@@ -26,7 +26,7 @@ class PublicMarketPresenter
   end
 
   def field_by_key(key)
-    all_market_attributes.find { |attr| attr.key == key.to_s }
+    MarketAttribute.find_by(key: key.to_s)
   end
 
   def available_required_market_attributes
