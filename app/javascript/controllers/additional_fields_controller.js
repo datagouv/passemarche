@@ -4,8 +4,7 @@ export default class extends Controller {
   static targets = ["accordion", "submitButton", "yesOption", "noOption"]
 
   connect() {
-    this._hideAccordion()
-    this._disableSubmit()
+    this._initializeState()
   }
 
   showAdditionalFieldsAndEnableSubmit() {
@@ -65,6 +64,23 @@ export default class extends Controller {
     if (hasCheckedBoxes) {
       this._enableSubmit()
     } else {
+      this._disableSubmit()
+    }
+  }
+
+  _initializeState() {
+    const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
+    const hasPreCheckedBoxes = Array.from(checkboxes).some(checkbox => checkbox.checked)
+    
+    if (hasPreCheckedBoxes) {
+      // Public market already has additional fields selected
+      this.yesOptionTarget.checked = true
+      this._showAccordion()
+      this._enableSubmit()
+      this._addCheckboxListeners()
+    } else {
+      // No additional fields selected yet
+      this._hideAccordion()
       this._disableSubmit()
     }
   }
