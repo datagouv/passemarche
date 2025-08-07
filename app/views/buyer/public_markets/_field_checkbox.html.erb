@@ -13,7 +13,7 @@
   is_checked = checked || public_market&.market_attributes&.any? { |attr| attr.key == field_key.to_s }
 %>
 
-<div class="fr-fieldset__element">
+<div class="fr-fieldset__element fr-pt-2w fr-mb-0">
   <div class="fr-checkbox-group">
     <%= check_box_tag "selected_attribute_keys[]", field_key, is_checked,
         { id: "field_#{field_key}", class: "fr-checkbox" } %>

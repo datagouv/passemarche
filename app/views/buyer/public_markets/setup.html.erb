@@ -2,8 +2,8 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12 fr-col-lg-7">
-    <div class="fr-mb-6w">
-      <h1 class="fr-h1 fr-mb-2w">Bienvenue,</h1>
+    <div class="fr-mb-5w">
+      <h1 class="fr-h1 fr-mb-1w">Bienvenue,</h1>
       <p class="fr-text--lg fr-mb-0">
         <%= @public_market.editor.name %> vous permet de mettre en place une 
         candidature simplifiée pour les entreprises et vous apporte 
@@ -16,19 +16,19 @@
       <h2 class="fr-card__title fr-mb-3w">Les informations du marché</h2>
       
       <div class="fr-mb-2w">
-        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du marché</h3>
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold">Nom du marché</h3>
         <p class="fr-text--sm fr-mb-0"><%= @public_market.name %></p>
       </div>
 
       <% if @public_market.lot_name.present? %>
         <div class="fr-mb-2w">
-          <h3 class="fr-text--md fr-mb-1w fr-text--bold">Nom du lot</h3>
+          <h3 class="fr-text--md fr-mb-0 fr-text--bold">Nom du lot</h3>
           <p class="fr-text--sm fr-mb-0"><%= @public_market.lot_name %></p>
         </div>
       <% end %>
 
       <div class="fr-mb-2w">
-        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Date et heure limite de remise des plis</h3>
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold">Date et heure limite de remise des plis</h3>
         <p class="fr-text--sm fr-mb-0">
           <%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)
         </p>

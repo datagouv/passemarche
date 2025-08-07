@@ -14,9 +14,9 @@
 </div>
 
 <div class="fr-grid-row fr-grid-row--center">
-  <div class="fr-col-12 fr-col-lg-10">
-    <div class="fr-mb-6w">
-      <h1 class="fr-h1 fr-mb-2w">Synthèse de ma candidature</h1>
+  <div class="fr-col-12">
+    <div class="fr-mb-5w">
+      <h1 class="fr-h1 fr-mb-1w">Synthèse de ma candidature</h1>
       <p class="fr-text--lg fr-mb-0">
         Vérifiez les paramètres de votre marché avant de finaliser la configuration.
       </p>
@@ -29,39 +29,38 @@
             Informations du marché
           </h2>
         </div>
-        <div class="fr-card__body">
-          <div class="fr-p-4w">
+        <div class="fr-card__body fr-pt-4w fr-pb-4w">
+          <div class="fr-mb-3w">
+            <div class="fr-text--bold fr-mb-1w">Nom du marché</div>
+            <div><%= @public_market.name %></div>
+          </div>
+          <% if @public_market.lot_name.present? %>
             <div class="fr-mb-3w">
-              <div class="fr-text--bold fr-mb-1w">Nom du marché</div>
-              <div><%= @public_market.name %></div>
+              <div class="fr-text--bold fr-mb-1w">Nom du lot</div>
+              <div><%= @public_market.lot_name %></div>
             </div>
-            <% if @public_market.lot_name.present? %>
-              <div class="fr-mb-3w">
-                <div class="fr-text--bold fr-mb-1w">Nom du lot</div>
-                <div><%= @public_market.lot_name %></div>
-              </div>
-            <% end %>
-            <div class="fr-mb-3w">
-              <div class="fr-text--bold fr-mb-1w">Date limite</div>
-              <div><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</div>
-            </div>
-            <div class="fr-mb-3w">
-              <div class="fr-text--bold fr-mb-1w">Type de marché</div>
-              <div>
-                <% @public_market.market_type_codes.each do |market_type_code| %>
-                  <span class="fr-badge fr-badge--<%= market_type_code == 'defense' ? 'warning' : 'info' %> fr-ml-1w">
-                    <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
-                  </span>
-                <% end %>
-                <% if @public_market.market_type_codes.empty? %>
-                  <span class="fr-text--sm">Aucun type de marché défini</span>
-                <% end %>
-              </div>
-            </div>
+          <% end %>
+          <div class="fr-mb-3w">
+            <div class="fr-text--bold fr-mb-1w">Date limite</div>
+            <div><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</div>
+          </div>
+          <div class="fr-mb-3w">
+            <div class="fr-text--bold fr-mb-1w">Type de marché</div>
             <div>
-              <div class="fr-text--bold fr-mb-1w">Identifiant</div>
-              <div><code><%= @public_market.identifier %></code></div>
+            <% if @public_market.market_type_codes.any? %>
+              <% @public_market.market_type_codes.each do |market_type_code| %>
+                <span class="fr-badge fr-badge--sm fr-mr-1w">
+                  <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+                </span>
+              <% end %>
+            <% else %>
+              <p class="fr-text--sm fr-mb-0">Aucun type de marché défini</p>
+            <% end %>
             </div>
+          </div>
+          <div>
+            <div class="fr-text--bold fr-mb-1w">Identifiant</div>
+            <div><code><%= @public_market.identifier %></code></div>
           </div>
         </div>
       </div>
