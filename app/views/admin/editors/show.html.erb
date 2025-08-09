@@ -55,6 +55,31 @@
         </div>
       </div>
 
+      <div class="fr-grid-row fr-mt-3w">
+        <div class="fr-col-12">
+          <div class="fr-card">
+            <div class="fr-card__body">
+              <h2 class="fr-card__title">Configuration Webhook</h2>
+              <div class="fr-card__content">
+                <% if @editor.webhook_configured? %>
+                  <p><strong>URL de webhook :</strong> <%= @editor.completion_webhook_url %></p>
+                  <p><strong>URL de redirection :</strong> <%= @editor.redirect_url || "Non configurée" %></p>
+                  <p><strong>Secret configuré :</strong> 
+                    <% if @editor.webhook_secret.present? %>
+                      <span class="fr-badge fr-badge--success">Oui</span>
+                    <% else %>
+                      <span class="fr-badge fr-badge--warning">Non</span>
+                    <% end %>
+                  </p>
+                <% else %>
+                  <p class="fr-text--sm">Webhook non configuré</p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="fr-mt-3w">
         <%= link_to "Modifier", edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
         <%= link_to "Supprimer", admin_editor_path(@editor), method: :delete,

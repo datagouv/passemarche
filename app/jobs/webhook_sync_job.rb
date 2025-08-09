@@ -53,7 +53,7 @@ class WebhookSyncJob < ApplicationJob
   end
 
   def generate_signature(editor, payload)
-    "sha256=#{editor.webhook_signature(payload.to_json)}"
+    "sha256=#{webhook_signature(editor.webhook_signature, payload.to_json)}"
   end
 
   def build_webhook_payload(public_market)
@@ -69,5 +69,11 @@ class WebhookSyncJob < ApplicationJob
         field_keys: public_market.market_attributes.pluck(:key)
       }
     }
+  end
+
+  def webhook_signature(webhook_secret, payload)
+    return nil if webhook_secret.blank?
+
+    OpenSSL::HMAC.hexdigest('SHA256', webhook_secret, payload)
   end
 end
