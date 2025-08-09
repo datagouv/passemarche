@@ -7,6 +7,8 @@ class PublicMarket < ApplicationRecord
 
   has_and_belongs_to_many :market_attributes
 
+  enum :sync_status, { sync_pending: 0, sync_processing: 1, sync_completed: 2, sync_failed: 3 }, default: :sync_pending, validate: true
+
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
@@ -22,6 +24,10 @@ class PublicMarket < ApplicationRecord
 
   def complete!
     update!(completed_at: Time.zone.now)
+  end
+
+  def sync_in_progress?
+    sync_pending? || sync_processing?
   end
 
   def defense_industry?

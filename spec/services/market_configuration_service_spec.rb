@@ -132,6 +132,12 @@ RSpec.describe MarketConfigurationService do
         expect(result).to eq(public_market)
         expect(public_market.reload.completed?).to be true
       end
+
+      it 'enqueues webhook sync job' do
+        expect {
+          described_class.call(public_market, :summary, {})
+        }.to have_enqueued_job(WebhookSyncJob).with(public_market.id)
+      end
     end
 
     context 'with unknown step' do
