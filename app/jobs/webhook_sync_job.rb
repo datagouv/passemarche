@@ -29,7 +29,7 @@ class WebhookSyncJob < ApplicationJob
       public_market.update!(sync_status: :sync_completed)
     else
       public_market.update!(sync_status: :sync_failed)
-      raise 'Webhook delivery failed'
+      raise StandardError, 'Webhook delivery failed'
     end
   end
 
