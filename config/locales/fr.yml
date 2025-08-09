@@ -165,6 +165,8 @@ fr:
   buyer:
     public_markets:
       wizard_completed: "Marché configuré avec succès"
+      market_completed_cannot_edit: "Ce marché a déjà été complété et ne peut plus être modifié."
+      sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
         required_fields: "Vérification des informations obligatoires" 
@@ -181,11 +183,29 @@ fr:
         question: "Je veux demander des informations et documents complémentaires au candidat"
         yes_option: "Oui"
         no_option: "Non"
+      sync:
+        loading: "Synchronisation en cours..."
+        processing:
+          title: "Synchronisation en cours"
+          message: "Votre marché est en cours de synchronisation avec la plateforme de l'éditeur. Veuillez patienter quelques instants."
+        completed:
+          title: "Synchronisation terminée"
+          message: "Votre marché a été synchronisé avec succès. Vous pouvez maintenant continuer."
+        failed:
+          title: "Erreur de synchronisation"
+          message: "Une erreur s'est produite lors de la synchronisation. Notre équipe a été notifiée. Vous pouvez nous contacter si le problème persiste."
+        continue: "Continuer"
+        contact_support: "Contacter le support"
       
   admin:
     editors:
       created: "Éditeur créé avec succès."
       updated: "Éditeur mis à jour avec succès."
+      webhook_secret_generated: "Nouveau secret webhook généré avec succès"
+      webhook_secret_error: "Erreur lors de la génération du secret"
+    webhook_events:
+      retry_queued: "Webhook mis en file d'attente pour réessai."
+      retry_not_available: "Ce webhook ne peut pas être réessayé."
       deleted: "Éditeur supprimé avec succès."
 
   activemodel:
@@ -417,3 +437,11 @@ fr:
               cannot_be_alone: "le marché de défense ne peut pas être seul"
             market_type_codes:
               invalid_codes: "contient des codes invalides : %{codes}"
+        editor:
+          attributes:
+            completion_webhook_url:
+              invalid_url: "n'est pas une URL valide"
+              https_required: "doit utiliser HTTPS en production"
+            redirect_url:
+              invalid_url: "n'est pas une URL valide"
+              https_required: "doit utiliser HTTPS en production"

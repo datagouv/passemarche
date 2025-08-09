@@ -46,7 +46,7 @@ Feature: Buyer Configuration Flow
     And I should see "Synthèse de ma candidature"
     And I should see "Informations du marché"
     And I should see "Identité de l'entreprise"
-    And I should see a disabled button "Finaliser la configuration"
+    And I should see a button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market

@@ -1,0 +1,75 @@
+<% content_for :title, "#{@public_market.editor.name} - Synchronisation" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-lg-7">
+    <div class="fr-mb-5w">
+      <h1 class="fr-h1 fr-mb-1w">Synchronisation en cours</h1>
+      <p class="fr-text--lg fr-mb-0">
+        Votre marché est en cours de synchronisation avec <%= @public_market.editor.name %>.
+        Cette opération permet de finaliser la configuration et de préparer l'accès
+        pour les candidats.
+      </p>
+    </div>
+
+    <div class="fr-mb-4w" 
+         data-controller="sync-status" 
+         data-sync-status-url-value="<%= buyer_sync_status_path(@public_market.identifier, format: :json) %>"
+         data-sync-status-redirect-url-value="<%= @public_market.editor.redirect_url&.gsub('{market_identifier}', @public_market.identifier) %>"
+         data-status="<%= @public_market.sync_status %>">
+      
+      <div id="sync-status-content">
+        <% if @public_market.sync_completed? %>
+          <div>
+            <h3 class="fr-h3">Synchronisation réussie</h3>
+            <p>
+              Votre marché a été synchronisé avec succès avec <%= @public_market.editor.name %>. 
+              Les candidats peuvent maintenant soumettre leur candidature.
+            </p>
+            <p class="fr-text--sm">
+              Vous allez être redirigé automatiquement vers votre plateforme. Si la redirection ne fonctionne pas, 
+              vous pouvez cliquer sur le bouton ci-dessous.
+            </p>
+            <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+              <%= link_to "Retourner sur #{@public_market.editor.name}", 
+                          @public_market.editor.redirect_url&.gsub('{market_identifier}', @public_market.identifier) || root_path,
+                          class: 'fr-btn' %>
+            </div>
+          </div>
+        
+        <% elsif @public_market.sync_failed? %>
+          <div>
+            <h3 class="fr-h3">Erreur inattendue</h3>
+            <p>
+              Désolée, lorem ipsum rencontre un problème, nous n'avons pas réussi à transmettre les informations au profil acheteur.
+            </p>
+            <p class="fr-text--sm">
+              Vous pouvez tenter de transférer à nouveau les informations en cliquant sur le bouton ci-dessous. Si vous avez besoin d'une aide immédiate, merci de nous contacter.
+            </p>
+            <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+              <%= button_to "Transmettre le formulaire", 
+                          retry_sync_buyer_public_market_path(@public_market.identifier),
+                          method: :post,
+                          class: "fr-btn",
+                          data: { turbo: false } %>
+              <%= link_to "Contactez-nous", 
+                          "mailto:support@voie-rapide.gouv.fr?subject=Erreur de synchronisation pour le marché #{@public_market.identifier}",
+                          class: "fr-btn fr-btn--secondary" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4">
+    <div class="center-content">
+      <% if @public_market.sync_completed? %>
+        <%= image_tag "sync_status_success.png", alt: "Synchronisation réussie" %>
+      <% elsif @public_market.sync_failed? %>
+        <%= image_tag "sync_status_error.png", alt: "Erreur de synchronisation" %>
+      <% end %>
+    </div>
+  </div>
+</div>

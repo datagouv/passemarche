@@ -9,3 +9,9 @@
       class: "fr-card__title fr-mb-0 fr-py-3w fr-px-4w #{additional_classes}",
       style: "background-color: var(--background-action-high-blue-france); color: white; font-weight: bold;" %>
 </div>
+
+<% if block_given? %>
+  <div class="fr-card__body">
+    <%= yield %>
+  </div>
+<% end %>
