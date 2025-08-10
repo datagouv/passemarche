@@ -49,6 +49,7 @@ RSpec.describe EditorSyncService do
         existing_app.reload
         expect(existing_app.name).to eq('Old Name')
         expect(existing_app.secret).to eq('old_secret')
+        expect(existing_app.scopes.to_s).to eq('api_access')
       end
     end
   end

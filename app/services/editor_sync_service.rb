@@ -6,18 +6,12 @@ class EditorSyncService < ApplicationService
   end
 
   def call
-    ensure_doorkeeper_application!
+    editor.doorkeeper_application || create_doorkeeper_application!
   end
 
   private
 
   attr_reader :editor
-
-  def ensure_doorkeeper_application!
-    return editor.doorkeeper_application if editor.doorkeeper_application
-
-    create_doorkeeper_application!
-  end
 
   def create_doorkeeper_application!
     CustomDoorkeeperApplication.create!(
