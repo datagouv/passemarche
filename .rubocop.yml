@@ -63,6 +63,7 @@ Metrics/BlockLength:
     - "spec/spec_helper.rb"
     - "spec/support/shared_examples/*"
     - "spec/factories/**/*"
+    - "spec/features/**/*"
   AllowedMethods:
     - "describe"
     - "context"
