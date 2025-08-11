@@ -69,18 +69,6 @@ class PublicMarket < ApplicationRecord
   def generate_identifier
     return if identifier.present?
 
-    self.identifier = build_identifier
-  end
-
-  def build_identifier
-    now = Time.zone.now
-    year = now.year
-    suffix = generate_unique_suffix(now)
-    "VR-#{year}-#{suffix}"
-  end
-
-  def generate_unique_suffix(time)
-    unique_number = (time.to_f * 1_000_000).to_i + SecureRandom.random_number(1000)
-    unique_number.to_s(36).upcase.rjust(12, '0')[-12..]
+    self.identifier = IdentifierGenerationService.call
   end
 end
