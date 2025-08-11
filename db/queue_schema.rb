@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_09_155526) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_193554) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_155526) do
     t.index ["client_id"], name: "index_editors_on_client_id", unique: true
     t.index ["name"], name: "index_editors_on_name", unique: true
     t.index ["webhook_secret"], name: "index_editors_on_webhook_secret", unique: true, where: "(webhook_secret IS NOT NULL)"
+  end
+
+  create_table "market_applications", force: :cascade do |t|
+    t.string "identifier", null: false
+    t.bigint "public_market_id", null: false
+    t.string "siret", limit: 14
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
+    t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
+    t.index ["siret"], name: "index_market_applications_on_siret"
   end
 
   create_table "market_attributes", force: :cascade do |t|
@@ -256,6 +267,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_155526) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  add_foreign_key "market_applications", "public_markets"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "public_markets", "editors"
