@@ -88,10 +88,10 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
     end
   end
 
-  describe 'POST /admin/editors/:id/generate_webhook_secret' do
+  describe 'POST /admin/editors/:id/webhook_secrets' do
     it 'generates a new webhook secret' do
       expect {
-        post generate_webhook_secret_admin_editor_path(editor)
+        post admin_editor_webhook_secrets_path(editor)
       }.to change { editor.reload.webhook_secret }
 
       expect(response).to redirect_to(edit_admin_editor_path(editor))
@@ -99,7 +99,7 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
     end
 
     it 'generates a valid secret' do
-      post generate_webhook_secret_admin_editor_path(editor)
+      post admin_editor_webhook_secrets_path(editor)
 
       editor.reload
       expect(editor.webhook_secret).to be_present
@@ -112,7 +112,7 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
       end
 
       it 'shows error message' do
-        post generate_webhook_secret_admin_editor_path(editor)
+        post admin_editor_webhook_secrets_path(editor)
 
         expect(response).to redirect_to(edit_admin_editor_path(editor))
         expect(flash[:alert]).to eq('Erreur lors de la génération du secret')

@@ -39,6 +39,12 @@ class Editor < ApplicationRecord
     completion_webhook_url.present?
   end
 
+  def webhook_signature(payload)
+    return nil if webhook_secret.blank?
+
+    OpenSSL::HMAC.hexdigest('SHA256', webhook_secret, payload)
+  end
+
   private
 
   def validate_webhook_urls

@@ -3,9 +3,7 @@
 Rails.application.routes.draw do
   namespace :admin do
     resources :editors do
-      member do
-        post :generate_webhook_secret
-      end
+      resources :webhook_secrets, only: [:create]
     end
     mount MissionControl::Jobs::Engine, at: "/jobs"
     root 'editors#index'

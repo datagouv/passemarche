@@ -1,5 +1,5 @@
 class Admin::EditorsController < Admin::ApplicationController
-  before_action :set_editor, only: %i[show edit update destroy generate_webhook_secret]
+  before_action :set_editor, only: %i[show edit update destroy]
 
   def index
     @editors = Editor.order(:name)
@@ -40,15 +40,6 @@ class Admin::EditorsController < Admin::ApplicationController
   def destroy
     @editor.destroy
     redirect_to admin_editors_path, notice: t('admin.editors.deleted')
-  end
-
-  def generate_webhook_secret
-    @editor.generate_webhook_secret!
-    if @editor.save
-      redirect_to edit_admin_editor_path(@editor), notice: t('admin.editors.webhook_secret_generated')
-    else
-      redirect_to edit_admin_editor_path(@editor), alert: t('admin.editors.webhook_secret_error')
-    end
   end
 
   private

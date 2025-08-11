@@ -67,6 +67,24 @@
                   <p><strong>Secret configuré :</strong> 
                     <% if @editor.webhook_secret.present? %>
                       <span class="fr-badge fr-badge--success">Oui</span>
+                      <div class="fr-mt-2w" data-controller="webhook-secret-toggle">
+                        <div class="fr-input-group" style="max-width: 400px;">
+                          <input type="text" 
+                                 class="fr-input fr-text--sm" 
+                                 value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                                 readonly
+                                 data-webhook-secret-toggle-target="field"
+                                 data-webhook-secret-toggle-masked-value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                                 data-webhook-secret-toggle-real-value="<%= @editor.webhook_secret %>" />
+                          <button type="button" 
+                                  class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-eye-line"
+                                  data-action="click->webhook-secret-toggle#toggle"
+                                  data-webhook-secret-toggle-target="button"
+                                  title="Afficher le secret">
+                            <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                      </div>
                     <% else %>
                       <span class="fr-badge fr-badge--warning">Non</span>
                     <% end %>

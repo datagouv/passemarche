@@ -85,20 +85,39 @@
               <%= form.label :webhook_secret, "Secret webhook", class: "fr-label" %>
               <span class="fr-hint-text">Secret utilisé pour signer les payloads (HMAC-SHA256)</span>
               <% if @editor.webhook_secret.present? %>
-                <%= form.text_field :webhook_secret, class: "fr-input", value: "••••••••••••••••", disabled: true %>
+                <div style="position: relative;" data-controller="webhook-secret-toggle">
+                  <%= form.text_field :webhook_secret, 
+                      class: "fr-input", 
+                      value: "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+                      disabled: true,
+                      style: "padding-right: 45px;",
+                      data: { 
+                        "webhook-secret-toggle-target": "field",
+                        "webhook-secret-toggle-masked-value": "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+                        "webhook-secret-toggle-real-value": @editor.webhook_secret
+                      } %>
+                  <button type="button" 
+                          class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                          data-action="click->webhook-secret-toggle#toggle"
+                          data-webhook-secret-toggle-target="button"
+                          title="Afficher/Masquer le secret"
+                          style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
+                    <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
+                  </button>
+                </div>
               <% end %>
             </div>
             
             <div class="fr-mb-4w">
               <% if @editor.webhook_secret.present? %>
                 <%= link_to "Générer un nouveau secret", 
-                            generate_webhook_secret_admin_editor_path(@editor), 
+                            admin_editor_webhook_secrets_path(@editor), 
                             method: :post,
                             data: { confirm: "Êtes-vous sûr ? Cela invalidera l'ancien secret.", turbo_method: :post },
                             class: "fr-btn fr-btn--secondary fr-btn--sm" %>
               <% else %>
                 <%= link_to "Générer un secret", 
-                            generate_webhook_secret_admin_editor_path(@editor), 
+                            admin_editor_webhook_secrets_path(@editor), 
                             method: :post,
                             data: { turbo_method: :post },
                             class: "fr-btn fr-btn--secondary fr-btn--sm" %>
