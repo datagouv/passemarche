@@ -43,7 +43,7 @@ Feature: Buyer Configuration Flow
     
     When I click on "Suivant"
     Then I should be on the summary page
-    And I should see "Synthèse de ma candidature"
+    And I should see "Synthèse des paramètres de la candidature"
     And I should see "Informations du marché"
     And I should see "Identité de l'entreprise"
     And I should see a button "Finaliser la configuration"
@@ -102,7 +102,7 @@ Feature: Buyer Configuration Flow
     
     When I visit the summary page for my public market
     Then I should be on the summary page
-    And I should see "Synthèse de ma candidature"
+    And I should see "Synthèse des paramètres de la candidature"
 
   Scenario: Marquer un marché comme défense en cochant la case
     Given I visit the setup page for my public market

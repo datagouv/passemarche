@@ -18,6 +18,7 @@ AllCops:
     - "config/**/*"
     - "vendor/**/*"
     - "tmp/**/*"
+    - "app/assets/**/*.css"
     - "fake_editor_app/**/*"
 
 # Layout Rules

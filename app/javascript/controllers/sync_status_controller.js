@@ -2,12 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = { url: String, redirectUrl: String }
+  static targets = ["loader"]
 
   connect() {
     const status = this.element.dataset.status
-    if (status === 'sync_completed') {
-      this.scheduleRedirect()
-    } else if (status === 'sync_pending' || status === 'sync_processing') {
+    if (status === 'sync_pending' || status === 'sync_processing') {
       this.startPolling()
     }
   }
@@ -26,16 +25,23 @@ export default class extends Controller {
       const data = await response.json()
 
       if (data.sync_status === 'sync_completed' || data.sync_status === 'sync_failed') {
-        location.reload()
+        // Stop the loader animation before reloading
+        if (this.hasLoaderTarget) {
+          this.loaderTarget.style.animationPlayState = 'paused'
+        }
+        
+        // Smooth transition before reload
+        setTimeout(() => location.reload(), 300)
       }
     } catch (error) {
       console.error('Sync status error:', error)
+      
+      // Show error state on loader if connection fails
+      if (this.hasLoaderTarget) {
+        this.loaderTarget.style.opacity = '0.5'
+        this.loaderTarget.setAttribute('aria-label', 'Erreur de connexion, vérification...')
+      }
     }
   }
 
-  scheduleRedirect() {
-    if (this.redirectUrlValue) {
-      setTimeout(() => window.location.href = this.redirectUrlValue, 3000)
-    }
-  }
 }

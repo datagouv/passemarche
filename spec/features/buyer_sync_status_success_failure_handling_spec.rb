@@ -36,7 +36,7 @@ RSpec.feature 'Buyer sync: Success & Failure Handling', type: :feature do
 
     visit buyer_sync_status_path(public_market.identifier)
     expect(page).to have_content('Synchronisation réussie')
-    expect(page).to have_content('Votre marché a été synchronisé avec succès')
+    expect(page).to have_content('Nous avons transmis automatiquement la configuration à votre profil acheteur')
   end
 
   scenario 'Failed webhook with proper error handling' do
