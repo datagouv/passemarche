@@ -1,5 +1,4 @@
-class Admin::EditorsController < ApplicationController
-  before_action :authenticate_admin_user!
+class Admin::EditorsController < Admin::ApplicationController
   before_action :set_editor, only: %i[show edit update destroy]
 
   def index
@@ -50,6 +49,9 @@ class Admin::EditorsController < ApplicationController
   end
 
   def editor_params
-    params.expect(editor: %i[name client_id client_secret authorized active])
+    params.expect(editor: %i[
+      name client_id client_secret authorized active
+      completion_webhook_url redirect_url
+    ])
   end
 end

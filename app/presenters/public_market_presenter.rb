@@ -17,6 +17,14 @@ class PublicMarketPresenter
     organize_fields_by_category_and_subcategory(all_market_attributes)
   end
 
+  def required_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(all_market_attributes.required)
+  end
+
+  def optional_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(all_market_attributes.additional)
+  end
+
   def should_display_subcategory?(subcategories)
     subcategories.keys.size > 1
   end

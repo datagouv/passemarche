@@ -55,6 +55,49 @@
         </div>
       </div>
 
+      <div class="fr-grid-row fr-mt-3w">
+        <div class="fr-col-12">
+          <div class="fr-card">
+            <div class="fr-card__body">
+              <h2 class="fr-card__title">Configuration Webhook</h2>
+              <div class="fr-card__content">
+                <% if @editor.webhook_configured? %>
+                  <p><strong>URL de webhook :</strong> <%= @editor.completion_webhook_url %></p>
+                  <p><strong>URL de redirection :</strong> <%= @editor.redirect_url || "Non configurée" %></p>
+                  <p><strong>Secret configuré :</strong> 
+                    <% if @editor.webhook_secret.present? %>
+                      <span class="fr-badge fr-badge--success">Oui</span>
+                      <div class="fr-mt-2w" data-controller="webhook-secret-toggle">
+                        <div class="fr-input-group" style="max-width: 400px;">
+                          <input type="text" 
+                                 class="fr-input fr-text--sm" 
+                                 value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                                 readonly
+                                 data-webhook-secret-toggle-target="field"
+                                 data-webhook-secret-toggle-masked-value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                                 data-webhook-secret-toggle-real-value="<%= @editor.webhook_secret %>" />
+                          <button type="button" 
+                                  class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-eye-line"
+                                  data-action="click->webhook-secret-toggle#toggle"
+                                  data-webhook-secret-toggle-target="button"
+                                  title="Afficher le secret">
+                            <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                      </div>
+                    <% else %>
+                      <span class="fr-badge fr-badge--warning">Non</span>
+                    <% end %>
+                  </p>
+                <% else %>
+                  <p class="fr-text--sm">Webhook non configuré</p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="fr-mt-3w">
         <%= link_to "Modifier", edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
         <%= link_to "Supprimer", admin_editor_path(@editor), method: :delete,

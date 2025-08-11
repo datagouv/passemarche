@@ -37,6 +37,9 @@ Pour demander l'enregistrement de votre plateforme :
    - **Client Secret** : Secret client OAuth2 (généré par Voie Rapide)
    - **Statut autorisé** : Votre éditeur doit être marqué comme `authorized: true`
    - **Statut actif** : Votre éditeur doit être marqué comme `active: true`
+   - **URL de webhook** (optionnel) : Pour recevoir les notifications d'événements
+   - **URL de redirection** (optionnel) : Pour rediriger après completion d'un marché
+   - **Secret webhook** (généré automatiquement) : Pour la vérification des signatures
 
 3. **Réception des identifiants** : Les identifiants vous seront transmis de manière sécurisée par l'administrateur.
 
@@ -134,6 +137,153 @@ Authorization: Bearer your_access_token
 - **Durée de vie** : 24 heures
 - **Renouvellement** : Obtenez un nouveau token en répétant la requête `/oauth/token`
 - **Révocation** : Les anciens tokens sont automatiquement révoqués lors de l'émission d'un nouveau token
+
+## Configuration des Webhooks
+
+### Vue d'ensemble
+
+Les webhooks permettent à Voie Rapide de notifier votre plateforme en temps réel des événements importants (complétion de marché, mise à jour, etc.). Cette fonctionnalité est optionnelle mais fortement recommandée pour une intégration complète.
+
+### Configuration requise
+
+**Important** : La configuration des webhooks doit être effectuée par un administrateur de Voie Rapide via l'interface d'administration.
+
+#### 1. URL de webhook (completion_webhook_url)
+- **Format** : URL HTTPS valide (obligatoire en production)
+- **Fonction** : Endpoint qui recevra les notifications d'événements
+- **Exemple** : `https://votre-plateforme.com/api/webhooks/voie-rapide`
+
+#### 2. URL de redirection (redirect_url)  
+- **Format** : URL HTTPS valide (obligatoire en production)
+- **Fonction** : URL vers laquelle rediriger l'utilisateur après complétion d'un marché
+- **Exemple** : `https://votre-plateforme.com/markets/{market_identifier}/completed`
+
+#### 3. Configuration avancée
+- **Timeout** : Délai d'attente par défaut de 5 secondes (configurable de 1 à 30s)
+- **Retry** : 3 tentatives par défaut (configurable de 1 à 10)
+- **Secret webhook** : Généré automatiquement pour la vérification des signatures HMAC
+
+### Types d'événements webhook
+
+| Type d'événement | Description | Déclencheur |
+|------------------|-------------|-------------|
+| `market.completed` | Marché complété avec succès | Candidature soumise et attestation générée |
+| `market.updated` | Données du marché mises à jour | Modification des informations après soumission |
+| `market.cancelled` | Marché annulé | Annulation par le candidat ou l'administrateur |
+
+### Format des payloads webhook
+
+#### Structure générale
+
+```json
+{
+  "event": {
+    "id": "uuid-event-id",
+    "type": "market.completed",
+    "created_at": "2025-01-15T10:30:00Z",
+    "correlation_id": "uuid-correlation-id"
+  },
+  "market": {
+    "identifier": "FT20250115A1B2C3D4",
+    "title": "Fourniture de matériel informatique",
+    "type": "supplies",
+    "defense_industry": false,
+    "status": "completed",
+    "completed_at": "2025-01-15T10:30:00Z",
+    "candidate": {
+      "siret": "12345678901234",
+      "company_name": "Entreprise Example SARL",
+      "contact_email": "contact@example.com"
+    },
+    "documents": {
+      "attestation_url": "https://voie-rapide.example.com/attestations/download/uuid",
+      "application_url": "https://voie-rapide.example.com/applications/download/uuid"
+    },
+    "redirect_url": "https://votre-plateforme.com/markets/FT20250115A1B2C3D4/completed"
+  },
+  "editor": {
+    "id": 1,
+    "name": "Votre Plateforme"
+  }
+}
+```
+
+### Sécurité des webhooks
+
+#### Vérification des signatures HMAC
+
+Tous les webhooks incluent une signature HMAC-SHA256 dans le header `X-Webhook-Signature` pour vérifier l'authenticité.
+
+**Header de sécurité :**
+```http
+X-Webhook-Signature: sha256=a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1
+```
+
+#### Vérification côté récepteur
+
+**JavaScript/Node.js :**
+```javascript
+const crypto = require('crypto');
+
+function verifyWebhookSignature(payload, signature, secret) {
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(payload, 'utf8')
+    .digest('hex');
+    
+  const receivedSignature = signature.replace('sha256=', '');
+  
+  return crypto.timingSafeEqual(
+    Buffer.from(expectedSignature, 'hex'),
+    Buffer.from(receivedSignature, 'hex')
+  );
+}
+
+// Utilisation dans Express
+app.post('/webhooks/voie-rapide', (req, res) => {
+  const payload = JSON.stringify(req.body);
+  const signature = req.headers['x-webhook-signature'];
+  
+  if (!verifyWebhookSignature(payload, signature, process.env.WEBHOOK_SECRET)) {
+    return res.status(401).send('Invalid signature');
+  }
+  
+  // Traiter l'événement webhook
+  console.log('Événement reçu:', req.body.event.type);
+  res.status(200).send('OK');
+});
+```
+
+### Gestion des erreurs et retry
+
+#### Mécanisme de retry automatique
+
+Voie Rapide implémente un système de retry intelligent avec circuit breaker :
+
+- **Tentatives** : 3 essais par défaut (configurable de 1 à 10)
+- **Délais** : Backoff exponentiel avec jitter
+- **Circuit breaker** : Suspension temporaire en cas d'échecs répétés
+- **Timeout** : 5 secondes par défaut (configurable de 1 à 30s)
+
+#### Codes de réponse attendus
+
+| Code HTTP | Traitement | Action |
+|-----------|------------|---------|
+| `200`, `201`, `202` | Succès | Marque l'événement comme traité |
+| `4xx` (sauf 429) | Erreur client | Pas de retry, marque comme échoué |
+| `429` | Rate limiting | Retry avec délai augmenté |
+| `5xx` | Erreur serveur | Retry selon la configuration |
+| Timeout | Délai dépassé | Retry selon la configuration |
+
+### URL de redirection post-completion
+
+L'URL de redirection permet de ramener l'utilisateur vers votre plateforme après la complétion d'un marché.
+
+**Variables disponibles :**
+- `{market_identifier}` : Identifiant unique du marché
+- `{status}` : Statut de completion (`completed`, `failed`)
+
+**Exemple :** `https://votre-plateforme.com/markets/{market_identifier}/status/{status}`
 
 ## Exemples d'Intégration
 
@@ -413,11 +563,21 @@ response = client.make_api_request('/api/v1/some-endpoint')
 2. **Gestion des erreurs** : Implémenter une logique de retry
 3. **Limitation des requêtes** : Respecter les limites de taux d'API
 
+### Webhooks
+
+1. **Endpoints robustes** : Implémenter des endpoints webhook résistants aux pannes
+2. **Idempotence** : Utiliser le `correlation_id` pour éviter le double traitement
+3. **Réponses rapides** : Répondre en moins de 30 secondes
+4. **Traitement asynchrone** : Traiter les webhooks en arrière-plan si nécessaire
+5. **Validation systematique** : Toujours vérifier la signature HMAC
+
 ### Monitoring
 
 1. **Logs d'authentification** : Enregistrer les tentatives d'authentification
 2. **Métriques** : Surveiller les temps de réponse et les erreurs
 3. **Alertes** : Configurer des alertes pour les échecs d'authentification
+4. **Surveillance webhook** : Monitorer les taux de succès des webhooks reçus
+5. **Temps de réponse** : Traquer les performances de vos endpoints webhook
 
 ## Processus d'Enregistrement et Sécurité
 
@@ -447,6 +607,42 @@ En cas de :
 - Non-respect des conditions d'utilisation
 
 L'administrateur peut immédiatement révoquer l'accès en mettant l'éditeur en statut `active: false` ou `authorized: false`.
+
+## Interface d'Administration
+
+### Gestion des Éditeurs
+
+L'interface d'administration de Voie Rapide (accessible à `/admin`) permet aux administrateurs de :
+
+#### Configuration des éditeurs
+- **Créer/modifier** des comptes éditeur
+- **Configurer les URLs** de webhook et redirection
+- **Générer les secrets** webhook sécurisés
+- **Activer/désactiver** les éditeurs
+- **Visualiser les statistiques** d'utilisation par éditeur
+
+#### Gestion des webhooks
+- **Consulter les événements** : Historique complet avec statuts de livraison
+- **Réessayer manuellement** : Relancer les webhooks échoués individuellement
+- **Statistiques globales** : 
+  - Taux de succès par éditeur et période
+  - Temps de réponse moyens
+  - Distribution des codes d'erreur
+  - Événements par type
+
+#### Surveillance et monitoring
+- **Alertes automatiques** : Notifications en cas d'échecs répétés
+- **Logs détaillés** : Traces complètes des tentatives de livraison
+- **Circuit breaker** : Visualisation du statut des circuit breakers par éditeur
+- **Métriques temps réel** : Dashboard avec KPI webhook
+
+### Exemple de workflow admin
+
+1. **Enregistrement éditeur** : L'admin crée le compte avec client_id/secret OAuth
+2. **Configuration webhook** : Ajout des URLs webhook et redirection
+3. **Génération secret** : Création automatique du secret HMAC
+4. **Activation** : Mise en service de l'éditeur (authorized: true, active: true)
+5. **Monitoring** : Surveillance continue via l'interface d'admin
 
 ## Support et Contact
 

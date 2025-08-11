@@ -52,6 +52,9 @@ class MarketConfigurationService < ApplicationService
 
   def complete_market
     public_market.complete!
+
+    PublicMarketWebhookJob.perform_later(public_market.id)
+
     public_market
   end
 end

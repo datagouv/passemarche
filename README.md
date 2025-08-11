@@ -21,6 +21,12 @@ Faciliter l'accès des PME aux marchés publics français en :
 - Flux d'autorisation sécurisé
 - Gestion des tokens et des scopes
 
+### 🔗 Système de Webhooks
+- Notifications en temps réel vers les éditeurs
+- Signatures HMAC pour la sécurité
+- Système de retry intelligent avec circuit breaker
+- Gestion centralisée des événements webhook
+
 ### 📋 Gestion documentaire
 - Documents requis par type de marché
 - Validation PDF uniquement (version MVP)
@@ -144,6 +150,23 @@ bin/rubocop -a
 bin/rubocop && bundle exec rspec && bundle exec cucumber
 ```
 
+### Administration des éditeurs et webhooks
+```bash
+# Interface d'administration (après avoir créé un admin)
+# URL: http://localhost:3000/admin
+
+# Gestion des éditeurs
+# - Créer/modifier des éditeurs
+# - Configurer les URLs de webhook et redirection
+# - Générer les secrets webhook
+# - Activer/désactiver les éditeurs
+
+# Surveillance des webhooks
+# - Consulter les événements webhook
+# - Réessayer les webhooks échoués
+# - Statistiques de succès/échec
+```
+
 ### Assets
 ```bash
 # Précompilation des assets
@@ -159,11 +182,22 @@ bin/rails assets:clobber
 ```
 app/
 ├── controllers/     # Gestion des requêtes HTTP
+│   ├── admin/       # Interface d'administration (éditeurs, webhooks)
+│   ├── api/v1/      # API RESTful pour les éditeurs
+│   └── buyer/       # Interface candidat
 ├── models/         # Logique métier et données
-├── views/          # Templates et présentation
-├── helpers/        # Assistants de vue
+│   ├── editor.rb    # Modèle éditeur avec config webhook
+│   ├── webhook_event.rb  # Événements webhook
+│   └── public_market.rb  # Marchés publics
+├── services/       # Services métier
+│   ├── webhook_delivery_service.rb  # Livraison webhook
+│   ├── webhook_circuit_breaker.rb   # Circuit breaker
+│   └── editor_sync_service.rb       # Sync OAuth
 ├── jobs/           # Tâches en arrière-plan
-└── services/       # Services métier
+│   ├── webhook_retry_job.rb    # Retry webhooks échoués
+│   └── webhook_sync_job.rb     # Sync données via webhooks
+└── views/          # Templates et présentation
+    └── admin/       # Interface admin pour webhooks
 
 config/             # Configuration de l'application
 ├── locales/        # Fichiers de traduction i18n

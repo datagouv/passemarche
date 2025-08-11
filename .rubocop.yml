@@ -18,6 +18,7 @@ AllCops:
     - "config/**/*"
     - "vendor/**/*"
     - "tmp/**/*"
+    - "app/assets/**/*.css"
     - "fake_editor_app/**/*"
 
 # Layout Rules
@@ -63,6 +64,7 @@ Metrics/BlockLength:
     - "spec/spec_helper.rb"
     - "spec/support/shared_examples/*"
     - "spec/factories/**/*"
+    - "spec/features/**/*"
   AllowedMethods:
     - "describe"
     - "context"

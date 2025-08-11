@@ -7,7 +7,8 @@ module Buyer
     steps :setup, :required_fields, :additional_fields, :summary
 
     before_action :find_public_market
-    before_action :initialize_presenter
+    before_action :check_market_not_completed, except: [:retry_sync]
+    before_action :initialize_presenter, except: [:retry_sync]
 
     def show
       case step
@@ -24,11 +25,20 @@ module Buyer
       result = MarketConfigurationService.call(@public_market, step, step_params)
 
       if step == :summary
-        redirect_to finish_wizard_path, notice: t('buyer.public_markets.wizard_completed')
+        redirect_to buyer_sync_status_path(@public_market.identifier)
       else
         jump_to(result[:next_step]) if result.is_a?(Hash) && result[:next_step]
         render_wizard @public_market
       end
+    end
+
+    def retry_sync
+      @public_market.update!(sync_status: :sync_pending)
+
+      PublicMarketWebhookJob.perform_later(@public_market.id)
+
+      redirect_to buyer_sync_status_path(@public_market.identifier),
+        notice: t('buyer.public_markets.sync_retry_initiated')
     end
 
     private
@@ -48,6 +58,13 @@ module Buyer
       @public_market = PublicMarket.find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
+    end
+
+    def check_market_not_completed
+      return unless @public_market.completed?
+
+      redirect_to buyer_sync_status_path(@public_market.identifier),
+        alert: t('buyer.public_markets.market_completed_cannot_edit')
     end
 
     def initialize_presenter

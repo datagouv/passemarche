@@ -297,6 +297,77 @@ body {
   color: #6c757d;
 }
 
+/* Markets section */
+.markets-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+  margin-bottom: 2rem;
+}
+
+.markets-list {
+  margin-top: 15px;
+}
+
+.market-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.market-header h4 {
+  margin: 0;
+  color: #343a40;
+  font-size: 1.1rem;
+}
+
+.market-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.market-status-created {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.market-status-completed {
+  background-color: #d1edff;
+  color: #0c5460;
+}
+
+.market-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.market-field {
+  font-size: 14px;
+}
+
+.market-field code {
+  background-color: #e9ecef;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header h1 {

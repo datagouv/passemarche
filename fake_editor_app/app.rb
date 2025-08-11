@@ -25,6 +25,8 @@ class FakeEditorApp < Sinatra::Base
 
   get '/' do
     @current_token = Token.current_token
+    load_markets
+    @completed_market_identifier = params[:completed]
     erb :dashboard
   end
 
@@ -107,12 +109,58 @@ class FakeEditorApp < Sinatra::Base
     return render_dashboard_with_error(validation_error, current_token) if validation_error
 
     api_response = @fast_track_client.create_public_market(current_token.access_token, market_data)
+    
+    # Store the market locally
+    Market.create_from_api({
+      identifier: api_response['identifier'],
+      name: market_data[:name],
+      lot_name: market_data[:lot_name],
+      market_type_codes: market_data[:market_type_codes]
+    })
+    
     render_dashboard_with_success(api_response, current_token)
   rescue StandardError => e
     handle_market_creation_error(e)
   end
 
+  # Webhook endpoint to receive completion notifications
+  post '/webhooks/voie-rapide' do
+    payload = request.body.read
+    signature = request.env['HTTP_X_WEBHOOK_SIGNATURE_SHA256']
+    
+    # In a real app, you'd verify the signature here
+    # For demo purposes, we'll just process the webhook
+    
+    webhook_data = JSON.parse(payload)
+    market_data = webhook_data['market']
+    
+    if market_data && market_data['identifier']
+      market = Market.find_by_identifier(market_data['identifier'])
+      if market
+        market.mark_completed!(webhook_data)
+        puts "✅ Webhook received: Market #{market_data['identifier']} completed"
+      else
+        puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
+      end
+    end
+    
+    status 200
+    'OK'
+  rescue JSON::ParserError => e
+    puts "❌ Invalid webhook payload: #{e.message}"
+    status 400
+    'Bad Request'
+  rescue StandardError => e
+    puts "❌ Webhook processing error: #{e.message}"
+    status 500
+    'Internal Server Error'
+  end
+
   private
+
+  def load_markets
+    @markets = Market.order(:created_at).reverse
+  end
 
   def extract_market_data_from_params
     market_type_codes_array = Array(params[:market_type_codes]).compact
@@ -136,6 +184,7 @@ class FakeEditorApp < Sinatra::Base
   def render_dashboard_with_error(error_message, token = nil)
     @error = error_message
     @current_token = token
+    load_markets
     erb :dashboard
   end
 
@@ -143,6 +192,7 @@ class FakeEditorApp < Sinatra::Base
     @success = "Marché créé avec succès! Identifiant: #{api_response['identifier']}"
     @configuration_url = api_response['configuration_url']
     @current_token = token
+    load_markets
     erb :dashboard
   end
 
@@ -153,6 +203,7 @@ class FakeEditorApp < Sinatra::Base
     rescue StandardError
       nil
     end
+    load_markets
     erb :dashboard
   end
 end

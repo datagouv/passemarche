@@ -26,6 +26,17 @@ DB.create_table?(:tokens) do
   DateTime :expires_at, null: false
 end
 
+DB.create_table?(:markets) do
+  primary_key :id
+  String :identifier, null: false, unique: true
+  String :name, null: false
+  String :lot_name
+  String :status, default: 'created'
+  DateTime :completed_at
+  Text :market_data
+  DateTime :created_at, null: false
+end
+
 class Token < Sequel::Model(DB[:tokens])
   def self.current_token
     where { expires_at > DateTime.now }.order(:created_at).last
@@ -62,5 +73,37 @@ class Token < Sequel::Model(DB[:tokens])
     return 0 if expired?
 
     ((expires_at - DateTime.now) * 86_400).to_i
+  end
+end
+
+class Market < Sequel::Model(DB[:markets])
+  def self.create_from_api(market_data)
+    create(
+      identifier: market_data[:identifier] || "VR-#{Time.now.to_i}",
+      name: market_data[:name],
+      lot_name: market_data[:lot_name],
+      status: 'created',
+      market_data: market_data.to_json,
+      created_at: DateTime.now
+    )
+  end
+
+  def self.find_by_identifier(identifier)
+    where(identifier: identifier).first
+  end
+
+  def mark_completed!(webhook_data = nil)
+    update(
+      status: 'completed',
+      completed_at: DateTime.now,
+      market_data: webhook_data ? webhook_data.to_json : market_data
+    )
+  end
+
+  def data
+    return {} if market_data.nil?
+    JSON.parse(market_data)
+  rescue JSON::ParserError
+    {}
   end
 end

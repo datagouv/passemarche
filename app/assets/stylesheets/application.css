@@ -9,4 +9,6 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+@import "_sync_loader.css";
+
 @import "utilities.css";

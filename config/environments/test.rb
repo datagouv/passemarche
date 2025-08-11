@@ -26,7 +26,7 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-  config.cache_store = :null_store
+  config.cache_store = :memory_store
 
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
@@ -56,4 +56,9 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Configure Active Record encryption for test environment
+  config.active_record.encryption.primary_key = 'test_primary_key_for_testing_only'
+  config.active_record.encryption.deterministic_key = 'test_deterministic_key_for_testing'
+  config.active_record.encryption.key_derivation_salt = 'test_key_derivation_salt_for_testing'
 end

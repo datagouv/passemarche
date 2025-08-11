@@ -2,7 +2,10 @@
 
 Rails.application.routes.draw do
   namespace :admin do
-    resources :editors
+    resources :editors do
+      resources :webhook_secrets, only: [:create]
+    end
+    mount MissionControl::Jobs::Engine, at: "/jobs"
     root 'editors#index'
   end
   devise_for :admin_users, skip: %i[registrations passwords confirmations unlocks]
@@ -22,8 +25,11 @@ Rails.application.routes.draw do
         get ':id', to: 'public_markets#show', as: :step
         put ':id', to: 'public_markets#update'
         patch ':id', to: 'public_markets#update'
+        post 'retry_sync', to: 'public_markets#retry_sync'
       end
     end
+    
+    resources :sync_status, param: :identifier, only: [:show], path: 'public_markets/:identifier/sync_status'
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check

@@ -1,6 +1,14 @@
 <div class="dashboard">
   <h2>Dashboard d'Authentification</h2>
 
+  <% if @completed_market_identifier %>
+    <div class="alert alert-success">
+      <strong>🎉 Configuration terminée!</strong> 
+      Le marché <code><%= @completed_market_identifier %></code> a été configuré avec succès dans Voie Rapide.
+      La synchronisation par webhook devrait avoir mis à jour son statut ci-dessous.
+    </div>
+  <% end %>
+
   <% if @error %>
     <div class="alert alert-error">
       <strong>Erreur:</strong> <%= @error %>
@@ -149,17 +157,62 @@
     </form>
   </div>
 
+  <div class="markets-section">
+    <h3>Marchés Publics (<%= @markets&.count || 0 %>)</h3>
+    
+    <% if @markets&.any? %>
+      <div class="markets-list">
+        <% @markets.each do |market| %>
+          <div class="market-card">
+            <div class="market-header">
+              <h4><%= market.name %></h4>
+              <span class="market-status market-status-<%= market.status %>">
+                <%= market.status == 'completed' ? '✅ Terminé' : '🟡 En cours' %>
+              </span>
+            </div>
+            
+            <div class="market-details">
+              <div class="market-field">
+                <strong>Identifiant:</strong> <code><%= market.identifier %></code>
+              </div>
+              
+              <% if market.lot_name %>
+                <div class="market-field">
+                  <strong>Lot:</strong> <%= market.lot_name %>
+                </div>
+              <% end %>
+              
+              <div class="market-field">
+                <strong>Créé le:</strong> <%= market.created_at.strftime('%d/%m/%Y à %H:%M') %>
+              </div>
+              
+              <% if market.completed_at %>
+                <div class="market-field">
+                  <strong>Complété le:</strong> <%= market.completed_at.strftime('%d/%m/%Y à %H:%M') %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="color: #666; font-style: italic;">Aucun marché créé pour le moment.</p>
+    <% end %>
+  </div>
+
   <div class="instructions-section">
     <h3>Instructions</h3>
     <ol>
       <li>Assurez-vous que <strong>Voie Rapide</strong> est lancé sur <code><%= ENV['FAST_TRACK_URL'] %></code></li>
       <li>Cliquez sur <strong>"S'authentifier"</strong> pour obtenir un token OAuth2</li>
-      <li>Le token sera affiché ci-dessus avec ses détails</li>
-      <li>Une fois authentifié, cliquez sur <strong>"🚀 Créer un Marché Public"</strong> pour démarrer le processus</li>
-      <li>Un identifiant de marché sera généré et vous recevrez l'URL de configuration</li>
-      <li>Cliquez sur l'URL pour accéder à la page de configuration DSFR</li>
-      <li>Utilisez <strong>"Rafraîchir le Token"</strong> si nécessaire</li>
-      <li>Utilisez <strong>"Effacer les Tokens"</strong> pour nettoyer la base de données</li>
+      <li>Une fois authentifié, créez un marché public avec le formulaire</li>
+      <li>Cliquez sur l'URL de configuration pour configurer le marché</li>
+      <li>Complétez la configuration - le marché apparaîtra comme "Terminé" via webhook</li>
     </ol>
+    
+    <div style="margin-top: 15px; padding: 10px; background: #f0f8ff; border-left: 3px solid #0066cc;">
+      <strong>🔗 Webhook Endpoint:</strong> <code>POST /webhooks/voie-rapide</code><br>
+      <small>Prêt à recevoir les notifications de completion de Voie Rapide</small>
+    </div>
   </div>
 </div>

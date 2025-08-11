@@ -58,11 +58,16 @@ demo_editor = Editor.create!(
   name: 'Demo Editor App',
   client_id: 'demo_editor_client',
   client_secret: 'demo_editor_secret',
+  completion_webhook_url: 'http://localhost:4567/webhooks/voie-rapide',
+  redirect_url: 'http://localhost:4567?completed={market_identifier}',
   authorized: true,
   active: true
 )
+demo_editor.generate_webhook_secret!
 demo_editor.sync_to_doorkeeper!
 ```
+
+**Note**: Les URLs de webhook et redirection sont configurées pour pointer vers l'application fake editor sur le port 4567.
 
 ## 🎮 Utilisation
 
@@ -76,12 +81,16 @@ bundle exec rackup -p 4567
 
 Ouvrez votre navigateur à : http://localhost:4567
 
-### 3. Tester l'authentification
+### 3. Tester l'intégration complète
 
 1. Cliquez sur **"S'authentifier"** pour obtenir un token OAuth2
-2. Le token sera affiché avec ses détails (type, scope, expiration)
-3. Utilisez **"Rafraîchir le Token"** pour obtenir un nouveau token
-4. Utilisez **"Effacer les Tokens"** pour nettoyer la base de données
+2. Le token sera affiché avec ses détails (type, scope, expiration)  
+3. Créez un marché public avec le formulaire
+4. Cliquez sur l'URL de configuration pour accéder à Voie Rapide
+5. Complétez la configuration du marché dans Voie Rapide
+6. À la fin, le marché sera marqué comme "Terminé" via webhook
+7. Utilisez **"Rafraîchir le Token"** si nécessaire
+8. Utilisez **"Effacer les Tokens"** pour nettoyer la base de données
 
 ## 🏗 Structure du Projet
 
@@ -110,15 +119,27 @@ fake_editor_app/
 - Gestion automatique des tokens
 - Stockage sécurisé en base SQLite
 
+### Création de marchés publics
+- Formulaire de création avec validation
+- Intégration avec l'API Voie Rapide
+- Stockage local des marchés créés
+
+### Réception de webhooks  
+- Endpoint `/webhooks/voie-rapide` pour les notifications
+- Traitement automatique des événements de completion
+- Mise à jour du statut des marchés en temps réel
+
 ### Interface utilisateur
 - Dashboard avec statut d'authentification
 - Affichage des détails du token
+- Liste des marchés publics avec leur statut
 - Boutons pour authentification/rafraîchissement
 - Countdown en temps réel pour l'expiration
 
-### Stockage des tokens
+### Stockage des données
 - Base de données SQLite locale
 - Modèle Token avec validation d'expiration
+- Modèle Market pour les marchés publics  
 - Nettoyage automatique des anciens tokens
 
 ## 🛡 Sécurité

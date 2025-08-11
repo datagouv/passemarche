@@ -1,6 +1,17 @@
 <div class="fr-container">
   <div class="fr-grid-row">
     <div class="fr-col-12">
+      <nav class="fr-nav fr-mb-3w" aria-label="Navigation admin">
+        <div class="fr-nav__item">
+          <%= link_to "Éditeurs", admin_editors_path, 
+                      class: "fr-nav__link #{'fr-nav__link--active' if current_page?(admin_editors_path)}" %>
+        </div>
+        <div class="fr-nav__item">
+          <%= link_to "Tâches en arrière-plan", "/admin/jobs", 
+                      class: "fr-nav__link", target: "_blank" %>
+        </div>
+      </nav>
+
       <h1>Gestion des éditeurs</h1>
       
       <div class="fr-mb-3w">

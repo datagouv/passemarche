@@ -29,5 +29,13 @@ module VoieRapide
     # I18n configuration
     config.i18n.default_locale = :fr
     config.i18n.available_locales = %i[fr en]
+
+    # Configure Active Job to use SolidQueue
+    config.active_job.queue_adapter = :solid_queue
+    config.solid_queue.connects_to = { database: { writing: :queue } }
+    
+    # Configure Mission Control Jobs
+    config.mission_control.jobs.base_controller_class = "Admin::ApplicationController"
+    config.mission_control.jobs.http_basic_auth_enabled = false
   end
 end

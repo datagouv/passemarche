@@ -29,30 +29,103 @@
           </div>
         <% end %>
 
-        <div class="fr-input-group">
+        <div class="fr-input-group fr-mb-3w">
           <%= form.label :name, "Nom", class: "fr-label" %>
           <%= form.text_field :name, class: "fr-input" %>
         </div>
 
-        <div class="fr-input-group">
+        <div class="fr-input-group fr-mb-3w">
           <%= form.label :client_id, "Client ID", class: "fr-label" %>
           <%= form.text_field :client_id, class: "fr-input" %>
         </div>
 
-        <div class="fr-input-group">
+        <div class="fr-input-group fr-mb-3w">
           <%= form.label :client_secret, "Client Secret", class: "fr-label" %>
           <%= form.text_field :client_secret, class: "fr-input" %>
         </div>
 
-        <div class="fr-checkbox-group">
-          <%= form.check_box :authorized, class: "fr-checkbox" %>
-          <%= form.label :authorized, "Autorisé", class: "fr-label" %>
+        <div class="fr-form-group fr-mt-3w">
+          <fieldset class="fr-fieldset">
+            <div class="fr-fieldset__element">
+              <div class="fr-checkbox-group">
+                <%= form.check_box :authorized, class: "fr-checkbox", id: "editor_authorized" %>
+                <%= form.label :authorized, "Autorisé", class: "fr-label", for: "editor_authorized" %>
+              </div>
+            </div>
+            <div class="fr-fieldset__element">
+              <div class="fr-checkbox-group">
+                <%= form.check_box :active, class: "fr-checkbox", id: "editor_active" %>
+                <%= form.label :active, "Actif", class: "fr-label", for: "editor_active" %>
+              </div>
+            </div>
+          </fieldset>
         </div>
 
-        <div class="fr-checkbox-group">
-          <%= form.check_box :active, class: "fr-checkbox" %>
-          <%= form.label :active, "Actif", class: "fr-label" %>
-        </div>
+        <fieldset class="fr-fieldset fr-mt-4w">
+          <legend class="fr-fieldset__legend">Configuration Webhook</legend>
+          
+          <div class="fr-fieldset__element">
+            <div class="fr-input-group fr-mb-4w">
+              <%= form.label :completion_webhook_url, "URL de webhook de complétion", class: "fr-label" %>
+              <span class="fr-hint-text">URL HTTPS où seront envoyées les notifications de complétion de marché</span>
+              <%= form.text_field :completion_webhook_url, class: "fr-input", placeholder: "https://example.com/webhook" %>
+            </div>
+          </div>
+
+          <div class="fr-fieldset__element">
+            <div class="fr-input-group fr-mb-4w">
+              <%= form.label :redirect_url, "URL de redirection", class: "fr-label" %>
+              <span class="fr-hint-text">URL où rediriger l'acheteur après complétion</span>
+              <%= form.text_field :redirect_url, class: "fr-input", placeholder: "https://example.com/success" %>
+            </div>
+          </div>
+
+          <div class="fr-fieldset__element">
+            <div class="fr-input-group fr-mb-4w">
+              <%= form.label :webhook_secret, "Secret webhook", class: "fr-label" %>
+              <span class="fr-hint-text">Secret utilisé pour signer les payloads (HMAC-SHA256)</span>
+              <% if @editor.webhook_secret.present? %>
+                <div style="position: relative;" data-controller="webhook-secret-toggle">
+                  <%= form.text_field :webhook_secret, 
+                      class: "fr-input", 
+                      value: "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+                      disabled: true,
+                      style: "padding-right: 45px;",
+                      data: { 
+                        "webhook-secret-toggle-target": "field",
+                        "webhook-secret-toggle-masked-value": "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+                        "webhook-secret-toggle-real-value": @editor.webhook_secret
+                      } %>
+                  <button type="button" 
+                          class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                          data-action="click->webhook-secret-toggle#toggle"
+                          data-webhook-secret-toggle-target="button"
+                          title="Afficher/Masquer le secret"
+                          style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
+                    <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
+                  </button>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="fr-mb-4w">
+              <% if @editor.webhook_secret.present? %>
+                <%= link_to "Générer un nouveau secret", 
+                            admin_editor_webhook_secrets_path(@editor), 
+                            method: :post,
+                            data: { confirm: "Êtes-vous sûr ? Cela invalidera l'ancien secret.", turbo_method: :post },
+                            class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+              <% else %>
+                <%= link_to "Générer un secret", 
+                            admin_editor_webhook_secrets_path(@editor), 
+                            method: :post,
+                            data: { turbo_method: :post },
+                            class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+              <% end %>
+            </div>
+          </div>
+
+        </fieldset>
 
         <div class="fr-mt-3w">
           <%= form.submit "Mettre à jour", class: "fr-btn" %>
