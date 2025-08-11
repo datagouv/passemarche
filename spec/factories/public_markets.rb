@@ -18,6 +18,7 @@ FactoryBot.define do
 
     trait :completed do
       completed_at { Time.zone.now }
+      sync_status { :sync_completed }
     end
 
     trait :without_lot do
