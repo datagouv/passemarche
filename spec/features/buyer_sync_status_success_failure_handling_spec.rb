@@ -31,7 +31,7 @@ RSpec.feature 'Buyer sync: Success & Failure Handling', type: :feature do
     expect(page).to have_content('Synchronisation en cours')
 
     perform_enqueued_jobs do
-      WebhookSyncJob.perform_later(public_market.id)
+      PublicMarketWebhookJob.perform_later(public_market.id)
     end
 
     visit buyer_sync_status_path(public_market.identifier)
@@ -41,17 +41,13 @@ RSpec.feature 'Buyer sync: Success & Failure Handling', type: :feature do
 
   scenario 'Failed webhook with proper error handling' do
     stub_request(:post, editor.completion_webhook_url)
-      .to_return(status: 500, body: 'Internal Server Error')
-      .times(3)
+      .to_return(status: 404, body: 'Not Found')
+
+    allow(BugTrackerService).to receive(:capture_exception)
 
     visit buyer_sync_status_path(public_market.identifier)
 
-    # Run the job directly which will fail and set status
-    begin
-      WebhookSyncJob.perform_now(public_market.id)
-    rescue RuntimeError
-      # Expected to fail due to webhook error
-    end
+    PublicMarketWebhookJob.perform_now(public_market.id)
 
     public_market.reload
     expect(public_market.sync_status).to eq('sync_failed')
@@ -66,12 +62,10 @@ RSpec.feature 'Buyer sync: Success & Failure Handling', type: :feature do
     stub_request(:post, editor.completion_webhook_url)
       .to_return(status: 200, body: 'OK')
 
-    # Re-run the sync job to retry
     perform_enqueued_jobs do
-      WebhookSyncJob.perform_later(public_market.id)
+      PublicMarketWebhookJob.perform_later(public_market.id)
     end
 
-    # Public market should be marked as completed
     public_market.reload
     expect(public_market.sync_status).to eq('sync_completed')
   end

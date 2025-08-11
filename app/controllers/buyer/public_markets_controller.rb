@@ -35,7 +35,7 @@ module Buyer
     def retry_sync
       @public_market.update!(sync_status: :sync_pending)
 
-      WebhookSyncJob.perform_later(@public_market.id)
+      PublicMarketWebhookJob.perform_later(@public_market.id)
 
       redirect_to buyer_sync_status_path(@public_market.identifier),
         notice: t('buyer.public_markets.sync_retry_initiated')

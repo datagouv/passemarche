@@ -122,7 +122,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
       end
 
       it 'enqueues webhook sync job' do
-        expect(WebhookSyncJob).to have_been_enqueued.with(public_market.id)
+        expect(PublicMarketWebhookJob).to have_been_enqueued.with(public_market.id)
       end
     end
   end
