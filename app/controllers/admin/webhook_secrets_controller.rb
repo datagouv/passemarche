@@ -2,7 +2,7 @@ class Admin::WebhookSecretsController < Admin::ApplicationController
   before_action :set_editor
 
   def create
-    @editor.generate_webhook_secret!
+    @editor.generate_webhook_secret
     if @editor.save
       redirect_to edit_admin_editor_path(@editor), notice: t('admin.editors.webhook_secret_generated')
     else

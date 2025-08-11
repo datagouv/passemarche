@@ -32,6 +32,11 @@ class Editor < ApplicationRecord
   end
 
   def generate_webhook_secret!
+    generate_webhook_secret
+    save!
+  end
+
+  def generate_webhook_secret
     self.webhook_secret = SecureRandom.hex(32)
   end
 

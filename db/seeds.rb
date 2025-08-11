@@ -25,7 +25,6 @@ if Rails.env.development? || Rails.env.sandbox?
   # Generate webhook secret if not present
   if demo_editor.webhook_secret.blank?
     demo_editor.generate_webhook_secret!
-    demo_editor.save!
     puts '   🔐 Generated webhook secret for demo editor'
   end
 
