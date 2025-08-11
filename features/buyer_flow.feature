@@ -23,8 +23,8 @@ Feature: Buyer Configuration Flow
     
     When I click on "Débuter l'activation de"
     Then I should be on the required documents page
-    And I should see "Vérification des informations obligatoires"
-    And I should see "Les documents et informations obligatoires"
+    And I should see "Vérification des informations réglementaires et obligagtoires"
+    And I should see "Les documents et informations réglementaires et obligatoires"
     And I should see "Identité de l'entreprise"
     And I should see "Nom de l'entreprise"
     And I should see "Condamnation pénale"
@@ -33,8 +33,8 @@ Feature: Buyer Configuration Flow
     
     When I click on "Suivant"
     Then I should be on the optional documents page
-    And I should see "Sélection des informations complémentaires"
-    And I should see "Les documents et informations complémentaires"
+    And I should see "Sélection des informations non réglementaires"
+    And I should see "Les documents et informations demandés à titre non réglementaire"
     And I should see "Chiffre d'affaires annuel"
     And I should see "Rupture antérieure de contrat"
     And I should see "Influence indue"
@@ -52,11 +52,11 @@ Feature: Buyer Configuration Flow
     Given I am on the summary page for my public market
     When I go back to optional documents page
     Then I should be on the optional documents page
-    And I should see "Sélection des informations complémentaires"
+    And I should see "Sélection des informations non réglementaires"
     
     When I click on "Précédent"
     Then I should be on the required documents page
-    And I should see "Vérification des informations obligatoires"
+    And I should see "Vérification des informations réglementaires et obligagtoires"
     
     When I click on "Précédent"
     Then I should be on the setup page
@@ -81,11 +81,11 @@ Feature: Buyer Configuration Flow
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
-    Then I should see "Vérification des informations obligatoires"
+    Then I should see "Vérification des informations réglementaires et obligagtoires"
     And the stepper should indicate step 1 as current
     
     When I navigate to optional documents page
-    Then I should see "Sélection des informations complémentaires"
+    Then I should see "Sélection des informations non réglementaires"
     And the stepper should indicate step 2 as current
 
   Scenario: Navigation directe vers différentes étapes
@@ -94,11 +94,11 @@ Feature: Buyer Configuration Flow
     
     When I visit the required documents page for my public market
     Then I should be on the required documents page
-    And I should see "Les documents et informations obligatoires"
+    And I should see "Les documents et informations réglementaires et obligatoires"
     
     When I visit the optional documents page for my public market
     Then I should be on the optional documents page
-    And I should see "Les documents et informations complémentaires"
+    And I should see "Les documents et informations demandés à titre non réglementaire"
     
     When I visit the summary page for my public market
     Then I should be on the summary page

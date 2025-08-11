@@ -2,6 +2,8 @@
 
 fr:
   time:
+    am: "am"
+    pm: "pm"
     formats:
       default: "%d/%m/%Y %H:%M"
       short: "%d %b %H:%M"
@@ -169,17 +171,17 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
-        required_fields: "Vérification des informations obligatoires" 
-        additional_fields: "Sélection des informations complémentaires"
+        required_fields: "Vérification des informations réglementaires et obligagtoires" 
+        additional_fields: "Sélection des informations non réglementaires"
         summary: "Synthèse"
       required_fields:
-        title: "Les documents et informations obligatoires"
+        title: "Les documents et informations réglementaires et obligatoires"
         subtitle: "Ces documents et informations sont obligatoires et démandés systématiquement aux candidats. "
       additional_fields:
-        title: "Les documents et informations complémentaires"
+        title: "Les documents et informations demandés à titre non réglementaire"
         subtitle: "Ces documents et informations sont facultatifs, vous pouvez en sélectionner un ou plusieurs. "
         config_title: "Configuration"
-        config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs obligatoires."
+        config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs réglementaires et obligatoires."
         question: "Je veux demander des informations et documents complémentaires au candidat"
         yes_option: "Oui"
         no_option: "Non"
