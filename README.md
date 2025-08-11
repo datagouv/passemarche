@@ -79,6 +79,15 @@ Faciliter l'accès des PME aux marchés publics français en :
 - PostgreSQL 12+
 - Git
 
+## 🌐 Environnements
+
+### 🧪 Sandbox (environnement de test)
+
+- **Voie Rapide (Fast Track)** : https://sandbox.voie-rapide.services.api.gouv.fr/
+- **Éditeur de démonstration (Fake Editor)** : https://sandbox.voie-rapide-edition.services.api.gouv.fr/
+
+Ces environnements permettent de tester l'intégration complète sans affecter les données de production.
+
 ## 🚀 Installation et configuration
 
 ### 1. Cloner le projet
