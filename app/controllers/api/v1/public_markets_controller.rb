@@ -4,10 +4,6 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   def create
     public_market = PublicMarketCreationService.call(current_editor, public_market_params)
     render json: success_response(public_market), status: :created
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { error: e.message }, status: :forbidden
-  rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
 
   private

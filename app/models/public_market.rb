@@ -6,6 +6,7 @@ class PublicMarket < ApplicationRecord
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
+  has_many :market_applications, dependent: :destroy
 
   enum :sync_status, { sync_pending: 0, sync_processing: 1, sync_completed: 2, sync_failed: 3 }, default: :sync_pending, validate: true
 
@@ -69,18 +70,6 @@ class PublicMarket < ApplicationRecord
   def generate_identifier
     return if identifier.present?
 
-    self.identifier = build_identifier
-  end
-
-  def build_identifier
-    now = Time.zone.now
-    year = now.year
-    suffix = generate_unique_suffix(now)
-    "VR-#{year}-#{suffix}"
-  end
-
-  def generate_unique_suffix(time)
-    unique_number = (time.to_f * 1_000_000).to_i + SecureRandom.random_number(1000)
-    unique_number.to_s(36).upcase.rjust(12, '0')[-12..]
+    self.identifier = IdentifierGenerationService.call
   end
 end

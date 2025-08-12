@@ -15,7 +15,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :public_markets, only: [:create]
+      resources :public_markets, only: [:create] do
+        resources :market_applications, only: [:create]
+      end
     end
   end
 
@@ -30,6 +32,16 @@ Rails.application.routes.draw do
     end
     
     resources :sync_status, param: :identifier, only: [:show], path: 'public_markets/:identifier/sync_status'
+  end
+
+  namespace :candidate do
+    resources :market_applications, param: :identifier, only: [] do
+      member do
+        get ':id', to: 'market_applications#show', as: :step
+        put ':id', to: 'market_applications#update'
+        patch ':id', to: 'market_applications#update'
+      end
+    end
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check

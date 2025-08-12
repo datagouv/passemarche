@@ -1,0 +1,43 @@
+<% content_for :title, "Candidature - Identification" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-lg-7">
+    <div class="fr-mb-5w fr-pt-4w">
+      <h1 class="fr-h1 fr-mb-1w">Bienvenue,</h1>
+      <p class="fr-text--lg fr-mb-0">
+        <%= @market_application.public_market.editor.name %> vous permet de candidater rapidement aux marchés publics.
+      </p>
+    </div>
+
+    <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
+      <div class="fr-mb-4w">
+        <div class="fr-input-group<%= ' fr-input-group--error' if @market_application.errors[:siret].any? %>">
+          <%= form.label :siret, "Veuillez saisir votre numéro de SIRET", class: "fr-label" %>
+          <span class="fr-hint-text">Cela nous permets de récupérer des informations et documents automatiquement</span>
+          <%= form.text_field :siret, 
+                class: "fr-input#{ ' fr-input--error' if @market_application.errors[:siret].any? }",
+                placeholder: "12345678901234",
+                maxlength: 14,
+                pattern: "\\d{14}" %>
+          <% if @market_application.errors[:siret].any? %>
+            <p class="fr-error-text">
+              <%= @market_application.errors[:siret].first %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="fr-mb-4w">
+        <%= form.submit "Continuer", class: "fr-btn fr-btn--lg" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
+    </div>
+  </div>
+</div>

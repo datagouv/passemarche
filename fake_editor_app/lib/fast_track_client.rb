@@ -69,4 +69,29 @@ class FastTrackClient
 
     response.parsed_response
   end
+
+  def create_market_application(access_token, public_market_identifier, siret)
+    payload = { market_application: { siret: siret } }
+
+    response = self.class.post(
+      "#{@base_url}/api/v1/public_markets/#{public_market_identifier}/market_applications",
+      body: payload.to_json,
+      headers: {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      }
+    )
+
+    unless response.success?
+      error_details = response.parsed_response
+      error_msg = if error_details.is_a?(Hash) && error_details['errors']
+                    "#{response.code} - #{error_details['errors'].join(', ')}"
+                  else
+                    "#{response.code} - #{response.message}"
+                  end
+      raise "Market application creation failed: #{error_msg}"
+    end
+
+    response.parsed_response
+  end
 end
