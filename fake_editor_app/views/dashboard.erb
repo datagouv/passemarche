@@ -192,6 +192,27 @@
                 </div>
               <% end %>
             </div>
+            
+            <% if market.status == 'completed' && @current_token && @current_token.valid? %>
+              <div class="market-actions">
+                <h5>Démarrer une candidature</h5>
+                <form method="post" action="/start_application" class="application-form">
+                  <input type="hidden" name="market_identifier" value="<%= market.identifier %>">
+                  <div class="form-group-inline">
+                    <label for="siret_<%= market.identifier %>">Numéro SIRET (optionnel):</label>
+                    <input type="text" id="siret_<%= market.identifier %>" name="siret" 
+                           placeholder="Laisser vide ou 12345678901234" maxlength="14"
+                           title="Le SIRET doit contenir exactement 14 chiffres ou être laissé vide">
+                    <button type="submit" class="btn btn-info btn-sm">
+                      🏢 Candidater
+                    </button>
+                  </div>
+                  <small style="display: block; margin-top: 5px; color: #666;">
+                    Si vous ne fournissez pas de SIRET, le candidat devra le saisir lui-même.
+                  </small>
+                </form>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </div>

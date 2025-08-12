@@ -123,6 +123,29 @@ class FakeEditorApp < Sinatra::Base
     handle_market_creation_error(e)
   end
 
+  post '/start_application' do
+    current_token = Token.current_token
+    market_identifier = params[:market_identifier]
+    siret = params[:siret]
+
+    return render_dashboard_with_error("Token d'accès non valide. Veuillez vous authentifier d'abord.", current_token) unless current_token&.valid?
+    
+    return render_dashboard_with_error("Identifiant de marché requis.", current_token) if market_identifier.to_s.strip.empty?
+    
+    # SIRET is optional - can be nil or empty
+    siret = siret.to_s.strip.empty? ? nil : siret.strip
+
+    api_response = @fast_track_client.create_market_application(current_token.access_token, market_identifier, siret)
+    
+    # Redirect to the application URL
+    redirect api_response['application_url']
+  rescue StandardError => e
+    @error = "Erreur lors du démarrage de la candidature: #{e.message}"
+    @current_token = current_token
+    load_markets
+    erb :dashboard
+  end
+
   # Webhook endpoint to receive completion notifications
   post '/webhooks/voie-rapide' do
     payload = request.body.read
