@@ -57,9 +57,9 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
         headers: { 'Authorization' => "Bearer #{access_token.token}" },
         as: :json
 
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
       json_response = response.parsed_body
-      expect(json_response['error']).to be_present
+      expect(json_response['error']).to eq('Resource not found')
     end
 
     it 'returns error when public market belongs to another editor' do
@@ -71,7 +71,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
         headers: { 'Authorization' => "Bearer #{access_token.token}" },
         as: :json
 
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'returns validation errors for invalid SIRET' do

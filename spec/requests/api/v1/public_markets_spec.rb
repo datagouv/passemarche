@@ -122,13 +122,13 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           }
       end
 
-      it 'returns forbidden status' do
-        expect(response).to have_http_status(:forbidden)
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
       end
 
       it 'returns error message' do
         json_response = response.parsed_body
-        expect(json_response['error']).to eq('Editor not found')
+        expect(json_response['error']).to eq('Resource not found')
       end
     end
 

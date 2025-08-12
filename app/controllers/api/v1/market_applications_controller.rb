@@ -9,10 +9,6 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
       siret: market_application_params[:siret]
     )
     render json: success_response(market_application), status: :created
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { error: e.message }, status: :forbidden
-  rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
 
   private
