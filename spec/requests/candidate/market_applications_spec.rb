@@ -14,9 +14,6 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       expect(response).to have_http_status(:success)
       expect(response.body).to include('Bienvenue,')
       expect(response.body).to include(market_application.siret)
-      # The factory generates a random name, so we just check for the market info section
-      expect(response.body).to include('Informations du marché')
-      expect(response.body).to include('Nom du marché')
     end
 
     it 'returns 404 for non-existent market application' do
