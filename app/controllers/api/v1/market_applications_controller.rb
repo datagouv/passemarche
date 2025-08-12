@@ -4,17 +4,28 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   before_action :find_public_market
 
   def create
-    market_application = MarketApplicationCreationService.call(
+    return unless @public_market
+
+    service = MarketApplicationCreationService.new(
       public_market: @public_market,
       siret: market_application_params[:siret]
-    )
-    render json: success_response(market_application), status: :created
+    ).perform
+
+    if service.success?
+      render json: success_response(service.result), status: :created
+    else
+      render json: { errors: service.errors }, status: :unprocessable_content
+    end
   end
 
   private
 
   def find_public_market
-    @public_market = current_editor.public_markets.find_by!(identifier: params[:public_market_id])
+    @public_market = current_editor.public_markets.find_by(identifier: params[:public_market_id])
+
+    return if @public_market
+
+    render json: { error: 'Public market not found' }, status: :not_found
   end
 
   def market_application_params

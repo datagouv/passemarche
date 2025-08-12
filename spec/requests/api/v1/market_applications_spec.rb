@@ -59,7 +59,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
       expect(response).to have_http_status(:not_found)
       json_response = response.parsed_body
-      expect(json_response['error']).to eq('Resource not found')
+      expect(json_response['error']).to eq('Public market not found')
     end
 
     it 'returns error when public market belongs to another editor' do
@@ -88,7 +88,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       json_response = response.parsed_body
-      expect(json_response['errors']).to include('Siret Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
+      expect(json_response['errors']['siret']).to include('Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
     end
 
     it 'accepts La Poste SIRET (special case)' do

@@ -89,13 +89,14 @@ end
 
 Then('the error should include {string}') do |error_message|
   expect(@response_body).to have_key('errors')
-  expect(@response_body['errors'].join(' ')).to include(error_message)
+  errors_text = @response_body['errors'].values.flatten.join(' ')
+  expect(errors_text).to include(error_message)
 end
 
 Then('the response should contain validation errors') do
   expect(@response_body).to have_key('errors')
   expect(@response_body['errors']).not_to be_empty
-  errors_text = @response_body['errors'].join(' ')
+  errors_text = @response_body['errors'].values.flatten.join(' ')
   expect(errors_text).to match(/vide|blank|Translation missing/i)
 end
 

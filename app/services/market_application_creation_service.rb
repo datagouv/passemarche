@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-class MarketApplicationCreationService < ApplicationService
+class MarketApplicationCreationService < ApplicationServiceObject
   def initialize(public_market:, siret:)
+    super()
     @public_market = public_market
     @siret = siret
   end
 
-  def call
+  def perform
     create_market_application
+    self
   end
 
   private
@@ -15,9 +17,17 @@ class MarketApplicationCreationService < ApplicationService
   attr_reader :public_market, :siret
 
   def create_market_application
-    MarketApplication.create!(
+    application = MarketApplication.new(
       public_market: public_market,
       siret: siret
     )
+
+    if application.save
+      @result = application
+    else
+      application.errors.each do |error|
+        add_error(error.attribute, error.message)
+      end
+    end
   end
 end
