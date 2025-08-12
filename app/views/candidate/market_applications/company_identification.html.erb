@@ -1,0 +1,64 @@
+<% content_for :title, "Candidature - Identification" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-lg-7">
+    <div class="fr-mb-5w">
+      <h1 class="fr-h1 fr-mb-1w">Candidature au marché</h1>
+      <p class="fr-text--lg fr-mb-0">
+        Bienvenue dans la procédure de candidature simplifiée. 
+        Votre identifiant SIRET nous permet de récupérer automatiquement 
+        les informations officielles de votre entreprise.
+      </p>
+    </div>
+
+    <div class="fr-mb-4w fr-p-3w fr-background-alt--grey">
+      <h2 class="fr-card__title fr-mb-3w">Informations du marché</h2>
+      
+      <div class="fr-mb-2w">
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold">Nom du marché</h3>
+        <p class="fr-text--sm fr-mb-0"><%= @market_application.public_market.name %></p>
+      </div>
+
+      <% if @market_application.public_market.lot_name.present? %>
+        <div class="fr-mb-2w">
+          <h3 class="fr-text--md fr-mb-0 fr-text--bold">Nom du lot</h3>
+          <p class="fr-text--sm fr-mb-0"><%= @market_application.public_market.lot_name %></p>
+        </div>
+      <% end %>
+
+      <div class="fr-mb-0">
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold">Date limite</h3>
+        <p class="fr-text--sm fr-mb-0">
+          <%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)
+        </p>
+      </div>
+    </div>
+
+    <div class="fr-mb-4w">
+      <h2 class="fr-h2 fr-mb-2w">Votre identification</h2>
+      
+      <div class="fr-p-3w fr-background-alt--blue-ecume">
+        <p class="fr-text--sm fr-mb-2w">
+          <strong>Numéro SIRET :</strong> <%= @market_application.siret %>
+        </p>
+        <p class="fr-text--sm fr-mb-0">
+          Ce numéro SIRET a été utilisé pour initier votre candidature.
+        </p>
+      </div>
+    </div>
+
+    <%= form_with url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
+      <div class="fr-mb-4w">
+        <%= form.submit "Continuer la candidature", class: "fr-btn fr-btn--lg" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
+    </div>
+  </div>
+</div>
