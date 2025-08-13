@@ -9,7 +9,7 @@
       </p>
     </div>
 
-    <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
+    <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false, controller: "input-validation" }, class: "fr-mb-4w" do |form| %>
       <div class="fr-mb-4w">
         <div class="fr-input-group<%= ' fr-input-group--error' if @market_application.errors[:siret].any? %>">
           <%= form.label :siret, "Veuillez saisir votre numéro de SIRET", class: "fr-label" %>
@@ -17,8 +17,7 @@
           <%= form.text_field :siret, 
                 class: "fr-input#{ ' fr-input--error' if @market_application.errors[:siret].any? }",
                 placeholder: "12345678901234",
-                maxlength: 14,
-                pattern: "\\d{14}" %>
+                data: { "input-validation-target": "input", action: "input->input-validation#validateInput" } %>
           <% if @market_application.errors[:siret].any? %>
             <p class="fr-error-text">
               <%= @market_application.errors[:siret].first %>
@@ -28,7 +27,7 @@
       </div>
 
       <div class="fr-mb-4w">
-        <%= form.submit "Continuer", class: "fr-btn fr-btn--lg" %>
+        <%= form.submit "Continuer", class: "fr-btn fr-btn--lg", data: { "input-validation-target": "submitButton" } %>
       </div>
     <% end %>
   </div>

@@ -83,8 +83,8 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           params: { market_application: { siret: wrong_format_siret } }
 
         expect(response).to have_http_status(:success)
-        # The actual error shows as i18n keys in the HTML
-        expect(response.body).to include('fr.activerecord.errors.models.market_application.attributes.siret.invalid')
+        # The actual error shows as translated message in the HTML
+        expect(response.body).to include('doit être un numéro SIRET valide de 14 chiffres')
 
         market_application.reload
         expect(market_application.siret).not_to eq(wrong_format_siret)
@@ -97,7 +97,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           params: { market_application: { siret: wrong_length_siret } }
 
         expect(response).to have_http_status(:success)
-        expect(response.body).to include('fr.activerecord.errors.models.market_application.attributes.siret.invalid')
+        expect(response.body).to include('doit être un numéro SIRET valide de 14 chiffres')
 
         market_application.reload
         expect(market_application.siret).not_to eq(wrong_length_siret)
