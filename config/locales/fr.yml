@@ -439,6 +439,10 @@ fr:
               cannot_be_alone: "le marché de défense ne peut pas être seul"
             market_type_codes:
               invalid_codes: "contient des codes invalides : %{codes}"
+        market_application:
+          attributes:
+            siret:
+              invalid: "doit être un numéro SIRET valide de 14 chiffres"
         editor:
           attributes:
             completion_webhook_url:
