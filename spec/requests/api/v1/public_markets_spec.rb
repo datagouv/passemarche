@@ -122,13 +122,13 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           }
       end
 
-      it 'returns not found status' do
-        expect(response).to have_http_status(:not_found)
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
-      it 'returns error message' do
+      it 'returns validation errors' do
         json_response = response.parsed_body
-        expect(json_response['error']).to eq('Resource not found')
+        expect(json_response['errors'][:editor]).to include('Editor not found')
       end
     end
 
@@ -158,8 +158,8 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
 
       it 'returns validation errors' do
         json_response = response.parsed_body
-        expect(json_response['errors']).to be_an(Array)
-        expect(json_response['errors']).not_to be_empty
+        expect(json_response['errors']).to be_a(Hash)
+        expect(json_response['errors']).to have_key('name')
       end
     end
 
@@ -208,7 +208,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         it 'returns validation error' do
           expect(response).to have_http_status(:unprocessable_content)
           json_response = response.parsed_body
-          expect(json_response['errors']).to include('Market type codes ne peut pas être seul')
+          expect(json_response['errors']['market_type_codes']).to include('ne peut pas être seul')
         end
       end
 

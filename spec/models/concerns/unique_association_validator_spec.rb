@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe UniqueAssociationValidator do
-  # Create a test class that includes the concern
   let(:test_class) do
     Class.new(ApplicationRecord) do
       self.table_name = 'public_markets'
@@ -24,7 +23,6 @@ RSpec.describe UniqueAssociationValidator do
     let(:market_attribute1) { create(:market_attribute, key: 'attribute1') }
     let(:market_attribute2) { create(:market_attribute, key: 'attribute2') }
     let(:test_record) do
-      # Use PublicMarket as it has the proper setup
       PublicMarket.new(
         editor: editor,
         name: 'Test Market',
@@ -52,14 +50,12 @@ RSpec.describe UniqueAssociationValidator do
 
     context 'with duplicate associations' do
       it 'is invalid when associations contain duplicates' do
-        # Mock the IDs method to simulate duplicates without hitting database constraints
         allow(test_record).to receive(:market_attribute_ids).and_return([market_attribute1.id, market_attribute1.id, market_attribute2.id])
         expect(test_record).not_to be_valid
         expect(test_record.errors[:market_attributes]).to include('contains duplicates: attribute1')
       end
 
       it 'includes all duplicate names in error message' do
-        # Mock the IDs method to simulate duplicates without hitting database constraints
         allow(test_record).to receive(:market_attribute_ids).and_return([market_attribute1.id, market_attribute1.id, market_attribute2.id, market_attribute2.id])
         expect(test_record).not_to be_valid
         error_message = test_record.errors[:market_attributes].first
@@ -74,7 +70,6 @@ RSpec.describe UniqueAssociationValidator do
     let(:attribute1) { create(:market_attribute, key: 'type_attr1') }
 
     it 'validates uniqueness of market_attributes on new record' do
-      # Set up duplicate IDs directly on the unsaved record
       allow(market_type).to receive(:market_attribute_ids).and_return([attribute1.id, attribute1.id])
       expect(market_type).not_to be_valid
       expect(market_type.errors[:market_attributes]).to include('contains duplicates: type_attr1')

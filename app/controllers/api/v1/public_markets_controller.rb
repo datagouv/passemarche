@@ -2,8 +2,13 @@
 
 class Api::V1::PublicMarketsController < Api::V1::BaseController
   def create
-    public_market = PublicMarketCreationService.call(current_editor, public_market_params)
-    render json: success_response(public_market), status: :created
+    service = PublicMarketCreationService.new(current_editor, public_market_params).perform
+
+    if service.success?
+      render json: success_response(service.result), status: :created
+    else
+      render json: { errors: service.errors }, status: :unprocessable_content
+    end
   end
 
   private
