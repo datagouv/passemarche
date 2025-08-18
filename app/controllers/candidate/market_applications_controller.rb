@@ -4,7 +4,12 @@ module Candidate
   class MarketApplicationsController < ApplicationController
     include Wicked::Wizard
 
-    steps :company_identification
+    steps :company_identification,
+          :market_and_company_information,    # Étape 1 (avec 3 sous-étapes dans la vue)
+          :exclusion_criteria,               # Étape 2
+          :economic_capacities,               # Étape 3
+          :technical_capacities,              # Étape 4
+          :summary                            # Étape 5
 
     before_action :find_market_application
     before_action :check_application_not_completed
@@ -14,13 +19,10 @@ module Candidate
     end
 
     def update
-      case step
-      when :company_identification
-        if @market_application.update(market_application_params)
-          redirect_to finish_wizard_path
-        else
-          render_wizard
-        end
+      if @market_application.update(market_application_params)
+        render_wizard(@market_application)
+      else
+        render_wizard
       end
     end
 
