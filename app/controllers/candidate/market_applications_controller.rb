@@ -5,11 +5,11 @@ module Candidate
     include Wicked::Wizard
 
     steps :company_identification,
-          :market_and_company_information,    # Étape 1 (avec 3 sous-étapes dans la vue)
-          :exclusion_criteria,               # Étape 2
-          :economic_capacities,               # Étape 3
-          :technical_capacities,              # Étape 4
-          :summary                            # Étape 5
+          :market_and_company_information,
+          :exclusion_criteria,
+          :economic_capacities,
+          :technical_capacities,
+          :summary
 
     before_action :find_market_application
     before_action :check_application_not_completed
@@ -30,6 +30,7 @@ module Candidate
     private
 
     def set_wizard_steps
+      # company_identification doesn't count as a step
       @wizard_steps = steps - [:company_identification]
     end
 
