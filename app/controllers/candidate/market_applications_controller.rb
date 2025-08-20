@@ -13,6 +13,7 @@ module Candidate
 
     before_action :find_market_application
     before_action :check_application_not_completed
+    before_action :set_wizard_steps
 
     def show
       render_wizard
@@ -27,6 +28,10 @@ module Candidate
     end
 
     private
+
+    def set_wizard_steps
+      @wizard_steps = steps - [:company_identification]
+    end
 
     def find_market_application
       @market_application = MarketApplication.find_by!(identifier: params[:identifier])
