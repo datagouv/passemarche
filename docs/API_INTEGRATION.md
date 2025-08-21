@@ -138,6 +138,99 @@ Authorization: Bearer your_access_token
 - **Renouvellement** : Obtenez un nouveau token en répétant la requête `/oauth/token`
 - **Révocation** : Les anciens tokens sont automatiquement révoqués lors de l'émission d'un nouveau token
 
+## Endpoints API
+
+### Créer un Marché Public
+
+**Endpoint :** `POST /api/v1/public_markets`
+
+**Headers :**
+```http
+Authorization: Bearer your_access_token
+Content-Type: application/json
+```
+
+**Body :**
+```json
+{
+  "public_market": {
+    "name": "Fourniture de matériel informatique",
+    "lot_name": "Lot principal",
+    "deadline": "2025-03-15T23:59:59Z",
+    "market_type_codes": ["supplies", "services"]
+  }
+}
+```
+
+**Réponse Succès (201 Created) :**
+```json
+{
+  "identifier": "VR-2025-A1B2C3D4E5F6",
+  "configuration_url": "https://voie-rapide.example.com/buyer/public_markets/VR-2025-A1B2C3D4E5F6/setup"
+}
+```
+
+**Paramètres :**
+
+- `name` (string, requis) : Nom du marché public
+- `lot_name` (string, optionnel) : Nom du lot spécifique
+- `deadline` (datetime, requis) : Date limite de candidature au format ISO 8601
+- `market_type_codes` (array, requis) : Types de marché (`supplies`, `services`, `works`, `defense`)
+
+### Créer une Candidature
+
+**Endpoint :** `POST /api/v1/public_markets/{market_identifier}/market_applications`
+
+**Headers :**
+```http
+Authorization: Bearer your_access_token
+Content-Type: application/json
+```
+
+**Body :**
+```json
+{
+  "market_application": {
+    "siret": "12345678901234"
+  }
+}
+```
+
+**Réponse Succès (201 Created) :**
+```json
+{
+  "identifier": "FT20250115A1B2C3D4",
+  "application_url": "https://voie-rapide.example.com/candidate/market_applications/FT20250115A1B2C3D4/company_identification"
+}
+```
+
+**Paramètres :**
+
+- `siret` (string, requis) : Numéro SIRET de l'entreprise candidate (14 chiffres)
+
+### Réponses d'Erreur
+
+**401 Unauthorized :**
+```json
+{
+  "error": "Not authorized"
+}
+```
+
+**404 Not Found :**
+```json
+{
+  "error": "Resource not found"
+}
+```
+
+**422 Unprocessable Content :**
+```json
+{
+  "errors": ["Name can't be blank", "Deadline can't be blank"]
+}
+```
+
 ## Configuration des Webhooks
 
 ### Vue d'ensemble
@@ -177,46 +270,45 @@ Les webhooks permettent à Voie Rapide de notifier votre plateforme en temps ré
 
 ```json
 {
-  "event": {
-    "id": "uuid-event-id",
-    "type": "market.completed",
-    "created_at": "2025-01-15T10:30:00Z",
-    "correlation_id": "uuid-correlation-id"
-  },
+  "event": "market.completed",
+  "timestamp": "2025-01-15T10:30:00Z",
   "market": {
     "identifier": "FT20250115A1B2C3D4",
-    "title": "Fourniture de matériel informatique",
-    "type": "supplies",
-    "defense_industry": false,
-    "status": "completed",
+    "name": "Fourniture de matériel informatique",
+    "lot_name": "Lot principal",
+    "market_type_codes": ["supplies", "services"],
     "completed_at": "2025-01-15T10:30:00Z",
-    "candidate": {
-      "siret": "12345678901234",
-      "company_name": "Entreprise Example SARL",
-      "contact_email": "contact@example.com"
-    },
-    "documents": {
-      "attestation_url": "https://voie-rapide.example.com/attestations/download/uuid",
-      "application_url": "https://voie-rapide.example.com/applications/download/uuid"
-    },
-    "redirect_url": "https://votre-plateforme.com/markets/FT20250115A1B2C3D4/completed"
-  },
-  "editor": {
-    "id": 1,
-    "name": "Votre Plateforme"
+    "field_keys": [
+      "company_name",
+      "siret",
+      "legal_form",
+      "turnover_year_n_minus_1",
+      "employee_count"
+    ]
   }
 }
 ```
+
+**Description des champs :**
+
+- `event` : Type d'événement (actuellement uniquement `"market.completed"`)
+- `timestamp` : Horodatage ISO 8601 de l'événement
+- `market.identifier` : Identifiant unique du marché public
+- `market.name` : Nom du marché public
+- `market.lot_name` : Nom du lot (optionnel)
+- `market.market_type_codes` : Array des codes de type de marché (`supplies`, `services`, `works`, `defense`)
+- `market.completed_at` : Date/heure de complétion au format ISO 8601
+- `market.field_keys` : Liste des clés des champs configurés pour ce marché
 
 ### Sécurité des webhooks
 
 #### Vérification des signatures HMAC
 
-Tous les webhooks incluent une signature HMAC-SHA256 dans le header `X-Webhook-Signature` pour vérifier l'authenticité.
+Tous les webhooks incluent une signature HMAC-SHA256 dans le header `X-Webhook-Signature-SHA256` pour vérifier l'authenticité.
 
 **Header de sécurité :**
 ```http
-X-Webhook-Signature: sha256=a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1
+X-Webhook-Signature-SHA256: sha256=a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1
 ```
 
 #### Vérification côté récepteur
@@ -242,14 +334,14 @@ function verifyWebhookSignature(payload, signature, secret) {
 // Utilisation dans Express
 app.post('/webhooks/voie-rapide', (req, res) => {
   const payload = JSON.stringify(req.body);
-  const signature = req.headers['x-webhook-signature'];
+  const signature = req.headers['x-webhook-signature-sha256'];
   
   if (!verifyWebhookSignature(payload, signature, process.env.WEBHOOK_SECRET)) {
     return res.status(401).send('Invalid signature');
   }
   
   // Traiter l'événement webhook
-  console.log('Événement reçu:', req.body.event.type);
+  console.log('Événement reçu:', req.body.event);
   res.status(200).send('OK');
 });
 ```
