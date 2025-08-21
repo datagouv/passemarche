@@ -11,12 +11,12 @@ module StepperHelper
       safe_join([
         content_tag(:h2, class: 'fr-stepper__title') do
           safe_join([
-        step_label,
-        content_tag(
-          :span,
-          "Étape #{step_number} sur #{total_steps}",
-          class: 'fr-stepper__state'
-        )
+            step_label,
+            content_tag(
+              :span,
+              "Étape #{step_number} sur #{total_steps}",
+              class: 'fr-stepper__state'
+            )
           ], ' ')
         end,
         content_tag(
@@ -24,8 +24,8 @@ module StepperHelper
           '',
           class: 'fr-stepper__steps',
           data: {
-        'fr-current-step': step_number,
-        'fr-steps': total_steps
+            'fr-current-step': step_number,
+            'fr-steps': total_steps
           }
         ),
         content_tag(:p, class: 'fr-stepper__details') do
