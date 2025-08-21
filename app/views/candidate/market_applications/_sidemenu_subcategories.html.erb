@@ -1,0 +1,11 @@
+<div class="fr-col-3">
+  <nav class="fr-sidemenu">
+    <ul class="fr-sidemenu__list">
+      <% subcategories.each do |key, title| %>
+        <li class="fr-sidemenu__item">
+          <%= link_to title, "#subcategory-#{key}", class: "fr-sidemenu__link" %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+</div>

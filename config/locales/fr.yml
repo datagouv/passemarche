@@ -156,6 +156,25 @@ fr:
         technical_capacities: "Les capacités techniques et professionnelles"
         summary: "Synthèse de votre candidature"
 
+      market_and_company_information_data:
+        subcategories:
+          market_information: "Informations du marché"
+          company_information: "Informations de votre entreprise"
+          contact_information: "Informations de contact"
+
+      economic_capacities_data:
+        subcategories:
+          annual_turnover: "Chiffre d'affaires"
+          financial_statements: "Bilans"
+          professional_risk_insurance: "Banque et assurance"
+      technical_capacities_data:
+        subcategories:
+              workforce: "Les effectifs"
+              professional_certificates: "Les certificats"
+              achievements: "Les réalisations"
+              equipment_quality: "Outillage, matériel"
+              quality_environment: "Assurance et qualité"
+
   admin:
     editors:
       created: "Éditeur créé avec succès."
