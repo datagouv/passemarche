@@ -25,9 +25,8 @@ Feature: Buyer Configuration Flow
     Then I should be on the required documents page
     And I should see "Vérification des informations réglementaires et obligagtoires"
     And I should see "Les documents et informations réglementaires et obligatoires"
-    And I should see "Identité de l'entreprise"
-    And I should see "Nom de l'entreprise"
-    And I should see "Condamnation pénale"
+    And I should see "Test: Identité de l'entreprise"
+    And I should see "Test: Déclaration sociale"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
     
@@ -35,9 +34,9 @@ Feature: Buyer Configuration Flow
     Then I should be on the optional documents page
     And I should see "Sélection des informations non réglementaires"
     And I should see "Les documents et informations demandés à titre non réglementaire"
-    And I should see "Chiffre d'affaires annuel"
-    And I should see "Rupture antérieure de contrat"
-    And I should see "Influence indue"
+    And I should see "Test: Chiffre d'affaires"
+    And I should see "Test: Rupture de contrat"
+    And I should see "Test: Influence indue"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
     
@@ -45,7 +44,7 @@ Feature: Buyer Configuration Flow
     Then I should be on the summary page
     And I should see "Synthèse des paramètres de la candidature"
     And I should see "Informations du marché"
-    And I should see "Identité de l'entreprise"
+    And I should see "Test: Identité de l'entreprise"
     And I should see a button "Finaliser la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent

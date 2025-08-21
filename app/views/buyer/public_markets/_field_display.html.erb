@@ -15,13 +15,16 @@
 <%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
   <div class="field-layout-container">
     <div class="field-layout-content">
-      <strong><%= I18n.t("form_fields.fields.#{field_key}.name") %></strong>
-      <br>
-      <span class="fr-text--sm fr-text--mention-grey"><%= I18n.t("form_fields.fields.#{field_key}.description") %></span>
+      <strong><%= t("form_fields.buyer.fields.#{field_key}.name") %></strong>
+      <% description_key = "form_fields.buyer.fields.#{field_key}.description" %>
+      <% if I18n.exists?(description_key) %>
+        <br>
+        <span class="fr-text--sm fr-text--mention-grey"><%= t(description_key) %></span>
+      <% end %>
     </div>
     <div class="field-layout-badge">
       <% if field && source_type %>
-        <% source_info = I18n.t("form_fields.source_types.#{source_type}") %>
+        <% source_info = t("form_fields.source_types.#{source_type}") %>
         <span class="fr-badge <%= source_info[:badge_class] %>">
           <%= source_info[:label] %>
         </span>

@@ -2,14 +2,11 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12">
-    <div class="fr-stepper">
-      <h2 class="fr-stepper__title">
-        <%= t('candidate.market_applications.steps.summary') %>
-        <span class="fr-stepper__state">Étape 5 sur 5</span>
-      </h2>
-      <div class="fr-stepper__steps" data-fr-current-step="5" data-fr-steps="5">
-      </div>
-    </div>
+    <%= stepper(
+      current_step: step,
+      steps: @wizard_steps,
+      i18n_scope: 'candidate.market_applications.steps'
+    ) %>
   </div>
 </div>
 

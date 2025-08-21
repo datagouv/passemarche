@@ -77,7 +77,7 @@
             <div class="fr-mb-5w">
               <% required_fields.each do |category, subcategories| %>
                 <div class="fr-card fr-mb-4w">
-                  <%= render 'card_header', title: t("form_fields.categories.#{category}") %>
+                  <%= render 'card_header', title: t("form_fields.buyer.categories.#{category}") %>
                   <div class="fr-card__body fr-mt-3w fr-mb-3w">
                     <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
                       <%= render 'subcategory_section',
@@ -107,7 +107,7 @@
             <div>
               <% optional_fields.each do |category, subcategories| %>
                 <div class="fr-card fr-mb-4w">
-                  <%= render 'card_header', title: t("form_fields.categories.#{category}") %>
+                  <%= render 'card_header', title: t("form_fields.buyer.categories.#{category}") %>
                   <div class="fr-card__body fr-mt-3w fr-mb-3w">
                     <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
                       <%= render 'subcategory_section',

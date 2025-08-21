@@ -20,13 +20,16 @@
     <%= label_tag "field_#{field_key}", class: "fr-label" do %>
       <div class="field-layout-container">
         <div class="field-layout-content">
-          <%= I18n.t("form_fields.fields.#{field_key}.name") %>
-          <br>
-          <span class="fr-hint-text"><%= I18n.t("form_fields.fields.#{field_key}.description") %></span>
+          <%= t("form_fields.buyer.fields.#{field_key}.name") %>
+          <% description_key = "form_fields.buyer.fields.#{field_key}.description" %>
+          <% if I18n.exists?(description_key) %>
+            <br>
+            <span class="fr-hint-text"><%= t(description_key) %></span>
+          <% end %>
         </div>
         <div class="field-layout-badge">
           <% if field && source_type %>
-            <% source_info = I18n.t("form_fields.source_types.#{source_type}") %>
+            <% source_info = t("form_fields.source_types.#{source_type}") %>
             <span class="fr-badge <%= source_info[:badge_class] %>">
               <%= source_info[:label] %>
             </span>

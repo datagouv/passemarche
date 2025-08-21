@@ -7,13 +7,31 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:public_market) { create(:public_market, :completed, editor: editor) }
   let(:market_application) { create(:market_application, public_market: public_market, siret: '73282932000074') }
 
-  describe 'GET /candidate/market_applications/:identifier/:step' do
-    it 'displays company_identification step' do
-      get "/candidate/market_applications/#{market_application.identifier}/company_identification"
+  STEPS = %i[
+    company_identification
+    market_and_company_information
+    exclusion_criteria
+    economic_capacities
+    technical_capacities
+    summary
+  ].freeze
 
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include('Bienvenue,')
-      expect(response.body).to include(market_application.siret)
+  describe 'GET /candidate/market_applications/:identifier/:step' do
+    STEPS.each_with_index do |step, idx|
+      it "redirects correctly after #{step} step" do
+        put "/candidate/market_applications/#{market_application.identifier}/#{step}"
+        if step == :summary
+          follow_redirect!
+          expect(response).to redirect_to(root_path)
+        else
+          next_step = STEPS[idx + 1]
+          if next_step
+            expect(response).to redirect_to(
+              "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+            )
+          end
+        end
+      end
     end
 
     it 'returns 404 for non-existent market application' do
@@ -22,17 +40,29 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       expect(response).to have_http_status(:not_found)
       expect(response.body).to include('La candidature recherchée n\'a pas été trouvée')
     end
+
+    it 'displays company_identification step' do
+      get "/candidate/market_applications/#{market_application.identifier}/company_identification"
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('Bienvenue,')
+      expect(response.body).to include(market_application.siret)
+    end
   end
 
   describe 'PUT /candidate/market_applications/:identifier/:step' do
-    context 'with valid SIRET' do
-      it 'saves the SIRET and redirects to finish' do
+    let(:next_step) { 'market_and_company_information' }
+
+    context 'with valid SIRET on company_identification' do
+      it 'saves the SIRET and redirects to next step' do
         valid_siret = '73282932000074'
 
         put "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: valid_siret } }
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+        )
 
         market_application.reload
         expect(market_application.siret).to eq(valid_siret)
@@ -44,7 +74,9 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         put "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: la_poste_siret } }
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+        )
 
         market_application.reload
         expect(market_application.siret).to eq(la_poste_siret)
@@ -54,14 +86,16 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         put "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: '' } }
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+        )
 
         market_application.reload
         expect(market_application.siret).to eq('')
       end
     end
 
-    context 'with invalid SIRET' do
+    context 'with invalid SIRET on company_identification' do
       it 'does not save invalid SIRET and renders the form with error' do
         invalid_siret = '12345678901234'
 
@@ -104,16 +138,25 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
     end
 
-    context 'without params' do
+    context 'without params on company_identification' do
       it 'does not modify SIRET when no parameter provided' do
         original_siret = market_application.siret
 
         put "/candidate/market_applications/#{market_application.identifier}/company_identification"
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to("/candidate/market_applications/#{market_application.identifier}/#{next_step}")
 
         market_application.reload
         expect(market_application.siret).to eq(original_siret)
+      end
+    end
+
+    describe 'PUT summary step' do
+      it 'redirects to wicked_finish after finishing last step' do
+        put "/candidate/market_applications/#{market_application.identifier}/summary"
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/wicked_finish"
+        )
       end
     end
   end
