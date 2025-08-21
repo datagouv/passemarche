@@ -5,11 +5,11 @@ module Candidate
     include Wicked::Wizard
 
     steps :company_identification,
-      :market_and_company_information,
-      :exclusion_criteria,
-      :economic_capacities,
-      :technical_capacities,
-      :summary
+          :market_and_company_information,
+          :exclusion_criteria,
+          :economic_capacities,
+          :technical_capacities,
+          :summary
 
     before_action :find_market_application
     before_action :check_application_not_completed
