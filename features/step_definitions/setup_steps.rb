@@ -32,70 +32,70 @@ def create_market_attributes
 end
 
 def create_siret_attribute
-  MarketAttribute.find_or_create_by(key: 'siret') do |attr|
+  MarketAttribute.find_or_create_by(key: 'identite_entreprise_identification_siret') do |attr|
     attr.input_type = :text_input
-    attr.category_key = 'company_identity'
-    attr.subcategory_key = 'basic_information'
+    attr.category_key = 'identite_entreprise'
+    attr.subcategory_key = 'identite_entreprise_identification'
     attr.from_api = true
     attr.required = true
   end
 end
 
 def create_company_name_attribute
-  MarketAttribute.find_or_create_by(key: 'company_name') do |attr|
+  MarketAttribute.find_or_create_by(key: 'identite_entreprise_identification_raison_sociale') do |attr|
     attr.input_type = :text_input
-    attr.category_key = 'company_identity'
-    attr.subcategory_key = 'basic_information'
+    attr.category_key = 'identite_entreprise'
+    attr.subcategory_key = 'identite_entreprise_identification'
     attr.from_api = true
     attr.required = true
   end
 end
 
 def create_criminal_conviction_attribute
-  MarketAttribute.find_or_create_by(key: 'criminal_conviction') do |attr|
+  MarketAttribute.find_or_create_by(key: 'motifs_exclusion_sociaux_declarations_test') do |attr|
     attr.input_type = :checkbox
-    attr.category_key = 'exclusion_criteria'
-    attr.subcategory_key = 'criminal_convictions'
+    attr.category_key = 'motifs_exclusion_sociaux'
+    attr.subcategory_key = 'motifs_exclusion_sociaux_declarations'
     attr.from_api = false
     attr.required = true
   end
 end
 
 def create_annual_turnover_attribute
-  MarketAttribute.find_or_create_by(key: 'annual_turnover') do |attr|
+  MarketAttribute.find_or_create_by(key: 'capacite_economique_financiere_bilans_test') do |attr|
     attr.input_type = :file_upload
-    attr.category_key = 'economic_capacity'
-    attr.subcategory_key = 'financial_data'
+    attr.category_key = 'capacite_economique_financiere'
+    attr.subcategory_key = 'capacite_economique_financiere_bilans'
     attr.from_api = false
     attr.required = false
   end
 end
 
 def create_prior_contract_breach_attribute
-  MarketAttribute.find_or_create_by(key: 'prior_contract_breach') do |attr|
+  MarketAttribute.find_or_create_by(key: 'motifs_exclusion_appreciation_acheteur_discretionnaire_test1') do |attr|
     attr.input_type = :checkbox
-    attr.category_key = 'exclusion_criteria'
-    attr.subcategory_key = 'buyer_discretion'
+    attr.category_key = 'motifs_exclusion_appreciation_acheteur'
+    attr.subcategory_key = 'motifs_exclusion_appreciation_acheteur_discretionnaire'
     attr.from_api = false
     attr.required = false
   end
 end
 
 def create_undue_influence_attribute
-  MarketAttribute.find_or_create_by(key: 'undue_influence') do |attr|
+  MarketAttribute.find_or_create_by(key: 'motifs_exclusion_appreciation_acheteur_discretionnaire_test2') do |attr|
     attr.input_type = :checkbox
-    attr.category_key = 'exclusion_criteria'
-    attr.subcategory_key = 'transparency_competition'
+    attr.category_key = 'motifs_exclusion_appreciation_acheteur'
+    attr.subcategory_key = 'motifs_exclusion_appreciation_acheteur_discretionnaire'
     attr.from_api = false
     attr.required = false
   end
 end
 
 def create_defense_supply_chain_attribute
-  MarketAttribute.find_or_create_by(key: 'defense_supply_chain') do |attr|
+  MarketAttribute.find_or_create_by(key: 'capacites_techniques_professionnelles_certificats_test') do |attr|
     attr.input_type = :file_upload
-    attr.category_key = 'defense_security'
-    attr.subcategory_key = 'defense_requirements'
+    attr.category_key = 'capacites_techniques_professionnelles'
+    attr.subcategory_key = 'capacites_techniques_professionnelles_certificats'
     attr.from_api = false
     attr.required = true
   end

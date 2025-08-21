@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 ruby '3.4.5'
 
 gem 'bootsnap', require: false
+gem 'csv'
 gem 'devise'
 gem 'doorkeeper', '~> 5.7'
 gem 'faraday', '~> 2.0'
@@ -24,6 +25,7 @@ gem 'thruster', require: false
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'wicked'
+gem 'interactor', '~> 3.2'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
