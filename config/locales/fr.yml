@@ -9,7 +9,7 @@ fr:
       short: "%d %b %H:%M"
       long: "%A %d %B %Y à %H:%M"
       only_date: "%d/%m/%Y"
-      
+
   date:
     formats:
       default: "%d/%m/%Y"
@@ -59,17 +59,17 @@ fr:
       - oct
       - nov
       - déc
-      
+
   application:
     name: "Voie Rapide"
     title: "Voie Rapide"
-    
+
   header:
     home_title: "Accueil - Pass marché public"
     service_title: "Pass marché public"
     service_tagline: "Un dossier de candidature, adapté à chaque marché public, en toute simplicité"
     logo_alt: "République Française"
-    
+
   footer:
     description: "Voie Rapide facilite l'accès des PME aux marchés publics français."
     links:
@@ -77,22 +77,22 @@ fr:
       legal: "Mentions légales"
       privacy: "Données personnelles"
       cookies: "Gestion des cookies"
-      
+
   home:
     title: "Voie Rapide"
     subtitle: "La plateforme de candidature simplifiée aux marchés publics"
     description: "Facilitez vos démarches administratives pour répondre aux appels d'offres publics."
-    
+
     welcome:
       text: "Bienvenue sur %{app_name}, la plateforme qui simplifie l'accès des petites et moyennes entreprises aux marchés publics français. Réduisez le temps consacré aux formalités administratives et concentrez-vous sur votre expertise métier."
-      
+
     features:
       title: "Fonctionnalités principales"
       siret: "Identification SIRET automatique"
       documents: "Gestion documentaire intégrée"
       attestations: "Attestations officielles PDF"
       integration: "Intégration plateforme d'achat"
-      
+
     workflow:
       title: "Comment ça marche ?"
       steps:
@@ -105,13 +105,12 @@ fr:
         candidature:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
-  
+
   market_types:
     supplies: "Fournitures"
     services: "Services"
     works: "Travaux"
     defense: "Défense et sécurité"
-    
 
   buyer:
     public_markets:
@@ -120,7 +119,7 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
-        required_fields: "Vérification des informations réglementaires et obligagtoires" 
+        required_fields: "Vérification des informations réglementaires et obligagtoires"
         additional_fields: "Sélection des informations non réglementaires"
         summary: "Synthèse"
       required_fields:
@@ -147,7 +146,16 @@ fr:
           message: "Une erreur s'est produite lors de la synchronisation. Notre équipe a été notifiée. Vous pouvez nous contacter si le problème persiste."
         continue: "Continuer"
         contact_support: "Contacter le support"
-      
+
+  candidate:
+    market_applications:
+      steps:
+        market_and_company_information: "Les informations du marché et de votre entreprise"
+        exclusion_criteria: "Les motifs d'exclusion"
+        economic_capacities: "Les capacités économiques et financières"
+        technical_capacities: "Les capacités techniques et professionnelles"
+        summary: "Synthèse de votre candidature"
+
   admin:
     editors:
       created: "Éditeur créé avec succès."
@@ -159,7 +167,6 @@ fr:
       retry_not_available: "Ce webhook ne peut pas être réessayé."
       deleted: "Éditeur supprimé avec succès."
 
-            
   activerecord:
     errors:
       messages:
