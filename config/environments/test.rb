@@ -49,8 +49,8 @@ Rails.application.configure do
   config.active_support.deprecation = :stderr
 
   # Load test-specific translations
-  config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'test_*.yml')]
-  
+  # config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'test_*.yml')]
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

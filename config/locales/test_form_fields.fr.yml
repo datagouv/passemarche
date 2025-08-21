@@ -2,57 +2,57 @@ fr:
   form_fields:
     buyer:
       categories:
-        identite_entreprise: "Test: Identité de l'entreprise"
-        motifs_exclusion_sociaux: "Test: Motifs d'exclusion sociaux"
-        motifs_exclusion_appreciation_acheteur: "Test: Motifs d'exclusion à l'appréciation"
-        capacite_economique_financiere: "Test: Capacité économique et financière"
-        capacites_techniques_professionnelles: "Test: Capacités techniques"
+        test_identite_entreprise: "Test: Identité de l'entreprise"
+        test_motifs_exclusion_sociaux: "Test: Motifs d'exclusion sociaux"
+        test_motifs_exclusion_appreciation_acheteur: "Test: Motifs d'exclusion à l'appréciation"
+        test_capacite_economique_financiere: "Test: Capacité économique et financière"
+        test_capacites_techniques_professionnelles: "Test: Capacités techniques"
       subcategories:
-        identite_entreprise_identification: "Test: Identification de l'entreprise"
-        motifs_exclusion_sociaux_declarations: "Test: Déclarations sociales"
-        motifs_exclusion_appreciation_acheteur_discretionnaire: "Test: Motifs discrétionnaires"
-        capacite_economique_financiere_bilans: "Test: Bilans financiers"
-        capacites_techniques_professionnelles_certificats: "Test: Certificats professionnels"
+        test_identite_entreprise_identification: "Test: Identification de l'entreprise"
+        test_motifs_exclusion_sociaux_declarations: "Test: Déclarations sociales"
+        test_motifs_exclusion_appreciation_acheteur_discretionnaire: "Test: Motifs discrétionnaires"
+        test_capacite_economique_financiere_bilans: "Test: Bilans financiers"
+        test_capacites_techniques_professionnelles_certificats: "Test: Certificats professionnels"
       fields:
-        identite_entreprise_identification_siret:
+        test_identite_entreprise_identification_siret:
           name: "Test: SIRET"
-        identite_entreprise_identification_raison_sociale:
+        test_identite_entreprise_identification_raison_sociale:
           name: "Test: Raison sociale"
-        motifs_exclusion_sociaux_declarations_test:
+        test_motifs_exclusion_sociaux_declarations_test:
           name: "Test: Déclaration sociale"
-        capacite_economique_financiere_bilans_test:
+        test_capacite_economique_financiere_bilans_test:
           name: "Test: Chiffre d'affaires"
-        motifs_exclusion_appreciation_acheteur_discretionnaire_test1:
+        test_motifs_exclusion_appreciation_acheteur_discretionnaire_test1:
           name: "Test: Rupture de contrat"
-        motifs_exclusion_appreciation_acheteur_discretionnaire_test2:
+        test_motifs_exclusion_appreciation_acheteur_discretionnaire_test2:
           name: "Test: Influence indue"
-        capacites_techniques_professionnelles_certificats_test:
+        test_capacites_techniques_professionnelles_certificats_test:
           name: "Test: Chaîne d'approvisionnement"
     candidate:
       categories:
-        identite_entreprise: "Test: Identité de l'entreprise"
-        motifs_exclusion_sociaux: "Test: Motifs d'exclusion sociaux"
-        motifs_exclusion_appreciation_acheteur: "Test: Motifs d'exclusion à l'appréciation"
-        capacite_economique_financiere: "Test: Capacité économique et financière"
-        capacites_techniques_professionnelles: "Test: Capacités techniques"
+        test_identite_entreprise: "Test: Identité de l'entreprise"
+        test_motifs_exclusion_sociaux: "Test: Motifs d'exclusion sociaux"
+        test_motifs_exclusion_appreciation_acheteur: "Test: Motifs d'exclusion à l'appréciation"
+        test_capacite_economique_financiere: "Test: Capacité économique et financière"
+        test_capacites_techniques_professionnelles: "Test: Capacités techniques"
       subcategories:
-        identite_entreprise_identification: "Test: Identification de l'entreprise"
-        motifs_exclusion_sociaux_declarations: "Test: Déclarations sociales"
-        motifs_exclusion_appreciation_acheteur_discretionnaire: "Test: Motifs discrétionnaires"
-        capacite_economique_financiere_bilans: "Test: Bilans financiers"
-        capacites_techniques_professionnelles_certificats: "Test: Certificats professionnels"
+        test_identite_entreprise_identification: "Test: Identification de l'entreprise"
+        test_motifs_exclusion_sociaux_declarations: "Test: Déclarations sociales"
+        test_motifs_exclusion_appreciation_acheteur_discretionnaire: "Test: Motifs discrétionnaires"
+        test_capacite_economique_financiere_bilans: "Test: Bilans financiers"
+        test_capacites_techniques_professionnelles_certificats: "Test: Certificats professionnels"
       fields:
-        identite_entreprise_identification_siret:
+        test_identite_entreprise_identification_siret:
           name: "Test: SIRET"
-        identite_entreprise_identification_raison_sociale:
+        test_identite_entreprise_identification_raison_sociale:
           name: "Test: Raison sociale"
-        motifs_exclusion_sociaux_declarations_test:
+        test_motifs_exclusion_sociaux_declarations_test:
           name: "Test: Déclaration sociale"
-        capacite_economique_financiere_bilans_test:
+        test_capacite_economique_financiere_bilans_test:
           name: "Test: Chiffre d'affaires"
-        motifs_exclusion_appreciation_acheteur_discretionnaire_test1:
+        test_motifs_exclusion_appreciation_acheteur_discretionnaire_test1:
           name: "Test: Rupture de contrat"
-        motifs_exclusion_appreciation_acheteur_discretionnaire_test2:
+        test_motifs_exclusion_appreciation_acheteur_discretionnaire_test2:
           name: "Test: Influence indue"
-        capacites_techniques_professionnelles_certificats_test:
+        test_capacites_techniques_professionnelles_certificats_test:
           name: "Test: Chaîne d'approvisionnement"

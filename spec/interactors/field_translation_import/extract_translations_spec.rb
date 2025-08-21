@@ -17,8 +17,8 @@ RSpec.describe FieldTranslationImport::ExtractTranslations, type: :interactor do
       let(:mock_row) do
         double('ParsedRow',
           should_import?: true,
-          category_key: 'identity',
-          subcategory_key: 'basic',
+          category_key: 'test_identity',
+          subcategory_key: 'test_basic',
           key: 'company_name',
           to_h: {
             'category_acheteur' => 'Buyer Category',

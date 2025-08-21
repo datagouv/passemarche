@@ -50,8 +50,8 @@ RSpec.describe MarketAttribute, type: :model do
     describe '.ordered' do
       before { MarketAttribute.delete_all }
 
-      let!(:economic_attr) { create(:market_attribute, required: false, category_key: 'economic', subcategory_key: 'financial', key: 'turnover') }
-      let!(:company_attr) { create(:market_attribute, required: true, category_key: 'company', subcategory_key: 'basic', key: 'name') }
+      let!(:economic_attr) { create(:market_attribute, required: false, category_key: 'test_economic', subcategory_key: 'test_financial', key: 'turnover') }
+      let!(:company_attr) { create(:market_attribute, required: true, category_key: 'test_company', subcategory_key: 'test_basic', key: 'name') }
 
       it 'orders by required, category_key, subcategory_key, key' do
         ordered = MarketAttribute.ordered.to_a

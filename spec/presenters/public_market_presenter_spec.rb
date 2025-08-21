@@ -15,8 +15,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
   let!(:siret_attribute) do
     attr = create(:market_attribute,
       key: 'test_siret',
-      category_key: 'company_identity',
-      subcategory_key: 'basic_information',
+      category_key: 'test_company_identity',
+      subcategory_key: 'test_basic_information',
       required: true)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
@@ -26,8 +26,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
   let!(:criminal_conviction_attribute) do
     attr = create(:market_attribute,
       key: 'test_criminal_conviction',
-      category_key: 'exclusion_criteria',
-      subcategory_key: 'criminal_convictions',
+      category_key: 'test_exclusion_criteria',
+      subcategory_key: 'test_criminal_convictions',
       required: true)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
@@ -37,8 +37,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
   let!(:annual_turnover_attribute) do
     attr = create(:market_attribute,
       key: 'test_annual_turnover',
-      category_key: 'economic_capacity',
-      subcategory_key: 'financial_data',
+      category_key: 'test_economic_capacity',
+      subcategory_key: 'test_financial_data',
       required: false)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
@@ -48,8 +48,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
   let!(:team_presentation_attribute) do
     attr = create(:market_attribute,
       key: 'test_team_presentation',
-      category_key: 'technical_capacity',
-      subcategory_key: 'workforce',
+      category_key: 'test_technical_capacity',
+      subcategory_key: 'test_workforce',
       required: false)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
@@ -60,11 +60,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     it 'organizes available required fields by category and subcategory' do
       result = presenter.available_required_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
-      expect(result.keys).to include('company_identity', 'exclusion_criteria')
+      expect(result.keys).to include('test_company_identity', 'test_exclusion_criteria')
 
-      company_identity = result['company_identity']
+      company_identity = result['test_company_identity']
       expect(company_identity).to be_a(Hash)
-      expect(company_identity['basic_information']).to include('test_siret')
+      expect(company_identity['test_basic_information']).to include('test_siret')
     end
   end
 
@@ -72,7 +72,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     it 'organizes available optional fields by category and subcategory' do
       result = presenter.available_optional_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
-      expect(result.keys).to include('economic_capacity', 'technical_capacity')
+      expect(result.keys).to include('test_economic_capacity', 'test_technical_capacity')
     end
   end
 
@@ -127,8 +127,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     let!(:defense_supply_chain_attribute) do
       attr = create(:market_attribute,
         key: 'test_defense_supply_chain',
-        category_key: 'defense_security',
-        subcategory_key: 'defense_requirements',
+        category_key: 'test_defense_security',
+        subcategory_key: 'test_defense_requirements',
         required: true)
       defense_market_type.market_attributes << attr
       defense_public_market.market_attributes << attr
@@ -138,8 +138,8 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     let!(:company_category_attribute) do
       attr = create(:market_attribute,
         key: 'test_company_category',
-        category_key: 'company_identity',
-        subcategory_key: 'basic_information',
+        category_key: 'test_company_identity',
+        subcategory_key: 'test_basic_information',
         required: false)
       defense_market_type.market_attributes << attr
       defense_public_market.market_attributes << attr

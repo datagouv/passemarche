@@ -24,8 +24,8 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
           key: 'company_name',
           to_market_attribute_params: {
             input_type: 'text_input',
-            category_key: 'identity',
-            subcategory_key: 'basic',
+            category_key: 'test_identity',
+            subcategory_key: 'test_basic',
             required: true,
             from_api: false,
             deleted_at: nil
@@ -57,7 +57,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
           to_market_attribute_params: {
             input_type: 'text_input',
             category_key: 'new_category',
-            subcategory_key: 'basic',
+            subcategory_key: 'test_basic',
             required: true,
             from_api: false,
             deleted_at: nil
@@ -82,8 +82,8 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
           key: 'company_name',
           to_market_attribute_params: {
             input_type: nil,
-            category_key: 'identity',
-            subcategory_key: 'basic',
+            category_key: 'test_identity',
+            subcategory_key: 'test_basic',
             required: true,
             from_api: false,
             deleted_at: nil
