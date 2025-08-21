@@ -185,6 +185,54 @@ bin/rails assets:precompile
 bin/rails assets:clobber
 ```
 
+### Configuration des champs et traductions
+```bash
+# Import de la configuration des champs depuis CSV
+bin/rails field_configuration:import
+
+# Import depuis un fichier CSV personnalisé
+bin/rails field_configuration:import_from_file[/chemin/vers/fichier.csv]
+
+# Validation de la structure CSV sans import
+bin/rails field_configuration:validate[/chemin/vers/fichier.csv]
+
+# Import des traductions des champs depuis CSV
+bin/rails field_translations:import
+
+# Import des traductions depuis un fichier CSV personnalisé
+bin/rails field_translations:import_from_file[/chemin/vers/fichier.csv]
+```
+
+#### Configuration des champs (`field_configuration`)
+Ces tâches permettent de configurer les champs de formulaire à partir d'un fichier CSV :
+
+- **`field_configuration:import`** : Importe la configuration des champs depuis le fichier CSV par défaut (`config/form_fields/fields.csv`)
+  - Crée les `MarketAttribute` et associations avec les `MarketType`
+  - Supprime en mode soft-delete les champs non présents dans le CSV
+  - Affiche des statistiques détaillées de l'import
+
+- **`field_configuration:import_from_file`** : Même fonctionnalité mais avec un fichier CSV personnalisé
+
+- **`field_configuration:validate`** : Valide la structure et le contenu du fichier CSV sans effectuer d'import
+
+#### Traductions des champs (`field_translations`)
+Ces tâches permettent d'extraire et de mettre à jour les traductions françaises depuis le même fichier CSV :
+
+- **`field_translations:import`** : Extrait les traductions des colonnes CSV et met à jour `config/locales/form_fields.fr.yml`
+  - Extrait les titres et descriptions côté acheteur (`category_acheteur`, `titre_acheteur`, etc.)
+  - Met à jour les sections `categories`, `subcategories` et `fields` du fichier de traduction
+  - Compatible avec les vues existantes sans modification de code
+
+- **`field_translations:import_from_file`** : Même fonctionnalité mais avec un fichier CSV personnalisé
+
+#### Structure du fichier CSV attendu
+Le fichier CSV doit contenir les colonnes suivantes (ligne 4 = en-têtes) :
+- `category_key`, `subcategory_key`, `key` : Clés techniques
+- `category_acheteur`, `subcategory_acheteur` : Traductions des catégories/sous-catégories  
+- `titre_acheteur`, `description_acheteur` : Traductions des champs côté acheteur
+- `import` : `oui` pour les lignes à traiter
+- Colonnes de types de marchés : `services`, `fournitures`, `travaux`, `défense`
+
 ## 🏗 Architecture
 
 ### Structure Rails
