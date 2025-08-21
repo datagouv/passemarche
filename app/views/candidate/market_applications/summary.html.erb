@@ -10,18 +10,4 @@
   </div>
 </div>
 
-<div class="wizard-nav">
-  <div class="fr-col-12">
-    <div class="fr-mb-4w">
-      <%= form_with model: @market_application, url: wizard_path, method: :patch, local: true do |form| %>
-        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
-          <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
-            Précédent
-          <% end %>
-          <%= form.submit "Suivant", class: "fr-btn fr-btn--icon-right" %>
-      </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render "wizard_nav", submit_label: "Transmettre ma candidature" %>
