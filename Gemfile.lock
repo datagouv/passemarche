@@ -101,6 +101,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    csv (3.3.5)
     cucumber (9.2.1)
       builder (~> 3.2)
       cucumber-ci-environment (> 9, < 11)
@@ -185,6 +186,8 @@ GEM
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
+    interactor (3.2.0)
+      ostruct
     io-console (0.8.1)
     irb (1.15.2)
       pp (>= 0.6.0)
@@ -481,6 +484,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   capybara
+  csv
   cucumber-rails (~> 3.1)
   database_cleaner-active_record (~> 2.2)
   debug
@@ -489,6 +493,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.4)
   faraday (~> 2.0)
   importmap-rails
+  interactor (~> 3.2)
   jbuilder
   kamal
   mission_control-jobs
