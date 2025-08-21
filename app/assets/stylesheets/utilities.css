@@ -1,3 +1,24 @@
+/* Sticky footer using flexbox - works with DSFR */
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer.fr-footer {
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
 /* Utility classes for centering content */
 .center-content {
   display: flex;
