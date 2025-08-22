@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_11_193554) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_22_123114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -44,9 +44,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_193554) do
     t.string "siret", limit: 14
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "completed_at"
+    t.integer "sync_status", default: 0, null: false
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"
+    t.index ["sync_status"], name: "index_market_applications_on_sync_status"
   end
 
   create_table "market_attributes", force: :cascade do |t|
