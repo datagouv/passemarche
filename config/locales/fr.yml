@@ -78,6 +78,10 @@ fr:
       privacy: "Données personnelles"
       cookies: "Gestion des cookies"
 
+  button:
+    next_step: "Passer à l'étape suivante"
+    submit_summary: "Transmettre ma candidature"
+
   home:
     title: "Voie Rapide"
     subtitle: "La plateforme de candidature simplifiée aux marchés publics"
