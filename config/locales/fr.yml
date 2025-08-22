@@ -153,6 +153,7 @@ fr:
 
   candidate:
     market_applications:
+      market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         market_and_company_information: "Les informations du marché et de votre entreprise"

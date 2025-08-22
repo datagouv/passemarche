@@ -56,8 +56,10 @@ module Candidate
     end
 
     def check_application_not_completed
-      # Placeholder for future implementation
-      # Will prevent editing completed applications
+      return unless @market_application.completed?
+
+      redirect_to candidate_sync_status_path(@market_application.identifier),
+        alert: t('candidate.market_applications.market_application_completed_cannot_edit')
     end
 
     def market_application_params
