@@ -20,7 +20,13 @@ module Candidate
     end
 
     def update
-      if @market_application.update(market_application_params)
+      if step == :summary
+        @market_application.complete!
+
+        MarketApplicationWebhookJob.perform_later(@market_application.id)
+
+        render_wizard(@market_application)
+      elsif @market_application.update(market_application_params)
         render_wizard(@market_application)
       else
         render_wizard
