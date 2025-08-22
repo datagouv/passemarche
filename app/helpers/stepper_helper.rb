@@ -11,7 +11,8 @@ module StepperHelper
       safe_join([
         stepper_title(step_label, step_number, total_steps),
         stepper_steps_div(step_number, total_steps),
-        stepper_details(current_step, steps, i18n_scope)
+        stepper_details(current_step, steps, i18n_scope),
+        stepper_subtitle(i18n_scope, step)
       ])
     end
   end
@@ -52,5 +53,15 @@ module StepperHelper
         ''
       end
     end
+  end
+
+  def stepper_subtitle(i18n_scope, step)
+    subtitle = t("#{i18n_scope}.#{step}", default: '')
+
+    content_tag(
+      :h3,
+      subtitle,
+      class: 'fr-stepper__subtitle fr-mt-6w fr-text--bold"'
+    )
   end
 end
