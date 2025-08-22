@@ -20,7 +20,7 @@ RSpec.describe 'Candidate::SyncStatus', type: :request do
       end
 
       it 'contains sync status content' do
-        expect(response.body).to include('Super page de synchronisation')
+        expect(response.body).to include('Synchronisation')
       end
     end
 

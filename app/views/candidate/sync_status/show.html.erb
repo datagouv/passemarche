@@ -1,1 +1,75 @@
-Super page de synchronisation
+<% content_for :title, "#{@market_application.editor.name} - Synchronisation de la candidature" %>
+
+<div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
+  <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
+    <div class="fr-mb-4w" 
+         data-controller="sync-status" 
+         data-sync-status-url-value="<%= candidate_sync_status_path(@market_application.identifier, format: :json) %>"
+         data-sync-status-redirect-url-value="<%= @market_application.editor.redirect_url&.gsub('{market_identifier}', @market_application.identifier) %>"
+         data-status="<%= @market_application.sync_status %>">
+
+      <div id="sync-status-content">
+        <% if @market_application.sync_completed? %>
+          <div>
+            <h3 class="fr-h3">Votre candidature a été transmise !</h3>
+            <p>
+              Nous avons transmis automatiquement toutes les informations nécessaires à l’acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt.
+            </p>
+            <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+              <%= link_to "Retourner sur #{@market_application.editor.name}", 
+                          @market_application.editor.redirect_url&.gsub('{market_identifier}', @market_application.identifier) || root_path,
+                          class: 'fr-btn' %>
+            </div>
+          </div>
+        
+        <% elsif @market_application.sync_failed? %>
+          <div>
+            <h3 class="fr-h3">Erreur inattendue</h3>
+            <p>
+              Désolée, notre système rencontre un problème, nous n’avons pas réussi à transmettre votre candidature à la plateforme de marché.
+            </p>
+            <p class="fr-text--sm">
+              Vous pouvez tenter de transférer à nouveau les informations en cliquant sur le bouton ci-dessous. Si vous avez besoin d'une aide immédiate, merci de nous contacter.
+            </p>
+            <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+              <%= button_to "Transmettre le formulaire", 
+                          retry_sync_candidate_market_application_path(@market_application.identifier),
+                          method: :post,
+                          class: "fr-btn",
+                          data: { turbo: false } %>
+              <%= link_to "Contactez-nous", 
+                          "mailto:support@voie-rapide.gouv.fr?subject=Erreur de synchronisation pour le marché #{@market_application.identifier}",
+                          class: "fr-btn fr-btn--secondary" %>
+            </div>
+          </div>
+        <% else %>
+          <div>
+            <h3 class="fr-h3">Synchronisation en cours</h3>
+            <p>
+              Votre candidature est en cours de synchronisation avec <%= @market_application.editor.name %>.
+              Cette opération permet de garantir la bonne transmission de votre candidature.
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4" style="display: flex; align-items: center; justify-content: center;">
+    <div class="center-content">
+      <% if @market_application.sync_completed? %>
+        <%= image_tag "sync_status_success.png", alt: "Synchronisation réussie" %>
+      <% elsif @market_application.sync_failed? %>
+        <%= image_tag "sync_status_error.png", alt: "Erreur de synchronisation" %>
+      <% else %>
+        <div class="sync-loader" 
+             role="img" 
+             aria-label="Synchronisation en cours..."
+             data-sync-status-target="loader">
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
