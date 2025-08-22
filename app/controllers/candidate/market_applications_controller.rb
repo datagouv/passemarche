@@ -25,7 +25,7 @@ module Candidate
 
         MarketApplicationWebhookJob.perform_later(@market_application.id)
 
-        render_wizard(@market_application)
+        redirect_to candidate_sync_status_path(@market_application.identifier)
       elsif @market_application.update(market_application_params)
         render_wizard(@market_application)
       else

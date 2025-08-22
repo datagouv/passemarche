@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :editors do
       resources :webhook_secrets, only: [:create]
     end
-    mount MissionControl::Jobs::Engine, at: "/jobs"
+    mount MissionControl::Jobs::Engine, at: '/jobs'
     root 'editors#index'
   end
   devise_for :admin_users, skip: %i[registrations passwords confirmations unlocks]
@@ -30,7 +30,7 @@ Rails.application.routes.draw do
         post 'retry_sync', to: 'public_markets#retry_sync'
       end
     end
-    
+
     resources :sync_status, param: :identifier, only: [:show], path: 'public_markets/:identifier/sync_status'
   end
 
@@ -42,6 +42,8 @@ Rails.application.routes.draw do
         patch ':id', to: 'market_applications#update'
       end
     end
+
+    resources :sync_status, param: :identifier, only: [:show], path: 'market_application/:identifier/sync_status'
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check

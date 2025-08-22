@@ -21,8 +21,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       it "redirects correctly after #{step} step" do
         patch "/candidate/market_applications/#{market_application.identifier}/#{step}"
         if step == :summary
-          follow_redirect!
-          expect(response).to redirect_to(root_path)
+          expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
         else
           next_step = STEPS[idx + 1]
           if next_step
@@ -160,9 +159,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         end
 
         it 'redirects to root' do
-          expect(response).to redirect_to(
-            "/candidate/market_applications/#{market_application.identifier}/wicked_finish"
-          )
+          expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
         end
 
         it 'completes the market' do
