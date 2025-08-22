@@ -5,7 +5,6 @@
     <div class="fr-mb-4w" 
          data-controller="sync-status" 
          data-sync-status-url-value="<%= buyer_sync_status_path(@public_market.identifier, format: :json) %>"
-         data-sync-status-redirect-url-value="<%= @public_market.editor.redirect_url&.gsub('{market_identifier}', @public_market.identifier) %>"
          data-status="<%= @public_market.sync_status %>">
       
       <div id="sync-status-content">
