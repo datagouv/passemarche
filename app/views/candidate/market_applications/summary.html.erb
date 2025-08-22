@@ -1,13 +1,5 @@
 <% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.steps.summary')}" %>
 
-<div class="fr-grid-row fr-grid-row--gutters">
-  <div class="fr-col-12">
-    <%= stepper(
-      current_step: step,
-      steps: @wizard_steps,
-      i18n_scope: 'candidate.market_applications.steps'
-    ) %>
-  </div>
-</div>
+<%= render "stepper", step: step, wizard_steps: @wizard_steps %>
 
 <%= render "wizard_nav", submit_label: t('button.submit_summary') %>
