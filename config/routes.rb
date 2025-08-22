@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'
         patch ':id', to: 'market_applications#update'
+        post 'retry_sync', to: 'market_applications#retry_sync'
       end
     end
 

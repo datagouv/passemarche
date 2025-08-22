@@ -33,6 +33,15 @@ module Candidate
       end
     end
 
+    def retry_sync
+      @market_application.update!(sync_status: :sync_pending)
+
+      MarketApplicationWebhookJob.perform_later(@market_application.id)
+
+      redirect_to candidate_sync_status_path(@market_application.identifier),
+        notice: t('candidate.market_application.sync_retry_initiated')
+    end
+
     private
 
     def set_wizard_steps

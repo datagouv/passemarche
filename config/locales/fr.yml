@@ -153,6 +153,7 @@ fr:
 
   candidate:
     market_applications:
+      sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         market_and_company_information: "Les informations du marché et de votre entreprise"
         exclusion_criteria: "Les motifs d'exclusion"
