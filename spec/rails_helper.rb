@@ -66,6 +66,11 @@ RSpec.configure do |config|
   # Configure Devise test helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
 
+  # Configure ActiveJob test adapter
+  config.before(:each) do
+    ActiveJob::Base.queue_adapter = :test
+  end
+
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
 

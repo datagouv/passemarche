@@ -13,13 +13,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
     )
   end
 
-  let(:access_token) do
-    editor.ensure_doorkeeper_application!
-    Doorkeeper::AccessToken.create!(
-      application: editor.doorkeeper_application,
-      scopes: 'api_access'
-    )
-  end
+  let(:access_token) { oauth_access_token_for(editor) }
 
   let!(:supplies_market_type) { create(:market_type, code: 'supplies') }
   let!(:defense_market_type) { create(:market_type, :defense) }
@@ -41,7 +35,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         post '/api/v1/public_markets',
           params: market_params.to_json,
           headers: {
-            'Authorization' => "Bearer #{access_token.token}",
+            'Authorization' => "Bearer #{access_token}",
             'Content-Type' => 'application/json'
           }
       end
@@ -147,7 +141,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         post '/api/v1/public_markets',
           params: invalid_params.to_json,
           headers: {
-            'Authorization' => "Bearer #{access_token.token}",
+            'Authorization' => "Bearer #{access_token}",
             'Content-Type' => 'application/json'
           }
       end
@@ -175,7 +169,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           post '/api/v1/public_markets',
             params: defense_params.to_json,
             headers: {
-              'Authorization' => "Bearer #{access_token.token}",
+              'Authorization' => "Bearer #{access_token}",
               'Content-Type' => 'application/json'
             }
         end
@@ -200,7 +194,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           post '/api/v1/public_markets',
             params: defense_alone_params.to_json,
             headers: {
-              'Authorization' => "Bearer #{access_token.token}",
+              'Authorization' => "Bearer #{access_token}",
               'Content-Type' => 'application/json'
             }
         end
@@ -217,7 +211,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           post '/api/v1/public_markets',
             params: market_params.to_json,
             headers: {
-              'Authorization' => "Bearer #{access_token.token}",
+              'Authorization' => "Bearer #{access_token}",
               'Content-Type' => 'application/json'
             }
         end

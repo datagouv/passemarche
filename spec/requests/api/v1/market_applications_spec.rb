@@ -3,15 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
-  let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, :completed, editor:) }
-  let(:access_token) do
-    editor.ensure_doorkeeper_application!
-    Doorkeeper::AccessToken.create!(
-      application: editor.doorkeeper_application,
-      scopes: 'api_access'
-    )
-  end
+  let(:editor) { create(:editor, :authorized_and_active) }
+  let(:public_market) { create(:public_market, :completed, editor: editor) }
+  let(:access_token) { oauth_access_token_for(editor) }
 
   describe 'POST /api/v1/public_markets/:public_market_id/market_applications' do
     let(:valid_siret) { '73282932000074' }
@@ -28,7 +22,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
     it 'creates market application successfully' do
       post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
         params: valid_params,
-        headers: { 'Authorization' => "Bearer #{access_token.token}" },
+        headers: { 'Authorization' => "Bearer #{access_token}" },
         as: :json
 
       expect(response).to have_http_status(:created)
@@ -42,7 +36,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect do
         post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
           params: valid_params,
-          headers: { 'Authorization' => "Bearer #{access_token.token}" },
+          headers: { 'Authorization' => "Bearer #{access_token}" },
           as: :json
       end.to change(MarketApplication, :count).by(1)
 
@@ -54,7 +48,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
     it 'returns error when public market not found' do
       post '/api/v1/public_markets/NONEXISTENT/market_applications',
         params: valid_params,
-        headers: { 'Authorization' => "Bearer #{access_token.token}" },
+        headers: { 'Authorization' => "Bearer #{access_token}" },
         as: :json
 
       expect(response).to have_http_status(:not_found)
@@ -68,7 +62,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
       post "/api/v1/public_markets/#{other_market.identifier}/market_applications",
         params: valid_params,
-        headers: { 'Authorization' => "Bearer #{access_token.token}" },
+        headers: { 'Authorization' => "Bearer #{access_token}" },
         as: :json
 
       expect(response).to have_http_status(:not_found)
@@ -83,7 +77,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
       post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
         params: invalid_params,
-        headers: { 'Authorization' => "Bearer #{access_token.token}" },
+        headers: { 'Authorization' => "Bearer #{access_token}" },
         as: :json
 
       expect(response).to have_http_status(:unprocessable_content)
@@ -100,7 +94,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
       post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
         params: la_poste_params,
-        headers: { 'Authorization' => "Bearer #{access_token.token}" },
+        headers: { 'Authorization' => "Bearer #{access_token}" },
         as: :json
 
       expect(response).to have_http_status(:created)
