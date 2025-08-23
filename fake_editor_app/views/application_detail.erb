@@ -54,6 +54,17 @@
          target="_blank" class="btn btn-primary">
         🔄 Reprendre la candidature
       </a>
+    <% else %>
+      <% if @application.attestation_url %>
+        <a href="/applications/<%= @application.identifier %>/download_attestation" 
+           class="btn btn-primary">
+          📄 Télécharger l'attestation
+        </a>
+      <% else %>
+        <span class="btn btn-disabled">
+          📄 Attestation non disponible
+        </span>
+      <% end %>
     <% end %>
     
     <a href="/markets/<%= @market.identifier %>" class="btn btn-secondary">
