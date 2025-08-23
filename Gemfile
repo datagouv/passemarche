@@ -27,6 +27,7 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'wicked'
 gem 'interactor', '~> 3.2'
 gem 'wicked_pdf'
+gem 'rubyzip', '~> 2.3'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
