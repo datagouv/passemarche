@@ -23,11 +23,7 @@ module Candidate
 
     def update
       if step == :summary
-        @market_application.complete!
-
-        MarketApplicationWebhookJob.perform_later(@market_application.id)
-
-        redirect_to candidate_sync_status_path(@market_application.identifier)
+        handle_summary_completion
       elsif @market_application.update(market_application_params)
         render_wizard(@market_application)
       else
@@ -49,6 +45,18 @@ module Candidate
     def set_wizard_steps
       # company_identification doesn't count as a step
       @wizard_steps = steps - [:company_identification]
+    end
+
+    def handle_summary_completion
+      result = CompleteMarketApplication.call(market_application: @market_application)
+
+      if result.success?
+        MarketApplicationWebhookJob.perform_later(@market_application.id)
+        redirect_to candidate_sync_status_path(@market_application.identifier)
+      else
+        flash.now[:alert] = result.message
+        render_wizard
+      end
     end
 
     def find_market_application

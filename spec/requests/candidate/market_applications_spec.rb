@@ -17,6 +17,10 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     summary
   ].freeze
 
+  before do
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+  end
+
   describe 'GET /candidate/market_applications/:identifier/:step' do
     STEPS.each_with_index do |step, idx|
       context 'when application is not completed' do
