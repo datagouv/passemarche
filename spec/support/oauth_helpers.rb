@@ -8,7 +8,7 @@ module OAuthHelpers
       grant_type: 'client_credentials',
       client_id: editor.client_id,
       client_secret: editor.client_secret,
-      scope:
+      scope: scope
     }
 
     response.parsed_body['access_token']

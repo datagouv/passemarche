@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:editor) { create(:editor, :authorized_and_active) }
-  let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:public_market) { create(:public_market, :completed, editor: editor) }
   let(:access_token) { oauth_access_token_for(editor) }
 
   describe 'POST /api/v1/public_markets/:public_market_id/market_applications' do
