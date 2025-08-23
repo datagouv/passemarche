@@ -158,66 +158,66 @@
   </div>
 
   <div class="markets-section">
-    <h3>Marchés Publics (<%= @markets&.count || 0 %>)</h3>
+    <h3>Marchés Publics Créés</h3>
     
     <% if @markets&.any? %>
-      <div class="markets-list">
-        <% @markets.each do |market| %>
-          <div class="market-card">
-            <div class="market-header">
-              <h4><%= market.name %></h4>
-              <span class="market-status market-status-<%= market.status %>">
-                <%= market.status == 'completed' ? '✅ Terminé' : '🟡 En cours' %>
-              </span>
-            </div>
-            
-            <div class="market-details">
-              <div class="market-field">
-                <strong>Identifiant:</strong> <code><%= market.identifier %></code>
-              </div>
-              
-              <% if market.lot_name %>
-                <div class="market-field">
-                  <strong>Lot:</strong> <%= market.lot_name %>
-                </div>
-              <% end %>
-              
-              <div class="market-field">
-                <strong>Créé le:</strong> <%= market.created_at.strftime('%d/%m/%Y à %H:%M') %>
-              </div>
-              
-              <% if market.completed_at %>
-                <div class="market-field">
-                  <strong>Complété le:</strong> <%= market.completed_at.strftime('%d/%m/%Y à %H:%M') %>
-                </div>
-              <% end %>
-            </div>
-            
-            <% if market.status == 'completed' && @current_token && @current_token.valid? %>
-              <div class="market-actions">
-                <h5>Démarrer une candidature</h5>
-                <form method="post" action="/start_application" class="application-form">
-                  <input type="hidden" name="market_identifier" value="<%= market.identifier %>">
-                  <div class="form-group-inline">
-                    <label for="siret_<%= market.identifier %>">Numéro SIRET (optionnel):</label>
-                    <input type="text" id="siret_<%= market.identifier %>" name="siret" 
-                           placeholder="Laisser vide ou 12345678901234" maxlength="14"
-                           title="Le SIRET doit contenir exactement 14 chiffres ou être laissé vide">
-                    <button type="submit" class="btn btn-info btn-sm">
-                      🏢 Candidater
-                    </button>
-                  </div>
-                  <small style="display: block; margin-top: 5px; color: #666;">
-                    Si vous ne fournissez pas de SIRET, le candidat devra le saisir lui-même.
-                  </small>
-                </form>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
+      <table class="markets-table">
+        <thead>
+          <tr>
+            <th>Identifiant</th>
+            <th>Nom</th>
+            <th>Lot</th>
+            <th>Candidatures</th>
+            <th>Statut</th>
+            <th>Webhook</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @markets.each do |market| %>
+            <tr class="<%= market.status %> market-row" data-identifier="<%= market.identifier %>">
+              <td><code><%= market.identifier %></code></td>
+              <td><%= market.name %></td>
+              <td><%= market.lot_name || '-' %></td>
+              <td>
+                <span class="badge">
+                  <%= market.completed_applications_count %>/<%= market.applications_count %>
+                </span>
+              </td>
+              <td>
+                <span class="status-badge status-<%= market.status %>">
+                  <%= market.status == 'completed' ? '✅ Configuré' : '⏳ En attente' %>
+                </span>
+              </td>
+              <td>
+                <% if market.has_webhook_data? %>
+                  <a href="/markets/<%= market.identifier %>#webhook" class="btn btn-small btn-debug">
+                    🔍 View
+                  </a>
+                  <br>
+                  <small><%= market.webhook_received_at.strftime('%H:%M:%S') if market.webhook_received_at %></small>
+                <% else %>
+                  <span style="color: #999;">-</span>
+                <% end %>
+              </td>
+              <td>
+                <% if market.status == 'completed' %>
+                  <a href="/markets/<%= market.identifier %>" class="btn btn-small">
+                    Voir détails →
+                  </a>
+                <% else %>
+                  <a href="<%= ENV['FAST_TRACK_URL'] %>/buyer/public_markets/<%= market.identifier %>/setup" 
+                     target="_blank" class="btn btn-small btn-primary">
+                    Configurer
+                  </a>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% else %>
-      <p style="color: #666; font-style: italic;">Aucun marché créé pour le moment.</p>
+      <p class="empty-state">Aucun marché créé pour le moment.</p>
     <% end %>
   </div>
 

@@ -1,0 +1,63 @@
+<div class="application-detail">
+  <div class="breadcrumb">
+    <a href="/">← Dashboard</a> / 
+    <a href="/markets/<%= @market.identifier %>">← <%= @market.name %></a>
+  </div>
+  
+  <h2>Détails de la Candidature</h2>
+  
+  <div class="application-info">
+    <h3>Informations générales</h3>
+    <p><strong>Identifiant:</strong> <code><%= @application.identifier %></code></p>
+    <p><strong>SIRET:</strong> <%= @application.siret || 'Non renseigné' %></p>
+    <p><strong>Marché:</strong> <a href="/markets/<%= @market.identifier %>"><%= @market.name %></a></p>
+    <p><strong>Statut:</strong> 
+      <span class="status-badge status-<%= @application.status %>">
+        <% if @application.status == 'completed' %>
+          ✅ Terminée
+        <% else %>
+          ⏳ En cours
+        <% end %>
+      </span>
+    </p>
+    <p><strong>Créée le:</strong> <%= @application.created_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+    <% if @application.completed_at %>
+      <p><strong>Terminée le:</strong> <%= @application.completed_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+    <% end %>
+  </div>
+  
+  <% if @application.has_webhook_data? %>
+    <div class="webhook-section">
+      <h3>🔍 Debug Webhook Data</h3>
+      <div class="webhook-info">
+        <p><strong>Webhook reçu le:</strong> <%= @application.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+      </div>
+      <div class="webhook-payload">
+        <h4>Contenu complet du webhook:</h4>
+        <pre class="webhook-json"><%= JSON.pretty_generate(@application.webhook_data) %></pre>
+      </div>
+    </div>
+  <% else %>
+    <div class="no-webhook">
+      <h3>Debug Webhook Data</h3>
+      <p>Aucune donnée de webhook disponible pour cette candidature.</p>
+      <% if @application.status != 'completed' %>
+        <p><em>Les données webhook apparaîtront ici une fois la candidature terminée.</em></p>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <div class="actions-section">
+    <h3>Actions</h3>
+    <% if @application.status != 'completed' %>
+      <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= @application.identifier %>/company_identification" 
+         target="_blank" class="btn btn-primary">
+        🔄 Reprendre la candidature
+      </a>
+    <% end %>
+    
+    <a href="/markets/<%= @market.identifier %>" class="btn btn-secondary">
+      ← Retour au marché
+    </a>
+  </div>
+</div>

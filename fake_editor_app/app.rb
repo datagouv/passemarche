@@ -137,6 +137,13 @@ class FakeEditorApp < Sinatra::Base
 
     api_response = @fast_track_client.create_market_application(current_token.access_token, market_identifier, siret)
     
+    # Store the application locally
+    MarketApplication.create_from_api({
+      identifier: api_response['identifier'],
+      market_identifier: market_identifier,
+      siret: siret
+    })
+    
     # Redirect to the application URL
     redirect api_response['application_url']
   rescue StandardError => e
@@ -145,6 +152,33 @@ class FakeEditorApp < Sinatra::Base
     load_markets
     erb :dashboard
   end
+
+  get '/markets/:identifier' do
+    @market = Market.find_by_identifier(params[:identifier])
+    
+    if @market
+      @applications = @market.applications
+      @current_token = Token.current_token
+      erb :market_detail
+    else
+      @error = "Marché non trouvé"
+      redirect '/'
+    end
+  end
+
+  get '/applications/:identifier' do
+    @application = MarketApplication.find_by_identifier(params[:identifier])
+    
+    if @application
+      @market = Market.find_by_identifier(@application.market_identifier)
+      @current_token = Token.current_token
+      erb :application_detail
+    else
+      @error = "Candidature non trouvée"
+      redirect '/'
+    end
+  end
+
 
   # Webhook endpoint to receive completion notifications
   post '/webhooks/voie-rapide' do
@@ -155,16 +189,15 @@ class FakeEditorApp < Sinatra::Base
     # For demo purposes, we'll just process the webhook
     
     webhook_data = JSON.parse(payload)
-    market_data = webhook_data['market']
+    event_type = webhook_data['event']
     
-    if market_data && market_data['identifier']
-      market = Market.find_by_identifier(market_data['identifier'])
-      if market
-        market.mark_completed!(webhook_data)
-        puts "✅ Webhook received: Market #{market_data['identifier']} completed"
-      else
-        puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
-      end
+    case event_type
+    when 'public_market.sync_completed'
+      handle_market_completion(webhook_data)
+    when 'market_application.completed'
+      handle_application_completion(webhook_data)
+    else
+      puts "⚠️ Unknown event type: #{event_type}"
     end
     
     status 200
@@ -183,6 +216,38 @@ class FakeEditorApp < Sinatra::Base
 
   def load_markets
     @markets = Market.order(:created_at).reverse
+  end
+
+  def handle_market_completion(webhook_data)
+    market_data = webhook_data['market']
+    
+    if market_data && market_data['identifier']
+      market = Market.find_by_identifier(market_data['identifier'])
+      if market
+        market.store_webhook_payload!(webhook_data)
+        market.mark_completed!(webhook_data)
+        puts "✅ Webhook received: Market #{market_data['identifier']} completed"
+        puts "🔍 Debug: Webhook payload stored for debugging"
+      else
+        puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
+      end
+    end
+  end
+
+  def handle_application_completion(webhook_data)
+    identifier = webhook_data['market_application']['identifier']
+    market_identifier = webhook_data['market_identifier']
+    
+    application = MarketApplication.find_by_identifier(identifier)
+    
+    if application
+      application.store_webhook_payload!(webhook_data)
+      application.mark_completed!(webhook_data)
+      puts "✅ Application #{identifier} completed for market #{market_identifier}"
+      puts "🔍 Debug: Webhook payload stored for debugging"
+    else
+      puts "⚠️ Unknown application: #{identifier}"
+    end
   end
 
   def extract_market_data_from_params

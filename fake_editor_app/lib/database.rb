@@ -34,7 +34,51 @@ DB.create_table?(:markets) do
   String :status, default: 'created'
   DateTime :completed_at
   Text :market_data
+  Text :webhook_payload
+  DateTime :webhook_received_at
   DateTime :created_at, null: false
+end
+
+DB.create_table?(:market_applications) do
+  primary_key :id
+  String :identifier, null: false, unique: true
+  String :market_identifier, null: false
+  String :siret
+  String :status, default: 'created'
+  DateTime :completed_at
+  Text :application_data
+  Text :webhook_payload
+  DateTime :webhook_received_at
+  DateTime :created_at, null: false
+  
+  index :market_identifier
+end
+
+# Add missing columns for existing databases
+begin
+  unless DB.schema(:markets).any? { |col| col[0] == :webhook_payload }
+    DB.alter_table(:markets) do
+      add_column :webhook_payload, String, text: true
+      add_column :webhook_received_at, DateTime
+    end
+    puts "✅ Added webhook columns to markets table"
+  end
+rescue Sequel::DatabaseError => e
+  # Column might already exist or other error - continue
+  puts "ℹ️  Markets webhook columns: #{e.message}"
+end
+
+begin
+  unless DB.schema(:market_applications).any? { |col| col[0] == :webhook_payload }
+    DB.alter_table(:market_applications) do
+      add_column :webhook_payload, String, text: true
+      add_column :webhook_received_at, DateTime
+    end
+    puts "✅ Added webhook columns to market_applications table"
+  end
+rescue Sequel::DatabaseError => e
+  # Column might already exist or other error - continue
+  puts "ℹ️  Market applications webhook columns: #{e.message}"
 end
 
 class Token < Sequel::Model(DB[:tokens])
@@ -96,13 +140,100 @@ class Market < Sequel::Model(DB[:markets])
     update(
       status: 'completed',
       completed_at: DateTime.now,
-      market_data: webhook_data ? webhook_data.to_json : market_data
+      market_data: webhook_data ? webhook_data.to_json : market_data,
+      webhook_payload: webhook_data ? webhook_data.to_json : webhook_payload,
+      webhook_received_at: DateTime.now
     )
+  end
+
+  def store_webhook_payload!(webhook_data)
+    update(
+      webhook_payload: webhook_data.to_json,
+      webhook_received_at: DateTime.now
+    )
+  end
+
+  def webhook_data
+    return {} if webhook_payload.nil?
+    JSON.parse(webhook_payload)
+  rescue JSON::ParserError
+    {}
+  end
+
+  def has_webhook_data?
+    respond_to?(:webhook_payload) && !webhook_payload.nil? && !webhook_payload.empty?
+  end
+
+  def applications
+    MarketApplication.for_market(identifier)
+  end
+  
+  def applications_count
+    MarketApplication.where(market_identifier: identifier).count
+  end
+  
+  def completed_applications_count
+    MarketApplication.where(market_identifier: identifier, status: 'completed').count
   end
 
   def data
     return {} if market_data.nil?
     JSON.parse(market_data)
+  rescue JSON::ParserError
+    {}
+  end
+end
+
+class MarketApplication < Sequel::Model(DB[:market_applications])
+  def self.for_market(market_identifier)
+    where(market_identifier: market_identifier).order(:created_at).reverse
+  end
+  
+  def self.create_from_api(data)
+    create(
+      identifier: data[:identifier],
+      market_identifier: data[:market_identifier],
+      siret: data[:siret],
+      status: 'created',
+      created_at: DateTime.now
+    )
+  end
+  
+  def self.find_by_identifier(identifier)
+    where(identifier: identifier).first
+  end
+  
+  def mark_completed!(webhook_data = nil)
+    update(
+      status: 'completed',
+      completed_at: DateTime.now,
+      application_data: webhook_data ? webhook_data.to_json : application_data,
+      webhook_payload: webhook_data ? webhook_data.to_json : webhook_payload,
+      webhook_received_at: DateTime.now
+    )
+  end
+
+  def store_webhook_payload!(webhook_data)
+    update(
+      webhook_payload: webhook_data.to_json,
+      webhook_received_at: DateTime.now
+    )
+  end
+
+  def webhook_data
+    return {} if webhook_payload.nil?
+    JSON.parse(webhook_payload)
+  rescue JSON::ParserError
+    {}
+  end
+
+  def has_webhook_data?
+    respond_to?(:webhook_payload) && !webhook_payload.nil? && !webhook_payload.empty?
+  end
+  
+  def data
+    return {} if application_data.nil?
+    JSON.parse(application_data)
   rescue JSON::ParserError
     {}
   end
