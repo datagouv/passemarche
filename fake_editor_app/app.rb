@@ -192,7 +192,7 @@ class FakeEditorApp < Sinatra::Base
     event_type = webhook_data['event']
     
     case event_type
-    when 'public_market.sync_completed'
+    when 'market.completed'
       handle_market_completion(webhook_data)
     when 'market_application.completed'
       handle_application_completion(webhook_data)
