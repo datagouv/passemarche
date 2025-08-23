@@ -26,7 +26,7 @@ Feature: Buyer Configuration Flow
     And I should see "Vérification des informations réglementaires et obligagtoires"
     And I should see "Les documents et informations réglementaires et obligatoires"
     And I should see "Test: Identité de l'entreprise"
-    And I should see "Test: Déclaration sociale"
+    And I should see "Test: Motifs d'exclusion sociaux"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
     
@@ -34,9 +34,8 @@ Feature: Buyer Configuration Flow
     Then I should be on the optional documents page
     And I should see "Sélection des informations non réglementaires"
     And I should see "Les documents et informations demandés à titre non réglementaire"
-    And I should see "Test: Chiffre d'affaires"
-    And I should see "Test: Rupture de contrat"
-    And I should see "Test: Influence indue"
+    And I should see "Test: Capacité économique et financière"
+    And I should see "Test: Motifs d'exclusion à l'appréciation"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
     

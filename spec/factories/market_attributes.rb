@@ -4,8 +4,8 @@ FactoryBot.define do
   factory :market_attribute do
     sequence(:key) { |n| "attribute_#{n}" }
     input_type { :file_upload }
-    category_key { 'company_identity' }
-    subcategory_key { 'basic_information' }
+    category_key { 'test_company_identity' }
+    subcategory_key { 'test_basic_information' }
     from_api { false }
     required { false }
 
