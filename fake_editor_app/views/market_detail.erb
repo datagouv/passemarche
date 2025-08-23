@@ -16,6 +16,19 @@
     </p>
   </div>
   
+  <% if @market.has_webhook_data? %>
+    <div class="webhook-section" id="webhook">
+      <h3>🔍 Debug Webhook Data</h3>
+      <div class="webhook-info">
+        <p><strong>Reçu le:</strong> <%= @market.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+      </div>
+      <div class="webhook-payload">
+        <h4>Contenu complet du webhook:</h4>
+        <pre class="webhook-json"><%= JSON.pretty_generate(@market.webhook_data) %></pre>
+      </div>
+    </div>
+  <% end %>
+  
   <div class="applications-section">
     <h3>Candidatures (<%= @applications.count %>)</h3>
     
@@ -60,6 +73,9 @@
               <td><%= app.created_at.strftime('%d/%m/%Y %H:%M') %></td>
               <td><%= app.completed_at&.strftime('%d/%m/%Y %H:%M') || '-' %></td>
               <td>
+                <a href="/applications/<%= app.identifier %>" class="btn btn-small">
+                  Détails
+                </a>
                 <% if app.status != 'completed' %>
                   <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= app.identifier %>/company_identification" 
                      target="_blank" class="btn btn-small">

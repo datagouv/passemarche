@@ -34,6 +34,8 @@ DB.create_table?(:markets) do
   String :status, default: 'created'
   DateTime :completed_at
   Text :market_data
+  Text :webhook_payload
+  DateTime :webhook_received_at
   DateTime :created_at, null: false
 end
 
@@ -45,6 +47,8 @@ DB.create_table?(:market_applications) do
   String :status, default: 'created'
   DateTime :completed_at
   Text :application_data
+  Text :webhook_payload
+  DateTime :webhook_received_at
   DateTime :created_at, null: false
   
   index :market_identifier
@@ -109,8 +113,28 @@ class Market < Sequel::Model(DB[:markets])
     update(
       status: 'completed',
       completed_at: DateTime.now,
-      market_data: webhook_data ? webhook_data.to_json : market_data
+      market_data: webhook_data ? webhook_data.to_json : market_data,
+      webhook_payload: webhook_data ? webhook_data.to_json : webhook_payload,
+      webhook_received_at: DateTime.now
     )
+  end
+
+  def store_webhook_payload!(webhook_data)
+    update(
+      webhook_payload: webhook_data.to_json,
+      webhook_received_at: DateTime.now
+    )
+  end
+
+  def webhook_data
+    return {} if webhook_payload.nil?
+    JSON.parse(webhook_payload)
+  rescue JSON::ParserError
+    {}
+  end
+
+  def has_webhook_data?
+    !webhook_payload.nil? && !webhook_payload.empty?
   end
 
   def applications
@@ -156,8 +180,28 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
     update(
       status: 'completed',
       completed_at: DateTime.now,
-      application_data: webhook_data ? webhook_data.to_json : application_data
+      application_data: webhook_data ? webhook_data.to_json : application_data,
+      webhook_payload: webhook_data ? webhook_data.to_json : webhook_payload,
+      webhook_received_at: DateTime.now
     )
+  end
+
+  def store_webhook_payload!(webhook_data)
+    update(
+      webhook_payload: webhook_data.to_json,
+      webhook_received_at: DateTime.now
+    )
+  end
+
+  def webhook_data
+    return {} if webhook_payload.nil?
+    JSON.parse(webhook_payload)
+  rescue JSON::ParserError
+    {}
+  end
+
+  def has_webhook_data?
+    !webhook_payload.nil? && !webhook_payload.empty?
   end
   
   def data

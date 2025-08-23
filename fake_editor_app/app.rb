@@ -166,6 +166,20 @@ class FakeEditorApp < Sinatra::Base
     end
   end
 
+  get '/applications/:identifier' do
+    @application = MarketApplication.find_by_identifier(params[:identifier])
+    
+    if @application
+      @market = Market.find_by_identifier(@application.market_identifier)
+      @current_token = Token.current_token
+      erb :application_detail
+    else
+      @error = "Candidature non trouvée"
+      redirect '/'
+    end
+  end
+
+
   # Webhook endpoint to receive completion notifications
   post '/webhooks/voie-rapide' do
     payload = request.body.read
@@ -210,8 +224,10 @@ class FakeEditorApp < Sinatra::Base
     if market_data && market_data['identifier']
       market = Market.find_by_identifier(market_data['identifier'])
       if market
+        market.store_webhook_payload!(webhook_data)
         market.mark_completed!(webhook_data)
         puts "✅ Webhook received: Market #{market_data['identifier']} completed"
+        puts "🔍 Debug: Webhook payload stored for debugging"
       else
         puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
       end
@@ -225,8 +241,10 @@ class FakeEditorApp < Sinatra::Base
     application = MarketApplication.find_by_identifier(identifier)
     
     if application
+      application.store_webhook_payload!(webhook_data)
       application.mark_completed!(webhook_data)
       puts "✅ Application #{identifier} completed for market #{market_identifier}"
+      puts "🔍 Debug: Webhook payload stored for debugging"
     else
       puts "⚠️ Unknown application: #{identifier}"
     end

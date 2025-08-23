@@ -169,6 +169,7 @@
             <th>Lot</th>
             <th>Candidatures</th>
             <th>Statut</th>
+            <th>Webhook</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -187,6 +188,17 @@
                 <span class="status-badge status-<%= market.status %>">
                   <%= market.status == 'completed' ? '✅ Configuré' : '⏳ En attente' %>
                 </span>
+              </td>
+              <td>
+                <% if market.has_webhook_data? %>
+                  <a href="/markets/<%= market.identifier %>#webhook" class="btn btn-small btn-debug">
+                    🔍 View
+                  </a>
+                  <br>
+                  <small><%= market.webhook_received_at.strftime('%H:%M:%S') if market.webhook_received_at %></small>
+                <% else %>
+                  <span style="color: #999;">-</span>
+                <% end %>
               </td>
               <td>
                 <% if market.status == 'completed' %>
