@@ -54,6 +54,33 @@ DB.create_table?(:market_applications) do
   index :market_identifier
 end
 
+# Add missing columns for existing databases
+begin
+  unless DB.schema(:markets).any? { |col| col[0] == :webhook_payload }
+    DB.alter_table(:markets) do
+      add_column :webhook_payload, String, text: true
+      add_column :webhook_received_at, DateTime
+    end
+    puts "✅ Added webhook columns to markets table"
+  end
+rescue Sequel::DatabaseError => e
+  # Column might already exist or other error - continue
+  puts "ℹ️  Markets webhook columns: #{e.message}"
+end
+
+begin
+  unless DB.schema(:market_applications).any? { |col| col[0] == :webhook_payload }
+    DB.alter_table(:market_applications) do
+      add_column :webhook_payload, String, text: true
+      add_column :webhook_received_at, DateTime
+    end
+    puts "✅ Added webhook columns to market_applications table"
+  end
+rescue Sequel::DatabaseError => e
+  # Column might already exist or other error - continue
+  puts "ℹ️  Market applications webhook columns: #{e.message}"
+end
+
 class Token < Sequel::Model(DB[:tokens])
   def self.current_token
     where { expires_at > DateTime.now }.order(:created_at).last
@@ -134,7 +161,7 @@ class Market < Sequel::Model(DB[:markets])
   end
 
   def has_webhook_data?
-    !webhook_payload.nil? && !webhook_payload.empty?
+    respond_to?(:webhook_payload) && !webhook_payload.nil? && !webhook_payload.empty?
   end
 
   def applications
@@ -201,7 +228,7 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
   end
 
   def has_webhook_data?
-    !webhook_payload.nil? && !webhook_payload.empty?
+    respond_to?(:webhook_payload) && !webhook_payload.nil? && !webhook_payload.empty?
   end
   
   def data
