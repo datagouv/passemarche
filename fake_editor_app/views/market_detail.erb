@@ -1,0 +1,78 @@
+<div class="market-detail">
+  <div class="breadcrumb">
+    <a href="/">← Retour au dashboard</a>
+  </div>
+  
+  <h2>Détails du Marché</h2>
+  
+  <div class="market-info">
+    <h3><%= @market.name %></h3>
+    <p><strong>Identifiant:</strong> <code><%= @market.identifier %></code></p>
+    <p><strong>Lot:</strong> <%= @market.lot_name || 'N/A' %></p>
+    <p><strong>Statut:</strong> 
+      <span class="status-badge status-<%= @market.status %>">
+        <%= @market.status == 'completed' ? '✅ Configuré' : '⏳ En attente' %>
+      </span>
+    </p>
+  </div>
+  
+  <div class="applications-section">
+    <h3>Candidatures (<%= @applications.count %>)</h3>
+    
+    <% if @current_token&.valid? && @market.status == 'completed' %>
+      <div class="action-bar">
+        <form action="/start_application" method="post" class="inline-form">
+          <input type="hidden" name="market_identifier" value="<%= @market.identifier %>">
+          <input type="text" name="siret" placeholder="SIRET (optionnel)" maxlength="14">
+          <button type="submit" class="btn btn-primary">
+            Démarrer une candidature test
+          </button>
+        </form>
+      </div>
+    <% end %>
+    
+    <% if @applications.any? %>
+      <table class="applications-table">
+        <thead>
+          <tr>
+            <th>Identifiant</th>
+            <th>SIRET</th>
+            <th>Statut</th>
+            <th>Date de création</th>
+            <th>Date de complétion</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @applications.each do |app| %>
+            <tr class="<%= app.status %>">
+              <td><code><%= app.identifier %></code></td>
+              <td><%= app.siret || 'Non renseigné' %></td>
+              <td>
+                <span class="status-badge status-<%= app.status %>">
+                  <% if app.status == 'completed' %>
+                    ✅ Terminée
+                  <% else %>
+                    ⏳ En cours
+                  <% end %>
+                </span>
+              </td>
+              <td><%= app.created_at.strftime('%d/%m/%Y %H:%M') %></td>
+              <td><%= app.completed_at&.strftime('%d/%m/%Y %H:%M') || '-' %></td>
+              <td>
+                <% if app.status != 'completed' %>
+                  <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= app.identifier %>/company_identification" 
+                     target="_blank" class="btn btn-small">
+                    Reprendre
+                  </a>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty-state">Aucune candidature pour ce marché.</p>
+    <% end %>
+  </div>
+</div>

@@ -37,6 +37,19 @@ DB.create_table?(:markets) do
   DateTime :created_at, null: false
 end
 
+DB.create_table?(:market_applications) do
+  primary_key :id
+  String :identifier, null: false, unique: true
+  String :market_identifier, null: false
+  String :siret
+  String :status, default: 'created'
+  DateTime :completed_at
+  Text :application_data
+  DateTime :created_at, null: false
+  
+  index :market_identifier
+end
+
 class Token < Sequel::Model(DB[:tokens])
   def self.current_token
     where { expires_at > DateTime.now }.order(:created_at).last
@@ -100,9 +113,56 @@ class Market < Sequel::Model(DB[:markets])
     )
   end
 
+  def applications
+    MarketApplication.for_market(identifier)
+  end
+  
+  def applications_count
+    MarketApplication.where(market_identifier: identifier).count
+  end
+  
+  def completed_applications_count
+    MarketApplication.where(market_identifier: identifier, status: 'completed').count
+  end
+
   def data
     return {} if market_data.nil?
     JSON.parse(market_data)
+  rescue JSON::ParserError
+    {}
+  end
+end
+
+class MarketApplication < Sequel::Model(DB[:market_applications])
+  def self.for_market(market_identifier)
+    where(market_identifier: market_identifier).order(:created_at).reverse
+  end
+  
+  def self.create_from_api(data)
+    create(
+      identifier: data[:identifier],
+      market_identifier: data[:market_identifier],
+      siret: data[:siret],
+      status: 'created',
+      created_at: DateTime.now
+    )
+  end
+  
+  def self.find_by_identifier(identifier)
+    where(identifier: identifier).first
+  end
+  
+  def mark_completed!(webhook_data = nil)
+    update(
+      status: 'completed',
+      completed_at: DateTime.now,
+      application_data: webhook_data ? webhook_data.to_json : application_data
+    )
+  end
+  
+  def data
+    return {} if application_data.nil?
+    JSON.parse(application_data)
   rescue JSON::ParserError
     {}
   end
