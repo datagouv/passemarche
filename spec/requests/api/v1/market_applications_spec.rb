@@ -110,4 +110,93 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
   end
+
+  describe 'GET /api/v1/market_applications/:id/documents_package' do
+    let(:market_application) { create(:market_application, public_market: public_market, siret: '73282932000074') }
+
+    before do
+      allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+      allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))
+    end
+
+    context 'when application is completed' do
+      before do
+        CompleteMarketApplication.call(market_application: market_application)
+        market_application.reload
+      end
+
+      it 'downloads documents package successfully' do
+        get "/api/v1/market_applications/#{market_application.identifier}/documents_package",
+          headers: { 'Authorization' => "Bearer #{access_token}" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.content_type).to eq('application/zip')
+        expect(response.headers['Content-Disposition']).to include("documents_package_FT#{market_application.identifier}.zip")
+        expect(response.body).to eq('fake zip content')
+      end
+    end
+
+    context 'when application is not completed' do
+      it 'returns error' do
+        get "/api/v1/market_applications/#{market_application.identifier}/documents_package",
+          headers: { 'Authorization' => "Bearer #{access_token}" }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq('Application not completed')
+      end
+    end
+
+    context 'when documents package is not available' do
+      before do
+        market_application.complete!
+      end
+
+      it 'returns error' do
+        get "/api/v1/market_applications/#{market_application.identifier}/documents_package",
+          headers: { 'Authorization' => "Bearer #{access_token}" }
+
+        expect(response).to have_http_status(:not_found)
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq('Documents package not available')
+      end
+    end
+
+    context 'when market application belongs to another editor' do
+      let(:other_editor) { create(:editor) }
+      let(:other_market) { create(:public_market, :completed, editor: other_editor) }
+      let(:other_application) { create(:market_application, public_market: other_market, siret: '73282932000074') }
+
+      before do
+        CompleteMarketApplication.call(market_application: other_application)
+        other_application.reload
+      end
+
+      it 'returns error' do
+        get "/api/v1/market_applications/#{other_application.identifier}/documents_package",
+          headers: { 'Authorization' => "Bearer #{access_token}" }
+
+        expect(response).to have_http_status(:not_found)
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq('Market application not found')
+      end
+    end
+
+    context 'when market application does not exist' do
+      it 'returns error' do
+        get '/api/v1/market_applications/NONEXISTENT/documents_package',
+          headers: { 'Authorization' => "Bearer #{access_token}" }
+
+        expect(response).to have_http_status(:not_found)
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq('Market application not found')
+      end
+    end
+
+    it 'requires authentication' do
+      get "/api/v1/market_applications/#{market_application.identifier}/documents_package"
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end
