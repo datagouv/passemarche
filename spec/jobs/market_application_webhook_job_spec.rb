@@ -13,6 +13,8 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
     stub_request(:post, editor.completion_webhook_url)
       .to_return(status: 200, body: 'OK')
     allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(Rails.application.config).to receive(:api_base_url)
+      .and_return('http://voie-rapide.test.gouv.fr')
   end
 
   after do
@@ -37,6 +39,17 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
             headers: { 'Content-Type' => 'application/json' },
             body: hash_including('event' => 'market_application.completed')
           )
+      end
+
+      it 'includes attestation_url in webhook payload' do
+        described_class.perform_now(market_application.id)
+
+        expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
+          .with { |request|
+            payload = JSON.parse(request.body)
+            expect(payload.dig('market_application', 'attestation_url'))
+              .to eq("http://voie-rapide.test.gouv.fr/api/v1/market_applications/#{market_application.identifier}/attestation")
+          }
       end
     end
 
