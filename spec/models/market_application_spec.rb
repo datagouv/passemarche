@@ -85,4 +85,44 @@ RSpec.describe MarketApplication, type: :model do
       expect(application.identifier).to eq(existing_identifier)
     end
   end
+
+  describe 'ActiveStorage attachments' do
+    let(:application) { create(:market_application, public_market: public_market, siret: '12345678901234') }
+
+    describe '#attestation' do
+      it 'has one attached attestation' do
+        expect(application.attestation).to be_an(ActiveStorage::Attached::One)
+      end
+
+      it 'can attach an attestation file' do
+        application.attestation.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: 'test_attestation.pdf',
+          content_type: 'application/pdf'
+        )
+
+        expect(application.attestation).to be_attached
+        expect(application.attestation.filename.to_s).to eq('test_attestation.pdf')
+        expect(application.attestation.content_type).to eq('application/pdf')
+      end
+    end
+
+    describe '#documents_package' do
+      it 'has one attached documents_package' do
+        expect(application.documents_package).to be_an(ActiveStorage::Attached::One)
+      end
+
+      it 'can attach a documents package file' do
+        application.documents_package.attach(
+          io: StringIO.new('fake zip content'),
+          filename: 'test_package.zip',
+          content_type: 'application/zip'
+        )
+
+        expect(application.documents_package).to be_attached
+        expect(application.documents_package.filename.to_s).to eq('test_package.zip')
+        expect(application.documents_package.content_type).to eq('application/zip')
+      end
+    end
+  end
 end
