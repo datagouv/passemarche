@@ -465,6 +465,9 @@ GEM
     websocket-extensions (0.1.5)
     wicked (2.0.0)
       railties (>= 3.0.7)
+    wicked_pdf (2.8.2)
+      activesupport
+      ostruct
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
@@ -515,6 +518,7 @@ DEPENDENCIES
   web-console
   webmock (~> 3.0)
   wicked
+  wicked_pdf
 
 RUBY VERSION
    ruby 3.4.5p51
