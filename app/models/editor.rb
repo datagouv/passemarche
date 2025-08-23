@@ -20,7 +20,9 @@ class Editor < ApplicationRecord
   end
 
   def doorkeeper_application
-    @doorkeeper_application ||= CustomDoorkeeperApplication.find_by(uid: client_id)
+    return @doorkeeper_application if defined?(@doorkeeper_application)
+
+    @doorkeeper_application = CustomDoorkeeperApplication.find_by(uid: client_id)
   end
 
   def ensure_doorkeeper_application!
