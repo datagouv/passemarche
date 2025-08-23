@@ -30,6 +30,44 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#complete!' do
+    let(:editor) { create(:editor) }
+    let(:application) { create(:market_application, public_market:, siret: '12345678901234', identifier: nil) }
+
+    it 'sets completed_at to current time' do
+      freeze_time do
+        application.complete!
+        expect(application.completed_at).to eq(Time.zone.now)
+      end
+    end
+  end
+
+  describe 'sync status helpers' do
+    let(:application) { create(:market_application, public_market:, siret: '12345678901234', identifier: nil) }
+
+    describe '#sync_in_progress?' do
+      it 'returns true for pending status' do
+        application.sync_status = 'sync_pending'
+        expect(application).to be_sync_in_progress
+      end
+
+      it 'returns true for processing status' do
+        application.sync_status = 'sync_processing'
+        expect(application).to be_sync_in_progress
+      end
+
+      it 'returns false for completed status' do
+        application.sync_status = 'sync_completed'
+        expect(application).not_to be_sync_in_progress
+      end
+
+      it 'returns false for failed status' do
+        application.sync_status = 'sync_failed'
+        expect(application).not_to be_sync_in_progress
+      end
+    end
+  end
+
   describe 'identifier generation' do
     it 'generates identifier on creation' do
       application = build(:market_application, public_market: public_market, siret: '12345678901234', identifier: nil)

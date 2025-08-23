@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class MarketApplication < ApplicationRecord
+  include Completable
+  include Syncable
+
   belongs_to :public_market
   has_one :editor, through: :public_market
 

@@ -2,13 +2,13 @@
 
 class PublicMarket < ApplicationRecord
   include UniqueAssociationValidator
+  include Completable
+  include Syncable
 
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
   has_many :market_applications, dependent: :destroy
-
-  enum :sync_status, { sync_pending: 0, sync_processing: 1, sync_completed: 2, sync_failed: 3 }, default: :sync_pending, validate: true
 
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
@@ -18,18 +18,6 @@ class PublicMarket < ApplicationRecord
   validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
-
-  def completed?
-    completed_at.present?
-  end
-
-  def complete!
-    update!(completed_at: Time.zone.now)
-  end
-
-  def sync_in_progress?
-    sync_pending? || sync_processing?
-  end
 
   def defense_industry?
     market_type_codes.any?('defense')
@@ -41,6 +29,7 @@ class PublicMarket < ApplicationRecord
     save!
   end
 
+  # this naming sucks
   def sync_optional_market_attributes(selected_attributes)
     required_attributes = market_attributes.required
     all_attributes = (required_attributes + Array(selected_attributes)).uniq

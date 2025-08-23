@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor: editor) }
-  let(:market_application) { create(:market_application, public_market: public_market, siret: '73282932000074') }
+  let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
+  let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
   STEPS = %i[
     company_identification
@@ -18,18 +19,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
   describe 'GET /candidate/market_applications/:identifier/:step' do
     STEPS.each_with_index do |step, idx|
-      it "redirects correctly after #{step} step" do
-        put "/candidate/market_applications/#{market_application.identifier}/#{step}"
-        if step == :summary
-          follow_redirect!
-          expect(response).to redirect_to(root_path)
-        else
-          next_step = STEPS[idx + 1]
-          if next_step
-            expect(response).to redirect_to(
-              "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
-            )
-          end
+      context 'when application is not completed' do
+        it "redirects correctly after #{step} step" do
+          patch "/candidate/market_applications/#{market_application.identifier}/#{step}"
+          expect_correct_redirect_for_step(step, idx, market_application.identifier)
+        end
+      end
+
+      context 'when application is completed' do
+        it "redirects to sync status from #{step} step when performing get requests" do
+          get "/candidate/market_applications/#{completed_market_application.identifier}/#{step}"
+          expect(response).to redirect_to(candidate_sync_status_path(completed_market_application.identifier))
+        end
+
+        it "redirects to sync status from #{step} step when performing patch requests" do
+          patch "/candidate/market_applications/#{completed_market_application.identifier}/#{step}"
+          expect(response).to redirect_to(candidate_sync_status_path(completed_market_application.identifier))
         end
       end
     end
@@ -50,14 +55,14 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     end
   end
 
-  describe 'PUT /candidate/market_applications/:identifier/:step' do
+  describe 'PATCH /candidate/market_applications/:identifier/company_identification' do
     let(:next_step) { 'market_and_company_information' }
 
     context 'with valid SIRET on company_identification' do
       it 'saves the SIRET and redirects to next step' do
         valid_siret = '73282932000074'
 
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification",
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: valid_siret } }
 
         expect(response).to redirect_to(
@@ -71,7 +76,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       it 'accepts La Poste SIRET (special case)' do
         la_poste_siret = '35600000000048'
 
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification",
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: la_poste_siret } }
 
         expect(response).to redirect_to(
@@ -83,7 +88,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
 
       it 'allows empty SIRET and saves as empty string' do
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification",
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: '' } }
 
         expect(response).to redirect_to(
@@ -99,7 +104,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       it 'does not save invalid SIRET and renders the form with error' do
         invalid_siret = '12345678901234'
 
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification",
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: invalid_siret } }
 
         expect(response).to have_http_status(:success)
@@ -113,7 +118,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       it 'does not save SIRET with wrong format' do
         wrong_format_siret = '123ABC'
 
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification",
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: wrong_format_siret } }
 
         expect(response).to have_http_status(:success)
@@ -127,7 +132,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       it 'does not save SIRET with wrong length' do
         wrong_length_siret = '123456'
 
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification",
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: wrong_length_siret } }
 
         expect(response).to have_http_status(:success)
@@ -142,7 +147,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       it 'does not modify SIRET when no parameter provided' do
         original_siret = market_application.siret
 
-        put "/candidate/market_applications/#{market_application.identifier}/company_identification"
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification"
 
         expect(response).to redirect_to("/candidate/market_applications/#{market_application.identifier}/#{next_step}")
 
@@ -151,13 +156,38 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
     end
 
-    describe 'PUT summary step' do
-      it 'redirects to wicked_finish after finishing last step' do
-        put "/candidate/market_applications/#{market_application.identifier}/summary"
-        expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/wicked_finish"
-        )
+    describe 'PATCH summary step' do
+      let(:summary_path) { step_candidate_market_application_path(market_application.identifier, :summary) }
+
+      context 'when completing the wizard' do
+        before do
+          patch summary_path
+        end
+
+        it 'redirects to root' do
+          expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
+        end
+
+        it 'completes the market' do
+          market_application.reload
+          expect(market_application).to be_completed
+        end
+
+        it 'enqueues webhook sync job' do
+          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(market_application.id)
+        end
       end
+    end
+  end
+
+  private
+
+  def expect_correct_redirect_for_step(step, idx, identifier)
+    if step == :summary
+      expect(response).to redirect_to(candidate_sync_status_path(identifier))
+    else
+      next_step = STEPS[idx + 1]
+      expect(response).to redirect_to("/candidate/market_applications/#{identifier}/#{next_step}") if next_step
     end
   end
 end

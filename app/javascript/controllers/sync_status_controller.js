@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static values = { url: String, redirectUrl: String }
+  static values = { url: String }
   static targets = ["loader"]
 
   connect() {
@@ -25,18 +25,15 @@ export default class extends Controller {
       const data = await response.json()
 
       if (data.sync_status === 'sync_completed' || data.sync_status === 'sync_failed') {
-        // Stop the loader animation before reloading
         if (this.hasLoaderTarget) {
           this.loaderTarget.style.animationPlayState = 'paused'
         }
-        
-        // Smooth transition before reload
+
         setTimeout(() => location.reload(), 300)
       }
     } catch (error) {
       console.error('Sync status error:', error)
-      
-      // Show error state on loader if connection fails
+
       if (this.hasLoaderTarget) {
         this.loaderTarget.style.opacity = '0.5'
         this.loaderTarget.setAttribute('aria-label', 'Erreur de connexion, vérification...')

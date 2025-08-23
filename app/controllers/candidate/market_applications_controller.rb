@@ -20,11 +20,26 @@ module Candidate
     end
 
     def update
-      if @market_application.update(market_application_params)
+      if step == :summary
+        @market_application.complete!
+
+        MarketApplicationWebhookJob.perform_later(@market_application.id)
+
+        redirect_to candidate_sync_status_path(@market_application.identifier)
+      elsif @market_application.update(market_application_params)
         render_wizard(@market_application)
       else
         render_wizard
       end
+    end
+
+    def retry_sync
+      @market_application.update!(sync_status: :sync_pending)
+
+      MarketApplicationWebhookJob.perform_later(@market_application.id)
+
+      redirect_to candidate_sync_status_path(@market_application.identifier),
+        notice: t('candidate.market_application.sync_retry_initiated')
     end
 
     private
@@ -41,8 +56,10 @@ module Candidate
     end
 
     def check_application_not_completed
-      # Placeholder for future implementation
-      # Will prevent editing completed applications
+      return unless @market_application.completed?
+
+      redirect_to candidate_sync_status_path(@market_application.identifier),
+        alert: t('candidate.market_applications.market_application_completed_cannot_edit')
     end
 
     def market_application_params
