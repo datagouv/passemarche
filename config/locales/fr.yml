@@ -123,7 +123,7 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
-        required_fields: "Vérification des informations réglementaires et obligagtoires"
+        required_fields: "Vérification des informations réglementaires et obligatoires"
         additional_fields: "Sélection des informations non réglementaires"
         summary: "Synthèse"
       required_fields:
@@ -137,6 +137,9 @@ fr:
         question: "Je veux demander des informations et documents complémentaires au candidat"
         yes_option: "Oui"
         no_option: "Non"
+      summary:
+        title: "Synthèse des paramètres de la candidature"
+        subtitle: "Vérifiez les paramètres de votre marché avant de finaliser la configuration."
       sync:
         loading: "Synchronisation en cours..."
         processing:
@@ -162,24 +165,35 @@ fr:
         technical_capacities: "Les capacités techniques et professionnelles"
         summary: "Synthèse de votre candidature"
 
-      market_and_company_information_data:
+      market_and_company_information:
+        title: "Les informations du marché et de votre entreprise"
+        subtitle: "Lorem ipsum..."
         subcategories:
           market_information: "Informations du marché"
           company_information: "Informations de votre entreprise"
           contact_information: "Informations de contact"
-
-      economic_capacities_data:
+      exclusion_criteria:
+        title: "Les motifs d'exclusion"
+        subtitle: "Lorem ipsum..."
+      economic_capacities:
+        title: "Les capacités économiques et financières"
+        subtitle: "Lorem ipsum..."
         subcategories:
           annual_turnover: "Chiffre d'affaires"
           financial_statements: "Bilans"
           professional_risk_insurance: "Banque et assurance"
-      technical_capacities_data:
+      technical_capacities:
+        title: "Les capacités techniques et professionnelles"
+        subtitle: "Lorem ipsum..."
         subcategories:
               workforce: "Les effectifs"
               professional_certificates: "Les certificats"
               achievements: "Les réalisations"
               equipment_quality: "Outillage, matériel"
               quality_environment: "Assurance et qualité"
+      summary:
+        title: "Synthèse de votre candidature"
+        subtitle: "Lorem ipsum"
 
   admin:
     editors:
