@@ -75,9 +75,9 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
             hash_including(entity_id: non_existent_id, message: /Entity not found/)
           )
 
-        expect {
+        expect do
           described_class.perform_now(non_existent_id)
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end

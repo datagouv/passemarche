@@ -8,9 +8,9 @@ RSpec.describe EditorSyncService do
   describe '.call' do
     context 'when doorkeeper application does not exist' do
       it 'creates a new doorkeeper application' do
-        expect {
+        expect do
           described_class.call(editor)
-        }.to change(CustomDoorkeeperApplication, :count).by(1)
+        end.to change(CustomDoorkeeperApplication, :count).by(1)
       end
 
       it 'creates doorkeeper application with correct attributes' do
@@ -37,10 +37,10 @@ RSpec.describe EditorSyncService do
       end
 
       it 'returns existing doorkeeper application without creating new one' do
-        expect {
+        expect do
           result = described_class.call(editor)
           expect(result).to eq(existing_app)
-        }.not_to change(CustomDoorkeeperApplication, :count)
+        end.not_to change(CustomDoorkeeperApplication, :count)
       end
 
       it 'does not modify existing application' do

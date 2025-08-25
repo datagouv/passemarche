@@ -90,9 +90,9 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
 
   describe 'POST /admin/editors/:id/webhook_secrets' do
     it 'generates a new webhook secret' do
-      expect {
+      expect do
         post admin_editor_webhook_secrets_path(editor)
-      }.to change { editor.reload.webhook_secret }
+      end.to change { editor.reload.webhook_secret }
 
       expect(response).to redirect_to(edit_admin_editor_path(editor))
       expect(flash[:notice]).to eq('Nouveau secret webhook généré avec succès')

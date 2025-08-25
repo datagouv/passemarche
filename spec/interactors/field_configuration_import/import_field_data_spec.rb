@@ -95,13 +95,11 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
 
       it 'fails and rolls back transaction' do
         expect { interactor }.to raise_error(ActiveRecord::StatementInvalid)
-        expect {
-          begin
-            interactor
-          rescue StandardError
-            nil
-          end
-        }.not_to change(MarketAttribute, :count)
+        expect do
+          interactor
+        rescue StandardError
+          nil
+        end.not_to change(MarketAttribute, :count)
       end
     end
   end

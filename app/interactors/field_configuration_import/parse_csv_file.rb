@@ -34,11 +34,11 @@ class FieldConfigurationImport::ParseCsvFile < ApplicationInteractor
   end
 
   def parse_data_rows
-    context.csv_lines[DATA_START_INDEX..].each_with_index.filter_map { |line, index|
+    context.csv_lines[DATA_START_INDEX..].each_with_index.filter_map do |line, index|
       next if line.strip.blank?
 
       parse_single_row(line, index)
-    }.compact
+    end.compact
   end
 
   def parse_single_row(line, index)
