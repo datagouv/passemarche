@@ -2,32 +2,16 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12">
-    <div class="fr-stepper">
-      <h2 class="fr-stepper__title">
-        <%= t('buyer.public_markets.steps.additional_fields') %>
-        <span class="fr-stepper__state">Étape 2 sur 3</span>
-      </h2>
-      <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3">
-        <div class="fr-stepper__step">
-          <p class="fr-stepper__details">
-            <span class="fr-text--bold">Étape suivante :</span> <%= t('buyer.public_markets.steps.summary') %>
-          </p>
-        </div>
-      </div>
-    </div>
+    <%= stepper(
+      current_step: step,
+      steps: @wizard_steps,
+      i18n_scope: 'buyer.public_markets'
+    ) %>
   </div>
 </div>
 
 <div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
   <div class="fr-col-12">
-    <div class="fr-mb-5w">
-      <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.additional_fields.title') %></h1>
-      <p class="fr-text--lg fr-mb-0">
-        <%= t('buyer.public_markets.additional_fields.subtitle') %>
-      </p>
-    </div>
-
-
     <div data-controller="additional-fields">
       <div class="fr-mb-4w fr-border-default--grey">
         <div class="fr-p-4w">
@@ -59,9 +43,9 @@
           <% @optional_fields.each_with_index do |(category, subcategories), index| %>
             <%= render 'category_accordion', category: category, index: index, id_prefix: 'accordion-optional' do %>
               <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
-                <%= render 'subcategory_section', 
-                      subcategory: subcategory, 
-                      subcategories: subcategories, 
+                <%= render 'subcategory_section',
+                      subcategory: subcategory,
+                      subcategories: subcategories,
                       is_last: (subcat_index == subcategories.size - 1) do %>
                   <div class="fr-fieldset__content">
                     <% fields.each do |field_key| %>
@@ -81,8 +65,8 @@
           <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
             Précédent
           <% end %>
-          <%= form.submit "Suivant", 
-              class: "fr-btn fr-btn--lg", 
+          <%= form.submit "Suivant",
+              class: "fr-btn fr-btn--lg",
               data: { additional_fields_target: "submitButton" },
               disabled: true,
               title: "Suivant" %>

@@ -2,26 +2,16 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12">
-    <div class="fr-stepper">
-      <h2 class="fr-stepper__title">
-        <%= t('buyer.public_markets.steps.summary') %>
-        <span class="fr-stepper__state">Étape 3 sur 3</span>
-      </h2>
-      <div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3">
-      </div>
-    </div>
+    <%= stepper(
+      current_step: step,
+      steps: @wizard_steps,
+      i18n_scope: 'buyer.public_markets'
+    ) %>
   </div>
 </div>
 
 <div class="fr-grid-row fr-grid-row--center">
   <div class="fr-col-12">
-    <div class="fr-mb-5w">
-      <h1 class="fr-h1 fr-mb-1w">Synthèse des paramètres de la candidature</h1>
-      <p class="fr-text--lg fr-mb-0">
-        Vérifiez les paramètres de votre marché avant de finaliser la configuration.
-      </p>
-    </div>
-
     <div class="fr-mb-4w">
       <div class="fr-card fr-mb-4w">
         <div class="fr-card__header">

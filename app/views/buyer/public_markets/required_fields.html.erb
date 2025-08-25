@@ -2,55 +2,40 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12">
-    <div class="fr-stepper">
-      <h2 class="fr-stepper__title">
-        <%= t('buyer.public_markets.steps.required_fields') %>
-        <span class="fr-stepper__state">Étape 1 sur 3</span>
-      </h2>
-      <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3">
-        <div class="fr-stepper__step">
-          <p class="fr-stepper__details">
-            <span class="fr-text--bold">Étape suivante :</span> <%= t('buyer.public_markets.steps.additional_fields') %>
-          </p>
-        </div>
-      </div>
-    </div>
+      <%= stepper(
+      current_step: step,
+      steps: @wizard_steps,
+      i18n_scope: 'buyer.public_markets'
+    ) %>
   </div>
 </div>
 
 <div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
   <div class="fr-col-12">
-    <div class="fr-mb-5w">
-      <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.required_fields.title') %></h1>
-      <p class="fr-text--lg fr-mb-0">
-        <%= t('buyer.public_markets.required_fields.subtitle') %>
-      </p>
-    </div>
-
-      <div class="fr-accordions-group fr-mt-4w">
-        <% @required_fields.each_with_index do |(category, subcategories), index| %>
-          <%= render 'category_accordion', category: category, index: index, id_prefix: 'accordion-required' do %>
-            <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
-              <%= render 'subcategory_section', 
-                    subcategory: subcategory, 
-                    subcategories: subcategories, 
-                    is_last: (subcat_index == subcategories.size - 1) do %>
-                <ul class="fr-list">
-                  <% fields.each do |field_key| %>
-                    <% field = @presenter.field_by_key(field_key) %>
-                    <%= render 'field_display', 
-                          field_key: field_key, 
-                          field: field, 
-                          html_tag: :li, 
-                          wrapper_classes: 'fr-list__item' %>
-                  <% end %>
-                </ul>
-              <% end %>
+    <div class="fr-accordions-group fr-mt-4w">
+      <% @required_fields.each_with_index do |(category, subcategories), index| %>
+        <%= render 'category_accordion', category: category, index: index, id_prefix: 'accordion-required' do %>
+          <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
+            <%= render 'subcategory_section',
+                  subcategory: subcategory,
+                  subcategories: subcategories,
+                  is_last: (subcat_index == subcategories.size - 1) do %>
+              <ul class="fr-list">
+                <% fields.each do |field_key| %>
+                  <% field = @presenter.field_by_key(field_key) %>
+                  <%= render 'field_display',
+                        field_key: field_key,
+                        field: field,
+                        html_tag: :li,
+                        wrapper_classes: 'fr-list__item' %>
+                <% end %>
+              </ul>
             <% end %>
           <% end %>
         <% end %>
-      </div>
+      <% end %>
     </div>
+  </div>
 
     <div class="fr-col-12">
       <div class="fr-mb-4w">
