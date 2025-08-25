@@ -1,0 +1,17 @@
+<%
+  title ||= ""
+  tag ||= :h4
+  background ||= ""
+  color ||= ""
+  additional_classes ||= ""
+%>
+
+<div class="fr-card__header">
+  <%= content_tag tag, title, class: "fr-card__title fr-mb-0 fr-py-2w fr-px-2w #{additional_classes} #{background} #{color}" %>
+</div>
+
+<% if block_given? %>
+  <div class="fr-card__body">
+    <%= yield %>
+  </div>
+<% end %>

@@ -16,6 +16,8 @@ module Candidate
     before_action :set_wizard_steps
 
     def show
+      @presenter = MarketApplicationPresenter.new(@market_application) if step == :summary
+
       render_wizard
     end
 
