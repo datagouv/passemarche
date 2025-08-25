@@ -10,7 +10,7 @@ RSpec.feature 'Buyer sync: Success & Failure Handling', type: :feature do
     create(:editor,
       completion_webhook_url: 'https://editor.example.com/webhook')
   end
-  let(:public_market) { create(:public_market, :completed, editor: editor, sync_status: 'sync_processing') }
+  let(:public_market) { create(:public_market, :completed, editor:, sync_status: 'sync_processing') }
 
   before do
     WebMock.enable!

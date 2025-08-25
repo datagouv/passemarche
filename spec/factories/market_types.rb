@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :market_type do
-    initialize_with { MarketType.find_or_create_by(code: code) }
+    initialize_with { MarketType.find_or_create_by(code:) }
 
     code { 'supplies' }
 

@@ -8,7 +8,7 @@ RSpec.describe FieldTranslationImport, type: :organizer do
   let(:mock_file_writer) { double('FileWriter') }
   let(:context) do
     {
-      csv_file_path: csv_file_path,
+      csv_file_path:,
       translation_file_path: temp_translation_file,
       file_writer: mock_file_writer
     }

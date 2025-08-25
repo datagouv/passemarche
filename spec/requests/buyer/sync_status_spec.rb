@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Buyer::SyncStatus', type: :request do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, editor: editor) }
+  let(:public_market) { create(:public_market, editor:) }
 
   describe 'GET /buyer/public_markets/:identifier/sync_status' do
     let(:sync_status_path) { buyer_sync_status_path(public_market.identifier) }

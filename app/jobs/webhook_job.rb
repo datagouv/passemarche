@@ -24,7 +24,7 @@ class WebhookJob < ApplicationJob
   rescue ActiveRecord::RecordNotFound => e
     BugTrackerService.capture_exception(e, {
       job: self.class.name,
-      entity_id: entity_id,
+      entity_id:,
       message: 'Entity not found - possible race condition or data integrity issue'
     })
   rescue WebhookNonRetryableError => e
@@ -32,7 +32,7 @@ class WebhookJob < ApplicationJob
 
     BugTrackerService.capture_exception(e, {
       job: self.class.name,
-      entity_id: entity_id,
+      entity_id:,
       entity_class: entity&.class&.name
     })
   end

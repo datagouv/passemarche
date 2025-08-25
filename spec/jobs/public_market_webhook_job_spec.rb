@@ -5,7 +5,7 @@ require 'webmock/rspec'
 
 RSpec.describe PublicMarketWebhookJob, type: :job do
   let(:editor) { create(:editor, completion_webhook_url: 'https://example.com/webhook') }
-  let(:public_market) { create(:public_market, editor: editor, completed_at: Time.zone.now, sync_status: :sync_processing) }
+  let(:public_market) { create(:public_market, editor:, completed_at: Time.zone.now, sync_status: :sync_processing) }
 
   before do
     WebMock.enable!
@@ -73,9 +73,9 @@ RSpec.describe PublicMarketWebhookJob, type: :job do
             hash_including(entity_id: non_existent_id, message: /Entity not found/)
           )
 
-        expect {
+        expect do
           described_class.perform_now(non_existent_id)
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe FieldConfigurationImport::ValidateCsvFile, type: :interactor do
   subject(:interactor) { described_class.call(context) }
 
-  let(:context) { Interactor::Context.build(csv_file_path: csv_file_path) }
+  let(:context) { Interactor::Context.build(csv_file_path:) }
 
   describe '.call' do
     context 'when CSV file exists' do

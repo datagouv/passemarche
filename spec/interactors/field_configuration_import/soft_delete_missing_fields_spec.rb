@@ -7,7 +7,7 @@ RSpec.describe FieldConfigurationImport::SoftDeleteMissingFields, type: :interac
 
   let(:context) do
     Interactor::Context.build(
-      imported_keys: imported_keys,
+      imported_keys:,
       statistics: { soft_deleted: 0 }
     )
   end

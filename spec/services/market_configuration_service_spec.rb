@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe MarketConfigurationService do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, editor: editor, market_type_codes: ['supplies']) }
+  let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
   let!(:supplies_market_type) { create(:market_type, code: 'supplies') }
   let!(:defense_market_type) { create(:market_type, code: 'defense') }
   let!(:required_attribute) { create(:market_attribute, :required, key: 'required_field') }
@@ -101,9 +101,9 @@ RSpec.describe MarketConfigurationService do
       it 'handles empty selected attributes' do
         params = { selected_attribute_keys: [] }
 
-        expect {
+        expect do
           described_class.call(public_market, :additional_fields, params)
-        }.not_to raise_error
+        end.not_to raise_error
 
         expect(public_market.reload.market_attributes).to eq([required_attribute])
       end
@@ -134,17 +134,17 @@ RSpec.describe MarketConfigurationService do
       end
 
       it 'enqueues webhook sync job' do
-        expect {
+        expect do
           described_class.call(public_market, :summary, {})
-        }.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
+        end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
       end
     end
 
     context 'with unknown step' do
       it 'raises ArgumentError' do
-        expect {
+        expect do
           described_class.call(public_market, :unknown_step, {})
-        }.to raise_error(ArgumentError, 'Unknown step: unknown_step')
+        end.to raise_error(ArgumentError, 'Unknown step: unknown_step')
       end
     end
   end

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, :completed, editor: editor) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
   let(:access_token) do
     editor.ensure_doorkeeper_application!
     Doorkeeper::AccessToken.create!(
@@ -39,12 +39,12 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
     end
 
     it 'creates market application in database' do
-      expect {
+      expect do
         post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
           params: valid_params,
           headers: { 'Authorization' => "Bearer #{access_token.token}" },
           as: :json
-      }.to change(MarketApplication, :count).by(1)
+      end.to change(MarketApplication, :count).by(1)
 
       application = MarketApplication.last
       expect(application.public_market).to eq(public_market)

@@ -39,9 +39,9 @@ RSpec.describe 'Admin::Editors', type: :request do
         }
       }
 
-      expect {
+      expect do
         post '/admin/editors', params: editor_params
-      }.to change(Editor, :count).by(1)
+      end.to change(Editor, :count).by(1)
 
       expect(response).to have_http_status(:redirect)
     end
@@ -74,9 +74,9 @@ RSpec.describe 'Admin::Editors', type: :request do
     it 'destroys the editor' do
       editor_to_delete = create(:editor)
 
-      expect {
+      expect do
         delete "/admin/editors/#{editor_to_delete.id}"
-      }.to change(Editor, :count).by(-1)
+      end.to change(Editor, :count).by(-1)
 
       expect(response).to have_http_status(:redirect)
     end

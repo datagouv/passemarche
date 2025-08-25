@@ -34,11 +34,11 @@ class FieldConfigurationImport::ParseCsvFile < ApplicationInteractor
   end
 
   def parse_data_rows
-    context.csv_lines[DATA_START_INDEX..].each_with_index.filter_map { |line, index|
+    context.csv_lines[DATA_START_INDEX..].each_with_index.filter_map do |line, index|
       next if line.strip.blank?
 
       parse_single_row(line, index)
-    }.compact
+    end.compact
   end
 
   def parse_single_row(line, index)
@@ -78,7 +78,7 @@ class FieldConfigurationImport::ParseCsvFile < ApplicationInteractor
 
   def record_malformed_row(line_number, error)
     context.statistics[:malformed_rows] ||= []
-    context.statistics[:malformed_rows] << { line: line_number, error: error }
+    context.statistics[:malformed_rows] << { line: line_number, error: }
   end
 
   def increment_stat(key)

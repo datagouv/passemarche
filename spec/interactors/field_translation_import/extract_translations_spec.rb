@@ -7,7 +7,7 @@ RSpec.describe FieldTranslationImport::ExtractTranslations, type: :interactor do
 
   let(:context) do
     Interactor::Context.build(
-      parsed_rows: parsed_rows,
+      parsed_rows:,
       statistics: { fields_processed: 0 }
     )
   end

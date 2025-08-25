@@ -8,7 +8,7 @@ RSpec.describe FieldConfigurationImport::ParseCsvFile, type: :interactor do
   let(:csv_file_path) { Rails.root.join('spec/fixtures/parse_test.csv') }
   let(:context) do
     Interactor::Context.build(
-      csv_file_path: csv_file_path,
+      csv_file_path:,
       statistics: { processed: 0, skipped: 0 }
     )
   end

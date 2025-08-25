@@ -61,7 +61,7 @@ end
 
 Then('the public market should be saved in the database') do
   identifier = @response_body['identifier']
-  public_market = PublicMarket.find_by(identifier: identifier)
+  public_market = PublicMarket.find_by(identifier:)
 
   expect(public_market).to be_present
   expect(public_market.name).to eq(@public_market_params['name'])
@@ -78,7 +78,7 @@ end
 
 Then('the public market should have no lot name') do
   identifier = @response_body['identifier']
-  public_market = PublicMarket.find_by(identifier: identifier)
+  public_market = PublicMarket.find_by(identifier:)
 
   expect(public_market.lot_name).to be_nil
 end
