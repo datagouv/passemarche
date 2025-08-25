@@ -12,6 +12,7 @@ body {
 
 main {
   flex: 1 0 auto;
+  min-height: 0; /* Allow main to shrink if needed */
 }
 
 footer.fr-footer {
@@ -31,6 +32,31 @@ footer.fr-footer {
 .center-content img {
   max-width: 100%;
   height: auto;
+}
+
+/* Full height utility classes */
+.min-h-full {
+  min-height: 100%;
+}
+
+.full-height-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.full-height-grid {
+  min-height: 60vh; /* Minimum 60% of viewport height for better visual balance */
+  align-items: stretch; /* Allow columns to stretch */
+}
+
+.full-height-grid .fr-col-12:first-child {
+  display: flex;
+  align-items: center; /* Center only the left column content */
+}
+
+.full-height-grid .fr-background-alt--blue-france {
+  display: flex; /* Make right column flex to fill height */
 }
 
 /* Field display layout classes */
