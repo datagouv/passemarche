@@ -29,6 +29,7 @@ class GenerateAttestationPdf < ApplicationInteractor
   rescue StandardError => e
     context.fail!(message: "Erreur inattendue lors de la génération de l'attestation: #{e.message}")
   end
+
   def filename
     "attestation_FT#{market_application.identifier}.pdf"
   end

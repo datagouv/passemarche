@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:editor) { create(:editor, :authorized_and_active) }
-  let(:public_market) { create(:public_market, :completed, editor: editor) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
   let(:access_token) { oauth_access_token_for(editor) }
 
   describe 'POST /api/v1/public_markets/:public_market_id/market_applications' do
@@ -112,7 +112,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
   end
 
   describe 'GET /api/v1/market_applications/:id/documents_package' do
-    let(:market_application) { create(:market_application, public_market: public_market, siret: '73282932000074') }
+    let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
 
     before do
       allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
@@ -121,7 +121,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
     context 'when application is completed' do
       before do
-        CompleteMarketApplication.call(market_application: market_application)
+        CompleteMarketApplication.call(market_application:)
         market_application.reload
       end
 

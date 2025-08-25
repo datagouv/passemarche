@@ -87,7 +87,7 @@ RSpec.describe MarketApplication, type: :model do
   end
 
   describe 'ActiveStorage attachments' do
-    let(:application) { create(:market_application, public_market: public_market, siret: '12345678901234') }
+    let(:application) { create(:market_application, public_market:, siret: '12345678901234') }
 
     describe '#attestation' do
       it 'has one attached attestation' do

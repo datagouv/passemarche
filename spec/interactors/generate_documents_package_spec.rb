@@ -10,7 +10,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
   end
 
   describe '.call' do
-    subject { described_class.call(market_application: market_application) }
+    subject { described_class.call(market_application:) }
 
     context 'when attestation is attached and no documents package exists' do
       before do

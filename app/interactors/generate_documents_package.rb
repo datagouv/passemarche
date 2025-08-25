@@ -22,7 +22,7 @@ class GenerateDocumentsPackage < ApplicationInteractor
 
     market_application.documents_package.attach(
       io: StringIO.new(zip_content),
-      filename: filename,
+      filename:,
       content_type: 'application/zip'
     )
 
