@@ -55,6 +55,11 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # Configure ActiveJob test adapter for job testing
+  config.before(:suite) do
+    ActiveJob::Base.queue_adapter = :test
+  end
+
   # Configure factory_bot
   config.include FactoryBot::Syntax::Methods
 
