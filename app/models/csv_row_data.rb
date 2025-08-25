@@ -47,7 +47,7 @@ class CsvRowData
 
     if raw_data.is_a?(Hash)
       known_attributes = extract_known_attributes(raw_data)
-      super(known_attributes.merge(line_number: line_number))
+      super(known_attributes.merge(line_number:))
     else
       super(raw_data)
     end
@@ -73,8 +73,8 @@ class CsvRowData
 
   def to_market_attribute_params
     {
-      category_key: category_key,
-      subcategory_key: subcategory_key,
+      category_key:,
+      subcategory_key:,
       required: required?,
       input_type: mapped_input_type,
       from_api: from_api?,

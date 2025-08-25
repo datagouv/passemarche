@@ -24,7 +24,7 @@ RSpec.describe UniqueAssociationValidator do
     let(:market_attribute2) { create(:market_attribute, key: 'attribute2') }
     let(:test_record) do
       PublicMarket.new(
-        editor: editor,
+        editor:,
         name: 'Test Market',
         deadline: 1.week.from_now,
         market_type_codes: ['supplies']

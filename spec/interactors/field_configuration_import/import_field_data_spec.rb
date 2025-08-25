@@ -8,7 +8,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
   let(:supplies_market_type) { create(:market_type, code: 'supplies') }
   let(:context) do
     Interactor::Context.build(
-      importable_rows: importable_rows,
+      importable_rows:,
       statistics: { created: 0, updated: 0 }
     )
   end

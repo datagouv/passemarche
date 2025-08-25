@@ -18,8 +18,8 @@ class MarketApplicationCreationService < ApplicationServiceObject
 
   def create_market_application
     application = MarketApplication.new(
-      public_market: public_market,
-      siret: siret
+      public_market:,
+      siret:
     )
 
     if application.save

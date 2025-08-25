@@ -78,7 +78,7 @@ class FieldConfigurationImport::ParseCsvFile < ApplicationInteractor
 
   def record_malformed_row(line_number, error)
     context.statistics[:malformed_rows] ||= []
-    context.statistics[:malformed_rows] << { line: line_number, error: error }
+    context.statistics[:malformed_rows] << { line: line_number, error: }
   end
 
   def increment_stat(key)

@@ -20,7 +20,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
 
   let(:public_market) do
     create(:public_market,
-      editor: editor,
+      editor:,
       market_type_codes: [supplies_type.code, services_type.code])
   end
 
@@ -130,7 +130,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
   describe 'Access Control & Data Integrity' do
     let(:completed_market) do
       create(:public_market, :completed,
-        editor: editor,
+        editor:,
         market_type_codes: [supplies_type.code],
         sync_status: :sync_completed)
     end
@@ -224,7 +224,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
     describe 'non-completed markets still work normally' do
       let(:non_completed_market) do
         create(:public_market,
-          editor: editor,
+          editor:,
           market_type_codes: [supplies_type.code],
           completed_at: nil)
       end

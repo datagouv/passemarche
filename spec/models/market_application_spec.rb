@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe MarketApplication, type: :model do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, :completed, editor: editor) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
 
   before do
     allow(SiretValidationService).to receive(:call).and_return(true)
@@ -14,7 +14,7 @@ RSpec.describe MarketApplication, type: :model do
     it 'calls SiretValidationService for SIRET validation' do
       allow(SiretValidationService).to receive(:call).and_return(false)
 
-      application = build(:market_application, public_market: public_market, siret: '12345678901234')
+      application = build(:market_application, public_market:, siret: '12345678901234')
 
       expect(application).not_to be_valid
       expect(application.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
@@ -22,7 +22,7 @@ RSpec.describe MarketApplication, type: :model do
     end
 
     it 'requires public market to be completed' do
-      incomplete_market = create(:public_market, editor: editor, sync_status: :sync_pending)
+      incomplete_market = create(:public_market, editor:, sync_status: :sync_pending)
       application = build(:market_application, public_market: incomplete_market, siret: '12345678901234')
 
       expect(application).not_to be_valid
@@ -70,7 +70,7 @@ RSpec.describe MarketApplication, type: :model do
 
   describe 'identifier generation' do
     it 'generates identifier on creation' do
-      application = build(:market_application, public_market: public_market, siret: '12345678901234', identifier: nil)
+      application = build(:market_application, public_market:, siret: '12345678901234', identifier: nil)
 
       expect(application.identifier).to be_nil
       application.valid?
@@ -79,7 +79,7 @@ RSpec.describe MarketApplication, type: :model do
 
     it 'does not override existing identifier' do
       existing_identifier = 'CUSTOM-ID'
-      application = build(:market_application, public_market: public_market, siret: '12345678901234', identifier: existing_identifier)
+      application = build(:market_application, public_market:, siret: '12345678901234', identifier: existing_identifier)
 
       application.save!
       expect(application.identifier).to eq(existing_identifier)

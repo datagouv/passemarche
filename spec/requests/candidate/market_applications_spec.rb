@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, :completed, editor: editor) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 

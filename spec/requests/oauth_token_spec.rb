@@ -317,7 +317,7 @@ RSpec.describe 'OAuth Token', type: :request do
           }
 
           token = response.parsed_body['access_token']
-          access_token = Doorkeeper::AccessToken.find_by(token: token)
+          access_token = Doorkeeper::AccessToken.find_by(token:)
 
           expect(access_token.expires_at.to_i).to eq(24.hours.from_now.to_i)
           expect(access_token.expires_in).to eq(86_400)
@@ -377,7 +377,7 @@ RSpec.describe 'OAuth Token', type: :request do
 
         # Verify token revocation behavior - all tokens except the last should be revoked
         tokens[0...-1].each do |token|
-          expect(Doorkeeper::AccessToken.find_by(token: token)).to be_revoked
+          expect(Doorkeeper::AccessToken.find_by(token:)).to be_revoked
         end
         expect(Doorkeeper::AccessToken.find_by(token: tokens.last)).not_to be_revoked
       end
@@ -511,7 +511,7 @@ RSpec.describe 'OAuth Token', type: :request do
       }
 
       token = response.parsed_body['access_token']
-      access_token = Doorkeeper::AccessToken.find_by(token: token)
+      access_token = Doorkeeper::AccessToken.find_by(token:)
 
       expect(access_token.scopes.to_a).to contain_exactly('api_read', 'api_write')
     end

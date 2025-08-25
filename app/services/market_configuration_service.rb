@@ -39,7 +39,7 @@ class MarketConfigurationService < ApplicationService
     required_attributes = MarketAttributeFilteringService.call(@public_market).required
     public_market.add_market_attributes(required_attributes)
 
-    { public_market: public_market, next_step: :additional_fields }
+    { public_market:, next_step: :additional_fields }
   end
 
   def snapshot_additional_fields
@@ -47,7 +47,7 @@ class MarketConfigurationService < ApplicationService
     selected_optional_attributes = MarketAttribute.where(key: selected_attribute_keys)
     public_market.sync_optional_market_attributes(selected_optional_attributes)
 
-    { public_market: public_market, next_step: :summary }
+    { public_market:, next_step: :summary }
   end
 
   def complete_market

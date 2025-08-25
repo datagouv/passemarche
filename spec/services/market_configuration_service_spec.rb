@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe MarketConfigurationService do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, editor: editor, market_type_codes: ['supplies']) }
+  let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
   let!(:supplies_market_type) { create(:market_type, code: 'supplies') }
   let!(:defense_market_type) { create(:market_type, code: 'defense') }
   let!(:required_attribute) { create(:market_attribute, :required, key: 'required_field') }

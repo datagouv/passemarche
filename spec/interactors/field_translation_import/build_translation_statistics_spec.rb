@@ -7,7 +7,7 @@ RSpec.describe FieldTranslationImport::BuildTranslationStatistics, type: :intera
 
   let(:context) do
     Interactor::Context.build(
-      translations: translations,
+      translations:,
       statistics: { fields_processed: 2 }
     )
   end

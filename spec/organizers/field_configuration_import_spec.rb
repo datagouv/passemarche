@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe FieldConfigurationImport, type: :organizer do
   let(:csv_file_path) { Rails.root.join('spec/fixtures/field_configuration_test.csv') }
-  let(:context) { { csv_file_path: csv_file_path } }
+  let(:context) { { csv_file_path: } }
 
   before do
     MarketAttribute.delete_all

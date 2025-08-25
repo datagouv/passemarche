@@ -12,14 +12,14 @@ RSpec.describe PublicMarket, type: :model do
 
     describe 'identifier validation' do
       it 'validates presence of identifier' do
-        public_market = build(:public_market, editor: editor, identifier: nil)
+        public_market = build(:public_market, editor:, identifier: nil)
         public_market.valid?
         expect(public_market.identifier).to be_present
       end
 
       it 'validates uniqueness of identifier' do
-        existing_market = create(:public_market, editor: editor)
-        duplicate_market = build(:public_market, editor: editor, identifier: existing_market.identifier)
+        existing_market = create(:public_market, editor:)
+        duplicate_market = build(:public_market, editor:, identifier: existing_market.identifier)
         expect(duplicate_market).not_to be_valid
         expect(duplicate_market.errors[:identifier]).to be_present
       end
@@ -38,18 +38,18 @@ RSpec.describe PublicMarket, type: :model do
       end
 
       it 'accepts valid market type codes' do
-        public_market = build(:public_market, editor: editor, market_type_codes: ['supplies'])
+        public_market = build(:public_market, editor:, market_type_codes: ['supplies'])
         expect(public_market).to be_valid
       end
 
       it 'rejects invalid market type codes' do
-        public_market = build(:public_market, editor: editor, market_type_codes: ['invalid_code'])
+        public_market = build(:public_market, editor:, market_type_codes: ['invalid_code'])
         expect(public_market).not_to be_valid
         expect(public_market.errors[:market_type_codes]).to include('contient des codes invalides : invalid_code')
       end
 
       it 'rejects mix of valid and invalid codes' do
-        public_market = build(:public_market, editor: editor, market_type_codes: %w[supplies invalid_code])
+        public_market = build(:public_market, editor:, market_type_codes: %w[supplies invalid_code])
         expect(public_market).not_to be_valid
         expect(public_market.errors[:market_type_codes]).to include('contient des codes invalides : invalid_code')
       end
@@ -59,7 +59,7 @@ RSpec.describe PublicMarket, type: :model do
   describe 'callbacks' do
     describe 'generate_identifier' do
       let(:editor) { create(:editor) }
-      let(:public_market) { build(:public_market, editor: editor, identifier: nil) }
+      let(:public_market) { build(:public_market, editor:, identifier: nil) }
 
       it 'generates an identifier before validation on create' do
         expect(public_market.identifier).to be_nil
@@ -69,7 +69,7 @@ RSpec.describe PublicMarket, type: :model do
 
       it 'does not override existing identifier' do
         existing_identifier = 'CUSTOM-ID'
-        public_market = build(:public_market, editor: editor, identifier: existing_identifier)
+        public_market = build(:public_market, editor:, identifier: existing_identifier)
         public_market.save!
 
         expect(public_market.identifier).to eq(existing_identifier)
@@ -79,7 +79,7 @@ RSpec.describe PublicMarket, type: :model do
 
   describe '#complete!' do
     let(:editor) { create(:editor) }
-    let(:public_market) { create(:public_market, editor: editor) }
+    let(:public_market) { create(:public_market, editor:) }
 
     it 'sets completed_at to current time' do
       freeze_time do

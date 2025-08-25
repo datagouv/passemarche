@@ -147,6 +147,9 @@ Rails/RedundantActiveRecordAllMethod:
 Style/AsciiComments:
   Enabled: false
 
+Style/HashSyntax:
+  EnforcedShorthandSyntax: always
+
 Style/BlockComments:
   Exclude:
     - "spec/spec_helper.rb"

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, :completed, editor: editor) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
   let(:access_token) do
     editor.ensure_doorkeeper_application!
     Doorkeeper::AccessToken.create!(

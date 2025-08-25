@@ -36,6 +36,6 @@ class FieldConfigurationImport::ValidateCsvFile < ApplicationInteractor
 
   def fail_with_message(message)
     context.message = message
-    context.fail!(message: message)
+    context.fail!(message:)
   end
 end

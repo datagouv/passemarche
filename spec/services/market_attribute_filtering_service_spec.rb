@@ -41,7 +41,7 @@ RSpec.describe MarketAttributeFilteringService do
 
   describe '.call' do
     context 'with supplies market type only' do
-      let(:public_market) { create(:public_market, editor: editor, market_type_codes: ['supplies']) }
+      let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
 
       it 'returns attributes available for supplies market type' do
         result = described_class.call(public_market)
@@ -52,7 +52,7 @@ RSpec.describe MarketAttributeFilteringService do
     end
 
     context 'with defense market type' do
-      let(:public_market) { create(:public_market, editor: editor, market_type_codes: %w[supplies defense]) }
+      let(:public_market) { create(:public_market, editor:, market_type_codes: %w[supplies defense]) }
 
       it 'returns attributes available for defense market type' do
         result = described_class.call(public_market)
@@ -63,7 +63,7 @@ RSpec.describe MarketAttributeFilteringService do
     end
 
     context 'with multiple market types' do
-      let(:public_market) { create(:public_market, editor: editor, market_type_codes: %w[supplies defense]) }
+      let(:public_market) { create(:public_market, editor:, market_type_codes: %w[supplies defense]) }
 
       it 'returns union of attributes from all market types' do
         result = described_class.call(public_market)
@@ -80,7 +80,7 @@ RSpec.describe MarketAttributeFilteringService do
     end
 
     context 'with ordering' do
-      let(:public_market) { create(:public_market, editor: editor, market_type_codes: ['supplies']) }
+      let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
 
       before do
         supplies_only_attribute.update!(required: true, category_key: 'test_b', subcategory_key: 'test_b')
@@ -97,7 +97,7 @@ RSpec.describe MarketAttributeFilteringService do
     end
 
     context 'with deleted attributes' do
-      let(:public_market) { create(:public_market, editor: editor, market_type_codes: ['supplies']) }
+      let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
 
       it 'excludes deleted attributes' do
         result = described_class.call(public_market)
@@ -107,7 +107,7 @@ RSpec.describe MarketAttributeFilteringService do
     end
 
     context 'returns ActiveRecord relation' do
-      let(:public_market) { create(:public_market, editor: editor, market_type_codes: ['supplies']) }
+      let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
 
       it 'returns an ActiveRecord relation for chaining' do
         result = described_class.call(public_market)

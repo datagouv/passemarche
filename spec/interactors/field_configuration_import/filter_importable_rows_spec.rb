@@ -7,7 +7,7 @@ RSpec.describe FieldConfigurationImport::FilterImportableRows, type: :interactor
 
   let(:context) do
     Interactor::Context.build(
-      parsed_rows: parsed_rows,
+      parsed_rows:,
       statistics: { skipped: 0, processed: 0 }
     )
   end
