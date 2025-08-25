@@ -12,7 +12,8 @@ module StepperHelper
         stepper_title(step_label, step_number, total_steps),
         stepper_steps_div(step_number, total_steps),
         stepper_details(current_step, steps, i18n_scope),
-        stepper_subtitle(i18n_scope, step)
+        stepper_subtitle(i18n_scope, step),
+        content_tag(:hr, nil, class: 'stepper__separator')
       ])
     end
   end
@@ -56,12 +57,16 @@ module StepperHelper
   end
 
   def stepper_subtitle(i18n_scope, step)
-    subtitle = t("#{i18n_scope}.#{step}", default: '')
+    subtitle_title = t("#{i18n_scope}.#{step}", default: '')
+    subtitle_text = t("#{i18n_scope}.#{step}.subtitle", default: 'Lorem ipsum...')
 
-    content_tag(
-      :h3,
-      subtitle,
-      class: 'fr-stepper__subtitle fr-mt-6w fr-text--bold"'
-    )
+    return if subtitle_title.blank? && subtitle_text.blank?
+
+    content_tag(:div, class: 'fr-stepper__subtitle-block') do
+      safe_join([
+        content_tag(:h3, subtitle_title, class: 'fr-stepper__subtitle fr-mt-6w fr-text--bold'),
+        content_tag(:p, subtitle_text, class: 'fr-stepper__subtext')
+      ])
+    end
   end
 end
