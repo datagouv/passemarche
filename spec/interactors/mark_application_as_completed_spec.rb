@@ -6,7 +6,7 @@ RSpec.describe MarkApplicationAsCompleted, type: :interactor do
   let(:market_application) { create(:market_application, siret: nil) }
 
   describe '.call' do
-    subject { described_class.call(market_application: market_application) }
+    subject { described_class.call(market_application:) }
 
     context 'when market application is not completed' do
       it 'succeeds' do

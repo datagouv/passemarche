@@ -9,7 +9,7 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
   let(:market_application) { create(:market_application, siret: nil) }
 
   describe '.call' do
-    subject { described_class.call(market_application: market_application) }
+    subject { described_class.call(market_application:) }
 
     context 'when all steps succeed' do
       it 'succeeds' do

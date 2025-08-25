@@ -9,7 +9,7 @@ RSpec.feature 'Candidate attestation download', type: :feature do
   let(:market_application) { create(:market_application, siret: nil) }
 
   scenario 'completing application generates attestation and shows secure download link' do
-    CompleteMarketApplication.call(market_application: market_application)
+    CompleteMarketApplication.call(market_application:)
 
     market_application.update!(sync_status: :sync_completed)
 

@@ -9,7 +9,7 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
   let(:market_application) { create(:market_application, siret: nil) }
 
   describe '.call' do
-    subject { described_class.call(market_application: market_application) }
+    subject { described_class.call(market_application:) }
 
     context 'when no attestation is attached' do
       it 'succeeds' do
