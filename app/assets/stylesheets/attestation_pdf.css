@@ -1,6 +1,8 @@
-/* Styles for PDF Attestation Template */
+/* Styles for PDF Attestation Template - Scoped to avoid conflicts with DSFR */
 
-body {
+/* Only apply these styles to the attestation PDF layout */
+html[data-context="attestation-pdf"] body,
+body.attestation-pdf {
   font-family: Arial, sans-serif;
   font-size: 12px;
   line-height: 1.5;
@@ -8,47 +10,56 @@ body {
   color: #333;
 }
 
-.header {
+/* Scope all attestation styles to prevent conflicts */
+.attestation-pdf .header,
+html[data-context="attestation-pdf"] .header {
   text-align: center;
   margin-bottom: 40px;
   border-bottom: 2px solid #000091;
   padding-bottom: 20px;
 }
 
-.title {
+.attestation-pdf .title,
+html[data-context="attestation-pdf"] .title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
   text-transform: uppercase;
 }
 
-.subtitle {
+.attestation-pdf .subtitle,
+html[data-context="attestation-pdf"] .subtitle {
   font-size: 18px;
   font-weight: bold;
   color: #666;
 }
 
-.content {
+.attestation-pdf .content,
+html[data-context="attestation-pdf"] .content {
   margin: 30px 0;
 }
 
-.field {
+.attestation-pdf .field,
+html[data-context="attestation-pdf"] .field {
   margin: 15px 0;
   padding: 10px;
   background-color: #f6f6f6;
   border-left: 4px solid #000091;
 }
 
-.field-label {
+.attestation-pdf .field-label,
+html[data-context="attestation-pdf"] .field-label {
   font-weight: bold;
   color: #000091;
 }
 
-.field-value {
+.attestation-pdf .field-value,
+html[data-context="attestation-pdf"] .field-value {
   margin-top: 5px;
 }
 
-.certification {
+.attestation-pdf .certification,
+html[data-context="attestation-pdf"] .certification {
   margin: 40px 0;
   padding: 20px;
   border: 1px solid #ddd;
@@ -56,7 +67,8 @@ body {
   text-align: justify;
 }
 
-.footer {
+.attestation-pdf .footer,
+html[data-context="attestation-pdf"] .footer {
   margin-top: 50px;
   text-align: right;
   font-size: 10px;
@@ -64,6 +76,7 @@ body {
   color: #666;
 }
 
-.logo {
+.attestation-pdf .logo,
+html[data-context="attestation-pdf"] .logo {
   margin-bottom: 20px;
 }
