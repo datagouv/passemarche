@@ -55,16 +55,32 @@ module Candidate
       result = CompleteMarketApplication.call(market_application: @market_application)
 
       if result.success?
-        MarketApplicationWebhookJob.perform_later(
-          @market_application.id,
-          request_host: request.host_with_port,
-          request_protocol: request.protocol
-        )
-        redirect_to candidate_sync_status_path(@market_application.identifier)
+        queue_webhook_and_redirect
       else
-        flash.now[:alert] = result.message
-        render_wizard
+        display_completion_error(result.message)
       end
+    rescue StandardError => e
+      log_and_display_error(e)
+    end
+
+    def queue_webhook_and_redirect
+      MarketApplicationWebhookJob.perform_later(
+        @market_application.id,
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
+      )
+      redirect_to candidate_sync_status_path(@market_application.identifier)
+    end
+
+    def display_completion_error(message)
+      flash.now[:alert] = message
+      render_wizard
+    end
+
+    def log_and_display_error(error)
+      Rails.logger.error "Error completing market application #{@market_application.identifier}: #{error.message}"
+      flash.now[:alert] = t('candidate.market_applications.completion_error')
+      render_wizard
     end
 
     def find_market_application
