@@ -14,11 +14,13 @@
             <p>
               Nous avons transmis automatiquement toutes les informations nécessaires à l’acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt.
             </p>
-            <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+            <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
               <% if @market_application.attestation.attached? %>
-                <%= link_to "Télécharger l'attestation", 
-                            rails_blob_path(@market_application.attestation, disposition: 'attachment'),
-                            class: 'fr-btn fr-btn--primary' %>
+                <button type="button" 
+                        class="fr-btn fr-btn--icon-left fr-icon-download-line"
+                        onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
+                  Télécharger l'attestation
+                </button>
               <% end %>
               <%= link_to "Retourner sur #{@market_application.editor.name}", 
                           @market_application.editor.redirect_url&.gsub('{market_identifier}', @market_application.identifier) || root_path,
@@ -45,9 +47,11 @@
                           "mailto:support@voie-rapide.gouv.fr?subject=Erreur de synchronisation pour le marché #{@market_application.identifier}",
                           class: "fr-btn fr-btn--secondary" %>
               <% if @market_application.attestation.attached? %>
-                <%= link_to "Télécharger l'attestation", 
-                            rails_blob_path(@market_application.attestation, disposition: 'attachment'),
-                            class: 'fr-btn fr-btn--primary' %>
+                <button type="button" 
+                        class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-download-line"
+                        onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
+                  Télécharger l'attestation
+                </button>
               <% end %>
             </div>
           </div>

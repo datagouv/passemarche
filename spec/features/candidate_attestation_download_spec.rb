@@ -18,16 +18,17 @@ RSpec.feature 'Candidate attestation download', type: :feature do
     market_application.reload
     expect(market_application.attestation).to be_attached
 
-    expect(page).to have_link('Télécharger l\'attestation')
+    expect(page).to have_button('Télécharger l\'attestation')
 
-    download_link = find_link('Télécharger l\'attestation')[:href]
-    expect(download_link).to include('/rails/active_storage/blobs/redirect')
-    expect(download_link).to include('disposition=attachment')
+    download_button = find_button('Télécharger l\'attestation')
+    onclick_attribute = download_button[:onclick]
+    expect(onclick_attribute).to include('/rails/active_storage/blobs/redirect')
+    expect(onclick_attribute).to include('disposition=attachment')
   end
 
   scenario 'attestation not available before completion' do
     visit candidate_sync_status_path(market_application.identifier)
 
-    expect(page).not_to have_link('Télécharger l\'attestation')
+    expect(page).not_to have_button('Télécharger l\'attestation')
   end
 end
