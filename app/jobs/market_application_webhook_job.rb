@@ -4,6 +4,12 @@
 class MarketApplicationWebhookJob < WebhookJob
   include WebhookSyncable
 
+  def perform(entity_id, request_host: nil, request_protocol: nil)
+    @request_host = request_host
+    @request_protocol = request_protocol
+    super(entity_id)
+  end
+
   private
 
   def find_entity(entity_id)
@@ -24,14 +30,10 @@ class MarketApplicationWebhookJob < WebhookJob
   end
 
   def attestation_url_for(entity)
-    # Parse the base URL to extract host and port
-    uri = URI.parse(Rails.application.config.api_base_url)
-
     Rails.application.routes.url_helpers.attestation_api_v1_market_application_url(
       entity.identifier,
-      host: uri.host,
-      port: uri.port == uri.default_port ? nil : uri.port,
-      protocol: uri.scheme
+      host: @request_host,
+      protocol: @request_protocol
     )
   end
 end

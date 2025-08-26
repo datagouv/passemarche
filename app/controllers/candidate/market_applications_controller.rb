@@ -34,7 +34,11 @@ module Candidate
     def retry_sync
       @market_application.update!(sync_status: :sync_pending)
 
-      MarketApplicationWebhookJob.perform_later(@market_application.id)
+      MarketApplicationWebhookJob.perform_later(
+        @market_application.id,
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
+      )
 
       redirect_to candidate_sync_status_path(@market_application.identifier),
         notice: t('candidate.market_application.sync_retry_initiated')
@@ -51,7 +55,11 @@ module Candidate
       result = CompleteMarketApplication.call(market_application: @market_application)
 
       if result.success?
-        MarketApplicationWebhookJob.perform_later(@market_application.id)
+        MarketApplicationWebhookJob.perform_later(
+          @market_application.id,
+          request_host: request.host_with_port,
+          request_protocol: request.protocol
+        )
         redirect_to candidate_sync_status_path(@market_application.identifier)
       else
         flash.now[:alert] = result.message

@@ -178,7 +178,11 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         end
 
         it 'enqueues webhook sync job' do
-          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(market_application.id)
+          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(
+            market_application.id,
+            request_host: 'www.example.com',
+            request_protocol: 'http://'
+          )
         end
       end
     end
