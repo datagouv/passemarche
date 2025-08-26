@@ -1,0 +1,20 @@
+<%
+  field_key ||= nil
+  field ||= nil
+  html_tag ||= :div
+  wrapper_classes ||= ""
+  content_classes ||= "fr-pt-4v fr-pb-4v"
+%>
+
+<%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
+  <div class="field-layout-container">
+    <div class="field-layout-content">
+      <strong><%= t("form_fields.candidate.fields.#{field_key}.name") %></strong>
+      <% description_key = "form_fields.candidate.fields.#{field_key}.description" %>
+      <% if I18n.exists?(description_key) %>
+        <br>
+        <span class="fr-text--sm fr-text--mention-grey"><%= t(description_key) %></span>
+      <% end %>
+    </div>
+  </div>
+<% end %>
