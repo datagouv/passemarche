@@ -7,6 +7,8 @@ class MarketApplication < ApplicationRecord
   belongs_to :public_market
   has_one :editor, through: :public_market
 
+  has_one_attached :attestation
+
   validates :identifier, presence: true, uniqueness: true
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
   validate :market_must_be_completed

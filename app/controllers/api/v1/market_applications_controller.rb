@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::MarketApplicationsController < Api::V1::BaseController
-  before_action :find_public_market
+  before_action :find_public_market, only: [:create]
+  before_action :find_market_application, only: [:attestation]
 
   def create
     return unless @public_market
@@ -18,6 +19,23 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     end
   end
 
+  def attestation
+    unless @market_application.completed?
+      render json: { error: 'Application not completed' }, status: :unprocessable_content
+      return
+    end
+
+    unless @market_application.attestation.attached?
+      render json: { error: 'Attestation not available' }, status: :not_found
+      return
+    end
+
+    send_data @market_application.attestation.download,
+      filename: "attestation_FT#{@market_application.identifier}.pdf",
+      type: 'application/pdf',
+      disposition: 'attachment'
+  end
+
   private
 
   def find_public_market
@@ -26,6 +44,16 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     return if @public_market
 
     render json: { error: 'Public market not found' }, status: :not_found
+  end
+
+  def find_market_application
+    @market_application = MarketApplication.joins(:public_market)
+      .where(public_markets: { editor: current_editor })
+      .find_by(identifier: params[:id])
+
+    return if @market_application
+
+    render json: { error: 'Market application not found' }, status: :not_found
   end
 
   def market_application_params

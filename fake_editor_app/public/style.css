@@ -182,6 +182,27 @@ body {
   background: #c82333;
 }
 
+.btn-disabled {
+  background: #6c757d;
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-disabled:hover {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
 .inline-form {
   display: inline-block;
 }

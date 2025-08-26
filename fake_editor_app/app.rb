@@ -179,6 +179,37 @@ class FakeEditorApp < Sinatra::Base
     end
   end
 
+  get '/applications/:identifier/download_attestation' do
+    @application = MarketApplication.find_by_identifier(params[:identifier])
+    
+    unless @application
+      halt 404, "Candidature non trouvée"
+    end
+    
+    unless @application.status == 'completed'
+      halt 400, "La candidature n'est pas terminée"
+    end
+    
+    unless @application.attestation_url
+      halt 404, "URL d'attestation non disponible"
+    end
+    
+    current_token = Token.current_token
+    unless current_token&.valid?
+      halt 401, "Token d'accès non valide. Veuillez vous authentifier d'abord."
+    end
+    
+    begin
+      pdf_content = @fast_track_client.download_attestation(current_token.access_token, @application.identifier)
+      
+      content_type 'application/pdf'
+      attachment "attestation_FT#{@application.identifier}.pdf"
+      pdf_content
+    rescue StandardError => e
+      halt 500, "Erreur lors du téléchargement: #{e.message}"
+    end
+  end
+
 
   # Webhook endpoint to receive completion notifications
   post '/webhooks/voie-rapide' do

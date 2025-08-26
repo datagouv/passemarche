@@ -26,6 +26,7 @@ gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'wicked'
 gem 'interactor', '~> 3.2'
+gem 'wicked_pdf'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]

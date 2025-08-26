@@ -14,7 +14,9 @@ class Api::V1::BaseController < ActionController::API
   private
 
   def current_editor
-    @current_editor ||= Editor.find_by(client_id: doorkeeper_token.application.uid)
+    return @current_editor if defined?(@current_editor)
+
+    @current_editor = Editor.find_by(client_id: doorkeeper_token.application.uid)
   end
 
   def doorkeeper_unauthorized_render_options(*)

@@ -18,6 +18,11 @@ Rails.application.routes.draw do
       resources :public_markets, only: [:create] do
         resources :market_applications, only: [:create]
       end
+      resources :market_applications, only: [] do
+        member do
+          get :attestation
+        end
+      end
     end
   end
 

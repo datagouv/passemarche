@@ -17,6 +17,10 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     summary
   ].freeze
 
+  before do
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+  end
+
   describe 'GET /candidate/market_applications/:identifier/:step' do
     STEPS.each_with_index do |step, idx|
       context 'when application is not completed' do
@@ -174,7 +178,11 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         end
 
         it 'enqueues webhook sync job' do
-          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(market_application.id)
+          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(
+            market_application.id,
+            request_host: 'www.example.com',
+            request_protocol: 'http://'
+          )
         end
       end
     end

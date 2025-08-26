@@ -231,6 +231,11 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
     respond_to?(:webhook_payload) && !webhook_payload.nil? && !webhook_payload.empty?
   end
   
+  def attestation_url
+    return nil unless has_webhook_data?
+    webhook_data.dig('market_application', 'attestation_url')
+  end
+  
   def data
     return {} if application_data.nil?
     JSON.parse(application_data)
