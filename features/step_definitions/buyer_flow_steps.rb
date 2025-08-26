@@ -107,7 +107,7 @@ Then('the stepper should indicate step {int} as current') do |step_number|
 
   case step_number
   when 1
-    expect(page).to have_content('Vérification des informations réglementaires et obligagtoires')
+    expect(page).to have_content('Vérification des informations réglementaires et obligatoires')
     expect(page).to have_content('Étape 1 sur 3')
     expect(page).to have_css('.fr-stepper__steps[data-fr-current-step="1"]')
   when 2

@@ -1,18 +1,20 @@
 module StepperHelper
-  def stepper(current_step:, steps:, i18n_scope:)
+  def stepper(current_step:, steps:, i18n_scope:, show_separator: false)
     current_step = current_step.to_sym
     return unless steps.include?(current_step)
 
     step_number = steps.index(current_step) + 1
     total_steps = steps.size
-    step_label = t("#{i18n_scope}.#{current_step}")
+    step_label = t("#{i18n_scope}.steps.#{current_step}")
 
     content_tag(:div, class: 'fr-stepper') do
       safe_join([
         stepper_title(step_label, step_number, total_steps),
         stepper_steps_div(step_number, total_steps),
         stepper_details(current_step, steps, i18n_scope),
-        stepper_subtitle(i18n_scope, step)
+        content_tag(:div, nil, class: 'fr-mb-5w'),
+        stepper_subtitle(step, i18n_scope),
+        (content_tag(:hr, nil, class: 'stepper__separator') if show_separator)
       ])
     end
   end
@@ -44,7 +46,7 @@ module StepperHelper
     content_tag(:p, class: 'fr-stepper__details') do
       next_step_index = steps.index(current_step) + 1
       if next_step_index < steps.size
-        next_step_label = t("#{i18n_scope}.#{steps[next_step_index]}")
+        next_step_label = t("#{i18n_scope}.steps.#{steps[next_step_index]}")
         safe_join([
           content_tag(:span, 'Étape suivante :', class: 'fr-text--bold'),
           " #{next_step_label}"
@@ -55,13 +57,17 @@ module StepperHelper
     end
   end
 
-  def stepper_subtitle(i18n_scope, step)
-    subtitle = t("#{i18n_scope}.#{step}", default: '')
+  def stepper_subtitle(step, i18n_scope)
+    subtitle_title = t("#{i18n_scope}.#{step}.title", default: '')
+    subtitle_text = t("#{i18n_scope}.#{step}.subtitle", default: '')
 
-    content_tag(
-      :h3,
-      subtitle,
-      class: 'fr-stepper__subtitle fr-mt-6w fr-text--bold"'
-    )
+    return if subtitle_title.blank? && subtitle_text.blank?
+
+    content_tag(:div, class: 'fr-mb-5w') do
+      safe_join([
+        content_tag(:h1, subtitle_title, class: 'fr-h1 fr-mb-1w'),
+        content_tag(:p, subtitle_text, class: 'fr-text--lg fr-mb-0')
+      ])
+    end
   end
 end

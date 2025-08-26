@@ -9,6 +9,7 @@ module Buyer
     before_action :find_public_market
     before_action :check_market_not_completed, except: [:retry_sync]
     before_action :initialize_presenter, except: [:retry_sync]
+    before_action :set_wizard_steps
 
     def show
       case step
@@ -42,6 +43,11 @@ module Buyer
     end
 
     private
+
+    def set_wizard_steps
+      # setup doesn't count as a step
+      @wizard_steps = steps - [:setup]
+    end
 
     def step_params
       case step

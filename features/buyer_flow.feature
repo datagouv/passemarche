@@ -20,16 +20,16 @@ Feature: Buyer Configuration Flow
     And I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
     And I should see "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité"
-    
+
     When I click on "Débuter l'activation de"
     Then I should be on the required documents page
-    And I should see "Vérification des informations réglementaires et obligagtoires"
+    And I should see "Vérification des informations réglementaires et obligatoires"
     And I should see "Les documents et informations réglementaires et obligatoires"
     And I should see "Test: Identité de l'entreprise"
     And I should see "Test: Motifs d'exclusion sociaux"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
-    
+
     When I click on "Suivant"
     Then I should be on the optional documents page
     And I should see "Sélection des informations non réglementaires"
@@ -38,7 +38,7 @@ Feature: Buyer Configuration Flow
     And I should see "Test: Motifs d'exclusion à l'appréciation"
     And I should see a "Précédent" button
     And I should see a button "Suivant"
-    
+
     When I click on "Suivant"
     Then I should be on the summary page
     And I should see "Synthèse des paramètres de la candidature"
@@ -51,11 +51,11 @@ Feature: Buyer Configuration Flow
     When I go back to optional documents page
     Then I should be on the optional documents page
     And I should see "Sélection des informations non réglementaires"
-    
+
     When I click on "Précédent"
     Then I should be on the required documents page
-    And I should see "Vérification des informations réglementaires et obligagtoires"
-    
+    And I should see "Vérification des informations réglementaires et obligatoires"
+
     When I click on "Précédent"
     Then I should be on the setup page
     And I should see "Bienvenue,"
@@ -65,13 +65,13 @@ Feature: Buyer Configuration Flow
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
     And I should see "Fournitures"
-    
+
     When I navigate to required documents page
     Then I should be on the required documents page
-    
+
     When I navigate to optional documents page
     Then I should be on the optional documents page
-    
+
     When I navigate to summary page
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
@@ -79,9 +79,9 @@ Feature: Buyer Configuration Flow
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the required documents page for my public market
-    Then I should see "Vérification des informations réglementaires et obligagtoires"
+    Then I should see "Vérification des informations réglementaires et obligatoires"
     And the stepper should indicate step 1 as current
-    
+
     When I navigate to optional documents page
     Then I should see "Sélection des informations non réglementaires"
     And the stepper should indicate step 2 as current
@@ -89,15 +89,15 @@ Feature: Buyer Configuration Flow
   Scenario: Navigation directe vers différentes étapes
     When I visit the setup page for my public market
     Then I should be on the setup page
-    
+
     When I visit the required documents page for my public market
     Then I should be on the required documents page
     And I should see "Les documents et informations réglementaires et obligatoires"
-    
+
     When I visit the optional documents page for my public market
     Then I should be on the optional documents page
     And I should see "Les documents et informations demandés à titre non réglementaire"
-    
+
     When I visit the summary page for my public market
     Then I should be on the summary page
     And I should see "Synthèse des paramètres de la candidature"

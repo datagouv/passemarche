@@ -75,3 +75,9 @@ footer.fr-footer {
 .field-layout-badge {
   flex-shrink: 0;
 }
+
+.stepper__separator {
+  border: none;
+  border-bottom: 2px solid var(--border-default-grey);
+  height: 0;
+}
