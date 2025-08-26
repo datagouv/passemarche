@@ -115,4 +115,25 @@ class FastTrackClient
 
     response.body
   end
+
+  def download_documents_package(access_token, application_identifier)
+    response = self.class.get(
+      "#{@base_url}/api/v1/market_applications/#{application_identifier}/documents_package",
+      headers: {
+        'Authorization' => "Bearer #{access_token}"
+      }
+    )
+
+    unless response.success?
+      error_details = response.parsed_response
+      error_msg = if error_details.is_a?(Hash) && error_details['error']
+                    "#{response.code} - #{error_details['error']}"
+                  else
+                    "#{response.code} - #{response.message}"
+                  end
+      raise "Documents package download failed: #{error_msg}"
+    end
+
+    response.body
+  end
 end

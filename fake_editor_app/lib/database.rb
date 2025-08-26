@@ -236,6 +236,11 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
     webhook_data.dig('market_application', 'attestation_url')
   end
   
+  def documents_package_url
+    return nil unless has_webhook_data?
+    webhook_data.dig('market_application', 'documents_package_url')
+  end
+  
   def data
     return {} if application_data.nil?
     JSON.parse(application_data)

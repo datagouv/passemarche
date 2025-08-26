@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe CompleteMarketApplication, type: :organizer do
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))
   end
   let(:market_application) { create(:market_application, siret: nil) }
 
@@ -28,10 +29,17 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
           .from(false).to(true)
       end
 
-      it 'sets both completed_at and attestation in context' do
+      it 'generates documents package ZIP' do
+        expect { subject }
+          .to change { market_application.reload.documents_package.attached? }
+          .from(false).to(true)
+      end
+
+      it 'sets completed_at, attestation, and documents_package in context' do
         result = subject
         expect(result.completed_at).to be_present
         expect(result.attestation).to be_present
+        expect(result.documents_package).to be_present
       end
     end
 
@@ -46,9 +54,10 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
         expect(subject).to be_failure
       end
 
-      it 'does not attach attestation' do
+      it 'does not attach attestation or documents package' do
         subject
         expect(market_application.reload.attestation).not_to be_attached
+        expect(market_application.reload.documents_package).not_to be_attached
       end
 
       it 'provides error message' do

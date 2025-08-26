@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :market_applications, only: [] do
         member do
           get :attestation
+          get :documents_package
         end
       end
     end

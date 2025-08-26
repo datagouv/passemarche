@@ -210,6 +210,37 @@ class FakeEditorApp < Sinatra::Base
     end
   end
 
+  get '/applications/:identifier/download_documents_package' do
+    @application = MarketApplication.find_by_identifier(params[:identifier])
+    
+    unless @application
+      halt 404, "Candidature non trouvée"
+    end
+    
+    unless @application.status == 'completed'
+      halt 400, "La candidature n'est pas terminée"
+    end
+    
+    unless @application.documents_package_url
+      halt 404, "URL du package de documents non disponible"
+    end
+    
+    current_token = Token.current_token
+    unless current_token&.valid?
+      halt 401, "Token d'accès non valide. Veuillez vous authentifier d'abord."
+    end
+    
+    begin
+      zip_content = @fast_track_client.download_documents_package(current_token.access_token, @application.identifier)
+      
+      content_type 'application/zip'
+      attachment "documents_package_FT#{@application.identifier}.zip"
+      zip_content
+    rescue StandardError => e
+      halt 500, "Erreur lors du téléchargement: #{e.message}"
+    end
+  end
+
 
   # Webhook endpoint to receive completion notifications
   post '/webhooks/voie-rapide' do

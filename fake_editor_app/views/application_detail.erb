@@ -65,6 +65,17 @@
           📄 Attestation non disponible
         </span>
       <% end %>
+      
+      <% if @application.documents_package_url %>
+        <a href="/applications/<%= @application.identifier %>/download_documents_package" 
+           class="btn btn-primary">
+          📦 Télécharger le package de documents
+        </a>
+      <% else %>
+        <span class="btn btn-disabled">
+          📦 Package de documents non disponible
+        </span>
+      <% end %>
     <% end %>
     
     <a href="/markets/<%= @market.identifier %>" class="btn btn-secondary">
