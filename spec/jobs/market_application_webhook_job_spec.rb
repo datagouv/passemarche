@@ -63,13 +63,17 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
       end
 
       it 'includes documents_package_url in webhook payload' do
-        described_class.perform_now(market_application.id)
+        described_class.perform_now(
+          market_application.id,
+          request_host: 'voie-rapide.test.gouv.fr',
+          request_protocol: 'https'
+        )
 
         expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
           .with { |request|
             payload = JSON.parse(request.body)
             expect(payload.dig('market_application', 'documents_package_url'))
-              .to eq("http://voie-rapide.test.gouv.fr/api/v1/market_applications/#{market_application.identifier}/documents_package")
+              .to eq("https://voie-rapide.test.gouv.fr/api/v1/market_applications/#{market_application.identifier}/documents_package")
           }
       end
     end

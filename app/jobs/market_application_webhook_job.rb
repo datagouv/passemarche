@@ -39,13 +39,10 @@ class MarketApplicationWebhookJob < WebhookJob
   end
 
   def documents_package_url_for(entity)
-    uri = URI.parse(Rails.application.config.api_base_url)
-
     Rails.application.routes.url_helpers.documents_package_api_v1_market_application_url(
       entity.identifier,
-      host: uri.host,
-      port: uri.port == uri.default_port ? nil : uri.port,
-      protocol: uri.scheme
+      host: @request_host,
+      protocol: @request_protocol
     )
   end
 end
