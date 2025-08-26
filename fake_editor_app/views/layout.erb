@@ -4,28 +4,84 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= @title || "Fake Editor App - Voie Rapide Demo" %></title>
+  
+  <!-- DSFR CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/utility/utility.min.css">
+  
+  <!-- Custom styles -->
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <header class="header">
-    <div class="container">
-      <h1>🎭 Fake Editor App</h1>
-      <p>Démonstration d'intégration avec Voie Rapide</p>
+  <!-- DSFR Header -->
+  <header role="banner" class="fr-header">
+    <div class="fr-header__body">
+      <div class="fr-container">
+        <div class="fr-header__body-row">
+          <div class="fr-header__brand fr-enlarge-link">
+            <div class="fr-header__brand-top">
+              <div class="fr-header__logo">
+                <a href="/" title="Accueil - Fake Editor App">
+                  <p class="fr-logo">
+                    République<br>Française
+                  </p>
+                </a>
+              </div>
+            </div>
+            <div class="fr-header__service">
+              <p class="fr-header__service-title">
+                <a href="/" title="Accueil - Fake Editor App">🎭 Fake Editor App</a>
+              </p>
+              <p class="fr-header__service-tagline">Démonstration d'intégration avec Voie Rapide</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
-  <main class="main">
-    <div class="container">
+  <!-- Main Content -->
+  <main role="main" id="content">
+    <div class="fr-container fr-pt-4w fr-pb-4w">
       <%= yield %>
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <p>Application de démonstration pour l'intégration OAuth2 avec Voie Rapide</p>
+  <!-- DSFR Footer -->
+  <footer class="fr-footer" role="contentinfo">
+    <div class="fr-container">
+      <div class="fr-footer__body">
+        <div class="fr-footer__brand fr-enlarge-link">
+          <p class="fr-logo">
+            République<br>Française
+          </p>
+        </div>
+        <div class="fr-footer__content">
+          <p class="fr-footer__content-desc">Application de démonstration pour l'intégration OAuth2 avec Voie Rapide</p>
+          <ul class="fr-footer__content-list">
+            <li class="fr-footer__content-item">
+              <a title="Voie Rapide - nouvelle fenêtre" href="<%= ENV['FAST_TRACK_URL'] || 'http://localhost:3000' %>" target="_blank" rel="noopener external" class="fr-footer__content-link">Voie Rapide</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="fr-footer__bottom">
+        <ul class="fr-footer__bottom-list">
+          <li class="fr-footer__bottom-item">
+            <span class="fr-footer__bottom-link">
+              Application de démonstration - Environnement de test
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
   </footer>
 
+  <!-- DSFR JavaScript -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.module.min.js"></script>
+  <script type="text/javascript" nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.nomodule.min.js"></script>
+  
+  <!-- Custom JavaScript -->
   <script src="/app.js"></script>
 </body>
 </html>

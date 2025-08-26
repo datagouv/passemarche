@@ -1,85 +1,124 @@
-<div class="application-detail">
-  <div class="breadcrumb">
-    <a href="/">← Dashboard</a> / 
-    <a href="/markets/<%= @market.identifier %>">← <%= @market.name %></a>
-  </div>
+<div class="fr-mb-4w">
+  <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-2">Voir le fil d'Ariane</button>
+    <div class="fr-collapse" id="breadcrumb-2">
+      <ol class="fr-breadcrumb__list">
+        <li>
+          <a class="fr-breadcrumb__link" href="/">Dashboard</a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" href="/markets/<%= @market.identifier %>"><%= @market.name %></a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" aria-current="page">Candidature</a>
+        </li>
+      </ol>
+    </div>
+  </nav>
   
-  <h2>Détails de la Candidature</h2>
+  <h1>Détails de la Candidature</h1>
   
-  <div class="application-info">
-    <h3>Informations générales</h3>
-    <p><strong>Identifiant:</strong> <code><%= @application.identifier %></code></p>
-    <p><strong>SIRET:</strong> <%= @application.siret || 'Non renseigné' %></p>
-    <p><strong>Marché:</strong> <a href="/markets/<%= @market.identifier %>"><%= @market.name %></a></p>
-    <p><strong>Statut:</strong> 
-      <span class="status-badge status-<%= @application.status %>">
-        <% if @application.status == 'completed' %>
-          ✅ Terminée
-        <% else %>
-          ⏳ En cours
-        <% end %>
-      </span>
-    </p>
-    <p><strong>Créée le:</strong> <%= @application.created_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
-    <% if @application.completed_at %>
-      <p><strong>Terminée le:</strong> <%= @application.completed_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
-    <% end %>
+  <div class="fr-card fr-mb-4w">
+    <div class="fr-card__body">
+      <div class="fr-card__content">
+        <h2 class="fr-card__title">Informations générales</h2>
+        <div class="fr-grid-row fr-grid-row--gutters">
+          <div class="fr-col-12">
+            <p><strong>Identifiant:</strong> <code><%= @application.identifier %></code></p>
+            <p><strong>SIRET:</strong> <%= @application.siret || 'Non renseigné' %></p>
+            <p><strong>Marché:</strong> <a href="/markets/<%= @market.identifier %>" class="fr-link"><%= @market.name %></a></p>
+            <p><strong>Statut:</strong> 
+              <span class="fr-badge fr-badge--<%= @application.status == 'completed' ? 'success' : 'info' %>">
+                <% if @application.status == 'completed' %>
+                  ✅ Terminée
+                <% else %>
+                  ⏳ En cours
+                <% end %>
+              </span>
+            </p>
+            <p><strong>Créée le:</strong> <%= @application.created_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+            <% if @application.completed_at %>
+              <p><strong>Terminée le:</strong> <%= @application.completed_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   
   <% if @application.has_webhook_data? %>
-    <div class="webhook-section">
-      <h3>🔍 Debug Webhook Data</h3>
-      <div class="webhook-info">
-        <p><strong>Webhook reçu le:</strong> <%= @application.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
-      </div>
-      <div class="webhook-payload">
-        <h4>Contenu complet du webhook:</h4>
-        <pre class="webhook-json"><%= JSON.pretty_generate(@application.webhook_data) %></pre>
+    <div class="fr-card fr-card--grey fr-mb-4w">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h2 class="fr-card__title">🔍 Debug Webhook Data</h2>
+          <p><strong>Webhook reçu le:</strong> <%= @application.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+          <div class="fr-callout">
+            <h3 class="fr-callout__title">Contenu complet du webhook:</h3>
+            <pre class="fr-text--xs"><%= JSON.pretty_generate(@application.webhook_data) %></pre>
+          </div>
+        </div>
       </div>
     </div>
   <% else %>
-    <div class="no-webhook">
-      <h3>Debug Webhook Data</h3>
-      <p>Aucune donnée de webhook disponible pour cette candidature.</p>
-      <% if @application.status != 'completed' %>
-        <p><em>Les données webhook apparaîtront ici une fois la candidature terminée.</em></p>
-      <% end %>
+    <div class="fr-card fr-card--grey fr-mb-4w">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h2 class="fr-card__title">Debug Webhook Data</h2>
+          <p>Aucune donnée de webhook disponible pour cette candidature.</p>
+          <% if @application.status != 'completed' %>
+            <p class="fr-text--muted"><em>Les données webhook apparaîtront ici une fois la candidature terminée.</em></p>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
   
-  <div class="actions-section">
-    <h3>Actions</h3>
-    <% if @application.status != 'completed' %>
-      <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= @application.identifier %>/company_identification" 
-         target="_blank" class="btn btn-primary">
-        🔄 Reprendre la candidature
-      </a>
-    <% else %>
-      <% if @application.attestation_url %>
-        <a href="/applications/<%= @application.identifier %>/download_attestation" 
-           class="btn btn-primary">
-          📄 Télécharger l'attestation
-        </a>
-      <% else %>
-        <span class="btn btn-disabled">
-          📄 Attestation non disponible
-        </span>
-      <% end %>
-      
-      <% if @application.documents_package_url %>
-        <a href="/applications/<%= @application.identifier %>/download_documents_package" 
-           class="btn btn-primary">
-          📦 Télécharger le package de documents
-        </a>
-      <% else %>
-        <span class="btn btn-disabled">
-          📦 Package de documents non disponible
-        </span>
-      <% end %>
-    <% end %>
-    
-    <a href="/markets/<%= @market.identifier %>" class="btn btn-secondary">
-      ← Retour au marché
-    </a>
+  <div class="fr-card fr-mb-4w">
+    <div class="fr-card__body">
+      <div class="fr-card__content">
+        <h2 class="fr-card__title">Actions</h2>
+        <div class="fr-grid-row fr-grid-row--gutters">
+          <div class="fr-col-12">
+            <% if @application.status != 'completed' %>
+              <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= @application.identifier %>/company_identification" 
+                 target="_blank" class="fr-btn fr-btn--primary fr-mb-2w" rel="noopener external">
+                🔄 Reprendre la candidature
+              </a>
+            <% else %>
+              <div class="fr-grid-row fr-grid-row--gutters fr-mb-3w">
+                <div class="fr-col-12 fr-col-md-6">
+                  <% if @application.attestation_url %>
+                    <a href="/applications/<%= @application.identifier %>/download_attestation" 
+                       class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-download-line">
+                      Télécharger l'attestation
+                    </a>
+                  <% else %>
+                    <button class="fr-btn fr-btn--disabled fr-btn--icon-left fr-icon-download-line">
+                      Attestation non disponible
+                    </button>
+                  <% end %>
+                </div>
+                <div class="fr-col-12 fr-col-md-6">
+                  <% if @application.documents_package_url %>
+                    <a href="/applications/<%= @application.identifier %>/download_documents_package" 
+                       class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-download-line">
+                      Télécharger le package
+                    </a>
+                  <% else %>
+                    <button class="fr-btn fr-btn--disabled fr-btn--icon-left fr-icon-download-line">
+                      Package non disponible
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+            
+            <a href="/markets/<%= @market.identifier %>" class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line">
+              Retour au marché
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

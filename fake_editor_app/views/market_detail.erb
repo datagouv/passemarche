@@ -1,94 +1,124 @@
-<div class="market-detail">
-  <div class="breadcrumb">
-    <a href="/">← Retour au dashboard</a>
-  </div>
+<div class="fr-mb-4w">
+  <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d'Ariane</button>
+    <div class="fr-collapse" id="breadcrumb-1">
+      <ol class="fr-breadcrumb__list">
+        <li>
+          <a class="fr-breadcrumb__link" href="/">Dashboard</a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" aria-current="page">Détails du marché</a>
+        </li>
+      </ol>
+    </div>
+  </nav>
   
-  <h2>Détails du Marché</h2>
+  <h1>Détails du Marché</h1>
   
-  <div class="market-info">
-    <h3><%= @market.name %></h3>
-    <p><strong>Identifiant:</strong> <code><%= @market.identifier %></code></p>
-    <p><strong>Lot:</strong> <%= @market.lot_name || 'N/A' %></p>
-    <p><strong>Statut:</strong> 
-      <span class="status-badge status-<%= @market.status %>">
-        <%= @market.status == 'completed' ? '✅ Configuré' : '⏳ En attente' %>
-      </span>
-    </p>
+  <div class="fr-card fr-mb-4w">
+    <div class="fr-card__body">
+      <div class="fr-card__content">
+        <h2 class="fr-card__title"><%= @market.name %></h2>
+        <div class="fr-grid-row fr-grid-row--gutters">
+          <div class="fr-col-12">
+            <p><strong>Identifiant:</strong> <code><%= @market.identifier %></code></p>
+            <p><strong>Lot:</strong> <%= @market.lot_name || 'N/A' %></p>
+            <p><strong>Statut:</strong> 
+              <span class="fr-badge fr-badge--<%= @market.status == 'completed' ? 'success' : 'info' %>">
+                <%= @market.status == 'completed' ? '✅ Configuré' : '⏳ En attente' %>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   
   <% if @market.has_webhook_data? %>
-    <div class="webhook-section" id="webhook">
-      <h3>🔍 Debug Webhook Data</h3>
-      <div class="webhook-info">
-        <p><strong>Reçu le:</strong> <%= @market.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
-      </div>
-      <div class="webhook-payload">
-        <h4>Contenu complet du webhook:</h4>
-        <pre class="webhook-json"><%= JSON.pretty_generate(@market.webhook_data) %></pre>
+    <div class="fr-card fr-card--grey fr-mb-4w" id="webhook">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h2 class="fr-card__title">🔍 Debug Webhook Data</h2>
+          <p><strong>Reçu le:</strong> <%= @market.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+          <div class="fr-callout">
+            <h3 class="fr-callout__title">Contenu complet du webhook:</h3>
+            <pre class="fr-text--xs"><%= JSON.pretty_generate(@market.webhook_data) %></pre>
+          </div>
+        </div>
       </div>
     </div>
   <% end %>
   
-  <div class="applications-section">
-    <h3>Candidatures (<%= @applications.count %>)</h3>
+  <div class="fr-card fr-mb-4w">
+    <div class="fr-card__body">
+      <div class="fr-card__content">
+        <h2 class="fr-card__title">Candidatures (<%= @applications.count %>)</h2>
+        
+        <% if @current_token&.valid? && @market.status == 'completed' %>
+          <div class="fr-callout fr-callout--green-tilleul-verveine fr-mb-3w">
+            <h3 class="fr-callout__title">Créer une candidature test</h3>
+            <form action="/start_application" method="post" class="fr-form">
+              <input type="hidden" name="market_identifier" value="<%= @market.identifier %>">
+              <div class="fr-input-group">
+                <label class="fr-label" for="siret">SIRET (optionnel)</label>
+                <input class="fr-input" type="text" id="siret" name="siret" placeholder="SIRET (optionnel)" maxlength="14">
+              </div>
+              <button type="submit" class="fr-btn fr-btn--primary">
+                Démarrer une candidature test
+              </button>
+            </form>
+          </div>
+        <% end %>
     
-    <% if @current_token&.valid? && @market.status == 'completed' %>
-      <div class="action-bar">
-        <form action="/start_application" method="post" class="inline-form">
-          <input type="hidden" name="market_identifier" value="<%= @market.identifier %>">
-          <input type="text" name="siret" placeholder="SIRET (optionnel)" maxlength="14">
-          <button type="submit" class="btn btn-primary">
-            Démarrer une candidature test
-          </button>
-        </form>
-      </div>
-    <% end %>
-    
-    <% if @applications.any? %>
-      <table class="applications-table">
-        <thead>
-          <tr>
-            <th>Identifiant</th>
-            <th>SIRET</th>
-            <th>Statut</th>
-            <th>Date de création</th>
-            <th>Date de complétion</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @applications.each do |app| %>
-            <tr class="<%= app.status %>">
-              <td><code><%= app.identifier %></code></td>
-              <td><%= app.siret || 'Non renseigné' %></td>
-              <td>
-                <span class="status-badge status-<%= app.status %>">
-                  <% if app.status == 'completed' %>
-                    ✅ Terminée
-                  <% else %>
-                    ⏳ En cours
-                  <% end %>
-                </span>
-              </td>
-              <td><%= app.created_at.strftime('%d/%m/%Y %H:%M') %></td>
-              <td><%= app.completed_at&.strftime('%d/%m/%Y %H:%M') || '-' %></td>
-              <td>
-                <a href="/applications/<%= app.identifier %>" class="btn btn-small">
-                  Détails
-                </a>
-                <% if app.status != 'completed' %>
-                  <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= app.identifier %>/company_identification" 
-                     target="_blank" class="btn btn-small">
-                    Reprendre
-                  </a>
+        <% if @applications.any? %>
+          <div class="fr-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Identifiant</th>
+                  <th>SIRET</th>
+                  <th>Statut</th>
+                  <th>Date de création</th>
+                  <th>Date de complétion</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @applications.each do |app| %>
+                  <tr class="<%= app.status %>">
+                    <td><code><%= app.identifier %></code></td>
+                    <td><%= app.siret || 'Non renseigné' %></td>
+                    <td>
+                      <span class="fr-badge fr-badge--<%= app.status == 'completed' ? 'success' : 'info' %>">
+                        <% if app.status == 'completed' %>
+                          ✅ Terminée
+                        <% else %>
+                          ⏳ En cours
+                        <% end %>
+                      </span>
+                    </td>
+                    <td><%= app.created_at.strftime('%d/%m/%Y %H:%M') %></td>
+                    <td><%= app.completed_at&.strftime('%d/%m/%Y %H:%M') || '-' %></td>
+                    <td>
+                      <a href="/applications/<%= app.identifier %>" class="fr-btn fr-btn--sm">
+                        Détails
+                      </a>
+                      <% if app.status != 'completed' %>
+                        <a href="<%= ENV['FAST_TRACK_URL'] %>/candidate/market_applications/<%= app.identifier %>/company_identification" 
+                           target="_blank" class="fr-btn fr-btn--sm fr-btn--secondary" rel="noopener external">
+                          Reprendre
+                        </a>
+                      <% end %>
+                    </td>
+                  </tr>
                 <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <p class="empty-state">Aucune candidature pour ce marché.</p>
-    <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="fr-text--center fr-text--muted fr-p-4w">Aucune candidature pour ce marché.</p>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
