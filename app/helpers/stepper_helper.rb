@@ -1,5 +1,5 @@
 module StepperHelper
-  def stepper(current_step:, steps:, i18n_scope:)
+  def stepper(current_step:, steps:, i18n_scope:, show_separator: false)
     current_step = current_step.to_sym
     return unless steps.include?(current_step)
 
@@ -14,7 +14,7 @@ module StepperHelper
         stepper_details(current_step, steps, i18n_scope),
         content_tag(:div, nil, class: 'fr-mb-5w'),
         stepper_subtitle(step, i18n_scope),
-        content_tag(:hr, nil, class: 'stepper__separator')
+        (content_tag(:hr, nil, class: 'stepper__separator') if show_separator)
       ])
     end
   end
