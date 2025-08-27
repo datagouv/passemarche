@@ -24,6 +24,8 @@ module Candidate
     def update
       if step == :summary
         handle_summary_completion
+      elsif step == :company_identification
+        handle_company_identification
       elsif @market_application.update(market_application_params)
         render_wizard(@market_application)
       else
@@ -49,6 +51,20 @@ module Candidate
     def set_wizard_steps
       # company_identification doesn't count as a step
       @wizard_steps = steps - [:company_identification]
+    end
+
+    def handle_company_identification
+      if @market_application.update(market_application_params) && @market_application.market_attribute_responses.none?
+        @market_application.public_market.market_attributes.find_each do |market_attribute|
+          MarketAttributeResponse.create!(
+            market_application: @market_application,
+            market_attribute:,
+            type: market_attribute.input_type.camelize
+          )
+        end
+      end
+
+      render_wizard(@market_application)
     end
 
     def handle_summary_completion
