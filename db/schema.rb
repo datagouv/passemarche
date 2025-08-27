@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_23_090633) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_27_090812) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -78,6 +78,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_23_090633) do
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"
     t.index ["sync_status"], name: "index_market_applications_on_sync_status"
+  end
+
+  create_table "market_attribute_responses", force: :cascade do |t|
+    t.bigint "market_application_id", null: false
+    t.bigint "market_attribute_id", null: false
+    t.string "type", null: false
+    t.jsonb "value", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["market_application_id", "market_attribute_id"], name: "idx_on_market_application_id_market_attribute_id_5a6e8c85b1", unique: true
+    t.index ["market_application_id"], name: "index_market_attribute_responses_on_market_application_id"
+    t.index ["market_attribute_id"], name: "index_market_attribute_responses_on_market_attribute_id"
   end
 
   create_table "market_attributes", force: :cascade do |t|
@@ -301,6 +313,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_23_090633) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "market_applications", "public_markets"
+  add_foreign_key "market_attribute_responses", "market_applications"
+  add_foreign_key "market_attribute_responses", "market_attributes"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "public_markets", "editors"
