@@ -1,13 +1,26 @@
 <%
   title ||= ""
-  tag ||= :h4
+  tag ||= :div
   background ||= ""
   color ||= ""
-  additional_classes ||= ""
+  additional_classes ||= "fr-text--lg"
 %>
 
 <div class="fr-card__header">
-  <%= content_tag tag, title, class: "fr-card__title fr-#{tag} fr-mb-0 fr-py-2w fr-px-2w #{additional_classes} #{background} #{color}" %>
+  <%= content_tag(
+    tag,
+    title,
+    class: [
+      "fr-card__title",
+      "fr-mb-0",
+      "fr-py-2w",
+      "fr-px-2w",
+      additional_classes,
+      background,
+      color
+    ].join(" ")
+      )
+  %>
 </div>
 
 <% if block_given? %>

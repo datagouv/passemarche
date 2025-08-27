@@ -65,7 +65,7 @@ module StepperHelper
 
     content_tag(:div, class: 'fr-mb-5w') do
       safe_join([
-        content_tag(:h1, subtitle_title, class: 'fr-h1 fr-mb-1w'),
+        content_tag(:h3, subtitle_title, class: 'fr-h3 fr-mb-1w'),
         content_tag(:p, subtitle_text, class: 'fr-text--lg fr-mb-0')
       ])
     end
