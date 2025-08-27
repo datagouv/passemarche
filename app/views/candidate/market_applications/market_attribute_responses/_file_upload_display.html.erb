@@ -1,0 +1,22 @@
+<%
+  file_info = market_attribute_response.value&.dig('file')
+  display_value = file_info&.dig('name') || 'Aucun fichier téléchargé'
+%>
+
+<li class="fr-list__item">
+  <div class="field-layout-container">
+    <div class="field-layout-content">
+      <strong>
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
+              default: market_attribute_response.market_attribute.key.humanize) %>
+      </strong>
+      <br>
+      <span class="fr-text--sm fr-text--mention-grey">
+        <%= display_value %>
+        <% if file_info&.dig('size').present? %>
+          (<%= number_to_human_size(file_info['size']) %>)
+        <% end %>
+      </span>
+    </div>
+  </div>
+</li>

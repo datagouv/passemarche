@@ -6,10 +6,17 @@
   <div class="fr-col-12">
     <% if @presenter %>
       <div class="fr-mb-4w">
-        <% fields_by_category = @presenter.fields_by_category_and_subcategory %>
+        <% category_keys = @market_application.public_market.market_attributes
+             .order(:id)
+             .pluck(:category_key)
+             .compact
+             .uniq %>
 
-        <% if fields_by_category.any? %>
-          <% fields_by_category.each do |category, subcategories| %>
+        <% if category_keys.any? %>
+          <% category_keys.each do |category| %>
+            <% subcategories = @presenter.subcategories_for_category(category) %>
+            <% next if subcategories.empty? %>
+
             <div class="fr-card fr-mb-2w">
               <%= render 'card_header', title: t("form_fields.candidate.categories.#{category}"), background: "fr-background-alt--grey" %>
               <div class="fr-card__body fr-mt-3w fr-mb-3w">
@@ -69,17 +76,17 @@
                   <% end %>
                   </div>
                 <% end %>
-                <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
+                <% subcategories.each do |subcategory| %>
+                  <% market_attributes = @presenter.market_attributes_for_subcategory(category, subcategory) %>
+                  <% next if market_attributes.empty? %>
+                  
                   <div class="fr-card fr-mb-4w fr-card--no-border">
                   <%= render 'card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
                     <ul class="fr-list fr-mb-3w">
-                      <% fields.each do |field_key| %>
-                        <% field = @presenter.field_by_key(field_key) %>
-                        <%= render 'field_display',
-                              field_key: field_key,
-                              field: field,
-                              html_tag: :li,
-                              wrapper_classes: 'fr-list__item' %>
+                      <% market_attributes.each do |attribute| %>
+                        <% response = @presenter.market_attribute_response_for(attribute) %>
+                        <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
+                        <%= render partial_name, market_attribute_response: response %>
                       <% end %>
                     </ul>
                   <% end %>

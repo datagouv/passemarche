@@ -19,14 +19,19 @@ module Candidate
     end
 
     def update
+      @presenter = MarketApplicationPresenter.new(@market_application)
+
       if step == :summary
         handle_summary_completion
       elsif step == :company_identification
         handle_company_identification
       elsif @market_application.update(market_application_params)
+        @market_application.market_attribute_responses.reload
         render_wizard(@market_application)
-      else
+      elsif custom_view_exists?
         render_wizard
+      else
+        render 'generic_step', locals: { step: }
       end
     end
 
@@ -65,14 +70,9 @@ module Candidate
     end
 
     def handle_company_identification
-      if @market_application.update(market_application_params) && @market_application.market_attribute_responses.none?
-        @market_application.public_market.market_attributes.find_each do |market_attribute|
-          MarketAttributeResponse.create!(
-            market_application: @market_application,
-            market_attribute:,
-            type: market_attribute.input_type.camelize
-          )
-        end
+      if @market_application.update(market_application_params)
+        # Ensure all required MarketAttributeResponse records exist
+        ensure_all_market_attribute_responses_exist
       end
 
       render_wizard(@market_application)
@@ -128,8 +128,27 @@ module Candidate
       lookup_context.exists?(step.to_s, 'candidate/market_applications', false)
     end
 
+    def ensure_all_market_attribute_responses_exist
+      @market_application.public_market.market_attributes.find_each do |market_attribute|
+        next if @market_application.market_attribute_responses.exists?(market_attribute:)
+
+        MarketAttributeResponse.create!(
+          market_application: @market_application,
+          market_attribute:,
+          type: market_attribute.input_type.camelize
+        )
+      end
+    end
+
     def market_application_params
-      params.fetch(:market_application, {}).permit(:siret)
+      params.fetch(:market_application, {}).permit(
+        :siret,
+        market_attribute_responses_attributes: [
+          :id, :market_attribute_id, :_destroy,
+          :value_text, :value_checked, :value_file,
+          { value: {} }
+        ]
+      )
     end
 
     def finish_wizard_path

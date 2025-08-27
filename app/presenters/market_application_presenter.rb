@@ -24,6 +24,29 @@ class MarketApplicationPresenter
     MarketAttribute.find_by(key: key.to_s)
   end
 
+  def market_attributes_for_subcategory(category_key, subcategory_key)
+    return [] if category_key.blank? || subcategory_key.blank?
+
+    all_market_attributes
+      .where(category_key:, subcategory_key:)
+      .order(:id)
+  end
+
+  def market_attribute_response_for(market_attribute)
+    @market_application.market_attribute_responses.find_by(market_attribute:) ||
+      @market_application.market_attribute_responses.build(
+        market_attribute:,
+        type: market_attribute.input_type.camelize
+      )
+  end
+
+  def responses_for_subcategory(category_key, subcategory_key)
+    return [] if category_key.blank? || subcategory_key.blank?
+
+    market_attributes = market_attributes_for_subcategory(category_key, subcategory_key)
+    market_attributes.map { |attr| market_attribute_response_for(attr) }
+  end
+
   def should_display_subcategory?(subcategories)
     subcategories.keys.size > 1
   end

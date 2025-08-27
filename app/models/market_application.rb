@@ -11,6 +11,8 @@ class MarketApplication < ApplicationRecord
   has_one_attached :documents_package
   has_many :market_attribute_responses, dependent: :destroy
 
+  accepts_nested_attributes_for :market_attribute_responses, allow_destroy: true
+
   validates :identifier, presence: true, uniqueness: true
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
   validate :market_must_be_completed
