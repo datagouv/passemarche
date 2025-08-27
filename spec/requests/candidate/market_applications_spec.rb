@@ -8,6 +8,14 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
+  # Create market attributes to match the expected wizard steps
+  before do
+    create(:market_attribute, key: 'company_name', category_key: 'market_and_company_information', public_markets: [public_market])
+    create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', public_markets: [public_market])
+    create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', public_markets: [public_market])
+    create(:market_attribute, key: 'certificates', category_key: 'technical_capacities', public_markets: [public_market])
+  end
+
   STEPS = %i[
     company_identification
     market_and_company_information
@@ -111,7 +119,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: invalid_siret } }
 
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include('Le numéro de SIRET saisi est invalide')
 
         market_application.reload
@@ -125,7 +133,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: wrong_format_siret } }
 
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:unprocessable_content)
         # The actual error shows as translated message in the HTML
         expect(response.body).to include('doit être un numéro SIRET valide de 14 chiffres')
 
@@ -139,7 +147,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
           params: { market_application: { siret: wrong_length_siret } }
 
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include('doit être un numéro SIRET valide de 14 chiffres')
 
         market_application.reload

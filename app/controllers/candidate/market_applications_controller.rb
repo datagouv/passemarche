@@ -4,19 +4,12 @@ module Candidate
   class MarketApplicationsController < ApplicationController
     include Wicked::Wizard
 
-    steps :company_identification,
-      :market_and_company_information,
-      :exclusion_criteria,
-      :economic_capacities,
-      :technical_capacities,
-      :summary
-
-    before_action :find_market_application
+    prepend_before_action :set_steps
     before_action :check_application_not_completed, except: [:retry_sync]
     before_action :set_wizard_steps
 
     def show
-      @presenter = MarketApplicationPresenter.new(@market_application) if step == :summary
+      @presenter = MarketApplicationPresenter.new(@market_application)
 
       render_wizard
     end
@@ -51,6 +44,12 @@ module Candidate
     def set_wizard_steps
       # company_identification doesn't count as a step
       @wizard_steps = steps - [:company_identification]
+    end
+
+    def set_steps
+      find_market_application
+
+      self.steps = [:company_identification] + @market_application.public_market.market_attributes.distinct.pluck(:category_key).compact.map(&:to_sym) + [:summary]
     end
 
     def handle_company_identification

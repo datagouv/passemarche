@@ -1,0 +1,14 @@
+<% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.steps.market_and_company_information')}" %>
+
+<%= stepper(
+  current_step: step,
+  steps: @wizard_steps,
+  i18n_scope: 'candidate',
+  show_separator: true
+) %>
+
+<% subcategories = ['market_information'] + @presenter.subcategories_for_category(step.to_s) %>
+
+<%= render "sidemenu_subcategories", subcategories: %>
+
+<%= render "wizard_nav" %>

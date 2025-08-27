@@ -9,6 +9,17 @@ class MarketApplicationPresenter
     organize_fields_by_category_and_subcategory(all_market_attributes)
   end
 
+  def subcategories_for_category(category_key)
+    return [] if category_key.blank?
+
+    all_market_attributes
+      .where(category_key:)
+      .reorder(:subcategory_key)
+      .distinct
+      .pluck(:subcategory_key)
+      .compact
+  end
+
   def field_by_key(key)
     MarketAttribute.find_by(key: key.to_s)
   end
