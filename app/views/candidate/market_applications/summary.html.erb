@@ -7,7 +7,7 @@
     <% if @presenter %>
       <div class="fr-mb-4w">
         <% fields_by_category = @presenter.fields_by_category_and_subcategory %>
-        
+
         <% if fields_by_category.any? %>
           <% fields_by_category.each do |category, subcategories| %>
             <div class="fr-card fr-mb-2w">
@@ -15,7 +15,7 @@
               <div class="fr-card__body fr-mt-3w fr-mb-3w">
                 <% if category == 'identite_entreprise' %>
                   <div class="fr-card fr-mb-4w fr-card--no-border">
-                  <%= render 'card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", tag: :h6 do %>
+                  <%= render 'card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", tag: :h4 do %>
                     <ul class="fr-list fr-mb-3w">
                       <li class="fr-list__item fr-pt-4v fr-pb-4v">
                         <div class="field-layout-container">
