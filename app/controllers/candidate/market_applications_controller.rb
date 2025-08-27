@@ -11,7 +11,11 @@ module Candidate
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
 
-      render_wizard
+      if custom_view_exists?
+        render_wizard
+      else
+        render 'generic_step', locals: { step: }
+      end
     end
 
     def update
@@ -48,8 +52,16 @@ module Candidate
 
     def set_steps
       find_market_application
+      return unless @market_application
 
-      self.steps = [:company_identification] + @market_application.public_market.market_attributes.distinct.pluck(:category_key).compact.map(&:to_sym) + [:summary]
+      # Order by id for consistent, predictable ordering (proper ordering logic will come later)
+      category_keys = @market_application.public_market.market_attributes
+        .order(:id)
+        .pluck(:category_key)
+        .compact
+        .uniq
+
+      self.steps = [:company_identification] + category_keys.map(&:to_sym) + [:summary]
     end
 
     def handle_company_identification
@@ -101,6 +113,7 @@ module Candidate
     def find_market_application
       @market_application = MarketApplication.find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
+      @market_application = nil
       render plain: 'La candidature recherchée n\'a pas été trouvée', status: :not_found
     end
 
@@ -109,6 +122,10 @@ module Candidate
 
       redirect_to candidate_sync_status_path(@market_application.identifier),
         alert: t('candidate.market_applications.market_application_completed_cannot_edit')
+    end
+
+    def custom_view_exists?
+      lookup_context.exists?(step.to_s, 'candidate/market_applications', false)
     end
 
     def market_application_params

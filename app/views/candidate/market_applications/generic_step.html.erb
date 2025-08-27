@@ -1,0 +1,15 @@
+<% content_for :title, "#{@market_application.siret} - #{t("form_fields.candidate.categories.#{step}", default: step.to_s.humanize)}" %>
+
+<%= stepper(
+  current_step: step,
+  steps: @wizard_steps,
+  i18n_scope: 'candidate',
+  show_separator: true
+) %>
+
+<% subcategories = @presenter.subcategories_for_category(step.to_s) %>
+<% if subcategories.any? %>
+  <%= render "sidemenu_subcategories", subcategories: %>
+<% end %>
+
+<%= render "wizard_nav" %>
