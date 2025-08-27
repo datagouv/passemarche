@@ -9,6 +9,7 @@ class MarketApplication < ApplicationRecord
 
   has_one_attached :attestation
   has_one_attached :documents_package
+  has_many :market_attribute_responses, dependent: :destroy
 
   validates :identifier, presence: true, uniqueness: true
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
