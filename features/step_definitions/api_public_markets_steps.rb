@@ -66,7 +66,7 @@ Then('the public market should be saved in the database') do
   expect(public_market).to be_present
   expect(public_market.name).to eq(@public_market_params['name'])
   expect(public_market.lot_name).to eq(@public_market_params['lot_name'])
-  expect(public_market.deadline.iso8601).to eq(@public_market_params['deadline'])
+  expect(public_market.deadline.utc.iso8601).to eq(@public_market_params['deadline'])
 
   # Check market types
   if @public_market_params['market_type_codes']
