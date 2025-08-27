@@ -15,7 +15,7 @@
               <div class="fr-card__body fr-mt-3w fr-mb-3w">
                 <% if category == 'identite_entreprise' %>
                   <div class="fr-card fr-mb-4w fr-card--no-border">
-                  <%= render 'card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", tag: :h4 do %>
+                  <%= render 'card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
                     <ul class="fr-list fr-mb-3w">
                       <li class="fr-list__item fr-pt-4v fr-pb-4v">
                         <div class="field-layout-container">
@@ -71,7 +71,7 @@
                 <% end %>
                 <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
                   <div class="fr-card fr-mb-4w fr-card--no-border">
-                  <%= render 'card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", tag: :h6 do %>
+                  <%= render 'card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
                     <ul class="fr-list fr-mb-3w">
                       <% fields.each do |field_key| %>
                         <% field = @presenter.field_by_key(field_key) %>
