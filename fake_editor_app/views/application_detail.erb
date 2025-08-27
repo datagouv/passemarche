@@ -36,9 +36,9 @@
                 <% end %>
               </span>
             </p>
-            <p><strong>Créée le:</strong> <%= @application.created_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+            <p><strong>Créée le:</strong> <%= format_paris_time(@application.created_at) %></p>
             <% if @application.completed_at %>
-              <p><strong>Terminée le:</strong> <%= @application.completed_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+              <p><strong>Terminée le:</strong> <%= format_paris_time(@application.completed_at) %></p>
             <% end %>
           </div>
         </div>
@@ -51,7 +51,7 @@
       <div class="fr-card__body">
         <div class="fr-card__content">
           <h2 class="fr-card__title">🔍 Debug Webhook Data</h2>
-          <p><strong>Webhook reçu le:</strong> <%= @application.webhook_received_at.strftime('%d/%m/%Y à %H:%M:%S') %></p>
+          <p><strong>Webhook reçu le:</strong> <%= format_paris_time(@application.webhook_received_at) %></p>
           <div class="fr-callout">
             <h3 class="fr-callout__title">Contenu complet du webhook:</h3>
             <pre class="fr-text--xs"><%= JSON.pretty_generate(@application.webhook_data) %></pre>

@@ -4,6 +4,7 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'dotenv/load'
 require 'sqlite3'
+require 'tzinfo'
 require_relative 'lib/database'
 require_relative 'lib/fast_track_client'
 
@@ -12,6 +13,18 @@ class FakeEditorApp < Sinatra::Base
     set :views, File.join(File.dirname(__FILE__), 'views')
     set :public_folder, File.join(File.dirname(__FILE__), 'public')
     set :show_exceptions, development?
+  end
+
+  helpers do
+    def format_paris_time(datetime, format = '%d/%m/%Y à %H:%M:%S')
+      return '-' if datetime.nil?
+      
+      # Convert UTC datetime to Europe/Paris timezone
+      paris_tz = TZInfo::Timezone.get('Europe/Paris')
+      paris_time = paris_tz.utc_to_local(datetime.to_time.utc)
+      
+      paris_time.strftime(format)
+    end
   end
 
   before do

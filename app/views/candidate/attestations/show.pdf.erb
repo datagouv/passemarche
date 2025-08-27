@@ -39,7 +39,7 @@
     <div class="field">
       <div class="field-label">Date de candidature</div>
       <div class="field-value">
-        <%= market_application.completed_at&.strftime('%d/%m/%Y à %H:%M') %>
+        <%= format_paris_time(market_application.completed_at) %>
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@
 
   <div class="footer">
     <p>
-      Document généré automatiquement le <%= Time.current.strftime('%d/%m/%Y à %H:%M') %><br>
+      Document généré automatiquement le <%= Time.zone.now.strftime('%d/%m/%Y à %H:%M') %><br>
       Système Voie Rapide - République Française
     </p>
   </div>
