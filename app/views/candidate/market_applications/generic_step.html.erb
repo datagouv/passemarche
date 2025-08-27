@@ -8,8 +8,28 @@
 ) %>
 
 <% subcategories = @presenter.subcategories_for_category(step.to_s) %>
-<% if subcategories.any? %>
-  <%= render "sidemenu_subcategories", subcategories: %>
-<% end %>
+<div class="fr-grid-row">
+  <% if subcategories.any? %>
+    <%= render "sidemenu_subcategories", subcategories: %>
+  <% end %>
+  
+  <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
+    <% if subcategories.any? %>
+      <% subcategories.each do |subcategory| %>
+        <div class="fr-mb-4w">
+          <h6 id="<%= subcategory %>" class="fr-text-title--blue-france fr-mb-2w">
+            <%= t("form_fields.candidate.subcategories.#{subcategory}", 
+                  default: t("candidate.market_applications.manual_subcategories.#{subcategory}", 
+                            default: subcategory.humanize)) %>
+          </h6>
+          <!-- Content for each subcategory will be added here -->
+          <p class="fr-text--sm fr-text--mention-grey">Contenu pour <%= subcategory.humanize %></p>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="fr-text--sm fr-text--mention-grey">Aucun contenu disponible pour cette étape.</p>
+    <% end %>
+  </div>
+</div>
 
 <%= render "wizard_nav" %>
