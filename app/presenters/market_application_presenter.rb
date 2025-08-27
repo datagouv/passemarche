@@ -35,9 +35,16 @@ class MarketApplicationPresenter
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)
-    market_attributes
-      .group_by(&:category_key)
-      .transform_values { |category_attrs| group_by_subcategory(category_attrs) }
+    category_keys = @market_application.public_market.market_attributes
+      .order(:id)
+      .pluck(:category_key)
+      .compact
+      .uniq
+
+    category_keys.each_with_object({}) do |category_key, result|
+      category_attrs = market_attributes.select { |attr| attr.category_key == category_key }
+      result[category_key] = group_by_subcategory(category_attrs) if category_attrs.any?
+    end
   end
 
   def group_by_subcategory(market_attributes)
