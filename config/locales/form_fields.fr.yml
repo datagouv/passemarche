@@ -11,109 +11,11 @@ fr:
       honor_declaration:
         label: Déclaration sur l'honneur
         badge_class: fr-badge--info
-    categories:
-      identite_entreprise: Identité de l'entreprise
-      motifs_exclusion_sociaux: Obligations fiscales et sociales, redressement/liquidation
-      motifs_exclusion_appreciation_acheteur: Motifs d’exclusion à l’appréciation
-        de l’acheteur et prévus dans les documents de la consultation
-      capacite_economique_financiere: Capacité économique et financière des candidats
-      capacites_techniques_professionnelles: Capacités techniques et professionnelles
-        des candidats
-    subcategories:
-      identite_entreprise_identification: Identification de l'entreprise
-      identite_entreprise_contact: Informations de contact
-      capacites_techniques_professionnelles_certificats: Les certificats de qualification
-        professionnelle ou équivalents
-      capacites_techniques_professionnelles_realisations: Les réalisations
-      capacites_techniques_professionnelles_outillage: Outillage, matériel et équipements
-        techniques
-      capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
-        de la qualité, sécurité et normes de gestion environnementale
-    fields:
-      identite_entreprise_identification_siret:
-        name: SIRET
-      identite_entreprise_identification_activite_principale:
-        name: Activité principale
-      identite_entreprise_identification_raison_sociale:
-        name: Raison sociale
-      identite_entreprise_identification_nom_prenom:
-        name: Nom et prénom du dirigeant
-      identite_entreprise_identification_categorie:
-        name: Catégorie de l'entreprise
-      identite_entreprise_identification_code_postal:
-        name: Adresse postale
-      identite_entreprise_identification_adresse:
-        name: Adresse du siège sociale
-      identite_entreprise_contact_email:
-        name: Email
-      identite_entreprise_contact_telephone:
-        name: Numéro de téléphone
-      motifs_exclusion_sociaux_declarations_cibtp_cnetp:
-        name: attestation de régularité sociale dans le secteur des travaux publics
-          (CIBTP - CNETP)
-        description: Lorem ipsum
-      motifs_exclusion_sociaux_declarations_pro_btp:
-        name: Attestation de régularité des cotisations retraite Pro BTP
-        description: Lorem ipsum
-      motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-        name: Bilan de gaz à effet de serre
-      motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
-        name: Plan de vigilance
-      capacite_economique_financiere_bilans_trois_exercices:
-        name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
-        description: Bilans ou extraits de bilan, concernant les trois dernières années,
-          des opérateurs économiques pour lesquels l'établissement des bilans est
-          obligatoire en vertu de la loi.
-      capacites_techniques_professionnelles_certificats_qualibat:
-        name: Certificat Qualibat
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_qualifelec:
-        name: Certificat Qualifelec
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_rge:
-        name: Certificats RGE
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_bio:
-        name: Certification bio
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_ess:
-        name: Certification entreprises ESS
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_qualiopi_france:
-        name: Certificats Qualiopi et France Compétences
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_cqp_tp:
-        name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_certificats_opqibi:
-        name: Certification OPQIBI
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_realisations_attestations_trois_ans:
-        name: Attestations ou preuves de livraisons sur les trois dernières années
-        description: Documents pouvant attester de la bonne réalisation des prestations
-      capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
-        name: Attestations ou preuves de livraisons sur les cinq dernières années
-        description: Documents pouvant attester de la bonne réalisation des prestations
-      capacites_techniques_professionnelles_outillage_materiel_equipements:
-        name: Une description de l'outillage, du matériel et de l'équipement technique
-        description: Une description de l'outillage, du matériel et de l'équipement
-          technique dont le candidat disposera pour la réalisation du marché public
-      capacites_techniques_professionnelles_outillage_mesures_qualite:
-        name: Equipements techniques et mesures de qualité employés
-        description: La description de l'équipement technique ainsi que des mesures
-          employées par le candidat pour s'assurer de la qualité et des moyens d'étude
-          et de recherche de son entreprise
-      capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
-        name: Systèmes de gestion et de suivi de la chaîne d'approvisionnement 
-      capacites_techniques_professionnelles_assurance_qualite_gestion_environnementale:
-        name: Mesures de gestion environnementale
-        description: Lorem ipsum
-      capacites_techniques_professionnelles_assurance_qualite_controle_organisme_officiel:
-        name: Contrôle des produits ou services complexes, par un organisme officiel
-        description: Lorem ipsum
     buyer:
       categories:
         identite_entreprise: Identité de l'entreprise
+        motifs_exclusion_sociaux: Motifs d' exclusion liés aux obligations fiscales
+          et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur: Motifs d’exclusion à l’appréciation
           de l’acheteur et prévus dans les documents de la consultation
         capacite_economique_financiere: Capacité économique et financière des candidats
@@ -148,6 +50,22 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
+        motifs_exclusion_sociaux_declarations_cotisations_sociales:
+          name: Déclaration de l'opérateur économique qu'il est acquitté des cotisations
+            sociales exigibles
+          description: Le candidat doit attester qu'il a bien déclaré et payé toutes
+            les cotisations et contributions sociales qui lui incombent, conformément
+            à la réglementation en vigueur.
+        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
+          name: Attestation de régularité sociale dans le secteur des travaux publics
+            (CIBTP - CNETP)
+          description: Le candidat devra fournir une attestation délivrée par un organisme
+            en charge de la gestion des congés payés et du chômage intempéries dans
+            le secteur du BTP
+        motifs_exclusion_sociaux_declarations_pro_btp:
+          name: Attestation de régularité des cotisations retraite Pro BTP
+          description: Le candidat devra fournir une attestation délivrée par un organisme
+            proposant des services de protection sociale dans le secteur du BTP
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
           name: Bilan des émissions de gaz à effet de serre
           description: Le candidat devra attester qu'il a bien réalisé son bilan des
@@ -164,11 +82,48 @@ fr:
             concernant les trois dernières années comptables clôturées (uniquement
             pour les opérateurs économiques pour lesquels l’établissement des bilans
             est obligatoire).
+        capacites_techniques_professionnelles_certificats_qualibat:
+          name: Certificat Qualibat
+          description: La certification QUALIBAT représente un label de qualification
+            et de certifications qui permet aux entreprises exerçant dans le domaine
+            de construction de  valoriser leurs compétences techniques et professionnelles.
+        capacites_techniques_professionnelles_certificats_qualifelec:
+          name: Certificat Qualifelec
+          description: La certification Qualifelec est une qualification professionnelle
+            pour les professionnels exerçant dans le domaine de l’électricité (rénovation
+            électrique) et dans le domaine de la rénovation énergétique.
+        capacites_techniques_professionnelles_certificats_rge:
+          name: Certificats RGE
+          description: La certification RGE (Reconnu Garant de l'Environnement) est
+            une qualification française qui certifie les entreprises du bâtiment spécialisées
+            dans les travaux de rénovation énergétique et d'installation d'énergies
+            renouvelables.
+        capacites_techniques_professionnelles_certificats_bio:
+          name: Certification bio
+          description: La certification bio est un label officiel qui garantit qu'un
+            produit a été produit selon les règles de l'agriculture biologique, sans
+            pesticides de synthèse, engrais chimiques, OGM, ni additifs artificiels
+            dans la plupart des cas.
         capacites_techniques_professionnelles_certificats_ess:
           name: Certification entreprises ESS
           description: La Certification des Entreprises de l'Économie Sociale et Solidaire
             (ESS) est une reconnaissance officielle accordée aux entreprises qui respectent
             les principes et valeurs de l'économie sociale et solidaire en France.
+        capacites_techniques_professionnelles_certificats_qualiopi_france:
+          name: Certificats Qualiopi et France Compétences
+          description: La certification Qualiopi est la certification qualité obligatoire
+            pour tous les organismes de formation professionnelle en France.
+        capacites_techniques_professionnelles_certificats_cqp_tp:
+          name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
+          description: Le Certificat de Qualification Professionnelle Travaux Publics
+            (CQP TP) vise à certifier les compétences professionnelles des salariés
+            dans des métiers spécifiques aux travaux publics.
+        capacites_techniques_professionnelles_certificats_opqibi:
+          name: Certification OPQIBI
+          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
+            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
+            leurs références et leurs moyens, pour garantir leur capacité à réaliser
+            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Les attestations ou preuves de livraisons au cours des trois dernières
             années
@@ -210,6 +165,7 @@ fr:
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
+        motifs_exclusion_sociaux: Les motifs d’exclusion
         motifs_exclusion_appreciation_acheteur: Les motifs d’exclusion
         capacite_economique_financiere: Les capacités économiques et financières de
           votre entreprise
@@ -218,6 +174,8 @@ fr:
       subcategories:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
+        motifs_exclusion_sociaux_declarations: Motifs d'exclusion liés aux obligations
+          fiscales et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs d’exclusion
         capacite_economique_financiere_bilans: Bilans
         capacites_techniques_professionnelles_certificats: Les certificats
@@ -244,6 +202,25 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
+        motifs_exclusion_sociaux_declarations_cotisations_sociales:
+          name: Mon entreprise n'est pas à jour de ses cotisations sociales
+          description: Mon entreprise n'a pas déclaré et payé toutes les cotisations
+            et contributions sociales qui lui incombent, en fonction de sa taille,
+            de son chiffre d'affaires ou de ses effectifs, comme l'exige le Code de
+            la commande publique.
+        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
+          name: Mon entreprise n'est pas à jour du paiement de ses cotisations CIBTP
+            - CNETP
+          description: Mon entreprise exercant dans le secteur du BTP, ne peut pas
+            fournir une attestation de la caisse CIBTP confirmant qu’elle est à jour
+            de ses déclarations et cotisations (congés payés et chômage-intempéries),
+            conformément au Code du travail.
+        motifs_exclusion_sociaux_declarations_pro_btp:
+          name: Mon entreprise n'est pas à jour du paiement de ses cotisations retraite
+            Pro BTP
+          description: Mon entreprise exercant dans le secteur du BTP, ne s'est pas
+            acquittée de ses obligations de retraites complémentaires. Mon entreprise
+            ne peut donc pas fournir d'attestation PRO BTP.
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
           name: Mon entreprise n'a pas satisfait à l'obligation d'établir un Bilan
             de gaz à effet de serre (BEGES), alors qu'elle est concernée
@@ -261,11 +238,48 @@ fr:
             trois derniers exercices comptables clôturées
           description: Vous devez fournir les bilans ou extraits de bilans de votre
             entreprise qui concernent les trois derniers exercices comptables clôturés.
+        capacites_techniques_professionnelles_certificats_qualibat:
+          name: Certificat Qualibat
+          description: La certification QUALIBAT représente un label de qualification
+            et de certifications qui permet aux entreprises exerçant dans le domaine
+            de construction de  valoriser leurs compétences techniques et professionnelles.
+        capacites_techniques_professionnelles_certificats_qualifelec:
+          name: Certificat Qualifelec
+          description: La certification Qualifelec est une qualification professionnelle
+            pour les professionnels exerçant dans le domaine de l’électricité (rénovation
+            électrique) et dans le domaine de la rénovation énergétique.
+        capacites_techniques_professionnelles_certificats_rge:
+          name: Certificats RGE
+          description: La certification RGE (Reconnu Garant de l'Environnement) est
+            une qualification française qui certifie les entreprises du bâtiment spécialisées
+            dans les travaux de rénovation énergétique et d'installation d'énergies
+            renouvelables.
+        capacites_techniques_professionnelles_certificats_bio:
+          name: Certification bio
+          description: La certification bio est un label officiel qui garantit qu'un
+            produit a été produit selon les règles de l'agriculture biologique, sans
+            pesticides de synthèse, engrais chimiques, OGM, ni additifs artificiels
+            dans la plupart des cas.
         capacites_techniques_professionnelles_certificats_ess:
           name: Certification entreprises ESS
           description: La Certification des Entreprises de l'Économie Sociale et Solidaire
             (ESS) est une reconnaissance officielle accordée aux entreprises qui respectent
             les principes et valeurs de l'économie sociale et solidaire en France.
+        capacites_techniques_professionnelles_certificats_qualiopi_france:
+          name: Certificats Qualiopi et France Compétences
+          description: La certification Qualiopi est la certification qualité obligatoire
+            pour tous les organismes de formation professionnelle en France.
+        capacites_techniques_professionnelles_certificats_cqp_tp:
+          name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
+          description: Le Certificat de Qualification Professionnelle Travaux Publics
+            (CQP TP) vise à certifier les compétences professionnelles des salariés
+            dans des métiers spécifiques aux travaux publics.
+        capacites_techniques_professionnelles_certificats_opqibi:
+          name: Certification OPQIBI
+          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
+            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
+            leurs références et leurs moyens, pour garantir leur capacité à réaliser
+            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà

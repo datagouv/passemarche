@@ -2,6 +2,7 @@
 
 class FieldTranslationImport < ApplicationOrganizer
   organize FieldConfigurationImport::ValidateCsvFile,
+    FieldTranslationImport::CleanCsvFile,
     FieldConfigurationImport::ParseCsvFile,
     FieldTranslationImport::ExtractTranslations,
     FieldTranslationImport::UpdateTranslationFile,
