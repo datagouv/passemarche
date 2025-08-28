@@ -114,7 +114,6 @@ fr:
     buyer:
       categories:
         identite_entreprise: Identité de l'entreprise
-        motifs_exclusion_sociaux: Obligations fiscales et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur: Motifs d’exclusion à l’appréciation
           de l’acheteur et prévus dans les documents de la consultation
         capacite_economique_financiere: Capacité économique et financière des candidats
@@ -149,89 +148,82 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
-          name: attestation de régularité sociale dans le secteur des travaux publics
-            (CIBTP - CNETP)
-          description: Lorem ipsum
-        motifs_exclusion_sociaux_declarations_pro_btp:
-          name: Attestation de régularité des cotisations retraite Pro BTP
-          description: Lorem ipsum
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-          name: Bilan de gaz à effet de serre
+          name: Bilan des émissions de gaz à effet de serre
+          description: Le candidat devra attester qu'il a bien réalisé son bilan des
+            émissions de gaz à effet de serre pour l’année précédant l’appel à concurrence
+            (uniquement s’il est soumis à l’article L.229-25 du Code de l’environnement)
         motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
           name: Plan de vigilance
+          description: Le candidat devra attester qu'il a réalisé un plan de vigilance
+            l’année précédant l’appel à concurrence (uniquement pour les entreprises
+            soumise à l’article L.225-102-1 du Code de commerce).
         capacite_economique_financiere_bilans_trois_exercices:
           name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
-          description: Bilans ou extraits de bilan, concernant les trois dernières
-            années, des opérateurs économiques pour lesquels l'établissement des bilans
-            est obligatoire en vertu de la loi.
-        capacites_techniques_professionnelles_certificats_qualibat:
-          name: Certificat Qualibat
-          description: Lorem ipsum
-        capacites_techniques_professionnelles_certificats_qualifelec:
-          name: Certificat Qualifelec
-          description: Lorem ipsum
-        capacites_techniques_professionnelles_certificats_rge:
-          name: Certificats RGE
-          description: Lorem ipsum
-        capacites_techniques_professionnelles_certificats_bio:
-          name: Certification bio
-          description: Lorem ipsum
+          description: Le candidat devra fournir les bilans ou extraits de bilan,
+            concernant les trois dernières années comptables clôturées (uniquement
+            pour les opérateurs économiques pour lesquels l’établissement des bilans
+            est obligatoire).
         capacites_techniques_professionnelles_certificats_ess:
           name: Certification entreprises ESS
-          description: Lorem ipsum
-        capacites_techniques_professionnelles_certificats_qualiopi_france:
-          name: Certificats Qualiopi et France Compétences
-          description: Lorem ipsum
-        capacites_techniques_professionnelles_certificats_cqp_tp:
-          name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
-          description: Lorem ipsum
-        capacites_techniques_professionnelles_certificats_opqibi:
-          name: Certification OPQIBI
-          description: Lorem ipsum
+          description: La Certification des Entreprises de l'Économie Sociale et Solidaire
+            (ESS) est une reconnaissance officielle accordée aux entreprises qui respectent
+            les principes et valeurs de l'économie sociale et solidaire en France.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
-          name: Attestations ou preuves de livraisons sur les trois dernières années
-          description: Documents pouvant attester de la bonne réalisation des prestations
+          name: Les attestations ou preuves de livraisons au cours des trois dernières
+            années
+          description: Le candidat devra fournir les documents pouvant attester de
+            la bonne réalisation des prestations
         capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
-          name: Attestations ou preuves de livraisons sur les cinq dernières années
-          description: Documents pouvant attester de la bonne réalisation des prestations
+          name: Les attestations ou preuves de livraisons au cours des cinq dernières
+            années
+          description: Le candidat devra fournir les documents pouvant attester de
+            la bonne réalisation des prestations
         capacites_techniques_professionnelles_outillage_materiel_equipements:
-          name: Une description de l'outillage, du matériel et de l'équipement technique
-          description: Une description de l'outillage, du matériel et de l'équipement
-            technique dont le candidat disposera pour la réalisation du marché public
+          name: Description de l'outillage, du matériel et de l'équipement technique
+          description: Le candidat devra décrire l’outillage, le matériel et les équipements
+            techniques dont il dispose ou qu’il mobilisera pour exécuter correctement
+            le marché
         capacites_techniques_professionnelles_outillage_mesures_qualite:
           name: Equipements techniques et mesures de qualité employés
-          description: La description de l'équipement technique ainsi que des mesures
-            employées par le candidat pour s'assurer de la qualité et des moyens d'étude
-            et de recherche de son entreprise
+          description: Le candidat devra décrire son équipement technique, les mesures
+            mises en place pour assurer la qualité ainsi que les moyens d’étude et
+            de recherche employés.
         capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
           name: Systèmes de gestion et de suivi de la chaîne d'approvisionnement 
+          description: Le candidat devra décrire l’organisation, le contrôle et le
+            suivi de sa chaîne d’approvisionnement, notamment la sélection des fournisseurs,
+            la traçabilité, la gestion des stocks et le respect des délais.
         capacites_techniques_professionnelles_assurance_qualite_gestion_environnementale:
           name: Mesures de gestion environnementale
-          description: Lorem ipsum
+          description: Le candidat devra préciser les actions mises en place pour
+            réduire l’impact environnemental, telles que la gestion des déchets, les
+            économies d’énergie, l’utilisation de matériaux durables ou d’autres pratiques
+            écoresponsables.
         capacites_techniques_professionnelles_assurance_qualite_controle_organisme_officiel:
-          name: Contrôle des produits ou services complexes, par un organisme officiel
-          description: Lorem ipsum
+          name: Contrôle des produits ou services complexes ou répondant à un besoin
+            particulier
+          description: Le candidat devra accepter que, pour des produits ou services
+            complexes ou spécifiques, ses capacités de production, ses moyens techniques,
+            d’étude et de recherche ainsi que ses mesures de contrôle qualité puissent
+            être vérifiés par l’acheteur ou un organisme compétent.
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
-        motifs_exclusion_sociaux: Les motifs d’exclusion
         motifs_exclusion_appreciation_acheteur: Les motifs d’exclusion
         capacite_economique_financiere: Les capacités économiques et financières de
           votre entreprise
         capacites_techniques_professionnelles: Capacités techniques et professionnelles
           des candidats
       subcategories:
-        identite_entreprise_identification: 2. Informations de votre entreprise
-        identite_entreprise_contact: 3. Informations de contact
-        motifs_exclusion_sociaux_declarations: Motifs d’exclusion liés à un défaut
-          de déclaration en matière sociale
+        identite_entreprise_identification: Informations de votre entreprise
+        identite_entreprise_contact: Informations de contact
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs d’exclusion
-        capacite_economique_financiere_bilans: 2. Bilans
-        capacites_techniques_professionnelles_certificats: 2. Les certificats
-        capacites_techniques_professionnelles_realisations: 3. Les réalisations
-        capacites_techniques_professionnelles_outillage: 4. Outillage, matériel
-        capacites_techniques_professionnelles_assurance_qualite: 5. Dispositif d’assurance
+        capacite_economique_financiere_bilans: Bilans
+        capacites_techniques_professionnelles_certificats: Les certificats
+        capacites_techniques_professionnelles_realisations: Les réalisations
+        capacites_techniques_professionnelles_outillage: Outillage, matériel
+        capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
           de la qualité, sécurité et normes de gestion environnementale
       fields:
         identite_entreprise_identification_siret:
@@ -252,109 +244,67 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
-          name: Certificats de cotisations CIBTP - CNETP
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        motifs_exclusion_sociaux_declarations_pro_btp:
-          name: Attestation de régularité des cotisations retraite Pro BTP
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-          name: Mon entreprise lorem ipsum  Bilan de gaz à effet de serre
-          description: Lorem ipsum
+          name: Mon entreprise n'a pas satisfait à l'obligation d'établir un Bilan
+            de gaz à effet de serre (BEGES), alors qu'elle est concernée
+          description: Mon entreprise, soumise à l’article L.229-25 du Code de l’environnement,
+            n’a pas réalisé son bilan des émissions de gaz à effet de serre pour l’année
+            précédant l’appel à concurrence.
         motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
-          name: Mon entreprise lorem ipsum  Plan de vigilance
-          description: Lorem ipsum
+          name: Mon entreprise n'a pas satisfait à l'obligation d'établissement d'un
+            plan de vigilance
+          description: Mon entreprise, soumise à l’article L.225-102-1 du Code de
+            commerce, n’a pas établi son plan de vigilance (mesures prévues à l’art.
+            L.225-102-4) pour l’année précédant l’appel à concurrence.
         capacite_economique_financiere_bilans_trois_exercices:
-          name: Vos bilans ou extraits de bilans des trois dernières années comptables
-            clôturées
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra in vitae eget sit Nunc elit quis sodales. dui id
-            efficitur. quam leo. est. eget massa nisi facilisis lacus viverra lacus,
-            varius luctus convallis. dolor Praesent fringilla quam at adipiscing Nunc
-            est. laoreet elementum Vestibulum nec tincidunt Vestibulum Nunc vel id
-            eget Ut Nullam adipiscing ultrices dolor porta Nullam.
-        capacites_techniques_professionnelles_certificats_qualibat:
-          name: Certificat Qualibat
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        capacites_techniques_professionnelles_certificats_qualifelec:
-          name: Certificat Qualifelec
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        capacites_techniques_professionnelles_certificats_rge:
-          name: Certificats RGE
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        capacites_techniques_professionnelles_certificats_bio:
-          name: Certification bio
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
+          name: Les bilans ou extraits de bilans de votre entreprise au cours des
+            trois derniers exercices comptables clôturées
+          description: Vous devez fournir les bilans ou extraits de bilans de votre
+            entreprise qui concernent les trois derniers exercices comptables clôturés.
         capacites_techniques_professionnelles_certificats_ess:
           name: Certification entreprises ESS
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        capacites_techniques_professionnelles_certificats_qualiopi_france:
-          name: Certificats Qualiopi et France Compétences
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        capacites_techniques_professionnelles_certificats_cqp_tp:
-          name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
-        capacites_techniques_professionnelles_certificats_opqibi:
-          name: Certification OPQIBI
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra
+          description: La Certification des Entreprises de l'Économie Sociale et Solidaire
+            (ESS) est une reconnaissance officielle accordée aux entreprises qui respectent
+            les principes et valeurs de l'économie sociale et solidaire en France.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Attestation de bonnes exécution
+          description: Joignez les attestations prouvant que votre entreprise a déjà
+            exécuté des contrats similaires
         capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
           name: Attestation de bonnes exécution
+          description: Joignez les attestations prouvant que votre entreprise a bien
+            exécuté des contrats similaires. Elles doivent indiquer le montant, la
+            date, le lieu des travaux et confirmer qu’ils ont été réalisés dans les
+            règles de l’art et menés à bonne fin.
         capacites_techniques_professionnelles_outillage_materiel_equipements:
-          name: Décrivez l’outillage, le matériel, les équipements techniques qui
-            serviront à la bonne exécution du marché
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra in vitae eget sit Nunc elit quis sodales. dui id
-            efficitur. quam leo. est. eget massa nisi facilisis lacus viverra lacus,
-            varius luctus convallis. dolor Praesent
+          name: L’outillage, le matériel, les équipements techniques qui serviront
+            à la bonne exécution du marché
+          description: 'Précisez les moyens techniques que votre entreprise mobilisera
+            pour exécuter le marché : types d’outils, machines, matériel spécialisé
+            ou équipements particuliers. L’objectif est de montrer que vous disposez
+            des ressources nécessaires et adaptées pour garantir la bonne réalisation
+            des prestations.'
         capacites_techniques_professionnelles_outillage_mesures_qualite:
-          name: Décrivez les mesures employées pour assurer la qualité
-          description: La description de l'équipement technique ainsi que des mesures
-            employées par le candidat pour s'assurer de la qualité et des moyens d'étude
-            et de recherche de votre entreprise.
+          name: Les mesures employées pour assurer la qualité
+          description: Décrivez les équipements techniques de votre entreprise ainsi
+            que les moyens mis en place pour garantir leur qualité, y compris vos
+            capacités d’étude et de recherche.
         capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
-          name: Décrivez les systèmes de gestion et de suivi de la chaîne d'approvisionnement
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra in vitae eget sit Nunc elit quis sodales. dui id
-            efficitur. quam leo. est. eget massa nisi facilisis lacus viverra lacus,
-            varius luctus convallis. dolor Praesent
+          name: Les systèmes de gestion et de suivi de la chaîne d'approvisionnement
+          description: 'Expliquez comment votre entreprise organise, contrôle et suit
+            sa chaîne d’approvisionnement : sélection des fournisseurs, traçabilité,
+            gestion des stocks et respect des délais.'
         capacites_techniques_professionnelles_assurance_qualite_gestion_environnementale:
-          name: Décrivez les mesures de gestion environnementale que vous appliquerez
-            dans le cadre de ce marché
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra in vitae eget sit Nunc elit quis sodales. dui id
-            efficitur. quam leo. est. eget massa nisi facilisis lacus viverra lacus,
-            varius luctus convallis. dolor Praesent
+          name: Les mesures de gestion environnementale que vous appliquerez dans
+            le cadre de ce marché
+          description: 'Précisez les actions mises en place pour limiter l’impact
+            environnemental : gestion des déchets, économies d’énergie, utilisation
+            de matériaux durables ou pratiques écoresponsables.'
         capacites_techniques_professionnelles_assurance_qualite_controle_organisme_officiel:
-          name: Transmettez les attestations ou documents de contrôle des produits
-            ou services complexes par un organisme officiel
-          description: lacus, nulla, vitae nisi nisi lobortis, tempor lacus ipsum
-            felis, Praesent volutpat felis, maximus tincidunt hendrerit in efficitur.
-            elit non. urna viverra in vitae eget sit Nunc elit quis sodales. dui id
-            efficitur. quam leo. est. eget massa nisi facilisis lacus viverra lacus,
-            varius luctus convallis. dolor Praesent
+          name: Contrôle des produits ou services complexes
+          description: Transmettez les attestations ou documents de contrôle des produits
+            ou services complexes par un organisme officiel. Sachez que pour des produits
+            ou services complexes ou spécifiques, l’acheteur (ou un organisme compétent)
+            peut contrôler les capacités de production, les moyens techniques, d’étude
+            et de recherche ainsi que les mesures de contrôle qualité du fournisseur
+            ou prestataire.
