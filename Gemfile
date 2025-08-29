@@ -28,6 +28,7 @@ gem 'wicked'
 gem 'interactor', '~> 3.2'
 gem 'wicked_pdf'
 gem 'rubyzip', '~> 3.0'
+gem 'json-schema', '~> 4.0'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]

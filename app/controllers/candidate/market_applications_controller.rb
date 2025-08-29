@@ -59,7 +59,6 @@ module Candidate
       find_market_application
       return unless @market_application
 
-      # Order by id for consistent, predictable ordering (proper ordering logic will come later)
       category_keys = @market_application.public_market.market_attributes
         .order(:id)
         .pluck(:category_key)
@@ -70,10 +69,7 @@ module Candidate
     end
 
     def handle_company_identification
-      if @market_application.update(market_application_params)
-        # Ensure all required MarketAttributeResponse records exist
-        ensure_all_market_attribute_responses_exist
-      end
+      ensure_all_market_attribute_responses_exist if @market_application.update(market_application_params)
 
       render_wizard(@market_application)
     end
@@ -135,7 +131,8 @@ module Candidate
         MarketAttributeResponse.create!(
           market_application: @market_application,
           market_attribute:,
-          type: market_attribute.input_type.camelize
+          type: market_attribute.input_type.camelize,
+          value: nil
         )
       end
     end

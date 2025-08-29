@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+FactoryBot.define do
+  factory :market_attribute_response do
+    association :market_application
+    association :market_attribute
+    type { 'TextInput' }
+    value { nil }
+
+    factory :market_attribute_response_checkbox, class: 'MarketAttributeResponse::Checkbox' do
+      type { 'Checkbox' }
+      association :market_attribute, :checkbox
+    end
+
+    factory :market_attribute_response_text_input, class: 'MarketAttributeResponse::TextInput' do
+      type { 'TextInput' }
+      association :market_attribute, :text_input
+    end
+
+    factory :market_attribute_response_file_upload, class: 'MarketAttributeResponse::FileUpload' do
+      type { 'FileUpload' }
+      association :market_attribute, :file_upload
+    end
+  end
+end
