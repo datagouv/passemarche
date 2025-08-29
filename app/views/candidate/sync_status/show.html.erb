@@ -17,7 +17,7 @@
             <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
               <% if @market_application.attestation.attached? %>
                 <button type="button"
-                        class="fr-btn fr-btn--icon-left fr-icon-download-line"
+                        class="fr-btn fr-btn--icon-left"
                         onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
                   <span class="fr-icon-download-line" aria-hidden="true"></span>
                   <span class="fr-ml-1w">Télécharger mon attestation de candidature</span>
