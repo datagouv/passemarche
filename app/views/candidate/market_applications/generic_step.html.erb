@@ -16,15 +16,8 @@
     
     <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
       <% if subcategories.any? %>
-        <% # Get all responses for this step, ordered consistently %>
-        <% step_responses = @market_application.market_attribute_responses
-             .joins(:market_attribute)
-             .where(market_attributes: { category_key: step.to_s })
-             .includes(:market_attribute)
-             .order('market_attributes.id') %>
-
-        <% # Group responses by subcategory for display %>
-        <% responses_by_subcategory = step_responses.group_by { |r| r.market_attribute.subcategory_key } %>
+        <% # Get responses from presenter (already loaded and grouped) %>
+        <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(step.to_s) %>
 
         <% subcategories.each do |subcategory| %>
           <div class="fr-mb-4w">

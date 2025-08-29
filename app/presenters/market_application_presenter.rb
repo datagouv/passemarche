@@ -47,6 +47,22 @@ class MarketApplicationPresenter
     market_attributes.map { |attr| market_attribute_response_for(attr) }
   end
 
+  def responses_for_category(category_key)
+    return [] if category_key.blank?
+
+    # Use preloaded responses if available, otherwise query
+    @responses_for_category ||= {}
+    @responses_for_category[category_key] ||= @market_application.market_attribute_responses
+      .joins(:market_attribute)
+      .where(market_attributes: { category_key: })
+      .includes(:market_attribute)
+      .order('market_attributes.id')
+  end
+
+  def responses_grouped_by_subcategory(category_key)
+    responses_for_category(category_key).group_by { |r| r.market_attribute.subcategory_key }
+  end
+
   def should_display_subcategory?(subcategories)
     subcategories.keys.size > 1
   end
