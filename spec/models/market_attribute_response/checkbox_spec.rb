@@ -7,31 +7,39 @@ RSpec.describe MarketAttributeResponse::Checkbox, type: :model do
   let(:market_attribute) { create(:market_attribute, input_type: 'checkbox') }
   let(:checkbox_response) { build(:market_attribute_response_checkbox, market_application:, market_attribute:) }
 
-  describe 'value_checked methods' do
-    it 'returns false when value is empty' do
+  describe 'checked accessor' do
+    it 'returns nil when value is empty' do
       checkbox_response.value = {}
-      expect(checkbox_response.value_checked).to eq(false)
+      expect(checkbox_response.checked).to be_nil
     end
 
-    it 'returns false when value is nil' do
+    it 'returns nil when value is nil' do
       checkbox_response.value = nil
-      expect(checkbox_response.value_checked).to eq(false)
+      expect(checkbox_response.checked).to be_nil
     end
 
     it 'returns the checked value when present' do
       checkbox_response.value = { 'checked' => true }
-      expect(checkbox_response.value_checked).to eq(true)
+      expect(checkbox_response.checked).to eq(true)
     end
 
     it 'sets the checked value' do
-      checkbox_response.value_checked = true
+      checkbox_response.checked = true
       expect(checkbox_response.value).to eq({ 'checked' => true })
     end
 
     it 'preserves other values when setting checked' do
       checkbox_response.value = { 'other' => 'data' }
-      checkbox_response.value_checked = true
+      checkbox_response.checked = true
       expect(checkbox_response.value).to eq({ 'other' => 'data', 'checked' => true })
+    end
+
+    it 'type casts string values to boolean' do
+      checkbox_response.checked = 'true'
+      expect(checkbox_response.checked).to eq(true)
+
+      checkbox_response.checked = 'false'
+      expect(checkbox_response.checked).to eq(false)
     end
   end
 

@@ -142,7 +142,7 @@ module Candidate
         :siret,
         market_attribute_responses_attributes: [
           :id, :market_attribute_id, :_destroy,
-          :value_text, :value_checked, :value_file,
+          :text, :checked, :file,
           { value: {} }
         ]
       )

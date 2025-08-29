@@ -1,5 +1,5 @@
 <%
-  checked_value = market_attribute_response.value&.dig('checked') || false
+  checked_value = market_attribute_response.checked || false
 %>
 
 <div class="fr-checkbox-group">
@@ -9,11 +9,11 @@
     
     <div class="fr-fieldset__element">
       <div class="fr-checkbox-group">
-        <%= response_form.check_box :value_checked, 
+        <%= response_form.check_box :checked, 
               { checked: checked_value, 
                 class: "fr-checkbox" },
               "true", "false" %>
-        <%= response_form.label :value_checked, 
+        <%= response_form.label :checked, 
               t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
                 default: market_attribute_response.market_attribute.key.humanize), 
               class: "fr-checkbox__label" %>

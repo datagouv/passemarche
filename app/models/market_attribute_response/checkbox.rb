@@ -1,10 +1,8 @@
 class MarketAttributeResponse::Checkbox < MarketAttributeResponse
-  def value_checked
-    value&.dig('checked') || false
-  end
+  store_accessor :value, :checked
 
-  def value_checked=(checked)
-    self.value = (value || {}).merge('checked' => checked)
+  def checked=(val)
+    super(ActiveModel::Type::Boolean.new.cast(val))
   end
 
   protected

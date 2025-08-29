@@ -1,5 +1,5 @@
 <%
-  file_info = market_attribute_response.value&.dig('file')
+  file_info = market_attribute_response.file
   required = market_attribute_response.market_attribute.required?
 %>
 
@@ -8,7 +8,7 @@
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
     
-    <%= response_form.label :value_file, 
+    <%= response_form.label :file, 
           t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
             default: market_attribute_response.market_attribute.key.humanize),
           class: "fr-label #{'fr-label--required' if required}" %>
@@ -19,7 +19,7 @@
       </span>
     <% end %>
     
-    <%= response_form.file_field :value_file, 
+    <%= response_form.file_field :file, 
           class: "fr-upload",
           required: required,
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png" %>

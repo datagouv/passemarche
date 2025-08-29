@@ -11,17 +11,15 @@ class MarketAttributeResponse::FileUpload < MarketAttributeResponse
     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
   ].freeze
 
-  def value_file
-    value&.dig('file')
-  end
+  store_accessor :value, :file
 
-  def value_file=(file)
-    return if file.blank?
+  def file=(uploaded_file)
+    return if uploaded_file.blank?
 
-    self.value = (value || {}).merge('file' => {
-      'name' => file.original_filename,
-      'content_type' => file.content_type,
-      'size' => file.size
+    write_store_attribute(:value, :file, {
+      'name' => uploaded_file.original_filename,
+      'content_type' => uploaded_file.content_type,
+      'size' => uploaded_file.size
     })
   end
 

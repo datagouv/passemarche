@@ -1,6 +1,5 @@
 <%
-  value = market_attribute_response.value
-  text_value = market_attribute_response.value&.dig('text')
+  text_value = market_attribute_response.text
   display_value = text_value.present? ? text_value : 'Non renseigné'
 %>
 

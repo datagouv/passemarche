@@ -1,13 +1,7 @@
 class MarketAttributeResponse::TextInput < MarketAttributeResponse
   TEXT_MAX_LENGTH = 10_000
 
-  def value_text
-    value&.dig('text') || ''
-  end
-
-  def value_text=(text)
-    self.value = (value || {}).merge('text' => text)
-  end
+  store_accessor :value, :text
 
   protected
 

@@ -1,5 +1,5 @@
 <%
-  file_info = market_attribute_response.value&.dig('file')
+  file_info = market_attribute_response.file
   display_value = file_info&.dig('name') || 'Aucun fichier téléchargé'
 %>
 

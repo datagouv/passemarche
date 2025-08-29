@@ -13,30 +13,30 @@ RSpec.describe MarketAttributeResponse::TextInput, type: :model do
     end
   end
 
-  describe 'value_text methods' do
-    it 'returns empty string when value is empty' do
+  describe 'text accessor' do
+    it 'returns nil when value is empty' do
       text_response.value = {}
-      expect(text_response.value_text).to eq('')
+      expect(text_response.text).to be_nil
     end
 
-    it 'returns empty string when value is nil' do
+    it 'returns nil when value is nil' do
       text_response.value = nil
-      expect(text_response.value_text).to eq('')
+      expect(text_response.text).to be_nil
     end
 
     it 'returns the text value when present' do
       text_response.value = { 'text' => 'Hello World' }
-      expect(text_response.value_text).to eq('Hello World')
+      expect(text_response.text).to eq('Hello World')
     end
 
     it 'sets the text value' do
-      text_response.value_text = 'New text'
+      text_response.text = 'New text'
       expect(text_response.value).to eq({ 'text' => 'New text' })
     end
 
     it 'preserves other values when setting text' do
       text_response.value = { 'other' => 'data' }
-      text_response.value_text = 'New text'
+      text_response.text = 'New text'
       expect(text_response.value).to eq({ 'other' => 'data', 'text' => 'New text' })
     end
   end

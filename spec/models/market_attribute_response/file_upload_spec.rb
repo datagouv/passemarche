@@ -19,28 +19,28 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
     end
   end
 
-  describe 'value_file methods' do
+  describe 'file accessor' do
     it 'returns nil when value is empty' do
       file_response.value = {}
-      expect(file_response.value_file).to be_nil
+      expect(file_response.file).to be_nil
     end
 
     it 'returns nil when value is nil' do
       file_response.value = nil
-      expect(file_response.value_file).to be_nil
+      expect(file_response.file).to be_nil
     end
 
     it 'returns the file data when present' do
       file_data = { 'name' => 'test.pdf', 'content_type' => 'application/pdf', 'size' => 1024 }
       file_response.value = { 'file' => file_data }
-      expect(file_response.value_file).to eq(file_data)
+      expect(file_response.file).to eq(file_data)
     end
 
     context 'when setting file' do
       let(:mock_file) { double('file', original_filename: 'test.pdf', content_type: 'application/pdf', size: 1024, present?: true) }
 
       it 'sets the file metadata' do
-        file_response.value_file = mock_file
+        file_response.file = mock_file
         expected_value = {
           'file' => {
             'name' => 'test.pdf',
@@ -53,7 +53,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
 
       it 'preserves other values when setting file' do
         file_response.value = { 'other' => 'data' }
-        file_response.value_file = mock_file
+        file_response.file = mock_file
         expect(file_response.value['other']).to eq('data')
         expect(file_response.value['file']).to be_present
       end

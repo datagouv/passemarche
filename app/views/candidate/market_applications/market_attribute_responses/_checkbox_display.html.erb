@@ -1,5 +1,5 @@
 <%
-  checked_value = market_attribute_response.value&.dig('checked')
+  checked_value = market_attribute_response.checked
   display_value = checked_value == true || checked_value == 'true' ? 'Oui' : 'Non'
 %>
 
