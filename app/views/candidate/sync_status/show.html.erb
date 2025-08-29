@@ -2,8 +2,8 @@
 
 <div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
   <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
-    <div class="fr-mb-4w" 
-         data-controller="sync-status" 
+    <div class="fr-mb-4w"
+         data-controller="sync-status"
          data-sync-status-url-value="<%= candidate_sync_status_path(@market_application.identifier, format: :json) %>"
          data-status="<%= @market_application.sync_status %>">
 
@@ -16,18 +16,19 @@
             </p>
             <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
               <% if @market_application.attestation.attached? %>
-                <button type="button" 
+                <button type="button"
                         class="fr-btn fr-btn--icon-left fr-icon-download-line"
                         onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
-                  Télécharger l'attestation
+                  <span class="fr-icon-download-line" aria-hidden="true"></span>
+                  <span class="fr-ml-1w">Télécharger mon attestation de candidature</span>
                 </button>
               <% end %>
-              <%= link_to "Retourner sur #{@market_application.editor.name}", 
+              <%= link_to "Retourner sur #{@market_application.editor.name}",
                           @market_application.editor.redirect_url&.gsub('{market_identifier}', @market_application.identifier) || root_path,
                           class: 'fr-btn' %>
             </div>
           </div>
-        
+
         <% elsif @market_application.sync_failed? %>
           <div>
             <h3 class="fr-h3">Erreur inattendue</h3>
@@ -38,19 +39,22 @@
               Vous pouvez tenter de transférer à nouveau les informations en cliquant sur le bouton ci-dessous. Si vous avez besoin d'une aide immédiate, merci de nous contacter.
             </p>
             <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
-              <%= button_to "Transmettre le formulaire", 
-                          retry_sync_candidate_market_application_path(@market_application.identifier),
-                          method: :post,
-                          class: "fr-btn",
-                          data: { turbo: false } %>
-              <%= link_to "Contactez-nous", 
+              <%= button_to retry_sync_candidate_market_application_path(@market_application.identifier),
+                            method: :post,
+                            class: "fr-btn fr-btn--icon-left",
+                            data: { turbo: false } do %>
+                <span class="fr-icon-refresh-line" aria-hidden="true"></span>
+                <span class="fr-ml-1w">Transmettre le formulaire</span>
+              <% end %>
+              <%= link_to "Contactez-nous",
                           "mailto:support@voie-rapide.gouv.fr?subject=Erreur de synchronisation pour le marché #{@market_application.identifier}",
                           class: "fr-btn fr-btn--secondary" %>
               <% if @market_application.attestation.attached? %>
-                <button type="button" 
+                <button type="button"
                         class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-download-line"
                         onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
-                  Télécharger l'attestation
+                  <span class="fr-icon-download-line" aria-hidden="true"></span>
+                  <span class="fr-ml-1w">Télécharger mon attestation de candidature</span>
                 </button>
               <% end %>
             </div>
@@ -77,8 +81,8 @@
       <% elsif @market_application.sync_failed? %>
         <%= image_tag "sync_status_error.png", alt: "Erreur de synchronisation" %>
       <% else %>
-        <div class="sync-loader" 
-             role="img" 
+        <div class="sync-loader"
+             role="img"
              aria-label="Synchronisation en cours..."
              data-sync-status-target="loader">
         </div>
