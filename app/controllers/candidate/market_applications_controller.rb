@@ -12,7 +12,7 @@ module Candidate
       :summary
 
     before_action :find_market_application
-    before_action :check_application_not_completed
+    before_action :check_application_not_completed, except: [:retry_sync]
     before_action :set_wizard_steps
 
     def show
