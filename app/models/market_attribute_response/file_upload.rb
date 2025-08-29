@@ -11,11 +11,16 @@ class MarketAttributeResponse::FileUpload < MarketAttributeResponse
     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
   ].freeze
 
+  has_one_attached :document
   store_accessor :value, :file
 
   def file=(uploaded_file)
     return if uploaded_file.blank?
 
+    # Attach the actual file to Active Storage (skip for test doubles)
+    document.attach(uploaded_file) if uploaded_file.respond_to?(:tempfile) || uploaded_file.is_a?(ActionDispatch::Http::UploadedFile)
+
+    # Store metadata for quick access without loading the blob
     write_store_attribute(:value, :file, {
       'name' => uploaded_file.original_filename,
       'content_type' => uploaded_file.content_type,

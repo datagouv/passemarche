@@ -1,5 +1,6 @@
 <%
   file_info = market_attribute_response.file
+  has_document = market_attribute_response.document.attached?
   display_value = file_info&.dig('name') || 'Aucun fichier téléchargé'
 %>
 
@@ -12,9 +13,15 @@
       </strong>
       <br>
       <span class="fr-text--sm fr-text--mention-grey">
+        <% if has_document %>
+          <span class="fr-icon-check-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+        <% end %>
         <%= display_value %>
         <% if file_info&.dig('size').present? %>
           (<%= number_to_human_size(file_info['size']) %>)
+        <% end %>
+        <% if has_document %>
+          <em class="fr-ml-1v">— Inclus dans le dossier de candidature</em>
         <% end %>
       </span>
     </div>
