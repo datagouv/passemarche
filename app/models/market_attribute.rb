@@ -15,7 +15,8 @@ class MarketAttribute < ApplicationRecord
     file_upload: 0,
     text_input: 1,
     checkbox: 2,
-    textarea: 3
+    textarea: 3,
+    email_input: 4
   }
 
   scope :required, -> { where(required: true) }
