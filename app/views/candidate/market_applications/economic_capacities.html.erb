@@ -1,9 +1,0 @@
-<% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.steps.economic_capacities')}" %>
-
-<%= render "stepper", step: step, wizard_steps: @wizard_steps %>
-
-<% subcategories = t('candidate.market_applications.economic_capacities.subcategories') %>
-
-<%= render "sidemenu_subcategories", subcategories: subcategories %>
-
-<%= render "wizard_nav" %>

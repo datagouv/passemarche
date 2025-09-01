@@ -1,6 +1,12 @@
 Given('a public market exists') do
   @editor = create(:editor)
   @public_market = create(:public_market, :completed, editor: @editor)
+
+  # Create market attributes to match expected steps
+  create(:market_attribute, key: 'company_name', category_key: 'market_and_company_information', public_markets: [@public_market])
+  create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', public_markets: [@public_market])
+  create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', public_markets: [@public_market])
+  create(:market_attribute, key: 'certificates', category_key: 'technical_capacities', public_markets: [@public_market])
 end
 
 Given('a candidate starts a new application') do

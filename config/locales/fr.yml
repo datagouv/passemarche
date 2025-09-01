@@ -166,6 +166,9 @@ fr:
         technical_capacities: "Les capacités techniques et professionnelles"
         summary: "Synthèse de votre candidature"
 
+      manual_subcategories:
+        market_information: "Informations du marché"
+
       market_and_company_information:
         title: "Les informations du marché et de votre entreprise"
         subtitle: "Lorem ipsum..."

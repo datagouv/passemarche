@@ -5,6 +5,7 @@ class MarketAttribute < ApplicationRecord
 
   has_and_belongs_to_many :market_types
   has_and_belongs_to_many :public_markets
+  has_many :market_attribute_responses, dependent: :destroy
 
   validates :key, presence: true, uniqueness: true
   validates :category_key, :subcategory_key, presence: true

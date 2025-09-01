@@ -36,6 +36,7 @@ class GenerateDocumentsPackage < ApplicationInteractor
   def generate_zip_content
     zip_buffer = Zip::OutputStream.write_buffer do |zip|
       add_attestation_to_zip(zip)
+      add_uploaded_documents_to_zip(zip)
     end
 
     zip_buffer.string
@@ -47,5 +48,34 @@ class GenerateDocumentsPackage < ApplicationInteractor
 
     zip.put_next_entry(attestation_filename)
     zip.write(attestation_content)
+  end
+
+  def add_uploaded_documents_to_zip(zip)
+    file_uploads = load_file_uploads
+    return if file_uploads.empty?
+
+    file_uploads.each_with_index do |upload, index|
+      add_single_document_to_zip(zip, upload, index)
+    end
+  end
+
+  def load_file_uploads
+    market_application.market_attribute_responses
+      .where(type: 'FileUpload')
+      .includes(:market_attribute, document_attachment: :blob)
+  end
+
+  def add_single_document_to_zip(zip, upload, index)
+    return unless upload.document.attached?
+
+    field_key = upload.market_attribute.key
+    original_filename = upload.document.filename.to_s
+    zip_filename = "documents/#{format('%02d', index + 1)}_#{field_key}_#{original_filename}"
+
+    zip.put_next_entry(zip_filename)
+    zip.write(upload.document.download)
+  rescue StandardError => e
+    Rails.logger.error "Failed to add document to ZIP: #{e.message}"
+    # Continue with other documents even if one fails
   end
 end

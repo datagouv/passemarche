@@ -1,0 +1,30 @@
+<%
+  checked_value = market_attribute_response.checked || false
+%>
+
+<div class="fr-checkbox-group">
+  <%= form.fields_for :market_attribute_responses, market_attribute_response, 
+                      child_index: market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    
+    <div class="fr-fieldset__element">
+      <div class="fr-checkbox-group">
+        <%= response_form.check_box :checked, 
+              { checked: checked_value, 
+                class: "fr-checkbox" },
+              "true", "false" %>
+        <%= response_form.label :checked, 
+              t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
+                default: market_attribute_response.market_attribute.key.humanize), 
+              class: "fr-checkbox__label" %>
+        
+        <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+          <div class="fr-checkbox__label__description">
+            <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

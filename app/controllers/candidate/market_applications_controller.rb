@@ -4,30 +4,34 @@ module Candidate
   class MarketApplicationsController < ApplicationController
     include Wicked::Wizard
 
-    steps :company_identification,
-      :market_and_company_information,
-      :exclusion_criteria,
-      :economic_capacities,
-      :technical_capacities,
-      :summary
-
-    before_action :find_market_application
+    prepend_before_action :set_steps
     before_action :check_application_not_completed, except: [:retry_sync]
     before_action :set_wizard_steps
 
     def show
-      @presenter = MarketApplicationPresenter.new(@market_application) if step == :summary
+      @presenter = MarketApplicationPresenter.new(@market_application)
 
-      render_wizard
+      if custom_view_exists?
+        render_wizard
+      else
+        render 'generic_step', locals: { step: }
+      end
     end
 
     def update
+      @presenter = MarketApplicationPresenter.new(@market_application)
+
       if step == :summary
         handle_summary_completion
+      elsif step == :company_identification
+        handle_company_identification
       elsif @market_application.update(market_application_params)
+        @market_application.market_attribute_responses.reload
         render_wizard(@market_application)
-      else
+      elsif custom_view_exists?
         render_wizard
+      else
+        render 'generic_step', locals: { step: }
       end
     end
 
@@ -49,6 +53,25 @@ module Candidate
     def set_wizard_steps
       # company_identification doesn't count as a step
       @wizard_steps = steps - [:company_identification]
+    end
+
+    def set_steps
+      find_market_application
+      return unless @market_application
+
+      category_keys = @market_application.public_market.market_attributes
+        .order(:id)
+        .pluck(:category_key)
+        .compact
+        .uniq
+
+      self.steps = [:company_identification] + category_keys.map(&:to_sym) + [:summary]
+    end
+
+    def handle_company_identification
+      ensure_all_market_attribute_responses_exist if @market_application.update(market_application_params)
+
+      render_wizard(@market_application)
     end
 
     def handle_summary_completion
@@ -84,8 +107,14 @@ module Candidate
     end
 
     def find_market_application
-      @market_application = MarketApplication.find_by!(identifier: params[:identifier])
+      @market_application = MarketApplication
+        .includes(
+          public_market: :market_attributes,
+          market_attribute_responses: :market_attribute
+        )
+        .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
+      @market_application = nil
       render plain: 'La candidature recherchée n\'a pas été trouvée', status: :not_found
     end
 
@@ -96,8 +125,32 @@ module Candidate
         alert: t('candidate.market_applications.market_application_completed_cannot_edit')
     end
 
+    def custom_view_exists?
+      lookup_context.exists?(step.to_s, 'candidate/market_applications', false)
+    end
+
+    def ensure_all_market_attribute_responses_exist
+      @market_application.public_market.market_attributes.find_each do |market_attribute|
+        next if @market_application.market_attribute_responses.exists?(market_attribute:)
+
+        MarketAttributeResponse.create!(
+          market_application: @market_application,
+          market_attribute:,
+          type: market_attribute.input_type.camelize,
+          value: nil
+        )
+      end
+    end
+
     def market_application_params
-      params.fetch(:market_application, {}).permit(:siret)
+      params.fetch(:market_application, {}).permit(
+        :siret,
+        market_attribute_responses_attributes: [
+          :id, :market_attribute_id, :_destroy,
+          :text, :checked, :file,
+          { value: {} }
+        ]
+      )
     end
 
     def finish_wizard_path
