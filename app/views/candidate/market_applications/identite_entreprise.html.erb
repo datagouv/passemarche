@@ -14,16 +14,10 @@
     <% if subcategories.any? %>
       <%= render "sidemenu_subcategories", subcategories: %>
     <% end %>
-    
+
     <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
       <% if subcategories.any? %>
-        <% step_responses = @market_application.market_attribute_responses
-             .joins(:market_attribute)
-             .where(market_attributes: { category_key: step.to_s })
-             .includes(:market_attribute)
-             .order('market_attributes.id') %>
-
-        <% responses_by_subcategory = step_responses.group_by { |r| r.market_attribute.subcategory_key } %>
+        <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(step.to_s) %>
         
         <% subcategories.each do |subcategory| %>
           <div class="fr-mb-4w">

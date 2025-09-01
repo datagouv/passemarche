@@ -79,25 +79,25 @@ RSpec.describe MarketAttributeResponse::Checkbox, type: :model do
       it 'rejects non-boolean values' do
         checkbox_response.value = { 'checked' => 'yes' }
         expect(checkbox_response).not_to be_valid
-        expect(checkbox_response.errors[:value]).to be_present
+        expect(checkbox_response.errors[:checked]).to be_present
       end
 
       it 'rejects missing checked field' do
         checkbox_response.value = {}
         expect(checkbox_response).not_to be_valid
-        expect(checkbox_response.errors[:value]).to be_present
+        expect(checkbox_response.errors[:checked]).to be_present
       end
 
       it 'rejects nil value' do
         checkbox_response.value = nil
         expect(checkbox_response).not_to be_valid
-        expect(checkbox_response.errors[:value]).to be_present
+        expect(checkbox_response.errors[:checked]).to be_present
       end
 
       it 'rejects additional properties' do
         checkbox_response.value = { 'checked' => true, 'extra' => 'field' }
         expect(checkbox_response).not_to be_valid
-        expect(checkbox_response.errors[:value]).to be_present
+        expect(checkbox_response.errors[:checked]).to be_present
       end
     end
   end
