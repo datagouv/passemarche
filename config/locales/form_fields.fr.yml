@@ -50,12 +50,6 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_sociaux_declarations_cotisations_sociales:
-          name: Déclaration de l'opérateur économique qu'il est acquitté des cotisations
-            sociales exigibles
-          description: Le candidat doit attester qu'il a bien déclaré et payé toutes
-            les cotisations et contributions sociales qui lui incombent, conformément
-            à la réglementation en vigueur.
         motifs_exclusion_sociaux_declarations_cibtp_cnetp:
           name: Attestation de régularité sociale dans le secteur des travaux publics
             (CIBTP - CNETP)
@@ -202,12 +196,6 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_sociaux_declarations_cotisations_sociales:
-          name: Mon entreprise n'est pas à jour de ses cotisations sociales
-          description: Mon entreprise n'a pas déclaré et payé toutes les cotisations
-            et contributions sociales qui lui incombent, en fonction de sa taille,
-            de son chiffre d'affaires ou de ses effectifs, comme l'exige le Code de
-            la commande publique.
         motifs_exclusion_sociaux_declarations_cibtp_cnetp:
           name: Mon entreprise n'est pas à jour du paiement de ses cotisations CIBTP
             - CNETP
