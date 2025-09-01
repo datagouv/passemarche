@@ -3,17 +3,15 @@
   display_value = checked_value == true || checked_value == 'true' ? 'Oui' : 'Non'
 %>
 
-<li class="fr-list__item">
-  <div class="field-layout-container">
-    <div class="field-layout-content">
-      <strong>
-        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
-              default: market_attribute_response.market_attribute.key.humanize) %>
-      </strong>
-      <br>
-      <span class="fr-text--sm fr-text--mention-grey">
-        <%= display_value %>
-      </span>
-    </div>
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
+            default: market_attribute_response.market_attribute.key.humanize) %>
+    </strong>
+    <br>
+    <span class="fr-text--sm fr-text--mention-grey">
+      <%= display_value %>
+    </span>
   </div>
-</li>
+</div>

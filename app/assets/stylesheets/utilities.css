@@ -60,11 +60,12 @@ footer.fr-footer {
 }
 
 /* Field display layout classes */
-.field-layout-container {
+.field-layout-container:not(:last-child) {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
+  margin-bottom: 1.5rem;
 }
 
 .field-layout-content {
@@ -81,3 +82,17 @@ footer.fr-footer {
   border-bottom: 1px solid var(--border-default-grey);
   height: 0;
 }
+
+.fr-label--required::after {
+  content: "*";
+  margin-left: 0.25rem;
+  color: var(--light-decisions-artwork-artwork-minor-red-marianne, #E1000F);
+  font-family: monospace;
+  cursor: help;
+}
+
+.badge--no-background {
+  background-color: transparent;
+  padding: 0;
+}
+
