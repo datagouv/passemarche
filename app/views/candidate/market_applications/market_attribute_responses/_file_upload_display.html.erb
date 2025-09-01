@@ -4,26 +4,24 @@
   display_value = file_info&.dig('name') || 'Aucun fichier téléchargé'
 %>
 
-<li class="fr-list__item">
-  <div class="field-layout-container">
-    <div class="field-layout-content">
-      <strong>
-        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
-              default: market_attribute_response.market_attribute.key.humanize) %>
-      </strong>
-      <br>
-      <span class="fr-text--sm fr-text--mention-grey">
-        <% if has_document %>
-          <span class="fr-icon-check-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-        <% end %>
-        <%= display_value %>
-        <% if file_info&.dig('size').present? %>
-          (<%= number_to_human_size(file_info['size']) %>)
-        <% end %>
-        <% if has_document %>
-          <em class="fr-ml-1v">— Inclus dans le dossier de candidature</em>
-        <% end %>
-      </span>
-    </div>
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
+            default: market_attribute_response.market_attribute.key.humanize) %>
+    </strong>
+    <br>
+    <span class="fr-text--sm fr-text--mention-grey">
+      <% if has_document %>
+        <span class="fr-icon-check-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+      <% end %>
+      <%= display_value %>
+      <% if file_info&.dig('size').present? %>
+        (<%= number_to_human_size(file_info['size']) %>)
+      <% end %>
+      <% if has_document %>
+        <em class="fr-ml-1v">— Inclus dans le dossier de candidature</em>
+      <% end %>
+    </span>
   </div>
-</li>
+</div>
