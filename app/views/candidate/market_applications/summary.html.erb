@@ -23,56 +23,50 @@
                 <% if category == 'identite_entreprise' %>
                   <div class="fr-card fr-mb-4w fr-card--no-border">
                   <%= render 'card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
-                    <ul class="fr-list fr-mb-3w">
-                      <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                        <div class="field-layout-container">
-                          <div class="field-layout-content">
-                            <strong>Nom du marché</strong>
-                            <br>
-                            <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.name %></span>
-                          </div>
+                    <div class="field-layout-container">
+                      <div class="field-layout-content">
+                        <span class="fr-badge fr-badge--success badge--no-background"> </span>
+                        <strong>Nom du marché</strong>
+                        <br>
+                        <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.name %></span>
+                      </div>
+                    </div>
+                    <% if @market_application.public_market.lot_name.present? %>
+                      <div class="field-layout-container">
+                        <div class="field-layout-content">
+                          <span class="fr-badge fr-badge--success badge--no-background"> </span>
+                          <strong>Nom du lot</strong>
+                          <br>
+                          <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.lot_name %></span>
                         </div>
-                      </li>
-                      <% if @market_application.public_market.lot_name.present? %>
-                        <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                          <div class="field-layout-container">
-                            <div class="field-layout-content">
-                              <strong>Nom du lot</strong>
-                              <br>
-                              <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.lot_name %></span>
-                            </div>
-                          </div>
-                        </li>
-                      <% end %>
-                      <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                        <div class="field-layout-container">
-                          <div class="field-layout-content">
-                            <strong>Date et heure limite de remise des plis</strong>
-                            <br>
-                            <span class="fr-text--sm fr-text--mention-grey"><%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
-                          </div>
+                      </div>
+                    <% end %>
+                      <div class="field-layout-container">
+                        <div class="field-layout-content">
+                          <span class="fr-badge fr-badge--success badge--no-background"> </span>
+                          <strong>Date et heure limite de remise des plis</strong>
+                          <br>
+                          <span class="fr-text--sm fr-text--mention-grey"><%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
                         </div>
-                      </li>
-                      <li class="fr-list__item fr-pt-4v fr-pb-4v">
-                        <div class="field-layout-container">
-                          <div class="field-layout-content">
-                            <strong>Typologie de marché</strong>
-                            <br>
-                            <span class="fr-text--sm fr-text--mention-grey">
-                              <% if @market_application.public_market.market_type_codes.any? %>
-                                <% @market_application.public_market.market_type_codes.each do |market_type_code| %>
-                                  <span class="fr-badge fr-badge--sm fr-mr-1w">
-                                    <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
-                                  </span>
-                                <% end %>
-                              <% else %>
-                                Aucun type de marché défini
+                      </div>
+                      <div class="field-layout-container">
+                        <div class="field-layout-content">
+                          <span class="fr-badge fr-badge--success badge--no-background"> </span>
+                          <strong>Typologie de marché</strong>
+                          <br>
+                          <span class="fr-text--sm fr-text--mention-grey">
+                            <% if @market_application.public_market.market_type_codes.any? %>
+                              <% @market_application.public_market.market_type_codes.each do |market_type_code| %>
+                                <span class="fr-badge fr-badge--sm fr-mr-1w">
+                                  <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+                                </span>
                               <% end %>
-                            </span>
-                          </div>
+                            <% else %>
+                              Aucun type de marché défini
+                            <% end %>
+                          </span>
                         </div>
-                      </li>
-                    </ul>
+                      </div>
                   <% end %>
                   </div>
                 <% end %>
@@ -82,13 +76,11 @@
                   
                   <div class="fr-card fr-mb-4w fr-card--no-border">
                   <%= render 'card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
-                    <ul class="fr-list fr-mb-3w">
-                      <% market_attributes.each do |attribute| %>
-                        <% response = @presenter.market_attribute_response_for(attribute) %>
-                        <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
-                        <%= render partial_name, market_attribute_response: response %>
-                      <% end %>
-                    </ul>
+                    <% market_attributes.each do |attribute| %>
+                      <% response = @presenter.market_attribute_response_for(attribute) %>
+                      <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
+                      <%= render partial_name, market_attribute_response: response %>
+                    <% end %>
                   <% end %>
                   </div>
                 <% end %>
