@@ -5,6 +5,7 @@ class MarketAttributeResponse < ApplicationRecord
   belongs_to :market_attribute
 
   validates :type, presence: true, inclusion: { in: %w[Checkbox Textarea TextInput FileUpload] }
+  validates :type, presence: true, inclusion: { in: %w[Checkbox Textarea TextInput FileUpload EmailInput] }
 
   validate :validate_json_schema, unless: :new_record?
 
@@ -18,6 +19,8 @@ class MarketAttributeResponse < ApplicationRecord
       MarketAttributeResponse::TextInput
     when 'FileUpload'
       MarketAttributeResponse::FileUpload
+    when 'EmailInput'
+      MarketAttributeResponse::EmailInput
     else
       super
     end

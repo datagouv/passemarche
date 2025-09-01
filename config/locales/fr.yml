@@ -233,6 +233,10 @@ fr:
           attributes:
             siret:
               invalid: "doit être un numéro SIRET valide de 14 chiffres"
+        market_attribute_response/email_input:
+          attributes:
+            text:
+              invalid: "doit être une adresse email valide"
         editor:
           attributes:
             completion_webhook_url:
