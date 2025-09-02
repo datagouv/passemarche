@@ -12,6 +12,11 @@ FactoryBot.define do
       association :market_attribute, :checkbox
     end
 
+    factory :market_attribute_response_textarea, class: 'MarketAttributeResponse::Textarea' do
+      type { 'Textarea' }
+      association :market_attribute, :textarea
+    end
+
     factory :market_attribute_response_text_input, class: 'MarketAttributeResponse::TextInput' do
       type { 'TextInput' }
       association :market_attribute, :text_input
