@@ -60,12 +60,16 @@ footer.fr-footer {
 }
 
 /* Field display layout classes */
-.field-layout-container:not(:last-child) {
+.field-layout-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
   margin-bottom: 1.5rem;
+}
+
+.field-layout-container:last-child {
+  margin-bottom: 0;
 }
 
 .field-layout-content {
