@@ -2,7 +2,6 @@ class MarketAttributeResponse < ApplicationRecord
   belongs_to :market_application
   belongs_to :market_attribute
 
-  validates :type, presence: true, inclusion: { in: %w[Checkbox Textarea TextInput FileUpload] }
   validates :type, presence: true, inclusion: { in: %w[Checkbox Textarea TextInput FileUpload EmailInput] }
 
   def self.find_sti_class(type_name)
