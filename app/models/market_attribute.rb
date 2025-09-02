@@ -14,7 +14,8 @@ class MarketAttribute < ApplicationRecord
   enum :input_type, {
     file_upload: 0,
     text_input: 1,
-    checkbox: 2
+    checkbox: 2,
+    textarea: 3
   }
 
   scope :required, -> { where(required: true) }
