@@ -3,25 +3,25 @@ class MarketAttributeResponse < ApplicationRecord
   belongs_to :market_attribute
 
   validates :type,
-            presence: true,
-            inclusion: {
-              in: %w[
-                Checkbox
-                Textarea
-                TextInput
-                FileUpload
-                EmailInput
-                PhoneInput
-              ]
-            }
+    presence: true,
+    inclusion: {
+      in: %w[
+        Checkbox
+        EmailInput
+        FileUpload
+        PhoneInput
+        TextInput
+        Textarea
+      ]
+    }
 
   STI_CLASS_MAP = {
-    'Checkbox'   => MarketAttributeResponse::Checkbox,
-    'Textarea'   => MarketAttributeResponse::Textarea,
-    'TextInput'  => MarketAttributeResponse::TextInput,
-    'FileUpload' => MarketAttributeResponse::FileUpload,
+    'Checkbox' => MarketAttributeResponse::Checkbox,
     'EmailInput' => MarketAttributeResponse::EmailInput,
-    'PhoneInput' => MarketAttributeResponse::PhoneInput
+    'FileUpload' => MarketAttributeResponse::FileUpload,
+    'PhoneInput' => MarketAttributeResponse::PhoneInput,
+    'TextInput' => MarketAttributeResponse::TextInput,
+    'Textarea' => MarketAttributeResponse::Textarea
   }.freeze
 
   def self.find_sti_class(type_name)
