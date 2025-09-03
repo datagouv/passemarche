@@ -31,6 +31,8 @@ fr:
           techniques
         capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
           de la qualité, sécurité et normes de gestion environnementale
+        capacites_techniques_professionnelles_securite_et_confidentialite: Securité
+          et confidentialité
       fields:
         identite_entreprise_identification_siret:
           name: SIRET
@@ -156,6 +158,23 @@ fr:
             complexes ou spécifiques, ses capacités de production, ses moyens techniques,
             d’étude et de recherche ainsi que ses mesures de contrôle qualité puissent
             être vérifiés par l’acheteur ou un organisme compétent.
+        capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
+          name: Capacité de protection des informations protégées ou classifiées
+          description: Le candidat devra démontrer sa capacité à traiter, stocker
+            et transmettre des informations protégées ou classifiées liées à la sécurité
+            nationale, conformément au niveau de protection exigé par l’acheteur
+        capacites_techniques_professionnelles_securite_et_confidentialite_habilitation_prealable_secret_defense:
+          name: Habilitation préalable relative à la protection du secret de la défense
+            nationale
+          description: Le candidat et son dirigeant devront, si le contrat implique
+            l’accès à des informations classifiées, obtenir une habilitation préalable
+            au secret de la défense nationale délivrée par l’autorité compétente,
+            garantissant leur fiabilité et le respect des règles de sécurité.
+        capacites_techniques_professionnelles_securite_et_confidentialite_description_regles_propriete_intellectuelle:
+          name: Description des règles internes en matière de proriété intellectuelle
+          description: Les résultats de certains marchés peuvent être grevés de droits
+            de propriété intellectuelle, de droits d’auteur notamment. Le candidat
+            devra détailler ses règles internes en matière de propriété intellectuelle.
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
@@ -177,6 +196,8 @@ fr:
         capacites_techniques_professionnelles_outillage: Outillage, matériel
         capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
           de la qualité, sécurité et normes de gestion environnementale
+        capacites_techniques_professionnelles_securite_et_confidentialite: Securité
+          et confidentialité
       fields:
         identite_entreprise_identification_siret:
           name: SIRET
@@ -310,3 +331,22 @@ fr:
             peut contrôler les capacités de production, les moyens techniques, d’étude
             et de recherche ainsi que les mesures de contrôle qualité du fournisseur
             ou prestataire.
+        capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
+          name: Mesures de sécurité et capacité de protection des informations protégées
+            ou classifiées
+          description: Pour les marchés impliquant des informations protégées ou classifiées
+            liées à la sécurité nationale, mon entreprise doit prouver sa capacité
+            à traiter, stocker et transmettre ces données selon le niveau de protection
+            exigé par l’acheteur.
+        capacites_techniques_professionnelles_securite_et_confidentialite_habilitation_prealable_secret_defense:
+          name: Habilitation préalable relative à la protection du secret de la défense
+            nationale
+          description: Si le contrat donne accès à des informations classifiées, votre
+            entreprise et son dirigeant doivent obtenir une habilitation préalable
+            au secret de la défense nationale. Cette habilitation, délivrée par l’autorité
+            compétente, garantit la fiabilité et le respect des règles de sécurité.
+        capacites_techniques_professionnelles_securite_et_confidentialite_description_regles_propriete_intellectuelle:
+          name: Les règles internes en matière de propriété intellectuelle
+          description: Les résultats de certains marchés peuvent être grevés de droits
+            de propriété intellectuelle, de droits d’auteur notamment. Votre entreprise
+            est tenue de décrire ses règles internes en matière de propriété intellectuelle.

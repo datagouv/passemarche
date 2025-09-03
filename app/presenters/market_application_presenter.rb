@@ -33,7 +33,7 @@ class MarketApplicationPresenter
   end
 
   def market_attribute_response_for(market_attribute)
-    @market_application.market_attribute_responses.find_by(market_attribute:) ||
+    @market_application.market_attribute_responses.find { |response| response.market_attribute_id == market_attribute.id } ||
       @market_application.market_attribute_responses.build(
         market_attribute:,
         type: market_attribute.input_type.camelize
@@ -50,13 +50,9 @@ class MarketApplicationPresenter
   def responses_for_category(category_key)
     return [] if category_key.blank?
 
-    # Use preloaded responses if available, otherwise query
-    @responses_for_category ||= {}
-    @responses_for_category[category_key] ||= @market_application.market_attribute_responses
-      .joins(:market_attribute)
-      .where(market_attributes: { category_key: })
-      .includes(:market_attribute)
-      .order('market_attributes.id')
+    @market_application.market_attribute_responses
+      .select { |response| response.market_attribute&.category_key == category_key }
+      .sort_by { |response| response.market_attribute&.id || Float::INFINITY }
   end
 
   def responses_grouped_by_subcategory(category_key)

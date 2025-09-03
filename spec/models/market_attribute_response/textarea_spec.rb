@@ -82,31 +82,31 @@ RSpec.describe MarketAttributeResponse::Textarea, type: :model do
       it 'rejects text exceeding length limit' do
         textarea_response.value = { 'text' => 'a' * 10_001 }
         expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:value]).to be_present
+        expect(textarea_response.errors[:text]).to be_present
       end
 
       it 'rejects non-string values' do
         textarea_response.value = { 'text' => 123 }
         expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:value]).to be_present
+        expect(textarea_response.errors[:text]).to be_present
       end
 
       it 'rejects missing text field' do
         textarea_response.value = {}
         expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:value]).to be_present
+        expect(textarea_response.errors[:text]).to be_present
       end
 
       it 'rejects nil value' do
         textarea_response.value = nil
         expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:value]).to be_present
+        expect(textarea_response.errors[:text]).to be_present
       end
 
       it 'rejects additional properties' do
         textarea_response.value = { 'text' => 'Valid text', 'extra' => 'field' }
         expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:value]).to be_present
+        expect(textarea_response.errors[:text]).to be_present
       end
     end
   end

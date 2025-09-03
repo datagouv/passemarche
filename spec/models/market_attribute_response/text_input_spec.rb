@@ -82,31 +82,31 @@ RSpec.describe MarketAttributeResponse::TextInput, type: :model do
       it 'rejects text exceeding length limit' do
         text_response.value = { 'text' => 'a' * 10_001 }
         expect(text_response).not_to be_valid
-        expect(text_response.errors[:value]).to be_present
+        expect(text_response.errors[:text]).to be_present
       end
 
       it 'rejects non-string values' do
         text_response.value = { 'text' => 123 }
         expect(text_response).not_to be_valid
-        expect(text_response.errors[:value]).to be_present
+        expect(text_response.errors[:text]).to be_present
       end
 
       it 'rejects missing text field' do
         text_response.value = {}
         expect(text_response).not_to be_valid
-        expect(text_response.errors[:value]).to be_present
+        expect(text_response.errors[:text]).to be_present
       end
 
       it 'rejects nil value' do
         text_response.value = nil
         expect(text_response).not_to be_valid
-        expect(text_response.errors[:value]).to be_present
+        expect(text_response.errors[:text]).to be_present
       end
 
       it 'rejects additional properties' do
         text_response.value = { 'text' => 'Valid text', 'extra' => 'field' }
         expect(text_response).not_to be_valid
-        expect(text_response.errors[:value]).to be_present
+        expect(text_response.errors[:text]).to be_present
       end
     end
   end

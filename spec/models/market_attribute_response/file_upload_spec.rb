@@ -112,13 +112,13 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
       it 'rejects missing file object' do
         file_response.value = {}
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects nil value' do
         file_response.value = nil
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects file with missing name' do
@@ -129,7 +129,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects file with missing content_type' do
@@ -140,7 +140,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects file with missing size' do
@@ -151,7 +151,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects non-allowed content types' do
@@ -163,7 +163,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects files that are too large' do
@@ -175,7 +175,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects zero-size files' do
@@ -187,7 +187,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
 
       it 'rejects additional properties in file object' do
@@ -200,7 +200,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
           }
         }
         expect(file_response).not_to be_valid
-        expect(file_response.errors[:value]).to be_present
+        expect(file_response.errors[:file]).to be_present
       end
     end
   end

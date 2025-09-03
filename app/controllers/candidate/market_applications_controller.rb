@@ -133,12 +133,13 @@ module Candidate
       @market_application.public_market.market_attributes.find_each do |market_attribute|
         next if @market_application.market_attribute_responses.exists?(market_attribute:)
 
-        MarketAttributeResponse.create!(
+        response = MarketAttributeResponse.new(
           market_application: @market_application,
           market_attribute:,
           type: market_attribute.input_type.camelize,
           value: nil
         )
+        response.save!(validate: false)
       end
     end
 

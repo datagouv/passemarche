@@ -215,6 +215,13 @@ fr:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
         cannot_be_alone: "ne peut pas être seul"
+      json_schema:
+        invalid_format: "n'est pas un format valide"
+        too_long: "est trop long"
+        required: "est requis"
+        wrong_type: "n'est pas du bon type"
+        additional_properties: "contient des propriétés non autorisées"
+        invalid: "est invalide"
       models:
         public_market:
           attributes:
@@ -233,6 +240,15 @@ fr:
           attributes:
             siret:
               invalid: "doit être un numéro SIRET valide de 14 chiffres"
+        market_attribute_response/email_input:
+          attributes:
+            text:
+              invalid: "doit être une adresse email valide"
+        market_attribute_response/text_input:
+          attributes:
+            text:
+              blank: "ne peut pas être vide"
+              too_long: "est trop long (maximum %{count} caractères)"
         editor:
           attributes:
             completion_webhook_url:
