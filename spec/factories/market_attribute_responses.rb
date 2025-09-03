@@ -26,5 +26,10 @@ FactoryBot.define do
       type { 'FileUpload' }
       association :market_attribute, :file_upload
     end
+
+    factory :market_attribute_response_checkbox_with_document, class: 'MarketAttributeResponse::CheckboxWithDocument' do
+      type { 'CheckboxWithDocument' }
+      association :market_attribute, :checkbox_with_document
+    end
   end
 end
