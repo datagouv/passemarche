@@ -6,31 +6,59 @@ RSpec.describe MarketAttributeResponse::PhoneInput, type: :model do
   let(:phone_response) { described_class.new(market_application:, market_attribute:) }
 
   describe 'validations' do
-    it 'accepts a valid French phone number' do
-      phone_response.text = '+33612345678'
+    it 'accepts 0123456789' do
+      phone_response.text = '0123456789'
       expect(phone_response).to be_valid
     end
 
-    it 'accepts a valid short phone number' do
-      phone_response.text = '0612345678'
+    it 'accepts 01 23 45 67 89' do
+      phone_response.text = '01 23 45 67 89'
       expect(phone_response).to be_valid
     end
 
-    it 'rejects a phone number that is too long' do
-      phone_response.text = '+33 6 12 34 56 78999'
+    it 'accepts 01-23-45-67-89' do
+      phone_response.text = '01-23-45-67-89'
+      expect(phone_response).to be_valid
+    end
+
+    it 'accepts +33 1 23 45 67 89' do
+      phone_response.text = '+33 1 23 45 67 89'
+      expect(phone_response).to be_valid
+    end
+
+    it 'accepts international phone numbers' do
+      phone_response.text = '+49 30 123456'
+      expect(phone_response).to be_valid
+    end
+
+    it 'rejects when too short' do
+      phone_response.text = '123456789'
       expect(phone_response).not_to be_valid
       expect(phone_response.errors[:text]).to be_present
     end
 
-    it 'rejects a phone number with invalid characters' do
-      phone_response.text = '06-12-34-56-78abc'
+    it 'rejects when too long' do
+      phone_response.text = '01234567890123456789'
       expect(phone_response).not_to be_valid
       expect(phone_response.errors[:text]).to be_present
     end
 
-    it 'accepts blank value if allowed' do
-      phone_response.text = ''
-      expect(phone_response).to be_valid
+    it 'rejects when incomplete' do
+      phone_response.text = '01 23 45 67'
+      expect(phone_response).not_to be_valid
+      expect(phone_response.errors[:text]).to be_present
+    end
+
+    it 'rejects when letters are present' do
+      phone_response.text = '01 23 45 AB 89'
+      expect(phone_response).not_to be_valid
+      expect(phone_response.errors[:text]).to be_present
+    end
+
+    it 'rejects when invalid country code is present' do
+      phone_response.text = '++33 1 23 45 67 89'
+      expect(phone_response).not_to be_valid
+      expect(phone_response.errors[:text]).to be_present
     end
   end
 end

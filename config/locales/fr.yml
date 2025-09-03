@@ -253,7 +253,7 @@ fr:
           attributes:
             text:
               blank: "ne peut pas être vide"
-              invalid: "Le format attendu est : 01 22 33 44 55"
+              invalid: "Le format attendu est : 01 23 45 67 89 ou +33 1 23 45 67 89"
               too_long: "est trop long (maximum %{count} caractères)"
         editor:
           attributes:
