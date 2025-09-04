@@ -9,6 +9,5 @@ class MarketAttributeResponse::PhoneInput < MarketAttributeResponse::TextInput
     format: {
       with: PHONE_REGEX,
       message: :invalid
-    },
-    allow_blank: true
+    }
 end
