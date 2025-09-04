@@ -10,7 +10,16 @@ RSpec.describe MarketAttribute, type: :model do
     it { should validate_uniqueness_of(:key) }
     it { should validate_presence_of(:category_key) }
     it { should validate_presence_of(:subcategory_key) }
-    it { should define_enum_for(:input_type).with_values(file_upload: 0, text_input: 1, checkbox: 2, textarea: 3, email_input: 4) }
+    it {
+      should define_enum_for(:input_type).with_values(
+        file_upload: 0,
+        text_input: 1,
+        checkbox: 2,
+        textarea: 3,
+        email_input: 4,
+        phone_input: 5
+      )
+    }
   end
 
   describe 'scopes' do

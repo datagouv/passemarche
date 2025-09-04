@@ -16,7 +16,8 @@ class MarketAttribute < ApplicationRecord
     text_input: 1,
     checkbox: 2,
     textarea: 3,
-    email_input: 4
+    email_input: 4,
+    phone_input: 5
   }
 
   scope :required, -> { where(required: true) }

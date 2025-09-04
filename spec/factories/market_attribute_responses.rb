@@ -26,5 +26,10 @@ FactoryBot.define do
       type { 'FileUpload' }
       association :market_attribute, :file_upload
     end
+
+    factory :market_attribute_response_phone_input, class: 'MarketAttributeResponse::PhoneInput' do
+      type { 'PhoneInput' }
+      association :market_attribute, :phone_input
+    end
   end
 end
