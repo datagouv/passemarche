@@ -21,7 +21,7 @@
       <% if checked && documents.attached? %>
         <% documents.each do |document| %>
           <div>
-            <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+            <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
             <%= link_to document.filename.to_s,
                         url_for(document),
                         target: "_blank", rel: "noopener" %>
