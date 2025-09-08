@@ -1,5 +1,8 @@
-<% checked_value = market_attribute_response.checked
-key = market_attribute_response.market_attribute.key %>
+<%
+  checked_value = market_attribute_response.checked
+  key = market_attribute_response.market_attribute.key
+  documents = market_attribute_response.documents
+%>
 
 <div class="fr-checkbox-group">
   <%= form.fields_for :market_attribute_responses, market_attribute_response,
@@ -39,6 +42,20 @@ key = market_attribute_response.market_attribute.key %>
           multiple: true,
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
           aria: { describedby: "upload-#{market_attribute_response.id}-messages" } %>
+
+          <% if documents.attached? %>
+            <div class="fr-mt-2w">
+              <p class="fr-text--sm"><strong>Documents actuels :</strong></p>
+              <% documents.each do |document| %>
+                <div>
+                  <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                  <%= link_to document.filename.to_s,
+                              url_for(document),
+                              target: "_blank", rel: "noopener" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
 
       <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
         <% if response_form.object.errors[:file].present? %>
