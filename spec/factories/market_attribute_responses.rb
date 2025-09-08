@@ -11,6 +11,11 @@ FactoryBot.define do
       type { 'Checkbox' }
       association :market_attribute, :checkbox
     end
+    
+    factory :market_attribute_response_checkbox_with_document, class: 'MarketAttributeResponse::CheckboxWithDocument' do
+      type { 'CheckboxWithDocument' }
+      association :market_attribute, :checkbox_with_document
+    end
 
     factory :market_attribute_response_textarea, class: 'MarketAttributeResponse::Textarea' do
       type { 'Textarea' }
@@ -27,9 +32,9 @@ FactoryBot.define do
       association :market_attribute, :file_upload
     end
 
-    factory :market_attribute_response_checkbox_with_document, class: 'MarketAttributeResponse::CheckboxWithDocument' do
-      type { 'CheckboxWithDocument' }
-      association :market_attribute, :checkbox_with_document
+    factory :market_attribute_response_phone_input, class: 'MarketAttributeResponse::PhoneInput' do
+      type { 'PhoneInput' }
+      association :market_attribute, :phone_input
     end
   end
 end

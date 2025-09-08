@@ -116,6 +116,7 @@ Ces API renvoient un document pdf attestant de la regularité . SI pas ""à jour
 
 "
 motifs_exclusion_sociaux,motifs_exclusion_sociaux_declarations,motifs_exclusion_sociaux_declarations_pro_btp,"Motifs d' exclusion liés aux obligations fiscales et sociales, redressement/liquidation",,Attestation de régularité des cotisations retraite Pro BTP,Le candidat devra fournir une attestation délivrée par un organisme proposant des services de protection sociale dans le secteur du BTP,non,Les motifs d’exclusion,"Motifs d'exclusion liés aux obligations fiscales et sociales, redressement/liquidation",Mon entreprise n'est pas à jour du paiement de ses cotisations retraite Pro BTP,"Mon entreprise exercant dans le secteur du BTP, ne s'est pas acquittée de ses obligations de retraites complémentaires. Mon entreprise ne peut donc pas fournir d'attestation PRO BTP.",checkbox_with_document,,oui,non,non,non,oui,non,oui,"Attestations ProBtp, ProBtp",https://entreprise.api.gouv.fr/catalogue/probtp/conformites_cotisations_retraite,"Attestation Pro Btp :
+
 L’attestation explicite :
 les contrats retraite et prévoyance souscrits ;
 la régularité de versement des cotisations, indiquée comme suit : « En tenant compte des éléments connus à cette date, elle [l’entreprise] est à jour des cotisations exigibles au JJ.MM.AAAA »."

@@ -1,5 +1,5 @@
 <%
-  text_value = market_attribute_response.text || ''
+  phone_value = market_attribute_response.text || ''
 %>
 
 <div class="fr-input-group<%= ' fr-input-group--error' if market_attribute_response.errors[:text].any? %>">
@@ -17,11 +17,16 @@
       <span class="fr-hint-text">
         <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
       </span>
+    <% else %>
+      <span class="fr-hint-text">Format attendu :  01 22 33 44 55</span>
     <% end %>
 
-    <%= response_form.text_field :text,
-          value: text_value,
+    <%= response_form.telephone_field :text,
+          value: phone_value,
           class: "fr-input#{ ' fr-input--error' if market_attribute_response.errors[:text].any? }",
+          id: "phone-input-#{form.object.id}",
+          autocomplete: "tel",
+          aria: { describedby: "phone-input-#{form.object.id}-messages" },
           required: true %>
 
     <% if market_attribute_response.errors[:text].any? %>
@@ -30,5 +35,4 @@
       </p>
     <% end %>
   <% end %>
-
 </div>
