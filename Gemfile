@@ -42,7 +42,7 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'cucumber-rails', '~> 3.1', require: false
+  gem 'cucumber-rails', '~> 4.0', require: false
   gem 'database_cleaner-active_record', '~> 2.2'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 6.4'
