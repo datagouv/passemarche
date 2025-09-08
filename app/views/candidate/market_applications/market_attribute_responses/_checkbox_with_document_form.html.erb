@@ -11,7 +11,7 @@
       <div class="fr-checkbox-group">
         <%= response_form.check_box :checked, {}, "1", "0" %>
         <%= response_form.label :checked, "Je certifie que mon entreprise est à jour de ses obligations d’assurance *",
-              class: "fr-checkbox__label" %>
+              class: "fr-checkbox__label fr-mb-2w" %>
 
         <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
           <div class="fr-checkbox__label__description">
@@ -21,14 +21,17 @@
       </div>
     </div>
 
-    <div class="fr-upload-group fr-mt-2w">
-      <%= response_form.label :file, "Ajouter vos documents", class: "fr-label", for: "upload-#{market_attribute_response.id}" %>
-      <span class="fr-hint-text">
-        Taille maximale : xx Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
+    <div class="fr-upload-group fr-mt-2w fr-card fr-p-2w">
+      <%= response_form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{market_attribute_response.id}" %>
+      <span class="fr-hint-text fr-mb-2w fr-text--sm">
+        Taille maximale : <%= MarketAttributeResponse::CheckboxWithDocument::MAX_FILE_SIZE / 1.megabyte %> Mo.
+        Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
       </span>
-      <%= response_form.file_field :file,
+      <%= response_form.file_field :files,
           id: "upload-#{market_attribute_response.id}",
           class: "fr-upload",
+          multipart: true,
+          multiple: true,
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
           aria: { describedby: "upload-#{market_attribute_response.id}-messages" } %>
 
