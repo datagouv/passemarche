@@ -215,6 +215,7 @@ fr:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
         cannot_be_alone: "ne peut pas être seul"
+        inclusion: "n'est pas inclus dans la liste"
       json_schema:
         invalid_format: "n'est pas un format valide"
         too_long: "est trop long"
