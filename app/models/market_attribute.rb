@@ -17,7 +17,7 @@ class MarketAttribute < ApplicationRecord
     checkbox: 2,
     textarea: 3,
     email_input: 4,
-    phone_input: 5,
+    phone: 5,
     checkbox_with_document: 6
   }
 

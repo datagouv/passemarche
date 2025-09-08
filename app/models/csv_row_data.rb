@@ -31,7 +31,7 @@ class CsvRowData
 
   INPUT_TYPE_MAPPING = {
     'checkbox' => :checkbox,
-    'checkbox_with_document' => :checkbox_with_document
+    'checkbox_with_document' => :checkbox_with_document,
     'document' => :file_upload,
     'email' => :email_input,
     'phone' => :phone_input,

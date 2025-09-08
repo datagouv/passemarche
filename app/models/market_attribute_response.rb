@@ -4,11 +4,12 @@ class MarketAttributeResponse < ApplicationRecord
 
   STI_CLASS_MAP = {
     'Checkbox' => 'MarketAttributeResponse::Checkbox',
-    CheckboxWithDocument' => 'MarketAttributeResponse::CheckboxWithDocument',
+    'CheckboxWithDocument' => 'MarketAttributeResponse::CheckboxWithDocument',
     'Textarea' => 'MarketAttributeResponse::Textarea',
     'TextInput' => 'MarketAttributeResponse::TextInput',
     'FileUpload' => 'MarketAttributeResponse::FileUpload',
-    'EmailInput' => 'MarketAttributeResponse::EmailInput'
+    'EmailInput' => 'MarketAttributeResponse::EmailInput',
+    'Phone' => 'MarketAttributeResponse::PhoneInput'
   }.freeze
 
   validates :type, presence: true, inclusion: { in: STI_CLASS_MAP.keys }

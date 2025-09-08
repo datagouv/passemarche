@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MarketAttributeResponse::PhoneInput, type: :model do
   let(:market_application) { create(:market_application) }
-  let(:market_attribute) { create(:market_attribute, input_type: 'phone_input') }
+  let(:market_attribute) { create(:market_attribute, input_type: 'phone') }
   let(:phone_response) { described_class.new(market_application:, market_attribute:) }
 
   describe 'validations' do
