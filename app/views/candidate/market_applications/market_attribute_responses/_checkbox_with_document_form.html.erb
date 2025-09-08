@@ -11,21 +11,22 @@
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
 
-    <p class="fr-text--sm fr-mb-2w">
-      <%= t("form_fields.candidate.fields.#{key}.description_candidat") %>
-    </p>
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
+            default: market_attribute_response.market_attribute.key.humanize) %>
+    </h6>
+
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <div class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </div>
+    <% end %>
 
     <div class="fr-fieldset__element">
       <div class="fr-checkbox-group">
         <%= response_form.check_box :checked, {}, "1", "0" %>
         <%= response_form.label :checked, raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")),
               class: "fr-checkbox__label fr-mb-2w" %>
-
-        <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
-          <div class="fr-checkbox__label__description">
-            <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
-          </div>
-        <% end %>
       </div>
     </div>
 
