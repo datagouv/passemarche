@@ -11,23 +11,21 @@ class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse::C
     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
   ].freeze
 
-  # TODO: needs to send mutliple files
-  # Check front upload file
-  # It receives many documents, but upload is not yet totally implemented
   has_many_attached :documents
-  store_accessor :value, :file, :checked
+  store_accessor :value, :checked
 
   validate :documents_only_if_checked
   validate :file_metadata_valid, if: -> { documents.attached? }
 
-  def file=(uploaded_files)
+  def files=(uploaded_files)
     return unless checked
     return if uploaded_files.blank?
 
-    Array(uploaded_files).each do |uploaded_file|
-      documents.attach(uploaded_file)
+    uploaded_files
+      .compact_blank
+      .each do |f|
+      documents.attach(f)
     end
-    save!
   end
 
   def checked
@@ -45,6 +43,7 @@ class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse::C
   def file_metadata_valid
     documents.each do |doc|
       blob = doc.blob
+
       errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid')) if blob.byte_size > MAX_FILE_SIZE
 
       errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid')) unless ALLOWED_CONTENT_TYPES.include?(blob.content_type)

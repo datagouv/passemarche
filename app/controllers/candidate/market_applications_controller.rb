@@ -147,8 +147,13 @@ module Candidate
       params.fetch(:market_application, {}).permit(
         :siret,
         market_attribute_responses_attributes: [
-          :id, :market_attribute_id, :_destroy,
-          :text, :checked, :file,
+          :id,
+          :market_attribute_id,
+          :_destroy,
+          :text,
+          :checked,
+          :file,
+          { files: [] },
           { value: {} }
         ]
       )
