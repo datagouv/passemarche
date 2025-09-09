@@ -59,9 +59,9 @@
           <% end %>
 
       <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
-        <% if response_form.object.errors[:file].present? %>
+        <% if response_form.object.errors[:documents].present? %>
           <p class="fr-message fr-message--error">
-            <%= response_form.object.errors[:file].first %>
+            <%= response_form.object.errors[:documents].first %>
           </p>
         <% end %>
       </div>

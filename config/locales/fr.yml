@@ -243,8 +243,8 @@ fr:
               invalid: "doit être un numéro SIRET valide de 14 chiffres"
         market_attribute_response:
           attributes:
-            file:
-              file_not_allowed_unless_checked: "Vous ne pouvez joindre un document que si la case est cochée."
+            documents:
+              document_not_allowed_unless_checked: "Vous ne pouvez joindre un document que si la case est cochée."
         market_attribute_response/email_input:
           attributes:
             text:

@@ -37,7 +37,7 @@ class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse::C
   def documents_only_if_checked
     return unless documents.attached? && !checked
 
-    errors.add(:documents, :file_not_allowed_unless_checked)
+    errors.add(:documents, :document_not_allowed_unless_checked)
   end
 
   def file_metadata_valid
