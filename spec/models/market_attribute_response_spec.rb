@@ -27,6 +27,12 @@ RSpec.describe MarketAttributeResponse, type: :model do
     it 'finds FileUpload class' do
       expect(MarketAttributeResponse.find_sti_class('FileUpload')).to eq(MarketAttributeResponse::FileUpload)
     end
+
+    it 'finds CheckboxWithDocument class' do
+      expect(
+        MarketAttributeResponse.find_sti_class('CheckboxWithDocument')
+      ).to eq(MarketAttributeResponse::CheckboxWithDocument)
+    end
   end
 
   describe 'sti_name' do

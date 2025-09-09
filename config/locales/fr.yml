@@ -215,6 +215,7 @@ fr:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
         cannot_be_alone: "ne peut pas être seul"
+        inclusion: "n'est pas inclus dans la liste"
       json_schema:
         invalid_format: "n'est pas un format valide"
         too_long: "est trop long"
@@ -240,6 +241,10 @@ fr:
           attributes:
             siret:
               invalid: "doit être un numéro SIRET valide de 14 chiffres"
+        market_attribute_response:
+          attributes:
+            file:
+              file_not_allowed_unless_checked: "Vous ne pouvez joindre un document que si la case est cochée."
         market_attribute_response/email_input:
           attributes:
             text:

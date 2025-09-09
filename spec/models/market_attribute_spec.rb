@@ -17,7 +17,8 @@ RSpec.describe MarketAttribute, type: :model do
         checkbox: 2,
         textarea: 3,
         email_input: 4,
-        phone_input: 5
+        phone_input: 5,
+        checkbox_with_document: 6
       )
     }
   end

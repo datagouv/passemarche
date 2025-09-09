@@ -1,0 +1,70 @@
+<%
+  checked_value = market_attribute_response.checked
+  key = market_attribute_response.market_attribute.key
+  documents = market_attribute_response.documents
+%>
+
+<div class="fr-checkbox-group">
+  <%= form.fields_for :market_attribute_responses, market_attribute_response,
+                      child_index: market_attribute_response.id,
+                      multipart: true do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
+            default: market_attribute_response.market_attribute.key.humanize) %>
+    </h6>
+
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <div class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </div>
+    <% end %>
+
+    <div class="fr-fieldset__element">
+      <div class="fr-checkbox-group">
+        <%= response_form.check_box :checked, {}, "1", "0" %>
+        <%= response_form.label :checked, raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")),
+              class: "fr-checkbox__label fr-mb-2w" %>
+      </div>
+    </div>
+
+    <div class="fr-upload-group fr-mt-2w fr-card fr-p-2w">
+      <%= response_form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{market_attribute_response.id}" %>
+      <span class="fr-hint-text fr-mb-2w fr-text--sm">
+        Taille maximale : <%= MarketAttributeResponse::CheckboxWithDocument::MAX_FILE_SIZE / 1.megabyte %> Mo.
+        Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
+      </span>
+      <%= response_form.file_field :files,
+          id: "upload-#{market_attribute_response.id}",
+          class: "fr-upload",
+          multipart: true,
+          multiple: true,
+          accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
+          aria: { describedby: "upload-#{market_attribute_response.id}-messages" } %>
+
+          <% if documents.attached? %>
+            <div class="fr-mt-2w">
+              <p class="fr-text--sm"><strong>Documents actuels :</strong></p>
+              <% documents.each do |document| %>
+                <div>
+                  <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                  <%= link_to document.filename.to_s,
+                              url_for(document),
+                              target: "_blank", rel: "noopener" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+      <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
+        <% if response_form.object.errors[:file].present? %>
+          <p class="fr-message fr-message--error">
+            <%= response_form.object.errors[:file].first %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
