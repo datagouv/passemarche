@@ -1,5 +1,8 @@
-<% checked_value = market_attribute_response.checked
-key = market_attribute_response.market_attribute.key %>
+<%
+  checked_value = market_attribute_response.checked
+  key = market_attribute_response.market_attribute.key
+  documents = market_attribute_response.documents
+%>
 
 <div class="fr-checkbox-group">
   <%= form.fields_for :market_attribute_responses, market_attribute_response,
@@ -8,21 +11,22 @@ key = market_attribute_response.market_attribute.key %>
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
 
-    <p class="fr-text--sm fr-mb-2w">
-      <%= t("form_fields.candidate.fields.#{key}.description_candidat") %>
-    </p>
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
+            default: market_attribute_response.market_attribute.key.humanize) %>
+    </h6>
+
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <div class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </div>
+    <% end %>
 
     <div class="fr-fieldset__element">
       <div class="fr-checkbox-group">
         <%= response_form.check_box :checked, {}, "1", "0" %>
         <%= response_form.label :checked, raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")),
               class: "fr-checkbox__label fr-mb-2w" %>
-
-        <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
-          <div class="fr-checkbox__label__description">
-            <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
-          </div>
-        <% end %>
       </div>
     </div>
 
@@ -40,10 +44,24 @@ key = market_attribute_response.market_attribute.key %>
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
           aria: { describedby: "upload-#{market_attribute_response.id}-messages" } %>
 
+          <% if documents.attached? %>
+            <div class="fr-mt-2w">
+              <p class="fr-text--sm"><strong>Documents actuels :</strong></p>
+              <% documents.each do |document| %>
+                <div>
+                  <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                  <%= link_to document.filename.to_s,
+                              url_for(document),
+                              target: "_blank", rel: "noopener" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
       <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
-        <% if response_form.object.errors[:file].present? %>
+        <% if response_form.object.errors[:documents].present? %>
           <p class="fr-message fr-message--error">
-            <%= response_form.object.errors[:file].first %>
+            <%= response_form.object.errors[:documents].first %>
           </p>
         <% end %>
       </div>

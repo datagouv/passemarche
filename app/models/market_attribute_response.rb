@@ -9,7 +9,7 @@ class MarketAttributeResponse < ApplicationRecord
     'TextInput' => 'MarketAttributeResponse::TextInput',
     'FileUpload' => 'MarketAttributeResponse::FileUpload',
     'EmailInput' => 'MarketAttributeResponse::EmailInput',
-    'Phone' => 'MarketAttributeResponse::PhoneInput'
+    'PhoneInput' => 'MarketAttributeResponse::PhoneInput'
   }.freeze
 
   validates :type, presence: true, inclusion: { in: STI_CLASS_MAP.keys }
