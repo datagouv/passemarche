@@ -1,0 +1,38 @@
+<%
+  phone_value = market_attribute_response.text || ''
+%>
+
+<div class="fr-input-group<%= ' fr-input-group--error' if market_attribute_response.errors[:text].any? %>">
+  <%= form.fields_for :market_attribute_responses, market_attribute_response,
+                      child_index: market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+
+    <%= response_form.label :text,
+          t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
+            default: market_attribute_response.market_attribute.key.humanize),
+          class: "fr-label fr-label--required" %>
+
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <span class="fr-hint-text">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </span>
+    <% else %>
+      <span class="fr-hint-text">Format attendu :  01 22 33 44 55</span>
+    <% end %>
+
+    <%= response_form.telephone_field :text,
+          value: phone_value,
+          class: "fr-input#{ ' fr-input--error' if market_attribute_response.errors[:text].any? }",
+          id: "phone-input-#{form.object.id}",
+          autocomplete: "tel",
+          aria: { describedby: "phone-input-#{form.object.id}-messages" },
+          required: true %>
+
+    <% if market_attribute_response.errors[:text].any? %>
+      <p class="fr-error-text">
+        <%= market_attribute_response.errors[:text].first %>
+      </p>
+    <% end %>
+  <% end %>
+</div>
