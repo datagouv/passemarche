@@ -13,11 +13,17 @@
     <br>
     <span class="fr-text--sm fr-text--mention-grey">
       <% if has_document %>
-        <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-      <% end %>
-      <%= display_value %>
-      <% if file_info&.dig('size').present? %>
-        (<%= number_to_human_size(file_info['size']) %>)
+        <div>
+          <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
+          <%= link_to market_attribute_response.document.filename.to_s,
+                      url_for(market_attribute_response.document),
+                      target: "_blank", rel: "noopener" %>
+          <% if file_info&.dig('size').present? %>
+            (<%= number_to_human_size(file_info['size']) %>)
+          <% end %>
+        </div>
+      <% else %>
+        <span>Aucun fichier téléchargé</span>
       <% end %>
     </span>
   </div>

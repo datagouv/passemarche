@@ -30,13 +30,22 @@
           required: required,
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png" %>
 
-    <% if file_info.present? %>
-      <div>
-        <p class="fr-text--sm fr-mb-0">
-          <strong>Fichier actuel :</strong> <%= file_info['name'] || 'Fichier téléchargé' %>
-        </p>
-      </div>
-    <% end %>
+      <% if file_info.present? && file_info['name'].present? %>
+        <div class="fr-text--sm fr-mb-0">
+          <strong>Fichier actuel :</strong>
+          <div>
+            <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+            <%= link_to file_info['name'].to_s,
+                        url_for(market_attribute_response.document),
+                        target: "_blank", rel: "noopener" %>
+          </div>
+        </div>
+      <% else %>
+        <div class="fr-text--sm fr-mb-0">
+          <strong>Fichier actuel :</strong>
+          <span>Fichier téléchargé</span>
+        </div>
+      <% end %>
       <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
         <% if response_form.object.errors[:file].present? %>
           <p class="fr-message fr-message--error">
