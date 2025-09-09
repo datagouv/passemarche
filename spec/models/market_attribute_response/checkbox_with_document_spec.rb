@@ -57,7 +57,7 @@ RSpec.describe MarketAttributeResponse::CheckboxWithDocument, type: :model do
     end
   end
 
-  describe 'combinaison checked/file' do
+  describe 'combination checked/file' do
     it 'is invalid if checked is false and file is attached' do
       response.checked = false
       response.documents.attach(
