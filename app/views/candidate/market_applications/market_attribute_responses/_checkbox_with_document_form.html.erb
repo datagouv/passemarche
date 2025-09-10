@@ -22,12 +22,10 @@
       </div>
     <% end %>
 
-    <div class="fr-fieldset__element">
-      <div class="fr-checkbox-group">
-        <%= response_form.check_box :checked, {}, "1", "0" %>
-        <%= response_form.label :checked, raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")),
-              class: "fr-checkbox__label fr-mb-2w" %>
-      </div>
+    <div class="fr-checkbox-group">
+      <%= response_form.check_box :checked, {}, "1", "0" %>
+      <%= response_form.label :checked, raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")),
+            class: "fr-checkbox__label fr-mb-2w" %>
     </div>
 
     <div class="fr-upload-group fr-mt-2w fr-card fr-p-2w">
