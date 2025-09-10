@@ -11,128 +11,88 @@ class MarketAttributeResponse::FileUpload < MarketAttributeResponse
     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
   ].freeze
 
-  has_one_attached :document
-  store_accessor :value, :file
+  has_many_attached :documents
+  store_accessor :value
 
-  validate :file_field_required
-  validate :file_structure_valid
-  validate :file_content_type_valid
-  validate :file_size_valid
-  validate :file_name_present
-  validate :file_additional_properties_valid
-  validate :file_object_additional_properties_valid
+  validates :documents, presence: { message: I18n.t('activerecord.errors.json_schema.required') }
+  validate :documents_content_type_valid
+  validate :documents_size_valid
+  validate :documents_name_present
+  validate :documents_additional_properties_valid
+  validate :documents_object_additional_properties_valid
 
-  def file=(uploaded_file)
-    return if uploaded_file.blank?
+  def files=(uploaded_files)
+    return if uploaded_files.blank?
 
-    # Attach the actual file to Active Storage (skip for test doubles)
-    document.attach(uploaded_file) if uploaded_file.respond_to?(:tempfile) || uploaded_file.is_a?(ActionDispatch::Http::UploadedFile)
-
-    # Store metadata for quick access without loading the blob
-    write_store_attribute(:value, :file, {
-      'name' => uploaded_file.original_filename,
-      'content_type' => uploaded_file.content_type,
-      'size' => uploaded_file.size
-    })
+    uploaded_files.compact_blank.each do |f|
+      documents.attach(f) if f.respond_to?(:tempfile) || f.is_a?(ActionDispatch::Http::UploadedFile)
+    end
   end
 
   private
 
-  def file_field_required
-    return unless value.blank? || !value.key?('file')
+  def documents_content_type_valid
+    return if documents.blank?
 
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.required'))
-  end
-
-  def file_structure_valid
-    return if value.blank? || !value.key?('file')
-    return if file.is_a?(Hash)
-
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.wrong_type'))
+    documents.each do |doc|
+      if doc.content_type.blank?
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.required'))
+      elsif ALLOWED_CONTENT_TYPES.exclude?(doc.content_type)
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
+      end
+    end
   end
 
   # rubocop:disable Metrics/AbcSize
-  def file_content_type_valid
-    return if value.blank? || !value.key?('file') || !file.is_a?(Hash)
+  def documents_size_valid
+    return if documents.blank?
 
-    content_type = file['content_type']
-
-    # Content type is required
-    if content_type.blank?
-      errors.add(:file, I18n.t('activerecord.errors.json_schema.required'))
-      return
+    documents.each do |doc|
+      size = doc.byte_size
+      if size.blank?
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.required'))
+      elsif !size.is_a?(Numeric)
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.wrong_type'))
+      elsif !size.positive? || size > MAX_FILE_SIZE
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
+      end
     end
-
-    # Content type must be allowed
-    return if ALLOWED_CONTENT_TYPES.include?(content_type)
-
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.invalid'))
   end
   # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable Metrics/AbcSize
-  def file_size_valid
-    return if value.blank? || !value.key?('file') || !file.is_a?(Hash)
+  def documents_name_present
+    return if documents.blank?
 
-    size = file['size']
-
-    # Size is required
-    if size.blank?
-      errors.add(:file, I18n.t('activerecord.errors.json_schema.required'))
-      return
+    documents.each do |doc|
+      name = doc.filename.to_s
+      if name.blank?
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.required'))
+      elsif !name.is_a?(String) || name.length > 255
+        errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
+      end
     end
-
-    # Size must be numeric
-    unless size.is_a?(Numeric)
-      errors.add(:file, I18n.t('activerecord.errors.json_schema.wrong_type'))
-      return
-    end
-
-    # Size must be valid range
-    return if size.positive? && size <= MAX_FILE_SIZE
-
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.invalid'))
   end
   # rubocop:enable Metrics/AbcSize
 
-  # rubocop:disable Metrics/AbcSize
-  def file_name_present
-    return if value.blank? || !value.key?('file') || !file.is_a?(Hash)
+  def documents_additional_properties_valid
+    return if documents.blank?
 
-    name = file['name']
+    allowed_keys = %w[filename content_type byte_size]
+    documents.each do |doc|
+      extra_keys = doc.attributes.keys & allowed_keys
 
-    # Name is required
-    if name.blank?
-      errors.add(:file, I18n.t('activerecord.errors.json_schema.required'))
-      return
+      errors.add(:documents, I18n.t('activerecord.errors.json_schema.additional_properties')) if extra_keys.any? { |k| doc.attributes[k].nil? }
     end
-
-    # Name must be string and within length
-    return if name.is_a?(String) && name.length <= 255
-
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.invalid'))
-  end
-  # rubocop:enable Metrics/AbcSize
-
-  def file_additional_properties_valid
-    return if value.blank? || !value.key?('file') || !file.is_a?(Hash)
-
-    allowed_keys = %w[name content_type size]
-    extra_keys = file.keys - allowed_keys
-
-    return if extra_keys.empty?
-
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.additional_properties'))
   end
 
-  def file_object_additional_properties_valid
+  def documents_object_additional_properties_valid
     return if value.blank?
 
-    allowed_keys = ['file']
+    allowed_keys = ['files']
     extra_keys = value.keys - allowed_keys
-
     return if extra_keys.empty?
 
-    errors.add(:file, I18n.t('activerecord.errors.json_schema.additional_properties'))
+    errors.add(:documents, I18n.t('activerecord.errors.json_schema.additional_properties'))
   end
 end

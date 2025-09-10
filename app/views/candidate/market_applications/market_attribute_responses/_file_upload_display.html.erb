@@ -1,7 +1,5 @@
 <%
-  file_info = market_attribute_response.file
-  has_document = market_attribute_response.document.attached?
-  display_value = file_info&.dig('name') || 'Aucun fichier téléchargé'
+  documents = market_attribute_response.documents
 %>
 
 <div class="field-layout-container">
@@ -11,15 +9,17 @@
             default: market_attribute_response.market_attribute.key.humanize) %>
     </strong>
     <br>
+
     <span class="fr-text--sm fr-text--mention-grey">
-      <% if has_document %>
+      <% if documents.attached? %>
         <div>
-          <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-          <%= link_to market_attribute_response.document.filename.to_s,
-                      url_for(market_attribute_response.document),
-                      target: "_blank", rel: "noopener" %>
-          <% if file_info&.dig('size').present? %>
-            (<%= number_to_human_size(file_info['size']) %>)
+          <% documents.each do |doc| %>
+            <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
+            <%= link_to doc.filename.to_s,
+                        url_for(doc),
+                        target: "_blank", rel: "noopener" %>
+            (<%= number_to_human_size(doc.byte_size) %>)
+            <br>
           <% end %>
         </div>
       <% else %>
