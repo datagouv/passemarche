@@ -2,23 +2,14 @@ class MarketAttributeResponse < ApplicationRecord
   belongs_to :market_application
   belongs_to :market_attribute
 
-  STI_CLASS_MAP = {
-    'Checkbox' => 'MarketAttributeResponse::Checkbox',
-    'CheckboxWithDocument' => 'MarketAttributeResponse::CheckboxWithDocument',
-    'Textarea' => 'MarketAttributeResponse::Textarea',
-    'TextInput' => 'MarketAttributeResponse::TextInput',
-    'FileUpload' => 'MarketAttributeResponse::FileUpload',
-    'FileOrTextarea' => 'MarketAttributeResponse::FileOrTextarea',
-    'EmailInput' => 'MarketAttributeResponse::EmailInput',
-    'PhoneInput' => 'MarketAttributeResponse::PhoneInput'
-  }.freeze
-
-  INPUT_TYPE_TO_STI_TYPE = {
+  # Simple mapping from input_type to STI class name
+  INPUT_TYPE_MAP = {
     'file_upload' => 'FileUpload',
     'text_input' => 'TextInput',
     'checkbox' => 'Checkbox',
     'textarea' => 'Textarea',
     'email_input' => 'EmailInput',
+    'file_or_textarea' => 'FileOrTextarea',
     'phone_input' => 'PhoneInput',
     'checkbox_with_document' => 'CheckboxWithDocument'
   }.freeze
