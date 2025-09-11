@@ -20,7 +20,7 @@ class CsvRowData
 
   attribute :obligatoire, :string
 
-  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email phone textarea texte].freeze
+  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email file_or_textarea phone textarea texte].freeze
 
   MARKET_TYPE_MAPPING = {
     'services' => 'services',
@@ -34,6 +34,7 @@ class CsvRowData
     'checkbox_with_document' => :checkbox_with_document,
     'document' => :file_upload,
     'email' => :email_input,
+    'file_or_textarea' => :file_or_textarea,
     'phone' => :phone_input,
     'textarea' => :textarea,
     'texte' => :text_input

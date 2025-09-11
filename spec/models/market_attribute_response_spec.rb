@@ -11,15 +11,8 @@ RSpec.describe MarketAttributeResponse, type: :model do
   describe 'validations' do
     subject { build(:market_attribute_response) }
 
-    it 'validates presence of type after creation' do
-      response = build(:market_attribute_response, market_attribute: nil)
-      response.type = nil
-
-      expect(response).not_to be_valid
-      expect(response.errors[:type]).to be_present
-    end
-
-    it { should validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload]) }
+    it { should validate_presence_of(:type) }
+    it { should validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload FileOrTextarea]) }
   end
 
   describe 'automatic type setting' do
@@ -51,6 +44,10 @@ RSpec.describe MarketAttributeResponse, type: :model do
 
     it 'finds FileUpload class' do
       expect(MarketAttributeResponse.find_sti_class('FileUpload')).to eq(MarketAttributeResponse::FileUpload)
+    end
+
+    it 'find FileOrTextarea class' do
+      expect(MarketAttributeResponse.find_sti_class('FileOrTextarea')).to eq(MarketAttributeResponse::FileOrTextarea)
     end
 
     it 'finds CheckboxWithDocument class' do
