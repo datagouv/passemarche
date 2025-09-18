@@ -17,6 +17,7 @@ class MarketApplication < ApplicationRecord
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
   validate :market_must_be_completed
   validate :siret_must_be_valid
+  validate :nested_attributes_valid
 
   before_validation :generate_identifier, on: :create
 
@@ -39,5 +40,15 @@ class MarketApplication < ApplicationRecord
     return if SiretValidationService.call(siret)
 
     errors.add(:siret, 'Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
+  end
+
+  def nested_attributes_valid
+    market_attribute_responses.each do |response|
+      next if response.valid?
+
+      response.errors.each do |error|
+        errors.add("market_attribute_responses.#{error.attribute}", error.message)
+      end
+    end
   end
 end

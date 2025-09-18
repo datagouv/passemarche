@@ -57,8 +57,30 @@ RSpec.describe MarketAttributeResponse::CheckboxWithDocument, type: :model do
     end
   end
 
-  describe 'combination checked/file' do
-    it 'is invalid if checked is false and file is attached' do
+  describe 'combination checked/file validation' do
+    it 'is valid when unchecked and no files' do
+      response.checked = false
+      expect(response.documents.attached?).to be_falsey
+      expect(response).to be_valid
+    end
+
+    it 'is valid when checked and no files' do
+      response.checked = true
+      expect(response.documents.attached?).to be_falsey
+      expect(response).to be_valid
+    end
+
+    it 'is valid when checked and files attached' do
+      response.checked = true
+      response.documents.attach(
+        io: StringIO.new('dummy content'),
+        filename: 'test.pdf',
+        content_type: 'application/pdf'
+      )
+      expect(response).to be_valid
+    end
+
+    it 'is invalid when unchecked and files attached' do
       response.checked = false
       response.documents.attach(
         io: StringIO.new('dummy content'),
