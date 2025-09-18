@@ -10,28 +10,31 @@ gem 'devise'
 gem 'doorkeeper', '~> 5.7'
 gem 'faraday', '~> 2.0'
 gem 'importmap-rails'
+gem 'interactor', '~> 3.2'
 gem 'jbuilder'
 gem 'kamal', require: false
+gem 'mission_control-jobs'
 gem 'pg', '>= 1.1'
 gem 'propshaft'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 8.0.2'
+gem 'rubyzip', '~> 3.1'
 gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
-gem 'mission_control-jobs'
 gem 'stimulus-rails'
 gem 'thruster', require: false
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'wicked'
-gem 'interactor', '~> 3.2'
 gem 'wicked_pdf'
-gem 'rubyzip', '~> 3.1'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails', '~> 6.5'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-rails'
   gem 'rspec-rails', '~> 8.0'
   gem 'rubocop-rails-omakase', require: false
 end
