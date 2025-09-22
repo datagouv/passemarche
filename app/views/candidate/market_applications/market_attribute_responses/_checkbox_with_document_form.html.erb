@@ -1,13 +1,12 @@
 <%
-  checked_value = market_attribute_response.checked
+  checked_value = market_attribute_response.checked || false
   key = market_attribute_response.market_attribute.key
   documents = market_attribute_response.documents
 %>
 
 <div class="fr-checkbox-group">
   <%= form.fields_for :market_attribute_responses, market_attribute_response,
-                      child_index: market_attribute_response.id,
-                      multipart: true do |response_form| %>
+                      child_index: market_attribute_response.id do |response_form| %>
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
 
@@ -22,10 +21,17 @@
       </div>
     <% end %>
 
-    <div class="fr-checkbox-group">
-      <%= response_form.check_box :checked, {}, "1", "0" %>
-      <%= response_form.label :checked, raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")),
-            class: "fr-checkbox__label fr-mb-2w" %>
+    <div class="fr-checkbox-group<%= ' fr-checkbox-group--error' if response_form.object.errors[:checked].any? %>">
+      <%= response_form.check_box :checked, { class: "fr-checkbox" }, "1", "0" %>
+      <%= response_form.label :checked, class: "fr-checkbox__label fr-mb-2w" do %>
+        <%= raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")) %>
+      <% end %>
+
+      <% if response_form.object.errors[:checked].any? %>
+        <p class="fr-error-text">
+          <%= response_form.object.errors[:checked].first %>
+        </p>
+      <% end %>
     </div>
 
     <div class="fr-upload-group fr-mt-2w fr-card fr-p-2w">
@@ -48,9 +54,13 @@
               <% documents.each do |document| %>
                 <div>
                   <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
-                  <%= link_to document.filename.to_s,
-                              url_for(document),
-                              target: "_blank", rel: "noopener" %>
+                  <% if document.persisted? %>
+                    <%= link_to document.filename.to_s,
+                                url_for(document),
+                                target: "_blank", rel: "noopener" %>
+                  <% else %>
+                    <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
+                  <% end %>
                 </div>
               <% end %>
             </div>

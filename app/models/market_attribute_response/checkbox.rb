@@ -9,6 +9,12 @@ class MarketAttributeResponse::Checkbox < MarketAttributeResponse
   validate :checked_field_required
   validate :checked_additional_properties_valid
 
+  protected
+
+  def checked_as_boolean
+    ActiveModel::Type::Boolean.new.cast(checked)
+  end
+
   private
 
   def checked_field_required

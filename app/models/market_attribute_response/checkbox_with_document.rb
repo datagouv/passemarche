@@ -12,13 +12,11 @@ class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse::C
   ].freeze
 
   has_many_attached :documents
-  store_accessor :value, :checked
 
-  validate :documents_only_if_checked
+  validate :checkbox_and_documents_consistency
   validate :file_metadata_valid, if: -> { documents.attached? }
 
   def files=(uploaded_files)
-    return unless checked
     return if uploaded_files.blank?
 
     uploaded_files
@@ -28,14 +26,10 @@ class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse::C
     end
   end
 
-  def checked
-    ActiveModel::Type::Boolean.new.cast(super)
-  end
-
   private
 
-  def documents_only_if_checked
-    return unless documents.attached? && !checked
+  def checkbox_and_documents_consistency
+    return unless !checked_as_boolean && documents.attached?
 
     errors.add(:documents, :document_not_allowed_unless_checked)
   end
