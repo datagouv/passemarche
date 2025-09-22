@@ -4,7 +4,6 @@ module MarketAttributeResponse::JsonValidatable
   extend ActiveSupport::Concern
 
   class_methods do
-    # Override these methods in classes that include this concern
     def json_schema_properties
       raise NotImplementedError, "#{self} must implement json_schema_properties class method"
     end

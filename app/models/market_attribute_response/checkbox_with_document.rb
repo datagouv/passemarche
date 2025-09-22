@@ -1,5 +1,7 @@
-class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse::Checkbox
+class MarketAttributeResponse::CheckboxWithDocument < MarketAttributeResponse
+  include MarketAttributeResponse::CheckboxFieldBehavior
   include MarketAttributeResponse::FileAttachable
+  include MarketAttributeResponse::JsonValidatable
 
   validate :checkbox_and_documents_consistency
 
