@@ -69,7 +69,7 @@ module Candidate
     end
 
     def handle_company_identification
-      ensure_all_market_attribute_responses_exist if @market_application.update(market_application_params)
+      @market_application.update(market_application_params)
 
       render_wizard(@market_application)
     end
@@ -127,20 +127,6 @@ module Candidate
 
     def custom_view_exists?
       lookup_context.exists?(step.to_s, 'candidate/market_applications', false)
-    end
-
-    def ensure_all_market_attribute_responses_exist
-      @market_application.public_market.market_attributes.find_each do |market_attribute|
-        next if @market_application.market_attribute_responses.exists?(market_attribute:)
-
-        response = MarketAttributeResponse.new(
-          market_application: @market_application,
-          market_attribute:,
-          type: market_attribute.input_type.camelize,
-          value: nil
-        )
-        response.save!(validate: false)
-      end
     end
 
     def market_application_params

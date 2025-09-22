@@ -3,7 +3,7 @@
 %>
 
 <div class="fr-input-group<%= ' fr-input-group--error' if market_attribute_response.errors[:text].any? %>">
-  <%= form.fields_for :market_attribute_responses, market_attribute_response, 
+  <%= form.fields_for :market_attribute_responses, market_attribute_response,
                       child_index: market_attribute_response.id do |response_form| %>
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>

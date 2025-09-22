@@ -11,8 +11,33 @@ RSpec.describe MarketAttributeResponse, type: :model do
   describe 'validations' do
     subject { build(:market_attribute_response) }
 
-    it { should validate_presence_of(:type) }
+    it 'validates presence of type after creation' do
+      response = build(:market_attribute_response, market_attribute: nil)
+      response.type = nil
+
+      expect(response).not_to be_valid
+      expect(response.errors[:type]).to be_present
+    end
+
     it { should validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload]) }
+  end
+
+  describe 'automatic type setting' do
+    it 'sets type from market_attribute input_type on create' do
+      market_attribute = create(:market_attribute, input_type: 'text_input')
+      response = build(:market_attribute_response, market_attribute:, type: nil)
+
+      response.valid?
+      expect(response.type).to eq('TextInput')
+    end
+
+    it 'does not override existing type' do
+      market_attribute = create(:market_attribute, input_type: 'checkbox')
+      response = build(:market_attribute_response, market_attribute:, type: 'TextInput')
+
+      response.valid?
+      expect(response.type).to eq('TextInput')
+    end
   end
 
   describe 'STI class resolution' do
