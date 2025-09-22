@@ -21,11 +21,18 @@ class MarketAttributeResponse < ApplicationRecord
     "MarketAttributeResponse::#{type_name}".constantize
   end
 
-  def self.build_for_attribute(market_attribute, params = {})
-    sti_class_name = INPUT_TYPE_MAP[market_attribute.input_type]
-    raise "Unknown input type: #{market_attribute.input_type}" unless sti_class_name
+  def self.sti_class_for_input_type(input_type)
+    sti_class_name = INPUT_TYPE_MAP[input_type]
+    unless sti_class_name
+      valid_types = INPUT_TYPE_MAP.keys.join(', ')
+      raise "Unknown input type '#{input_type}'. Valid types are: #{valid_types}"
+    end
 
-    klass = "MarketAttributeResponse::#{sti_class_name}".constantize
+    "MarketAttributeResponse::#{sti_class_name}".constantize
+  end
+
+  def self.build_for_attribute(market_attribute, params = {})
+    klass = sti_class_for_input_type(market_attribute.input_type)
     klass.new(params.merge(market_attribute:))
   end
 
