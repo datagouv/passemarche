@@ -400,7 +400,7 @@ When('I complete the application on summary step') do
   click_button 'Transmettre ma candidature'
 end
 
-Then('the application status should be {string}') do |expected_status|
+Then('the application status should be {string}') do |_expected_status|
   # Simply verify we've progressed through the workflow successfully
   expect(page).not_to have_content('erreur')
   expect(page).not_to have_content('error')

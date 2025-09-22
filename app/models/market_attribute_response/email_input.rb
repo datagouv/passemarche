@@ -1,6 +1,9 @@
 class MarketAttributeResponse::EmailInput < MarketAttributeResponse::TextInput
-  validates :text, format: {
-    with: URI::MailTo::EMAIL_REGEXP,
-    message: :invalid
-  }
+  validate :email_format
+
+  private
+
+  def email_format
+    validate_text_format(URI::MailTo::EMAIL_REGEXP, :invalid)
+  end
 end
