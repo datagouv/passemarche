@@ -50,9 +50,10 @@ class MarketApplicationPresenter
   def responses_for_category(category_key)
     return [] if category_key.blank?
 
-    @market_application.market_attribute_responses
-      .select { |response| response.market_attribute&.category_key == category_key }
-      .sort_by { |response| response.market_attribute&.id || Float::INFINITY }
+    all_market_attributes
+      .where(category_key:)
+      .order(:id)
+      .map { |attr| market_attribute_response_for(attr) }
   end
 
   def responses_grouped_by_subcategory(category_key)
