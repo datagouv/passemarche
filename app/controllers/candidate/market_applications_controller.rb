@@ -135,6 +135,7 @@ module Candidate
         market_attribute_responses_attributes: [
           :id,
           :market_attribute_id,
+          :type,
           :_destroy,
           :text,
           :checked,

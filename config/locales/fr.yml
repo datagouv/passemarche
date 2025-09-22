@@ -262,6 +262,10 @@ fr:
               too_long: "est trop long (maximum %{count} caractères)"
         editor:
           attributes:
+            name:
+              taken: "est déjà utilisé"
+            client_id:
+              taken: "est déjà utilisé"
             completion_webhook_url:
               invalid_url: "n'est pas une URL valide"
               https_required: "doit utiliser HTTPS en production"

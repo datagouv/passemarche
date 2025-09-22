@@ -1,24 +1,15 @@
 <div class="wizard-nav">
   <div class="fr-col-12">
     <div class="fr-mb-4w">
-      <%= form_with(
-        model: @market_application,
-        url: wizard_path,
-        method: :patch,
-        local: true
-          ) do |form| %>
-        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
-          <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
-            <span class="fr-icon-arrow-left-line" aria-hidden="true"></span>
-            <span class="fr-ml-1w">Précédent</span>
-          <% end %>
-            <%= form.submit(
-              local_assigns[:submit_label] || "Suivant",
-              class: "fr-btn fr-btn--icon-right"
-              ) %>
-        </div>
-        <%= yield form if block_given? %>
-      <% end %>
+      <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
+        <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
+          <span class="fr-icon-arrow-left-line" aria-hidden="true"></span>
+          <span class="fr-ml-1w">Précédent</span>
+        <% end %>
+        <button type="submit" class="fr-btn fr-btn--icon-right">
+          <%= local_assigns[:submit_label] || "Suivant" %>
+        </button>
+      </div>
     </div>
   </div>
 </div>

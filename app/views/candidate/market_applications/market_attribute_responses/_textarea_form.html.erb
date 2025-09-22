@@ -7,6 +7,7 @@
                       child_index: market_attribute_response.id do |response_form| %>
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
 
     <%= response_form.label :text,
           t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
