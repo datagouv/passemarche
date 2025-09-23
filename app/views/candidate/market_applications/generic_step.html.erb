@@ -16,7 +16,6 @@
 
     <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
       <% if subcategories.any? %>
-        <% # Get responses from presenter (already loaded and grouped) %>
         <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(step.to_s) %>
 
         <% subcategories.each do |subcategory| %>

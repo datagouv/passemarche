@@ -51,3 +51,5 @@ group :test do
   gem 'shoulda-matchers', '~> 6.4'
   gem 'webmock', '~> 3.0'
 end
+
+gem "reactionview", "~> 0.1.2"

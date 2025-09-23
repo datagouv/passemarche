@@ -17,7 +17,7 @@
   <div class="fr-checkbox-group">
     <%= check_box_tag "selected_attribute_keys[]", field_key, is_checked,
         { id: "field_#{field_key}", class: "fr-checkbox" } %>
-    <%= label_tag "field_#{field_key}", class: "fr-label" do %>
+    <%= label_tag "field_#{field_key}", class: "fr-checkbox__label" do %>
       <div class="field-layout-container">
         <div class="field-layout-content">
           <%= t("form_fields.buyer.fields.#{field_key}.name") %>
