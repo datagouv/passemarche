@@ -156,6 +156,9 @@ fr:
 
   candidate:
     market_applications:
+      form_fields:
+        capacite_economique_financiere_assurance_risques_professionnels:
+          extra: Je certifie que mon entreprise est à jour de ses obligations d'assurance
       market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."

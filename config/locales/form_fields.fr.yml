@@ -5,8 +5,6 @@
 fr:
   form_fields:
     source_types:
-      checkbox_with_document:
-        name: Je certifie que mon entreprise est à jour de ses obligations d'assurance
       authentic_source:
         label: Source authentique
         badge_class: fr-badge--success
