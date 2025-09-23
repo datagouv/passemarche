@@ -36,7 +36,7 @@ class MarketApplicationPresenter
     @market_application.market_attribute_responses.find { |response| response.market_attribute_id == market_attribute.id } ||
       @market_application.market_attribute_responses.build(
         market_attribute:,
-        type: market_attribute.input_type.camelize
+        type: MarketAttributeResponse.type_from_input_type(market_attribute.input_type)
       )
   end
 

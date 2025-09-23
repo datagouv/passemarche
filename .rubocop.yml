@@ -58,6 +58,8 @@ Lint/ConstantDefinitionInBlock:
 # Metrics Rules
 Metrics/AbcSize:
   Max: 17
+  Exclude:
+    - "features/step_definitions/**/*"
 
 Metrics/BlockLength:
   Exclude:
@@ -65,6 +67,7 @@ Metrics/BlockLength:
     - "spec/support/shared_examples/*"
     - "spec/factories/**/*"
     - "spec/features/**/*"
+    - "features/step_definitions/**/*"
   AllowedMethods:
     - "describe"
     - "context"
@@ -86,6 +89,8 @@ Metrics/MethodLength:
   CountAsOne:
     - hash
     - array
+  Exclude:
+    - "features/step_definitions/**/*"
 
 Metrics/ModuleLength:
   Max: 200
