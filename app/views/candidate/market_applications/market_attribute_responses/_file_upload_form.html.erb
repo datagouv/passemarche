@@ -37,15 +37,18 @@
       <% if documents.attached? %>
         <div class="fr-text--sm fr-mb-0">
           <strong>Fichiers actuels :</strong>
-          <% documents.each do |doc| %>
-            <div>
-              <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
-              <%= link_to doc.filename.to_s,
-                          url_for(doc),
-                          target: "_blank", rel: "noopener" %>
-              (<%= number_to_human_size(doc.byte_size) %>)
-            </div>
-          <% end %>
+            <% documents.each do |document| %>
+              <div>
+                <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                <% if document.persisted? %>
+                  <%= link_to document.filename.to_s,
+                              url_for(document),
+                              target: "_blank", rel: "noopener" %>
+                <% else %>
+                  <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
+                <% end %>
+              </div>
+            <% end %>
         </div>
       <% else %>
         <div class="fr-text--sm fr-mb-0">
