@@ -5,6 +5,8 @@
 fr:
   form_fields:
     source_types:
+      checkbox_with_document:
+        name: Je certifie que mon entreprise est à jour de ses obligations d'assurance
       authentic_source:
         label: Source authentique
         badge_class: fr-badge--success
@@ -78,6 +80,10 @@ fr:
             concernant les trois dernières années comptables clôturées (uniquement
             pour les opérateurs économiques pour lesquels l’établissement des bilans
             est obligatoire).
+        capacite_economique_financiere_assurance_risques_professionnels:
+          name: Assurance des risques professionnels pertinents
+          description: Le candidat devra fournir la preuve qu'il a souscrit un contrat
+            d'assurance et/ou fournir une déclaration appropriée de banque.
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -191,6 +197,7 @@ fr:
           fiscales et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs d’exclusion
         capacite_economique_financiere_bilans: Bilans
+        capacite_economique_financiere_assurance: Banque et assurance
         capacites_techniques_professionnelles_certificats: Les certificats
         capacites_techniques_professionnelles_realisations: Les réalisations
         capacites_techniques_professionnelles_outillage: Outillage, matériel
@@ -247,6 +254,12 @@ fr:
             trois derniers exercices comptables clôturées
           description: Vous devez fournir les bilans ou extraits de bilans de votre
             entreprise qui concernent les trois derniers exercices comptables clôturés.
+        capacite_economique_financiere_assurance_risques_professionnels:
+          name: Les déclarations appropriées de banques ou preuve d'une assurance
+            des risques professionnels pertinents de votre entreprise
+          description: Fournissez des déclarations de vos banques ou une attestation
+            d’assurance couvrant les risques professionnels de votre entreprise, afin
+            de démontrer votre solidité financière.
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
