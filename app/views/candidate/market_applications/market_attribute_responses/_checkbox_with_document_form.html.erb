@@ -25,7 +25,7 @@
     <div class="fr-checkbox-group<%= ' fr-checkbox-group--error' if response_form.object.errors[:checked].any? %>">
       <%= response_form.check_box :checked, { class: "fr-checkbox" }, "1", "0" %>
       <%= response_form.label :checked, class: "fr-checkbox__label fr-mb-2w" do %>
-        <%= raw(t("form_fields.candidate.fields.source_types.checkbox_with_document")) %>
+        <%= t("candidate.market_applications.form_fields.#{market_attribute_response.market_attribute.key}.extra") %>
       <% end %>
 
       <% if response_form.object.errors[:checked].any? %>
