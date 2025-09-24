@@ -63,6 +63,27 @@ Feature: Comprehensive Candidate Application Flow
     And the phone response should be of class "MarketAttributeResponse::PhoneInput"
     And the text response should be of class "MarketAttributeResponse::TextInput"
 
+  Scenario: Comprehensive STI class verification for all input types
+    When I visit the "identite_entreprise" step
+    And I fill in all identity fields with valid data
+    And I submit the form
+    When I visit the "exclusion_criteria" step
+    And I check the required exclusion checkboxes
+    And I submit the form
+    When I visit the "economic_capacities" step
+    And I fill in the economic capacity information
+    And I submit the form
+    When I visit the "technical_capacities" step
+    And I upload required documents
+    And I submit the form
+    Then all responses should be created with correct STI types
+    And the email response should be of class "MarketAttributeResponse::EmailInput"
+    And the phone response should be of class "MarketAttributeResponse::PhoneInput"
+    And the text response should be of class "MarketAttributeResponse::TextInput"
+    And the checkbox response should be of class "MarketAttributeResponse::Checkbox"
+    And the textarea response should be of class "MarketAttributeResponse::Textarea"
+    And the file upload response should be of class "MarketAttributeResponse::FileUpload"
+
   Scenario: Test form validation errors display correctly
     When I visit the "identite_entreprise" step
     And I fill in invalid data:

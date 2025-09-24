@@ -235,6 +235,27 @@ Then('the text response should be of class {string}') do |expected_class|
   expect(text_response.class.name).to eq(expected_class)
 end
 
+Then('the checkbox response should be of class {string}') do |expected_class|
+  checkbox_response = @market_application.market_attribute_responses
+    .find { |r| r.market_attribute.input_type == 'checkbox' }
+  expect(checkbox_response).to be_present
+  expect(checkbox_response.class.name).to eq(expected_class)
+end
+
+Then('the textarea response should be of class {string}') do |expected_class|
+  textarea_response = @market_application.market_attribute_responses
+    .find { |r| r.market_attribute.input_type == 'textarea' }
+  expect(textarea_response).to be_present
+  expect(textarea_response.class.name).to eq(expected_class)
+end
+
+Then('the file upload response should be of class {string}') do |expected_class|
+  file_upload_response = @market_application.market_attribute_responses
+    .find { |r| r.market_attribute.input_type == 'file_upload' }
+  expect(file_upload_response).to be_present
+  expect(file_upload_response.class.name).to eq(expected_class)
+end
+
 When('I fill in invalid data:') do |table|
   table.hashes.each do |row|
     field_name = row['field']
