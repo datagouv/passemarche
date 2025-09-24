@@ -39,7 +39,7 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
       it { is_expected.to be_valid }
     end
 
-    context 'with missing required year' do
+    context 'with partial year data' do
       let(:value) do
         {
           'year_1' => {
@@ -55,9 +55,8 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
         }
       end
 
-      it 'is invalid' do
-        expect(response).not_to be_valid
-        expect(response.errors[:year_3]).to be_present
+      it 'is valid (partial data allowed)' do
+        expect(response).to be_valid
       end
     end
 
@@ -359,8 +358,8 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
     end
 
     describe '.json_schema_required' do
-      it 'returns all years as required' do
-        expect(described_class.json_schema_required).to eq(%w[year_1 year_2 year_3])
+      it 'returns empty array to allow partial data' do
+        expect(described_class.json_schema_required).to eq([])
       end
     end
 
