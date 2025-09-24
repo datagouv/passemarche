@@ -20,7 +20,7 @@ class CsvRowData
 
   attribute :obligatoire, :string
 
-  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email file_or_textarea phone textarea texte].freeze
+  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email file_or_textarea phone textarea texte capacite_economique_financiere_chiffre_affaires_global_annuel].freeze
 
   MARKET_TYPE_MAPPING = {
     'services' => 'services',
@@ -37,7 +37,8 @@ class CsvRowData
     'file_or_textarea' => :file_or_textarea,
     'phone' => :phone_input,
     'textarea' => :textarea,
-    'texte' => :text_input
+    'texte' => :text_input,
+    'capacite_economique_financiere_chiffre_affaires_global_annuel' => :capacite_economique_financiere_chiffre_affaires_global_annuel
   }.freeze
 
   validates :key, presence: true, if: :should_import?
