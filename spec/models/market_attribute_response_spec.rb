@@ -4,15 +4,19 @@ require 'rails_helper'
 
 RSpec.describe MarketAttributeResponse, type: :model do
   describe 'associations' do
-    it { should belong_to(:market_application) }
-    it { should belong_to(:market_attribute) }
+    it { is_expected.to belong_to(:market_application) }
+    it { is_expected.to belong_to(:market_attribute) }
   end
 
   describe 'validations' do
     subject { build(:market_attribute_response) }
 
-    it { should validate_presence_of(:type) }
-    it { should validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload FileOrTextarea]) }
+    before { allow(subject).to receive(:set_type_from_market_attribute) }
+
+    it 'validates presence and inclusion of type' do
+      expect(subject).to validate_presence_of(:type)
+      expect(subject).to validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload FileOrTextarea])
+    end
   end
 
   describe 'automatic type setting' do
