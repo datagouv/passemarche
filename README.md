@@ -396,11 +396,26 @@ bin/rubocop && bundle exec rspec && bundle exec cucumber
 
 ## 📚 Documentation
 
-### Documentation API et Intégration
-- [**Guide d'Intégration API**](docs/API_INTEGRATION.md) - Documentation complète pour les éditeurs
-- [Authentification OAuth2](docs/API_INTEGRATION.md#authentification-oauth2) - Flux Client Credentials
-- [Exemples d'Intégration](docs/API_INTEGRATION.md#exemples-dintégration) - JavaScript, PHP, Python
-- [**Fake Editor App**](fake_editor_app/README.md) - Application de démonstration OAuth2
+### 🚀 Pour les Équipes Techniques
+- [**📖 Guide de Démarrage**](docs/GUIDE_DE_DEMARRAGE.md) - Navigation et glossaire de toute la documentation
+- [**🏃‍♂️ Démarrage Rapide**](docs/DEMARRAGE_RAPIDE.md) - Intégration complète en 30 minutes
+
+### 📋 Documentation Technique Détaillée
+
+#### Authentification et Sécurité
+- [**🔐 Authentification OAuth2**](docs/AUTHENTIFICATION_OAUTH.md) - Flux Client Credentials, gestion tokens, sécurité
+- [**🔔 Webhooks**](docs/WEBHOOKS.md) - Notifications temps réel, signatures HMAC, retry intelligent
+
+#### Flux Métier
+- [**🏢 Flux Acheteur**](docs/FLUX_ACHETEUR.md) - Création et configuration des marchés publics
+- [**👥 Flux Candidat**](docs/FLUX_CANDIDAT.md) - Soumission et finalisation des candidatures
+
+#### Références Techniques
+- [**⚙️ Référence API**](docs/REFERENCE_API.md) - Spécifications complètes des endpoints
+- [**🏗️ Schémas d'Intégration**](docs/SCHEMAS_INTEGRATION.md) - Architecture et diagrammes techniques
+
+### 💡 Application de Démonstration
+- [**🎭 Fake Editor App**](fake_editor_app/README.md) - Exemple d'implémentation OAuth2
 
 ### Ressources utiles
 - [Rails 8.0 Guide](https://guides.rubyonrails.org/)
