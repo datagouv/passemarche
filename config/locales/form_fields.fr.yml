@@ -231,8 +231,7 @@ fr:
             commerce, n’a pas établi son plan de vigilance (mesures prévues à l’art.
             L.225-102-4) pour l’année précédant l’appel à concurrence.
         capacite_economique_financiere_chiffre_affaires_global_annuel:
-          name: Le chiffre d’affaires de votre entreprise au cours des trois dernières
-            années
+          name: Le chiffre d'affaires de votre entreprise au cours des trois dernières années
           description: Indiquez le chiffre d'affaires de votre entreprise au cours
             des trois années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
