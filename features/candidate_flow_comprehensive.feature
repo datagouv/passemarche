@@ -63,6 +63,27 @@ Feature: Comprehensive Candidate Application Flow
     And the phone response should be of class "MarketAttributeResponse::PhoneInput"
     And the text response should be of class "MarketAttributeResponse::TextInput"
 
+  Scenario: Comprehensive STI class verification for all input types
+    When I visit the "identite_entreprise" step
+    And I fill in all identity fields with valid data
+    And I submit the form
+    When I visit the "exclusion_criteria" step
+    And I check the required exclusion checkboxes
+    And I submit the form
+    When I visit the "economic_capacities" step
+    And I fill in the economic capacity information
+    And I submit the form
+    When I visit the "technical_capacities" step
+    And I upload required documents
+    And I submit the form
+    Then all responses should be created with correct STI types
+    And the email response should be of class "MarketAttributeResponse::EmailInput"
+    And the phone response should be of class "MarketAttributeResponse::PhoneInput"
+    And the text response should be of class "MarketAttributeResponse::TextInput"
+    And the checkbox response should be of class "MarketAttributeResponse::Checkbox"
+    And the textarea response should be of class "MarketAttributeResponse::Textarea"
+    And the file upload response should be of class "MarketAttributeResponse::FileUpload"
+
   Scenario: Test form validation errors display correctly
     When I visit the "identite_entreprise" step
     And I fill in invalid data:
@@ -113,3 +134,55 @@ Feature: Comprehensive Candidate Application Flow
     And I should be redirected to the success page
     And an attestation PDF should be generated
     And a documents package should be created
+
+  Scenario: File upload with validation failure recovery
+    When I visit the "technical_capacities" step
+    Then I should see file upload fields
+    When I upload a valid document "test_document.pdf"
+    And I leave other required fields empty on the page
+    And I click "Suivant"
+    Then I should see validation errors
+    And I should see "test_document.pdf (en cours de téléchargement)" in the uploaded files
+    And the document should not have a download link
+    When I fill in all required fields correctly
+    And I click "Suivant"
+    Then I should progress to the next step
+    When I go back to "technical_capacities" step
+    Then I should see "test_document.pdf" with a download link
+
+  Scenario: Multiple file uploads and persistence
+    When I visit the "technical_capacities" step
+    And I upload multiple valid documents:
+      | filename          | content_type     |
+      | certificate.pdf   | application/pdf  |
+      | reference.jpg     | image/jpeg       |
+    And I click "Suivant"
+    Then I should progress to the next step
+    When I go back to "technical_capacities" step
+    Then I should see all uploaded documents:
+      | filename          |
+      | certificate.pdf   |
+      | reference.jpg     |
+    And each document should have a download link
+
+  Scenario: File upload validation errors
+    When I visit the "technical_capacities" step
+    And I attempt to upload an invalid file "document.txt"
+    And I click "Suivant"
+    Then I should see a file format validation error
+    And I should remain on the "technical_capacities" step
+    When I upload a valid document "valid_doc.pdf"
+    And I click "Suivant"
+    Then I should progress to the next step
+
+  Scenario: File upload display states
+    When I visit the "technical_capacities" step
+    Then I should see "Aucun fichier téléchargé" message
+    When I upload a valid document "new_file.pdf"
+    But validation fails for other reasons
+    And I click "Suivant"
+    Then I should see "new_file.pdf (en cours de téléchargement)"
+    And the file should not have a download link
+    When I fix the validation issues and submit
+    Then I should see "new_file.pdf" with a download link
+    And I should not see "(en cours de téléchargement)" text
