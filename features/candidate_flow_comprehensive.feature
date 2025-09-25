@@ -20,6 +20,7 @@ Feature: Comprehensive Candidate Application Flow
     And I should see market information
     When I click "Suivant"
 
+    # The actual order follows database ID creation order
     Then I should be on the "contact" step
     And I should see email and phone fields
     When I fill in contact fields with valid data
@@ -47,6 +48,10 @@ Feature: Comprehensive Candidate Application Flow
 
     Then I should be on the "attestations" step
     And I should see checkbox with document field
+    When I handle optional checkbox with document
+    And I click "Suivant"
+
+    Then I should be on the "certifications" step
     When I handle optional checkbox with document
     And I click "Suivant"
 

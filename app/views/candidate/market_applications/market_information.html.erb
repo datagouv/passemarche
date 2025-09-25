@@ -1,7 +1,7 @@
 <% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.steps.market_and_company_information')}" %>
 
 <%
-  current_category = @presenter.category_for_subcategory(step.to_s)
+  current_category = @presenter.parent_category_for(step.to_s)
 %>
 
 <%= stepper(

@@ -54,26 +54,16 @@ module Candidate
       find_market_application
       return unless @market_application
 
-      category_keys = @market_application.public_market.market_attributes
-        .order(:id)
-        .pluck(:category_key)
-        .compact
-        .uniq
-
-      @wizard_steps = category_keys.map(&:to_sym) + [:summary]
+      @presenter = MarketApplicationPresenter.new(@market_application)
+      @wizard_steps = @presenter.stepper_steps
     end
 
     def set_steps
       find_market_application
       return unless @market_application
 
-      subcategory_keys = @market_application.public_market.market_attributes
-        .order(:id)
-        .pluck(:subcategory_key)
-        .compact
-        .uniq
-
-      self.steps = (%i[company_identification market_information] + subcategory_keys.map(&:to_sym) + [:summary]).uniq
+      @presenter ||= MarketApplicationPresenter.new(@market_application)
+      self.steps = @presenter.wizard_steps
     end
 
     def handle_company_identification

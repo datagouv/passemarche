@@ -8,7 +8,6 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
-  # Create market attributes to match the expected wizard steps
   before do
     create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [public_market])
     create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [public_market])

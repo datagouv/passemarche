@@ -65,6 +65,14 @@ Given('a comprehensive public market with all input types exists') do
     attr.required = false
   end
   @checkbox_doc_attr.public_markets << @public_market unless @checkbox_doc_attr.public_markets.include?(@public_market)
+
+  @certifications_attr = MarketAttribute.find_or_create_by(key: 'comprehensive_test_certifications') do |attr|
+    attr.input_type = 'checkbox_with_document'
+    attr.category_key = 'technical_capacities'
+    attr.subcategory_key = 'certifications'
+    attr.required = true
+  end
+  @certifications_attr.public_markets << @public_market unless @certifications_attr.public_markets.include?(@public_market)
 end
 
 Given('a candidate starts a comprehensive application') do
