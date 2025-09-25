@@ -5,10 +5,21 @@
     <%= response_form.hidden_field :market_attribute_id %>
     <%= response_form.hidden_field :type %>
 
-  <%= render "candidate/market_applications/market_attribute_responses/fields/textarea_field",
-        form: response_form,
-        attribute_response: market_attribute_response
-  %>
+    <%= response_form.label :text,
+          t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
+            default: market_attribute_response.market_attribute.key.humanize),
+          class: "fr-label fr-label--required" %>
+
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <span class="fr-hint-text">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </span>
+    <% end %>
+
+    <%= render "candidate/market_applications/market_attribute_responses/fields/textarea_field",
+          form: response_form,
+          attribute_response: market_attribute_response
+    %>
 
   <% end %>
 </div>
