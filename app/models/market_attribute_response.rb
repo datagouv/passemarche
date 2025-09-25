@@ -9,6 +9,7 @@ class MarketAttributeResponse < ApplicationRecord
     'checkbox' => 'Checkbox',
     'textarea' => 'Textarea',
     'email_input' => 'EmailInput',
+    'file_or_textarea' => 'FileOrTextarea',
     'phone_input' => 'PhoneInput',
     'checkbox_with_document' => 'CheckboxWithDocument'
   }.freeze

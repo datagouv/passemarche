@@ -26,6 +26,11 @@ FactoryBot.define do
       association :market_attribute, :file_upload
     end
 
+    factory :market_attribute_response_file_or_textarea, class: 'MarketAttributeResponse::FileOrTextarea' do
+      type { 'FileOrTextarea' }
+      association :market_attribute, :file_or_textarea
+    end
+
     factory :market_attribute_response_phone_input, class: 'MarketAttributeResponse::PhoneInput' do
       association :market_attribute, :phone
     end

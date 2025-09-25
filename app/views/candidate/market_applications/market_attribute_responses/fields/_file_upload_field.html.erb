@@ -1,0 +1,44 @@
+<%# Expected variables: form:, attribute_response: %>
+<%
+  documents = attribute_response.documents
+%>
+
+<div class="fr-upload-group fr-card fr-p-2w">
+  <%= form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{attribute_response.id}" %>
+  <span class="fr-hint-text fr-mb-2w fr-text--sm">
+    Taille maximale : <%= MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte %> Mo.
+    Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
+  </span>
+  <%= form.file_field :files,
+      class: "fr-upload",
+      required: attribute_response.market_attribute.required?,
+      multiple: true,
+      direct_upload: true,
+      accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
+      id: "upload-#{attribute_response.id}",
+      aria: { describedby: "upload-#{attribute_response.id}-messages" } %>
+
+  <% if documents.attached? %>
+    <div class="fr-mt-2w fr-text--sm fr-mb-0">
+      <strong>Fichiers actuels :</strong>
+      <% documents.each do |document| %>
+        <div>
+          <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+          <% if document.persisted? %>
+            <%= link_to document.filename.to_s,
+                        url_for(document),
+                        target: "_blank", rel: "noopener" %>
+          <% else %>
+            <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if form.object.errors[:base].present? %>
+    <p class="fr-error-text">
+      <%= form.object.errors[:base].first %>
+    </p>
+  <% end %>
+</div>

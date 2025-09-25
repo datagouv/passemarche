@@ -1,0 +1,40 @@
+<%= form.fields_for(
+  :market_attribute_responses,
+  market_attribute_response,
+  child_index: market_attribute_response.id,
+  multipart: true
+    ) do |response_form| %>
+  <%= response_form.hidden_field :id %>
+  <%= response_form.hidden_field :market_attribute_id %>
+  <%= response_form.hidden_field :type %>
+
+  <h6 class="fr-mb-2w fr-text--md">
+    <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name") %>
+  </h6>
+
+  <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+    <span class="fr-hint-text fr-mb-2w fr-text--sm">
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+    </span>
+  <% else %>
+    <span class="fr-hint-text fr-mb-2w fr-text--sm">
+      Description
+    </span>
+  <% end %>
+
+  <%= render(
+    partial: "candidate/market_applications/market_attribute_responses/fields/textarea_field",
+    locals: {
+      form: response_form,
+      attribute_response: market_attribute_response,
+    }
+  ) %>
+
+  <%= render(
+    partial: "candidate/market_applications/market_attribute_responses/fields/file_upload_field",
+    locals: {
+      form: response_form,
+      attribute_response: market_attribute_response
+    }
+  ) %>
+<% end %>

@@ -4,22 +4,19 @@ require 'rails_helper'
 
 RSpec.describe MarketAttributeResponse, type: :model do
   describe 'associations' do
-    it { should belong_to(:market_application) }
-    it { should belong_to(:market_attribute) }
+    it { is_expected.to belong_to(:market_application) }
+    it { is_expected.to belong_to(:market_attribute) }
   end
 
   describe 'validations' do
     subject { build(:market_attribute_response) }
 
-    it 'validates presence of type after creation' do
-      response = build(:market_attribute_response, market_attribute: nil)
-      response.type = nil
+    before { allow(subject).to receive(:set_type_from_market_attribute) }
 
-      expect(response).not_to be_valid
-      expect(response.errors[:type]).to be_present
+    it 'validates presence and inclusion of type' do
+      expect(subject).to validate_presence_of(:type)
+      expect(subject).to validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload FileOrTextarea])
     end
-
-    it { should validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload]) }
   end
 
   describe 'automatic type setting' do
@@ -51,6 +48,10 @@ RSpec.describe MarketAttributeResponse, type: :model do
 
     it 'finds FileUpload class' do
       expect(MarketAttributeResponse.find_sti_class('FileUpload')).to eq(MarketAttributeResponse::FileUpload)
+    end
+
+    it 'find FileOrTextarea class' do
+      expect(MarketAttributeResponse.find_sti_class('FileOrTextarea')).to eq(MarketAttributeResponse::FileOrTextarea)
     end
 
     it 'finds CheckboxWithDocument class' do
