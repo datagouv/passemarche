@@ -55,27 +55,37 @@ class GenerateDocumentsPackage < ApplicationInteractor
     return if file_uploads.empty?
 
     file_uploads.each_with_index do |upload, index|
-      add_single_document_to_zip(zip, upload, index)
+      add_documents_from_upload_to_zip(zip, upload, index)
     end
   end
 
   def load_file_uploads
     market_application.market_attribute_responses
       .where(type: 'FileUpload')
-      .includes(:market_attribute, document_attachment: :blob)
+      .includes(:market_attribute, documents_attachments: :blob)
   end
 
-  def add_single_document_to_zip(zip, upload, index)
-    return unless upload.document.attached?
+  def add_documents_from_upload_to_zip(zip, upload, index)
+    return unless upload.documents.attached?
 
-    field_key = upload.market_attribute.key
-    original_filename = upload.document.filename.to_s
-    zip_filename = "documents/#{format('%02d', index + 1)}_#{field_key}_#{original_filename}"
-
-    zip.put_next_entry(zip_filename)
-    zip.write(upload.document.download)
+    upload.documents.each_with_index do |document, doc_index|
+      add_single_document_to_zip(zip, document, upload, index, doc_index)
+    end
   rescue StandardError => e
     Rails.logger.error "Failed to add document to ZIP: #{e.message}"
     # Continue with other documents even if one fails
+  end
+
+  def add_single_document_to_zip(zip, document, upload, upload_index, doc_index)
+    field_key = upload.market_attribute.key
+    original_filename = document.filename.to_s
+    zip_filename = build_zip_filename(upload_index, doc_index, field_key, original_filename)
+
+    zip.put_next_entry(zip_filename)
+    zip.write(document.download)
+  end
+
+  def build_zip_filename(upload_index, doc_index, field_key, original_filename)
+    "documents/#{format('%02d', upload_index + 1)}_#{format('%02d', doc_index + 1)}_#{field_key}_#{original_filename}"
   end
 end
