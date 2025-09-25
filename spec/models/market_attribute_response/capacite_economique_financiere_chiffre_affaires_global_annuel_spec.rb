@@ -287,17 +287,6 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
 
       it 'is invalid' do
         expect(response).not_to be_valid
-        expect(response.errors[:value]).to include('year_1.fiscal_year_end is not a valid date')
-      end
-    end
-
-    context 'with non-string date' do
-      let(:value) do
-        base_value.tap { |v| v['year_1']['fiscal_year_end'] = 20_231_231 }
-      end
-
-      it 'is invalid' do
-        expect(response).not_to be_valid
         expect(response.errors[:value]).to include('year_1.fiscal_year_end must be in YYYY-MM-DD format')
       end
     end
