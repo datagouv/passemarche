@@ -9,10 +9,25 @@ class MarketApplicationPresenter
     organize_fields_by_category_and_subcategory(all_market_attributes)
   end
 
+  def category_for_subcategory(subcategory_key)
+    return nil if subcategory_key.blank?
+    return 'identite_entreprise' if subcategory_key == 'market_information'
+
+    all_market_attributes
+      .where(subcategory_key:)
+      .pluck(:category_key)
+      .compact
+      .first
+  end
+
   def subcategories_for_category(category_key)
     return [] if category_key.blank?
 
-    all_market_attributes
+    subcategories = []
+
+    subcategories << 'market_information' if category_key == 'identite_entreprise'
+
+    subcategories + all_market_attributes
       .where(category_key:)
       .reorder(:subcategory_key)
       .distinct

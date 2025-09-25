@@ -9,8 +9,8 @@ Feature: Candidate application flow
     And a candidate starts a new application
 
   Scenario: Candidate completes the application flow successfully
-    When the candidate visits the "market_and_company_information" step
-    Then they should see the "market_and_company_information" step
+    When the candidate visits the "market_information" step
+    Then they should see the "market_information" step
     When the candidate visits the "exclusion_criteria" step
     Then they should see the "exclusion_criteria" step
     When the candidate visits the "economic_capacities" step

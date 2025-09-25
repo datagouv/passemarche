@@ -6,14 +6,23 @@ module MarketAttributeResponse::TextValidatable
   included do
     include MarketAttributeResponse::TextFieldBehavior
 
-    validate :text_field_required
+    validate :text_field_structure_valid
+    validate :text_field_required_when_mandatory
     validate :text_additional_properties_valid
   end
 
   private
 
-  def text_field_required
-    return unless value.blank? || !value.key?('text')
+  def text_field_structure_valid
+    return unless persisted?
+    return if value.present? && value.key?('text')
+
+    errors.add(:text, I18n.t('activerecord.errors.json_schema.required'))
+  end
+
+  def text_field_required_when_mandatory
+    return if text.present?
+    return unless market_attribute&.required?
 
     errors.add(:text, I18n.t('activerecord.errors.json_schema.required'))
   end
