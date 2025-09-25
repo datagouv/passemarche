@@ -35,7 +35,6 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'reactionview', '~> 0.1.2'
   gem 'rspec-rails', '~> 8.0'
   gem 'rubocop-rails-omakase', require: false
 end

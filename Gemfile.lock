@@ -182,14 +182,6 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashdiff (1.2.0)
-    herb (0.7.2-aarch64-linux-gnu)
-    herb (0.7.2-aarch64-linux-musl)
-    herb (0.7.2-arm-linux-gnu)
-    herb (0.7.2-arm-linux-musl)
-    herb (0.7.2-arm64-darwin)
-    herb (0.7.2-x86_64-darwin)
-    herb (0.7.2-x86_64-linux-gnu)
-    herb (0.7.2-x86_64-linux-musl)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.2.2)
@@ -359,9 +351,6 @@ GEM
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
-    reactionview (0.1.2)
-      actionview (>= 7.0)
-      herb (>= 0.7.0, < 1.0.0)
     regexp_parser (2.11.2)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -531,7 +520,6 @@ DEPENDENCIES
   pry-rails
   puma (>= 5.0)
   rails (~> 8.0.2)
-  reactionview (~> 0.1.2)
   rspec-rails (~> 8.0)
   rubocop-rails-omakase
   rubyzip (~> 3.1)
