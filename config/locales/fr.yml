@@ -159,6 +159,16 @@ fr:
       form_fields:
         capacite_economique_financiere_assurance_risques_professionnels:
           extra: Je certifie que mon entreprise est à jour de ses obligations d'assurance
+        capacite_economique_financiere_chiffre_affaires_global_annuel:
+          table_headers:
+            year: "Année"
+            turnover: "Chiffre d'affaires (€)"
+            market_percentage: "% CA dans le secteur du marché"
+            fiscal_year_end: "Fin de l'exercice"
+          year_labels:
+            year_1: "Année N-1"
+            year_2: "Année N-2"
+            year_3: "Année N-3"
       market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."

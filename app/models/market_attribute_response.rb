@@ -11,7 +11,8 @@ class MarketAttributeResponse < ApplicationRecord
     'email_input' => 'EmailInput',
     'file_or_textarea' => 'FileOrTextarea',
     'phone_input' => 'PhoneInput',
-    'checkbox_with_document' => 'CheckboxWithDocument'
+    'checkbox_with_document' => 'CheckboxWithDocument',
+    'capacite_economique_financiere_chiffre_affaires_global_annuel' => 'CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel'
   }.freeze
 
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }

@@ -141,7 +141,10 @@ module Candidate
           :checked,
           :file,
           { files: [] },
-          { value: {} }
+          { value: {} },
+          :year_1_turnover, :year_1_market_percentage, :year_1_fiscal_year_end,
+          :year_2_turnover, :year_2_market_percentage, :year_2_fiscal_year_end,
+          :year_3_turnover, :year_3_market_percentage, :year_3_fiscal_year_end
         ]
       )
     end

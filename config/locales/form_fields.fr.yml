@@ -14,8 +14,6 @@ fr:
     buyer:
       categories:
         identite_entreprise: Identité de l'entreprise
-        motifs_exclusion_sociaux: Motifs d' exclusion liés aux obligations fiscales
-          et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur: Motifs d’exclusion à l’appréciation
           de l’acheteur et prévus dans les documents de la consultation
         capacite_economique_financiere: Capacité économique et financière des candidats
@@ -24,9 +22,10 @@ fr:
       subcategories:
         identite_entreprise_identification: Identification de l'entreprise
         identite_entreprise_contact: Informations de contact
+        capacites_techniques_professionnelles_effectifs: Les effectifs
         capacites_techniques_professionnelles_certificats: Les certificats de qualification
           professionnelle ou équivalents
-        capacites_techniques_professionnelles_realisations: Les réalisations
+        capacites_techniques_professionnelles_realisations: Les réalisations ou références
         capacites_techniques_professionnelles_outillage: Outillage, matériel et équipements
           techniques
         capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
@@ -47,41 +46,38 @@ fr:
         identite_entreprise_identification_code_postal:
           name: Adresse postale
         identite_entreprise_identification_adresse:
-          name: Adresse du siège sociale
+          name: Adresse du siège social
         identite_entreprise_contact_email:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
-          name: Attestation de régularité sociale dans le secteur des travaux publics
-            (CIBTP - CNETP)
-          description: Le candidat devra fournir une attestation délivrée par un organisme
-            en charge de la gestion des congés payés et du chômage intempéries dans
-            le secteur du BTP
-        motifs_exclusion_sociaux_declarations_pro_btp:
-          name: Attestation de régularité des cotisations retraite Pro BTP
-          description: Le candidat devra fournir une attestation délivrée par un organisme
-            proposant des services de protection sociale dans le secteur du BTP
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
           name: Bilan des émissions de gaz à effet de serre
           description: Le candidat devra attester qu'il a bien réalisé son bilan des
-            émissions de gaz à effet de serre pour l’année précédant l’appel à concurrence
-            (uniquement s’il est soumis à l’article L.229-25 du Code de l’environnement)
+            émissions de gaz à effet de serre pour l’année précédant l’appel à la
+            concurrence ou d'engagement de la consultation (uniquement s’il est soumis
+            à l’article L.229-25 du Code de l’environnement)
         motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
           name: Plan de vigilance
           description: Le candidat devra attester qu'il a réalisé un plan de vigilance
             l’année précédant l’appel à concurrence (uniquement pour les entreprises
             soumise à l’article L.225-102-1 du Code de commerce).
+        capacite_economique_financiere_chiffre_affaires_global_annuel:
+          name: Chiffre d'affaires global annuel
+          description: Le candidat devra déclarer le chiffre d'affaires de son entreprise
+            des trois (3) années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
           description: Le candidat devra fournir les bilans ou extraits de bilan,
             concernant les trois dernières années comptables clôturées (uniquement
-            pour les opérateurs économiques pour lesquels l’établissement des bilans
+            pour les opérateurs économiques pour lesquels l’établissement de bilans
             est obligatoire).
-        capacite_economique_financiere_assurance_risques_professionnels:
-          name: Assurance des risques professionnels pertinents
-          description: Le candidat devra fournir la preuve qu'il a souscrit un contrat
-            d'assurance et/ou fournir une déclaration appropriée de banque.
+        capacites_techniques_professionnelles_effectifs_moyens_annuels:
+          name: Les effectifs moyens annuels du candidat au cours des trois dernières
+            années
+          description: Le candidat devra fournir une déclaration indiquant ses effectifs
+            moyens annuels au cours des trois dernières années et l'importance du
+            personnel d'encadrement
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -110,37 +106,37 @@ fr:
             (ESS) est une reconnaissance officielle accordée aux entreprises qui respectent
             les principes et valeurs de l'économie sociale et solidaire en France.
         capacites_techniques_professionnelles_certificats_qualiopi_france:
-          name: Certificats Qualiopi et France Compétences
+          name: Certificat Qualiopi
           description: La certification Qualiopi est la certification qualité obligatoire
             pour tous les organismes de formation professionnelle en France.
+        capacites_techniques_professionnelles_certificats_france_competences:
+          name: Certificat France Compétences
+          description: La certification France Compétences atteste que l’organisme
+            est habilité à délivrer des actions de formation, d’évaluation ou de certification
+            inscrites au Répertoire spécifique ou au Répertoire national des certifications
+            professionnelles (RNCP)
         capacites_techniques_professionnelles_certificats_cqp_tp:
           name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
           description: Le Certificat de Qualification Professionnelle Travaux Publics
             (CQP TP) vise à certifier les compétences professionnelles des salariés
             dans des métiers spécifiques aux travaux publics.
-        capacites_techniques_professionnelles_certificats_opqibi:
-          name: Certification OPQIBI
-          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
-            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
-            leurs références et leurs moyens, pour garantir leur capacité à réaliser
-            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Les attestations ou preuves de livraisons au cours des trois dernières
             années
           description: Le candidat devra fournir les documents pouvant attester de
             la bonne réalisation des prestations
         capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
-          name: Les attestations ou preuves de livraisons au cours des cinq dernières
-            années
+          name: Les attestations ou preuves de bonne exécution des principaux travaux
+            au cours des cinq (5) dernières années
           description: Le candidat devra fournir les documents pouvant attester de
-            la bonne réalisation des prestations
+            la bonne exécution des travaux
         capacites_techniques_professionnelles_outillage_materiel_equipements:
           name: Description de l'outillage, du matériel et de l'équipement technique
           description: Le candidat devra décrire l’outillage, le matériel et les équipements
             techniques dont il dispose ou qu’il mobilisera pour exécuter correctement
             le marché
         capacites_techniques_professionnelles_outillage_mesures_qualite:
-          name: Equipements techniques et mesures de qualité employés
+          name: Equipements techniques et mesures de qualité employées
           description: Le candidat devra décrire son équipement technique, les mesures
             mises en place pour assurer la qualité ainsi que les moyens d’étude et
             de recherche employés.
@@ -159,9 +155,10 @@ fr:
           name: Contrôle des produits ou services complexes ou répondant à un besoin
             particulier
           description: Le candidat devra accepter que, pour des produits ou services
-            complexes ou spécifiques, ses capacités de production, ses moyens techniques,
-            d’étude et de recherche ainsi que ses mesures de contrôle qualité puissent
-            être vérifiés par l’acheteur ou un organisme compétent.
+            complexes ou spécifiques, ses capacités de production, sa capacité technique,
+            ses moyens d’étude et de recherche ou ceux de son prestataire le cas échéant,
+            ainsi que ses mesures de contrôle qualité puissent être vérifiés par l’acheteur
+            ou un organisme compétent.
         capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
           name: Capacité de protection des informations protégées ou classifiées
           description: Le candidat devra démontrer sa capacité à traiter, stocker
@@ -182,7 +179,6 @@ fr:
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
-        motifs_exclusion_sociaux: Les motifs d’exclusion
         motifs_exclusion_appreciation_acheteur: Les motifs d’exclusion
         capacite_economique_financiere: Les capacités économiques et financières de
           votre entreprise
@@ -191,14 +187,14 @@ fr:
       subcategories:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
-        motifs_exclusion_sociaux_declarations: Motifs d'exclusion liés aux obligations
-          fiscales et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs d’exclusion
+        capacite_economique_financiere_chiffre_affaires: Chiffre d’affaires
         capacite_economique_financiere_bilans: Bilans
-        capacite_economique_financiere_assurance: Banque et assurance
+        capacites_techniques_professionnelles_effectifs: Les effectifs
         capacites_techniques_professionnelles_certificats: Les certificats
-        capacites_techniques_professionnelles_realisations: Les réalisations
-        capacites_techniques_professionnelles_outillage: Outillage, matériel
+        capacites_techniques_professionnelles_realisations: Les réalisations ou références
+        capacites_techniques_professionnelles_outillage: Outillage, matériel et équipements
+          techniques
         capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
           de la qualité, sécurité et normes de gestion environnementale
         capacites_techniques_professionnelles_securite_et_confidentialite: Securité
@@ -217,47 +213,37 @@ fr:
         identite_entreprise_identification_code_postal:
           name: Adresse postale
         identite_entreprise_identification_adresse:
-          name: Adresse du siège sociale
+          name: Adresse du siège social
         identite_entreprise_contact_email:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
-          name: Mon entreprise n'est pas à jour du paiement de ses cotisations CIBTP
-            - CNETP
-          description: Mon entreprise exercant dans le secteur du BTP, ne peut pas
-            fournir une attestation de la caisse CIBTP confirmant qu’elle est à jour
-            de ses déclarations et cotisations (congés payés et chômage-intempéries),
-            conformément au Code du travail.
-        motifs_exclusion_sociaux_declarations_pro_btp:
-          name: Mon entreprise n'est pas à jour du paiement de ses cotisations retraite
-            Pro BTP
-          description: Mon entreprise exercant dans le secteur du BTP, ne s'est pas
-            acquittée de ses obligations de retraites complémentaires. Mon entreprise
-            ne peut donc pas fournir d'attestation PRO BTP.
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
           name: Mon entreprise n'a pas satisfait à l'obligation d'établir un Bilan
             de gaz à effet de serre (BEGES), alors qu'elle est concernée
           description: Mon entreprise, soumise à l’article L.229-25 du Code de l’environnement,
             n’a pas réalisé son bilan des émissions de gaz à effet de serre pour l’année
-            précédant l’appel à concurrence.
+            précédant l’appel à la concurrence ou d'engagement de la consultation.
         motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
           name: Mon entreprise n'a pas satisfait à l'obligation d'établissement d'un
             plan de vigilance
           description: Mon entreprise, soumise à l’article L.225-102-1 du Code de
             commerce, n’a pas établi son plan de vigilance (mesures prévues à l’art.
             L.225-102-4) pour l’année précédant l’appel à concurrence.
+        capacite_economique_financiere_chiffre_affaires_global_annuel:
+          name: Le chiffre d'affaires de votre entreprise au cours des trois dernières années
+          description: Indiquez le chiffre d'affaires de votre entreprise au cours
+            des trois années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Les bilans ou extraits de bilans de votre entreprise au cours des
             trois derniers exercices comptables clôturées
           description: Vous devez fournir les bilans ou extraits de bilans de votre
             entreprise qui concernent les trois derniers exercices comptables clôturés.
-        capacite_economique_financiere_assurance_risques_professionnels:
-          name: Les déclarations appropriées de banques ou preuve d'une assurance
-            des risques professionnels pertinents de votre entreprise
-          description: Fournissez des déclarations de vos banques ou une attestation
-            d’assurance couvrant les risques professionnels de votre entreprise, afin
-            de démontrer votre solidité financière.
+        capacites_techniques_professionnelles_effectifs_moyens_annuels:
+          name: Les effectifs moyens annuels de votre entreprise au cours des trois
+            dernières années
+          description: Indiquez les effectifs moyens annuels au cours des trois (3)
+            dernières années en préciant l'importance du personnel d'encadrement
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -286,20 +272,20 @@ fr:
             (ESS) est une reconnaissance officielle accordée aux entreprises qui respectent
             les principes et valeurs de l'économie sociale et solidaire en France.
         capacites_techniques_professionnelles_certificats_qualiopi_france:
-          name: Certificats Qualiopi et France Compétences
+          name: Certificat Qualiopi
           description: La certification Qualiopi est la certification qualité obligatoire
             pour tous les organismes de formation professionnelle en France.
+        capacites_techniques_professionnelles_certificats_france_competences:
+          name: Certificats France Compétences
+          description: La certification France Compétences atteste que l’organisme
+            est habilité à délivrer des actions de formation, d’évaluation ou de certification
+            inscrites au Répertoire spécifique ou au Répertoire national des certifications
+            professionnelles (RNCP)
         capacites_techniques_professionnelles_certificats_cqp_tp:
           name: Certificat CQP TP (Qualification Professionnelle Travaux Publics)
           description: Le Certificat de Qualification Professionnelle Travaux Publics
             (CQP TP) vise à certifier les compétences professionnelles des salariés
             dans des métiers spécifiques aux travaux publics.
-        capacites_techniques_professionnelles_certificats_opqibi:
-          name: Certification OPQIBI
-          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
-            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
-            leurs références et leurs moyens, pour garantir leur capacité à réaliser
-            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
