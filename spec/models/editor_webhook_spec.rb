@@ -29,13 +29,13 @@ RSpec.describe Editor, 'webhook configuration', type: :model do
         it 'rejects HTTP URLs for webhook' do
           editor.completion_webhook_url = 'http://example.com/webhook'
           expect(editor).not_to be_valid
-          expect(editor.errors[:completion_webhook_url]).to include('doit utiliser HTTPS en production')
+          expect(editor.errors[:completion_webhook_url]).to include('L\'URL de webhook de completion doit utiliser HTTPS en production')
         end
 
         it 'rejects HTTP URLs for redirect' do
           editor.redirect_url = 'http://example.com/success'
           expect(editor).not_to be_valid
-          expect(editor.errors[:redirect_url]).to include('doit utiliser HTTPS en production')
+          expect(editor.errors[:redirect_url]).to include('L\'URL de redirection doit utiliser HTTPS en production')
         end
 
         it 'accepts HTTPS URLs' do
@@ -48,7 +48,7 @@ RSpec.describe Editor, 'webhook configuration', type: :model do
       it 'rejects invalid URLs' do
         editor.completion_webhook_url = 'not a url'
         expect(editor).not_to be_valid
-        expect(editor.errors[:completion_webhook_url]).to include("n'est pas une URL valide")
+        expect(editor.errors[:completion_webhook_url]).to include("L'URL de webhook de completion n'est pas valide")
       end
 
       it 'allows blank URLs' do

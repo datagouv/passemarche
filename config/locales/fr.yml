@@ -227,64 +227,106 @@ fr:
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
-        cannot_be_alone: "ne peut pas être seul"
-        inclusion: "n'est pas inclus dans la liste"
+        cannot_be_alone: "%{attribute} ne peut pas être seul"
+        inclusion: "%{attribute} n'est pas inclus dans la liste des valeurs autorisées"
+        invalid: "%{attribute} n'est pas valide"
+        blank: "%{attribute} ne peut pas être vide"
+        taken: "%{attribute} est déjà utilisé"
+        too_long: "%{attribute} est trop long (maximum %{count} caractères)"
+        too_short: "%{attribute} est trop court (minimum %{count} caractères)"
+        wrong_length: "%{attribute} ne fait pas la bonne longueur (doit contenir %{count} caractères)"
+        not_a_number: "%{attribute} n'est pas un nombre"
+        greater_than: "%{attribute} doit être supérieur à %{count}"
+        greater_than_or_equal_to: "%{attribute} doit être supérieur ou égal à %{count}"
+        equal_to: "%{attribute} doit être égal à %{count}"
+        less_than: "%{attribute} doit être inférieur à %{count}"
+        less_than_or_equal_to: "%{attribute} doit être inférieur ou égal à %{count}"
+        other_than: "%{attribute} doit être différent de %{count}"
+        odd: "%{attribute} doit être impair"
+        even: "%{attribute} doit être pair"
+        present: "%{attribute} doit être renseigné"
+        required: "%{attribute} est requis"
+        confirmation: "%{attribute} ne concorde pas avec %{attribute} (confirmation)"
+        accepted: "%{attribute} doit être accepté"
+        empty: "%{attribute} doit être vide"
+        in: "%{attribute} n'est pas inclus dans la liste"
+        excluded: "%{attribute} n'est pas disponible"
       json_schema:
-        invalid_format: "n'est pas un format valide"
-        too_long: "est trop long"
-        required: "est requis"
-        wrong_type: "n'est pas du bon type"
-        additional_properties: "contient des propriétés non autorisées"
-        invalid: "est invalide"
+        invalid_format: "Le format n'est pas valide"
+        too_long: "Le contenu est trop long"
+        required: "Ce champ est requis"
+        wrong_type: "Le type de données n'est pas valide"
+        additional_properties: "Des propriétés non autorisées ont été fournies"
+        invalid: "Les données fournies ne sont pas valides"
       models:
         public_market:
           attributes:
             name:
-              blank: "ne peut pas être vide"
+              blank: "Le nom du marché ne peut pas être vide"
             deadline:
-              blank: "ne peut pas être vide"
+              blank: "La date limite ne peut pas être vide"
             market_type:
-              blank: "ne peut pas être vide"
+              blank: "Le type de marché ne peut pas être vide"
             market_types:
-              blank: "ne peut pas être vide"
-              cannot_be_alone: "le marché de défense ne peut pas être seul"
+              blank: "Les types de marché ne peuvent pas être vides"
+              cannot_be_alone: "Le marché de défense ne peut pas être le seul type sélectionné"
             market_type_codes:
-              invalid_codes: "contient des codes invalides : %{codes}"
+              invalid_codes: "Les codes de marché contiennent des valeurs invalides : %{codes}"
         market_application:
           attributes:
             siret:
-              invalid: "doit être un numéro SIRET valide de 14 chiffres"
+              invalid: "Le numéro SIRET doit être composé de 14 chiffres valides"
         market_attribute_response:
           attributes:
             documents:
-              document_not_allowed_unless_checked: "Vous ne pouvez joindre un document que si la case est cochée."
+              document_not_allowed_unless_checked: "Vous ne pouvez joindre un document que si la case correspondante est cochée"
         market_attribute_response/email_input:
           attributes:
             text:
-              invalid: "doit être une adresse email valide"
+              invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
         market_attribute_response/text_input:
           attributes:
             text:
-              blank: "ne peut pas être vide"
-              too_long: "est trop long (maximum %{count} caractères)"
+              blank: "Ce champ de texte ne peut pas être vide"
+              too_long: "Ce champ de texte est trop long (maximum %{count} caractères)"
         market_attribute_response/phone_input:
           attributes:
             text:
-              blank: "ne peut pas être vide"
-              invalid: "Le format attendu est : 01 23 45 67 89 ou +33 1 23 45 67 89"
-              too_long: "est trop long (maximum %{count} caractères)"
+              blank: "Le numéro de téléphone ne peut pas être vide"
+              invalid: "Le numéro de téléphone doit respecter le format : 01 23 45 67 89 ou +33 1 23 45 67 89"
+              too_long: "Le numéro de téléphone est trop long (maximum %{count} caractères)"
         market_attribute_response/file_or_textarea:
           attributes:
-            file_or_textarea_blank: 'Vous devez fournir soit un fichier, soit un texte'
+            file_or_textarea_blank: 'Vous devez fournir soit un fichier, soit un texte dans ce champ'
         editor:
           attributes:
             name:
-              taken: "est déjà utilisé"
+              taken: "Ce nom d'éditeur est déjà utilisé"
             client_id:
-              taken: "est déjà utilisé"
+              taken: "Cet identifiant client est déjà utilisé"
             completion_webhook_url:
-              invalid_url: "n'est pas une URL valide"
-              https_required: "doit utiliser HTTPS en production"
+              invalid_url: "L'URL de webhook de completion n'est pas valide"
+              https_required: "L'URL de webhook de completion doit utiliser HTTPS en production"
             redirect_url:
-              invalid_url: "n'est pas une URL valide"
-              https_required: "doit utiliser HTTPS en production"
+              invalid_url: "L'URL de redirection n'est pas valide"
+              https_required: "L'URL de redirection doit utiliser HTTPS en production"
+      attributes:
+        # Generic attribute names that can be used across models
+        name: "nom"
+        email: "adresse email"
+        phone: "numéro de téléphone"
+        siret: "numéro SIRET"
+        deadline: "date limite"
+        market_type: "type de marché"
+        market_types: "types de marché"
+        market_type_codes: "codes de marché"
+        text: "texte"
+        documents: "documents"
+        client_id: "identifiant client"
+        client_secret: "secret client"
+        completion_webhook_url: "URL de webhook"
+        redirect_url: "URL de redirection"
+        checked: "case à cocher"
+        file: "fichier"
+        value: "valeur"
+        type: "type"
