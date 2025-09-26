@@ -44,7 +44,7 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
     it 'requires documents if none attached' do
       file_response.documents = []
       file_response.valid?
-      expect(file_response.errors[:documents]).to include(I18n.t('activerecord.errors.json_schema.required'))
+      expect(file_response.errors[:documents]).to include('Ce champ est requis')
     end
 
     it 'rejects blank content_type' do

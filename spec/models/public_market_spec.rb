@@ -45,13 +45,13 @@ RSpec.describe PublicMarket, type: :model do
       it 'rejects invalid market type codes' do
         public_market = build(:public_market, editor:, market_type_codes: ['invalid_code'])
         expect(public_market).not_to be_valid
-        expect(public_market.errors[:market_type_codes]).to include('contient des codes invalides : invalid_code')
+        expect(public_market.errors[:market_type_codes]).to include('Les codes de marché contiennent des valeurs invalides : invalid_code')
       end
 
       it 'rejects mix of valid and invalid codes' do
         public_market = build(:public_market, editor:, market_type_codes: %w[supplies invalid_code])
         expect(public_market).not_to be_valid
-        expect(public_market.errors[:market_type_codes]).to include('contient des codes invalides : invalid_code')
+        expect(public_market.errors[:market_type_codes]).to include('Les codes de marché contiennent des valeurs invalides : invalid_code')
       end
     end
   end

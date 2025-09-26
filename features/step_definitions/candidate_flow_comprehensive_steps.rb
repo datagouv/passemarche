@@ -282,9 +282,9 @@ Then('I should see validation errors for:') do |table|
 
     case field_name
     when 'email'
-      expect(page).to have_content('doit être une adresse email valide')
+      expect(page).to have_content("L'adresse email doit avoir un format valide")
     when 'phone'
-      expect(page).to have_content('Le format attendu est')
+      expect(page).to have_content('Le numéro de téléphone doit respecter le format')
     when 'required_text'
       expect(page).to have_css('.fr-error-text')
     else

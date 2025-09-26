@@ -135,7 +135,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
         expect(response).to have_http_status(:unprocessable_content)
         # The actual error shows as translated message in the HTML
-        expect(response.body).to include('doit être un numéro SIRET valide de 14 chiffres')
+        expect(response.body).to include('Le numéro SIRET doit être composé de 14 chiffres valides')
 
         market_application.reload
         expect(market_application.siret).not_to eq(wrong_format_siret)
@@ -148,7 +148,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           params: { market_application: { siret: wrong_length_siret } }
 
         expect(response).to have_http_status(:unprocessable_content)
-        expect(response.body).to include('doit être un numéro SIRET valide de 14 chiffres')
+        expect(response.body).to include('Le numéro SIRET doit être composé de 14 chiffres valides')
 
         market_application.reload
         expect(market_application.siret).not_to eq(wrong_length_siret)
