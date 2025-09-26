@@ -190,3 +190,18 @@ Would you like me to [specific improvement]?"
 - **REMINDER**: If this file hasn't been referenced in 30+ minutes, RE-READ IT!
 
 Avoid complex abstractions or "clever" code. The Rails way is probably better, and my guidance helps you stay focused on what matters.
+
+
+## Example of a prompt for a new MarketAttributeResponse type
+I need to add a new MarketAttributeReponse type. The type in the csv file is <type>.
+
+All the data are required for this fields
+
+I want you to make a plan with the following step :
+  1 - Minimal code to be able to import the field through the csv import rake tasks
+  2 - The validation and structure of the model, wth the tests
+  3 - The views with the translations, and the cucumber tests for this specific file.
+
+Each step should be rubocop compliant, rspec and cucumber test OK. After each step, you will stop so that I can review and commit to create and understandable Pull request to review for my coworker.
+
+  You can ultrathink
