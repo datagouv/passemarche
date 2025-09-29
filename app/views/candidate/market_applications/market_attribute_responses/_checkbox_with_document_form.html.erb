@@ -46,19 +46,31 @@
           class: "fr-upload",
           multipart: true,
           multiple: true,
+          direct_upload: true,
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
           aria: { describedby: "upload-#{market_attribute_response.id}-messages" } %>
 
           <% if documents.attached? %>
-            <div class="fr-text--sm fr-mb-0">
-              <strong>Fichiers actuels :</strong>
+            <div class="fr-text--sm fr-mb-0" data-controller="delete-document-confirm" data-market-application-id="<%= @market_application.identifier %>">
+              <strong>Documents actuels :</strong>
               <% documents.each do |document| %>
                 <div>
-                  <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
                   <% if document.persisted? %>
-                    <%= link_to document.filename.to_s,
-                                url_for(document),
-                                target: "_blank", rel: "noopener" %>
+                    <turbo-frame id="document_<%= document.id %>">
+                      <div class="uploaded-file">
+                        <%= link_to document.filename.to_s,
+                          url_for(document),
+                          target: "_blank", rel: "noopener" %>
+
+                        <button type="button"
+                          data-document-id="<%= document.id %>"
+                          data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
+                          title="Supprimer ce document"
+                          class="fr-btn--icon delete-document-btn">
+                            <span class="fr-icon--sm fr-icon-delete-line fr-icon--blue-france" aria-hidden="true"></span>
+                        </button>
+                      </div>
+                    </turbo-frame>
                   <% else %>
                     <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
                   <% end %>
