@@ -8,7 +8,7 @@ gem 'bootsnap', require: false
 gem 'csv'
 gem 'devise'
 gem 'doorkeeper', '~> 5.7'
-gem 'faraday', '~> 2.0'
+gem 'faraday', '~> 2.14'
 gem 'importmap-rails'
 gem 'interactor', '~> 3.2'
 gem 'jbuilder'
