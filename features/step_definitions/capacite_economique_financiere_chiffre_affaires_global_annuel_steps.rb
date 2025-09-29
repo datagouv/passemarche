@@ -141,7 +141,7 @@ end
 # Button click step is already defined in candidate_flow_comprehensive_steps.rb
 
 # Validation and submission steps
-Then('the form should be submitted successfully') do
+Then('the economic capacity form should be submitted successfully') do
   expect(page).not_to have_css('.fr-message--error')
   expect(page).not_to have_content('doit être rempli')
 end
@@ -174,7 +174,7 @@ Then('the data should be saved with correct structure') do
   expect(response.value['year_1']).to have_key('fiscal_year_end')
 end
 
-Then('the response should be created with class {string}') do |class_name|
+Then('the economic capacity response should be created with class {string}') do |class_name|
   @market_application.reload
   response = @market_application.market_attribute_responses.last
   expect(response.class.name).to eq(class_name)

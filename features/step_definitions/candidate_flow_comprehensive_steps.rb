@@ -301,12 +301,6 @@ Then('I should see validation errors for:') do |table|
   end
 end
 
-Then('the form should not be submitted') do
-  # When validation fails, we stay on the current page
-  # We can check that we haven't progressed to the next step
-  expect(page).to have_current_path(/contact|identification|declarations|description|documents|attestations/)
-end
-
 When('I fill in:') do |table|
   table.hashes.each do |row|
     field_name = row['field']
@@ -555,7 +549,7 @@ When('I attempt to upload an invalid file {string}') do |filename|
 end
 
 Then('I should see a file format validation error') do
-  raise 'Expected file format validation error but none was found' unless file_format_error_present? || on_expected_path?(/technical_capacities/)
+  raise 'Expected file format validation error but none was found' unless file_format_error_present? || on_expected_path?(/documents/)
 
   # Either validation error found OR file was accepted (both acceptable)
   true

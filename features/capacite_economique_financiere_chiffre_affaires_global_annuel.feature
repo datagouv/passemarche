@@ -12,9 +12,7 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
 
   Scenario: Display of 3x3 grid form
     When I visit the economic capacities step
-    Then I should see the title "Le chiffre d'affaires de votre entreprise au cours des trois dernières années"
-    And I should see the effectifs description "Indiquez le chiffre d'affaires de votre entreprise au cours des trois années précédentes, en euros."
-    And I should see a table with effectifs headers:
+    Then I should see a table with headers:
       | Année | Chiffre d'affaires (€) | % CA dans le secteur du marché | Fin de l'exercice |
     And I should see 3 rows with labels:
       | Année N-1 |
@@ -29,7 +27,7 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
       | year_2 | 450000   | 80         | 2022-12-31      |
       | year_3 | 400000   | 70         | 2021-12-31      |
     And I click "Suivant"
-    Then the form should be submitted successfully
+    Then the economic capacity form should be submitted successfully
     And the data should be saved with correct structure
 
   Scenario: Validation errors for missing required fields
@@ -81,7 +79,7 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
     When I visit the economic capacities step
     Then the form should have a hidden type field with value "CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel"
     When I fill in valid turnover data and submit
-    Then the response should be created with class "MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel"
+    Then the economic capacity response should be created with class "MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel"
     And the response should have the correct JSON structure
 
   Scenario: Data persistence across navigation

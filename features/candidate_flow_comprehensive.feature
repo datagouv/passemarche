@@ -111,13 +111,23 @@ Feature: Comprehensive Candidate Application Flow
 
   Scenario: Test form validation errors display correctly
     When I visit the "contact" step
-    And I fill in contact fields with valid data
-    And I click "Suivant"
-    Then I should be on the "identification" step
-    When I leave identification fields empty
-    And I click "Suivant"
-    Then I should remain on the "identification" step
-    And I should see validation errors
+    And I fill in invalid data:
+      | field | value |
+      | email | invalid-email |
+      | phone | 123 |
+    And I submit the form
+    Then I should see validation errors for:
+      | field | error |
+      | email | format invalide |
+      | phone | format invalide |
+    When I visit the "identification" step
+    And I fill in invalid data:
+      | field | value |
+      | required_text | |
+    And I submit the form
+    Then I should see validation errors for:
+      | field | error |
+      | required_text | requis |
 
   Scenario: Test data persistence across steps
     When I visit the "contact" step
