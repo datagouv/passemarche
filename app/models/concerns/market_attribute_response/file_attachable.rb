@@ -24,7 +24,14 @@ module MarketAttributeResponse::FileAttachable
     return if uploaded_files.blank?
 
     uploaded_files.compact_blank.each do |f|
-      documents.attach(f) if f.respond_to?(:tempfile) || f.is_a?(ActionDispatch::Http::UploadedFile)
+      next unless f.respond_to?(:tempfile) || f.is_a?(ActionDispatch::Http::UploadedFile)
+
+      documents.attach(
+        io: f.respond_to?(:tempfile) ? f.tempfile : f,
+        filename: f.original_filename,
+        content_type: f.content_type,
+        metadata: { field_type: 'generic' }
+      )
     end
   end
 

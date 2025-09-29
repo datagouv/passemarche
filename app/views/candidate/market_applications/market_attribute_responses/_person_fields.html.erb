@@ -1,0 +1,90 @@
+<div class="nested-form-wrapper fr-card fr-card--sm fr-mb-2w" data-new-record="<%= index == 'NEW_RECORD' %>">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+        <div class="fr-col-12">
+          <h6 class="fr-text--sm fr-mb-2w">
+            <% if display_number %>
+              Personne <%= display_number %>
+            <% else %>
+              Nouvelle personne
+            <% end %>
+          </h6>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-6">
+          <div class="fr-input-group">
+            <%= response_form.label "person_#{index}_nom", "Nom", class: "fr-label fr-label--required" %>
+            <%= response_form.text_field "person_#{index}_nom",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'nom'),
+                  class: "fr-input",
+                  placeholder: "ex: Dupont",
+                  required: true %>
+          </div>
+        </div>
+        <div class="fr-col-6">
+          <div class="fr-input-group">
+            <%= response_form.label "person_#{index}_prenoms", "Prénoms", class: "fr-label fr-label--required" %>
+            <%= response_form.text_field "person_#{index}_prenoms",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'prenoms'),
+                  class: "fr-input",
+                  placeholder: "ex: Jean Pierre",
+                  required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-12">
+          <div class="fr-input-group">
+            <%= response_form.label "person_#{index}_titres", "Titres d'études et professionnels", class: "fr-label" %>
+            <span class="fr-hint-text">Diplômes, certifications, expériences professionnelles</span>
+            <%= response_form.text_area "person_#{index}_titres",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'titres'),
+                  class: "fr-input",
+                  placeholder: "ex: Ingénieur informatique, Master en gestion de projet",
+                  rows: 3 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-8">
+          <div class="fr-upload-group">
+            <%= response_form.label "person_#{index}_cv_attachment_id", "Ajouter un CV", class: "fr-label" %>
+            <span class="fr-hint-text">Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo.</span>
+            <%= response_form.file_field "person_#{index}_cv_attachment_id",
+                  class: "fr-upload",
+                  accept: ".pdf,.doc,.docx" %>
+            <% if index != 'NEW_RECORD' %>
+              <% cv_attachment = market_attribute_response.person_cv_attachment(index) %>
+              <% if cv_attachment %>
+                <div class="fr-mt-1w fr-text--sm">
+                  <strong>Fichier actuel :</strong>
+                  <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                  <%= link_to cv_attachment.filename.to_s,
+                              url_for(cv_attachment),
+                              target: "_blank", rel: "noopener" %>
+                  (<%= number_to_human_size(cv_attachment.byte_size) %>)
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <div class="fr-col-4">
+          <%= response_form.hidden_field "person_#{index}__destroy", value: '0' %>
+          <div class="fr-mt-4w">
+            <button type="button"
+                    class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
+                    data-action="nested-form#remove"
+                    title="Supprimer cette personne">
+              Supprimer cette personne
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
