@@ -332,3 +332,6 @@ fr:
           description: Les résultats de certains marchés peuvent être grevés de droits
             de propriété intellectuelle, de droits d'auteur notamment. Votre entreprise
             est tenue de décrire ses règles internes en matière de propriété intellectuelle.
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
+          name: Présentation de l'équipe qui participera au contrat
+          description: Décrivez l'équipe mobilisée pour le marché en renseignant pour chaque personne nom, prénoms, titres d'études et professionnels
