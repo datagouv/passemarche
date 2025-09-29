@@ -22,7 +22,8 @@ class MarketAttribute < ApplicationRecord
     file_or_textarea: 7,
     capacite_economique_financiere_chiffre_affaires_global_annuel: 8,
     capacite_economique_financiere_effectifs_moyens_annuels: 9,
-    presentation_intervenants: 10
+    presentation_intervenants: 10,
+    capacites_techniques_professionnelles_effectifs_cv_intervenants: 11
   }
 
   scope :required, -> { where(required: true) }

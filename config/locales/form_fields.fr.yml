@@ -67,6 +67,8 @@ fr:
             personnel d'encadrement
         presentation_intervenants:
           name: Les titres d'études et professionnels des cadres de l'entreprise
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
+          name: Les titres d'études et professionnels des cadres de l'entreprise
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -222,6 +224,9 @@ fr:
           description: Indiquez les effectifs moyens annuels au cours des trois (3)
             dernières années en préciant l'importance du personnel d'encadrement
         presentation_intervenants:
+          name: Présentation de l'équipe qui participera au contrat
+          description: 'Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l''équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications.'
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
           name: Présentation de l'équipe qui participera au contrat
           description: 'Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l''équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications.'
         capacites_techniques_professionnelles_certificats_qualibat:

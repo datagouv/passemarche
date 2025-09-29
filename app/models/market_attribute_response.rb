@@ -14,7 +14,8 @@ class MarketAttributeResponse < ApplicationRecord
     'checkbox_with_document' => 'CheckboxWithDocument',
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => 'CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel',
     'capacite_economique_financiere_effectifs_moyens_annuels' => 'CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels',
-    'presentation_intervenants' => 'PresentationIntervenants'
+    'presentation_intervenants' => 'PresentationIntervenants',
+    'capacites_techniques_professionnelles_effectifs_cv_intervenants' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants'
   }.freeze
 
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }
