@@ -1,43 +1,51 @@
 # frozen_string_literal: true
 
 class MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants < MarketAttributeResponse
-  include MarketAttributeResponse::FileAttachable
-  include MarketAttributeResponse::JsonValidatable
+  include MarketAttributeResponse::RepeatableField
 
-  # Expected JSON structure:
-  # {
-  #   "persons": [
-  #     {
-  #       "nom": "Dupont",
-  #       "prenoms": "Jean",
-  #       "titres": "Ingénieur",
-  #       "cv_attachment_id": "123"
-  #     }
-  #   ]
-  # }
+  PERSON_FIELDS = %w[nom prenoms titres cv_attachment_id].freeze
+
+  def self.item_schema
+    {
+      'nom' => { type: 'string', required: true },
+      'prenoms' => { type: 'string', required: true },
+      'titres' => { type: 'text', required: false },
+      'cv_attachment_id' => { type: 'file', required: false }
+    }
+  end
 
   def self.json_schema_properties
-    %w[persons]
+    %w[items]
   end
 
   def self.json_schema_required
-    [] # Allow empty data initially
+    []
   end
 
   def self.json_schema_error_field
     :value
   end
 
+  alias persons items
+  alias persons= items=
+  alias persons_ordered items_ordered
+
   validate :validate_persons_structure
 
-  # Virtual attribute for persons array
-  def persons
-    value&.dig('persons') || []
+  def specialized_document_fields
+    ['cv_attachment_id']
   end
 
-  def persons=(persons_array)
-    self.value = {} if value.blank?
-    value['persons'] = persons_array.is_a?(Array) ? persons_array : []
+  def cleanup_old_specialized_documents?
+    true
+  end
+
+  def person_cv_attachment(person_timestamp)
+    get_specialized_document(person_timestamp, 'cv_attachment_id')
+  end
+
+  def item_prefix
+    'person'
   end
 
   private
@@ -50,37 +58,35 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvInt
       return
     end
 
-    persons_data = value['persons']
+    persons_data = value['items']
     return if persons_data.blank?
 
-    unless persons_data.is_a?(Array)
-      errors.add(:value, 'persons must be an array')
+    unless persons_data.is_a?(Hash)
+      errors.add(:value, 'persons must be a hash')
       return
     end
 
-    persons_data.each_with_index do |person, index|
-      validate_single_person(person, index)
+    persons_data.each_with_index do |(_timestamp, person), display_index|
+      validate_single_person(person, display_index + 1)
     end
   end
 
-  def validate_single_person(person, index)
+  def validate_single_person(person, display_number)
     unless person.is_a?(Hash)
-      errors.add(:value, "Person at index #{index} must be a hash")
+      errors.add(:value, "Person #{display_number} must be a hash")
       return
     end
 
-    # For now, just validate that if person data exists, it has some content
     return unless person_has_data?(person)
-
-    # Basic validation - at least nom should be present if any field is filled
+    return unless market_attribute&.required?
     return if person['nom'].present?
 
-    errors.add(:value, "Person at index #{index}: nom is required when person data is provided")
+    errors.add(:value, "Person #{display_number}: nom is required when person data is provided")
   end
 
   def person_has_data?(person)
     return false unless person.is_a?(Hash)
 
-    %w[nom prenoms titres cv_attachment_id].any? { |field| person[field].present? }
+    PERSON_FIELDS.any? { |field| person[field].present? }
   end
 end

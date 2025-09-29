@@ -226,6 +226,7 @@ RSpec.describe MarketApplication, type: :model do
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
               'type' => 'PresentationIntervenants',
+              'type' => 'PresentationIntervenants',
               "person_#{timestamp}_nom" => 'Dupont',
               "person_#{timestamp}_prenoms" => 'Jean',
               "person_#{timestamp}_titres" => 'Ingénieur'
@@ -250,6 +251,7 @@ RSpec.describe MarketApplication, type: :model do
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
               'type' => 'PresentationIntervenants',
+              'type' => 'PresentationIntervenants',
               "person_#{timestamp1}_nom" => 'Dupont',
               "person_#{timestamp2}_nom" => 'Martin',
               "person_#{timestamp3}_nom" => 'Durand'
@@ -272,6 +274,7 @@ RSpec.describe MarketApplication, type: :model do
         response = application.market_attribute_responses.create!(
           market_attribute:,
           type: 'PresentationIntervenants'
+          type: 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants'
         )
 
         # Create initial data with 3 persons
@@ -302,6 +305,7 @@ RSpec.describe MarketApplication, type: :model do
             '0' => {
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
+              'type' => 'PresentationIntervenants',
               'type' => 'PresentationIntervenants',
               "person_#{timestamp1}_nom" => 'Dupont',
               "person_#{timestamp2}_nom" => 'Martin'
