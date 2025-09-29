@@ -23,18 +23,26 @@
   <% end %>
 
   <%= render(
-    partial: "candidate/market_applications/market_attribute_responses/fields/textarea_field",
-    locals: {
-      form: response_form,
-      attribute_response: market_attribute_response,
-    }
-  ) %>
-
-  <%= render(
     partial: "candidate/market_applications/market_attribute_responses/fields/file_upload_field",
     locals: {
       form: response_form,
       attribute_response: market_attribute_response
+    }
+  ) %>
+
+  <div style="margin-bottom: 2em;"></div>
+
+  <div class="fr-separator fr-mb-2w" style="display: flex; align-items: center;">
+    <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
+    <span style="padding: 0 1em; font-weight: bold;">OU</span>
+    <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
+  </div>
+
+  <%= render(
+    partial: "candidate/market_applications/market_attribute_responses/fields/textarea_field",
+    locals: {
+      form: response_form,
+      attribute_response: market_attribute_response,
     }
   ) %>
 <% end %>
