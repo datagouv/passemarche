@@ -192,6 +192,68 @@ Would you like me to [specific improvement]?"
 Avoid complex abstractions or "clever" code. The Rails way is probably better, and my guidance helps you stay focused on what matters.
 
 
+## Repeatable Fields Pattern
+
+For MarketAttributeResponse types that need to store collections of items (e.g., team members, projects, certifications):
+
+### Backend (Model)
+1. **Include the RepeatableField concern**:
+   ```ruby
+   class MarketAttributeResponse::YourField < MarketAttributeResponse
+     include MarketAttributeResponse::RepeatableField
+   end
+   ```
+
+2. **Define your item schema**:
+   ```ruby
+   def self.item_schema
+     {
+       'field_name' => { type: 'string', required: true },
+       'other_field' => { type: 'text', required: false }
+     }
+   end
+   ```
+
+3. **Generate virtual attributes** (optional, for custom naming like `person_X_field` instead of `item_X_field`):
+   ```ruby
+   ITEM_FIELDS = %w[field_name other_field].freeze
+
+   ITEM_FIELDS.each do |field|
+     (0...50).each do |index|
+       define_method "custom_#{index}_#{field}" do
+         get_item_field(index, field)
+       end
+
+       define_method "custom_#{index}_#{field}=" do |val|
+         set_item_field(index, field, val)
+       end
+     end
+   end
+   ```
+
+### Frontend (View)
+Use the official `stimulus-rails-nested-form` component with Rails NEW_RECORD pattern:
+
+```erb
+<div data-controller="nested-form">
+  <button data-action="nested-form#add">Add Item</button>
+
+  <div data-nested-form-target="target">
+    <%= render partial: 'item_fields', collection: existing_items %>
+  </div>
+
+  <template data-nested-form-target="template">
+    <%= render partial: 'item_fields', locals: { index: 'NEW_RECORD' } %>
+  </template>
+</div>
+```
+
+### Key Benefits
+- **Automatic handling**: MarketApplication detects RepeatableField concern and uses RepeatableFieldForm
+- **No configuration**: Just include the concern and define your schema
+- **Reusable**: Same pattern for all future repeatable fields
+- **Rails-native**: Uses standard NEW_RECORD pattern for nested attributes
+
 ## Example of a prompt for a new MarketAttributeResponse type
 I need to add a new MarketAttributeReponse type. The type in the csv file is <type>.
 
