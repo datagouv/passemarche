@@ -2,16 +2,16 @@ Given('a public market exists') do
   @editor = create(:editor)
   @public_market = create(:public_market, :completed, editor: @editor)
 
-  # Create market attributes to match expected steps
-  create(:market_attribute, key: 'company_name', category_key: 'market_and_company_information', public_markets: [@public_market])
-  create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', public_markets: [@public_market])
-  create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', public_markets: [@public_market])
-  create(:market_attribute, key: 'certificates', category_key: 'technical_capacities', public_markets: [@public_market])
+  # Create market attributes to match expected steps with subcategories
+  create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [@public_market])
+  create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [@public_market])
+  create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', subcategory_key: 'economic_capacities', public_markets: [@public_market])
+  create(:market_attribute, key: 'certificates', category_key: 'technical_capacities', subcategory_key: 'technical_capacities', public_markets: [@public_market])
 end
 
 Given('a candidate starts a new application') do
   @market_application = create(:market_application, public_market: @public_market, siret: '73282932000074')
-  visit "/candidate/market_applications/#{@market_application.identifier}/market_and_company_information"
+  visit "/candidate/market_applications/#{@market_application.identifier}/market_information"
 end
 
 When('the candidate visits the {string} step') do |step|

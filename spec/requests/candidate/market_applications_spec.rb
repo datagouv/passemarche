@@ -8,17 +8,16 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
-  # Create market attributes to match the expected wizard steps
   before do
-    create(:market_attribute, key: 'company_name', category_key: 'market_and_company_information', public_markets: [public_market])
-    create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', public_markets: [public_market])
-    create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', public_markets: [public_market])
-    create(:market_attribute, key: 'certificates', category_key: 'technical_capacities', public_markets: [public_market])
+    create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [public_market])
+    create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [public_market])
+    create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', subcategory_key: 'economic_capacities', public_markets: [public_market])
+    create(:market_attribute, key: 'certificates', category_key: 'technical_capacities', subcategory_key: 'technical_capacities', public_markets: [public_market])
   end
 
   STEPS = %i[
     company_identification
-    market_and_company_information
+    market_information
     exclusion_criteria
     economic_capacities
     technical_capacities
@@ -68,7 +67,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   end
 
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do
-    let(:next_step) { 'market_and_company_information' }
+    let(:next_step) { 'market_information' }
 
     context 'with valid SIRET on company_identification' do
       it 'saves the SIRET and redirects to next step' do

@@ -51,21 +51,19 @@ module Candidate
     private
 
     def set_wizard_steps
-      # company_identification doesn't count as a step
-      @wizard_steps = steps - [:company_identification]
+      find_market_application
+      return unless @market_application
+
+      @presenter = MarketApplicationPresenter.new(@market_application)
+      @wizard_steps = @presenter.stepper_steps
     end
 
     def set_steps
       find_market_application
       return unless @market_application
 
-      category_keys = @market_application.public_market.market_attributes
-        .order(:id)
-        .pluck(:category_key)
-        .compact
-        .uniq
-
-      self.steps = [:company_identification] + category_keys.map(&:to_sym) + [:summary]
+      @presenter ||= MarketApplicationPresenter.new(@market_application)
+      self.steps = @presenter.wizard_steps
     end
 
     def handle_company_identification

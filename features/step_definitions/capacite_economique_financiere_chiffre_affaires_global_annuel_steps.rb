@@ -4,8 +4,13 @@ World(FactoryBot::Syntax::Methods)
 
 # Background steps
 Given('a public market with capacite_economique_financiere_chiffre_affaires_global_annuel field exists') do
-  @editor = create(:editor, :authorized_and_active)
-  @public_market = create(:public_market, :completed, editor: @editor)
+  # Clean up any existing test data
+  MarketApplication.where("identifier LIKE 'VR-2025-TEST%'").destroy_all
+  PublicMarket.where("name LIKE 'Test Market%'").destroy_all
+  Editor.where("name LIKE 'Test Editor%'").destroy_all
+
+  @editor = create(:editor, :authorized_and_active, name: "Test Editor #{Time.current.to_i}")
+  @public_market = create(:public_market, :completed, editor: @editor, name: "Test Market #{Time.current.to_i}")
 
   @chiffre_affaires_attr = MarketAttribute.find_or_create_by(key: 'capacite_economique_financiere_chiffre_affaires_global_annuel') do |attr|
     attr.input_type = 'capacite_economique_financiere_chiffre_affaires_global_annuel'
@@ -19,12 +24,12 @@ end
 Given('a candidate starts an application for this market') do
   @market_application = create(:market_application,
     public_market: @public_market,
-    siret: '73282932000074')
+    siret: nil)
 end
 
 # Navigation steps
 When('I visit the economic capacities step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere"
+  visit "/candidate/market_applications/#{@market_application.identifier}/chiffre_affaires"
 end
 
 When('I visit the summary step') do
@@ -32,7 +37,7 @@ When('I visit the summary step') do
 end
 
 When('I navigate back to the economic capacities step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere"
+  visit "/candidate/market_applications/#{@market_application.identifier}/chiffre_affaires"
 end
 
 # Verification steps - Display
@@ -143,7 +148,7 @@ end
 
 Then('the economic capacity form should not be submitted') do
   # Check that we're still on the economic capacities page (not redirected to next step)
-  expect(page).to have_current_path(/capacite_economique_financiere/)
+  expect(page).to have_current_path(/chiffre_affaires/)
   # Also check for presence of error messages
   expect(page).to have_css('.fr-message--error')
 end

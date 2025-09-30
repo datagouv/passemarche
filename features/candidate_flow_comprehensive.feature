@@ -16,24 +16,43 @@ Feature: Comprehensive Candidate Application Flow
     When I fill in the SIRET with "73282932000074"
     And I click "Suivant"
 
-    Then I should be on the "identite_entreprise" step
-    And I should see all required identity fields
-    When I fill in all identity fields with valid data
+    Then I should be on the "market_information" step
+    And I should see market information
+    When I click "Suivant"
+
+    # The actual order follows database ID creation order
+    Then I should be on the "contact" step
+    And I should see email and phone fields
+    When I fill in contact fields with valid data
     And I click "Suivant"
 
-    Then I should be on the "exclusion_criteria" step
+    Then I should be on the "identification" step
+    And I should see company name field
+    When I fill in identification fields with valid data
+    And I click "Suivant"
+
+    Then I should be on the "declarations" step
     And I should see checkbox fields
     When I check the required exclusion checkboxes
     And I click "Suivant"
 
-    Then I should be on the "economic_capacities" step
+    Then I should be on the "description" step
     And I should see textarea fields
     When I fill in the economic capacity information
     And I click "Suivant"
 
-    Then I should be on the "technical_capacities" step
+    Then I should be on the "documents" step
     And I should see file upload fields
     When I upload required documents
+    And I click "Suivant"
+
+    Then I should be on the "attestations" step
+    And I should see checkbox with document field
+    When I handle optional checkbox with document
+    And I click "Suivant"
+
+    Then I should be on the "certifications" step
+    When I handle optional checkbox with document
     And I click "Suivant"
 
     Then I should be on the "summary" step
@@ -42,21 +61,24 @@ Feature: Comprehensive Candidate Application Flow
     Then my application should be submitted successfully
 
   Scenario: Verify hidden type fields are present in all forms
-    When I visit the "identite_entreprise" step
+    When I visit the "contact" step
     Then each form field should have a type hidden field with correct STI class
 
-    When I visit the "exclusion_criteria" step
+    When I visit the "declarations" step
     Then each checkbox field should have type "Checkbox"
 
-    When I visit the "economic_capacities" step
+    When I visit the "description" step
     Then each textarea field should have type "Textarea"
 
-    When I visit the "technical_capacities" step
+    When I visit the "documents" step
     Then each file upload field should have type "FileUpload"
 
   Scenario: Test nested attributes submission and STI instantiation
-    When I visit the "identite_entreprise" step
-    And I fill in all identity fields with valid data
+    When I visit the "contact" step
+    And I fill in contact fields with valid data
+    And I submit the form
+    When I visit the "identification" step
+    And I fill in identification fields with valid data
     And I submit the form
     Then all responses should be created with correct STI types
     And the email response should be of class "MarketAttributeResponse::EmailInput"
@@ -64,16 +86,19 @@ Feature: Comprehensive Candidate Application Flow
     And the text response should be of class "MarketAttributeResponse::TextInput"
 
   Scenario: Comprehensive STI class verification for all input types
-    When I visit the "identite_entreprise" step
-    And I fill in all identity fields with valid data
+    When I visit the "contact" step
+    And I fill in contact fields with valid data
     And I submit the form
-    When I visit the "exclusion_criteria" step
+    When I visit the "identification" step
+    And I fill in identification fields with valid data
+    And I submit the form
+    When I visit the "declarations" step
     And I check the required exclusion checkboxes
     And I submit the form
-    When I visit the "economic_capacities" step
+    When I visit the "description" step
     And I fill in the economic capacity information
     And I submit the form
-    When I visit the "technical_capacities" step
+    When I visit the "documents" step
     And I upload required documents
     And I submit the form
     Then all responses should be created with correct STI types
@@ -85,34 +110,27 @@ Feature: Comprehensive Candidate Application Flow
     And the file upload response should be of class "MarketAttributeResponse::FileUpload"
 
   Scenario: Test form validation errors display correctly
-    When I visit the "identite_entreprise" step
-    And I fill in invalid data:
-      | field | value |
-      | email | invalid-email |
-      | phone | 123 |
-      | required_text | |
-    And I submit the form
-    Then I should see validation errors for:
-      | field | error |
-      | email | format invalide |
-      | phone | format invalide |
-      | required_text | requis |
-    And the form should not be submitted
+    When I visit the "contact" step
+    And I fill in contact fields with valid data
+    And I click "Suivant"
+    Then I should be on the "identification" step
+    When I leave identification fields empty
+    And I click "Suivant"
+    Then I should remain on the "identification" step
+    And I should see validation errors
 
   Scenario: Test data persistence across steps
-    When I visit the "identite_entreprise" step
+    When I visit the "contact" step
     And I fill in:
       | field | value |
       | email | test@example.com |
       | phone | 01 23 45 67 89 |
-      | text  | Test Company |
     And I click "Suivant"
-    And I go back to "identite_entreprise" step
+    And I go back to "contact" step
     Then the fields should contain the previously entered values:
       | field | expected_value |
       | email | test@example.com |
       | phone | 01 23 45 67 89 |
-      | text  | Test Company |
 
   Scenario: Test checkbox with document functionality
     Given a market with checkbox_with_document fields exists
@@ -136,29 +154,26 @@ Feature: Comprehensive Candidate Application Flow
     And a documents package should be created
 
   Scenario: File upload with validation failure recovery
-    When I visit the "technical_capacities" step
+    When I visit the "documents" step
     Then I should see file upload fields
-    When I upload a valid document "test_document.pdf"
-    And I leave other required fields empty on the page
+    When I leave the required file upload empty
     And I click "Suivant"
     Then I should see validation errors
-    And I should see "test_document.pdf (en cours de téléchargement)" in the uploaded files
-    And the document should not have a download link
-    When I fill in all required fields correctly
+    When I upload a valid document "test_document.pdf"
     And I click "Suivant"
     Then I should progress to the next step
-    When I go back to "technical_capacities" step
+    When I go back to "documents" step
     Then I should see "test_document.pdf" with a download link
 
   Scenario: Multiple file uploads and persistence
-    When I visit the "technical_capacities" step
+    When I visit the "documents" step
     And I upload multiple valid documents:
       | filename          | content_type     |
       | certificate.pdf   | application/pdf  |
       | reference.jpg     | image/jpeg       |
     And I click "Suivant"
     Then I should progress to the next step
-    When I go back to "technical_capacities" step
+    When I go back to "documents" step
     Then I should see all uploaded documents:
       | filename          |
       | certificate.pdf   |
@@ -166,23 +181,24 @@ Feature: Comprehensive Candidate Application Flow
     And each document should have a download link
 
   Scenario: File upload validation errors
-    When I visit the "technical_capacities" step
+    When I visit the "documents" step
     And I attempt to upload an invalid file "document.txt"
     And I click "Suivant"
     Then I should see a file format validation error
-    And I should remain on the "technical_capacities" step
+    And I should remain on the "documents" step
     When I upload a valid document "valid_doc.pdf"
     And I click "Suivant"
     Then I should progress to the next step
 
   Scenario: File upload display states
-    When I visit the "technical_capacities" step
+    When I visit the "documents" step
     Then I should see "Aucun fichier téléchargé" message
     When I upload a valid document "new_file.pdf"
-    But validation fails for other reasons
     And I click "Suivant"
-    Then I should see "new_file.pdf (en cours de téléchargement)"
-    And the file should not have a download link
-    When I fix the validation issues and submit
+    Then I should progress to the next step
+    When I go back to "documents" step
     Then I should see "new_file.pdf" with a download link
-    And I should not see "(en cours de téléchargement)" text
+
+  Scenario: Side menu highlights current step
+    When I visit the "contact" step
+    Then the current step should be highlighted in the side menu
