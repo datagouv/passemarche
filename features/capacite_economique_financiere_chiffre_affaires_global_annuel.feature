@@ -60,7 +60,7 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
       | year_1.market_percentage must be between 0 and 100 |
       | year_2.turnover must be a positive integer |
       | year_2.market_percentage must be between 0 and 100 |
-      | year_1.fiscal_year_end is not a valid date |
+      | year_1.fiscal_year_end must be in YYYY-MM-DD format |
       | year_2.fiscal_year_end must be in YYYY-MM-DD format |
     And the economic capacity form should not be submitted
 
