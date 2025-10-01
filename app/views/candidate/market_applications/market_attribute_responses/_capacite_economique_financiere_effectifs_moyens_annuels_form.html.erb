@@ -1,0 +1,93 @@
+<%
+  key = market_attribute_response.market_attribute.key
+%>
+
+<div class="fr-input-group<%= ' fr-input-group--error' if market_attribute_response.errors[:value].any? %>">
+  <%= form.fields_for :market_attribute_responses, market_attribute_response do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+    </h6>
+
+    <% if t("form_fields.candidate.fields.#{key}.description", default: nil).present? %>
+      <div class="fr-hint-text fr-mb-3w fr-text--sm">
+        <%= t("form_fields.candidate.fields.#{key}.description") %>
+      </div>
+    <% end %>
+
+    <div class="fr-table">
+      <div class="fr-table__container fr-ml-0 fr-table--layout-fixed">
+        <div class="fr-table__content" style="max-width: 580px; margin-left: 0;">
+          <!-- Table with 3 rows x 2 fields (year, average staff) -->
+          <% [["n-1", "year_1"], ["n-2", "year_2"], ["n-3", "year_3"]].each do |label, year_key| %>
+            <div class="fr-grid-row">
+              <div class="fr-col-6 fr-pr-2w">
+                <div class="fr-input-group fr-mb-2w">
+                  <label
+                    class="fr-label fr-text--md"
+                    for="market_attribute_response_<%= year_key %>_year"
+                  >
+                    Année <%= label %>
+                  </label>
+                  <%= response_form.number_field(
+                        "#{year_key}_year",
+                        class: "fr-input fr-input--sm",
+                        id: "market_attribute_response_#{year_key}_year",
+                        step: 1,
+                        min: 2000,
+                        max: Time.current.year,
+                        required: true
+                      )
+                  %>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 0;" class="fr-col-6">
+                <div class="fr-input-group">
+                  <label
+                    class="fr-label fr-text--md"
+                    for="market_attribute_response_<%= year_key %>_average_staff"
+                  >
+                    Effectif moyen
+                  </label>
+                  <%= response_form.number_field(
+                        "#{year_key}_average_staff",
+                        class: "fr-input fr-input--sm flex-basis: 0; flex-grow: 1;",
+                        id: "market_attribute_response_#{year_key}_average_staff",
+                        step: 1,
+                        min: 0,
+                        required: true
+                      )
+                  %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if market_attribute_response.errors[:value].any? %>
+      <div class="fr-messages-group fr-mt-2w" aria-live="polite">
+        <% market_attribute_response.errors[:value].each do |error_message| %>
+          <p class="fr-message fr-message--error">
+            <%= error_message %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% [["year_1", "n-1"], ["year_2", "n-2"], ["year_3", "n-3"]].each do |year_key, label| %>
+      <% if market_attribute_response.errors[year_key.to_sym].any? %>
+        <div class="fr-messages-group fr-mt-1w" aria-live="polite">
+          <p class="fr-message fr-message--error">
+            Année <%= label %> :
+            <%= market_attribute_response.errors[year_key.to_sym].first %>
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
