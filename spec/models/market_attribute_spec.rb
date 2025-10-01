@@ -20,7 +20,8 @@ RSpec.describe MarketAttribute, type: :model do
         phone_input: 5,
         checkbox_with_document: 6,
         file_or_textarea: 7,
-        capacite_economique_financiere_chiffre_affaires_global_annuel: 8
+        capacite_economique_financiere_chiffre_affaires_global_annuel: 8,
+        capacite_economique_financiere_effectifs_moyens_annuels: 9
       )
     }
   end
