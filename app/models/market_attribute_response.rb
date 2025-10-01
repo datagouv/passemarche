@@ -12,7 +12,8 @@ class MarketAttributeResponse < ApplicationRecord
     'file_or_textarea' => 'FileOrTextarea',
     'phone_input' => 'PhoneInput',
     'checkbox_with_document' => 'CheckboxWithDocument',
-    'capacite_economique_financiere_chiffre_affaires_global_annuel' => 'CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel'
+    'capacite_economique_financiere_chiffre_affaires_global_annuel' => 'CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel',
+    'capacite_economique_financiere_effectifs_moyens_annuels' => 'CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels'
   }.freeze
 
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }

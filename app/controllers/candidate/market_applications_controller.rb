@@ -132,20 +132,7 @@ module Candidate
     def market_application_params
       params.fetch(:market_application, {}).permit(
         :siret,
-        market_attribute_responses_attributes: [
-          :id,
-          :market_attribute_id,
-          :type,
-          :_destroy,
-          :text,
-          :checked,
-          :file,
-          { files: [] },
-          { value: {} },
-          :year_1_turnover, :year_1_market_percentage, :year_1_fiscal_year_end,
-          :year_2_turnover, :year_2_market_percentage, :year_2_fiscal_year_end,
-          :year_3_turnover, :year_3_market_percentage, :year_3_fiscal_year_end
-        ]
+        market_attribute_responses_attributes: {}
       )
     end
 
