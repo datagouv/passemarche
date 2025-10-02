@@ -1,0 +1,126 @@
+<div class="nested-form-wrapper fr-card fr-card--sm fr-mb-2w" data-new-record="<%= index == 'NEW_RECORD' %>">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+        <div class="fr-col-12">
+          <h6 class="fr-text--sm fr-mb-2w">
+            <% if display_number %>
+              Réalisation <%= display_number %>
+            <% else %>
+              Nouvelle réalisation
+            <% end %>
+          </h6>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12">
+          <div class="fr-input-group">
+            <%= response_form.label "realisation_#{index}_resume", "Résumé du travail effectué", class: "fr-label fr-label--required" %>
+            <span class="fr-hint-text">Une phrase courte résumant le projet</span>
+            <%= response_form.text_field "realisation_#{index}_resume",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'resume'),
+                  class: "fr-input",
+                  placeholder: "ex: Construction d'un bâtiment municipal",
+                  required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-6">
+          <div class="fr-input-group">
+            <%= response_form.label "realisation_#{index}_date_debut", "Date de début", class: "fr-label fr-label--required" %>
+            <%= response_form.date_field "realisation_#{index}_date_debut",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'date_debut'),
+                  class: "fr-input",
+                  required: true %>
+          </div>
+        </div>
+        <div class="fr-col-6">
+          <div class="fr-input-group">
+            <%= response_form.label "realisation_#{index}_date_fin", "Date de fin", class: "fr-label fr-label--required" %>
+            <%= response_form.date_field "realisation_#{index}_date_fin",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'date_fin'),
+                  class: "fr-input",
+                  required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-6">
+          <div class="fr-input-group">
+            <%= response_form.label "realisation_#{index}_montant", "Montant (€)", class: "fr-label fr-label--required" %>
+            <span class="fr-hint-text">Montant en euros</span>
+            <%= response_form.number_field "realisation_#{index}_montant",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'montant'),
+                  class: "fr-input",
+                  placeholder: "ex: 500000",
+                  min: 1,
+                  step: 1,
+                  required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-12">
+          <div class="fr-input-group">
+            <%= response_form.label "realisation_#{index}_description", "Description détaillée de la réalisation", class: "fr-label fr-label--required" %>
+            <span class="fr-hint-text">Décrivez en détail les travaux effectués, les destinataires, et les résultats obtenus</span>
+            <%= response_form.text_area "realisation_#{index}_description",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'description'),
+                  class: "fr-input",
+                  placeholder: "ex: Construction complète d'un bâtiment municipal de 1200m² incluant gros œuvre, second œuvre et finitions. Livré au client Mairie de Paris en respectant les délais et le budget.",
+                  rows: 4,
+                  required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-8">
+          <div class="fr-upload-group">
+            <%= response_form.label "realisation_#{index}_attestation_bonne_execution", "Attestations de bonne exécution", class: "fr-label" %>
+            <span class="fr-hint-text">Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo. Vous pouvez joindre plusieurs fichiers.</span>
+            <%= response_form.file_field "realisation_#{index}_attestation_bonne_execution",
+                  class: "fr-upload",
+                  accept: ".pdf,.doc,.docx",
+                  multiple: true %>
+            <% if index != 'NEW_RECORD' %>
+              <% attestations = market_attribute_response.realisation_attestations(index) %>
+              <% if attestations.any? %>
+                <div class="fr-mt-1w">
+                  <strong class="fr-text--sm">Fichiers actuels :</strong>
+                  <ul class="fr-text--sm">
+                    <% attestations.each do |attestation| %>
+                      <li>
+                        <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                        <%= link_to attestation.filename.to_s,
+                                    url_for(attestation),
+                                    target: "_blank", rel: "noopener" %>
+                        (<%= number_to_human_size(attestation.byte_size) %>)
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <div class="fr-col-4">
+          <%= response_form.hidden_field "realisation_#{index}__destroy", value: '0' %>
+          <div class="fr-mt-4w">
+            <button type="button"
+                    class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
+                    data-action="nested-form#remove"
+                    title="Supprimer cette réalisation">
+              Supprimer cette réalisation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
