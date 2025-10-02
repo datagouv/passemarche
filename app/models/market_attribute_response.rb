@@ -17,6 +17,8 @@ class MarketAttributeResponse < ApplicationRecord
     'presentation_intervenants' => 'PresentationIntervenants',
     'capacites_techniques_professionnelles_effectifs_cv_intervenants' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns'
+    'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+    'capacites_techniques_professionnelles_outillage_echantillons' => 'CapacitesTechniquesProfessionnellesOutillageEchantillons'
   }.freeze
 
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }

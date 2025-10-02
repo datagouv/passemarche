@@ -25,6 +25,9 @@ class MarketAttribute < ApplicationRecord
     presentation_intervenants: 10,
     capacites_techniques_professionnelles_effectifs_cv_intervenants: 11,
     capacites_techniques_professionnelles_realisations_livraisons_cinq_ans: 12
+    presentation_intervenants: 9,
+    capacites_techniques_professionnelles_realisations_livraisons_cinq_ans: 10,
+    capacites_techniques_professionnelles_outillage_echantillons: 11
   }
 
   scope :required, -> { where(required: true) }

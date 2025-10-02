@@ -34,6 +34,7 @@ class CsvRowData
     presentation_intervenants
     capacites_techniques_professionnelles_effectifs_cv_intervenants
     capacites_techniques_professionnelles_realisations_livraisons_cinq_ans
+    capacites_techniques_professionnelles_outillage_echantillons
   ].freeze
 
   MARKET_TYPE_MAPPING = {
@@ -57,6 +58,8 @@ class CsvRowData
     'presentation_intervenants' => :presentation_intervenants,
     'capacites_techniques_professionnelles_effectifs_cv_intervenants' => :capacites_techniques_professionnelles_effectifs_cv_intervenants,
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans
+    'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans,
+    'capacites_techniques_professionnelles_outillage_echantillons' => :capacites_techniques_professionnelles_outillage_echantillons
   }.freeze
 
   validates :key, presence: true, if: :should_import?

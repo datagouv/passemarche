@@ -24,6 +24,9 @@ RSpec.describe MarketAttribute, type: :model do
         capacite_economique_financiere_effectifs_moyens_annuels: 9,
         presentation_intervenants: 10,
         capacites_techniques_professionnelles_effectifs_cv_intervenants: 11
+        presentation_intervenants: 9,
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans: 10,
+        capacites_techniques_professionnelles_outillage_echantillons: 11
       )
     }
   end
