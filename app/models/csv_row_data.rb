@@ -20,7 +20,21 @@ class CsvRowData
 
   attribute :obligatoire, :string
 
-  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email file_or_textarea phone textarea texte capacite_economique_financiere_chiffre_affaires_global_annuel capacite_economique_financiere_effectifs_moyens_annuels presentation_intervenants capacites_techniques_professionnelles_effectifs_cv_intervenants].freeze
+  SUPPORTED_TYPES = %w[
+    checkbox
+    checkbox_with_document
+    document
+    email
+    file_or_textarea
+    phone
+    textarea
+    texte
+    capacite_economique_financiere_chiffre_affaires_global_annuel
+    capacite_economique_financiere_effectifs_moyens_annuels
+    presentation_intervenants
+    capacites_techniques_professionnelles_effectifs_cv_intervenants
+    capacites_techniques_professionnelles_realisations_livraisons_cinq_ans
+  ].freeze
 
   MARKET_TYPE_MAPPING = {
     'services' => 'services',
@@ -41,7 +55,8 @@ class CsvRowData
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => :capacite_economique_financiere_chiffre_affaires_global_annuel,
     'capacite_economique_financiere_effectifs_moyens_annuels' => :capacite_economique_financiere_effectifs_moyens_annuels,
     'presentation_intervenants' => :presentation_intervenants,
-    'capacites_techniques_professionnelles_effectifs_cv_intervenants' => :capacites_techniques_professionnelles_effectifs_cv_intervenants
+    'capacites_techniques_professionnelles_effectifs_cv_intervenants' => :capacites_techniques_professionnelles_effectifs_cv_intervenants,
+    'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans
   }.freeze
 
   validates :key, presence: true, if: :should_import?

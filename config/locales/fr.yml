@@ -169,6 +169,18 @@ fr:
             year_1: "Année N-1"
             year_2: "Année N-2"
             year_3: "Année N-3"
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
+          labels:
+            resume: "Résumé du travail effectué"
+            date_debut: "Date de début"
+            date_fin: "Date de fin"
+            montant: "Montant (€)"
+            description: "Description détaillée"
+            attestation_bonne_execution: "Attestation de bonne exécution"
+          hints:
+            resume: "Une phrase courte résumant le projet"
+            montant: "Montant en euros"
+            description: "Décrivez en détail la réalisation"
       market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
