@@ -44,7 +44,7 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLi
   end
 
   def cleanup_old_specialized_documents?
-    true
+    false
   end
 
   alias realisations items
