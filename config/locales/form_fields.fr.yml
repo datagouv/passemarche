@@ -136,9 +136,10 @@ fr:
             mises en place pour assurer la qualité ainsi que les moyens d'étude et
             de recherche employés.
         capacites_techniques_professionnelles_outillage_echantillons:
-          name: Illustration des réalisations
-          description: Le candidat devra fournir des échantillons, descriptions ou
-            photographies qui illustrent les réalisations effectuées.
+          name: "Illustration des réalisations : échantillons, photographie ou description
+            des fournitures"
+          description: Ajoutez des échantillons, photos ou descriptions pour démontrer
+            la conformité, la qualité des fournitures proposées et illustrer vos réalisations.
         capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
           name: Systèmes de gestion et de suivi de la chaîne d'approvisionnement 
           description: Le candidat devra décrire l'organisation, le contrôle et le
@@ -311,8 +312,8 @@ fr:
             que les moyens mis en place pour garantir leur qualité, y compris vos
             capacités d'étude et de recherche.
         capacites_techniques_professionnelles_outillage_echantillons:
-          name: 'Illustration des réalisations : échantillons, photographie ou description
-            des fournitures'
+          name: "Illustration des réalisations : échantillons, photographie ou description
+            des fournitures"
           description: Ajoutez des échantillons, photos ou descriptions pour démontrer
             la conformité, la qualité des fournitures proposées et illustrer vos réalisations.
         capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
