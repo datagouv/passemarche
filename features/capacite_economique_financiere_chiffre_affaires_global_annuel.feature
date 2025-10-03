@@ -13,8 +13,8 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
   Scenario: Display of 3x3 grid form
     When I visit the economic capacities step
     Then I should see the title "Le chiffre d'affaires de votre entreprise au cours des trois dernières années"
-    And I should see the description "Indiquez le chiffre d'affaires de votre entreprise au cours des trois années précédentes, en euros."
-    And I should see a table with headers:
+    And I should see the effectifs description "Indiquez le chiffre d'affaires de votre entreprise au cours des trois années précédentes, en euros."
+    And I should see a table with effectifs headers:
       | Année | Chiffre d'affaires (€) | % CA dans le secteur du marché | Fin de l'exercice |
     And I should see 3 rows with labels:
       | Année N-1 |
