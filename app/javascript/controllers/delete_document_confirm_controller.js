@@ -16,11 +16,21 @@ export default class extends Controller {
       const documentId = btn.getAttribute("data-document-id");
       const marketApplicationId = this.element.getAttribute("data-market-application-id");
       if (!documentId || !marketApplicationId) return;
+      // Safely get CSRF token meta tag
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+      if (!csrfMeta) {
+        console.error("CSRF meta tag not found. Aborting document delete request.");
+        return;
+      }
       const url = `/candidate/market_applications/${marketApplicationId}/documents/${documentId}`;
       fetch(url, {
         method: "DELETE",
         headers: {
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          // Safely get CSRF token
+          "X-CSRF-Token": (() => {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            return meta ? meta.getAttribute('content') : "";
+          })(),
           "Accept": "text/vnd.turbo-stream.html"
         }
       }).then(response => {
@@ -28,8 +38,12 @@ export default class extends Controller {
           // Remove the turbo-frame for this document
           const frame = btn.closest("turbo-frame");
           if (frame) { frame.remove(); }
-        }
-      });
+          } else {
+            window.alert("La suppression du document a échoué. Veuillez réessayer.");
+          }
+        }).catch(error => {
+          window.alert("Une erreur réseau est survenue lors de la suppression du document.");
+        });
       e.preventDefault();
       e.stopPropagation();
     });

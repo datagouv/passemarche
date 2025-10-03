@@ -20,9 +20,19 @@ class MarketAttributeResponse < ApplicationRecord
     'capacites_techniques_professionnelles_outillage_echantillons' => 'CapacitesTechniquesProfessionnellesOutillageEchantillons'
   }.freeze
 
+  FILE_ATTACHABLE_TYPES = %w[
+    FileUpload
+    FileOrTextarea
+    CheckboxWithDocument
+  ].freeze
+
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }
 
   before_validation :set_type_from_market_attribute, on: :create
+
+  def self.file_attachable_types
+    FILE_ATTACHABLE_TYPES
+  end
 
   def self.find_sti_class(type_name)
     "MarketAttributeResponse::#{type_name}".constantize

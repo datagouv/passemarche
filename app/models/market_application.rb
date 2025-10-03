@@ -21,6 +21,13 @@ class MarketApplication < ApplicationRecord
 
   before_validation :generate_identifier, on: :create
 
+  def find_authorized_document(attachment_id)
+    market_attribute_responses
+      .where(type: MarketAttributeResponse.file_attachable_types)
+      .flat_map(&:documents)
+      .find { |doc| doc.id.to_s == attachment_id.to_s }
+  end
+
   private
 
   def generate_identifier
