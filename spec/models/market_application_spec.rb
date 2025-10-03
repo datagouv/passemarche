@@ -209,9 +209,9 @@ RSpec.describe MarketApplication, type: :model do
     describe 'nested attributes with person fields' do
       let(:market_attribute) do
         MarketAttribute.find_or_create_by(
-          key: 'capacites_techniques_professionnelles_effectifs_cv_intervenants'
+          key: 'presentation_intervenants'
         ) do |attr|
-          attr.input_type = 'capacites_techniques_professionnelles_effectifs_cv_intervenants'
+          attr.input_type = 'presentation_intervenants'
           attr.category_key = 'capacites_techniques_professionnelles'
           attr.subcategory_key = 'effectifs'
           attr.required = true
@@ -225,7 +225,7 @@ RSpec.describe MarketApplication, type: :model do
             '0' => {
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
-              'type' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
+              'type' => 'PresentationIntervenants',
               "person_#{timestamp}_nom" => 'Dupont',
               "person_#{timestamp}_prenoms" => 'Jean',
               "person_#{timestamp}_titres" => 'Ingénieur'
@@ -249,7 +249,7 @@ RSpec.describe MarketApplication, type: :model do
             '0' => {
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
-              'type' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
+              'type' => 'PresentationIntervenants',
               "person_#{timestamp1}_nom" => 'Dupont',
               "person_#{timestamp2}_nom" => 'Martin',
               "person_#{timestamp3}_nom" => 'Durand'
@@ -271,7 +271,7 @@ RSpec.describe MarketApplication, type: :model do
 
         response = application.market_attribute_responses.create!(
           market_attribute:,
-          type: 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants'
+          type: 'PresentationIntervenants'
         )
 
         # Create initial data with 3 persons
@@ -302,7 +302,7 @@ RSpec.describe MarketApplication, type: :model do
             '0' => {
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
-              'type' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
+              'type' => 'PresentationIntervenants',
               "person_#{timestamp1}_nom" => 'Dupont',
               "person_#{timestamp2}_nom" => 'Martin'
             }

@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants, type: :model do
+RSpec.describe MarketAttributeResponse::PresentationIntervenants, type: :model do
   let(:market_application) { create(:market_application) }
-  let(:market_attribute) { create(:market_attribute, input_type: :capacites_techniques_professionnelles_effectifs_cv_intervenants) }
+  let(:market_attribute) { create(:market_attribute, input_type: :presentation_intervenants) }
 
   subject(:response) do
     described_class.new(

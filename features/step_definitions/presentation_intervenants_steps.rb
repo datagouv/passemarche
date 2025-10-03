@@ -3,12 +3,12 @@
 World(FactoryBot::Syntax::Methods)
 
 # Background steps
-Given('a public market with capacites_techniques_professionnelles_effectifs_cv_intervenants field exists') do
+Given('a public market with presentation_intervenants field exists') do
   @editor = create(:editor, :authorized_and_active)
   @public_market = create(:public_market, :completed, editor: @editor)
 
-  @cv_intervenants_attr = MarketAttribute.find_or_create_by(key: 'capacites_techniques_professionnelles_effectifs_cv_intervenants') do |attr|
-    attr.input_type = 'capacites_techniques_professionnelles_effectifs_cv_intervenants'
+  @cv_intervenants_attr = MarketAttribute.find_or_create_by(key: 'presentation_intervenants') do |attr|
+    attr.input_type = 'presentation_intervenants'
     attr.category_key = 'capacites_techniques_professionnelles'
     attr.subcategory_key = 'effectifs'
     attr.required = true
@@ -79,7 +79,7 @@ When('I submit the technical capacities form with single person data:') do |tabl
         '0' => {
           id: '',
           market_attribute_id: @cv_intervenants_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
+          type: 'PresentationIntervenants',
           "person_#{timestamp}_nom" => row['nom'],
           "person_#{timestamp}_prenoms" => row['prenoms'],
           "person_#{timestamp}_titres" => row['titres']
@@ -121,7 +121,7 @@ When('I submit the technical capacities form with person removal:') do |table|
         '0' => {
           id: '',
           market_attribute_id: @cv_intervenants_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
+          type: 'PresentationIntervenants',
           "person_#{timestamp}_nom" => row['nom'],
           "person_#{timestamp}_prenoms" => row['prenoms'],
           "person_#{timestamp}_titres" => row['titres']
@@ -140,7 +140,7 @@ When('I submit the technical capacities form with partial person data:') do |tab
         '0' => {
           id: '',
           market_attribute_id: @cv_intervenants_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
+          type: 'PresentationIntervenants',
           "person_#{timestamp}_nom" => row['nom'],
           "person_#{timestamp}_prenoms" => row['prenoms'],
           "person_#{timestamp}_titres" => row['titres']
@@ -176,7 +176,7 @@ Then('the person data should be saved correctly') do
   @market_application.reload
   response = @market_application.market_attribute_responses.last
   expect(response).to be_present
-  expect(response.class.name).to eq('MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants')
+  expect(response.class.name).to eq('MarketAttributeResponse::PresentationIntervenants')
 
   persons = response.persons.values.compact
   expect(persons.length).to eq(1)
@@ -241,7 +241,7 @@ end
 
 # Background data setup for summary tests
 Given('I have submitted team data with multiple persons:') do |table|
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants.create!(
+  response = MarketAttributeResponse::PresentationIntervenants.create!(
     market_application: @market_application,
     market_attribute: @cv_intervenants_attr
   )
@@ -259,7 +259,7 @@ end
 
 Given('I have submitted person data:') do |table|
   row = table.hashes.first
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants.create!(
+  response = MarketAttributeResponse::PresentationIntervenants.create!(
     market_application: @market_application,
     market_attribute: @cv_intervenants_attr
   )
@@ -274,7 +274,7 @@ end
 
 Given('I have submitted single person data:') do |table|
   row = table.hashes.first
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants.create!(
+  response = MarketAttributeResponse::PresentationIntervenants.create!(
     market_application: @market_application,
     market_attribute: @cv_intervenants_attr
   )
@@ -323,7 +323,7 @@ Then('the form should support adding up to 50 persons') do
   expect(page).to have_css('template[data-nested-form-target="template"]', visible: false)
 
   # Verify that the model can handle multiple items (tested via set_item_field)
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants.new(
+  response = MarketAttributeResponse::PresentationIntervenants.new(
     market_application: @market_application,
     market_attribute: @cv_intervenants_attr
   )

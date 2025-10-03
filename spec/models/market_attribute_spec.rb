@@ -22,7 +22,7 @@ RSpec.describe MarketAttribute, type: :model do
         file_or_textarea: 7,
         capacite_economique_financiere_chiffre_affaires_global_annuel: 8,
         capacite_economique_financiere_effectifs_moyens_annuels: 9,
-        capacites_techniques_professionnelles_effectifs_cv_intervenants: 10
+        presentation_intervenants: 10
       )
     }
   end

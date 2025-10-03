@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 @capacites_techniques_professionnelles
-Feature: Capacités techniques et professionnelles - Effectifs CV Intervenants
+Feature: Capacités techniques et professionnelles - Présentation Intervenants
   En tant que candidat à un marché public
   Je veux pouvoir renseigner l'équipe qui participera au contrat
   Afin de démontrer mes capacités techniques et professionnelles
 
   Background:
-    Given a public market with capacites_techniques_professionnelles_effectifs_cv_intervenants field exists
+    Given a public market with presentation_intervenants field exists
     And a candidate starts an application for this technical capacities market
 
   Scenario: Display of empty form with add person functionality
     When I visit the technical capacities step
     Then I should see the title "Présentation de l'équipe qui participera au contrat"
-    And I should see the description "Décrivez l'équipe mobilisée pour le marché en renseignant pour chaque personne nom, prénoms, titres d'études et professionnels"
+    And I should see the description "Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
     And I should see the "Ajouter un intervenant manuellement" button
     And I should see "Téléchargez une liste des intervenants" section
 
@@ -62,9 +62,9 @@ Feature: Capacités techniques et professionnelles - Effectifs CV Intervenants
       | Personne 1 | Dupont     | Jean Pierre | Ingénieur informatique, Master      |
       | Personne 2 | Martin     | Marie Claire| Architecte logiciel, PhD             |
 
-  Scenario: STI class verification for capacites_techniques_professionnelles_effectifs_cv_intervenants
+  Scenario: STI class verification for presentation_intervenants
     When I visit the technical capacities step
-    Then the form should have a hidden type field with value "CapacitesTechniquesProfessionnellesEffectifsCvIntervenants"
+    Then the form should have a hidden type field with value "PresentationIntervenants"
 
   Scenario: Data persistence across navigation
     Given I have submitted person data:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MarketAttributeResponse::CapacitesTechniquesProfessionnellesEffectifsCvIntervenants < MarketAttributeResponse
+class MarketAttributeResponse::PresentationIntervenants < MarketAttributeResponse
   include MarketAttributeResponse::RepeatableField
 
   PERSON_FIELDS = %w[nom prenoms titres cv_attachment_id].freeze
