@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
   namespace :candidate do
     resources :market_applications, param: :identifier, only: [] do
+      resources :documents, only: [:destroy]
+
       member do
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'
@@ -50,7 +52,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :sync_status, param: :identifier, only: [:show], path: 'market_application/:identifier/sync_status'
+    resources :sync_status, param: :identifier, only: [:show],
+      path: 'market_application/:identifier/sync_status'
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check
