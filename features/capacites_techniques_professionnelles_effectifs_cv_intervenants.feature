@@ -23,26 +23,26 @@ Feature: Capacités techniques et professionnelles - Effectifs CV Intervenants
     And the page should have a button to add persons dynamically
 
   Scenario: Successful form submission with single person
-    Given I have submitted single person data:
+    Given I have submitted single person data (effectifs cv intervenants):
       | nom        | prenoms     | titres                               |
       | Dupont     | Jean Pierre | Ingénieur informatique, Master      |
-    Then the person data should be saved correctly
+    Then the person data should be saved correctly (effectifs cv intervenants)
 
   Scenario: Successful form submission with multiple persons
-    Given I have submitted team data with multiple persons:
+    Given I have submitted team data with multiple persons (effectifs cv intervenants):
       | nom        | prenoms     | titres                               |
       | Dupont     | Jean Pierre | Ingénieur informatique, Master      |
       | Martin     | Marie Claire| Architecte logiciel, PhD             |
     Then both persons data should be saved correctly
 
   Scenario: Removing a person from the form
-    Given I have submitted single person data:
+    Given I have submitted single person data (effectifs cv intervenants):
       | nom        | prenoms     | titres                               |
       | Martin     | Marie Claire| Architecte logiciel, PhD             |
     Then only person 2 data should be saved
 
   Scenario: Form accepts partial person data
-    Given I have submitted single person data:
+    Given I have submitted single person data (effectifs cv intervenants):
       | nom        | prenoms     | titres                               |
       | Dupont     | Jean Pierre |                                      |
     Then the person data with partial information should be saved
@@ -52,7 +52,7 @@ Feature: Capacités techniques et professionnelles - Effectifs CV Intervenants
     Then I should see file upload infrastructure for documents
 
   Scenario: Display of submitted data in summary
-    Given I have submitted team data with multiple persons:
+    Given I have submitted team data with multiple persons (effectifs cv intervenants):
       | nom        | prenoms     | titres                               |
       | Dupont     | Jean Pierre | Ingénieur informatique, Master      |
       | Martin     | Marie Claire| Architecte logiciel, PhD             |
@@ -67,7 +67,7 @@ Feature: Capacités techniques et professionnelles - Effectifs CV Intervenants
     Then the form should have a hidden type field with value "CapacitesTechniquesProfessionnellesEffectifsCvIntervenants"
 
   Scenario: Data persistence across navigation
-    Given I have submitted person data:
+    Given I have submitted single person data (effectifs cv intervenants):
       | nom        | prenoms     | titres                               |
       | Dupont     | Jean Pierre | Ingénieur informatique, Master      |
     When I navigate back to the technical capacities step

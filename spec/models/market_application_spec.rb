@@ -225,6 +225,7 @@ RSpec.describe MarketApplication, type: :model do
             '0' => {
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
+              'type' => 'PresentationIntervenants',
               "person_#{timestamp}_nom" => 'Dupont',
               "person_#{timestamp}_prenoms" => 'Jean',
               "person_#{timestamp}_titres" => 'Ingénieur'
@@ -249,10 +250,11 @@ RSpec.describe MarketApplication, type: :model do
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
               'type' => 'PresentationIntervenants',
-              'type' => 'PresentationIntervenants',
               "person_#{timestamp1}_nom" => 'Dupont',
               "person_#{timestamp2}_nom" => 'Martin',
               "person_#{timestamp3}_nom" => 'Durand'
+            }
+          }
         )
 
         response = application.market_attribute_responses.last
@@ -270,7 +272,6 @@ RSpec.describe MarketApplication, type: :model do
         response = application.market_attribute_responses.create!(
           market_attribute:,
           type: 'PresentationIntervenants'
-          type: 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants'
         )
 
         # Create initial data with 3 persons
@@ -279,8 +280,14 @@ RSpec.describe MarketApplication, type: :model do
         response.save!
 
         # Update only t1 and t3 - t2 remains unchanged
-            '0' => { 'id' => response.id.to_s, 'market_attribute_id' => market_attribute.id.to_s,
-                     "person_#{t1}_nom" => 'Dupont Updated', "person_#{t3}_nom" => 'Durand Updated' }
+        application.update(
+          market_attribute_responses_attributes: {
+            '0' => {
+              'id' => response.id.to_s,
+              'market_attribute_id' => market_attribute.id.to_s,
+              "person_#{t1}_nom" => 'Dupont Updated',
+              "person_#{t3}_nom" => 'Durand Updated'
+            }
           }
         )
 
@@ -300,7 +307,6 @@ RSpec.describe MarketApplication, type: :model do
               'id' => '',
               'market_attribute_id' => market_attribute.id.to_s,
               'type' => 'PresentationIntervenants',
-              'type' => 'PresentationIntervenants',
               "person_#{timestamp1}_nom" => 'Dupont',
               "person_#{timestamp2}_nom" => 'Martin'
             }
@@ -313,6 +319,8 @@ RSpec.describe MarketApplication, type: :model do
         expect(response.get_item_field(timestamp1, 'nom')).to eq('Dupont')
         expect(response.get_item_field(timestamp2, 'nom')).to eq('Martin')
       end
+    end
+
     # NOTE: build_market_attribute_response was removed in favor of Rails' standard
     # accepts_nested_attributes_for implementation which automatically builds
     # the correct STI class based on the 'type' parameter

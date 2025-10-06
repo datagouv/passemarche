@@ -16,7 +16,6 @@ class MarketAttributeResponse < ApplicationRecord
     'capacite_economique_financiere_effectifs_moyens_annuels' => 'CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels',
     'presentation_intervenants' => 'PresentationIntervenants',
     'capacites_techniques_professionnelles_effectifs_cv_intervenants' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
-    'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns'
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
     'capacites_techniques_professionnelles_outillage_echantillons' => 'CapacitesTechniquesProfessionnellesOutillageEchantillons'
   }.freeze
