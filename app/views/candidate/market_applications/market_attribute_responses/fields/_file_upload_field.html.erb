@@ -31,7 +31,9 @@
         <div>
           <% if document.persisted? %>
             <turbo-frame id="document_<%= document.id %>">
-              <div class="uploaded-file">
+                <div class="uploaded-file"
+                  data-controller="delete-document-confirm"
+                  data-market-application-id="<%= @market_application.identifier %>">
                 <%= link_to document.filename.to_s,
                   url_for(document),
                   target: "_blank", rel: "noopener" %>

@@ -13,7 +13,7 @@ Feature: Capacités techniques et professionnelles - Effectifs CV Intervenants
   Scenario: Display of empty form with add person functionality
     When I visit the technical capacities step
     Then I should see the title "Présentation de l'équipe qui participera au contrat"
-    And I should see the description "Décrivez l'équipe mobilisée pour le marché en renseignant pour chaque personne nom, prénoms, titres d'études et professionnels"
+    And I should see the description "Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
     And I should see the "Ajouter un intervenant manuellement" button
     And I should see "Téléchargez une liste des intervenants" section
 
