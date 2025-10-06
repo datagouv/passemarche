@@ -182,12 +182,14 @@ module MarketAttributeResponse::RepeatableField
     value_will_change!
   end
 
-  def handle_specialized_document(timestamp, field_name, file)
-    if file.respond_to?(:tempfile)
-      attach_specialized_document(timestamp, field_name, file)
+  def handle_specialized_document(timestamp, field_name, file_or_files)
+    if file_or_files.is_a?(Array)
+      handle_multiple_document(timestamp, field_name, file_or_files)
+    elsif file_or_files.respond_to?(:tempfile)
+      attach_specialized_document(timestamp, field_name, file_or_files)
       set_item_field(timestamp, field_name, 'attached')
     else
-      set_item_field(timestamp, field_name, file)
+      set_item_field(timestamp, field_name, file_or_files)
     end
   end
 
@@ -195,5 +197,14 @@ module MarketAttributeResponse::RepeatableField
     def item_schema
       raise NotImplementedError, "#{name} must implement item_schema class method"
     end
+  end
+
+  def handle_multiple_document(timestamp, field_name, files)
+    files.each do |file|
+      next if file.blank?
+
+      attach_specialized_document(timestamp, field_name, file) if file.respond_to?(:tempfile)
+    end
+    set_item_field(timestamp, field_name, 'attached') if files.any?
   end
 end

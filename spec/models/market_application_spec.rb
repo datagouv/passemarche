@@ -282,8 +282,12 @@ RSpec.describe MarketApplication, type: :model do
         # Update only t1 and t3 - t2 remains unchanged
         application.update(
           market_attribute_responses_attributes: {
-            '0' => { 'id' => response.id.to_s, 'market_attribute_id' => market_attribute.id.to_s,
-                     "person_#{t1}_nom" => 'Dupont Updated', "person_#{t3}_nom" => 'Durand Updated' }
+            '0' => {
+              'id' => response.id.to_s,
+              'market_attribute_id' => market_attribute.id.to_s,
+              "person_#{t1}_nom" => 'Dupont Updated',
+              "person_#{t3}_nom" => 'Durand Updated'
+            }
           }
         )
 

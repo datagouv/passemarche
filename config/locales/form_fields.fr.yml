@@ -26,7 +26,7 @@ fr:
         capacites_techniques_professionnelles_realisations: Les réalisations ou références
         capacites_techniques_professionnelles_outillage: Outillage, matériel et équipements
           techniques
-        capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
+        capacites_techniques_professionnelles_assurance_qualite: Dispositif d'assurance
           de la qualité, sécurité et normes de gestion environnementale
         capacites_techniques_professionnelles_securite_et_confidentialite: Securité
           et confidentialité
@@ -53,7 +53,7 @@ fr:
           name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
           description: Le candidat devra fournir les bilans ou extraits de bilan,
             concernant les trois dernières années comptables clôturées (uniquement
-            pour les opérateurs économiques pour lesquels l’établissement de bilans
+            pour les opérateurs économiques pour lesquels l'établissement de bilans
             est obligatoire).
         capacite_economique_financiere_assurance_risques_professionnels:
           name: Assurance des risques professionnels pertinents
@@ -67,6 +67,8 @@ fr:
             personnel d'encadrement
         presentation_intervenants:
           name: Les titres d'études et professionnels des cadres de l'entreprise
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
+          name: Les titres d'études et professionnels des cadres de l'entreprise
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -75,7 +77,7 @@ fr:
         capacites_techniques_professionnelles_certificats_qualifelec:
           name: Certificat Qualifelec
           description: La certification Qualifelec est une qualification professionnelle
-            pour les professionnels exerçant dans le domaine de l’électricité (rénovation
+            pour les professionnels exerçant dans le domaine de l'électricité (rénovation
             électrique) et dans le domaine de la rénovation énergétique.
         capacites_techniques_professionnelles_certificats_rge:
           name: Certificats RGE
@@ -100,8 +102,8 @@ fr:
             pour tous les organismes de formation professionnelle en France.
         capacites_techniques_professionnelles_certificats_france_competences:
           name: Certificat France Compétences
-          description: La certification France Compétences atteste que l’organisme
-            est habilité à délivrer des actions de formation, d’évaluation ou de certification
+          description: La certification France Compétences atteste que l'organisme
+            est habilité à délivrer des actions de formation, d'évaluation ou de certification
             inscrites au Répertoire spécifique ou au Répertoire national des certifications
             professionnelles (RNCP)
         capacites_techniques_professionnelles_certificats_cqp_tp:
@@ -114,6 +116,12 @@ fr:
             années
           description: Le candidat devra fournir les documents pouvant attester de
             la bonne réalisation des prestations
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
+          name: Liste des principaux travaux effectués au cours des cinq (5) dernières
+            années 
+          description: Le candidat doit fournir la liste des principaux travaux exécutés
+            au cours des cinq (5) dernières années, en précisant leur montant, leur
+            date et leurs destinataires.
         capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
           name: Les attestations ou preuves de bonne exécution des principaux travaux
             au cours des cinq (5) dernières années
@@ -121,49 +129,49 @@ fr:
             la bonne exécution des travaux
         capacites_techniques_professionnelles_outillage_materiel_equipements:
           name: Description de l'outillage, du matériel et de l'équipement technique
-          description: Le candidat devra décrire l’outillage, le matériel et les équipements
-            techniques dont il dispose ou qu’il mobilisera pour exécuter correctement
+          description: Le candidat devra décrire l'outillage, le matériel et les équipements
+            techniques dont il dispose ou qu'il mobilisera pour exécuter correctement
             le marché
         capacites_techniques_professionnelles_outillage_mesures_qualite:
           name: Equipements techniques et mesures de qualité employées
           description: Le candidat devra décrire son équipement technique, les mesures
-            mises en place pour assurer la qualité ainsi que les moyens d’étude et
+            mises en place pour assurer la qualité ainsi que les moyens d'étude et
             de recherche employés.
         capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
           name: Systèmes de gestion et de suivi de la chaîne d'approvisionnement 
-          description: Le candidat devra décrire l’organisation, le contrôle et le
-            suivi de sa chaîne d’approvisionnement, notamment la sélection des fournisseurs,
+          description: Le candidat devra décrire l'organisation, le contrôle et le
+            suivi de sa chaîne d'approvisionnement, notamment la sélection des fournisseurs,
             la traçabilité, la gestion des stocks et le respect des délais.
         capacites_techniques_professionnelles_assurance_qualite_gestion_environnementale:
           name: Mesures de gestion environnementale
           description: Le candidat devra préciser les actions mises en place pour
-            réduire l’impact environnemental, telles que la gestion des déchets, les
-            économies d’énergie, l’utilisation de matériaux durables ou d’autres pratiques
+            réduire l'impact environnemental, telles que la gestion des déchets, les
+            économies d'énergie, l'utilisation de matériaux durables ou d'autres pratiques
             écoresponsables.
         capacites_techniques_professionnelles_assurance_qualite_controle_organisme_officiel:
           name: Contrôle des produits ou services complexes ou répondant à un besoin
             particulier
           description: Le candidat devra accepter que, pour des produits ou services
             complexes ou spécifiques, ses capacités de production, sa capacité technique,
-            ses moyens d’étude et de recherche ou ceux de son prestataire le cas échéant,
-            ainsi que ses mesures de contrôle qualité puissent être vérifiés par l’acheteur
+            ses moyens d'étude et de recherche ou ceux de son prestataire le cas échéant,
+            ainsi que ses mesures de contrôle qualité puissent être vérifiés par l'acheteur
             ou un organisme compétent.
         capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
           name: Capacité de protection des informations protégées ou classifiées
           description: Le candidat devra démontrer sa capacité à traiter, stocker
             et transmettre des informations protégées ou classifiées liées à la sécurité
-            nationale, conformément au niveau de protection exigé par l’acheteur
+            nationale, conformément au niveau de protection exigé par l'acheteur
         capacites_techniques_professionnelles_securite_et_confidentialite_habilitation_prealable_secret_defense:
           name: Habilitation préalable relative à la protection du secret de la défense
             nationale
           description: Le candidat et son dirigeant devront, si le contrat implique
-            l’accès à des informations classifiées, obtenir une habilitation préalable
-            au secret de la défense nationale délivrée par l’autorité compétente,
+            l'accès à des informations classifiées, obtenir une habilitation préalable
+            au secret de la défense nationale délivrée par l'autorité compétente,
             garantissant leur fiabilité et le respect des règles de sécurité.
         capacites_techniques_professionnelles_securite_et_confidentialite_description_regles_propriete_intellectuelle:
           name: Description des règles internes en matière de proriété intellectuelle
           description: Les résultats de certains marchés peuvent être grevés de droits
-            de propriété intellectuelle, de droits d’auteur notamment. Le candidat
+            de propriété intellectuelle, de droits d'auteur notamment. Le candidat
             devra détailler ses règles internes en matière de propriété intellectuelle.
     candidate:
       categories:
@@ -182,7 +190,7 @@ fr:
         capacites_techniques_professionnelles_realisations: Les réalisations ou références
         capacites_techniques_professionnelles_outillage: Outillage, matériel et équipements
           techniques
-        capacites_techniques_professionnelles_assurance_qualite: Dispositif d’assurance
+        capacites_techniques_professionnelles_assurance_qualite: Dispositif d'assurance
           de la qualité, sécurité et normes de gestion environnementale
         capacites_techniques_professionnelles_securite_et_confidentialite: Securité
           et confidentialité
@@ -214,7 +222,7 @@ fr:
           name: Les déclarations appropriées de banques ou preuve d'une assurance
             des risques professionnels pertinents de votre entreprise
           description: Fournissez des déclarations de vos banques ou une attestation
-            d’assurance couvrant les risques professionnels de votre entreprise, afin
+            d'assurance couvrant les risques professionnels de votre entreprise, afin
             de démontrer votre solidité financière.
         capacites_techniques_professionnelles_effectifs_moyens_annuels:
           name: Les effectifs moyens annuels de votre entreprise au cours des trois
@@ -222,6 +230,9 @@ fr:
           description: Indiquez les effectifs moyens annuels au cours des trois (3)
             dernières années en préciant l'importance du personnel d'encadrement
         presentation_intervenants:
+          name: Présentation de l'équipe qui participera au contrat
+          description: 'Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l''équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications.'
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
           name: Présentation de l'équipe qui participera au contrat
           description: 'Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l''équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications.'
         capacites_techniques_professionnelles_certificats_qualibat:
@@ -232,7 +243,7 @@ fr:
         capacites_techniques_professionnelles_certificats_qualifelec:
           name: Certificat Qualifelec
           description: La certification Qualifelec est une qualification professionnelle
-            pour les professionnels exerçant dans le domaine de l’électricité (rénovation
+            pour les professionnels exerçant dans le domaine de l'électricité (rénovation
             électrique) et dans le domaine de la rénovation énergétique.
         capacites_techniques_professionnelles_certificats_rge:
           name: Certificats RGE
@@ -257,8 +268,8 @@ fr:
             pour tous les organismes de formation professionnelle en France.
         capacites_techniques_professionnelles_certificats_france_competences:
           name: Certificats France Compétences
-          description: La certification France Compétences atteste que l’organisme
-            est habilité à délivrer des actions de formation, d’évaluation ou de certification
+          description: La certification France Compétences atteste que l'organisme
+            est habilité à délivrer des actions de formation, d'évaluation ou de certification
             inscrites au Répertoire spécifique ou au Répertoire national des certifications
             professionnelles (RNCP)
         capacites_techniques_professionnelles_certificats_cqp_tp:
@@ -270,42 +281,49 @@ fr:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
             exécuté des contrats similaires
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
+          name: Les principaux travaux effectués par votre entreprise au cours des
+            cinq dernières années
+          description: Décrivez les principaux travaux effectués au cours des cinq
+            (5) années, en précisant leur date, leur montant et leurs destinataires.
+            Veillez à sélectionner les travaux en lien avec le marché et qui démontrent
+            les capacités techniques et professionnelles de votre entreprise
         capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a bien
             exécuté des contrats similaires. Elles doivent indiquer le montant, la
-            date, le lieu des travaux et confirmer qu’ils ont été réalisés dans les
-            règles de l’art et menés à bonne fin.
+            date, le lieu des travaux et confirmer qu'ils ont été réalisés dans les
+            règles de l'art et menés à bonne fin.
         capacites_techniques_professionnelles_outillage_materiel_equipements:
-          name: L’outillage, le matériel, les équipements techniques qui serviront
+          name: L'outillage, le matériel, les équipements techniques qui serviront
             à la bonne exécution du marché
           description: 'Précisez les moyens techniques que votre entreprise mobilisera
-            pour exécuter le marché : types d’outils, machines, matériel spécialisé
-            ou équipements particuliers. L’objectif est de montrer que vous disposez
+            pour exécuter le marché : types d''outils, machines, matériel spécialisé
+            ou équipements particuliers. L''objectif est de montrer que vous disposez
             des ressources nécessaires et adaptées pour garantir la bonne réalisation
             des prestations.'
         capacites_techniques_professionnelles_outillage_mesures_qualite:
           name: Les mesures employées pour assurer la qualité
           description: Décrivez les équipements techniques de votre entreprise ainsi
             que les moyens mis en place pour garantir leur qualité, y compris vos
-            capacités d’étude et de recherche.
+            capacités d'étude et de recherche.
         capacites_techniques_professionnelles_assurance_qualite_systemes_gestion:
           name: Les systèmes de gestion et de suivi de la chaîne d'approvisionnement
           description: 'Expliquez comment votre entreprise organise, contrôle et suit
-            sa chaîne d’approvisionnement : sélection des fournisseurs, traçabilité,
+            sa chaîne d''approvisionnement : sélection des fournisseurs, traçabilité,
             gestion des stocks et respect des délais.'
         capacites_techniques_professionnelles_assurance_qualite_gestion_environnementale:
           name: Les mesures de gestion environnementale que vous appliquerez dans
             le cadre de ce marché
-          description: 'Précisez les actions mises en place pour limiter l’impact
-            environnemental : gestion des déchets, économies d’énergie, utilisation
+          description: 'Précisez les actions mises en place pour limiter l''impact
+            environnemental : gestion des déchets, économies d''énergie, utilisation
             de matériaux durables ou pratiques écoresponsables.'
         capacites_techniques_professionnelles_assurance_qualite_controle_organisme_officiel:
           name: Contrôle des produits ou services complexes
           description: Transmettez les attestations ou documents de contrôle des produits
             ou services complexes par un organisme officiel. Sachez que pour des produits
-            ou services complexes ou spécifiques, l’acheteur (ou un organisme compétent)
-            peut contrôler les capacités de production, les moyens techniques, d’étude
+            ou services complexes ou spécifiques, l'acheteur (ou un organisme compétent)
+            peut contrôler les capacités de production, les moyens techniques, d'étude
             et de recherche ainsi que les mesures de contrôle qualité du fournisseur
             ou prestataire.
         capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
@@ -314,16 +332,19 @@ fr:
           description: Pour les marchés impliquant des informations protégées ou classifiées
             liées à la sécurité nationale, mon entreprise doit prouver sa capacité
             à traiter, stocker et transmettre ces données selon le niveau de protection
-            exigé par l’acheteur.
+            exigé par l'acheteur.
         capacites_techniques_professionnelles_securite_et_confidentialite_habilitation_prealable_secret_defense:
           name: Habilitation préalable relative à la protection du secret de la défense
             nationale
           description: Si le contrat donne accès à des informations classifiées, votre
             entreprise et son dirigeant doivent obtenir une habilitation préalable
-            au secret de la défense nationale. Cette habilitation, délivrée par l’autorité
+            au secret de la défense nationale. Cette habilitation, délivrée par l'autorité
             compétente, garantit la fiabilité et le respect des règles de sécurité.
         capacites_techniques_professionnelles_securite_et_confidentialite_description_regles_propriete_intellectuelle:
           name: Les règles internes en matière de propriété intellectuelle
           description: Les résultats de certains marchés peuvent être grevés de droits
             de propriété intellectuelle, de droits d'auteur notamment. Votre entreprise
             est tenue de décrire ses règles internes en matière de propriété intellectuelle.
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
+          name: Présentation de l'équipe qui participera au contrat
+          description: Décrivez l'équipe mobilisée pour le marché en renseignant pour chaque personne nom, prénoms, titres d'études et professionnels
