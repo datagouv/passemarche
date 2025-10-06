@@ -473,8 +473,6 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesReali
       response.attach_specialized_document('1738234567890', 'attestation_bonne_execution', file)
       first_doc_id = response.documents.first.id
 
-      sleep 0.1
-
       new_file = fixture_file_upload('test.pdf', 'application/pdf')
       response.attach_specialized_document('1738234567890', 'attestation_bonne_execution', new_file)
 

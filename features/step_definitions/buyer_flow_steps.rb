@@ -88,7 +88,6 @@ When('I click on {string}') do |link_or_button_text|
   elsif link_or_button_text == 'Suivant'
     if page.has_content?('Je veux demander des informations et documents complémentaires au candidat')
       choose 'additional-no'
-      sleep 0.2
       find('input[type="submit"][value="Suivant"]').click
     elsif page.has_link?('Suivant')
       click_link 'Suivant'
