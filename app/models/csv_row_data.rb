@@ -20,7 +20,7 @@ class CsvRowData
 
   attribute :obligatoire, :string
 
-  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email file_or_textarea phone textarea texte capacite_economique_financiere_chiffre_affaires_global_annuel capacite_economique_financiere_effectifs_moyens_annuels].freeze
+  SUPPORTED_TYPES = %w[checkbox checkbox_with_document document email file_or_textarea phone textarea texte capacite_economique_financiere_chiffre_affaires_global_annuel capacite_economique_financiere_effectifs_moyens_annuels presentation_intervenants].freeze
 
   MARKET_TYPE_MAPPING = {
     'services' => 'services',
@@ -39,7 +39,8 @@ class CsvRowData
     'textarea' => :textarea,
     'texte' => :text_input,
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => :capacite_economique_financiere_chiffre_affaires_global_annuel,
-    'capacite_economique_financiere_effectifs_moyens_annuels' => :capacite_economique_financiere_effectifs_moyens_annuels
+    'capacite_economique_financiere_effectifs_moyens_annuels' => :capacite_economique_financiere_effectifs_moyens_annuels,
+    'presentation_intervenants' => :presentation_intervenants
   }.freeze
 
   validates :key, presence: true, if: :should_import?

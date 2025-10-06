@@ -14,8 +14,6 @@ fr:
     buyer:
       categories:
         identite_entreprise: Identité de l'entreprise
-        motifs_exclusion_appreciation_acheteur: Motifs d’exclusion à l’appréciation
-          de l’acheteur et prévus dans les documents de la consultation
         capacite_economique_financiere: Capacité économique et financière des candidats
         capacites_techniques_professionnelles: Capacités techniques et professionnelles
           des candidats
@@ -51,21 +49,6 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-          name: Bilan des émissions de gaz à effet de serre
-          description: Le candidat devra attester qu'il a bien réalisé son bilan des
-            émissions de gaz à effet de serre pour l’année précédant l’appel à la
-            concurrence ou d'engagement de la consultation (uniquement s’il est soumis
-            à l’article L.229-25 du Code de l’environnement)
-        motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
-          name: Plan de vigilance
-          description: Le candidat devra attester qu'il a réalisé un plan de vigilance
-            l’année précédant l’appel à concurrence (uniquement pour les entreprises
-            soumise à l’article L.225-102-1 du Code de commerce).
-        capacite_economique_financiere_chiffre_affaires_global_annuel:
-          name: Chiffre d'affaires global annuel
-          description: Le candidat devra déclarer le chiffre d'affaires de son entreprise
-            des trois (3) années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
           description: Le candidat devra fournir les bilans ou extraits de bilan,
@@ -82,6 +65,8 @@ fr:
           description: Le candidat devra fournir une déclaration indiquant ses effectifs
             moyens annuels au cours des trois dernières années et l'importance du
             personnel d'encadrement
+        presentation_intervenants:
+          name: Les titres d'études et professionnels des cadres de l'entreprise
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -183,7 +168,6 @@ fr:
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
-        motifs_exclusion_appreciation_acheteur: Les motifs d’exclusion
         capacite_economique_financiere: Les capacités économiques et financières de
           votre entreprise
         capacites_techniques_professionnelles: Capacités techniques et professionnelles
@@ -191,8 +175,6 @@ fr:
       subcategories:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
-        motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs
-        capacite_economique_financiere_chiffre_affaires: Chiffre d’affaires
         capacite_economique_financiere_bilans: Bilans
         capacite_economique_financiere_assurance: Banque et assurance
         capacites_techniques_professionnelles_effectifs: Les effectifs
@@ -223,24 +205,6 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
-        motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-          name: Votre entreprise a-t-elle manquée à l'obligation d'établir un Bilan
-            de gaz à effet de serre (BEGES), alors qu'elle est concernée ?
-          description: Uniquement pour les entreprises, soumise à l’article L.229-25
-            du Code de l’environnement, n’a pas réalisé son bilan des émissions de
-            gaz à effet de serre pour l’année précédant l’appel à la concurrence ou
-            d'engagement de la consultation.
-        motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
-          name: Votre entreprise a-t-elle manquée à l'obligation d'établissement d'un
-            plan de vigilance ?
-          description: Uniquement pour les entreprises soumises à l’article L.225-102-1
-            du Code de commerce, n’a pas établi son plan de vigilance (mesures prévues
-            à l’art. L.225-102-4) pour l’année précédant l’appel à concurrence.
-        capacite_economique_financiere_chiffre_affaires_global_annuel:
-          name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
-            années
-          description: Indiquez le chiffre d'affaires de votre entreprise au cours
-            des trois années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Les bilans ou extraits de bilans de votre entreprise au cours des
             trois derniers exercices comptables clôturées
@@ -257,6 +221,9 @@ fr:
             dernières années
           description: Indiquez les effectifs moyens annuels au cours des trois (3)
             dernières années en préciant l'importance du personnel d'encadrement
+        presentation_intervenants:
+          name: Présentation de l'équipe qui participera au contrat
+          description: 'Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l''équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications.'
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -358,5 +325,5 @@ fr:
         capacites_techniques_professionnelles_securite_et_confidentialite_description_regles_propriete_intellectuelle:
           name: Les règles internes en matière de propriété intellectuelle
           description: Les résultats de certains marchés peuvent être grevés de droits
-            de propriété intellectuelle, de droits d’auteur notamment. Votre entreprise
+            de propriété intellectuelle, de droits d'auteur notamment. Votre entreprise
             est tenue de décrire ses règles internes en matière de propriété intellectuelle.

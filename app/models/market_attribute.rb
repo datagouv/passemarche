@@ -21,7 +21,8 @@ class MarketAttribute < ApplicationRecord
     checkbox_with_document: 6,
     file_or_textarea: 7,
     capacite_economique_financiere_chiffre_affaires_global_annuel: 8,
-    capacite_economique_financiere_effectifs_moyens_annuels: 9
+    capacite_economique_financiere_effectifs_moyens_annuels: 9,
+    presentation_intervenants: 10
   }
 
   scope :required, -> { where(required: true) }

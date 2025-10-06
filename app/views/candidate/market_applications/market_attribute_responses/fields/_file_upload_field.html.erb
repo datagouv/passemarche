@@ -1,6 +1,12 @@
 <%# Expected variables: form:, attribute_response: %>
 <%
-  documents = attribute_response.documents
+  # For repeatable fields with specialized documents, show only generic documents
+  # For other types, show all documents
+  documents = if attribute_response.respond_to?(:generic_documents)
+                attribute_response.generic_documents
+              else
+                attribute_response.documents
+              end
 %>
 
 <div class="fr-upload-group fr-card fr-p-2w">
@@ -18,7 +24,7 @@
       id: "upload-#{attribute_response.id}",
       aria: { describedby: "upload-#{attribute_response.id}-messages" } %>
 
-  <% if documents.attached? %>
+  <% if documents.is_a?(Array) ? documents.any? : documents.attached? %>
     <div class="fr-mt-2w fr-text--sm fr-mb-0">
       <strong>Fichiers actuels :</strong>
       <% documents.each do |document| %>

@@ -7,8 +7,8 @@ Given('a public market with capacite_economique_financiere_effectifs_moyens_annu
 
   @effectifs_attr = MarketAttribute.find_or_create_by(key: 'capacite_economique_financiere_effectifs_moyens_annuels') do |attr|
     attr.input_type = 'capacite_economique_financiere_effectifs_moyens_annuels'
-    attr.category_key = 'capacite_economique_financiere'
-    attr.subcategory_key = 'effectifs_moyens'
+    attr.category_key = 'capacites_techniques_professionnelles'
+    attr.subcategory_key = 'capacites_techniques_professionnelles_effectifs'
     attr.required = true
   end
   @effectifs_attr.public_markets << @public_market unless @effectifs_attr.public_markets.include?(@public_market)
@@ -22,7 +22,7 @@ end
 
 # Navigation steps
 When('I visit the economic capacities step \(effectifs moyens annuels)') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere"
+  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_effectifs"
 end
 
 When('I fill in average staff data:') do |table|
@@ -33,12 +33,8 @@ When('I fill in average staff data:') do |table|
   end
 end
 
-When('I visit the economic capacities step (effectifs moyens annuels)') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere"
-end
-
-When('I navigate back to the economic capacities step (effectifs moyens annuels)') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere"
+When('I navigate back to the economic capacities step \(effectifs moyens annuels\)') do
+  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_effectifs"
 end
 
 When('I visit the effectifs summary step') do
@@ -53,7 +49,7 @@ end
 
 # Verification steps - Display
 Then('I should see the effectifs title {string}') do |title|
-  expect(page).to have_content(title)
+  expect(page).to have_content(title, normalize_ws: true)
 end
 
 Then('I should see the effectifs description {string}') do |description|
@@ -153,7 +149,7 @@ Then('the effectifs form should be submitted successfully') do
 end
 
 Then('the effectifs form should not be submitted') do
-  expect(page).to have_current_path(/capacite_economique_financiere/)
+  expect(page).to have_current_path(/capacites_techniques_professionnelles_effectifs/)
   expect(page).to have_css('.fr-message--error')
 end
 

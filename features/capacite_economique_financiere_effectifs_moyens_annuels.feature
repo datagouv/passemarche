@@ -10,8 +10,7 @@ Feature: Capacité économique et financière - Effectifs moyens annuels
 
   Scenario: Display of 3x2 grid form
     When I visit the economic capacities step (effectifs moyens annuels)
-    Then I should see the effectifs title "Effectifs moyens"
-    And I should see effectifs form with labels:
+    Then I should see effectifs form with labels:
       | Année n-1 |
       | Année n-2 |
       | Année n-3 |
@@ -39,7 +38,7 @@ Feature: Capacité économique et financière - Effectifs moyens annuels
       | error |
       | year_1.average_staff is required |
       | year_2.year is required |
-    And the economic capacity form should not be submitted
+    And the effectifs form should not be submitted
 
   Scenario: Validation errors for invalid data types
     When I visit the economic capacities step (effectifs moyens annuels)
@@ -53,7 +52,7 @@ Feature: Capacité économique et financière - Effectifs moyens annuels
       | error |
       | year_1.year must be a valid year |
       | year_1.average_staff must be a positive integer |
-    And the economic capacity form should not be submitted
+    And the effectifs form should not be submitted
 
   Scenario: Display of submitted data in summary
     Given I have submitted valid average staff data:
@@ -81,6 +80,6 @@ Feature: Capacité économique et financière - Effectifs moyens annuels
       | year   | year_value | average_staff |
       | year_1 | 2024       | 30           |
     And I click "Suivant"
-    And I navigate back to the economic capacities step
+    And I navigate back to the economic capacities step (effectifs moyens annuels)
     Then the year field for year_1 should contain "2024"
     And the average_staff field for year_1 should contain "30"
