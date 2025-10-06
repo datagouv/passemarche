@@ -246,4 +246,103 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndText, type: :model do
       expect(response.documents).not_to be_attached
     end
   end
+
+  describe 'yes to no transition (data clearing)' do
+    let(:value) { {} }
+    let(:file_blob) do
+      ActiveStorage::Blob.create_and_upload!(
+        io: StringIO.new('test content'),
+        filename: 'test.pdf',
+        content_type: 'application/pdf'
+      )
+    end
+
+    context 'when switching from yes with text to no' do
+      it 'clears the text field' do
+        response.radio_choice = 'yes'
+        response.text = 'Important information'
+        expect(response.text).to eq('Important information')
+
+        response.radio_choice = 'no'
+        expect(response.text).to be_nil
+        expect(response.value).to eq({ 'radio_choice' => 'no' })
+      end
+    end
+
+    context 'when switching from yes with files to no' do
+      it 'purges attached documents' do
+        response.radio_choice = 'yes'
+        response.documents.attach(file_blob)
+        expect(response.documents).to be_attached
+
+        response.radio_choice = 'no'
+        expect(response.documents).not_to be_attached
+      end
+    end
+
+    context 'when switching from yes with both text and files to no' do
+      it 'clears text and purges files' do
+        response.radio_choice = 'yes'
+        response.text = 'See attached document'
+        response.documents.attach(file_blob)
+
+        expect(response.text).to be_present
+        expect(response.documents).to be_attached
+
+        response.radio_choice = 'no'
+
+        expect(response.text).to be_nil
+        expect(response.documents).not_to be_attached
+        expect(response.value).to eq({ 'radio_choice' => 'no' })
+      end
+    end
+  end
+
+  describe 'data consistency validation' do
+    let(:value) { {} }
+
+    context 'when radio is no but text is present (inconsistent state)' do
+      it 'is invalid' do
+        # Create inconsistent state by directly manipulating value hash
+        response.value = { 'radio_choice' => 'no', 'text' => 'leftover data' }
+
+        expect(response).to be_invalid
+        expect(response.errors[:value]).to be_present
+      end
+    end
+
+    context 'when radio is no but documents are attached (inconsistent state)' do
+      it 'is invalid' do
+        # Attach document first
+        response.documents.attach(
+          ActiveStorage::Blob.create_and_upload!(
+            io: StringIO.new('test'),
+            filename: 'test.pdf',
+            content_type: 'application/pdf'
+          )
+        )
+        # Then set radio to no directly (creating inconsistent state)
+        response.value = { 'radio_choice' => 'no' }
+
+        expect(response).to be_invalid
+        expect(response.errors[:documents]).to be_present
+      end
+    end
+
+    context 'when radio is yes with text and documents' do
+      it 'is valid' do
+        response.radio_choice = 'yes'
+        response.text = 'Valid text'
+        response.documents.attach(
+          ActiveStorage::Blob.create_and_upload!(
+            io: StringIO.new('test'),
+            filename: 'test.pdf',
+            content_type: 'application/pdf'
+          )
+        )
+
+        expect(response).to be_valid
+      end
+    end
+  end
 end
