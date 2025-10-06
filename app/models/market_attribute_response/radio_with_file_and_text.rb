@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class MarketAttributeResponse::RadioWithFileAndText < MarketAttributeResponse
+  include MarketAttributeResponse::RadioFieldBehavior
+  include MarketAttributeResponse::TextFieldBehavior
+  include MarketAttributeResponse::FileAttachable
   include MarketAttributeResponse::JsonValidatable
 
-  store_accessor :value
-
   def self.json_schema_properties
-    []
+    %w[radio_choice text]
   end
 
   def self.json_schema_required

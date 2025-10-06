@@ -34,5 +34,9 @@ FactoryBot.define do
     factory :market_attribute_response_phone_input, class: 'MarketAttributeResponse::PhoneInput' do
       association :market_attribute, :phone
     end
+
+    factory :market_attribute_response_radio_with_file_and_text, class: 'MarketAttributeResponse::RadioWithFileAndText' do
+      association :market_attribute, :radio_with_file_and_text
+    end
   end
 end
