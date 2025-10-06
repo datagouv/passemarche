@@ -1,0 +1,75 @@
+<div class="nested-form-wrapper fr-card fr-card--sm fr-mb-2w" data-new-record="<%= index == 'NEW_RECORD' %>">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+        <div class="fr-col-12">
+          <h6 class="fr-text--sm fr-mb-2w">
+            <% if display_number %>
+              Échantillon <%= display_number %>
+            <% else %>
+              Nouvel échantillon
+            <% end %>
+          </h6>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12">
+          <div class="fr-input-group">
+            <%= response_form.label "echantillon_#{index}_description", "Description de l'échantillon", class: "fr-label fr-label--required" %>
+            <span class="fr-hint-text">Décrivez l'échantillon, la photographie ou la fourniture que vous souhaitez présenter</span>
+            <%= response_form.text_area "echantillon_#{index}_description",
+                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'description'),
+                  class: "fr-input",
+                  placeholder: "ex: Échantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, matériau acier inoxydable",
+                  rows: 3,
+                  required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+        <div class="fr-col-8">
+          <div class="fr-upload-group">
+            <%= response_form.label "echantillon_#{index}_fichiers", "Fichiers (photos, documents)", class: "fr-label" %>
+            <span class="fr-hint-text">Format accepté : PDF, JPG, PNG. Taille maximale : 10 Mo par fichier. Vous pouvez joindre plusieurs fichiers.</span>
+            <%= response_form.file_field "echantillon_#{index}_fichiers",
+                  class: "fr-upload",
+                  accept: ".pdf,.jpg,.jpeg,.png",
+                  multiple: true %>
+            <% if index != 'NEW_RECORD' %>
+              <% fichiers = market_attribute_response.echantillon_fichiers(index) %>
+              <% if fichiers.any? %>
+                <div class="fr-mt-1w">
+                  <strong class="fr-text--sm">Fichiers actuels :</strong>
+                  <ul class="fr-text--sm">
+                    <% fichiers.each do |fichier| %>
+                      <li>
+                        <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
+                        <%= link_to fichier.filename.to_s,
+                                    url_for(fichier),
+                                    target: "_blank", rel: "noopener" %>
+                        (<%= number_to_human_size(fichier.byte_size) %>)
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <div class="fr-col-4">
+          <%= response_form.hidden_field "echantillon_#{index}__destroy", value: '0' %>
+          <div class="fr-mt-4w">
+            <button type="button"
+                    class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
+                    data-action="nested-form#remove"
+                    title="Supprimer cet échantillon">
+              Supprimer cet échantillon
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
