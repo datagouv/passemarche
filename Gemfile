@@ -29,6 +29,9 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'wicked'
 gem 'wicked_pdf'
 
+gem 'sentry-rails'
+gem 'sentry-ruby'
+
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails', '~> 6.5'
