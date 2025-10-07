@@ -17,7 +17,8 @@ class MarketAttributeResponse < ApplicationRecord
     'presentation_intervenants' => 'PresentationIntervenants',
     'capacites_techniques_professionnelles_effectifs_cv_intervenants' => 'CapacitesTechniquesProfessionnellesEffectifsCvIntervenants',
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
-    'capacites_techniques_professionnelles_outillage_echantillons' => 'CapacitesTechniquesProfessionnellesOutillageEchantillons'
+    'capacites_techniques_professionnelles_outillage_echantillons' => 'CapacitesTechniquesProfessionnellesOutillageEchantillons',
+    'url_input' => 'UrlInput'
   }.freeze
 
   FILE_ATTACHABLE_TYPES = %w[
