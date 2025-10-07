@@ -5,7 +5,7 @@ class MarketAttributeResponse::UrlInput < MarketAttributeResponse
 
   validates :text, presence: true, format: {
     with: URL_REGEX,
-    message: 'doit être une URL valide (ex: https://..., ou www...)'
+    message: :invalid_url
   }
 
   before_save :normalize_url

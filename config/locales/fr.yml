@@ -310,6 +310,10 @@ fr:
         market_attribute_response/file_or_textarea:
           attributes:
             file_or_textarea_blank: 'Vous devez fournir soit un fichier, soit un texte dans ce champ'
+        market_attribute_response/url_input:
+          attributes:
+            text:
+              invalid_url: "doit être une URL valide (ex: https://..., ou www...)"
         editor:
           attributes:
             name:
