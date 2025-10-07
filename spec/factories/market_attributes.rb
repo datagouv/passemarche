@@ -52,5 +52,9 @@ FactoryBot.define do
     trait :radio_with_file_and_text do
       input_type { :radio_with_file_and_text }
     end
+
+    trait :radio_with_justification_required do
+      input_type { :radio_with_justification_required }
+    end
   end
 end
