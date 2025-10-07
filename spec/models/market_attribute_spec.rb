@@ -28,7 +28,9 @@ RSpec.describe MarketAttribute, type: :model do
         capacites_techniques_professionnelles_realisations_livraisons_cinq_ans: 12,
         capacites_techniques_professionnelles_outillage_echantillons: 13,
         url_input: 14,
-        inline_url_input: 16
+        radio_with_justification_required: 15,
+        inline_file_upload: 16,
+        inline_url_input: 17
       )
     }
   end
