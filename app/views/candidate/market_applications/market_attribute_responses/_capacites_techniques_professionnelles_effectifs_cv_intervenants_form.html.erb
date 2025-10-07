@@ -36,14 +36,6 @@
         <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
       </div>
 
-      <div class="fr-mb-3w">
-        <button type="button"
-                class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-line fr-btn--icon-left"
-                data-action="nested-form#add">
-          Ajouter un intervenant manuellement
-        </button>
-      </div>
-
       <div data-nested-form-target="target">
         <%
           persons_data = market_attribute_response.persons_ordered
@@ -61,6 +53,14 @@
                        display_number: display_index + 1
                      } %>
         <% end %>
+      </div>
+
+      <div class="fr-mb-3w">
+        <button type="button"
+                class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-line fr-btn--icon-left"
+                data-action="nested-form#add">
+          Ajouter un intervenant manuellement
+        </button>
       </div>
 
       <template data-nested-form-target="template">
