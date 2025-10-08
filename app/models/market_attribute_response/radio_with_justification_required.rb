@@ -23,14 +23,9 @@ class MarketAttributeResponse::RadioWithJustificationRequired < MarketAttributeR
   private
 
   def conditional_fields_based_on_radio
-    if radio_no?
-      # When "no" (non-compliant), documents are REQUIRED
-      errors.add(:documents, :required) unless documents.attached?
-      # Text and extra documents in value hash are not allowed
-      errors.add(:value, :invalid) if text.present?
-    elsif radio_yes?
-      # When "yes" (compliant), text and documents are OPTIONAL
-      # No validation errors for optional fields
-    end
+    return unless radio_no?
+
+    errors.add(:documents, :required) unless documents.attached?
+    errors.add(:value, :invalid) if text.present?
   end
 end
