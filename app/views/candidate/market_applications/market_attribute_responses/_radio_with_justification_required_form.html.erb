@@ -51,11 +51,13 @@
         </div>
       </div>
 
-      <div data-conditional-fields-target="content" class="<%= 'fr-hidden' unless radio_choice == 'yes' %> fr-mt-3w">
+      <%# Content shown when YES selected (compliant - optional text & file) %>
+      <div data-conditional-fields-target="content"
+           class="<%= 'fr-hidden' unless radio_choice == 'yes' %> fr-mt-3w">
 
         <div class="fr-input-group fr-mb-3w<%= ' fr-input-group--error' if response_form.object.errors[:text].any? %>">
           <%= response_form.label :text,
-                t("form_fields.candidate.fields.#{key}.text_label", default: "Décrivez votre situation"),
+                t("form_fields.candidate.fields.#{key}.text_label", default: "Précisions (optionnel)"),
                 class: "fr-label" %>
           <% if t("form_fields.candidate.fields.#{key}.text_hint", default: nil).present? %>
             <span class="fr-hint-text">
@@ -83,11 +85,28 @@
                    } %>
       </div>
 
-      <% if response_form.object.errors[:value].any? %>
-        <p class="fr-error-text fr-mt-2w">
-          <%= response_form.object.errors[:value].first %>
-        </p>
-      <% end %>
+      <%# Content shown when NO selected (non-compliant - required document) %>
+      <div data-conditional-fields-target="inverseContent"
+           class="<%= 'fr-hidden' unless radio_choice == 'no' %> fr-mt-3w"
+           id="no-justification-<%= market_attribute_response.id %>">
+        <%= render partial: 'candidate/market_applications/market_attribute_responses/fields/file_upload_field',
+                   locals: {
+                     form: response_form,
+                     attribute_response: market_attribute_response
+                   } %>
+      </div>
     </div>
+
+    <% if response_form.object.errors[:value].any? %>
+      <p class="fr-error-text fr-mt-2w">
+        <%= response_form.object.errors[:value].first %>
+      </p>
+    <% end %>
+
+    <% if response_form.object.errors[:documents].any? %>
+      <p class="fr-error-text fr-mt-2w">
+        <%= response_form.object.errors[:documents].first %>
+      </p>
+    <% end %>
   <% end %>
 </div>
