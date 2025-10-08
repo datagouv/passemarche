@@ -9,15 +9,16 @@
     <%= response_form.hidden_field :market_attribute_id %>
     <%= response_form.hidden_field :type %>
 
-    <h6 class="fr-mb-2w fr-text--md">
-      <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
-    </h6>
-
     <div data-controller="conditional-fields">
       <div class="fr-mb-3w" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem;">
-        <div class="fr-hint-text fr-text--sm" style="flex: 1;">
+        <div style="flex: 1;">
+          <h6 class="fr-mb-2w fr-text--md">
+            <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+          </h6>
           <% if t("form_fields.candidate.fields.#{key}.description", default: nil).present? %>
-            <%= t("form_fields.candidate.fields.#{key}.description") %>
+            <div class="fr-hint-text fr-text--sm">
+              <%= t("form_fields.candidate.fields.#{key}.description") %>
+            </div>
           <% end %>
         </div>
 

@@ -9,17 +9,18 @@
     <%= response_form.hidden_field :market_attribute_id %>
     <%= response_form.hidden_field :type %>
 
-    <h6 class="fr-mb-2w fr-text--md">
-      <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
-    </h6>
-
     <div data-controller="conditional-fields">
       <div class="fr-mb-3w" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem;">
-        <% if t("form_fields.candidate.fields.#{key}.description", default: nil).present? %>
-          <div class="fr-hint-text fr-text--sm" style="flex: 1;">
-            <%= t("form_fields.candidate.fields.#{key}.description") %>
-          </div>
-        <% end %>
+        <div style="flex: 1;">
+          <h6 class="fr-mb-2w fr-text--md">
+            <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+          </h6>
+          <% if t("form_fields.candidate.fields.#{key}.description", default: nil).present? %>
+            <div class="fr-hint-text fr-text--sm">
+              <%= t("form_fields.candidate.fields.#{key}.description") %>
+            </div>
+          <% end %>
+        </div>
 
         <div style="flex-shrink: 0;">
           <div style="display: flex; gap: 1rem;">
@@ -83,23 +84,17 @@
                      attribute_response: market_attribute_response
                    } %>
       </div>
-    </div>
 
-    <%# Content shown when NO selected (non-compliant - required document) %>
-    <%# This section uses inline visibility toggling without stimulus for simplicity %>
-    <div class="<%= 'fr-hidden' unless radio_choice == 'no' %> fr-mt-3w" id="no-justification-<%= market_attribute_response.id %>">
-      <div class="fr-callout fr-mb-2w">
-        <p class="fr-callout__text">
-          <%= t("form_fields.candidate.fields.#{key}.justification_required",
-                default: "Vous devez fournir un document justificatif.") %>
-        </p>
+      <%# Content shown when NO selected (non-compliant - required document) %>
+      <div data-conditional-fields-target="inverseContent"
+           class="<%= 'fr-hidden' unless radio_choice == 'no' %> fr-mt-3w"
+           id="no-justification-<%= market_attribute_response.id %>">
+        <%= render partial: 'candidate/market_applications/market_attribute_responses/fields/file_upload_field',
+                   locals: {
+                     form: response_form,
+                     attribute_response: market_attribute_response
+                   } %>
       </div>
-
-      <%= render partial: 'candidate/market_applications/market_attribute_responses/fields/file_upload_field',
-                 locals: {
-                   form: response_form,
-                   attribute_response: market_attribute_response
-                 } %>
     </div>
 
     <% if response_form.object.errors[:value].any? %>
