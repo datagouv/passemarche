@@ -1,0 +1,79 @@
+<%
+  required = market_attribute_response.market_attribute.required?
+  documents = market_attribute_response.documents
+%>
+
+<div class="certificate-row" style="display: flex; flex-direction: row; margin-bottom: 20px;">
+  <div class="certificate-col certificate-col--left">
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name") %>
+    </h6>
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <span class="fr-mb-2w fr-text--sm">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </span>
+    <% end %>
+  </div>
+  <div class="certificate-col certificate-col--right">
+  <div class="fr-upload-group">
+    <%= form.fields_for :market_attribute_responses, market_attribute_response,
+                        child_index: market_attribute_response.id,
+                        multipart: true do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+      <div class="fr-upload-group fr-mt-2w" data-controller="delete-document-confirm" data-market-application-id="<%= @market_application.identifier %>">
+        <span class="fr-hint-text fr-text--sm">
+          Taille maximale : <%= MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte %> Mo.
+          Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
+        </span>
+        <%= response_form.file_field :files,
+            class: "fr-upload",
+            required: required,
+            multiple: true,
+            accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
+            id: "upload-#{market_attribute_response.id}" %>
+        <% if documents.attached? %>
+          <div class="fr-mt-2w fr-text--sm fr-mb-0">
+            <strong>Documents actuels :</strong>
+              <% documents.each do |document| %>
+                <div>
+                  <% if document.persisted? %>
+                    <turbo-frame id="document_<%= document.id %>">
+                      <div class="uploaded-file">
+                        <%= link_to document.filename.to_s,
+                          url_for(document),
+                          target: "_blank", rel: "noopener" %>
+                        <button type="button"
+                          data-document-id="<%= document.id %>"
+                          data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
+                          title="Supprimer ce document"
+                          class="fr-btn--icon delete-document-btn">
+                            <span class="fr-icon--sm fr-icon-delete-line fr-text-title--blue-france" aria-hidden="true"></span>
+                        </button>
+                      </div>
+                    </turbo-frame>
+                  <% else %>
+                    <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
+                  <% end %>
+                </div>
+              <% end %>
+          </div>
+        <% else %>
+          <div class="fr-mt-2w fr-text--sm fr-mb-0">
+            <strong>Fichiers actuels :</strong>
+            <span>Aucun fichier téléchargé</span>
+          </div>
+        <% end %>
+        <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
+          <% if response_form.object.errors[:documents].present? %>
+            <p class="fr-message fr-message--error">
+              <%= response_form.object.errors[:documents].first %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  </div>
+</div>

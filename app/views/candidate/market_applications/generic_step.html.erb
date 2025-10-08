@@ -29,25 +29,14 @@
             </h6>
 
             <% subcategory_responses = responses_by_subcategory[step.to_s] || [] %>
-            <% if step.to_s == "capacites_techniques_professionnelles_certificats" %>
-              <div class="certificate-two-columns">
-                <% subcategory_responses.each do |response| %>
-                  <div class="certificate-row" style="display: flex; flex-direction: row; margin-bottom: 20px;">
-                    <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
-                            market_attribute_response: response, form: form, two_columns: true %>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="fr-fieldset">
-                <% subcategory_responses.each do |response| %>
-                  <div class="fr-fieldset__element">
-                    <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
-                            market_attribute_response: response, form: form %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
+            <div class="fr-fieldset">
+              <% subcategory_responses.each do |response| %>
+                <div class="fr-fieldset__element">
+                  <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
+                          market_attribute_response: response, form: form %>
+                </div>
+              <% end %>
+            </div>
           </div>
       <% else %>
         <p class="fr-text--sm fr-text--mention-grey">Aucun contenu disponible pour cette étape.</p>

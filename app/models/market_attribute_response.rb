@@ -5,6 +5,7 @@ class MarketAttributeResponse < ApplicationRecord
   # Simple mapping from input_type to STI class name
   INPUT_TYPE_MAP = {
     'file_upload' => 'FileUpload',
+    'inline_file_upload' => 'InlineFileUpload',
     'text_input' => 'TextInput',
     'checkbox' => 'Checkbox',
     'textarea' => 'Textarea',
@@ -17,11 +18,13 @@ class MarketAttributeResponse < ApplicationRecord
     'presentation_intervenants' => 'PresentationIntervenants',
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
     'capacites_techniques_professionnelles_outillage_echantillons' => 'CapacitesTechniquesProfessionnellesOutillageEchantillons',
-    'url_input' => 'UrlInput'
+    'url_input' => 'UrlInput',
+    'inline_url_input' => 'InlineUrlInput'
   }.freeze
 
   FILE_ATTACHABLE_TYPES = %w[
     FileUpload
+    InlineFileUpload
     FileOrTextarea
     CheckboxWithDocument
   ].freeze

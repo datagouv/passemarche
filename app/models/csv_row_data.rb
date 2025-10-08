@@ -24,6 +24,7 @@ class CsvRowData
     checkbox
     checkbox_with_document
     document
+    inline_document
     email
     file_or_textarea
     phone
@@ -35,6 +36,7 @@ class CsvRowData
     capacites_techniques_professionnelles_realisations_livraisons_cinq_ans
     capacites_techniques_professionnelles_outillage_echantillons
     url_input
+    inline_url_input
   ].freeze
 
   MARKET_TYPE_MAPPING = {
@@ -48,6 +50,7 @@ class CsvRowData
     'checkbox' => :checkbox,
     'checkbox_with_document' => :checkbox_with_document,
     'document' => :file_upload,
+    'inline_document' => :inline_file_upload,
     'email' => :email_input,
     'file_or_textarea' => :file_or_textarea,
     'phone' => :phone_input,
@@ -58,7 +61,8 @@ class CsvRowData
     'presentation_intervenants' => :presentation_intervenants,
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans,
     'capacites_techniques_professionnelles_outillage_echantillons' => :capacites_techniques_professionnelles_outillage_echantillons,
-    'url_input' => :url_input
+    'url_input' => :url_input,
+    'inline_url_input' => :inline_url_input
   }.freeze
 
   validates :key, presence: true, if: :should_import?

@@ -14,12 +14,21 @@ fr:
     buyer:
       categories:
         identite_entreprise: Identité de l'entreprise
+        motifs_exclusion: Les motifs d'exclusion
         capacite_economique_financiere: Capacité économique et financière des candidats
         capacites_techniques_professionnelles: Capacités techniques et professionnelles
           des candidats
       subcategories:
         identite_entreprise_identification: Identification de l'entreprise
         identite_entreprise_contact: Informations de contact
+        motifs_exclusion_condamnations_penales: Motifs d'exclusion liés à des condamnations
+          définitives
+        motifs_exclusion_fiscaux_taxes_impots: Motifs d' exclusion liés aux obligations
+          fiscales et sociales, redressement/liquidation
+        motifs_exclusion_sociaux_declarations: Motifs d' exclusion liés aux obligations
+          fiscales et sociales, redressement/liquidation
+        motifs_exclusion_appreciation_acheteur_discretionnaire: Motifs d'exclusion
+          à l'appréciation de l'acheteur et prévus dans les documents de la consultation
         capacites_techniques_professionnelles_effectifs: Les effectifs
         capacites_techniques_professionnelles_certificats: Les certificats de qualification
           professionnelle ou équivalents
@@ -49,6 +58,120 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
+        motifs_exclusion_condamnations_penales_infractions_code_penal:
+          name: Condamnation définitive pour certaines infractions au Code pénal
+          description: Le candidat doit attester qu'il n'a pas fait l'objet, lui ou
+            l'un de ses dirigeants, d'une condamnation définitive pour les infractions
+            qui entraînent l'exclusion des marchés publics ou contrats de concession
+            (art. L.2141-1 et L.3123-1 du Code de la commande publique).
+        motifs_exclusion_condamnations_penales_egalite_discrimination:
+          name: Condamnation pénale pour manquement à l'égalité professionnelle entre
+            les hommes et les femmes ou pour discrimination
+          description: Le candidat doit attester qu'il n'a pas fait l'objet, lui ou
+            l'un de ses dirigeants, d'une condamnation pour manquement à l'égalité
+            professionnelle entre les femmes et les hommes (art. L.1146-1 du Code
+            du travail) ou pour discrimination (art. 225-1 du Code pénal).
+        motifs_exclusion_condamnations_penales_droit_travail:
+          name: Condamnation définitive pour méconnaissance de certaines obligations
+            dans le domaine du droit du travail puni également par le Code pénal
+          description: Le candidat doit attester qu'il n'a pas fait l'objet, lui ou
+            l'un de ses dirigeants, d'une condamnation pour manquement au Code du
+            travail, entraînant l'exclusion des marchés publics ou contrats de concession.
+        motifs_exclusion_condamnations_penales_negociation_remuneration:
+          name: Manquement à l'obligation de négociation périodique sur la rémunération
+            et sur l'égalité professionnelle hommes-femmes
+          description: Le candidat doit attester que, s'il dispose de sections syndicales,
+            il a bien mené au cours des 4 dernières années les négociations obligatoires
+            prévues par le Code du travail (rémunération, temps de travail, égalité
+            femmes-hommes, conditions de travail).
+        motifs_exclusion_fiscaux_taxes_impots_liquidation_judiciaire:
+          name: Attestation sur l'honneur que l'opérateur économique n'est pas en
+            procédure de liquidation judiciaire
+          description: Le candidat doit attester qu'il n'est pas en liquidation judiciaire,
+            ou dans une procédure équivalente s'il est établi hors de France.
+        motifs_exclusion_fiscaux_taxes_impots_faillite_interdiction:
+          name: Attestation sur l'honneur que l'opérateur économique n'est pas en
+            faillite ou qu'il ne lui est pas interdit de gérer une entreprise
+          description: Le candidat doit attester qu'il n'est pas en liquidation judiciaire,
+            ou dans une procédure équivalente s'il est établi hors de France.
+        motifs_exclusion_fiscaux_taxes_impots_infractions_impots:
+          name: Condamnation définitive pour certaines infractions au Code général
+            des impôts
+          description: Le candidat doit attester qu'il n'a pas fait l'objet, lui ou
+            l'un de ses dirigeants, d'une condamnation pour infractions fiscales (fraude,
+            refus de contrôle, délivrance de faux documents), entraînant l'exclusion
+            des marchés publics ou contrats de concession.
+        motifs_exclusion_fiscaux_taxes_impots_declarations_fiscales:
+          name: Défaut de déclarations en matière fiscale
+          description: Le candidat doit attester qu'il s'est acquitté de l'ensemble
+            de ses impôts, taxes et contributions exigibles.
+        motifs_exclusion_sociaux_declarations_cotisations_sociales:
+          name: Déclaration de l'opérateur économique qu'il s'est acquitté des cotisations
+            sociales exigibles
+          description: Le candidat doit attester qu'il a bien déclaré et payé toutes
+            les cotisations et contributions sociales qui lui incombent, conformément
+            à la réglementation en vigueur.
+        motifs_exclusion_sociaux_declarations_travailleurs_handicapes:
+          name: Obligations d'emploi de travailleurs handicapés
+          description: Si l'entreprise du candidat compte au moins 20 salariés, il
+            doit attester qu'il respecte l'obligation d'emploi de travailleurs handicapés
+            prévue par le Code du travail (art. L.5212-1 à L.5212-11).
+        motifs_exclusion_sociaux_declarations_travailleurs_etrangers:
+          name: Liste nominative des travailleurs étrangers
+          description: Le candidat doit attester que ses salariés étrangers sont en
+            situation régulière en fournissant une liste issue du registre du personnel
+            (mise à jour tous les 6 mois), précisant la date d'embauche, la nationalité
+            et le titre de travail de chaque salarié.
+        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
+          name: Attestation de régularité sociale dans le secteur des travaux publics
+            (CIBTP - CNETP)
+          description: Le candidat devra fournir une attestation délivrée par un organisme
+            en charge de la gestion des congés payés et du chômage intempéries dans
+            le secteur du BTP
+        motifs_exclusion_sociaux_declarations_pro_btp:
+          name: Attestation de régularité des cotisations retraite Pro BTP
+          description: Le candidat devra fournir une attestation délivrée par un organisme
+            proposant des services de protection sociale dans le secteur du BTP
+        motifs_exclusion_appreciation_acheteur_discretionnaire_manquement_execution:
+          name: Manquement dans l'exécution d'un contrat antérieur
+          description: Le candidat devra attester qu'au cours des trois dernièrs années
+            il n'a pas versé de dommages et intêrets, qu'il n'a pas été sanctionné
+            par une résiliation ou fait l'objet d'une sanction comparable du fait
+            d'un manquement grave ou persistant à ses obligations contractuelles lors
+            de l'exécution d'un contrat de la commande publique antérieur.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_influence_preparation:
+          name: Trafic d'influence
+          description: Le candidat devra attester ne pas avoir tenté d'influencer
+            la décision de l'acheteur ou d'obtenir de ce dernier des informations
+            confidentielles susceptibles de lui conférer un avantage indu. Il devra
+            également attester ne pas avoir participé  de manière directe ou indirecte
+            à la préparation de la procédure de passation.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_presomption_entente:
+          name: Présomption d'entente
+          description: Le candidat doit attester ne pas avoir conclu d'entente avec
+            d'autres opérateurs économiques en vue de fausser la concurrence.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_conflit_interets:
+          name: Conflit d'intérêts
+          description: Le candidat devra attester ne pas avoir été impliqué dans une
+            situation pour laquelle il aurait été susceptible d'influencer l'issue
+            d'un marché public, directement ou indirectement, qu'il n'a pas d'intérêt
+            financier, économique ou tout autre intérêt personnel qui pourrait compromettre
+            son impartialité ou son indépendance.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
+          name: Bilan des émissions de gaz à effet de serre
+          description: Le candidat devra attester qu'il a bien réalisé son bilan des
+            émissions de gaz à effet de serre pour l'année précédant l'appel à la
+            concurrence ou d'engagement de la consultation (uniquement s'il est soumis
+            à l'article L.229-25 du Code de l'environnement)
+        motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
+          name: Plan de vigilance
+          description: Le candidat devra attester qu'il a réalisé un plan de vigilance
+            l'année précédant l'appel à concurrence (uniquement pour les entreprises
+            soumise à l'article L.225-102-1 du Code de commerce).
+        capacite_economique_financiere_chiffre_affaires_global_annuel:
+          name: Chiffre d'affaires global annuel
+          description: Le candidat devra déclarer le chiffre d'affaires de son entreprise
+            des trois (3) années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
           description: Le candidat devra fournir les bilans ou extraits de bilan,
@@ -182,6 +305,7 @@ fr:
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
+        motifs_exclusion: Les motifs d'exclusion
         capacite_economique_financiere: Les capacités économiques et financières de
           votre entreprise
         capacites_techniques_professionnelles: Capacités techniques et professionnelles
@@ -189,6 +313,11 @@ fr:
       subcategories:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
+        motifs_exclusion_condamnations_penales: Condamnation définitive
+        motifs_exclusion_fiscaux_taxes_impots: Obligations fiscales et sociales
+        motifs_exclusion_sociaux_declarations: Obligations fiscales et sociales
+        motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs
+        capacite_economique_financiere_chiffre_affaires: Chiffre d'affaires
         capacite_economique_financiere_bilans: Bilans
         capacite_economique_financiere_assurance: Banque et assurance
         capacites_techniques_professionnelles_effectifs: Les effectifs
@@ -219,6 +348,126 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
+        motifs_exclusion_condamnations_penales_infractions_code_penal:
+          name: Votre entreprise a-t-elle été condamnée pour certaines infractions
+            découlant directement du Code pénal ?
+          description: 'Exemple : trafic de stupéfiants, traite des êtres humains
+            ou sa tentative, escroquerie, blanchiment, actes de terrorisme, concussion,
+            corruption passive et trafic d''influence, prise illégale d''intérêt,
+            atteintes à la liberté d''accès et à l''égalité des candidats, corruption
+            active et trafic d''influence, entraves à l''exercice de la justice, corruption
+            et du trafic d''influence actifs, faux, corruption passive et active des
+            personnes n''exerçant pas une fonction publique ou participation à une
+            association de malfaiteurs.'
+        motifs_exclusion_condamnations_penales_egalite_discrimination:
+          name: Votre entreprise a t-elle été condamnée pour manquement à l'égalité
+            professionnelle entre les hommes et les femmes ou pour discrimination
+            ?
+          description: En référence à l'article L. 1146-1 du Code du travail et l'article
+            225-1 du Code pénal
+        motifs_exclusion_condamnations_penales_droit_travail:
+          name: Votre entreprise a-t-elle été condamnée pour méconnaissance de certaines
+            obligations dans le domaine du droit du travail puni également par le
+            Code pénal ?
+          description: 'Exemple : travail dissimulé par dissimulation d''activité,
+            travail dissimulé par dissimulation d''emploi salarié, marchandage, prêt
+            illicite de main-d''œuvre, emploi d''étrangers non autorisés à travailler.'
+        motifs_exclusion_condamnations_penales_negociation_remuneration:
+          name: Votre entreprise a-t-elle manquée à ses obligations de négociation
+            périodique sur la rémunération et sur l'égalité professionnelle hommes-femmes
+            ?
+          description: Tout les 4 ans, les négociations sont obligatoires et prévues
+            par le Code du travail (rémunération, temps de travail, égalité femmes-hommes,
+            conditions de travail).
+        motifs_exclusion_fiscaux_taxes_impots_liquidation_judiciaire:
+          name: Votre entreprise est-elle en procédure de liquidation judiciaire ?
+          description: Si votre entreprise n'est pas établie en France, vous devez
+            avoir un extrait d'inscription au registre professionnel permettant de
+            justifier l'absence de redressement ou liquidation judiciaire ou tout
+            autre procédure équivalente.
+        motifs_exclusion_fiscaux_taxes_impots_faillite_interdiction:
+          name: Le dirigeant de l'entreprise est-il en faillite personnelle ou il
+            lui est il interdit de gérer une entreprise ?
+        motifs_exclusion_fiscaux_taxes_impots_infractions_impots:
+          name: Votre entreprise a t-elle été condamnée pénalement pour certaines
+            infractions issues du Code général des impôts ?
+          description: 'Par exemple : fraude fiscale, refus de contrôle par l''administration
+            ou délivrance de faux documents (Code général des impôts).'
+        motifs_exclusion_fiscaux_taxes_impots_declarations_fiscales:
+          name: Votre entreprise a t-elle manqué à ses obligations d'acquittement
+            des impôts, taxes, contributions sociales exigibles ?
+          description: 'Par exemple : impôt sur le revenu ou sociétés, TVA, etc'
+        motifs_exclusion_sociaux_declarations_cotisations_sociales:
+          name: Votre entreprise a t-elle manqué à ses obligations relatives au déclaration
+            et paiement des cotisations sociales ?
+        motifs_exclusion_sociaux_declarations_travailleurs_handicapes:
+          name: Votre entreprise a t-elle manqué à ses obligations d'emploi de travailleurs
+            handicapés ?
+          description: Sont concernées, les entreprises employant au moins 20 salariés,
+            concernée par l'emploi de travailleurs handicapés prévue par le Code du
+            travail (art. L.5212-1 à L.5212-11), conformément au Code de la commande
+            publique.
+        motifs_exclusion_sociaux_declarations_travailleurs_etrangers:
+          name: Votre entreprise emploie t-elle des travailleurs étrangers ?
+          description: Si votre entreprise emploie des salariés étrangers, elle doit
+            attester qu'ils sont en situation régulière en fournissant à l'acheteur
+            ou à l'autorité concédante une liste issue du registre du personnel (mise
+            à jour tous les 6 mois) précisant la date d'embauche, la nationalité et
+            le titre de travail de chaque salarié (art. D8254-2 du Code du travail).
+        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
+          name: Votre entreprise a t-elle manqué à ses obligations de déclaration
+            et paiement  de ses cotisations CIBTP-CNETP ?
+          description: Si votre entreprise exerce dans le secteur du BTP, elle doit
+            fournir une attestation de la caisse CIBTP confirmant qu'elle est à jour
+            de ses déclarations et cotisations (congés payés et chômage-intempéries),
+            conformément au Code du travail.
+        motifs_exclusion_sociaux_declarations_pro_btp:
+          name: Votre entreprise a t-elle manqué à ses obligations de déclaration
+            et paiement  de ses cotisations retraite Pro-BTP ?
+          description: Si votre entreprise exerce dans le secteur du BTP, elle doit
+            fournir une attestation PRO BTP prouvant qu'elle s'est acquittée de ses
+            obligations de retraites complémentaires.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_manquement_execution:
+          name: Votre entreprise a-t-elle été sanctionnée pour manquement dans l'exécution
+            d'un contrat antérieur au cours des 3 dernières années?
+          description: 'Exemple : dommages et intérêts, résiliation ou équivalent,  pour
+            manquements graves ou répétés dans l''exécution d''un précédent contrat
+            public.'
+        motifs_exclusion_appreciation_acheteur_discretionnaire_influence_preparation:
+          name: Votre entreprise a-telle tentée d'influencer indûment la décision
+            de l'acheteur, obtenu ou utilisé des informations confidentielles, fourni
+            des informations trompeuses, ou encore profité d'une participation préalable
+            préalable à la procédure créant une distorsion de concurrence ?
+        motifs_exclusion_appreciation_acheteur_discretionnaire_presomption_entente:
+          name: Votre entreprise a-t-elle fait l'objet d'une présomption d'entente
+            ?
+          description: Vous devez indiquez si votre entreprise a conclu une entente
+            avec d'autres entreprises afin de fausser la concurrence.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_conflit_interets:
+          name: La candidature de votre entreprise crée-t-elle une situation de conflit
+            d'intérêts ?
+          description: Si une personne impliquée dans la procédure détient un intérêt
+            financier, économique ou personnel pouvant compromettre son impartialité
+            ou son indépendance. Il existe un doute sur l'impartialité de votre entreprise
+            en tant que candidate.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
+          name: Votre entreprise a-t-elle manquée à l'obligation d'établir un Bilan
+            de gaz à effet de serre (BEGES), alors qu'elle est concernée ?
+          description: Uniquement pour les entreprises, soumise à l'article L.229-25
+            du Code de l'environnement, n'a pas réalisé son bilan des émissions de
+            gaz à effet de serre pour l'année précédant l'appel à la concurrence ou
+            d'engagement de la consultation.
+        motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
+          name: Votre entreprise a-t-elle manquée à l'obligation d'établissement d'un
+            plan de vigilance ?
+          description: Uniquement pour les entreprises soumises à l'article L.225-102-1
+            du Code de commerce, n'a pas établi son plan de vigilance (mesures prévues
+            à l'art. L.225-102-4) pour l'année précédant l'appel à concurrence.
+        capacite_economique_financiere_chiffre_affaires_global_annuel:
+          name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
+            années
+          description: Indiquez le chiffre d'affaires de votre entreprise au cours
+            des trois années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Les bilans ou extraits de bilans de votre entreprise au cours des
             trois derniers exercices comptables clôturées
