@@ -100,3 +100,23 @@ footer.fr-footer {
   padding: 0;
 }
 
+
+/* Certificate two-columns layout */
+.certificate-row {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.certificate-col--left,
+.certificate-col--right {
+  width: 50%;
+  min-width: 0;
+}
+
+.certificate-col {
+  width: 100%;
+}
