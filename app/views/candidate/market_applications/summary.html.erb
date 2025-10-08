@@ -27,7 +27,7 @@
                       <div class="field-layout-content">
                         <strong>Nom du marché</strong>
                         <br>
-                        <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.name %></span>
+                        <span class="fr-text--md fr-text--mention-grey"><%= @market_application.public_market.name %></span>
                       </div>
                     </div>
                     <% if @market_application.public_market.lot_name.present? %>
@@ -36,7 +36,7 @@
 
                           <strong>Nom du lot</strong>
                           <br>
-                          <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.lot_name %></span>
+                          <span class="fr-text--md fr-text--mention-grey"><%= @market_application.public_market.lot_name %></span>
                         </div>
                       </div>
                     <% end %>
@@ -45,7 +45,7 @@
 
                           <strong>Date et heure limite de remise des plis</strong>
                           <br>
-                          <span class="fr-text--sm fr-text--mention-grey"><%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
+                          <span class="fr-text--md fr-text--mention-grey"><%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
                         </div>
                       </div>
                       <div class="field-layout-container">
@@ -53,10 +53,10 @@
 
                           <strong>Typologie de marché</strong>
                           <br>
-                          <span class="fr-text--sm fr-text--mention-grey">
+                          <span class="fr-text--md fr-text--mention-grey">
                             <% if @market_application.public_market.market_type_codes.any? %>
                               <% @market_application.public_market.market_type_codes.each do |market_type_code| %>
-                                <span class="fr-badge fr-badge--sm fr-mr-1w">
+                                <span class="fr-badge fr-badge--md fr-mr-1w">
                                   <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
                                 </span>
                               <% end %>
