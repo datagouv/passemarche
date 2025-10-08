@@ -19,14 +19,12 @@ module MarketAttributeResponse::RadioFieldBehavior
     self.value = if normalized.nil?
                    (value || {}).except('radio_choice')
                  elsif normalized == RADIO_NO
-                   # Clear conditional fields when switching to "no"
                    { 'radio_choice' => normalized }
                  else
                    (value || {}).merge('radio_choice' => normalized)
                  end
     value_will_change! if persisted?
 
-    # Purge attached documents when switching to "no"
     clear_conditional_documents if normalized == RADIO_NO
   end
 
