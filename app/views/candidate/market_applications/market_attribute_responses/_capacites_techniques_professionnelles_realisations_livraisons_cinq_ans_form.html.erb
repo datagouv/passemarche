@@ -19,14 +19,6 @@
     <% end %>
 
     <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper">
-      <div class="fr-mb-3w">
-        <button type="button"
-                class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-line fr-btn--icon-left"
-                data-action="nested-form#add">
-          Ajouter une réalisation
-        </button>
-      </div>
-
       <div data-nested-form-target="target">
         <%
           realisations_data = market_attribute_response.realisations_ordered
@@ -44,6 +36,14 @@
                        display_number: display_index + 1
                      } %>
         <% end %>
+      </div>
+
+      <div class="fr-mb-3w">
+        <button type="button"
+                class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-line fr-btn--icon-left"
+                data-action="nested-form#add">
+          Ajouter une réalisation
+        </button>
       </div>
 
       <template data-nested-form-target="template">
