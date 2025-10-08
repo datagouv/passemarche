@@ -71,18 +71,12 @@ fr:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
             et de certifications qui permet aux entreprises exerçant dans le domaine
-            de construction de  valoriser leurs compétences techniques et professionnelles.
+            de construction de valoriser leurs compétences techniques et professionnelles.
         capacites_techniques_professionnelles_certificats_qualifelec:
           name: Certificat Qualifelec
           description: La certification Qualifelec est une qualification professionnelle
             pour les professionnels exerçant dans le domaine de l'électricité (rénovation
             électrique) et dans le domaine de la rénovation énergétique.
-        capacites_techniques_professionnelles_certificats_opqibi:
-          name: Certification OPQIBI
-          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
-            qualifie les entreprises d'ingénierie selon leurs compétences techniques, leurs
-            références et leurs moyens, pour garantir leur capacité à réaliser des prestations
-            intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_certificats_rge:
           name: Certificats RGE
           description: La certification RGE (Reconnu Garant de l'Environnement) est
@@ -105,7 +99,7 @@ fr:
           description: La certification Qualiopi est la certification qualité obligatoire
             pour tous les organismes de formation professionnelle en France.
         capacites_techniques_professionnelles_certificats_france_competences:
-          name: Certification France Compétences
+          name: Certificat France Compétences
           description: La certification France Compétences atteste que l'organisme
             est habilité à délivrer des actions de formation, d'évaluation ou de certification
             inscrites au Répertoire spécifique ou au Répertoire national des certifications
@@ -115,6 +109,12 @@ fr:
           description: Le Certificat de Qualification Professionnelle Travaux Publics
             (CQP TP) vise à certifier les compétences professionnelles des salariés
             dans des métiers spécifiques aux travaux publics.
+        capacites_techniques_professionnelles_certificats_opqibi:
+          name: Certification OPQIBI
+          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
+            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
+            leurs références et leurs moyens, pour garantir leur capacité à réaliser
+            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Les attestations ou preuves de livraisons au cours des trois dernières
             années
@@ -244,29 +244,16 @@ fr:
             l''équipe mobilisée pour le marché : rôles, compétences et expériences.
             Vous pouvez également joindre les CV des intervenants afin de mettre en
             valeur leurs qualifications.'
-        presentation_intervenants:
-          name: "Présentation de l'équipe qui participera au contrat"
-          description:
-            "Téléchargez la liste des intervenants qui participeront au projet.
-            Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché :
-            rôles, compétences et expériences.
-            Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
             et de certifications qui permet aux entreprises exerçant dans le domaine
-            de construction de  valoriser leurs compétences techniques et professionnelles.
+            de construction de valoriser leurs compétences techniques et professionnelles.
         capacites_techniques_professionnelles_certificats_qualifelec:
           name: Certificat Qualifelec
           description: La certification Qualifelec est une qualification professionnelle
             pour les professionnels exerçant dans le domaine de l'électricité (rénovation
             électrique) et dans le domaine de la rénovation énergétique.
-        capacites_techniques_professionnelles_certificats_opqibi:
-          name: Certification OPQIBI
-          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
-            qualifie les entreprises d'ingénierie selon leurs compétences techniques, leurs
-            références et leurs moyens, pour garantir leur capacité à réaliser des prestations
-            intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_certificats_rge:
           name: Certificats RGE
           description: La certification RGE (Reconnu Garant de l'Environnement) est
@@ -289,7 +276,7 @@ fr:
           description: La certification Qualiopi est la certification qualité obligatoire
             pour tous les organismes de formation professionnelle en France.
         capacites_techniques_professionnelles_certificats_france_competences:
-          name: Certification France Compétences
+          name: Certificats France Compétences
           description: La certification France Compétences atteste que l'organisme
             est habilité à délivrer des actions de formation, d'évaluation ou de certification
             inscrites au Répertoire spécifique ou au Répertoire national des certifications
@@ -299,6 +286,12 @@ fr:
           description: Le Certificat de Qualification Professionnelle Travaux Publics
             (CQP TP) vise à certifier les compétences professionnelles des salariés
             dans des métiers spécifiques aux travaux publics.
+        capacites_techniques_professionnelles_certificats_opqibi:
+          name: Certification OPQIBI
+          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
+            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
+            leurs références et leurs moyens, pour garantir leur capacité à réaliser
+            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
