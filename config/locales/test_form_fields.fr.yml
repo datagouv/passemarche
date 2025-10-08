@@ -56,3 +56,10 @@ fr:
           name: "Test: Influence indue"
         test_capacites_techniques_professionnelles_certificats_test:
           name: "Test: Chaîne d'approvisionnement"
+        test_radio_with_file_and_text_field:
+          name: "Question avec choix oui/non"
+          description: "Veuillez indiquer si vous souhaitez fournir des informations complémentaires"
+          radio_yes: "Oui"
+          radio_no: "Non"
+          text_label: "Décrivez votre situation"
+          text_hint: "Vous pouvez fournir des précisions textuelles"

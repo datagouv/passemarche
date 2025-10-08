@@ -5,9 +5,6 @@ Before do
 end
 
 def setup_market_types_and_attributes
-  # Clear existing market attributes to ensure clean test state
-  MarketAttribute.delete_all
-
   market_types = create_market_types
   attributes = create_market_attributes
   associate_attributes_with_market_types(market_types, attributes)
