@@ -13,7 +13,6 @@ RSpec.describe MarketAttribute, type: :model do
     it {
       should define_enum_for(:input_type).with_values(
         file_upload: 0,
-        inline_file_upload: 15,
         text_input: 1,
         checkbox: 2,
         textarea: 3,

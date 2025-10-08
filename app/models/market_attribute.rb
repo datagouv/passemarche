@@ -13,7 +13,6 @@ class MarketAttribute < ApplicationRecord
 
   enum :input_type, {
     file_upload: 0,
-    inline_file_upload: 15,
     text_input: 1,
     checkbox: 2,
     textarea: 3,
