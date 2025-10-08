@@ -35,6 +35,12 @@ module MarketAttributeResponse::FileAttachable
     end
   end
 
+  class_methods do
+    def file_attachable?
+      true
+    end
+  end
+
   private
 
   def validate_attached_files

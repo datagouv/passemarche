@@ -24,19 +24,12 @@ class MarketAttributeResponse < ApplicationRecord
     'inline_url_input' => 'InlineUrlInput'
   }.freeze
 
-  FILE_ATTACHABLE_TYPES = %w[
-    FileUpload
-    InlineFileUpload
-    FileOrTextarea
-    CheckboxWithDocument
-  ].freeze
-
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }
 
   before_validation :set_type_from_market_attribute, on: :create
 
-  def self.file_attachable_types
-    FILE_ATTACHABLE_TYPES
+  def self.file_attachable?
+    false
   end
 
   def self.find_sti_class(type_name)
