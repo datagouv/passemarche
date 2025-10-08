@@ -74,13 +74,13 @@
                   <% next if market_attributes.empty? %>
 
                   <div class="fr-card fr-mb-4w fr-card--no-border">
-                  <%= render 'card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
-                    <% market_attributes.each do |attribute| %>
-                      <% response = @presenter.market_attribute_response_for(attribute) %>
-                      <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
-                      <%= render partial_name, market_attribute_response: response %>
+                    <%= render 'card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
+                      <% market_attributes.each do |attribute| %>
+                        <% response = @presenter.market_attribute_response_for(attribute) %>
+                        <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
+                        <%= render partial_name, market_attribute_response: response %>
+                      <% end %>
                     <% end %>
-                  <% end %>
                   </div>
                 <% end %>
               </div>

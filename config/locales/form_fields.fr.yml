@@ -28,6 +28,14 @@ fr:
       subcategories:
         identite_entreprise_identification: Identification de l'entreprise
         identite_entreprise_contact: Informations de contact
+        motifs_exclusion_condamnations_penales: Motifs d'exclusion liés à des condamnations
+          définitives
+        motifs_exclusion_fiscaux_taxes_impots: Motifs d' exclusion liés aux obligations
+          fiscales et sociales, redressement/liquidation
+        motifs_exclusion_sociaux_declarations: Motifs d' exclusion liés aux obligations
+          fiscales et sociales, redressement/liquidation
+        motifs_exclusion_appreciation_acheteur_discretionnaire: Motifs d'exclusion
+          à l'appréciation de l'acheteur et prévus dans les documents de la consultation
         capacites_techniques_professionnelles_effectifs: Les effectifs
         capacites_techniques_professionnelles_certificats: Les certificats de qualification
           professionnelle ou équivalents
@@ -397,6 +405,13 @@ fr:
             dernières années
           description: Indiquez les effectifs moyens annuels au cours des trois (3)
             dernières années en préciant l'importance du personnel d'encadrement
+        capacites_techniques_professionnelles_effectifs_cv_intervenants:
+          name: "Présentation de l'équipe qui participera au contrat"
+          description:
+            "Téléchargez la liste des intervenants qui participeront au projet.
+            Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché :
+            rôles, compétences et expériences.
+            Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
         presentation_intervenants:
           name: "Présentation de l'équipe qui participera au contrat"
           description:

@@ -314,6 +314,8 @@ fr:
           attributes:
             text:
               invalid_url: "doit être une URL valide (ex: https://..., ou www...)"
+              blank: "Ce champ ne peut pas être vide"
+              too_long: "Ce champ est trop long (maximum %{count} caractères)"
         editor:
           attributes:
             name:

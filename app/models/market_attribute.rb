@@ -13,6 +13,7 @@ class MarketAttribute < ApplicationRecord
 
   enum :input_type, {
     file_upload: 0,
+    inline_file_upload: 15,
     text_input: 1,
     checkbox: 2,
     textarea: 3,
@@ -26,7 +27,8 @@ class MarketAttribute < ApplicationRecord
     radio_with_file_and_text: 11,
     capacites_techniques_professionnelles_realisations_livraisons_cinq_ans: 12,
     capacites_techniques_professionnelles_outillage_echantillons: 13,
-    url_input: 14
+    url_input: 14,
+    inline_url_input: 16
   }
 
   scope :required, -> { where(required: true) }
