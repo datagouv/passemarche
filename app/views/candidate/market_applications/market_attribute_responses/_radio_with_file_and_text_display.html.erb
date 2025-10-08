@@ -7,42 +7,51 @@
 
 <div class="field-layout-container">
   <div class="field-layout-content">
-    <strong>
-      <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
-    </strong>
-    <br>
+    <div class="fr-grid-row fr-mb-2w">
+      <!-- Colonne 1 : titre + infos complémentaires -->
+      <div class="fr-col">
+        <strong>
+          <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+        </strong>
+        <br>
 
-    <span class="fr-text--sm fr-text--mention-grey">
-      <% if radio_choice == 'yes' %>
-        <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>
+        <% if radio_choice == 'yes' %>
+          <% if text.present? %>
+            <div class="fr-mb-2w">
+              <strong class="fr-text--sm">Réponse :</strong><br>
+              <%= simple_format(text, class: "fr-text--sm") %>
+            </div>
+          <% end %>
 
-        <% if text.present? %>
-          <div class="fr-mb-2w">
-            <strong class="fr-text--sm">Réponse :</strong><br>
-            <%= simple_format(text, class: "fr-text--sm") %>
-          </div>
+          <% if documents.attached? %>
+            <div>
+              <strong class="fr-text--sm">Documents joints :</strong><br>
+              <% documents.each do |doc| %>
+                <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
+                <%= link_to doc.filename.to_s,
+                            url_for(doc),
+                            target: "_blank", rel: "noopener" %>
+                (<%= number_to_human_size(doc.byte_size) %>)
+                <br>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if text.blank? && !documents.attached? %>
+            <span class="fr-text--md">Aucune information complémentaire fournie</span>
+          <% end %>
         <% end %>
+      </div>
 
-        <% if documents.attached? %>
-          <div>
-            <strong class="fr-text--sm">Documents joints :</strong><br>
-            <% documents.each do |doc| %>
-              <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-              <%= link_to doc.filename.to_s,
-                          url_for(doc),
-                          target: "_blank", rel: "noopener" %>
-              (<%= number_to_human_size(doc.byte_size) %>)
-              <br>
-            <% end %>
-          </div>
+      <!-- Colonne 2 : badge Oui/Non -->
+      <div class="fr-col-auto" style="display: flex; align-items: flex-start; justify-content: flex-end;">
+        <% if radio_choice == 'yes' %>
+          <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>
+        <% else %>
+          <div class="fr-badge fr-badge--sm">Non</div>
         <% end %>
-
-        <% if text.blank? && !documents.attached? %>
-          <span class="fr-text--sm">Aucune information complémentaire fournie</span>
-        <% end %>
-      <% else %>
-        <div class="fr-badge fr-badge--sm">Non</div>
-      <% end %>
-    </span>
+      </div>
+    </div>
   </div>
 </div>
+<hr class="fr-hr">
