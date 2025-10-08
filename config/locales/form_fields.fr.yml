@@ -190,6 +190,12 @@ fr:
             personnel d'encadrement
         capacites_techniques_professionnelles_effectifs_cv_intervenants:
           name: Les titres d'études et professionnels des cadres de l'entreprise
+        capacites_techniques_professionnelles_effectifs_techniciens_organismes:
+          name: Les techniciens ou organismes responsables du contrôle de la qualité
+          description: Le candidat devra présenter les techniciens ou les organismes
+            techniques, qu'ils soient ou non intégrés au candidat, en particulier
+            ceux qui sont responsables du contrôle de la qualité et auquel le candidat
+            pourra faire appel pour l'exécution de l'ouvrage.
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -287,6 +293,28 @@ fr:
             ses moyens d'étude et de recherche ou ceux de son prestataire le cas échéant,
             ainsi que ses mesures de contrôle qualité puissent être vérifiés par l'acheteur
             ou un organisme compétent.
+        capacites_techniques_professionnelles_assurance_qualite_norme_assurance_qualite:
+          name: Normes d'assurance de qualité, y compris en ce qui concerne l'accessibilité
+            pour les personnes handicapées
+          description: Le candidat devra fournir des certificats délivrés par des
+            organismes indépendants prouvant le respect des normes de qualité et d'accessibilité
+            (ex. accès aux personnes handicapées). Un certificat équivalent reconnu
+            dans l'UE est accepté. À défaut, le candidat peut proposer des mesures
+            équivalentes garantissant le même niveau d'exigence.
+        capacites_techniques_professionnelles_assurance_qualite_certifications_qualité_environnement:
+          name: Certifications de qualité et de protection de l'environnement
+          description: Le candidat devra fournir des certificats délivrés par des
+            organismes indépendants et accrédités prouvant le respect des standards
+            de qualité et de protection de l'environnement. Un certificat équivalent
+            reconnu dans l'UE est accepté. À défaut, des mesures équivalentes peuvent
+            être proposées si elles garantissent le même niveau d'exigence.
+        capacites_techniques_professionnelles_securite_et_confidentialite_description_source_approvisionnement:
+          name: Description des sources d'approvisionnement en cas d'augmentation
+            des besoins
+          description: Le candidat devra décrire ses sources d'approvisionnement (en
+            précisant leur localisation si elles sont hors Europe) ainsi que sa capacité
+            à répondre à une hausse des besoins, à assurer la maintenance, la modernisation
+            et l'adaptation des fournitures.
         capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
           name: Capacité de protection des informations protégées ou classifiées
           description: Le candidat devra démontrer sa capacité à traiter, stocker
@@ -487,19 +515,19 @@ fr:
           description: Indiquez les effectifs moyens annuels au cours des trois (3)
             dernières années en préciant l'importance du personnel d'encadrement
         capacites_techniques_professionnelles_effectifs_cv_intervenants:
-          name: "Présentation de l'équipe qui participera au contrat"
-          description:
-            "Téléchargez la liste des intervenants qui participeront au projet.
-            Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché :
-            rôles, compétences et expériences.
-            Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
-        presentation_intervenants:
-          name: "Présentation de l'équipe qui participera au contrat"
-          description:
-            "Téléchargez la liste des intervenants qui participeront au projet.
-            Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché :
-            rôles, compétences et expériences.
-            Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
+          name: Présentation de l'équipe qui participera au contrat
+          description: 'Téléchargez la liste des intervenants qui participeront au
+            projet. Si vous ne disposez pas de cette liste, décrivez manuellement
+            l''équipe mobilisée pour le marché : rôles, compétences et expériences.
+            Vous pouvez également joindre les CV des intervenants afin de mettre en
+            valeur leurs qualifications.'
+        capacites_techniques_professionnelles_effectifs_techniciens_organismes:
+          name: Présentation des techniciens, organismes techniques qui participeront
+            au contrat
+          description: Téléchargez la liste des techniciens ou organismes techniques
+            (internes ou externes, chargés notamment du contrôle qualité) qui participeront
+            au projet. Si vous ne disposez pas de cette liste, décrivez manuellement
+            les techniciens ou organismes techniques mobilisés pour le marché.
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -602,6 +630,29 @@ fr:
             peut contrôler les capacités de production, les moyens techniques, d'étude
             et de recherche ainsi que les mesures de contrôle qualité du fournisseur
             ou prestataire.
+        capacites_techniques_professionnelles_assurance_qualite_norme_assurance_qualite:
+          name: Conformité à certaines normes d'assurance de qualité
+          description: Votre entreprise doit prouver, par des certificats délivrés
+            par des organismes indépendants, qu'elle respecte les normes de qualité
+            et d'accessibilité (ex. accès aux personnes handicapées). Un certificat
+            équivalent reconnu dans l'UE est accepté. Si aucun certificat n'est disponible
+            pour des raisons indépendantes de l'entreprise, des mesures équivalentes
+            peuvent être fournies, à condition de garantir le même niveau d'exigence.
+        capacites_techniques_professionnelles_assurance_qualite_certifications_qualité_environnement:
+          name: Contrôle de qualité et de conformité par rapport à certaines spécifications
+            techniques
+          description: Votre entreprise doit démontrer, par des certificats délivrés
+            par des organismes indépendants et accrédités, qu'elle respecte les standards
+            de qualité et de protection de l'environnement. Un certificat équivalent
+            reconnu dans l'UE est accepté. Si aucun certificat ne peut être obtenu
+            pour des raisons indépendantes de l'entreprise, des mesures équivalentes
+            peuvent être proposées, à condition de garantir le même niveau d'exigence
+        capacites_techniques_professionnelles_securite_et_confidentialite_description_source_approvisionnement:
+          name: Les systèmes de gestion, de suivi de la chaîne d'approvisionnement
+          description: Mon entreprise doit décrire ses sources d'approvisionnement
+            (et leur localisation si elles sont hors Europe), ainsi que sa capacité
+            à répondre à une hausse des besoins, à assurer la maintenance, la modernisation
+            et l'adaptation des fournitures.
         capacites_techniques_professionnelles_securite_et_confidentialite_capacite_protection_informations_protegees:
           name: Mesures de sécurité et capacité de protection des informations protégées
             ou classifiées
