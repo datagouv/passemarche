@@ -28,5 +28,29 @@ FactoryBot.define do
     trait :checkbox do
       input_type { :checkbox }
     end
+
+    trait :checkbox_with_document do
+      input_type { :checkbox_with_document }
+    end
+
+    trait :file_upload do
+      input_type { :file_upload }
+    end
+
+    trait :file_or_textarea do
+      input_type { :file_or_textarea }
+    end
+
+    trait :textarea do
+      input_type { :textarea }
+    end
+
+    trait :phone do
+      input_type { :phone_input }
+    end
+
+    trait :radio_with_file_and_text do
+      input_type { :radio_with_file_and_text }
+    end
   end
 end
