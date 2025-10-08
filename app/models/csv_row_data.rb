@@ -34,6 +34,7 @@ class CsvRowData
     presentation_intervenants
     capacites_techniques_professionnelles_realisations_livraisons_cinq_ans
     capacites_techniques_professionnelles_outillage_echantillons
+    url_input
   ].freeze
 
   MARKET_TYPE_MAPPING = {
@@ -56,7 +57,8 @@ class CsvRowData
     'capacite_economique_financiere_effectifs_moyens_annuels' => :capacite_economique_financiere_effectifs_moyens_annuels,
     'presentation_intervenants' => :presentation_intervenants,
     'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans' => :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans,
-    'capacites_techniques_professionnelles_outillage_echantillons' => :capacites_techniques_professionnelles_outillage_echantillons
+    'capacites_techniques_professionnelles_outillage_echantillons' => :capacites_techniques_professionnelles_outillage_echantillons,
+    'url_input' => :url_input
   }.freeze
 
   validates :key, presence: true, if: :should_import?

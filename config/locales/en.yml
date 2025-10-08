@@ -29,17 +29,17 @@
 
 en:
   hello: "Hello world"
-  
+
   application:
     name: "Fast Track"
     title: "Fast Track"
-    
+
   header:
     home_title: "Home - Fast Track"
     service_title: "Fast Track"
     service_tagline: "Simplify your public procurement applications"
     logo_alt: "French Republic"
-    
+
   footer:
     description: "Fast Track facilitates SME access to French public markets."
     links:
@@ -47,22 +47,22 @@ en:
       legal: "Legal notice"
       privacy: "Personal data"
       cookies: "Cookie management"
-      
+
   home:
     title: "Fast Track"
     subtitle: "The simplified platform for public procurement applications"
     description: "Facilitate your administrative procedures to respond to public calls for tenders."
-    
+
     welcome:
       text: "Welcome to %{app_name}, the platform that simplifies access for small and medium enterprises to French public markets. Reduce time spent on administrative formalities and focus on your business expertise."
-      
+
     features:
       title: "Main features"
       siret: "Automatic SIRET identification"
       documents: "Integrated document management"
       attestations: "Official PDF certificates"
       integration: "Procurement platform integration"
-      
+
     workflow:
       title: "How does it work?"
       steps:
@@ -75,7 +75,7 @@ en:
         candidature:
           title: "3. Application"
           description: "Receive your application certificate"
-          
+
   activerecord:
     errors:
       models:
@@ -87,3 +87,7 @@ en:
               blank: "can't be blank"
             market_type:
               empty: "can't be empty"
+        market_attribute_response/url_input:
+          attributes:
+            text:
+              invalid_url: "must be a valid URL (e.g., https://..., or www...)"

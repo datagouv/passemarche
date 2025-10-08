@@ -69,7 +69,7 @@ fr:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
             et de certifications qui permet aux entreprises exerçant dans le domaine
-            de construction de  valoriser leurs compétences techniques et professionnelles.
+            de construction de valoriser leurs compétences techniques et professionnelles.
         capacites_techniques_professionnelles_certificats_qualifelec:
           name: Certificat Qualifelec
           description: La certification Qualifelec est une qualification professionnelle
@@ -107,6 +107,12 @@ fr:
           description: Le Certificat de Qualification Professionnelle Travaux Publics
             (CQP TP) vise à certifier les compétences professionnelles des salariés
             dans des métiers spécifiques aux travaux publics.
+        capacites_techniques_professionnelles_certificats_opqibi:
+          name: Certification OPQIBI
+          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
+            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
+            leurs références et leurs moyens, pour garantir leur capacité à réaliser
+            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Les attestations ou preuves de livraisons au cours des trois dernières
             années
@@ -240,7 +246,7 @@ fr:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
             et de certifications qui permet aux entreprises exerçant dans le domaine
-            de construction de  valoriser leurs compétences techniques et professionnelles.
+            de construction de valoriser leurs compétences techniques et professionnelles.
         capacites_techniques_professionnelles_certificats_qualifelec:
           name: Certificat Qualifelec
           description: La certification Qualifelec est une qualification professionnelle
@@ -278,6 +284,12 @@ fr:
           description: Le Certificat de Qualification Professionnelle Travaux Publics
             (CQP TP) vise à certifier les compétences professionnelles des salariés
             dans des métiers spécifiques aux travaux publics.
+        capacites_techniques_professionnelles_certificats_opqibi:
+          name: Certification OPQIBI
+          description: La certification OPQIBI (Organisme de Qualification de l'Ingénierie)
+            qualifie les entreprises d'ingénierie selon leurs compétences techniques,
+            leurs références et leurs moyens, pour garantir leur capacité à réaliser
+            des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
