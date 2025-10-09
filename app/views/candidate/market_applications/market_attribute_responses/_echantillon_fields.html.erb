@@ -40,19 +40,17 @@
             <% if index != 'NEW_RECORD' %>
               <% fichiers = market_attribute_response.echantillon_fichiers(index) %>
               <% if fichiers.any? %>
-                <div class="fr-mt-1w">
-                  <strong class="fr-text--sm">Fichiers actuels :</strong>
-                  <ul class="fr-text--sm">
+                <div class="fr-mt-1w fr-text--sm">
+                  <strong>Fichiers actuels :</strong>
                     <% fichiers.each do |fichier| %>
-                      <li>
+                      <div>
                         <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
                         <%= link_to fichier.filename.to_s,
                                     url_for(fichier),
                                     target: "_blank", rel: "noopener" %>
                         (<%= number_to_human_size(fichier.byte_size) %>)
-                      </li>
+                      </div>
                     <% end %>
-                  </ul>
                 </div>
               <% end %>
             <% end %>
