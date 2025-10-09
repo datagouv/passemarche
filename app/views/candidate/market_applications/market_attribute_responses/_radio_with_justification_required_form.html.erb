@@ -89,6 +89,11 @@
       <div data-conditional-fields-target="inverseContent"
            class="<%= 'fr-hidden' unless radio_choice == 'no' %> fr-mt-3w"
            id="no-justification-<%= market_attribute_response.id %>">
+
+        <div class="fr-text--md fr-mb-3w">
+          Vous devez fournir la preuve que vous êtes à jour de vos obligations *
+        </div>
+
         <%= render partial: 'candidate/market_applications/market_attribute_responses/fields/file_upload_field',
                    locals: {
                      form: response_form,
