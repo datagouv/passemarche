@@ -3,14 +3,14 @@
 World(FactoryBot::Syntax::Methods)
 
 # Background steps
-Given('a public market with capacites_techniques_professionnelles_realisations_livraisons_cinq_ans field exists') do
+Given('a public market with realisations_livraisons field exists') do
   @editor = create(:editor, :authorized_and_active)
   @public_market = create(:public_market, :completed, editor: @editor)
 
   @realisations_attr = MarketAttribute.find_or_create_by(
-    key: 'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans'
+    key: 'realisations_livraisons'
   ) do |attr|
-    attr.input_type = 'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans'
+    attr.input_type = 'realisations_livraisons'
     attr.category_key = 'capacites_techniques_professionnelles'
     attr.subcategory_key = 'capacites_techniques_professionnelles_realisations'
     attr.required = true
@@ -58,7 +58,7 @@ Given('I have submitted single realisation data:') do |table|
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+          type: 'RealisationsLivraisons',
           "realisation_#{timestamp}_resume" => row['resume'],
           "realisation_#{timestamp}_date_debut" => row['date_debut'],
           "realisation_#{timestamp}_date_fin" => row['date_fin'],
@@ -88,7 +88,7 @@ Given('I have submitted realisations data with multiple items:') do |table|
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns'
+          type: 'RealisationsLivraisons'
         }.merge(responses_attrs)
       }
     }
@@ -104,7 +104,7 @@ When('I submit invalid date range realisation:') do |table|
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+          type: 'RealisationsLivraisons',
           "realisation_#{timestamp}_resume" => row['resume'],
           "realisation_#{timestamp}_date_debut" => row['date_debut'],
           "realisation_#{timestamp}_date_fin" => row['date_fin'],
@@ -125,7 +125,7 @@ When('I submit invalid montant realisation:') do |table|
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+          type: 'RealisationsLivraisons',
           "realisation_#{timestamp}_resume" => row['resume'],
           "realisation_#{timestamp}_date_debut" => row['date_debut'],
           "realisation_#{timestamp}_date_fin" => row['date_fin'],
@@ -145,7 +145,7 @@ Then('the realisation data should be saved correctly') do
   @market_application.reload
   response = @market_application.market_attribute_responses.last
   expect(response).to be_present
-  expect(response.class.name).to eq('MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns')
+  expect(response.class.name).to eq('MarketAttributeResponse::RealisationsLivraisons')
 
   realisations = response.realisations.values.compact
   expect(realisations.length).to eq(1)
@@ -182,7 +182,7 @@ end
 # Background data setup for summary tests
 Given('I have submitted realisation data:') do |table|
   row = table.hashes.first
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns.create!(
+  response = MarketAttributeResponse::RealisationsLivraisons.create!(
     market_application: @market_application,
     market_attribute: @realisations_attr
   )
@@ -231,7 +231,7 @@ end
 # File upload tests
 Given('I have a realisation with attestation:') do |table|
   row = table.hashes.first
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns.create!(
+  response = MarketAttributeResponse::RealisationsLivraisons.create!(
     market_application: @market_application,
     market_attribute: @realisations_attr
   )
