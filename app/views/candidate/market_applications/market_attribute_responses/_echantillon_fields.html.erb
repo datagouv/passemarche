@@ -38,19 +38,35 @@
                   accept: ".pdf,.jpg,.jpeg,.png",
                   multiple: true %>
             <% if index != 'NEW_RECORD' %>
-              <% fichiers = market_attribute_response.echantillon_fichiers(index) %>
-              <% if fichiers.any? %>
+              <% files = market_attribute_response.echantillon_fichiers(index) %>
+              <% if files.any? %>
                 <div class="fr-mt-1w fr-text--sm">
                   <strong>Fichiers actuels :</strong>
-                    <% fichiers.each do |fichier| %>
-                      <div>
-                        <span class="fr-icon--sm fr-icon-file-fill" aria-hidden="true"></span>
-                        <%= link_to fichier.filename.to_s,
-                                    url_for(fichier),
-                                    target: "_blank", rel: "noopener" %>
-                        (<%= number_to_human_size(fichier.byte_size) %>)
-                      </div>
-                    <% end %>
+                    <% files.each do |file| %>
+                    <div>
+                      <% if file.persisted? %>
+                        <turbo-frame id="document_<%= file.id %>">
+                            <div class="uploaded-file"
+                              data-controller="delete-document-confirm"
+                              data-market-application-id="<%= @market_application.identifier %>">
+                            <%= link_to file.filename.to_s,
+                              url_for(file),
+                              target: "_blank", rel: "noopener" %>
+
+                            <button type="button"
+                              data-document-id="<%= file.id %>"
+                              data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
+                              title="Supprimer ce document"
+                              class="fr-btn--icon delete-document-btn">
+                                <span class="fr-icon--sm fr-icon-delete-line fr-text-title--blue-france" aria-hidden="true"></span>
+                            </button>
+                          </div>
+                        </turbo-frame>
+                      <% else %>
+                        <span><%= file.filename.to_s %> (en cours de téléchargement)</span>
+                      <% end %>
+                    </div>
+                  <% end %>
                 </div>
               <% end %>
             <% end %>

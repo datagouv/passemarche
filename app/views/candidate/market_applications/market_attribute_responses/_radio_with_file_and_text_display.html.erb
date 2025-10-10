@@ -30,7 +30,9 @@
                 <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
                 <%= link_to doc.filename.to_s,
                             url_for(doc),
-                            target: "_blank", rel: "noopener" %>
+                            target: "_blank",
+                            rel: "noopener",
+                            class: "fr-text--sm"%>
                 (<%= number_to_human_size(doc.byte_size) %>)
                 <br>
               <% end %>
