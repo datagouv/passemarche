@@ -18,7 +18,7 @@ namespace :attestation do
 
     html = ApplicationController.render(
       template: 'candidate/attestations/show',
-      formats: [:pdf],
+      formats: [:html],
       layout: false,
       locals: { market_application: app }
     )

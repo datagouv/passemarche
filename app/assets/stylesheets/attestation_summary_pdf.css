@@ -1,0 +1,319 @@
+/* PDF-Compatible DSFR Styles for Attestation Summary */
+/* Adapted for wkhtmltopdf (old WebKit) - no CSS custom properties, simplified flexbox */
+
+/* Base Typography */
+body {
+  font-family: "Marianne", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #161616;
+  margin: 0;
+  padding: 0;
+}
+
+/* Grid System - Simplified */
+.fr-grid-row {
+  display: block;
+  width: 100%;
+}
+
+.fr-grid-row--center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fr-col-12 {
+  width: 100%;
+}
+
+.fr-col {
+  width: 100%;
+}
+
+.fr-col-auto {
+  width: auto;
+}
+
+/* Cards */
+.fr-card {
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.fr-card--no-border {
+  border: none;
+  box-shadow: none;
+}
+
+.fr-card--sm {
+  font-size: 14px;
+}
+
+.fr-card__header {
+  border-bottom: 1px solid #dddddd;
+}
+
+.fr-card__title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 18px;
+  color: #161616;
+}
+
+.fr-card__body {
+  padding: 16px;
+}
+
+.fr-card__content {
+  display: block;
+}
+
+/* Backgrounds */
+.fr-background-alt--grey {
+  background-color: #f6f6f6;
+}
+
+.fr-background-alt--blue-ecume {
+  background-color: #e3e3fd;
+}
+
+/* Text Colors */
+.fr-text-title--blue-france {
+  color: #000091;
+}
+
+.fr-text--mention-grey {
+  color: #666666;
+}
+
+.fr-text--error {
+  color: #ce0500;
+}
+
+/* Text Sizes */
+.fr-text--lg {
+  font-size: 20px;
+}
+
+.fr-text--md {
+  font-size: 16px;
+}
+
+.fr-text--sm {
+  font-size: 14px;
+}
+
+h6 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Badges */
+.fr-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #f6f6f6;
+  color: #161616;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fr-badge--sm {
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.fr-badge--md {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.fr-badge--success {
+  background-color: #b8fec9;
+  color: #18753c;
+}
+
+/* Spacing Utilities */
+.fr-mb-0 {
+  margin-bottom: 0;
+}
+
+.fr-mb-1v {
+  margin-bottom: 4px;
+}
+
+.fr-mb-1w {
+  margin-bottom: 8px;
+}
+
+.fr-mb-2w {
+  margin-bottom: 16px;
+}
+
+.fr-mb-3w {
+  margin-bottom: 24px;
+}
+
+.fr-mb-4w {
+  margin-bottom: 32px;
+}
+
+.fr-mt-1v {
+  margin-top: 4px;
+}
+
+.fr-mt-2w {
+  margin-top: 16px;
+}
+
+.fr-mt-3w {
+  margin-top: 24px;
+}
+
+.fr-mr-1v {
+  margin-right: 4px;
+}
+
+.fr-mr-1w {
+  margin-right: 8px;
+}
+
+.fr-py-1w {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.fr-py-2w {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.fr-px-2w {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Separator */
+.fr-hr {
+  border: none;
+  border-top: 1px solid #dddddd;
+  margin: 16px 0;
+}
+
+/* Field Layout - From utilities.css */
+.field-layout-container {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  page-break-inside: avoid;
+}
+
+.field-layout-container:last-child {
+  margin-bottom: 0;
+}
+
+.field-layout-content {
+  width: 100%;
+}
+
+.field-layout-badge {
+  display: inline-block;
+  margin-top: 8px;
+}
+
+/* Links */
+a {
+  color: #000091;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Lists */
+ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+/* Simple format spacing */
+p {
+  margin: 0 0 8px 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Strong emphasis */
+strong {
+  font-weight: 700;
+}
+
+/* Page breaks - Help wkhtmltopdf with pagination */
+.fr-card {
+  page-break-inside: avoid;
+}
+
+.field-layout-container {
+  page-break-inside: avoid;
+}
+
+/* Header section for attestation */
+.attestation-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #000091;
+}
+
+.attestation-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #000091;
+  text-transform: uppercase;
+}
+
+.attestation-subtitle {
+  font-size: 18px;
+  color: #666666;
+  margin: 0;
+}
+
+/* Footer section for attestation */
+.attestation-footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid #dddddd;
+  font-size: 12px;
+  color: #666666;
+  text-align: center;
+}
+
+/* Certification text */
+.attestation-certification {
+  margin: 32px 0;
+  padding: 16px;
+  background-color: #f6f6f6;
+  border-left: 4px solid #000091;
+}
+
+.attestation-certification p {
+  margin-bottom: 8px;
+}
+
+.attestation-certification p:last-child {
+  margin-bottom: 0;
+}

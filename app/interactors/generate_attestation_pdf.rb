@@ -37,7 +37,7 @@ class GenerateAttestationPdf < ApplicationInteractor
   def generate_pdf_content
     html_content = ApplicationController.render(
       template: 'candidate/attestations/show',
-      formats: [:pdf],
+      formats: [:html],
       layout: false,
       locals: { market_application: }
     )
