@@ -10,55 +10,6 @@
     presenter = MarketApplicationPresenter.new(market_application)
   %>
 
-  <!-- Official Header -->
-  <div class="attestation-header">
-    <div class="attestation-title">Attestation de Candidature</div>
-    <div class="attestation-subtitle">Voie Rapide - Fast Track</div>
-  </div>
-
-  <!-- Basic Information Section -->
-  <div class="fr-mb-4w">
-    <div class="fr-card">
-      <div class="fr-card__body">
-        <div class="field-layout-container">
-          <div class="field-layout-content">
-            <strong>Identifiant de candidature</strong>
-            <br>
-            <span class="fr-text--md fr-text--mention-grey">FT<%= market_application.identifier %></span>
-          </div>
-        </div>
-
-        <% if market_application.siret.present? %>
-          <div class="field-layout-container">
-            <div class="field-layout-content">
-              <strong>Numéro SIRET</strong>
-              <br>
-              <span class="fr-text--md fr-text--mention-grey"><%= market_application.siret %></span>
-            </div>
-          </div>
-        <% end %>
-
-        <div class="field-layout-container">
-          <div class="field-layout-content">
-            <strong>Éditeur</strong>
-            <br>
-            <span class="fr-text--md fr-text--mention-grey"><%= market_application.editor.name %></span>
-          </div>
-        </div>
-
-        <div class="field-layout-container">
-          <div class="field-layout-content">
-            <strong>Date de candidature</strong>
-            <br>
-            <span class="fr-text--md fr-text--mention-grey">
-              <%= format_paris_time(market_application.completed_at) %>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Application Summary Content (Same as web summary page) -->
   <%= render 'shared/application_summary_content',
              market_application: market_application,

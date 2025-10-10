@@ -11,6 +11,18 @@ body {
   padding: 0;
 }
 
+/* DSFR Logo */
+.fr-logo {
+  font-family: "Marianne", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #161616;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
 /* Grid System - Simplified */
 .fr-grid-row {
   display: block;
@@ -262,12 +274,24 @@ strong {
 }
 
 /* Page breaks - Help wkhtmltopdf with pagination */
-.fr-card {
+/* Only prevent page breaks inside category cards, not subcategory cards */
+.category-card {
+  page-break-inside: auto;
+}
+
+/* Subcategory cards can break across pages */
+.fr-card--no-border {
+  page-break-inside: auto;
+}
+
+/* Individual fields should not break */
+.field-layout-container {
   page-break-inside: avoid;
 }
 
-.field-layout-container {
-  page-break-inside: avoid;
+/* Category page breaks - Each category starts on a new page */
+.page-break-before {
+  page-break-before: always;
 }
 
 /* Header section for attestation */
@@ -317,3 +341,54 @@ strong {
 .attestation-certification p:last-child {
   margin-bottom: 0;
 }
+
+/* Repeating page header for all pages */
+.pdf-page-header {
+  background-color: #ffffff;
+  border-bottom: 2px solid #000091;
+  display: table;
+  width: 100%;
+  padding: 15px 20px 20px 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.pdf-page-header-content {
+  display: table-row;
+}
+
+.pdf-page-header-left,
+.pdf-page-header-center,
+.pdf-page-header-right {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.pdf-page-header-left {
+  width: 30%;
+  text-align: left;
+}
+
+.pdf-page-header-center {
+  width: 40%;
+  text-align: center;
+}
+
+.pdf-page-header-right {
+  width: 30%;
+  text-align: right;
+}
+
+.pdf-page-header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000091;
+  margin: 0;
+}
+
+.pdf-page-header-date {
+  font-size: 12px;
+  color: #666666;
+  font-style: italic;
+}
+

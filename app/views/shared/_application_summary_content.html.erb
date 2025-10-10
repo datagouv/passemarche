@@ -17,15 +17,15 @@
      .uniq %>
 
 <% if category_keys.any? %>
-  <% category_keys.each do |category| %>
+  <% category_keys.each_with_index do |category, index| %>
     <% subcategories = presenter.subcategories_for_category(category) %>
     <% next if subcategories.empty? %>
 
-    <div class="fr-card fr-mb-2w">
+    <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if context == :pdf && index > 0 %>">
       <%= render 'shared/card_header', title: t("form_fields.candidate.categories.#{category}"), background: "fr-background-alt--grey" %>
-      <div class="fr-card__body fr-mt-3w fr-mb-3w">
+      <div class="fr-card__body fr-mt-1w fr-mb-1w">
         <% if category == 'identite_entreprise' %>
-          <div class="fr-card fr-mb-4w fr-card--no-border">
+          <div class="fr-card fr-mb-1w fr-card--no-border">
           <%= render 'shared/card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
             <div class="field-layout-container">
               <div class="field-layout-content">
@@ -77,7 +77,7 @@
           <% market_attributes = presenter.market_attributes_for_subcategory(category, subcategory) %>
           <% next if market_attributes.empty? %>
 
-          <div class="fr-card fr-mb-4w fr-card--no-border">
+          <div class="fr-card fr-mb-1w fr-card--no-border">
             <%= render 'shared/card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
               <% market_attributes.each do |attribute| %>
                 <% response = presenter.market_attribute_response_for(attribute) %>
