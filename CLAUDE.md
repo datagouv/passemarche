@@ -32,20 +32,6 @@ Your code must be 100% clean. No exceptions.
 3. **Document Management**: Automatic/manual document collection and validation
 4. **Attestation Generation**: PDF proof of submission with official timestamps
 
-### Commit Message Style
-
-Use **Conventional Commits** format:
-
-- `feat:` - New features
-- `fix:` - Bug fixes
-- `docs:` - Documentation changes
-- `style:` - Code style changes (formatting, etc.)
-- `refactor:` - Code refactoring
-- `test:` - Adding or updating tests
-- `chore:` - Maintenance tasks
-
-Commit description should explain why we are working on a specific task, what it brings to the app and not the how. The code itself is here to describe the how.
-
 ## Development Commands
 
 ### Setup
@@ -96,7 +82,6 @@ bin/rails assets:precompile
 
 ### Integration Architecture
 - **OAuth Authentication** - Inter-system authentication with editors
-- **Popup/iFrame Integration** - Embedded in procurement platforms
 - **ZIP File Generation** - Structured document packages
 - **PDF Generation** - Attestation documents with timestamps
 
@@ -112,7 +97,6 @@ bin/rails assets:precompile
 - **NO logic in migrations** - keep them simple and reversible
 
 ### Required Standards:
-- **Strong Parameters** for all controller actions
 - **Meaningful names**: `user_id` not `id`, `create_user` not `create`
 - **Early returns** to reduce nesting
 - **Service objects** for complex business logic or Organizer/Interactor pattern
@@ -130,20 +114,33 @@ bin/rails assets:precompile
 - ✅ Database migrations are reversible
 - ✅ Strong parameters are properly configured
 
-### Testing Strategy
+### Testing Guidelines
 
-We want to keep the testing strategy minimal and yet still cover all the important part of the app. We do not want to test the rails core behavior, we want to test our business logic.
+- Use RSpec expectations syntax for tests
+- Test files should follow the same structure as the application
+- Do not test associations and validations directly, focus on behavior
+- Never use controller specs if you can use cucumber features, if controller
+  specs are needed, check if you can create organizers or services to
+  handle the logic
 
-- **Models**: business logic
-- **Controllers**: Test authorization, parameter handling, and response formats
-- **Integration**: Test complete user workflows
+### Implementation Guidelines
 
-## Working Memory Management
+- Always implement features in the following order:
+  1. Implement models and their tests
+  2. Implement services (preferably organizers) and their tests
+  3. Implement controllers with their views
+  4. Implement cucumnber features
 
-### When context gets long:
-- Re-read this CLAUDE.md file
-- Summarize progress in a PROGRESS.md file
-- Document current state before major changes
+  At each step, ensure that the tests pass before moving to the next step.
+
+- You can ask questions about the instructions if it not clear enough or if
+  you think it will help me deepen my thinking.
+- Use TDD, refactor your code after each test. Use `rubocop` to check you
+  code style. Make it consistent with the rest of the codebase.
+- Be sure that rubocop passes before stopping your work.
+- Be sure that tests you introduce pass before stopping your work.
+- Authorization should be done in the controller, not in the model/services.
+- Check docs/ for technical documentation if needed.
 
 ## Problem-Solving Together
 
@@ -158,112 +155,6 @@ When you're stuck or confused:
 
 My insights on better approaches are valued - please ask for them!
 
-## Security & Performance
+## Git
 
-### **Security Always**:
-- Use strong parameters for all user input
-- Validate all data on the server side
-- Use Rails' built-in CSRF protection
-- Sanitize all user-generated content
-- Use parameterized queries (ActiveRecord does this automatically)
-- Keep secrets in Rails credentials, not in code
-
-### **Performance Considerations**:
-- Use database indexes for frequently queried columns
-- Avoid N+1 queries with proper includes
-- Use fragment caching for expensive views
-- Profile with rails-profiler for bottlenecks
-- Use Solid Queue for background processing
-
-## Communication Protocol
-
-### Suggesting Improvements:
-"The current approach works, but I notice [observation].
-Would you like me to [specific improvement]?"
-
-## Working Together
-
-- This is always a feature branch - no backwards compatibility needed
-- When in doubt, we choose Rails conventions over custom solutions
-- We do not want to have useless comments in the code. The code should be self explanatory, if it's not, then it needs refactoring
-- Always look for the "rails way" to do the job.
-- **REMINDER**: If this file hasn't been referenced in 30+ minutes, RE-READ IT!
-
-Avoid complex abstractions or "clever" code. The Rails way is probably better, and my guidance helps you stay focused on what matters.
-
-
-## Repeatable Fields Pattern
-
-For MarketAttributeResponse types that need to store collections of items (e.g., team members, projects, certifications):
-
-### Backend (Model)
-1. **Include the RepeatableField concern**:
-   ```ruby
-   class MarketAttributeResponse::YourField < MarketAttributeResponse
-     include MarketAttributeResponse::RepeatableField
-   end
-   ```
-
-2. **Define your item schema**:
-   ```ruby
-   def self.item_schema
-     {
-       'field_name' => { type: 'string', required: true },
-       'other_field' => { type: 'text', required: false }
-     }
-   end
-   ```
-
-3. **Generate virtual attributes** (optional, for custom naming like `person_X_field` instead of `item_X_field`):
-   ```ruby
-   ITEM_FIELDS = %w[field_name other_field].freeze
-
-   ITEM_FIELDS.each do |field|
-     (0...50).each do |index|
-       define_method "custom_#{index}_#{field}" do
-         get_item_field(index, field)
-       end
-
-       define_method "custom_#{index}_#{field}=" do |val|
-         set_item_field(index, field, val)
-       end
-     end
-   end
-   ```
-
-### Frontend (View)
-Use the official `stimulus-rails-nested-form` component with Rails NEW_RECORD pattern:
-
-```erb
-<div data-controller="nested-form">
-  <button data-action="nested-form#add">Add Item</button>
-
-  <div data-nested-form-target="target">
-    <%= render partial: 'item_fields', collection: existing_items %>
-  </div>
-
-  <template data-nested-form-target="template">
-    <%= render partial: 'item_fields', locals: { index: 'NEW_RECORD' } %>
-  </template>
-</div>
-```
-
-### Key Benefits
-- **Automatic handling**: MarketApplication detects RepeatableField concern and uses RepeatableFieldForm
-- **No configuration**: Just include the concern and define your schema
-- **Reusable**: Same pattern for all future repeatable fields
-- **Rails-native**: Uses standard NEW_RECORD pattern for nested attributes
-
-## Example of a prompt for a new MarketAttributeResponse type
-I need to add a new MarketAttributeReponse type. The type in the csv file is <type>.
-
-All the data are required for this fields
-
-I want you to make a plan with the following step :
-  1 - Minimal code to be able to import the field through the csv import rake tasks
-  2 - The validation and structure of the model, wth the tests
-  3 - The views with the translations, and the cucumber tests for this specific file.
-
-Each step should be rubocop compliant, rspec and cucumber test OK. After each step, you will stop so that I can review and commit to create and understandable Pull request to review for my coworker.
-
-  You can ultrathink
+- When you move files, use `git mv` to keep history.
