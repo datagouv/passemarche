@@ -41,6 +41,7 @@ fr:
         test_motifs_exclusion_appreciation_acheteur_discretionnaire: "Test: Motifs discrétionnaires"
         test_capacite_economique_financiere_bilans: "Test: Bilans financiers"
         test_capacites_techniques_professionnelles_certificats: "Test: Certificats professionnels"
+        test_capacites_techniques_professionnelles_realisations: "Test: Réalisations ou références"
       fields:
         test_identite_entreprise_identification_siret:
           name: "Test: SIRET"
@@ -71,3 +72,6 @@ fr:
           text_label: "Précisions (optionnel)"
           text_hint: "Vous pouvez fournir des détails supplémentaires"
           justification_required: "Vous devez fournir un document justificatif obligatoire."
+        test_realisations_livraisons:
+          name: "Les principaux travaux effectués par votre entreprise au cours des dernières années (3 ou 5 ans)"
+          description: "Décrivez les principaux travaux effectués, en précisant leur date, leur montant et leurs destinataires."

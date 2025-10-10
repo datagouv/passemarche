@@ -244,12 +244,17 @@ fr:
             qualifie les entreprises d'ingénierie selon leurs compétences techniques,
             leurs références et leurs moyens, pour garantir leur capacité à réaliser
             des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
+        capacites_techniques_professionnelles_realisations_livraisons_trois_ans:
+          name: Liste des principales réalisations au cours des trois dernières années 
+          description: Le candidat devra fournir la liste de ses principales livraisons
+            réalisées au cours des trois dernières années, en précisant leur montant,
+            leur date et leurs destinataires.
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Les attestations ou preuves de livraisons au cours des trois dernières
             années
           description: Le candidat devra fournir les documents pouvant attester de
             la bonne réalisation des prestations
-        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
+        realisations_livraisons_cinq_ans:
           name: Liste des principaux travaux effectués au cours des cinq (5) dernières
             années 
           description: Le candidat doit fournir la liste des principaux travaux exécutés
@@ -576,11 +581,19 @@ fr:
             qualifie les entreprises d'ingénierie selon leurs compétences techniques,
             leurs références et leurs moyens, pour garantir leur capacité à réaliser
             des prestations intellectuelles dans le domaine du bâtiment et des infrastructures.
+        capacites_techniques_professionnelles_realisations_livraisons_trois_ans:
+          name: Les principales réalisations effectuées par votre entreprise  au cours
+            des trois dernières années (livraisons effectuées ou services fournis).
+          description: Décrivez les principales livraisons réalisées ou services fournis
+            au cours des trois (3) dernières années, en précisant leur date, leur
+            montant et leurs destinataires. Veillez à sélectionner les réalisations
+            en lien avec le marché et qui démontrent les capacités techniques et professionnelles
+            de votre entreprise
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
             exécuté des contrats similaires
-        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
+        realisations_livraisons_cinq_ans:
           name: Les principaux travaux effectués par votre entreprise au cours des
             cinq dernières années
           description: Décrivez les principaux travaux effectués au cours des cinq

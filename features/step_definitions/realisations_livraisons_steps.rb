@@ -3,16 +3,16 @@
 World(FactoryBot::Syntax::Methods)
 
 # Background steps
-Given('a public market with capacites_techniques_professionnelles_realisations_livraisons_cinq_ans field exists') do
+Given('a public market with realisations_livraisons field exists') do
   @editor = create(:editor, :authorized_and_active)
   @public_market = create(:public_market, :completed, editor: @editor)
 
   @realisations_attr = MarketAttribute.find_or_create_by(
-    key: 'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans'
+    key: 'test_realisations_livraisons'
   ) do |attr|
-    attr.input_type = 'capacites_techniques_professionnelles_realisations_livraisons_cinq_ans'
-    attr.category_key = 'capacites_techniques_professionnelles'
-    attr.subcategory_key = 'capacites_techniques_professionnelles_realisations'
+    attr.input_type = 'realisations_livraisons'
+    attr.category_key = 'test_capacites_techniques_professionnelles'
+    attr.subcategory_key = 'test_capacites_techniques_professionnelles_realisations'
     attr.required = true
   end
   @realisations_attr.public_markets << @public_market unless @realisations_attr.public_markets.include?(@public_market)
@@ -26,11 +26,11 @@ end
 
 # Navigation steps
 When('I visit the realisations step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations"
+  visit "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations"
 end
 
 When('I navigate back to the realisations step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations"
+  visit "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations"
 end
 
 # Display verification steps
@@ -52,13 +52,13 @@ Given('I have submitted single realisation data:') do |table|
   row = table.hashes.first
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+          type: 'RealisationsLivraisons',
           "realisation_#{timestamp}_resume" => row['resume'],
           "realisation_#{timestamp}_date_debut" => row['date_debut'],
           "realisation_#{timestamp}_date_fin" => row['date_fin'],
@@ -82,13 +82,13 @@ Given('I have submitted realisations data with multiple items:') do |table|
     responses_attrs["realisation_#{timestamp}_description"] = row['description']
   end
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns'
+          type: 'RealisationsLivraisons'
         }.merge(responses_attrs)
       }
     }
@@ -98,13 +98,13 @@ When('I submit invalid date range realisation:') do |table|
   row = table.hashes.first
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+          type: 'RealisationsLivraisons',
           "realisation_#{timestamp}_resume" => row['resume'],
           "realisation_#{timestamp}_date_debut" => row['date_debut'],
           "realisation_#{timestamp}_date_fin" => row['date_fin'],
@@ -119,13 +119,13 @@ When('I submit invalid montant realisation:') do |table|
   row = table.hashes.first
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
           id: '',
           market_attribute_id: @realisations_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+          type: 'RealisationsLivraisons',
           "realisation_#{timestamp}_resume" => row['resume'],
           "realisation_#{timestamp}_date_debut" => row['date_debut'],
           "realisation_#{timestamp}_date_fin" => row['date_fin'],
@@ -145,7 +145,7 @@ Then('the realisation data should be saved correctly') do
   @market_application.reload
   response = @market_application.market_attribute_responses.last
   expect(response).to be_present
-  expect(response.class.name).to eq('MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns')
+  expect(response.class.name).to eq('MarketAttributeResponse::RealisationsLivraisons')
 
   realisations = response.realisations.values.compact
   expect(realisations.length).to eq(1)
@@ -182,7 +182,7 @@ end
 # Background data setup for summary tests
 Given('I have submitted realisation data:') do |table|
   row = table.hashes.first
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns.create!(
+  response = MarketAttributeResponse::RealisationsLivraisons.create!(
     market_application: @market_application,
     market_attribute: @realisations_attr
   )
@@ -231,7 +231,7 @@ end
 # File upload tests
 Given('I have a realisation with attestation:') do |table|
   row = table.hashes.first
-  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns.create!(
+  response = MarketAttributeResponse::RealisationsLivraisons.create!(
     market_application: @market_application,
     market_attribute: @realisations_attr
   )

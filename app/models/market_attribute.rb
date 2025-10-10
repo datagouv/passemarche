@@ -24,7 +24,7 @@ class MarketAttribute < ApplicationRecord
     capacite_economique_financiere_effectifs_moyens_annuels: 9,
     presentation_intervenants: 10,
     radio_with_file_and_text: 11,
-    capacites_techniques_professionnelles_realisations_livraisons_cinq_ans: 12,
+    realisations_livraisons: 12,
     capacites_techniques_professionnelles_outillage_echantillons: 13,
     url_input: 14,
     radio_with_justification_required: 15,

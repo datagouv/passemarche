@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns,
+RSpec.describe MarketAttributeResponse::RealisationsLivraisons,
   type: :model do
   let(:market_application) { create(:market_application) }
   let(:market_attribute) do
     create(:market_attribute,
-      input_type: :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans,
+      input_type: :realisations_livraisons,
       required: true)
   end
 
@@ -128,7 +128,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesReali
     context 'when field is not required' do
       let(:market_attribute) do
         create(:market_attribute,
-          input_type: :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans,
+          input_type: :realisations_livraisons,
           required: false)
       end
 
@@ -160,7 +160,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesReali
     context 'when field is required' do
       let(:market_attribute) do
         create(:market_attribute,
-          input_type: :capacites_techniques_professionnelles_realisations_livraisons_cinq_ans,
+          input_type: :realisations_livraisons,
           required: true)
       end
 
@@ -493,7 +493,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesReali
           '0' => {
             id: '',
             market_attribute_id: market_attribute.id.to_s,
-            type: 'CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns',
+            type: 'RealisationsLivraisons',
             "realisation_#{timestamp}_resume" => 'Construction école',
             "realisation_#{timestamp}_date_debut" => '2023-01-01',
             "realisation_#{timestamp}_date_fin" => '2023-12-31',

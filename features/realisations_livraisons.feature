@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 @capacites_techniques_professionnelles_realisations
-Feature: Capacités techniques et professionnelles - Réalisations des 5 dernières années
+Feature: Capacités techniques et professionnelles - Réalisations des dernières années (3 ou 5 ans)
   En tant que candidat à un marché public
-  Je veux pouvoir renseigner les principaux travaux effectués au cours des 5 dernières années
+  Je veux pouvoir renseigner les principaux travaux effectués au cours des dernières années (3 ou 5 ans)
   Afin de démontrer mes capacités techniques et professionnelles
 
   Background:
-    Given a public market with capacites_techniques_professionnelles_realisations_livraisons_cinq_ans field exists
+    Given a public market with realisations_livraisons field exists
     And a candidate starts an application for this realisations market
 
   Scenario: Display of empty form with add realisation functionality
     When I visit the realisations step
-    Then I should see the title "Les principaux travaux effectués par votre entreprise au cours des cinq dernières années"
+    Then I should see the title "Les principaux travaux effectués par votre entreprise au cours des dernières années (3 ou 5 ans)"
     And I should see the realisations "Ajouter une réalisation" button
 
   Scenario: Form has dynamic realisation adding infrastructure
@@ -66,7 +66,7 @@ Feature: Capacités techniques et professionnelles - Réalisations des 5 derniè
 
   Scenario: STI class verification
     When I visit the realisations step
-    Then the form should have a hidden type field with value "CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns"
+    Then the form should have a hidden type field with value "RealisationsLivraisons"
 
   Scenario: Data persistence across navigation
     Given I have submitted realisation data:

@@ -169,7 +169,7 @@ fr:
             year_1: "Année N-1"
             year_2: "Année N-2"
             year_3: "Année N-3"
-        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
+        realisations_livraisons:
           labels:
             resume: "Résumé du travail effectué"
             date_debut: "Date de début"

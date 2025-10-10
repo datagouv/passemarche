@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MarketAttributeResponse::CapacitesTechniquesProfessionnellesRealisationsLivraisonsCinqAns < MarketAttributeResponse
+class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
   include MarketAttributeResponse::RepeatableField
 
   REALISATION_FIELDS = %w[
