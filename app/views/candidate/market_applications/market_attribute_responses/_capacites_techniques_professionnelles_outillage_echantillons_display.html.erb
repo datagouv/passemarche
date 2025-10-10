@@ -34,20 +34,19 @@
                 <% if echantillon['fichiers'].present? %>
                   <% fichiers = market_attribute_response.echantillon_fichiers(timestamp) %>
                   <% if fichiers.any? %>
-                    <div class="fr-mb-1v">
+                    <div class="fr-mb-1v fr-text--sm">
                       <strong><%= fichiers.size == 1 ? 'Fichier' : 'Fichiers' %> :</strong>
-                      <ul class="fr-text--sm fr-mt-1v">
+                      <div class="fr-mt-1v">
                         <% fichiers.each do |fichier| %>
-                          <li>
                             <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
                             <%= link_to fichier.filename.to_s,
                                         url_for(fichier),
                                         target: "_blank", rel: "noopener",
-                                        class: "fr-link" %>
+                                        class: "fr-link fr-text--sm" %>
                             (<%= number_to_human_size(fichier.byte_size) %>)
-                          </li>
+                            </br>
                         <% end %>
-                      </ul>
+                      </div>
                     </div>
                   <% end %>
                 <% end %>
