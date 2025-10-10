@@ -8,11 +8,11 @@ Given('a public market with realisations_livraisons field exists') do
   @public_market = create(:public_market, :completed, editor: @editor)
 
   @realisations_attr = MarketAttribute.find_or_create_by(
-    key: 'realisations_livraisons'
+    key: 'test_realisations_livraisons'
   ) do |attr|
     attr.input_type = 'realisations_livraisons'
-    attr.category_key = 'capacites_techniques_professionnelles'
-    attr.subcategory_key = 'capacites_techniques_professionnelles_realisations'
+    attr.category_key = 'test_capacites_techniques_professionnelles'
+    attr.subcategory_key = 'test_capacites_techniques_professionnelles_realisations'
     attr.required = true
   end
   @realisations_attr.public_markets << @public_market unless @realisations_attr.public_markets.include?(@public_market)
@@ -26,11 +26,11 @@ end
 
 # Navigation steps
 When('I visit the realisations step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations"
+  visit "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations"
 end
 
 When('I navigate back to the realisations step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations"
+  visit "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations"
 end
 
 # Display verification steps
@@ -52,7 +52,7 @@ Given('I have submitted single realisation data:') do |table|
   row = table.hashes.first
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
@@ -82,7 +82,7 @@ Given('I have submitted realisations data with multiple items:') do |table|
     responses_attrs["realisation_#{timestamp}_description"] = row['description']
   end
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
@@ -98,7 +98,7 @@ When('I submit invalid date range realisation:') do |table|
   row = table.hashes.first
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
@@ -119,7 +119,7 @@ When('I submit invalid montant realisation:') do |table|
   row = table.hashes.first
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_realisations",
+  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/test_capacites_techniques_professionnelles_realisations",
     market_application: {
       market_attribute_responses_attributes: {
         '0' => {
