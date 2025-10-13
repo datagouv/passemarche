@@ -3,6 +3,7 @@
 class MakeRequest < ApplicationInteractor
   def call
     api_call
+    check_response_status
   end
 
   protected
@@ -72,5 +73,24 @@ class MakeRequest < ApplicationInteractor
   def query_params?
     !request_params.nil? &&
       request_params.any?
+  end
+
+  def check_response_status
+    return if context.response.is_a?(Net::HTTPSuccess)
+
+    error_message = extract_error_message || "HTTP #{context.response.code}: #{context.response.message}"
+    context.fail!(error: error_message)
+  end
+
+  def extract_error_message
+    return nil unless context.response.body
+
+    parsed = JSON.parse(context.response.body)
+    error = parsed.dig('errors', 0)
+    return nil unless error
+
+    "#{error['title']}: #{error['detail']}" if error['title'] && error['detail']
+  rescue JSON::ParserError
+    nil
   end
 end

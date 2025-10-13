@@ -29,14 +29,19 @@ RSpec.shared_examples 'a successful API request' do
 end
 
 RSpec.shared_examples 'a failed API request' do |status_code, http_class|
-  it 'succeeds (interactor succeeds even with non-200 response)' do
-    expect(subject).to be_success
+  it 'fails' do
+    expect(subject).to be_failure
   end
 
   it "returns the #{status_code} response in context" do
     result = subject
     expect(result.response).to be_a(http_class)
     expect(result.response.code).to eq(status_code.to_s)
+  end
+
+  it 'sets an error message' do
+    result = subject
+    expect(result.error).to be_present
   end
 end
 
