@@ -170,6 +170,24 @@ RSpec.describe Insee, type: :organizer do
       end
     end
 
+    context 'when the API token is missing' do
+      let(:api_entreprise_credentials) do
+        OpenStruct.new(
+          base_url:,
+          token: nil
+        )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'sets an error message' do
+        result = subject
+        expect(result.error).to eq('Missing API credentials')
+      end
+    end
+
     context 'when called with market_application (full integration)' do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:, siret:) }
