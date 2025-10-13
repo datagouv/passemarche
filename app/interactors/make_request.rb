@@ -2,7 +2,7 @@
 
 class MakeRequest < ApplicationInteractor
   def call
-    api_call
+    api_call_with_error_handing
     check_response_status
   end
 
@@ -13,10 +13,6 @@ class MakeRequest < ApplicationInteractor
   end
 
   def endpoint_url
-    raise NotImplementedError
-  end
-
-  def request_params
     raise NotImplementedError
   end
 
@@ -41,7 +37,43 @@ class MakeRequest < ApplicationInteractor
     request['Content-Type'] = 'application/json'
   end
 
+  def request_params
+    {
+      context: request_context,
+      recipient: request_recipient,
+      object: request_object
+    }
+  end
+
+  def request_context
+    'Candidature marché public'
+  end
+
+  def request_recipient
+    '13002526500013'
+  end
+
+  def request_object
+    if context.market_application
+      "Réponse marché: #{context.market_application.public_market.name}"
+    else
+      'Réponse appel offre'
+    end
+  end
+
   private
+
+  def api_call_with_error_handing
+    api_call
+  rescue Net::OpenTimeout, Net::ReadTimeout, EOFError => e
+    context.fail!(error: "Timeout: #{e.message}")
+  rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH => e
+    context.fail!(error: "Connection error: #{e.message}")
+  rescue OpenSSL::SSL::SSLError => e
+    context.fail!(error: "SSL error: #{e.message}")
+  rescue SocketError => e
+    context.fail!(error: "Socket error: #{e.message}")
+  end
 
   def http_wrapper(&)
     Net::HTTP.start(request_uri.host, request_uri.port, http_options.merge(extra_http_start_options)) do |http|

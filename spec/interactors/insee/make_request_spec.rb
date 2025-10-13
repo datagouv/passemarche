@@ -9,6 +9,13 @@ RSpec.describe Insee::MakeRequest, type: :interactor do
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
   let(:endpoint_url) { "#{base_url}v3/insee/sirene/etablissements/#{siret}" }
+  let(:query_params) do
+    {
+      'context' => 'Candidature marché public',
+      'recipient' => '13002526500013',
+      'object' => 'Réponse appel offre'
+    }
+  end
 
   let(:successful_response_body) { insee_etablissement_success_response(siret:) }
 
@@ -24,6 +31,7 @@ RSpec.describe Insee::MakeRequest, type: :interactor do
       before do
         stub_request(:get, endpoint_url)
           .with(
+            query: hash_including(query_params),
             headers: {
               'Authorization' => "Bearer #{token}",
               'Content-Type' => 'application/json'
@@ -52,12 +60,13 @@ RSpec.describe Insee::MakeRequest, type: :interactor do
 
       before do
         stub_request(:get, endpoint_url)
+          .with(query: hash_including(query_params))
           .to_return(status: 200, body: successful_response_body)
       end
 
       it 'builds the correct endpoint URL' do
         subject
-        expect(a_request(:get, endpoint_url)).to have_been_made.once
+        expect(a_request(:get, endpoint_url).with(query: hash_including(query_params))).to have_been_made.once
       end
     end
   end

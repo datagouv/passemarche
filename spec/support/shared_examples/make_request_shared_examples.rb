@@ -13,18 +13,18 @@ RSpec.shared_examples 'a successful API request' do
 
   it 'includes the correct Authorization header' do
     subject
-    expect(
-      a_request(:get, endpoint_url)
-        .with(headers: { 'Authorization' => "Bearer #{token}" })
-    ).to have_been_made.once
+    request_matcher = a_request(:get, endpoint_url)
+    request_matcher = request_matcher.with(query: hash_including(query_params)) if defined?(query_params) && query_params
+    request_matcher = request_matcher.with(headers: { 'Authorization' => "Bearer #{token}" })
+    expect(request_matcher).to have_been_made.once
   end
 
   it 'includes the correct Content-Type header' do
     subject
-    expect(
-      a_request(:get, endpoint_url)
-        .with(headers: { 'Content-Type' => 'application/json' })
-    ).to have_been_made.once
+    request_matcher = a_request(:get, endpoint_url)
+    request_matcher = request_matcher.with(query: hash_including(query_params)) if defined?(query_params) && query_params
+    request_matcher = request_matcher.with(headers: { 'Content-Type' => 'application/json' })
+    expect(request_matcher).to have_been_made.once
   end
 end
 
@@ -62,18 +62,30 @@ RSpec.shared_examples 'API request error handling' do
     end
 
     before do
-      stub_request(:get, endpoint_url)
-        .with(
-          headers: {
-            'Authorization' => "Bearer #{token}",
-            'Content-Type' => 'application/json'
-          }
-        )
-        .to_return(
-          status: 404,
-          body: error_response_body,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+      stub = stub_request(:get, endpoint_url)
+
+      stub = if defined?(query_params) && query_params
+               stub.with(
+                 query: hash_including(query_params),
+                 headers: {
+                   'Authorization' => "Bearer #{token}",
+                   'Content-Type' => 'application/json'
+                 }
+               )
+             else
+               stub.with(
+                 headers: {
+                   'Authorization' => "Bearer #{token}",
+                   'Content-Type' => 'application/json'
+                 }
+               )
+             end
+
+      stub.to_return(
+        status: 404,
+        body: error_response_body,
+        headers: { 'Content-Type' => 'application/json' }
+      )
     end
 
     it_behaves_like 'a failed API request', 404, Net::HTTPNotFound
@@ -86,22 +98,25 @@ RSpec.shared_examples 'API request error handling' do
 
   context 'when the API request fails (HTTP 401 Unauthorized)' do
     before do
-      stub_request(:get, endpoint_url)
-        .to_return(
-          status: 401,
-          body: {
-            errors: [
-              {
-                code: '00101',
-                title: 'Interdit',
-                detail: "Votre token n'est pas valide ou n'est pas renseigné",
-                source: { parameter: 'token' },
-                meta: {}
-              }
-            ]
-          }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+      stub = stub_request(:get, endpoint_url)
+
+      stub = stub.with(query: hash_including(query_params)) if defined?(query_params) && query_params
+
+      stub.to_return(
+        status: 401,
+        body: {
+          errors: [
+            {
+              code: '00101',
+              title: 'Interdit',
+              detail: "Votre token n'est pas valide ou n'est pas renseigné",
+              source: { parameter: 'token' },
+              meta: {}
+            }
+          ]
+        }.to_json,
+        headers: { 'Content-Type' => 'application/json' }
+      )
     end
 
     it_behaves_like 'a failed API request', 401, Net::HTTPUnauthorized
@@ -109,12 +124,15 @@ RSpec.shared_examples 'API request error handling' do
 
   context 'when the API request fails (HTTP 500 Server Error)' do
     before do
-      stub_request(:get, endpoint_url)
-        .to_return(
-          status: 500,
-          body: 'Internal Server Error',
-          headers: { 'Content-Type' => 'text/plain' }
-        )
+      stub = stub_request(:get, endpoint_url)
+
+      stub = stub.with(query: hash_including(query_params)) if defined?(query_params) && query_params
+
+      stub.to_return(
+        status: 500,
+        body: 'Internal Server Error',
+        headers: { 'Content-Type' => 'text/plain' }
+      )
     end
 
     it_behaves_like 'a failed API request', 500, Net::HTTPInternalServerError

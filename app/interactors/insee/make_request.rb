@@ -5,10 +5,6 @@ class Insee::MakeRequest < MakeRequest
     "v3/insee/sirene/etablissements/#{siret}"
   end
 
-  def request_params
-    {}
-  end
-
   private
 
   def siret
