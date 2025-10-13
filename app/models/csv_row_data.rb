@@ -20,6 +20,10 @@ class CsvRowData
 
   attribute :obligatoire, :string
 
+  # API-related attributes (using exact CSV column names)
+  attribute :'API en question ', :string
+  attribute :"Informations récupérées par l'API", :string
+
   SUPPORTED_TYPES = %w[
     checkbox
     checkbox_with_document
@@ -99,6 +103,14 @@ class CsvRowData
     oui_to_boolean(apifiable)
   end
 
+  def api_name
+    public_send(:'API en question ')&.strip
+  end
+
+  def api_key
+    public_send(:"Informations récupérées par l'API")&.strip
+  end
+
   def applicable_market_types
     MARKET_TYPE_MAPPING.filter_map do |csv_column, code|
       code if oui_to_boolean_from_column(csv_column)
@@ -112,6 +124,8 @@ class CsvRowData
       required: required?,
       input_type: mapped_input_type,
       from_api: from_api?,
+      api_name: api_name.presence,
+      api_key: api_key.presence,
       deleted_at: nil
     }
   end
