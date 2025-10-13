@@ -21,18 +21,7 @@ module Candidate
     def update
       @presenter = MarketApplicationPresenter.new(@market_application)
 
-      if step == :summary
-        handle_summary_completion
-      elsif step == :company_identification
-        handle_company_identification
-      elsif @market_application.update(market_application_params)
-        @market_application.market_attribute_responses.reload
-        render_wizard(@market_application)
-      elsif custom_view_exists?
-        render_wizard
-      else
-        render 'generic_step', locals: { step: }
-      end
+      handle_step_update
     end
 
     def retry_sync
@@ -49,6 +38,21 @@ module Candidate
     end
 
     private
+
+    def handle_step_update
+      if step.to_sym == :summary
+        handle_summary_completion
+      elsif step.to_sym == :company_identification
+        handle_company_identification
+      elsif @market_application.update(market_application_params)
+        @market_application.market_attribute_responses.reload
+        render_wizard(@market_application)
+      elsif custom_view_exists?
+        render_wizard
+      else
+        render 'generic_step', locals: { step: }
+      end
+    end
 
     def set_wizard_steps
       find_market_application
@@ -68,8 +72,23 @@ module Candidate
 
     def handle_company_identification
       @market_application.update(market_application_params)
+      populate_insee_data
 
       render_wizard(@market_application)
+    end
+
+    def populate_insee_data
+      return if @market_application.siret.blank?
+
+      result = Insee.call(
+        params: { siret: @market_application.siret },
+        market_application: @market_application
+      )
+
+      return if result.success?
+
+      flash.now[:alert] = t('candidate.market_applications.insee_api_error',
+        error: result.error)
     end
 
     def handle_summary_completion
