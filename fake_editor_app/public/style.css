@@ -21,6 +21,21 @@ code {
   border: 1px solid #e3e3e3;
 }
 
+/* Card enhancements */
+.fr-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fr-card.fr-enlarge-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* JSON/Pre formatting for webhook debug */
 pre {
   white-space: pre-wrap;

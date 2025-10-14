@@ -1,0 +1,92 @@
+<header role="banner" class="fr-header">
+  <div class="fr-header__body">
+    <div class="fr-container">
+      <div class="fr-header__body-row">
+        <div class="fr-header__brand fr-enlarge-link">
+          <div class="fr-header__brand-top">
+            <div class="fr-header__logo">
+              <a href="/" title="Accueil - Éditeur de marchés publics">
+                <p class="fr-logo">
+                  République
+                  <br>Française
+                </p>
+              </a>
+            </div>
+            <div class="fr-header__navbar">
+              <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="modal-menu" aria-haspopup="menu" id="button-menu" title="Menu">
+                Menu
+              </button>
+            </div>
+          </div>
+          <div class="fr-header__service">
+            <a href="/" title="Accueil - Éditeur de marchés publics">
+              <p class="fr-header__service-title">
+                Éditeur de marchés publics
+                <span class="fr-badge fr-badge--sm fr-badge--info fr-ml-1w">Demo</span>
+              </p>
+            </a>
+            <p class="fr-header__service-tagline">Plateforme de démonstration - Intégration Voie Rapide</p>
+          </div>
+        </div>
+        <div class="fr-header__tools">
+          <div class="fr-header__tools-links">
+            <ul class="fr-btns-group">
+              <% if @current_token&.valid? %>
+                <li>
+                  <span class="fr-badge fr-badge--success">
+                    <span class="fr-icon-lock-line fr-icon--sm" aria-hidden="true"></span>
+                    Authentifié
+                  </span>
+                </li>
+              <% else %>
+                <li>
+                  <a class="fr-btn fr-btn--sm fr-btn--tertiary" href="/technical">
+                    <span class="fr-icon-lock-unlock-line fr-icon--sm" aria-hidden="true"></span>
+                    S'authentifier
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-header__menu fr-modal" id="modal-menu" aria-labelledby="button-menu">
+    <div class="fr-container">
+      <button class="fr-btn--close fr-btn" aria-controls="modal-menu" title="Fermer">
+        Fermer
+      </button>
+      <div class="fr-header__menu-links"></div>
+      <nav class="fr-nav" id="navigation-main" role="navigation" aria-label="Menu principal">
+        <ul class="fr-nav__list">
+          <li class="fr-nav__item">
+            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/') && request.path_info == '/' %>" href="/" target="_self">
+              <span class="fr-icon-home-4-line fr-icon--sm" aria-hidden="true"></span>
+              Accueil
+            </a>
+          </li>
+          <li class="fr-nav__item">
+            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/buyer') %>" href="/buyer" target="_self">
+              <span class="fr-icon-building-line fr-icon--sm" aria-hidden="true"></span>
+              Acheteur
+            </a>
+          </li>
+          <li class="fr-nav__item">
+            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/candidate') %>" href="/candidate" target="_self">
+              <span class="fr-icon-user-line fr-icon--sm" aria-hidden="true"></span>
+              Candidat
+            </a>
+          </li>
+          <li class="fr-nav__item">
+            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/technical') %>" href="/technical" target="_self">
+              <span class="fr-icon-settings-5-line fr-icon--sm" aria-hidden="true"></span>
+              Technique
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>

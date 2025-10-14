@@ -1,0 +1,182 @@
+<div class="fr-container fr-py-6w">
+  <div class="fr-mb-4w">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-new-market">Voir le fil d'Ariane</button>
+      <div class="fr-collapse" id="breadcrumb-new-market">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" href="/buyer">Acheteur</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Créer un marché</a>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <h1>
+      <span class="fr-icon-add-circle-line fr-icon--lg" aria-hidden="true"></span>
+      Créer un nouveau marché
+    </h1>
+    <p class="fr-text--lead">Remplissez les informations essentielles de votre marché public</p>
+  </div>
+
+  <% if @error %>
+    <div class="fr-alert fr-alert--error fr-mb-4w">
+      <h3 class="fr-alert__title">Erreur</h3>
+      <p><%= @error %></p>
+    </div>
+  <% end %>
+
+  <!-- Steps Indicator -->
+  <div class="fr-stepper fr-mb-4w">
+    <h2 class="fr-stepper__title">
+      <span class="fr-stepper__state">Étape 1 sur 2</span>
+      Informations du marché
+    </h2>
+    <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2"></div>
+    <p class="fr-stepper__details">
+      <span class="fr-text--bold">Étape suivante :</span> Configuration dans Voie Rapide
+    </p>
+  </div>
+
+  <div class="fr-grid-row fr-grid-row--gutters">
+    <div class="fr-col-12 fr-col-lg-8">
+      <!-- Main Form Card -->
+      <div class="fr-card fr-card--grey fr-mb-4w">
+        <div class="fr-card__body">
+          <div class="fr-card__content">
+            <h2 class="fr-mb-3w">Informations du marché</h2>
+            <form method="post" action="/buyer/markets" class="fr-form-group">
+              <!-- Market Name -->
+              <div class="fr-input-group">
+                <label class="fr-label" for="name">
+                  Nom du marché
+                  <span class="fr-hint-text">Intitulé complet du marché public</span>
+                </label>
+                <input
+                  class="fr-input"
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="Ex: Fourniture de matériel informatique">
+              </div>
+
+              <!-- Lot Name (Optional) -->
+              <div class="fr-input-group">
+                <label class="fr-label" for="lot_name">
+                  Nom du lot (optionnel)
+                  <span class="fr-hint-text">Si votre marché est divisé en lots</span>
+                </label>
+                <input
+                  class="fr-input"
+                  type="text"
+                  id="lot_name"
+                  name="lot_name"
+                  placeholder="Ex: Lot 1 - Ordinateurs portables">
+              </div>
+
+              <!-- Deadline -->
+              <div class="fr-input-group">
+                <label class="fr-label" for="deadline">
+                  Date limite de candidature
+                  <span class="fr-hint-text">Date et heure limite pour déposer les candidatures</span>
+                </label>
+                <input
+                  class="fr-input"
+                  type="datetime-local"
+                  id="deadline"
+                  name="deadline"
+                  required>
+              </div>
+
+              <!-- Market Type Codes -->
+              <div class="fr-form-group">
+                <fieldset class="fr-fieldset" id="market-type-codes">
+                  <legend class="fr-fieldset__legend fr-text--regular" id="market-type-codes-legend">
+                    Typologie du marché
+                    <span class="fr-hint-text">Sélectionnez au moins une typologie</span>
+                  </legend>
+                  <div class="fr-fieldset__content">
+                    <div class="fr-checkbox-group">
+                      <input type="checkbox" id="type-works" name="market_type_codes[]" value="works">
+                      <label class="fr-label" for="type-works">
+                        Travaux
+                        <span class="fr-hint-text">Marchés de travaux de construction, rénovation, etc.</span>
+                      </label>
+                    </div>
+                    <div class="fr-checkbox-group">
+                      <input type="checkbox" id="type-supplies" name="market_type_codes[]" value="supplies">
+                      <label class="fr-label" for="type-supplies">
+                        Fournitures
+                        <span class="fr-hint-text">Marchés d'achat de biens et équipements</span>
+                      </label>
+                    </div>
+                    <div class="fr-checkbox-group">
+                      <input type="checkbox" id="type-services" name="market_type_codes[]" value="services">
+                      <label class="fr-label" for="type-services">
+                        Services
+                        <span class="fr-hint-text">Marchés de prestations de services</span>
+                      </label>
+                    </div>
+                    <div class="fr-checkbox-group">
+                      <input type="checkbox" id="type-defense" name="market_type_codes[]" value="defense">
+                      <label class="fr-label" for="type-defense">
+                        Défense
+                        <span class="fr-hint-text">Marchés de défense et de sécurité</span>
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <!-- Submit Buttons -->
+              <div class="fr-btns-group fr-btns-group--inline fr-btns-group--right">
+                <a href="/buyer" class="fr-btn fr-btn--secondary">
+                  Annuler
+                </a>
+                <button type="submit" class="fr-btn fr-btn--primary">
+                  <span class="fr-icon-arrow-right-line fr-icon--sm" aria-hidden="true"></span>
+                  Créer le marché
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Help -->
+    <div class="fr-col-12 fr-col-lg-4">
+      <div class="fr-callout fr-callout--blue-ecume">
+        <h3 class="fr-callout__title">
+          <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
+          À propos du processus
+        </h3>
+        <p class="fr-callout__text">
+          <strong>Étape 1 :</strong> Vous créez le marché avec les informations essentielles<br><br>
+          <strong>Étape 2 :</strong> Vous serez redirigé vers Voie Rapide pour configurer les documents requis,
+          les critères de sélection, etc.<br><br>
+          <strong>Étape 3 :</strong> Une fois configuré, Voie Rapide vous notifiera via webhook
+          et votre marché sera visible par les candidats.
+        </p>
+      </div>
+
+      <div class="fr-callout fr-mt-3w">
+        <h3 class="fr-callout__title">
+          <span class="fr-icon-lightbulb-line fr-icon--sm" aria-hidden="true"></span>
+          Conseils
+        </h3>
+        <ul class="fr-callout__text">
+          <li>Soyez précis dans l'intitulé du marché</li>
+          <li>Vérifiez bien la date limite</li>
+          <li>Choisissez la ou les typologies appropriées</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

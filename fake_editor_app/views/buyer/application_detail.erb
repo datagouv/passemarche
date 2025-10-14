@@ -1,0 +1,214 @@
+<div class="fr-container fr-py-6w">
+  <div class="fr-mb-4w">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-app-detail">Voir le fil d'Ariane</button>
+      <div class="fr-collapse" id="breadcrumb-app-detail">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" href="/buyer">Acheteur</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" href="/buyer/markets/<%= @market.identifier %>">Détail du marché</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Détails de la candidature</a>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+      <div class="fr-col">
+        <h1>Candidature reçue</h1>
+        <p class="fr-text--lead">
+          <%= erb :'shared/_application_status', locals: { application: @application } %>
+        </p>
+      </div>
+      <div class="fr-col-auto">
+        <a href="/buyer/markets/<%= @market.identifier %>?tab=applications" class="fr-btn fr-btn--secondary">
+          <span class="fr-icon-arrow-left-line fr-icon--sm" aria-hidden="true"></span>
+          Retour au marché
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Banner -->
+  <% if @application.status == 'completed' %>
+    <div class="fr-alert fr-alert--success fr-mb-4w">
+      <h3 class="fr-alert__title">
+        <span class="fr-icon-checkbox-circle-line fr-icon--lg" aria-hidden="true"></span>
+        Candidature complétée
+      </h3>
+      <p>
+        Cette candidature a été soumise avec succès.
+        Vous pouvez consulter les informations et télécharger le package de documents ci-dessous.
+      </p>
+    </div>
+  <% else %>
+    <div class="fr-alert fr-alert--info fr-mb-4w">
+      <h3 class="fr-alert__title">
+        <span class="fr-icon-time-line fr-icon--lg" aria-hidden="true"></span>
+        Candidature en cours
+      </h3>
+      <p>
+        Cette candidature est en cours de remplissage par le candidat.
+        Les documents seront disponibles une fois la candidature terminée.
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Tabs Navigation -->
+  <div class="fr-tabs">
+    <ul class="fr-tabs__list" role="tablist" aria-label="Navigation par onglets">
+      <li role="presentation">
+        <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'overview' || !@tab %>"
+                id="tab-button-overview"
+                role="tab"
+                aria-selected="<%= (@tab == 'overview' || !@tab) ? 'true' : 'false' %>"
+                aria-controls="tab-overview">
+          <span class="fr-icon-file-text-line fr-icon--sm" aria-hidden="true"></span>
+          Vue d'ensemble
+        </button>
+      </li>
+      <% if @application.has_webhook_data? %>
+        <li role="presentation">
+          <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'technical' %>"
+                  id="tab-button-technical"
+                  role="tab"
+                  aria-selected="<%= @tab == 'technical' ? 'true' : 'false' %>"
+                  aria-controls="tab-technical">
+            <span class="fr-icon-code-s-slash-line fr-icon--sm" aria-hidden="true"></span>
+            Données techniques
+          </button>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Tab Content: Overview -->
+    <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'overview' || !@tab %>" id="tab-overview" role="tabpanel" tabindex="0">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-lg-8">
+          <div class="fr-card fr-mb-4w">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <div class="fr-table fr-table--layout-fixed">
+                  <table>
+                    <caption class="sr-only">Informations de la candidature</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Propriété</th>
+                        <th scope="col">Valeur</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Identifiant</th>
+                        <td><code><%= @application.identifier %></code></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Marché</th>
+                        <td><strong><%= @market.name %></strong></td>
+                      </tr>
+                      <% if @market.lot_name %>
+                        <tr>
+                          <th scope="row">Lot</th>
+                          <td><%= @market.lot_name %></td>
+                        </tr>
+                      <% end %>
+                      <tr>
+                        <th scope="row">SIRET</th>
+                        <td><%= @application.siret || 'Non renseigné' %></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Statut</th>
+                        <td>
+                          <%= erb :'shared/_application_status', locals: { application: @application, size: 'sm' } %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Créée le</th>
+                        <td><%= format_paris_time(@application.created_at) %></td>
+                      </tr>
+                      <% if @application.completed_at %>
+                        <tr>
+                          <th scope="row">Terminée le</th>
+                          <td><%= format_paris_time(@application.completed_at) %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="fr-col-12 fr-col-lg-4">
+          <!-- Quick Actions -->
+          <div class="fr-callout fr-mb-3w">
+            <h3 class="fr-callout__title">
+              <span class="fr-icon-links-line fr-icon--sm" aria-hidden="true"></span>
+              Actions rapides
+            </h3>
+            <div class="fr-btns-group fr-btns-group--icon-left">
+              <a href="/buyer/markets/<%= @market.identifier %>" class="fr-btn fr-btn--sm fr-btn--secondary">
+                <span class="fr-icon-file-text-line" aria-hidden="true"></span>
+                Voir le marché
+              </a>
+              <% if @application.status == 'completed' %>
+                <% if @application.documents_package_url %>
+                  <a href="/candidate/applications/<%= @application.identifier %>/download_documents_package"
+                     class="fr-btn fr-btn--sm fr-btn--primary">
+                    <span class="fr-icon-folder-2-line" aria-hidden="true"></span>
+                    Package de documents
+                  </a>
+                <% end %>
+                <% unless @application.documents_package_url %>
+                  <p class="fr-text--sm fr-text--mention-grey fr-mt-2w">
+                    Le package de documents sera disponible une fois la candidature traitée.
+                  </p>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="fr-callout fr-callout--blue-ecume fr-mt-3w">
+            <h3 class="fr-callout__title">
+              <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
+              À propos
+            </h3>
+            <p class="fr-callout__text fr-text--sm">
+              <% if @application.status == 'created' %>
+                Cette candidature est en cours de remplissage par le candidat.
+                Les documents seront disponibles une fois la soumission effectuée.
+              <% else %>
+                Cette candidature a été soumise avec succès. Le package de documents contient
+                tous les fichiers fournis par le candidat.
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Technical -->
+    <% if @application.has_webhook_data? %>
+      <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'technical' %>" id="tab-technical" role="tabpanel" tabindex="0">
+        <div class="fr-card fr-card--grey">
+          <div class="fr-card__body">
+            <div class="fr-card__content">
+              <h2 class="fr-mb-3w">Données du webhook</h2>
+              <pre class="fr-text--xs" style="max-height: 500px; overflow-y: auto;"><%= JSON.pretty_generate(@application.webhook_data) %></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

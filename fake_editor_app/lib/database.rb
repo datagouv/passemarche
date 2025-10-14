@@ -182,6 +182,40 @@ class Market < Sequel::Model(DB[:markets])
   rescue JSON::ParserError
     {}
   end
+
+  def configuration_url
+    return nil unless ENV['FAST_TRACK_URL']
+    "#{ENV['FAST_TRACK_URL']}/buyer/markets/#{identifier}/configuration"
+  end
+
+  # User-friendly display methods
+  def status_label
+    case status
+    when 'created' then 'En attente de configuration'
+    when 'completed' then 'Prêt pour candidatures'
+    else status
+    end
+  end
+
+  def status_icon
+    case status
+    when 'created' then '⏳'
+    when 'completed' then '✅'
+    else '❓'
+    end
+  end
+
+  def status_color
+    case status
+    when 'created' then 'info'
+    when 'completed' then 'success'
+    else 'new'
+    end
+  end
+
+  def completed_recently?
+    completed_at && completed_at > DateTime.now - 1
+  end
 end
 
 class MarketApplication < Sequel::Model(DB[:market_applications])
@@ -246,5 +280,34 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
     JSON.parse(application_data)
   rescue JSON::ParserError
     {}
+  end
+
+  # User-friendly display methods
+  def status_label
+    case status
+    when 'created' then 'En cours'
+    when 'completed' then 'Terminée'
+    else status
+    end
+  end
+
+  def status_icon
+    case status
+    when 'created' then '⏳'
+    when 'completed' then '✅'
+    else '❓'
+    end
+  end
+
+  def status_color
+    case status
+    when 'created' then 'info'
+    when 'completed' then 'success'
+    else 'new'
+    end
+  end
+
+  def completed_recently?
+    completed_at && completed_at > DateTime.now - 1
   end
 end

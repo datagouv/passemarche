@@ -1,0 +1,61 @@
+<%
+  # Parameters:
+  # - market: Market instance (required)
+  # - show_applications: Boolean to show application count (default: false)
+  # - link_path: Custom link path (default: "/buyer/markets/#{market.identifier}")
+  # - card_class: Additional CSS classes (optional)
+
+  show_applications ||= false
+  link_path ||= "/buyer/markets/#{market.identifier}"
+  card_class ||= ""
+%>
+
+<div class="fr-card fr-enlarge-link <%= card_class %> <%= 'fr-card--green-emeraude' if market.completed_recently? %>">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <h3 class="fr-card__title">
+        <a href="<%= link_path %>" class="fr-card__link">
+          <%= market.name %>
+        </a>
+      </h3>
+      <p class="fr-card__desc">
+        <% if market.lot_name && !market.lot_name.empty? %>
+          <strong>Lot:</strong> <%= market.lot_name %><br>
+        <% end %>
+        <strong>Identifiant:</strong> <code class="fr-text--xs"><%= market.identifier %></code>
+      </p>
+      <div class="fr-card__start">
+        <p class="fr-badge fr-badge--<%= market.status_color %>">
+          <%= market.status_icon %> <%= market.status_label %>
+        </p>
+      </div>
+      <div class="fr-card__end">
+        <p class="fr-card__detail fr-text--xs">
+          <span class="fr-icon-time-line fr-icon--sm" aria-hidden="true"></span>
+          <%= relative_time(market.created_at) %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <% if show_applications %>
+    <div class="fr-card__footer">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col">
+          <p class="fr-card__detail fr-text--xs">
+            <span class="fr-icon-file-text-line fr-icon--sm" aria-hidden="true"></span>
+            <%= market.applications_count %> candidature<%= 's' if market.applications_count > 1 %>
+          </p>
+        </div>
+        <% if market.status == 'completed' && market.completed_applications_count > 0 %>
+          <div class="fr-col-auto">
+            <p class="fr-card__detail fr-text--xs">
+              <span class="fr-icon-checkbox-circle-line fr-icon--sm" aria-hidden="true"></span>
+              <%= market.completed_applications_count %> terminée<%= 's' if market.completed_applications_count > 1 %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

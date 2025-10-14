@@ -1,0 +1,127 @@
+<div class="fr-container fr-py-6w">
+  <div class="fr-mb-4w">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-candidate">Voir le fil d'Ariane</button>
+      <div class="fr-collapse" id="breadcrumb-candidate">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Tableau de bord Candidat</a>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <h1>
+      <span class="fr-icon-user-line fr-icon--lg" aria-hidden="true"></span>
+      Tableau de bord Candidat
+    </h1>
+    <p class="fr-text--lead">Consultez les marchés publics et gérez vos candidatures</p>
+  </div>
+
+  <!-- Authentication Warning -->
+  <% unless @current_token&.valid? %>
+    <div class="fr-alert fr-alert--warning fr-mb-4w">
+      <h3 class="fr-alert__title">⚠️ Authentification requise</h3>
+      <p>
+        Vous devez être authentifié pour candidater aux marchés.
+        <a href="/technical" class="fr-link">Aller au tableau de bord technique</a> pour vous authentifier.
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Quick Stats -->
+  <div class="fr-grid-row fr-grid-row--gutters fr-mb-6w">
+    <div class="fr-col-12 fr-col-md-6">
+      <div class="fr-card fr-card--no-arrow fr-card--horizontal">
+        <div class="fr-card__body">
+          <div class="fr-card__content">
+            <h3 class="fr-card__title">
+              <span class="fr-icon-folder-2-line fr-icon--lg fr-mr-1w" aria-hidden="true"></span>
+              <%= @markets.count %>
+            </h3>
+            <p class="fr-card__desc">Marchés disponibles</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-col-12 fr-col-md-6">
+      <div class="fr-card fr-card--no-arrow fr-card--horizontal">
+        <div class="fr-card__body">
+          <div class="fr-card__content">
+            <h3 class="fr-card__title">
+              <span class="fr-icon-file-text-line fr-icon--lg fr-mr-1w" aria-hidden="true"></span>
+              <%= @my_applications.count %>
+            </h3>
+            <p class="fr-card__desc">Mes candidatures récentes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Recent Applications -->
+  <% if @my_applications.any? %>
+    <div class="fr-mb-6w">
+      <h2 class="fr-mb-3w">
+        Mes candidatures récentes
+        <span class="fr-badge fr-badge--sm fr-ml-1w"><%= @my_applications.count %></span>
+      </h2>
+
+      <div class="fr-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Marché</th>
+              <th>Identifiant</th>
+              <th>SIRET</th>
+              <th>Statut</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @my_applications.each do |app| %>
+              <% market = Market.find_by_identifier(app.market_identifier) %>
+              <tr>
+                <td><%= market&.name || app.market_identifier %></td>
+                <td><code class="fr-text--xs"><%= app.identifier %></code></td>
+                <td><%= app.siret || 'Non renseigné' %></td>
+                <td>
+                  <span class="fr-badge fr-badge--sm fr-badge--<%= app.status_color %>">
+                    <%= app.status_icon %> <%= app.status_label %>
+                  </span>
+                </td>
+                <td class="fr-text--xs">
+                  <%= relative_time(app.created_at) %>
+                </td>
+                <td>
+                  <a href="/candidate/applications/<%= app.identifier %>" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline">
+                    Détails
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Help Section -->
+  <div class="fr-mt-6w">
+    <div class="fr-callout fr-callout--blue-ecume">
+      <h3 class="fr-callout__title">💡 Comment candidater ?</h3>
+      <ol>
+        <li>Parcourez les marchés disponibles</li>
+        <li>Consultez les détails du marché qui vous intéresse</li>
+        <li>Cliquez sur "Candidater" (avec ou sans SIRET)</li>
+        <li>Complétez votre candidature dans Voie Rapide</li>
+        <li>Recevez votre attestation de dépôt une fois terminé</li>
+      </ol>
+    </div>
+  </div>
+</div>

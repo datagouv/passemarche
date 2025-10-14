@@ -14,37 +14,11 @@
 </head>
 <body>
   <!-- DSFR Header -->
-  <header role="banner" class="fr-header">
-    <div class="fr-header__body">
-      <div class="fr-container">
-        <div class="fr-header__body-row">
-          <div class="fr-header__brand fr-enlarge-link">
-            <div class="fr-header__brand-top">
-              <div class="fr-header__logo">
-                <a href="/" title="Accueil - Fake Editor App">
-                  <p class="fr-logo">
-                    République<br>Française
-                  </p>
-                </a>
-              </div>
-            </div>
-            <div class="fr-header__service">
-              <p class="fr-header__service-title">
-                <a href="/" title="Accueil - Fake Editor App">🎭 Fake Editor App</a>
-              </p>
-              <p class="fr-header__service-tagline">Démonstration d'intégration avec Voie Rapide</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <%= erb :'shared/_nav' %>
 
   <!-- Main Content -->
   <main role="main" id="content">
-    <div class="fr-container fr-pt-4w fr-pb-4w">
-      <%= yield %>
-    </div>
+    <%= yield %>
   </main>
 
   <!-- DSFR Footer -->

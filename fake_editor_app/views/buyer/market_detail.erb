@@ -1,0 +1,236 @@
+<div class="fr-container fr-py-6w">
+  <div class="fr-mb-4w">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-market-detail">Voir le fil d'Ariane</button>
+      <div class="fr-collapse" id="breadcrumb-market-detail">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" href="/buyer">Acheteur</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Détails du marché</a>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+      <div class="fr-col">
+        <h1><%= @market.name %></h1>
+        <p class="fr-text--lead">
+          <span class="fr-badge fr-badge--<%= @market.status_color %>">
+            <%= @market.status_icon %> <%= @market.status_label %>
+          </span>
+        </p>
+      </div>
+      <div class="fr-col-auto">
+        <a href="/buyer" class="fr-btn fr-btn--secondary">
+          <span class="fr-icon-arrow-left-line fr-icon--sm" aria-hidden="true"></span>
+          Retour
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="fr-tabs">
+    <ul class="fr-tabs__list" role="tablist" aria-label="Navigation par onglets">
+      <li role="presentation">
+        <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'overview' %>"
+                id="tab-button-overview"
+                role="tab"
+                aria-selected="<%= @tab == 'overview' ? 'true' : 'false' %>"
+                aria-controls="tab-overview">
+          <span class="fr-icon-file-text-line fr-icon--sm" aria-hidden="true"></span>
+          Vue d'ensemble
+        </button>
+      </li>
+      <li role="presentation">
+        <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'applications' %>"
+                id="tab-button-applications"
+                role="tab"
+                aria-selected="<%= @tab == 'applications' ? 'true' : 'false' %>"
+                aria-controls="tab-applications">
+          <span class="fr-icon-folder-2-line fr-icon--sm" aria-hidden="true"></span>
+          Candidatures (<%= @applications.count %>)
+        </button>
+      </li>
+      <% if @market.has_webhook_data? %>
+        <li role="presentation">
+          <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'technical' %>"
+                  id="tab-button-technical"
+                  role="tab"
+                  aria-selected="<%= @tab == 'technical' ? 'true' : 'false' %>"
+                  aria-controls="tab-technical">
+            <span class="fr-icon-code-s-slash-line fr-icon--sm" aria-hidden="true"></span>
+            Données techniques
+          </button>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Tab Content: Overview -->
+    <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'overview' %>" id="tab-overview" role="tabpanel" tabindex="0">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <!-- Market Info Card -->
+        <div class="fr-col-12 fr-col-lg-8">
+          <div class="fr-card fr-mb-4w">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <div class="fr-table fr-table--layout-fixed">
+                  <table>
+                    <caption class="sr-only">Informations du marché</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Propriété</th>
+                        <th scope="col">Valeur</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Identifiant</th>
+                        <td><code><%= @market.identifier %></code></td>
+                      </tr>
+                      <% if @market.lot_name %>
+                        <tr>
+                          <th scope="row">Lot</th>
+                          <td><%= @market.lot_name %></td>
+                        </tr>
+                      <% end %>
+                      <tr>
+                        <th scope="row">Statut</th>
+                        <td>
+                          <span class="fr-badge fr-badge--<%= @market.status_color %>">
+                            <%= @market.status_icon %> <%= @market.status_label %>
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Créé le</th>
+                        <td><%= format_paris_time(@market.created_at) %></td>
+                      </tr>
+                      <% if @market.completed_at %>
+                        <tr>
+                          <th scope="row">Configuré le</th>
+                          <td><%= format_paris_time(@market.completed_at) %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="fr-col-12 fr-col-lg-4">
+          <!-- Actions rapides (only shown when market needs configuration) -->
+          <% if @market.status == 'created' && @market.configuration_url %>
+            <div class="fr-callout fr-mb-3w">
+              <h3 class="fr-callout__title">
+                <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
+                Actions rapides
+              </h3>
+              <div class="fr-btns-group fr-btns-group--icon-left">
+                <a href="<%= @market.configuration_url %>"
+                   target="_blank"
+                   rel="noopener external"
+                   class="fr-btn fr-btn--sm fr-btn--primary">
+                  <span class="fr-icon-settings-5-line" aria-hidden="true"></span>
+                  Configurer le marché
+                </a>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Statistics -->
+          <div class="fr-callout fr-mb-3w">
+            <h3 class="fr-callout__title">
+              <span class="fr-icon-bar-chart-box-line fr-icon--sm" aria-hidden="true"></span>
+              Statistiques
+            </h3>
+            <p class="fr-text--sm">
+              <strong><%= @market.applications_count %></strong> candidature<%= 's' if @market.applications_count > 1 %>
+              <% if @market.completed_applications_count > 0 %>
+                <br>
+                <strong><%= @market.completed_applications_count %></strong> terminée<%= 's' if @market.completed_applications_count > 1 %>
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Applications -->
+    <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'applications' %>" id="tab-applications" role="tabpanel" tabindex="0">
+      <h2 class="fr-mb-3w">
+        Candidatures
+        <span class="fr-badge fr-badge--sm fr-ml-1w"><%= @applications.count %></span>
+      </h2>
+
+      <% if @applications.any? %>
+        <div class="fr-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Identifiant</th>
+                <th>SIRET</th>
+                <th>Statut</th>
+                <th>Date de création</th>
+                <th>Date de complétion</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @applications.each do |app| %>
+                <tr>
+                  <td><code class="fr-text--xs"><%= app.identifier %></code></td>
+                  <td><%= app.siret || 'Non renseigné' %></td>
+                  <td>
+                    <%= erb :'shared/_application_status', locals: { application: app, size: 'sm' } %>
+                  </td>
+                  <td class="fr-text--xs"><%= format_paris_time(app.created_at, '%d/%m/%Y %H:%M') %></td>
+                  <td class="fr-text--xs">
+                    <%= app.completed_at ? format_paris_time(app.completed_at, '%d/%m/%Y %H:%M') : '-' %>
+                  </td>
+                  <td>
+                    <a href="/buyer/applications/<%= app.identifier %>"
+                       class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline">
+                      Détails
+                    </a>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="fr-callout">
+          <h3 class="fr-callout__title">Aucune candidature</h3>
+          <p class="fr-callout__text">
+            Ce marché n'a pas encore reçu de candidature.
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Tab Content: Technical -->
+    <% if @market.has_webhook_data? %>
+      <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'technical' %>" id="tab-technical" role="tabpanel" tabindex="0">
+        <div class="fr-card fr-card--grey">
+          <div class="fr-card__body">
+            <div class="fr-card__content">
+              <h2 class="fr-mb-3w">Données du webhook</h2>
+              <pre class="fr-text--xs" style="max-height: 500px; overflow-y: auto;"><%= JSON.pretty_generate(@market.webhook_data) %></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

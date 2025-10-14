@@ -1,0 +1,249 @@
+<div class="fr-container fr-py-6w">
+  <div class="fr-mb-4w">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-technical">Voir le fil d'Ariane</button>
+      <div class="fr-collapse" id="breadcrumb-technical">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Tableau de bord Technique</a>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <h1>
+      <span class="fr-icon-settings-5-line fr-icon--lg" aria-hidden="true"></span>
+      Tableau de bord Technique
+    </h1>
+    <p class="fr-text--lead">Gestion de l'authentification OAuth et données techniques</p>
+  </div>
+
+  <% if @error %>
+    <div class="fr-alert fr-alert--error fr-mb-4w">
+      <h3 class="fr-alert__title">Erreur</h3>
+      <p><%= @error %></p>
+    </div>
+  <% end %>
+
+  <!-- Tabs Navigation -->
+  <div class="fr-tabs">
+    <ul class="fr-tabs__list" role="tablist" aria-label="Navigation par onglets">
+      <li role="presentation">
+        <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'auth' || !@tab %>"
+                id="tab-button-auth"
+                role="tab"
+                aria-selected="<%= (@tab == 'auth' || !@tab) ? 'true' : 'false' %>"
+                aria-controls="tab-auth">
+          <span class="fr-icon-lock-line fr-icon--sm" aria-hidden="true"></span>
+          Authentification
+        </button>
+      </li>
+      <li role="presentation">
+        <button class="fr-tabs__tab <%= 'fr-tabs__tab--selected' if @tab == 'config' %>"
+                id="tab-button-config"
+                role="tab"
+                aria-selected="<%= @tab == 'config' ? 'true' : 'false' %>"
+                aria-controls="tab-config">
+          <span class="fr-icon-settings-5-line fr-icon--sm" aria-hidden="true"></span>
+          Configuration
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Content: Authentication -->
+    <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'auth' || !@tab %>" id="tab-auth" role="tabpanel" tabindex="0">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-lg-8">
+          <div class="fr-card <%= @current_token&.valid? ? 'fr-card--green-emeraude' : 'fr-card--orange-terre-battue' %>">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <h2 class="fr-mb-3w">
+                  <% if @current_token&.valid? %>
+                    <span class="fr-icon-lock-line fr-icon--lg" aria-hidden="true"></span>
+                    Authentifié auprès de Voie Rapide
+                  <% else %>
+                    <span class="fr-icon-lock-unlock-line fr-icon--lg" aria-hidden="true"></span>
+                    Non authentifié
+                  <% end %>
+                </h2>
+
+                <% if @current_token&.valid? %>
+                  <div class="fr-table fr-table--layout-fixed">
+                    <table>
+                      <caption class="sr-only">Détails du token OAuth</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Propriété</th>
+                          <th scope="col">Valeur</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Access Token</th>
+                          <td>
+                            <code><%= @current_token.access_token[0..20] %>...</code>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Token Type</th>
+                          <td><%= @current_token.token_type %></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Scope</th>
+                          <td><%= @current_token.scope || 'N/A' %></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Créé le</th>
+                          <td><%= format_paris_time(@current_token.created_at) %></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Expire le</th>
+                          <td><%= format_paris_time(@current_token.expires_at) %></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Temps restant</th>
+                          <td>
+                            <span class="fr-badge fr-badge--success">
+                              <%= @current_token.time_until_expiry / 60 %> minutes
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+                    <form action="/refresh" method="post" style="display: inline;">
+                      <input type="hidden" name="redirect_back" value="/technical">
+                      <button type="submit" class="fr-btn fr-btn--secondary">
+                        <span class="fr-icon-refresh-line" aria-hidden="true"></span>
+                        Rafraîchir le token
+                      </button>
+                    </form>
+                    <form action="/clear" method="get" style="display: inline;">
+                      <input type="hidden" name="redirect_back" value="/technical">
+                      <button type="submit" class="fr-btn fr-btn--tertiary-no-outline">
+                        <span class="fr-icon-delete-line" aria-hidden="true"></span>
+                        Supprimer le token
+                      </button>
+                    </form>
+                  </div>
+                <% else %>
+                  <p class="fr-mb-3w">
+                    Vous devez vous authentifier auprès de Voie Rapide pour utiliser les fonctionnalités de création de marchés et de candidatures.
+                  </p>
+
+                  <form action="/authenticate" method="post">
+                    <input type="hidden" name="redirect_back" value="/technical">
+                    <button type="submit" class="fr-btn fr-btn--primary fr-btn--lg">
+                      <span class="fr-icon-lock-line" aria-hidden="true"></span>
+                      S'authentifier via OAuth2
+                    </button>
+                  </form>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="fr-col-12 fr-col-lg-4">
+          <div class="fr-callout fr-callout--blue-ecume fr-mb-3w">
+            <h3 class="fr-callout__title">
+              <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
+              Flow OAuth2
+            </h3>
+            <p class="fr-callout__text fr-text--sm">
+              Cette application utilise le flow <strong>Client Credentials</strong> pour s'authentifier auprès de Voie Rapide.<br><br>
+              Le token d'accès est automatiquement géré et peut être rafraîchi manuellement si nécessaire.
+            </p>
+          </div>
+
+          <div class="fr-callout">
+            <h3 class="fr-callout__title">
+              <span class="fr-icon-bar-chart-box-line fr-icon--sm" aria-hidden="true"></span>
+              Statistiques
+            </h3>
+            <p class="fr-text--sm">
+              <strong><%= Market.count %></strong> marché<%= 's' if Market.count > 1 %><br>
+              <strong><%= MarketApplication.count %></strong> candidature<%= 's' if MarketApplication.count > 1 %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Configuration -->
+    <div class="fr-tabs__panel <%= 'fr-tabs__panel--selected' if @tab == 'config' %>" id="tab-config" role="tabpanel" tabindex="0">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-lg-8">
+          <div class="fr-card">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <h2 class="fr-mb-3w">Configuration OAuth2</h2>
+                <div class="fr-table fr-table--layout-fixed">
+                  <table>
+                    <caption class="sr-only">Configuration OAuth2</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Propriété</th>
+                        <th scope="col">Valeur</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Client ID</th>
+                        <td><code><%= ENV.fetch('CLIENT_ID', 'Non configuré')[0..15] %>...</code></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">URL Voie Rapide</th>
+                        <td><code style="word-break: break-all;"><%= ENV.fetch('FAST_TRACK_URL', 'Non configuré') %></code></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Flow OAuth</th>
+                        <td>Client Credentials</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Client Secret</th>
+                        <td><code><%= ENV.fetch('CLIENT_SECRET', 'Non configuré') ? '***' : 'Non configuré' %></code></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="fr-col-12 fr-col-lg-4">
+          <div class="fr-callout fr-callout--blue-ecume">
+            <h3 class="fr-callout__title">
+              <span class="fr-icon-book-2-line fr-icon--sm" aria-hidden="true"></span>
+              Documentation
+            </h3>
+            <div class="fr-btns-group fr-btns-group--icon-left">
+              <a href="<%= ENV['FAST_TRACK_URL'] %>" target="_blank" rel="noopener external" class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline">
+                <span class="fr-icon-external-link-line" aria-hidden="true"></span>
+                Voie Rapide
+              </a>
+            </div>
+          </div>
+
+          <div class="fr-notice fr-notice--info fr-mt-3w">
+            <div class="fr-notice__body">
+              <p class="fr-notice__title">À propos de cette page</p>
+              <p class="fr-text--sm">
+                Cette page technique permet de gérer l'authentification OAuth2 et de consulter les données brutes.
+                Utilisez les interfaces Acheteur ou Candidat pour les scénarios utilisateur.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

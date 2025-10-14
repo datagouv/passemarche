@@ -1,0 +1,145 @@
+<div class="fr-container fr-py-6w">
+  <div class="fr-mb-4w">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-markets-list">Voir le fil d'Ariane</button>
+      <div class="fr-collapse" id="breadcrumb-markets-list">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" href="/candidate">Candidat</a>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page">Tous les marchés</a>
+          </li>
+        </ol>
+      </div>
+    </nav>
+
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+      <div class="fr-col">
+        <h1>
+          <span class="fr-icon-folder-2-line fr-icon--lg" aria-hidden="true"></span>
+          Marchés publics disponibles
+        </h1>
+        <p class="fr-text--lead">Consultez tous les marchés ouverts aux candidatures</p>
+      </div>
+      <div class="fr-col-auto">
+        <span class="fr-badge fr-badge--lg">
+          <%= @markets.count %> marché<%= 's' if @markets.count > 1 %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentication Warning -->
+  <% unless @current_token&.valid? %>
+    <div class="fr-alert fr-alert--warning fr-mb-4w">
+      <h3 class="fr-alert__title">⚠️ Authentification requise</h3>
+      <p>
+        Vous devez être authentifié pour candidater aux marchés.
+        <a href="/technical" class="fr-link">Aller au tableau de bord technique</a> pour vous authentifier.
+      </p>
+    </div>
+  <% end %>
+
+  <% if @markets.any? %>
+    <!-- Markets Grid -->
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <% @markets.each do |market| %>
+        <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
+          <div class="fr-card fr-enlarge-link">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <h3 class="fr-card__title">
+                  <a href="/candidate/markets/<%= market.identifier %>" class="fr-card__link">
+                    <%= market.name %>
+                  </a>
+                </h3>
+                <p class="fr-card__desc">
+                  <% if market.lot_name && !market.lot_name.empty? %>
+                    <strong>Lot:</strong> <%= market.lot_name %><br>
+                  <% end %>
+                  <strong>Identifiant:</strong> <code class="fr-text--xs"><%= market.identifier %></code><br>
+                  <strong>Publié:</strong> <%= relative_time(market.completed_at || market.created_at) %><br>
+                  <strong>Candidatures:</strong> <%= market.applications_count %>
+                </p>
+                <div class="fr-card__end">
+                  <p class="fr-badge fr-badge--<%= market.status_color %>">
+                    <%= market.status_icon %> <%= market.status_label %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination info if many markets -->
+    <% if @markets.count > 10 %>
+      <div class="fr-mt-4w fr-text--center">
+        <p class="fr-text--sm">
+          Affichage de <%= @markets.count %> marché<%= 's' if @markets.count > 1 %>
+        </p>
+      </div>
+    <% end %>
+  <% else %>
+    <!-- Empty State -->
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-8">
+        <div class="fr-card fr-card--grey fr-card--no-arrow">
+          <div class="fr-card__body">
+            <div class="fr-card__content">
+              <h2 class="fr-card__title">
+                <span class="fr-icon-information-line fr-icon--lg" aria-hidden="true"></span>
+                Aucun marché disponible
+              </h2>
+              <p class="fr-card__desc">
+                Il n'y a actuellement aucun marché ouvert aux candidatures.
+                Revenez plus tard ou consultez le tableau de bord pour voir l'activité récente.
+              </p>
+              <div class="fr-card__end">
+                <a href="/candidate" class="fr-btn fr-btn--primary">
+                  <span class="fr-icon-arrow-left-line fr-icon--sm" aria-hidden="true"></span>
+                  Retour au tableau de bord
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Help Section -->
+  <div class="fr-mt-6w">
+    <div class="fr-callout fr-callout--blue-ecume">
+      <h3 class="fr-callout__title">
+        <span class="fr-icon-lightbulb-line fr-icon--sm" aria-hidden="true"></span>
+        Conseils pour candidater
+      </h3>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-md-4">
+          <h4 class="fr-text--md">Préparez vos documents</h4>
+          <p class="fr-text--sm">
+            Assurez-vous d'avoir tous les documents requis avant de commencer votre candidature.
+          </p>
+        </div>
+        <div class="fr-col-12 fr-col-md-4">
+          <h4 class="fr-text--md">Utilisez le SIRET</h4>
+          <p class="fr-text--sm">
+            Si vous avez un SIRET, renseignez-le pour pré-remplir automatiquement vos informations.
+          </p>
+        </div>
+        <div class="fr-col-12 fr-col-md-4">
+          <h4 class="fr-text--md">Sauvegardez régulièrement</h4>
+          <p class="fr-text--sm">
+            Votre candidature est automatiquement sauvegardée à chaque étape dans Voie Rapide.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

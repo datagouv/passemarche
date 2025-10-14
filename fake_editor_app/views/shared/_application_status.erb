@@ -1,0 +1,12 @@
+<%
+  # Parameters:
+  # - application: MarketApplication instance (required)
+  # - size: Badge size - 'sm' or default (optional)
+
+  size ||= ""
+  badge_size_class = size == 'sm' ? 'fr-badge--sm' : ''
+%>
+
+<span class="fr-badge <%= badge_size_class %> fr-badge--<%= application.status_color %>">
+  <%= application.status_icon %> <%= application.status_label %>
+</span>
