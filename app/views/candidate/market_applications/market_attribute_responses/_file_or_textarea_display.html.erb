@@ -8,34 +8,45 @@
     <strong>
       <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
             default: market_attribute_response.market_attribute.key.humanize) %>
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
+      <% end %>
     </strong>
   </div>
 
-  <% if text_value.present? %>
-    <div class="fr-text fr-mb-2w">
-      <strong>Description :</strong>
-      <p><%= simple_format(text_value) %></p>
-    </div>
-  <% end %>
-
-  <span class="fr-text--sm fr-text--mention-grey">
-    <% if documents.attached? %>
-      <div>
-        <% documents.each do |doc| %>
-          <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-          <%= link_to doc.filename.to_s,
-                      url_for(doc),
-                      target: "_blank", rel: "noopener" %>
-          (<%= number_to_human_size(doc.byte_size) %>)
-          <br>
-        <% end %>
+  <% unless market_attribute_response.auto? %>
+    <% if text_value.present? %>
+      <div class="fr-text fr-mb-2w">
+        <strong>Description :</strong>
+        <p><%= simple_format(text_value) %></p>
       </div>
-    <% else %>
-      <span>Aucun fichier téléchargé</span>
     <% end %>
-  </span>
 
-  <% if text_value.blank? && !documents.attached? %>
-    <p class="fr-text--sm fr-mt-2w">Aucune description ni fichier fourni.</p>
+    <span class="fr-text--sm fr-text--mention-grey">
+      <% if documents.attached? %>
+        <div>
+          <% documents.each do |doc| %>
+            <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
+            <%= link_to doc.filename.to_s,
+                        url_for(doc),
+                        target: "_blank", rel: "noopener" %>
+            (<%= number_to_human_size(doc.byte_size) %>)
+            <br>
+          <% end %>
+        </div>
+      <% else %>
+        <span>Aucun fichier téléchargé</span>
+      <% end %>
+    </span>
+
+    <% if text_value.blank? && !documents.attached? %>
+      <p class="fr-text--sm fr-mt-2w">Aucune description ni fichier fourni.</p>
+    <% end %>
   <% end %>
 </div>

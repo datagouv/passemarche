@@ -8,80 +8,92 @@
   <div class="field-layout-content">
     <strong>
       <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
+      <% end %>
     </strong>
-    <br>
 
-    <% if has_realisations %>
-      <div class="fr-mt-2w">
-        <% market_attribute_response.realisations_ordered.each_with_index do |(timestamp, realisation), index| %>
-          <% next if realisation.blank? || realisation.all? { |_, v| v.blank? } %>
+    <% unless market_attribute_response.auto? %>
+      <br>
 
-          <div class="fr-card fr-card--sm fr-mb-2w">
-            <div class="fr-card__body">
-              <div class="fr-card__content">
-                <h6 class="fr-text--sm fr-mb-1w">
-                  <span class="fr-icon-building-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                  Réalisation <%= index + 1 %>
-                </h6>
+      <% if has_realisations %>
+        <div class="fr-mt-2w">
+          <% market_attribute_response.realisations_ordered.each_with_index do |(timestamp, realisation), index| %>
+            <% next if realisation.blank? || realisation.all? { |_, v| v.blank? } %>
 
-                <% if realisation['resume'].present? %>
-                  <div class="fr-mb-1v">
-                    <strong>Résumé :</strong> <%= realisation['resume'] %>
-                  </div>
-                <% end %>
+            <div class="fr-card fr-card--sm fr-mb-2w">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <h6 class="fr-text--sm fr-mb-1w">
+                    <span class="fr-icon-building-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                    Réalisation <%= index + 1 %>
+                  </h6>
 
-                <% if realisation['date_debut'].present? || realisation['date_fin'].present? %>
-                  <div class="fr-mb-1v">
-                    <strong>Période :</strong>
-                    <% if realisation['date_debut'].present? %>
-                      Du <%= l(Date.parse(realisation['date_debut']), format: :long) %>
-                    <% end %>
-                    <% if realisation['date_fin'].present? %>
-                      au <%= l(Date.parse(realisation['date_fin']), format: :long) %>
-                    <% end %>
-                  </div>
-                <% end %>
-
-                <% if realisation['montant'].present? %>
-                  <div class="fr-mb-1v">
-                    <strong>Montant :</strong> <%= number_to_currency(realisation['montant'], unit: '€', separator: ',', delimiter: ' ', format: '%n %u', precision: 0) %>
-                  </div>
-                <% end %>
-
-                <% if realisation['description'].present? %>
-                  <div class="fr-mb-1v">
-                    <strong>Description :</strong><br>
-                    <%= simple_format(realisation['description'], class: 'fr-text--sm') %>
-                  </div>
-                <% end %>
-
-                <% if realisation['attestation_bonne_execution'].present? %>
-                  <% attestations = market_attribute_response.realisation_attestations(timestamp) %>
-                  <% if attestations.any? %>
+                  <% if realisation['resume'].present? %>
                     <div class="fr-mb-1v">
-                      <strong><%= attestations.size == 1 ? 'Attestation' : 'Attestations' %> :</strong>
-                      <ul class="fr-text--sm fr-mt-1v">
-                        <% attestations.each do |attestation| %>
-                          <li>
-                            <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                            <%= link_to attestation.filename.to_s,
-                                        url_for(attestation),
-                                        target: "_blank", rel: "noopener",
-                                        class: "fr-link" %>
-                            (<%= number_to_human_size(attestation.byte_size) %>)
-                          </li>
-                        <% end %>
-                      </ul>
+                      <strong>Résumé :</strong> <%= realisation['resume'] %>
                     </div>
                   <% end %>
-                <% end %>
+
+                  <% if realisation['date_debut'].present? || realisation['date_fin'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Période :</strong>
+                      <% if realisation['date_debut'].present? %>
+                        Du <%= l(Date.parse(realisation['date_debut']), format: :long) %>
+                      <% end %>
+                      <% if realisation['date_fin'].present? %>
+                        au <%= l(Date.parse(realisation['date_fin']), format: :long) %>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <% if realisation['montant'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Montant :</strong> <%= number_to_currency(realisation['montant'], unit: '€', separator: ',', delimiter: ' ', format: '%n %u', precision: 0) %>
+                    </div>
+                  <% end %>
+
+                  <% if realisation['description'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Description :</strong><br>
+                      <%= simple_format(realisation['description'], class: 'fr-text--sm') %>
+                    </div>
+                  <% end %>
+
+                  <% if realisation['attestation_bonne_execution'].present? %>
+                    <% attestations = market_attribute_response.realisation_attestations(timestamp) %>
+                    <% if attestations.any? %>
+                      <div class="fr-mb-1v">
+                        <strong><%= attestations.size == 1 ? 'Attestation' : 'Attestations' %> :</strong>
+                        <ul class="fr-text--sm fr-mt-1v">
+                          <% attestations.each do |attestation| %>
+                            <li>
+                              <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                              <%= link_to attestation.filename.to_s,
+                                          url_for(attestation),
+                                          target: "_blank", rel: "noopener",
+                                          class: "fr-link" %>
+                              (<%= number_to_human_size(attestation.byte_size) %>)
+                            </li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <span class="fr-text--md fr-text--mention-grey">Aucune réalisation renseignée</span>
+          <% end %>
+        </div>
+      <% else %>
+        <span class="fr-text--md fr-text--mention-grey">Aucune réalisation renseignée</span>
+      <% end %>
     <% end %>
   </div>
 </div>

@@ -16,33 +16,45 @@
         "form_fields.candidate.fields.#{key}.name",
         default: key.humanize
       ) %>
-    </strong>
-    <div class="fr-mb-3w"></div>
-    <% displayed = false %>
-    <% [["n-1", "year_1"], ["n-2", "year_2"], ["n-3", "year_3"]].each do |label, year_key| %>
-      <% year_data = value_data[year_key] || {} %>
-      <% if year_data['year'].present? || year_data['average_staff'].present? %>
-        <div class="fr-mb-2w">
-          <span class="fr-text--md"><strong>Année <%= label %> :</strong></span>
-          <span class="fr-text--md fr-ml-1w">
-            <%= year_data['year'].present? ?
-              year_data['year'] :
-              "<span class='fr-text--mention-grey'>Non renseigné</span>" %>
-          </span>
-          <span class="fr-text--md fr-ml-2w"><strong>Effectif moyen :</strong></span>
-          <span class="fr-text--md fr-ml-1w">
-            <%= year_data['average_staff'].present? ?
-              year_data['average_staff'] :
-              "<span class='fr-text--mention-grey'>Non renseigné</span>" %>
-          </span>
-        </div>
-        <% displayed = true %>
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
       <% end %>
-    <% end %>
-    <% unless displayed %>
-      <span class="fr-text--sm fr-text--mention-grey fr-mt-2w">
-        Non renseigné
-      </span>
+    </strong>
+
+    <% unless market_attribute_response.auto? %>
+      <div class="fr-mb-3w"></div>
+      <% displayed = false %>
+      <% [["n-1", "year_1"], ["n-2", "year_2"], ["n-3", "year_3"]].each do |label, year_key| %>
+        <% year_data = value_data[year_key] || {} %>
+        <% if year_data['year'].present? || year_data['average_staff'].present? %>
+          <div class="fr-mb-2w">
+            <span class="fr-text--md"><strong>Année <%= label %> :</strong></span>
+            <span class="fr-text--md fr-ml-1w">
+              <%= year_data['year'].present? ?
+                year_data['year'] :
+                "<span class='fr-text--mention-grey'>Non renseigné</span>" %>
+            </span>
+            <span class="fr-text--md fr-ml-2w"><strong>Effectif moyen :</strong></span>
+            <span class="fr-text--md fr-ml-1w">
+              <%= year_data['average_staff'].present? ?
+                year_data['average_staff'] :
+                "<span class='fr-text--mention-grey'>Non renseigné</span>" %>
+            </span>
+          </div>
+          <% displayed = true %>
+        <% end %>
+      <% end %>
+      <% unless displayed %>
+        <span class="fr-text--sm fr-text--mention-grey fr-mt-2w">
+          Non renseigné
+        </span>
+      <% end %>
     <% end %>
   </div>
 </div>

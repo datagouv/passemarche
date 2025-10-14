@@ -8,26 +8,38 @@
     <strong>
       <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
         default: market_attribute_response.market_attribute.key.humanize) %>
-    </strong>
-    <br>
-    <% if checked %>
-      <span class="fr-badge fr-badge--success badge--no-background" aria-hidden="true"></span>
-      <span class="fr-text-md">Je certifie que mon entreprise est à jour de ses obligations d’assurance</span>
-    <% else  %>
-      <span>Non certifié</span>
-    <% end %>
-
-    <span class="fr-text-md fr-text--mention-grey">
-      <% if checked && documents.attached? %>
-        <% documents.each do |document| %>
-          <div>
-            <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-            <%= link_to document.filename.to_s,
-                        url_for(document),
-                        target: "_blank", rel: "noopener" %>
-          </div>
-        <% end %>
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
       <% end %>
-    </span>
+    </strong>
+
+    <% unless market_attribute_response.auto? %>
+      <br>
+      <% if checked %>
+        <span class="fr-badge fr-badge--success badge--no-background" aria-hidden="true"></span>
+        <span class="fr-text-md">Je certifie que mon entreprise est à jour de ses obligations d'assurance</span>
+      <% else  %>
+        <span>Non certifié</span>
+      <% end %>
+
+      <span class="fr-text-md fr-text--mention-grey">
+        <% if checked && documents.attached? %>
+          <% documents.each do |document| %>
+            <div>
+              <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
+              <%= link_to document.filename.to_s,
+                          url_for(document),
+                          target: "_blank", rel: "noopener" %>
+            </div>
+          <% end %>
+        <% end %>
+      </span>
+    <% end %>
   </div>
 </div>

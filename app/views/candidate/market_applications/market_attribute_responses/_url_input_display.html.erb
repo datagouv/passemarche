@@ -7,15 +7,27 @@
     <strong>
       <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
             default: market_attribute_response.market_attribute.key.humanize) %>
-    </strong>
-    <br>
-
-    <span class="fr-text--sm fr-text--mention-grey">
-      <% if text_value.present? %>
-        <%= link_to text_value, text_value, target: "_blank", rel: "noopener" %>
-      <% else %>
-        Non renseigné
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
       <% end %>
-    </span>
+    </strong>
+
+    <% unless market_attribute_response.auto? %>
+      <br>
+
+      <span class="fr-text--sm fr-text--mention-grey">
+        <% if text_value.present? %>
+          <%= link_to text_value, text_value, target: "_blank", rel: "noopener" %>
+        <% else %>
+          Non renseigné
+        <% end %>
+      </span>
+    <% end %>
   </div>
 </div>

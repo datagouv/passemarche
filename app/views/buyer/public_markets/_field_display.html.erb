@@ -5,7 +5,7 @@
   wrapper_classes ||= ""
   content_classes ||= "fr-pt-4v fr-pb-4v"
   
-  source_type = if field&.from_api
+  source_type = if field&.from_api?
                   'authentic_source'
                 else
                   'honor_declaration'

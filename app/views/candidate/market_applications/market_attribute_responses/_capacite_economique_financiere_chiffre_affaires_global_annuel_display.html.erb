@@ -8,63 +8,75 @@
   <div class="field-layout-content">
     <strong>
       <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
+      <% end %>
     </strong>
-    <br>
 
-    <% if has_data %>
-      <div class="fr-table fr-mt-2w">
-        <div class="fr-table__wrapper">
-          <div class="fr-table__container">
-            <div class="fr-table__content">
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.year') %></th>
-                    <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.turnover') %></th>
-                    <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.market_percentage') %></th>
-                    <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.fiscal_year_end') %></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% %w[year_1 year_2 year_3].each_with_index do |year_key, index| %>
-                    <% year_data = value_data[year_key] || {} %>
-                    <% if year_data.present? %>
-                      <tr>
-                        <td>
-                          <strong><%= t("candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.year_labels.#{year_key}", default: "Année #{index + 1}") %></strong>
-                        </td>
-                        <td>
-                          <% if year_data['turnover'].present? %>
-                            <%= number_with_delimiter(year_data['turnover'], delimiter: ' ') %> €
-                          <% else %>
-                            <span class="fr-text--mention-grey">Non renseigné</span>
-                          <% end %>
-                        </td>
-                        <td>
-                          <% if year_data['market_percentage'].present? %>
-                            <%= year_data['market_percentage'] %> %
-                          <% else %>
-                            <span class="fr-text--mention-grey">Non renseigné</span>
-                          <% end %>
-                        </td>
-                        <td>
-                          <% if year_data['fiscal_year_end'].present? %>
-                            <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
-                          <% else %>
-                            <span class="fr-text--mention-grey">Non renseigné</span>
-                          <% end %>
-                        </td>
-                      </tr>
+    <% unless market_attribute_response.auto? %>
+      <br>
+
+      <% if has_data %>
+        <div class="fr-table fr-mt-2w">
+          <div class="fr-table__wrapper">
+            <div class="fr-table__container">
+              <div class="fr-table__content">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.year') %></th>
+                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.turnover') %></th>
+                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.market_percentage') %></th>
+                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.fiscal_year_end') %></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% %w[year_1 year_2 year_3].each_with_index do |year_key, index| %>
+                      <% year_data = value_data[year_key] || {} %>
+                      <% if year_data.present? %>
+                        <tr>
+                          <td>
+                            <strong><%= t("candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.year_labels.#{year_key}", default: "Année #{index + 1}") %></strong>
+                          </td>
+                          <td>
+                            <% if year_data['turnover'].present? %>
+                              <%= number_with_delimiter(year_data['turnover'], delimiter: ' ') %> €
+                            <% else %>
+                              <span class="fr-text--mention-grey">Non renseigné</span>
+                            <% end %>
+                          </td>
+                          <td>
+                            <% if year_data['market_percentage'].present? %>
+                              <%= year_data['market_percentage'] %> %
+                            <% else %>
+                              <span class="fr-text--mention-grey">Non renseigné</span>
+                            <% end %>
+                          </td>
+                          <td>
+                            <% if year_data['fiscal_year_end'].present? %>
+                              <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
+                            <% else %>
+                              <span class="fr-text--mention-grey">Non renseigné</span>
+                            <% end %>
+                          </td>
+                        </tr>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    <% else %>
-      <span class="fr-text--sm fr-text--mention-grey">Non renseigné</span>
+      <% else %>
+        <span class="fr-text--sm fr-text--mention-grey">Non renseigné</span>
+      <% end %>
     <% end %>
   </div>
 </div>

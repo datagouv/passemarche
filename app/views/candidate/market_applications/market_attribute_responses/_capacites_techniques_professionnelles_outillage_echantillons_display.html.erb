@@ -8,55 +8,67 @@
   <div class="field-layout-content">
     <strong>
       <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+      <% if market_attribute_response.auto? %>
+        <span class="fr-badge fr-badge--success fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_from_api') %>
+        </span>
+      <% elsif market_attribute_response.manual_after_api_failure? %>
+        <span class="fr-badge fr-badge--warning fr-ml-1w">
+          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
+        </span>
+      <% end %>
     </strong>
-    <br>
 
-    <% if has_echantillons %>
-      <div class="fr-mt-2w">
-        <% market_attribute_response.echantillons_ordered.each_with_index do |(timestamp, echantillon), index| %>
-          <% next if echantillon.blank? || echantillon.all? { |_, v| v.blank? } %>
+    <% unless market_attribute_response.auto? %>
+      <br>
 
-          <div class="fr-card fr-card--sm fr-mb-2w">
-            <div class="fr-card__body">
-              <div class="fr-card__content">
-                <h6 class="fr-text--sm fr-mb-1w">
-                  <span class="fr-icon-image-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                  Échantillon <%= index + 1 %>
-                </h6>
+      <% if has_echantillons %>
+        <div class="fr-mt-2w">
+          <% market_attribute_response.echantillons_ordered.each_with_index do |(timestamp, echantillon), index| %>
+            <% next if echantillon.blank? || echantillon.all? { |_, v| v.blank? } %>
 
-                <% if echantillon['description'].present? %>
-                  <div class="fr-mb-1v">
-                    <strong>Description :</strong><br>
-                    <%= simple_format(echantillon['description'], class: 'fr-text--sm') %>
-                  </div>
-                <% end %>
+            <div class="fr-card fr-card--sm fr-mb-2w">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <h6 class="fr-text--sm fr-mb-1w">
+                    <span class="fr-icon-image-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                    Échantillon <%= index + 1 %>
+                  </h6>
 
-                <% if echantillon['fichiers'].present? %>
-                  <% fichiers = market_attribute_response.echantillon_fichiers(timestamp) %>
-                  <% if fichiers.any? %>
-                    <div class="fr-mb-1v fr-text--sm">
-                      <strong><%= fichiers.size == 1 ? 'Fichier' : 'Fichiers' %> :</strong>
-                      <div class="fr-mt-1v">
-                        <% fichiers.each do |fichier| %>
-                            <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                            <%= link_to fichier.filename.to_s,
-                                        url_for(fichier),
-                                        target: "_blank", rel: "noopener",
-                                        class: "fr-link fr-text--sm" %>
-                            (<%= number_to_human_size(fichier.byte_size) %>)
-                            </br>
-                        <% end %>
-                      </div>
+                  <% if echantillon['description'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Description :</strong><br>
+                      <%= simple_format(echantillon['description'], class: 'fr-text--sm') %>
                     </div>
                   <% end %>
-                <% end %>
+
+                  <% if echantillon['fichiers'].present? %>
+                    <% fichiers = market_attribute_response.echantillon_fichiers(timestamp) %>
+                    <% if fichiers.any? %>
+                      <div class="fr-mb-1v fr-text--sm">
+                        <strong><%= fichiers.size == 1 ? 'Fichier' : 'Fichiers' %> :</strong>
+                        <div class="fr-mt-1v">
+                          <% fichiers.each do |fichier| %>
+                              <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                              <%= link_to fichier.filename.to_s,
+                                          url_for(fichier),
+                                          target: "_blank", rel: "noopener",
+                                          class: "fr-link fr-text--sm" %>
+                              (<%= number_to_human_size(fichier.byte_size) %>)
+                              </br>
+                          <% end %>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <span class="fr-text--sm fr-text--mention-grey">Aucun échantillon renseigné</span>
+          <% end %>
+        </div>
+      <% else %>
+        <span class="fr-text--sm fr-text--mention-grey">Aucun échantillon renseigné</span>
+      <% end %>
     <% end %>
   </div>
 </div>
