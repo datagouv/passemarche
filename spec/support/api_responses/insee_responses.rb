@@ -123,5 +123,21 @@ module ApiResponses
     def insee_etablissement_success_data(siret: '41816609600069', overrides: {})
       JSON.parse(insee_etablissement_success_response(siret:, overrides:))
     end
+
+    def insee_invalid_json_response
+      'This is not valid JSON at all { malformed'
+    end
+
+    def insee_empty_response
+      ''
+    end
+
+    def insee_response_without_data_key
+      {
+        meta: {
+          date_derniere_mise_a_jour: 1_704_067_200
+        }
+      }.to_json
+    end
   end
 end

@@ -188,6 +188,105 @@ RSpec.describe Insee, type: :organizer do
       end
     end
 
+    context 'when the API returns invalid JSON' do
+      before do
+        stub_request(:get, api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013',
+              'object' => 'Réponse appel offre'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: insee_invalid_json_response,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'sets an error message about invalid JSON' do
+        result = subject
+        expect(result.error).to eq('Invalid JSON response')
+      end
+
+      it 'does not create bundled_data' do
+        result = subject
+        expect(result.bundled_data).to be_nil
+      end
+    end
+
+    context 'when the API returns empty response body' do
+      before do
+        stub_request(:get, api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013',
+              'object' => 'Réponse appel offre'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: insee_empty_response,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'sets an error message about invalid JSON' do
+        result = subject
+        expect(result.error).to eq('Invalid JSON response')
+      end
+
+      it 'does not create bundled_data' do
+        result = subject
+        expect(result.bundled_data).to be_nil
+      end
+    end
+
+    context 'when the API returns JSON without data key' do
+      before do
+        stub_request(:get, api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013',
+              'object' => 'Réponse appel offre'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: insee_response_without_data_key,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'sets an error message about invalid JSON' do
+        result = subject
+        expect(result.error).to eq('Invalid JSON response')
+      end
+
+      it 'does not create bundled_data' do
+        result = subject
+        expect(result.bundled_data).to be_nil
+      end
+    end
+
     context 'when called with market_application (full integration)' do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:, siret:) }
