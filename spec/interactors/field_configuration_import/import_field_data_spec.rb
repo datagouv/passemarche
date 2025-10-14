@@ -27,7 +27,6 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             category_key: 'test_identity',
             subcategory_key: 'test_basic',
             required: true,
-            from_api: false,
             deleted_at: nil
           },
           applicable_market_types: ['supplies'])
@@ -59,7 +58,6 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             category_key: 'new_category',
             subcategory_key: 'test_basic',
             required: true,
-            from_api: false,
             deleted_at: nil
           },
           applicable_market_types: ['supplies'])
@@ -85,7 +83,6 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             category_key: 'test_identity',
             subcategory_key: 'test_basic',
             required: true,
-            from_api: false,
             deleted_at: nil
           },
           applicable_market_types: ['supplies'])

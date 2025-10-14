@@ -61,6 +61,12 @@ RSpec.describe MapApiData, type: :interactor do
         expect(responses.map(&:type).uniq).to eq(['TextInput'])
       end
 
+      it 'sets source to auto for new responses' do
+        subject
+        responses = market_application.market_attribute_responses.reload
+        expect(responses.map(&:source).uniq).to eq(['auto'])
+      end
+
       context 'when responses already exist' do
         before do
           create(:market_attribute_response,
@@ -74,6 +80,34 @@ RSpec.describe MapApiData, type: :interactor do
         end
 
         it 'updates the value of existing response' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
+          expect(response.text).to eq('41816609600069')
+        end
+
+        it 'sets source to auto for updated responses' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
+          expect(response.source).to eq('auto')
+        end
+      end
+
+      context 'when response has manual_after_api_failure source' do
+        before do
+          create(:market_attribute_response,
+            market_application:,
+            market_attribute: siret_attribute,
+            value: { 'text' => 'manually_entered' },
+            source: :manual_after_api_failure)
+        end
+
+        it 'does not change source from manual_after_api_failure' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
+          expect(response.source).to eq('manual_after_api_failure')
+        end
+
+        it 'still updates the value even with manual_after_api_failure source' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
           expect(response.text).to eq('41816609600069')
