@@ -184,6 +184,7 @@ fr:
       market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
+      insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"
       steps:
         market_and_company_information: "Les informations du marché et de votre entreprise"
         exclusion_criteria: "Les motifs d'exclusion"
