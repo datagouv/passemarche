@@ -123,7 +123,6 @@ class CsvRowData
       subcategory_key:,
       required: required?,
       input_type: mapped_input_type,
-      from_api: from_api?,
       api_name: api_name.presence,
       api_key: api_key.presence,
       deleted_at: nil

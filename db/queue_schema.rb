@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_13_131631) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_14_094858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_131631) do
     t.jsonb "value", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "source", default: 0, null: false
     t.index ["market_application_id", "market_attribute_id"], name: "idx_on_market_application_id_market_attribute_id_5a6e8c85b1", unique: true
     t.index ["market_application_id"], name: "index_market_attribute_responses_on_market_application_id"
     t.index ["market_attribute_id"], name: "index_market_attribute_responses_on_market_attribute_id"
@@ -97,7 +98,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_131631) do
     t.integer "input_type", default: 0, null: false
     t.string "category_key", null: false
     t.string "subcategory_key", null: false
-    t.boolean "from_api", default: false, null: false
     t.boolean "required", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
