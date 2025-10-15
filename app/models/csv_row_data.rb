@@ -21,7 +21,7 @@ class CsvRowData
   attribute :obligatoire, :string
 
   # API-related attributes (using exact CSV column names)
-  attribute :'API en question ', :string
+  attribute :API, :string
   attribute :"Informations récupérées par l'API", :string
 
   SUPPORTED_TYPES = %w[
@@ -104,7 +104,7 @@ class CsvRowData
   end
 
   def api_name
-    public_send(:'API en question ')&.strip
+    self.API&.strip
   end
 
   def api_key
