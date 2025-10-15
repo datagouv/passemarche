@@ -16,6 +16,8 @@ RSpec.describe Insee::BuildResource, type: :interactor do
       it_behaves_like 'a successful resource builder'
       it_behaves_like 'resource field extraction', :siret, '41816609600069'
       it_behaves_like 'resource field extraction', :category, 'PME'
+      it_behaves_like 'resource field extraction', :main_activity, 'Conseil en systèmes et logiciels informatiques'
+      it_behaves_like 'resource field extraction', :social_reason, 'OCTO TECHNOLOGY'
     end
 
     context 'with different category values' do
@@ -75,6 +77,82 @@ RSpec.describe Insee::BuildResource, type: :interactor do
       let(:siret) { '13002526500013' }
 
       it_behaves_like 'resource field extraction', :siret, '13002526500013'
+    end
+
+    context 'with different main_activity values' do
+      context 'when main_activity has a different label' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                activite_principale: {
+                  code: '4711F',
+                  libelle: 'Hypermarchés',
+                  nomenclature: 'NAFRev2'
+                }
+              }
+            }
+          )
+        end
+
+        it_behaves_like 'resource field extraction', :main_activity, 'Hypermarchés'
+      end
+
+      context 'when main_activity is null' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                activite_principale: nil
+              }
+            }
+          )
+        end
+
+        it_behaves_like 'resource field extraction', :main_activity, nil
+      end
+    end
+
+    context 'with different social_reason values' do
+      context 'when social_reason has a different value' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                unite_legale: {
+                  personne_morale_attributs: {
+                    raison_sociale: 'EXEMPLE SAS'
+                  }
+                }
+              }
+            }
+          )
+        end
+
+        it_behaves_like 'resource field extraction', :social_reason, 'EXEMPLE SAS'
+      end
+
+      context 'when social_reason is null' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                unite_legale: {
+                  personne_morale_attributs: {
+                    raison_sociale: nil
+                  }
+                }
+              }
+            }
+          )
+        end
+
+        it_behaves_like 'resource field extraction', :social_reason, nil
+      end
     end
 
     context 'when the response contains invalid JSON' do
