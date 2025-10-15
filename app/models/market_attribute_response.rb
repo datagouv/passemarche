@@ -69,19 +69,6 @@ class MarketAttributeResponse < ApplicationRecord
     name.demodulize
   end
 
-  # Helper methods for source-based logic
-  def manually_filled?
-    manual? || manual_after_api_failure?
-  end
-
-  def should_display_badge?
-    auto? || manual_after_api_failure?
-  end
-
-  def from_api_source?
-    auto?
-  end
-
   private
 
   def set_type_from_market_attribute
