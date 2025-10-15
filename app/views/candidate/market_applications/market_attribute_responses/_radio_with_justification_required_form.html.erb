@@ -3,6 +3,26 @@
   radio_choice = market_attribute_response.radio_choice || 'no'
 %>
 
+<% if market_attribute_response.auto? %>
+  <%# Data filled automatically from API - show indicator but not the value %>
+  <%= form.fields_for :market_attribute_responses, market_attribute_response,
+                      child_index: market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= t('candidate.market_applications.auto_filled_message') %>
+    </p>
+  </div>
+<% else %>
+  <%# Manual input or manual after API failure - show normal form %>
 <div class="fr-input-group">
   <%= form.fields_for :market_attribute_responses, market_attribute_response do |response_form| %>
     <%= response_form.hidden_field :id %>
@@ -115,3 +135,4 @@
     <% end %>
   <% end %>
 </div>
+<% end %>

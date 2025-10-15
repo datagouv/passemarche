@@ -1,36 +1,60 @@
 <%
   required = market_attribute_response.market_attribute.required?
   text_value = market_attribute_response.text || ''
+  label_text = t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name")
 %>
 
-<div class="fr-input-group">
-  <h6 class="fr-mb-2w fr-text--md">
-    <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name") %>
-  </h6>
-  <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
-    <span class="fr-hint-text fr-mb-2w fr-text--sm">
-      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
-    </span>
-  <% end %>
-
+<% if market_attribute_response.auto? %>
+  <%# Data filled automatically from API - show indicator but not the value %>
   <%= form.fields_for :market_attribute_responses, market_attribute_response,
                       child_index: market_attribute_response.id do |response_form| %>
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
     <%= response_form.hidden_field :type %>
-
-    <%= response_form.label :text, "URL", class: "fr-label", for: "url-#{market_attribute_response.id}" %>
-    <%= response_form.text_field :text,
-          value: text_value,
-          id: "url-#{market_attribute_response.id}",
-          class: "fr-input#{' fr-input--error' if market_attribute_response.errors[:text].any?}",
-          required: required,
-          placeholder: "https://..." %>
-
-    <% if market_attribute_response.errors[:text].any? %>
-      <p class="fr-error-text">
-        <%= market_attribute_response.errors[:text].first %>
-      </p>
-    <% end %>
+    <%= response_form.hidden_field :text, value: text_value %>
   <% end %>
-</div>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= label_text %>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= t('candidate.market_applications.auto_filled_message') %>
+    </p>
+  </div>
+<% else %>
+  <%# Manual input or manual after API failure %>
+  <div class="fr-input-group">
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= label_text %>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
+    </h6>
+    <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+      <span class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      </span>
+    <% end %>
+
+    <%= form.fields_for :market_attribute_responses, market_attribute_response,
+                        child_index: market_attribute_response.id do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+
+      <%= response_form.label :text, "URL", class: "fr-label", for: "url-#{market_attribute_response.id}" %>
+      <%= response_form.text_field :text,
+            value: text_value,
+            id: "url-#{market_attribute_response.id}",
+            class: "fr-input#{' fr-input--error' if market_attribute_response.errors[:text].any?}",
+            required: required,
+            placeholder: "https://..." %>
+
+      <% if market_attribute_response.errors[:text].any? %>
+        <p class="fr-error-text">
+          <%= market_attribute_response.errors[:text].first %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

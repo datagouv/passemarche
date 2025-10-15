@@ -12,45 +12,51 @@
       <div class="fr-col">
         <strong>
           <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
+          <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
         </strong>
-        <br>
 
-        <% if radio_choice == 'yes' %>
-          <% if text.present? %>
-            <div class="fr-mb-2w">
-              <strong class="fr-text--sm">Réponse :</strong><br>
-              <%= simple_format(text, class: "fr-text--sm") %>
-            </div>
-          <% end %>
+        <% unless market_attribute_response.auto? %>
+          <br>
 
-          <% if documents.attached? %>
-            <div>
-              <strong class="fr-text--sm">Documents joints :</strong><br>
-              <% documents.each do |doc| %>
-                <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-                <%= link_to doc.filename.to_s,
-                            url_for(doc),
-                            target: "_blank",
-                            rel: "noopener",
-                            class: "fr-text--sm"%>
-                (<%= number_to_human_size(doc.byte_size) %>)
-                <br>
-              <% end %>
-            </div>
-          <% end %>
+          <% if radio_choice == 'yes' %>
+            <% if text.present? %>
+              <div class="fr-mb-2w">
+                <strong class="fr-text--sm">Réponse :</strong><br>
+                <%= simple_format(text, class: "fr-text--sm") %>
+              </div>
+            <% end %>
 
-          <% if text.blank? && !documents.attached? %>
-            <span class="fr-text--md">Aucune information complémentaire fournie</span>
+            <% if documents.attached? %>
+              <div>
+                <strong class="fr-text--sm">Documents joints :</strong><br>
+                <% documents.each do |doc| %>
+                  <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
+                  <%= link_to doc.filename.to_s,
+                              url_for(doc),
+                              target: "_blank",
+                              rel: "noopener",
+                              class: "fr-text--sm"%>
+                  (<%= number_to_human_size(doc.byte_size) %>)
+                  <br>
+                <% end %>
+              </div>
+            <% end %>
+
+            <% if text.blank? && !documents.attached? %>
+              <span class="fr-text--md">Aucune information complémentaire fournie</span>
+            <% end %>
           <% end %>
         <% end %>
       </div>
 
       <!-- Colonne 2 : badge Oui/Non -->
       <div class="fr-col-auto" style="display: flex; align-items: flex-start; justify-content: flex-end;">
-        <% if radio_choice == 'yes' %>
-          <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>
-        <% else %>
-          <div class="fr-badge fr-badge--sm">Non</div>
+        <% unless market_attribute_response.auto? %>
+          <% if radio_choice == 'yes' %>
+            <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>
+          <% else %>
+            <div class="fr-badge fr-badge--sm">Non</div>
+          <% end %>
         <% end %>
       </div>
     </div>

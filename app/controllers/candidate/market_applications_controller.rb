@@ -87,8 +87,29 @@ module Candidate
 
       return if result.success?
 
+      # Mark INSEE attributes as needing manual input after API failure
+      mark_api_attributes_as_manual_after_failure('Insee')
+
       flash.now[:alert] = t('candidate.market_applications.insee_api_error',
         error: result.error)
+    end
+
+    def mark_api_attributes_as_manual_after_failure(api_name)
+      # Find all attributes from this API for this market
+      api_attributes = @market_application.public_market.market_attributes
+        .where(api_name:)
+
+      # Mark responses as manual_after_api_failure so candidate can fill them
+      api_attributes.each do |attribute|
+        response = @market_application.market_attribute_responses
+          .find_or_initialize_by(market_attribute: attribute)
+
+        # Only mark as manual_after_api_failure if not already set
+        next if response.manual_after_api_failure?
+
+        response.source = :manual_after_api_failure
+        response.save! if response.persisted? || response.changed?
+      end
     end
 
     def handle_summary_completion

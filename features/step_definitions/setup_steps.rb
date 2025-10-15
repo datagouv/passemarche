@@ -36,7 +36,8 @@ def create_siret_attribute
     attr.input_type = :text_input
     attr.category_key = 'test_identite_entreprise'
     attr.subcategory_key = 'test_identite_entreprise_identification'
-    attr.from_api = true
+    attr.api_name = 'Insee'
+    attr.api_key = 'siret'
     attr.required = true
   end
 end
@@ -46,7 +47,6 @@ def create_company_name_attribute
     attr.input_type = :text_input
     attr.category_key = 'test_identite_entreprise'
     attr.subcategory_key = 'test_identite_entreprise_identification'
-    attr.from_api = true
     attr.required = true
   end
 end
@@ -56,7 +56,6 @@ def create_criminal_conviction_attribute
     attr.input_type = :checkbox
     attr.category_key = 'test_motifs_exclusion_sociaux'
     attr.subcategory_key = 'test_motifs_exclusion_sociaux_declarations'
-    attr.from_api = false
     attr.required = true
   end
 end
@@ -66,7 +65,6 @@ def create_annual_turnover_attribute
     attr.input_type = :file_upload
     attr.category_key = 'test_capacite_economique_financiere'
     attr.subcategory_key = 'test_capacite_economique_financiere_bilans'
-    attr.from_api = false
     attr.required = false
   end
 end
@@ -76,7 +74,6 @@ def create_prior_contract_breach_attribute
     attr.input_type = :checkbox
     attr.category_key = 'test_motifs_exclusion_appreciation_acheteur'
     attr.subcategory_key = 'test_motifs_exclusion_appreciation_acheteur_discretionnaire'
-    attr.from_api = false
     attr.required = false
   end
 end
@@ -86,7 +83,6 @@ def create_undue_influence_attribute
     attr.input_type = :checkbox
     attr.category_key = 'test_motifs_exclusion_appreciation_acheteur'
     attr.subcategory_key = 'test_motifs_exclusion_appreciation_acheteur_discretionnaire'
-    attr.from_api = false
     attr.required = false
   end
 end
@@ -96,7 +92,6 @@ def create_defense_supply_chain_attribute
     attr.input_type = :file_upload
     attr.category_key = 'test_capacites_techniques_professionnelles'
     attr.subcategory_key = 'test_capacites_techniques_professionnelles_certificats'
-    attr.from_api = false
     attr.required = true
   end
 end

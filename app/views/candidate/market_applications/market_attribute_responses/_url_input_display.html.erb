@@ -7,15 +7,19 @@
     <strong>
       <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
             default: market_attribute_response.market_attribute.key.humanize) %>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
-    <br>
 
-    <span class="fr-text--sm fr-text--mention-grey">
-      <% if text_value.present? %>
-        <%= link_to text_value, text_value, target: "_blank", rel: "noopener" %>
-      <% else %>
-        Non renseigné
-      <% end %>
-    </span>
+    <% unless market_attribute_response.auto? %>
+      <br>
+
+      <span class="fr-text--sm fr-text--mention-grey">
+        <% if text_value.present? %>
+          <%= link_to text_value, text_value, target: "_blank", rel: "noopener" %>
+        <% else %>
+          Non renseigné
+        <% end %>
+      </span>
+    <% end %>
   </div>
 </div>

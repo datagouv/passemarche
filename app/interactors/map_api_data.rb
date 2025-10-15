@@ -26,7 +26,8 @@ class MapApiData < ApplicationInteractor
 
   def api_attributes
     context.market_application.public_market.market_attributes
-      .where(api_name: context.api_name, from_api: true)
+      .where(api_name: context.api_name)
+      .where.not(api_name: nil)
   end
 
   def create_or_update_response(market_attribute)
@@ -34,6 +35,8 @@ class MapApiData < ApplicationInteractor
     value = extract_value_from_resource(market_attribute)
 
     response.text = value
+    # Set source to auto unless it's already manual_after_api_failure
+    response.source = :auto unless response.manual_after_api_failure?
     response.save!
   end
 

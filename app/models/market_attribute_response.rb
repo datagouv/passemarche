@@ -2,6 +2,16 @@ class MarketAttributeResponse < ApplicationRecord
   belongs_to :market_application
   belongs_to :market_attribute
 
+  # Source tracking for data origin
+  # manual: filled by candidate manually
+  # auto: automatically filled from API
+  # manual_after_api_failure: filled manually after API call failed
+  enum :source, {
+    manual: 0,
+    auto: 1,
+    manual_after_api_failure: 2
+  }
+
   # Simple mapping from input_type to STI class name
   INPUT_TYPE_MAP = {
     'file_upload' => 'FileUpload',

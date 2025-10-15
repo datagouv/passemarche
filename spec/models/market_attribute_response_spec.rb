@@ -74,4 +74,22 @@ RSpec.describe MarketAttributeResponse, type: :model do
       expect(MarketAttributeResponse::FileUpload.sti_name).to eq('FileUpload')
     end
   end
+
+  describe 'source enum' do
+    let(:response) { build(:market_attribute_response_text_input) }
+
+    it 'has manual as default value' do
+      expect(response.source).to eq('manual')
+    end
+
+    it 'can be set to auto' do
+      response.source = :auto
+      expect(response).to be_auto
+    end
+
+    it 'can be set to manual_after_api_failure' do
+      response.source = :manual_after_api_failure
+      expect(response).to be_manual_after_api_failure
+    end
+  end
 end

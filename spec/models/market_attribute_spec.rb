@@ -37,7 +37,7 @@ RSpec.describe MarketAttribute, type: :model do
   describe 'scopes' do
     let!(:required_attribute) { create(:market_attribute, required: true) }
     let!(:optional_attribute) { create(:market_attribute, required: false) }
-    let!(:api_attribute) { create(:market_attribute, from_api: true) }
+    let!(:api_attribute) { create(:market_attribute, api_name: 'Insee', api_key: 'siret') }
     let!(:inactive_attribute) { create(:market_attribute, :inactive) }
 
     describe '.required' do
@@ -55,7 +55,7 @@ RSpec.describe MarketAttribute, type: :model do
     end
 
     describe '.from_api' do
-      it 'returns only attributes from API' do
+      it 'returns only attributes with api_name set' do
         expect(MarketAttribute.from_api).to include(api_attribute)
         expect(MarketAttribute.from_api).not_to include(required_attribute)
       end
@@ -79,6 +79,23 @@ RSpec.describe MarketAttribute, type: :model do
         expect(ordered.first).to eq(economic_attr)
         expect(ordered.second).to eq(company_attr)
       end
+    end
+  end
+
+  describe '#from_api?' do
+    it 'returns true when api_name is present' do
+      attribute = build(:market_attribute, api_name: 'Insee', api_key: 'siret')
+      expect(attribute).to be_from_api
+    end
+
+    it 'returns false when api_name is nil' do
+      attribute = build(:market_attribute, api_name: nil)
+      expect(attribute).not_to be_from_api
+    end
+
+    it 'returns false when api_name is blank' do
+      attribute = build(:market_attribute, api_name: '')
+      expect(attribute).not_to be_from_api
     end
   end
 end

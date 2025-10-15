@@ -29,6 +29,11 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
 
+    # Stub ActiveStorage download to prevent file system access in tests
+    allow_any_instance_of(ActiveStorage::Blob).to receive(:download).and_return('fake pdf content')
+
+    allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))
+
     # Stub INSEE API calls for general tests (default SIRET)
     stub_request(:get, %r{https://.*entreprise\.api\.gouv\.fr/v3/insee/sirene/etablissements/})
       .with(
@@ -263,7 +268,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             )
         end
 
-        it 'still saves SIRET but does not create responses and shows error' do
+        it 'still saves SIRET and creates responses marked as manual_after_api_failure' do
           patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
             params: { market_application: { siret: valid_siret } }
 
@@ -273,7 +278,11 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
           market_application.reload
           expect(market_application.siret).to eq(valid_siret)
-          expect(market_application.market_attribute_responses.count).to eq(0)
+          expect(market_application.market_attribute_responses.count).to eq(2)
+
+          # Verify responses are marked as manual_after_api_failure
+          responses = market_application.market_attribute_responses.reload
+          expect(responses.map(&:source).uniq).to eq(['manual_after_api_failure'])
         end
       end
     end

@@ -6,12 +6,16 @@
 <div class="field-layout-container">
   <div class="field-layout-content">
     <strong>
-      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name", 
+      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
             default: market_attribute_response.market_attribute.key.humanize) %>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
-    <br>
-    <span class="fr-text--sm fr-text--mention-grey">
-      <%= display_value %>
-    </span>
+
+    <% unless market_attribute_response.auto? %>
+      <br>
+      <span class="fr-text--sm fr-text--mention-grey">
+        <%= display_value %>
+      </span>
+    <% end %>
   </div>
 </div>
