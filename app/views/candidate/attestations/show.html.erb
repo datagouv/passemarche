@@ -2,7 +2,9 @@
 <html data-context="attestation-pdf">
 <head>
   <meta charset="utf-8">
-  <%= wicked_pdf_stylesheet_link_tag 'attestation_summary_pdf' %>
+  <style type="text/css">
+    <%= File.read(Rails.root.join('lib/assets/pdf_stylesheets/attestation_summary_pdf.css')) %>
+  </style>
 </head>
 <body>
   <%
