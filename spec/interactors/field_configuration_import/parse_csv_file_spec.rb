@@ -86,5 +86,33 @@ RSpec.describe FieldConfigurationImport::ParseCsvFile, type: :interactor do
         expect(interactor.message).to eq('Invalid CSV: expected at least 5 lines')
       end
     end
+
+    context 'with unsanitized keys' do
+      before do
+        csv_content = <<~CSV
+          ,,,,,,
+          ,,,,,,
+          ,,,,,,
+          key,category_key,subcategory_key,label,description,subcategory_label,subcategory_description,type,import,apifiable,services,fournitures,travaux,défense
+          Capacités_techniques_professionnelles,capacites_techniques_professionnelles_Assurance_qualité,capacites_techniques_Professionnelles_assurance_qualite_certifications_qualité_environnement,Capacités techniques et professionnelles des candidats,"Dispositif d'assurance de la qualité, sécurité et normes de gestion environnementale",Certifications de qualité et de protection de l'environnement,"Le candidat devra fournir des certificats délivrés par des organismes indépendants et accrédités prouvant le respect des standards de qualité et de protection de l'environnement...",file_or_textarea,,non,non,oui,oui,oui,oui,oui
+        CSV
+        File.write(csv_file_path, csv_content)
+      end
+
+      it 'sanitizes the subcategory_key to snake_case without accents' do
+        interactor
+        expect(
+          context.parsed_rows.first.category_key
+        ).to eq('capacites_techniques_professionnelles_assurance_qualite')
+        expect(
+          context.parsed_rows.first.subcategory_key
+        ).to eq(
+          'capacites_techniques_professionnelles_assurance_qualite_certifications_qualite_environnement'
+        )
+        expect(
+          context.parsed_rows.first.key
+        ).to eq('capacites_techniques_professionnelles')
+      end
+    end
   end
 end

@@ -53,11 +53,20 @@ class FieldConfigurationImport::ParseCsvFile < ApplicationInteractor
 
   def build_csv_row(row_data, index)
     raw_data = context.headers.zip(row_data).to_h
+
+    sanitize_keys!(raw_data)
+
     row = CsvRowData.new(raw_data, index + DATA_START_INDEX + 1)
 
     collect_validation_errors(row) unless row.valid?
 
     row
+  end
+
+  def sanitize_keys!(raw_data)
+    %w[key category_key subcategory_key].each do |col|
+      raw_data[col] = raw_data[col].to_s.parameterize.underscore if raw_data[col].present?
+    end
   end
 
   def handle_malformed_row(index, error_message)
