@@ -16,15 +16,7 @@
         "form_fields.candidate.fields.#{key}.name",
         default: key.humanize
       ) %>
-      <% if market_attribute_response.auto? %>
-        <span class="fr-badge fr-badge--success fr-ml-1w">
-          <%= t('candidate.market_applications.badges.data_from_api') %>
-        </span>
-      <% elsif market_attribute_response.manual_after_api_failure? %>
-        <span class="fr-badge fr-badge--warning fr-ml-1w">
-          <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
-        </span>
-      <% end %>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
 
     <% unless market_attribute_response.auto? %>

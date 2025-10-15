@@ -10,9 +10,7 @@
   <div class="fr-mb-2w">
     <label class="fr-label">
       <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name") %>
-      <span class="fr-badge fr-badge--success fr-ml-1w">
-        <%= t('candidate.market_applications.badges.data_from_api') %>
-      </span>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </label>
     <p class="fr-text--sm fr-text--mention-grey">
       <%= t('candidate.market_applications.auto_filled_message') %>

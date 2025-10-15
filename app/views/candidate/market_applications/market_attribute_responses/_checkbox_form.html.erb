@@ -17,9 +17,7 @@
   <div class="fr-mb-2w">
     <label class="fr-label">
       <%= label_text %>
-      <span class="fr-badge fr-badge--success fr-ml-1w">
-        <%= t('candidate.market_applications.badges.data_from_api') %>
-      </span>
+      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </label>
     <p class="fr-text--sm fr-text--mention-grey">
       <%= t('candidate.market_applications.auto_filled_message') %>
@@ -41,11 +39,7 @@
 
         <%= response_form.label :checked, class: "fr-checkbox__label fr-text--md" do %>
           <%= label_text %>
-          <% if market_attribute_response.manual_after_api_failure? %>
-            <span class="fr-badge fr-badge--warning fr-ml-1w">
-              <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
-            </span>
-          <% end %>
+          <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
 
           <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
             <span class="fr-checkbox__label__description fr-text--xs">
