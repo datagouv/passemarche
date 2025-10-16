@@ -47,6 +47,18 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         body: insee_etablissement_success_response(siret: '73282932000074'),
         headers: { 'Content-Type' => 'application/json' }
       )
+
+    # Stub GenerateDocumentsPackage to avoid ActiveStorage download issues in tests
+    allow_any_instance_of(GenerateDocumentsPackage).to receive(:call) do |instance|
+      # Attach a fake documents package
+      instance.context.market_application.documents_package.attach(
+        io: StringIO.new('fake zip content'),
+        filename: "documents_package_FT#{instance.context.market_application.identifier}.zip",
+        content_type: 'application/zip'
+      )
+      instance.context.documents_package = instance.context.market_application.documents_package
+      instance.context
+    end
   end
 
   describe 'GET /candidate/market_applications/:identifier/:step' do

@@ -9,10 +9,10 @@ if Rails.env.test?
     enable_local_file_access: true
   })
 else
-  # Use the actual wkhtmltopdf installation
+  # Use the actual wkhtmltopdf installation (patched version)
   WickedPdf.config.merge!({
-    exe_path: '/usr/bin/wkhtmltopdf',
+    exe_path: '/usr/local/bin/wkhtmltopdf',
     enable_local_file_access: true,
-    wkhtmltopdf: '/usr/bin/wkhtmltopdf'
+    wkhtmltopdf: '/usr/local/bin/wkhtmltopdf'
   })
 end

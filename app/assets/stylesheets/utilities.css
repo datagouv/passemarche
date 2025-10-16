@@ -1,50 +1,6 @@
-/* Sticky footer using flexbox - works with DSFR */
-html {
-  height: 100%;
-}
+/* Utility classes */
 
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
-
-main {
-  flex: 1 0 auto;
-  min-height: 0; /* Allow main to shrink if needed */
-}
-
-footer.fr-footer {
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
-/* Utility classes for centering content */
-.center-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  padding: 2rem;
-}
-
-.center-content img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Full height utility classes */
-.min-h-full {
-  min-height: 100%;
-}
-
-.full-height-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
+/* Full height grid layout - for split-screen layouts */
 .full-height-grid {
   min-height: 60vh; /* Minimum 60% of viewport height for better visual balance */
   align-items: stretch; /* Allow columns to stretch */
@@ -57,6 +13,20 @@ footer.fr-footer {
 
 .full-height-grid .fr-background-alt--blue-france {
   display: flex; /* Make right column flex to fill height */
+}
+
+/* Utility class for centering content (images, etc.) */
+.center-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem;
+}
+
+.center-content img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Field display layout classes */
