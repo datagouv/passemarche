@@ -71,6 +71,7 @@ Metrics/BlockLength:
   AllowedMethods:
     - "describe"
     - "context"
+    - "before"
     - "namespace"
     - "shared_examples"
     - "let"

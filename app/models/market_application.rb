@@ -50,12 +50,27 @@ class MarketApplication < ApplicationRecord
   end
 
   def nested_attributes_valid
-    market_attribute_responses.each do |response|
+    responses_to_validate = if validation_context.blank?
+                              market_attribute_responses
+                            else
+                              responses_for_step(validation_context)
+                            end
+
+    responses_to_validate.each do |response|
       next if response.valid?
 
       response.errors.each do |error|
         errors.add("market_attribute_responses.#{error.attribute}", error.message)
       end
     end
+  end
+
+  def responses_for_step(step_name)
+    step_attributes = public_market.market_attributes
+      .where(subcategory_key: step_name.to_s)
+
+    attribute_ids = step_attributes.pluck(:id)
+
+    market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
   end
 end

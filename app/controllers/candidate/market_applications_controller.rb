@@ -39,18 +39,21 @@ module Candidate
 
     private
 
-    def handle_step_update
+    def handle_step_update # rubocop:disable Metrics/AbcSize
       if step.to_sym == :summary
         handle_summary_completion
       elsif step.to_sym == :company_identification
         handle_company_identification
-      elsif @market_application.update(market_application_params)
-        @market_application.market_attribute_responses.reload
-        render_wizard(@market_application)
-      elsif custom_view_exists?
-        render_wizard
       else
-        render 'generic_step', locals: { step: }
+        @market_application.assign_attributes(market_application_params)
+        if @market_application.save(context: step.to_sym)
+          @market_application.market_attribute_responses.reload
+          render_wizard(@market_application)
+        elsif custom_view_exists?
+          render_wizard
+        else
+          render 'generic_step', locals: { step: }
+        end
       end
     end
 
@@ -71,7 +74,8 @@ module Candidate
     end
 
     def handle_company_identification
-      if @market_application.update(market_application_params)
+      @market_application.assign_attributes(market_application_params)
+      if @market_application.save(context: step.to_sym)
         populate_insee_data
         populate_rne_data
       end
