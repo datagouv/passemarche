@@ -21,7 +21,13 @@ module Candidate
     def update
       @presenter = MarketApplicationPresenter.new(@market_application)
 
-      handle_step_update
+      result = MarketApplicationStepUpdateService.call(
+        @market_application,
+        step.to_sym,
+        market_application_params
+      )
+
+      handle_service_result(result)
     end
 
     def retry_sync
@@ -39,21 +45,20 @@ module Candidate
 
     private
 
-    def handle_step_update # rubocop:disable Metrics/AbcSize
-      if step.to_sym == :summary
-        handle_summary_completion
-      elsif step.to_sym == :company_identification
-        handle_company_identification
+    def handle_service_result(result)
+      # Apply flash messages from service
+      result[:flash_messages].each do |key, value|
+        flash.now[key] = value
+      end
+
+      if result[:redirect] == :sync_status
+        queue_webhook_and_redirect
+      elsif result[:success]
+        render_wizard(@market_application)
+      elsif custom_view_exists?
+        render_wizard(nil, status: :unprocessable_entity)
       else
-        @market_application.assign_attributes(market_application_params)
-        if @market_application.save(context: step.to_sym)
-          @market_application.market_attribute_responses.reload
-          render_wizard(@market_application)
-        elsif custom_view_exists?
-          render_wizard
-        else
-          render 'generic_step', locals: { step: }
-        end
+        render 'generic_step', locals: { step: }, status: :unprocessable_entity
       end
     end
 
@@ -73,80 +78,6 @@ module Candidate
       self.steps = @presenter.wizard_steps
     end
 
-    def handle_company_identification
-      @market_application.assign_attributes(market_application_params)
-      if @market_application.save(context: step.to_sym)
-        populate_insee_data
-        populate_rne_data
-      end
-
-      render_wizard(@market_application)
-    end
-
-    def populate_insee_data
-      return if @market_application.siret.blank?
-
-      result = Insee.call(
-        params: { siret: @market_application.siret },
-        market_application: @market_application
-      )
-
-      return if result.success?
-
-      # Mark INSEE attributes as needing manual input after API failure
-      mark_api_attributes_as_manual_after_failure('Insee')
-
-      flash.now[:alert] = t('candidate.market_applications.insee_api_error',
-        error: result.error)
-    end
-
-    def populate_rne_data
-      return if @market_application.siret.blank?
-
-      result = Rne.call(
-        params: { siret: @market_application.siret },
-        market_application: @market_application
-      )
-
-      return if result.success?
-
-      # Mark RNE attributes as needing manual input after API failure
-      mark_api_attributes_as_manual_after_failure('rne')
-
-      flash.now[:alert] = t('candidate.market_applications.rne_api_error',
-        error: result.error)
-    end
-
-    def mark_api_attributes_as_manual_after_failure(api_name)
-      # Find all attributes from this API for this market
-      api_attributes = @market_application.public_market.market_attributes
-        .where(api_name:)
-
-      # Mark responses as manual_after_api_failure so candidate can fill them
-      api_attributes.each do |attribute|
-        response = @market_application.market_attribute_responses
-          .find_or_initialize_by(market_attribute: attribute)
-
-        # Only mark as manual_after_api_failure if not already set
-        next if response.manual_after_api_failure?
-
-        response.source = :manual_after_api_failure
-        response.save! if response.persisted? || response.changed?
-      end
-    end
-
-    def handle_summary_completion
-      result = CompleteMarketApplication.call(market_application: @market_application)
-
-      if result.success?
-        queue_webhook_and_redirect
-      else
-        display_completion_error(result.message)
-      end
-    rescue StandardError => e
-      log_and_display_error(e)
-    end
-
     def queue_webhook_and_redirect
       MarketApplicationWebhookJob.perform_later(
         @market_application.id,
@@ -154,17 +85,6 @@ module Candidate
         request_protocol: request.protocol
       )
       redirect_to candidate_sync_status_path(@market_application.identifier)
-    end
-
-    def display_completion_error(message)
-      flash.now[:alert] = message
-      render_wizard
-    end
-
-    def log_and_display_error(error)
-      Rails.logger.error "Error completing market application #{@market_application.identifier}: #{error.message}"
-      flash.now[:alert] = t('candidate.market_applications.completion_error')
-      render_wizard
     end
 
     def find_market_application
