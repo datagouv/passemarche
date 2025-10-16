@@ -185,6 +185,7 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
       insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"
+      rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       badges:
         data_from_api: "Données récupérées automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"

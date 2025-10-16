@@ -2,12 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe Insee, type: :organizer do
-  include ApiResponses::InseeResponses
+RSpec.describe Rne, type: :organizer do
+  include ApiResponses::RneResponses
 
   let(:siret) { '41816609600069' }
+  let(:siren) { '418166096' }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
-  let(:api_url) { "#{base_url}v3/insee/sirene/etablissements/#{siret}" }
+  let(:api_url) { "#{base_url}v3/inpi/rne/unites_legales/#{siren}/extrait_rne" }
   let(:token) { 'test_token_123' }
 
   before do
@@ -36,7 +37,7 @@ RSpec.describe Insee, type: :organizer do
           )
           .to_return(
             status: 200,
-            body: insee_etablissement_success_response(siret:),
+            body: rne_extrait_success_response(siren:),
             headers: { 'Content-Type' => 'application/json' }
           )
       end
@@ -55,14 +56,14 @@ RSpec.describe Insee, type: :organizer do
         expect(result.bundled_data.data).to be_a(Resource)
       end
 
-      it 'extracts the SIRET correctly' do
+      it 'extracts the first_name_last_name correctly' do
         result = subject
-        expect(result.bundled_data.data.siret).to eq('41816609600069')
+        expect(result.bundled_data.data.first_name_last_name).to eq('SOPHIE MARTIN')
       end
 
-      it 'extracts the category correctly' do
+      it 'extracts the head_office_address correctly' do
         result = subject
-        expect(result.bundled_data.data.category).to eq('PME')
+        expect(result.bundled_data.data.head_office_address).to eq('50 AVENUE DES CHAMPS ÉLYSÉES, 75008 PARIS 8, FRANCE')
       end
 
       it 'sets an empty context hash in BundledData' do
@@ -70,7 +71,7 @@ RSpec.describe Insee, type: :organizer do
         expect(result.bundled_data.context).to eq({})
       end
 
-      context 'with a different category (GE)' do
+      context 'with different director names' do
         before do
           stub_request(:get, api_url)
             .with(
@@ -83,13 +84,19 @@ RSpec.describe Insee, type: :organizer do
             )
             .to_return(
               status: 200,
-              body: insee_etablissement_success_response(
-                siret:,
+              body: rne_extrait_success_response(
+                siren:,
                 overrides: {
                   data: {
-                    unite_legale: {
-                      categorie_entreprise: 'GE'
-                    }
+                    dirigeants_et_associes: [
+                      {
+                        qualite: 'Président',
+                        nom: 'DUPONT',
+                        prenom: 'JEAN',
+                        date_naissance: '03-1980',
+                        commune_residence: 'LYON'
+                      }
+                    ]
                   }
                 }
               ),
@@ -97,9 +104,9 @@ RSpec.describe Insee, type: :organizer do
             )
         end
 
-        it 'extracts the GE category correctly' do
+        it 'extracts the director name correctly' do
           result = subject
-          expect(result.bundled_data.data.category).to eq('GE')
+          expect(result.bundled_data.data.first_name_last_name).to eq('JEAN DUPONT')
         end
       end
     end
@@ -117,7 +124,7 @@ RSpec.describe Insee, type: :organizer do
           )
           .to_return(
             status: 401,
-            body: insee_unauthorized_response,
+            body: rne_unauthorized_response,
             headers: { 'Content-Type' => 'application/json' }
           )
       end
@@ -150,7 +157,7 @@ RSpec.describe Insee, type: :organizer do
           )
           .to_return(
             status: 404,
-            body: insee_etablissement_not_found_response,
+            body: rne_extrait_not_found_response,
             headers: { 'Content-Type' => 'application/json' }
           )
       end
@@ -204,73 +211,7 @@ RSpec.describe Insee, type: :organizer do
           )
           .to_return(
             status: 200,
-            body: insee_invalid_json_response,
-            headers: { 'Content-Type' => 'application/json' }
-          )
-      end
-
-      it 'fails' do
-        expect(subject).to be_failure
-      end
-
-      it 'sets an error message about invalid JSON' do
-        result = subject
-        expect(result.error).to eq('Invalid JSON response')
-      end
-
-      it 'does not create bundled_data' do
-        result = subject
-        expect(result.bundled_data).to be_nil
-      end
-    end
-
-    context 'when the API returns empty response body' do
-      before do
-        stub_request(:get, api_url)
-          .with(
-            query: hash_including(
-              'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
-            ),
-            headers: { 'Authorization' => "Bearer #{token}" }
-          )
-          .to_return(
-            status: 200,
-            body: insee_empty_response,
-            headers: { 'Content-Type' => 'application/json' }
-          )
-      end
-
-      it 'fails' do
-        expect(subject).to be_failure
-      end
-
-      it 'sets an error message about invalid JSON' do
-        result = subject
-        expect(result.error).to eq('Invalid JSON response')
-      end
-
-      it 'does not create bundled_data' do
-        result = subject
-        expect(result.bundled_data).to be_nil
-      end
-    end
-
-    context 'when the API returns JSON without data key' do
-      before do
-        stub_request(:get, api_url)
-          .with(
-            query: hash_including(
-              'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
-            ),
-            headers: { 'Authorization' => "Bearer #{token}" }
-          )
-          .to_return(
-            status: 200,
-            body: insee_response_without_data_key,
+            body: rne_invalid_json_response,
             headers: { 'Content-Type' => 'application/json' }
           )
       end
@@ -294,19 +235,19 @@ RSpec.describe Insee, type: :organizer do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:, siret:) }
 
-      let!(:siret_attribute) do
+      let!(:director_name_attribute) do
         create(:market_attribute, :text_input, :from_api,
-          key: 'identite_entreprise_identification_siret',
-          api_name: 'Insee',
-          api_key: 'siret',
+          key: 'identite_entreprise_identification_nom_prenom',
+          api_name: 'rne',
+          api_key: 'first_name_last_name',
           public_markets: [public_market])
       end
 
-      let!(:category_attribute) do
+      let!(:head_office_address_attribute) do
         create(:market_attribute, :text_input, :from_api,
-          key: 'identite_entreprise_identification_categorie',
-          api_name: 'Insee',
-          api_key: 'category',
+          key: 'identite_entreprise_identification_adresse_siege_social',
+          api_name: 'rne',
+          api_key: 'head_office_address',
           public_markets: [public_market])
       end
 
@@ -324,7 +265,7 @@ RSpec.describe Insee, type: :organizer do
           )
           .to_return(
             status: 200,
-            body: insee_etablissement_success_response(siret:),
+            body: rne_extrait_success_response(siren:),
             headers: { 'Content-Type' => 'application/json' }
           )
       end
@@ -337,22 +278,28 @@ RSpec.describe Insee, type: :organizer do
         expect { subject }.to change { market_application.market_attribute_responses.count }.by(2)
       end
 
-      it 'populates SIRET field correctly' do
+      it 'populates director name field correctly' do
         subject
-        response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
-        expect(response.text).to eq('41816609600069')
+        response = market_application.market_attribute_responses.find_by(market_attribute: director_name_attribute)
+        expect(response.text).to eq('SOPHIE MARTIN')
       end
 
-      it 'populates category field correctly' do
+      it 'populates head office address field correctly' do
         subject
-        response = market_application.market_attribute_responses.find_by(market_attribute: category_attribute)
-        expect(response.text).to eq('PME')
+        response = market_application.market_attribute_responses.find_by(market_attribute: head_office_address_attribute)
+        expect(response.text).to eq('50 AVENUE DES CHAMPS ÉLYSÉES, 75008 PARIS 8, FRANCE')
       end
 
       it 'creates both BundledData and responses' do
         result = subject
         expect(result.bundled_data).to be_a(BundledData)
         expect(market_application.market_attribute_responses.count).to eq(2)
+      end
+
+      it 'marks responses as auto-populated' do
+        subject
+        responses = market_application.market_attribute_responses
+        expect(responses.all?(&:auto?)).to be true
       end
     end
   end

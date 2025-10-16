@@ -71,8 +71,10 @@ module Candidate
     end
 
     def handle_company_identification
-      @market_application.update(market_application_params)
-      populate_insee_data
+      if @market_application.update(market_application_params)
+        populate_insee_data
+        populate_rne_data
+      end
 
       render_wizard(@market_application)
     end
@@ -91,6 +93,23 @@ module Candidate
       mark_api_attributes_as_manual_after_failure('Insee')
 
       flash.now[:alert] = t('candidate.market_applications.insee_api_error',
+        error: result.error)
+    end
+
+    def populate_rne_data
+      return if @market_application.siret.blank?
+
+      result = Rne.call(
+        params: { siret: @market_application.siret },
+        market_application: @market_application
+      )
+
+      return if result.success?
+
+      # Mark RNE attributes as needing manual input after API failure
+      mark_api_attributes_as_manual_after_failure('rne')
+
+      flash.now[:alert] = t('candidate.market_applications.rne_api_error',
         error: result.error)
     end
 

@@ -20,6 +20,7 @@ RSpec.describe Insee::MakeRequest, type: :interactor do
   let(:successful_response_body) { insee_etablissement_success_response(siret:) }
 
   before do
+    # Mock API credentials to prevent leaking real tokens in CI logs
     allow(Rails.application.credentials).to receive_message_chain(:api_entreprise, :base_url).and_return(base_url)
     allow(Rails.application.credentials).to receive_message_chain(:api_entreprise, :token).and_return(token)
   end
