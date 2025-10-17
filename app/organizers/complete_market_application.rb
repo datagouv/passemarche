@@ -3,5 +3,6 @@
 class CompleteMarketApplication < ApplicationOrganizer
   organize MarkApplicationAsCompleted,
     GenerateAttestationPdf,
+    GenerateBuyerAttestationPdf,
     GenerateDocumentsPackage
 end

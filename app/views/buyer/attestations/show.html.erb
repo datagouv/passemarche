@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html data-context="attestation-pdf">
+<head>
+  <meta charset="utf-8">
+  <style type="text/css">
+    <%= File.read(Rails.root.join('lib/assets/pdf_stylesheets/attestation_summary_pdf.css')) %>
+  </style>
+</head>
+<body>
+  <%
+    # Create presenter for the market application
+    presenter = MarketApplicationPresenter.new(market_application)
+  %>
+
+  <!-- PDF Header (First page only) -->
+  <div class="pdf-page-header">
+    <div class="pdf-page-header-content">
+      <div class="pdf-page-header-left">
+        <p class="fr-logo">
+          République<br>Française
+        </p>
+      </div>
+      <div class="pdf-page-header-center">
+        <div class="pdf-page-header-title">Attestation de candidature</div>
+      </div>
+      <div class="pdf-page-header-right">
+        <div class="pdf-page-header-date">
+          Transmise le <%= transmission_time %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Summary Content (Same as web summary page) -->
+  <%= render 'shared/application_summary_content',
+             market_application: market_application,
+             presenter: presenter,
+             context: :pdf %>
+
+  <!-- Official Certification -->
+  <div class="attestation-certification">
+    <p>
+      <strong>Certification :</strong>
+    </p>
+    <p>
+      Cette attestation certifie que la candidature référencée ci-dessus a été
+      soumise avec succès dans le système Voie Rapide (Fast Track) à la date
+      et heure indiquées.
+    </p>
+    <p>
+      Ce document constitue une preuve officielle de dépôt de candidature et
+      peut être présenté aux autorités compétentes si nécessaire.
+    </p>
+  </div>
+
+  <!-- Official Footer -->
+  <div class="attestation-footer">
+    <p>
+      Document généré automatiquement le <%= Time.zone.now.strftime('%d/%m/%Y à %H:%M') %><br>
+      Système Voie Rapide - République Française
+    </p>
+  </div>
+</body>
+</html>

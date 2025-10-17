@@ -29,16 +29,23 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
           .from(false).to(true)
       end
 
+      it 'generates buyer attestation PDF' do
+        expect { subject }
+          .to change { market_application.reload.buyer_attestation.attached? }
+          .from(false).to(true)
+      end
+
       it 'generates documents package ZIP' do
         expect { subject }
           .to change { market_application.reload.documents_package.attached? }
           .from(false).to(true)
       end
 
-      it 'sets completed_at, attestation, and documents_package in context' do
+      it 'sets completed_at, attestation, buyer_attestation, and documents_package in context' do
         result = subject
         expect(result.completed_at).to be_present
         expect(result.attestation).to be_present
+        expect(result.buyer_attestation).to be_present
         expect(result.documents_package).to be_present
       end
     end
@@ -54,9 +61,10 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
         expect(subject).to be_failure
       end
 
-      it 'does not attach attestation or documents package' do
+      it 'does not attach attestation, buyer attestation, or documents package' do
         subject
         expect(market_application.reload.attestation).not_to be_attached
+        expect(market_application.reload.buyer_attestation).not_to be_attached
         expect(market_application.reload.documents_package).not_to be_attached
       end
 
