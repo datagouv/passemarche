@@ -27,6 +27,16 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
         result = subject
         expect(result.buyer_attestation).to eq(market_application.buyer_attestation)
       end
+
+      it 'generates PDF with "Attestation acheteur" header' do
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+          expect(html_content).to include('Attestation acheteur')
+          'fake pdf content'
+        end
+
+        subject
+      end
     end
 
     context 'when buyer attestation is already attached' do
