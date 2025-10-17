@@ -12,6 +12,7 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
 
   private
 
+  # rubocop:disable Metrics/AbcSize
   def generate_and_attach_pdf
     ActiveRecord::Base.transaction do
       pdf_content = generate_pdf_content
@@ -27,8 +28,9 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
   rescue ActiveRecord::ActiveRecordError => e
     context.fail!(message: "Erreur de base de données lors de l'attachement: #{e.message}")
   rescue StandardError => e
-    context.fail!(message: "Erreur inattendue lors de la génération de l'attestation acheteur: #{e.message}")
+    context.fail!(message: "Erreur inattendue lors de la génération de l'attestation acheteur #{market_application.identifier}: #{e.message}")
   end
+  # rubocop:enable Metrics/AbcSize
 
   def filename
     "buyer_attestation_FT#{market_application.identifier}.pdf"
@@ -37,7 +39,6 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
   def generate_pdf_content
     transmission_time = Time.zone.now.strftime('%d/%m/%Y à %H:%M')
 
-    # Render main content HTML with inline header
     html_content = ApplicationController.render(
       template: 'buyer/attestations/show',
       formats: [:html],
@@ -48,7 +49,6 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
       }
     )
 
-    # Generate PDF with WickedPdf (wkhtmltopdf)
     WickedPdf.new.pdf_from_string(
       html_content,
       page_size: 'A4',
