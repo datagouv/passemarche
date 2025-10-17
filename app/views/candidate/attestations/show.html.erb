@@ -12,6 +12,25 @@
     presenter = MarketApplicationPresenter.new(market_application)
   %>
 
+  <!-- PDF Header (First page only) -->
+  <div class="pdf-page-header">
+    <div class="pdf-page-header-content">
+      <div class="pdf-page-header-left">
+        <p class="fr-logo">
+          République<br>Française
+        </p>
+      </div>
+      <div class="pdf-page-header-center">
+        <div class="pdf-page-header-title">Attestation de candidature</div>
+      </div>
+      <div class="pdf-page-header-right">
+        <div class="pdf-page-header-date">
+          Transmise le <%= transmission_time %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Application Summary Content (Same as web summary page) -->
   <%= render 'shared/application_summary_content',
              market_application: market_application,

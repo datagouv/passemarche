@@ -37,20 +37,15 @@ class GenerateAttestationPdf < ApplicationInteractor
   def generate_pdf_content
     transmission_time = Time.zone.now.strftime('%d/%m/%Y à %H:%M')
 
-    # Render main content HTML
+    # Render main content HTML with inline header
     html_content = ApplicationController.render(
       template: 'candidate/attestations/show',
       formats: [:html],
       layout: false,
-      locals: { market_application: }
-    )
-
-    # Render header HTML for WickedPdf
-    header_html = ApplicationController.render(
-      partial: 'candidate/attestations/pdf_header',
-      formats: [:html],
-      layout: false,
-      locals: { transmission_time: }
+      locals: {
+        market_application:,
+        transmission_time:
+      }
     )
 
     # Generate PDF with WickedPdf (wkhtmltopdf)
@@ -58,14 +53,10 @@ class GenerateAttestationPdf < ApplicationInteractor
       html_content,
       page_size: 'A4',
       margin: {
-        top: 35,
+        top: 20,
         bottom: 20,
         left: 15,
         right: 15
-      },
-      header: {
-        content: header_html,
-        spacing: 5
       },
       print_media_type: true
     )
