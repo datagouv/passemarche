@@ -16,11 +16,16 @@ namespace :attestation do
       market_attribute_responses: :market_attribute
     ).find_by!(identifier: args[:identifier])
 
+    transmission_time = Time.zone.now.strftime('%d/%m/%Y à %H:%M')
+
     html = ApplicationController.render(
       template: 'candidate/attestations/show',
       formats: [:html],
       layout: false,
-      locals: { market_application: app }
+      locals: {
+        market_application: app,
+        transmission_time:
+      }
     )
 
     path = Rails.root.join('tmp', "attestation_#{args[:identifier]}.html")
