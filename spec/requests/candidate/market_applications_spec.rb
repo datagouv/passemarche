@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ApiResponses::InseeResponses
+  include ApiResponses::RneResponses
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
@@ -27,6 +28,14 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   ].freeze
 
   before do
+    # Mock API credentials to prevent leaking real tokens in CI logs
+    allow(Rails.application.credentials).to receive(:api_entreprise).and_return(
+      OpenStruct.new(
+        base_url: 'https://entreprise.api.gouv.fr/',
+        token: 'test_token_123'
+      )
+    )
+
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
 
     # Stub ActiveStorage download to prevent file system access in tests
@@ -45,6 +54,20 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       .to_return(
         status: 200,
         body: insee_etablissement_success_response(siret: '73282932000074'),
+        headers: { 'Content-Type' => 'application/json' }
+      )
+
+    # Stub RNE API calls for general tests
+    stub_request(:get, %r{https://.*entreprise\.api\.gouv\.fr/v3/inpi/rne/unites_legales/\d+/extrait_rne})
+      .with(
+        query: hash_including(
+          'context' => 'Candidature marché public',
+          'recipient' => '13002526500013'
+        )
+      )
+      .to_return(
+        status: 200,
+        body: '{"data": {"identite_entreprise": {"adresse_siege_social": {}}}, "dirigeants_et_associes": []}',
         headers: { 'Content-Type' => 'application/json' }
       )
 
@@ -228,7 +251,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
 
       before do
-        allow(Rails.application.credentials).to receive(:api_entreprise).and_return(api_entreprise_credentials)
+        # Credentials are already mocked in the main before block, no need to re-mock
 
         stub_request(:get, api_url)
           .with(
@@ -241,6 +264,23 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           .to_return(
             status: 200,
             body: insee_etablissement_success_response(siret: valid_siret),
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        # Stub RNE API call
+        siren = valid_siret[0..8]
+        rne_api_url = "https://entreprise.api.gouv.fr/v3/inpi/rne/unites_legales/#{siren}/extrait_rne"
+        stub_request(:get, rne_api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: rne_extrait_success_response(siren:),
             headers: { 'Content-Type' => 'application/json' }
           )
       end
@@ -276,6 +316,23 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             .to_return(
               status: 404,
               body: insee_etablissement_not_found_response,
+              headers: { 'Content-Type' => 'application/json' }
+            )
+
+          # Also stub RNE API call
+          siren = valid_siret[0..8]
+          rne_api_url = "https://entreprise.api.gouv.fr/v3/inpi/rne/unites_legales/#{siren}/extrait_rne"
+          stub_request(:get, rne_api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => '13002526500013'
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 404,
+              body: rne_extrait_not_found_response,
               headers: { 'Content-Type' => 'application/json' }
             )
         end

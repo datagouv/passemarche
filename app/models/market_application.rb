@@ -50,12 +50,34 @@ class MarketApplication < ApplicationRecord
   end
 
   def nested_attributes_valid
-    market_attribute_responses.each do |response|
+    # Use validation context to determine which responses to validate
+    # validation_context is the current wizard step (e.g., :market_information)
+    # If nil, validate all responses (e.g., at summary step)
+    responses_to_validate = if validation_context.blank?
+                              # No context = validate everything (summary step)
+                              market_attribute_responses
+                            else
+                              # Get only responses for this step's form fields
+                              responses_for_step(validation_context)
+                            end
+
+    responses_to_validate.each do |response|
       next if response.valid?
 
       response.errors.each do |error|
         errors.add("market_attribute_responses.#{error.attribute}", error.message)
       end
     end
+  end
+
+  def responses_for_step(step_name)
+    # Query attributes that belong to this step (matched by subcategory_key)
+    step_attributes = public_market.market_attributes
+      .where(subcategory_key: step_name.to_s)
+
+    attribute_ids = step_attributes.pluck(:id)
+
+    # Return only responses for this step's attributes
+    market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
   end
 end
