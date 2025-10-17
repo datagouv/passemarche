@@ -7,6 +7,9 @@
 <%
   value_data = market_attribute_response.value || {}
   key = market_attribute_response.market_attribute.key
+  context ||= :web
+  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
+  show_value = !market_attribute_response.auto? || context == :buyer
 %>
 
 <div class="field-layout-container">
@@ -19,7 +22,7 @@
       <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
 
-    <% unless market_attribute_response.auto? %>
+    <% if show_value %>
       <div class="fr-mb-3w"></div>
       <% displayed = false %>
       <% [["n-1", "year_1"], ["n-2", "year_2"], ["n-3", "year_3"]].each do |label, year_key| %>

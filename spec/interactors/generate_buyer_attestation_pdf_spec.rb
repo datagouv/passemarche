@@ -37,6 +37,33 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
 
         subject
       end
+
+      it 'includes API-sourced data (auto) in the PDF content' do
+        # Create a text input market attribute
+        market_attribute = create(:market_attribute,
+          :text_input,
+          key: 'test_field',
+          public_markets: [market_application.public_market])
+
+        # Create a response with source: :auto (API-sourced data)
+        create(:market_attribute_response_text_input,
+          market_application:,
+          market_attribute:,
+          text: 'API sourced value',
+          source: :auto)
+
+        market_application.reload
+
+        # Mock WickedPdf to capture HTML content
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+          # Verify API-sourced data is present in buyer attestation
+          expect(html_content).to include('API sourced value')
+          'fake pdf content'
+        end
+
+        subject
+      end
     end
 
     context 'when buyer attestation is already attached' do

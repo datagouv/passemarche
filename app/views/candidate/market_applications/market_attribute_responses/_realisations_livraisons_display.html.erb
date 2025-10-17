@@ -2,6 +2,9 @@
   realisations_data = market_attribute_response.realisations
   key = market_attribute_response.market_attribute.key
   has_realisations = realisations_data.present? && realisations_data.values.any? { |realisation| realisation.present? && realisation.any? { |_, v| v.present? } }
+  context ||= :web
+  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
+  show_value = !market_attribute_response.auto? || context == :buyer
 %>
 
 <div class="field-layout-container">
@@ -11,7 +14,7 @@
       <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
 
-    <% unless market_attribute_response.auto? %>
+    <% if show_value %>
       <br>
 
       <% if has_realisations %>

@@ -37,6 +37,60 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
 
         subject
       end
+
+      it 'hides API-sourced data (auto) from the PDF content' do
+        # Create a text input market attribute
+        market_attribute = create(:market_attribute,
+          :text_input,
+          key: 'test_field',
+          public_markets: [market_application.public_market])
+
+        # Create a response with source: :auto (API-sourced data)
+        create(:market_attribute_response_text_input,
+          market_application:,
+          market_attribute:,
+          text: 'API sourced value should be hidden',
+          source: :auto)
+
+        market_application.reload
+
+        # Mock WickedPdf to capture HTML content
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+          # Verify API-sourced data is NOT present in candidate attestation
+          expect(html_content).not_to include('API sourced value should be hidden')
+          'fake pdf content'
+        end
+
+        subject
+      end
+
+      it 'shows manually-entered data in the PDF content' do
+        # Create a text input market attribute
+        market_attribute = create(:market_attribute,
+          :text_input,
+          key: 'test_field',
+          public_markets: [market_application.public_market])
+
+        # Create a response with source: :manual
+        create(:market_attribute_response_text_input,
+          market_application:,
+          market_attribute:,
+          text: 'Manual value should be visible',
+          source: :manual)
+
+        market_application.reload
+
+        # Mock WickedPdf to capture HTML content
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+          # Verify manually-entered data IS present in candidate attestation
+          expect(html_content).to include('Manual value should be visible')
+          'fake pdf content'
+        end
+
+        subject
+      end
     end
 
     context 'when attestation is already attached' do

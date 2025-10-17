@@ -1,5 +1,8 @@
 <%
   text_value = market_attribute_response.text
+  context ||= :web
+  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
+  show_value = !market_attribute_response.auto? || context == :buyer
 %>
 
 <div class="field-layout-container">
@@ -10,7 +13,7 @@
       <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
 
-    <% unless market_attribute_response.auto? %>
+    <% if show_value %>
       <br>
 
       <span class="fr-text--sm fr-text--mention-grey">

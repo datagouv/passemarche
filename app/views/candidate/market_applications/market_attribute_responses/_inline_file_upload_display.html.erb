@@ -1,5 +1,8 @@
 <%
   documents = market_attribute_response.documents
+  context ||= :web
+  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
+  show_value = !market_attribute_response.auto? || context == :buyer
 %>
 
 <div class="certificate-row">
@@ -11,7 +14,7 @@
     </strong>
   </div>
   <div class="certificate-col certificate-col--right">
-    <% unless market_attribute_response.auto? %>
+    <% if show_value %>
       <span class="fr-text--sm fr-text--mention-grey">
         <% if documents.attached? %>
           <div>

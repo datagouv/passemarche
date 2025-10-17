@@ -1,11 +1,11 @@
 <%
   # Shared partial for displaying market application summary
-  # Used in both web summary page and PDF attestation
+  # Used in both web summary page and PDF attestations
   #
   # Required locals:
   #   market_application - MarketApplication instance
   #   presenter - MarketApplicationPresenter instance
-  #   context - :web or :pdf (optional, defaults to :web)
+  #   context - :web, :pdf, or :buyer (optional, defaults to :web)
 
   context ||= :web
 %>
@@ -21,7 +21,7 @@
     <% subcategories = presenter.subcategories_for_category(category) %>
     <% next if subcategories.empty? %>
 
-    <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if context == :pdf && index > 0 %>">
+    <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if [:pdf, :buyer].include?(context) && index > 0 %>">
       <%= render 'shared/card_header', title: t("form_fields.candidate.categories.#{category}"), background: "fr-background-alt--grey" %>
       <div class="fr-card__body fr-mt-1w fr-mb-1w">
         <% if category == 'identite_entreprise' %>
@@ -82,7 +82,7 @@
               <% market_attributes.each do |attribute| %>
                 <% response = presenter.market_attribute_response_for(attribute) %>
                 <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
-                <%= render partial_name, market_attribute_response: response %>
+                <%= render partial_name, market_attribute_response: response, context: context %>
               <% end %>
             <% end %>
           </div>
