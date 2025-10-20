@@ -1,3 +1,7 @@
+<%
+  field_key = market_attribute_response.market_attribute.key
+%>
+
 <% if market_attribute_response.auto? %>
   <%# Data filled automatically from API - show indicator but not the value %>
   <%= form.fields_for :market_attribute_responses, market_attribute_response,
@@ -9,7 +13,7 @@
 
   <div class="fr-mb-2w">
     <label class="fr-label">
-      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name") %>
+      <%= t("form_fields.candidate.fields.#{field_key}.name") %>
       <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </label>
     <p class="fr-text--sm fr-text--mention-grey">
@@ -29,12 +33,12 @@
   <%= response_form.hidden_field :type %>
 
   <h6 class="fr-mb-2w fr-text--md">
-    <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name") %>
+    <%= t("form_fields.candidate.fields.#{field_key}.name") %>
   </h6>
 
-  <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+  <% if t("form_fields.candidate.fields.#{field_key}.description", default: nil).present? %>
     <span class="fr-hint-text fr-mb-2w fr-text--sm">
-      <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+      <%= t("form_fields.candidate.fields.#{field_key}.description") %>
     </span>
   <% else %>
     <span class="fr-hint-text fr-mb-2w fr-text--sm">
