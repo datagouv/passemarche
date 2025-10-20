@@ -40,7 +40,7 @@
       </span>
     <% end %>
 
-  <div class="fr-upload-group fr-mt-2w fr-card fr-p-2w" data-controller="delete-document-confirm" data-market-application-id="<%= @market_application.identifier %>">
+  <div class="fr-upload-group fr-mt-2w fr-card fr-p-2w">
       <%= response_form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{market_attribute_response.id}" %>
       <span class="fr-hint-text fr-mb-2w fr-text--sm">
         Taille maximale : <%= MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte %> Mo.
@@ -53,32 +53,15 @@
           accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
           id: "upload-#{market_attribute_response.id}" %>
 
-      <% if documents.attached? %>
+      <% persisted_documents = documents.select(&:persisted?) %>
+      <% if persisted_documents.any? %>
         <div class="fr-mt-2w fr-text--sm fr-mb-0">
           <strong>Documents actuels :</strong>
-            <% documents.each do |document| %>
-              <div>
-                <% if document.persisted? %>
-                  <turbo-frame id="document_<%= document.id %>">
-                    <div class="uploaded-file">
-                      <%= link_to document.filename.to_s,
-                        url_for(document),
-                        target: "_blank", rel: "noopener" %>
-
-                      <button type="button"
-                        data-document-id="<%= document.id %>"
-                        data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
-                        title="Supprimer ce document"
-                        class="fr-btn--icon delete-document-btn">
-                          <span class="fr-icon--sm fr-icon-delete-line fr-text-title--blue-france" aria-hidden="true"></span>
-                      </button>
-                    </div>
-                  </turbo-frame>
-                <% else %>
-                  <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
-                <% end %>
-              </div>
-            <% end %>
+          <% persisted_documents.each do |document| %>
+            <div>
+              <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener" %>
+            </div>
+          <% end %>
         </div>
       <% else %>
         <div class="fr-mt-2w fr-text--sm fr-mb-0">

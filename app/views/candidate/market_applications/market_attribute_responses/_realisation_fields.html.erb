@@ -91,32 +91,13 @@
             <% if index != 'NEW_RECORD' %>
               <% attestations = market_attribute_response.realisation_attestations(index) %>
               <% if attestations.any? %>
-                <div
-                  class="fr-text--sm fr-mb-0"
-                  data-controller="delete-document-confirm"
-                  data-market-application-id="<%= @market_application.identifier %>"
-                >
-                  <strong>Fichiers actuels :</strong>
-                    <% attestations.each do |attestation| %>
-                      <div>
-                        <turbo-frame id="document_<%= attestation.id %>">
-                          <div class="uploaded-file">
-                            <%= link_to attestation.filename.to_s,
-                              url_for(attestation),
-                              target: "_blank", rel: "noopener" %>
-
-                            <button type="button"
-                              data-document-id="<%= attestation.id %>"
-                              data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
-                              title="Supprimer ce document"
-                              class="fr-btn--icon delete-document-btn">
-                                <span class="fr-icon--sm fr-icon-delete-line fr-text-title--blue-france" aria-hidden="true"></span>
-                            </button>
-                          </div>
-                        </turbo-frame>
-                      </div>
-                    <% end %>
-                  </ul>
+                <div class="fr-mt-1w fr-text--sm">
+                  <strong>Attestations actuelles :</strong>
+                  <% attestations.each do |attestation| %>
+                    <div>
+                      <%= link_to attestation.filename.to_s, url_for(attestation), target: "_blank", rel: "noopener" %>
+                    </div>
+                  <% end %>
                 </div>
               <% end %>
             <% end %>

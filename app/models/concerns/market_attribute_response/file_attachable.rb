@@ -29,15 +29,8 @@ module MarketAttributeResponse::FileAttachable
       documents.attach(
         io: f.respond_to?(:tempfile) ? f.tempfile : f,
         filename: f.original_filename,
-        content_type: f.content_type,
-        metadata: { field_type: 'generic' }
+        content_type: f.content_type
       )
-    end
-  end
-
-  class_methods do
-    def file_attachable?
-      true
     end
   end
 

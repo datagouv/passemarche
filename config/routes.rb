@@ -42,8 +42,6 @@ Rails.application.routes.draw do
 
   namespace :candidate do
     resources :market_applications, param: :identifier, only: [] do
-      resources :documents, only: [:destroy]
-
       member do
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'

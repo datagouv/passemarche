@@ -80,13 +80,7 @@ module MarketAttributeResponse::RepeatableField
     []
   end
 
-  def cleanup_old_specialized_documents?
-    false
-  end
-
   def attach_specialized_document(timestamp, field_name, file)
-    purge_old_specialized_documents(timestamp, field_name) if cleanup_old_specialized_documents?
-
     documents.attach(
       io: file.respond_to?(:tempfile) ? file.tempfile : file,
       filename: file.original_filename,
@@ -99,33 +93,13 @@ module MarketAttributeResponse::RepeatableField
     )
   end
 
-  def purge_old_specialized_documents(timestamp, field_name)
-    return unless documents.attached?
+  def get_specialized_documents(timestamp, field_name)
+    return [] unless documents.attached?
 
     documents.select do |doc|
       doc.metadata['field_type'] == 'specialized' &&
         doc.metadata['item_timestamp'] == timestamp.to_s &&
         doc.metadata['field_name'] == field_name.to_s
-    end.each(&:purge)
-  end
-
-  def get_specialized_document(timestamp, field_name)
-    return nil unless documents.attached?
-
-    matching_docs = documents.select do |doc|
-      doc.metadata['field_type'] == 'specialized' &&
-        doc.metadata['item_timestamp'] == timestamp.to_s &&
-        doc.metadata['field_name'] == field_name.to_s
-    end
-
-    matching_docs.max_by(&:created_at)
-  end
-
-  def generic_documents
-    return [] unless documents.attached?
-
-    documents.reject do |doc|
-      doc.metadata['field_type'] == 'specialized'
     end
   end
 

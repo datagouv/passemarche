@@ -583,11 +583,6 @@ Then('I should see validation errors') do
   true
 end
 
-Then('the file should not have a download link') do
-  # Check that there are no clickable links for documents marked as "en cours de téléchargement"
-  expect(page).not_to have_link(href: %r{rails/active_storage})
-end
-
 # Helper methods for validation error checking
 def file_format_error_present?
   page.has_content?('format') ||

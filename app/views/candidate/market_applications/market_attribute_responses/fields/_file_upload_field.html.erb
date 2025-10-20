@@ -1,12 +1,6 @@
 <%# Expected variables: form:, attribute_response: %>
 <%
-  # For repeatable fields with specialized documents, show only generic documents
-  # For other types, show all documents
-  documents = if attribute_response.respond_to?(:generic_documents)
-                attribute_response.generic_documents
-              else
-                attribute_response.documents
-              end
+  documents = attribute_response.documents
 %>
 
 <div class="fr-upload-group fr-card fr-p-2w">
@@ -18,37 +12,16 @@
   <%= form.file_field :files,
       class: "fr-upload",
       multiple: true,
-      direct_upload: true,
       accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
       id: "upload-#{attribute_response.id}",
       aria: { describedby: "upload-#{attribute_response.id}-messages" } %>
 
-  <% if documents.is_a?(Array) ? documents.any? : documents.attached? %>
+  <% if documents.attached? %>
     <div class="fr-mt-2w fr-text--sm fr-mb-0">
       <strong>Fichiers actuels :</strong>
       <% documents.each do |document| %>
         <div>
-          <% if document.persisted? %>
-            <turbo-frame id="document_<%= document.id %>">
-                <div class="uploaded-file"
-                  data-controller="delete-document-confirm"
-                  data-market-application-id="<%= @market_application.identifier %>">
-                <%= link_to document.filename.to_s,
-                  url_for(document),
-                  target: "_blank", rel: "noopener" %>
-
-                <button type="button"
-                  data-document-id="<%= document.id %>"
-                  data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
-                  title="Supprimer ce document"
-                  class="fr-btn--icon delete-document-btn">
-                    <span class="fr-icon--sm fr-icon-delete-line fr-text-title--blue-france" aria-hidden="true"></span>
-                </button>
-              </div>
-            </turbo-frame>
-          <% else %>
-            <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
-          <% end %>
+          <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener" %>
         </div>
       <% end %>
     </div>

@@ -278,17 +278,18 @@ RSpec.describe MarketAttributeResponse::PresentationIntervenants, type: :model d
       response.assign_attributes("person_#{timestamp1}_cv_attachment_id" => file)
       response.save!
 
-      cv = response.person_cv_attachment(timestamp1)
-      expect(cv).to be_present
-      expect(cv.filename.to_s).to eq('test.pdf')
+      cvs = response.person_cv_attachment(timestamp1)
+      expect(cvs).to be_present
+      expect(cvs.size).to eq(1)
+      expect(cvs.first.filename.to_s).to eq('test.pdf')
     end
 
-    it 'returns nil when no CV attached for person' do
+    it 'returns empty array when no CV attached for person' do
       response.assign_attributes("person_#{timestamp1}_nom" => 'Dupont')
       response.save!
 
-      cv = response.person_cv_attachment(timestamp1)
-      expect(cv).to be_nil
+      cvs = response.person_cv_attachment(timestamp1)
+      expect(cvs).to eq([])
     end
 
     it 'handles multiple CV attachments for different persons' do
@@ -301,15 +302,15 @@ RSpec.describe MarketAttributeResponse::PresentationIntervenants, type: :model d
       )
       response.save!
 
-      cv1 = response.person_cv_attachment(timestamp1)
-      cv2 = response.person_cv_attachment(timestamp2)
+      cvs1 = response.person_cv_attachment(timestamp1)
+      cvs2 = response.person_cv_attachment(timestamp2)
 
-      expect(cv1).to be_present
-      expect(cv2).to be_present
-      expect(cv1.signed_id).not_to eq(cv2.signed_id)
+      expect(cvs1).to be_present
+      expect(cvs2).to be_present
+      expect(cvs1.first.signed_id).not_to eq(cvs2.first.signed_id)
     end
 
-    it 'auto-deletes old CV when uploading a new one for the same person' do
+    it 'keeps multiple CVs when uploading more than one for the same person' do
       file1 = fixture_file_upload('spec/fixtures/files/test.pdf', 'application/pdf')
       file2 = fixture_file_upload('spec/fixtures/files/test.pdf', 'application/pdf')
 
@@ -317,25 +318,21 @@ RSpec.describe MarketAttributeResponse::PresentationIntervenants, type: :model d
       response.assign_attributes("person_#{timestamp1}_cv_attachment_id" => file1)
       response.save!
 
-      first_cv = response.person_cv_attachment(timestamp1)
-      first_cv_id = first_cv.signed_id
-      first_cv_filename = first_cv.filename.to_s
+      first_cvs = response.person_cv_attachment(timestamp1)
       expect(response.documents.count).to eq(1)
+      expect(first_cvs.size).to eq(1)
 
       # Upload second CV for same person
       response.assign_attributes("person_#{timestamp1}_cv_attachment_id" => file2)
       response.save!
 
-      # Should only have one CV now (old one purged)
-      expect(response.documents.count).to eq(1)
+      # Both CVs are kept (no auto-deletion)
+      expect(response.documents.count).to eq(2)
 
-      # Should retrieve the new CV (different from old one)
-      current_cv = response.person_cv_attachment(timestamp1)
-      expect(current_cv.signed_id).not_to eq(first_cv_id)
-      expect(current_cv.filename.to_s).to eq(first_cv_filename)
-
-      # Old CV attachment should not exist in documents collection
-      expect(response.documents.map(&:signed_id)).not_to include(first_cv_id)
+      # person_cv_attachment returns all CVs
+      current_cvs = response.person_cv_attachment(timestamp1)
+      expect(current_cvs).to be_present
+      expect(current_cvs.size).to eq(2)
     end
   end
 end
