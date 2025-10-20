@@ -3,6 +3,9 @@
   key = market_attribute_response.market_attribute.key
   has_persons = persons_data.present? && persons_data.values.any? { |person| person.present? && person.any? { |_, v| v.present? } }
   documents = market_attribute_response.generic_documents
+  context ||= :web
+  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
+  show_value = !market_attribute_response.auto? || context == :buyer
 %>
 
 <div class="field-layout-container">
@@ -12,7 +15,7 @@
       <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
 
-    <% unless market_attribute_response.auto? %>
+    <% if show_value %>
       <br>
 
       <% if has_persons %>

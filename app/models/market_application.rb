@@ -8,6 +8,7 @@ class MarketApplication < ApplicationRecord
   has_one :editor, through: :public_market
 
   has_one_attached :attestation
+  has_one_attached :buyer_attestation
   has_one_attached :documents_package
   has_many :market_attribute_responses, dependent: :destroy
 

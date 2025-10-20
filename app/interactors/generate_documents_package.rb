@@ -13,7 +13,7 @@ class GenerateDocumentsPackage < ApplicationInteractor
   private
 
   def validate_prerequisites
-    context.fail!(message: 'Attestation requise pour créer le package') unless market_application.attestation.attached?
+    context.fail!(message: 'Attestation acheteur requise pour créer le package') unless market_application.buyer_attestation.attached?
     context.fail!(message: 'Documents package déjà généré') if market_application.documents_package.attached?
   end
 
@@ -43,8 +43,8 @@ class GenerateDocumentsPackage < ApplicationInteractor
   end
 
   def add_attestation_to_zip(zip)
-    attestation_filename = "attestation_FT#{market_application.identifier}.pdf"
-    attestation_content = market_application.attestation.download
+    attestation_filename = "buyer_attestation_FT#{market_application.identifier}.pdf"
+    attestation_content = market_application.buyer_attestation.download
 
     zip.put_next_entry(attestation_filename)
     zip.write(attestation_content)
