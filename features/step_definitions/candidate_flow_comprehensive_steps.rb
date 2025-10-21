@@ -393,9 +393,16 @@ Then('it should have both checked status and attached file') do
   expect(checkbox_doc_response.documents).to be_attached
 end
 
+Then('I should see API names list') do
+  expect(page).to have_content('APIs qui seront interrogées')
+end
+
 Given('I have filled all required fields across all steps') do
   visit "/candidate/market_applications/#{@market_application.identifier}/company_identification"
   fill_in 'market_application_siret', with: '73282932000074'
+  click_button 'Continuer'
+
+  # Skip api_data_recovery_status step
   click_button 'Continuer'
 
   fill_in_all_available_fields

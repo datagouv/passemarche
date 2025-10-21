@@ -14,6 +14,8 @@ class MarketApplicationStepUpdateService < ApplicationService
     case step
     when :company_identification
       handle_company_identification
+    when :api_data_recovery_status
+      handle_api_data_recovery_status
     when :summary
       handle_summary_completion
     else
@@ -32,6 +34,11 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     populate_api_data
 
+    build_result(true)
+  end
+
+  def handle_api_data_recovery_status
+    # Simple passthrough step - no data processing needed
     build_result(true)
   end
 

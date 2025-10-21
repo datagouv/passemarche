@@ -20,6 +20,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
   STEPS = %i[
     company_identification
+    api_data_recovery_status
     market_information
     exclusion_criteria
     economic_capacities
@@ -123,7 +124,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   end
 
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do
-    let(:next_step) { 'market_information' }
+    let(:next_step) { 'api_data_recovery_status' }
 
     context 'with valid SIRET on company_identification' do
       it 'saves the SIRET and redirects to next step' do

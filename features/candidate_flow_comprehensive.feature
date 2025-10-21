@@ -14,7 +14,11 @@ Feature: Comprehensive Candidate Application Flow
     When I visit the company identification step
     Then I should see the SIRET input field
     When I fill in the SIRET with "73282932000074"
-    And I click "Suivant"
+    And I click "Continuer"
+
+    Then I should be on the "api_data_recovery_status" step
+    And I should see API names list
+    When I click "Continuer"
 
     Then I should be on the "market_information" step
     And I should see market information

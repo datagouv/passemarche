@@ -81,6 +81,7 @@ fr:
   button:
     next_step: "Passer à l'étape suivante"
     submit_summary: "Transmettre ma candidature"
+    continue: "Continuer"
 
   home:
     title: "Voie Rapide"
@@ -195,7 +196,12 @@ fr:
         data_from_api: "Données récupérées automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
+      api_data_recovery_status:
+        title: "Récupération automatique de vos données"
+        description: "Nous allons récupérer automatiquement certaines informations de votre entreprise via les APIs suivantes :"
+        apis_list_title: "APIs qui seront interrogées :"
       steps:
+        api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"
         exclusion_criteria: "Les motifs d'exclusion"
         economic_capacities: "Les capacités économiques et financières"
