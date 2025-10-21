@@ -30,37 +30,25 @@
 
       <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div class="fr-col-8">
-          <div class="fr-upload-group">
+          <% files = index == 'NEW_RECORD' ? nil : market_attribute_response.echantillon_fichiers(index) %>
+          <%= direct_upload_field documents: files,
+                                  market_application_identifier: market_attribute_response.market_application.identifier,
+                                  deletable: true,
+                                  form: response_form,
+                                  field_name: "echantillon_#{index}_fichiers" do %>
             <%= response_form.label "echantillon_#{index}_fichiers", "Fichiers (photos, documents)", class: "fr-label" %>
             <span class="fr-hint-text">Format accepté : PDF, JPG, PNG. Taille maximale : 10 Mo par fichier. Vous pouvez joindre plusieurs fichiers.</span>
             <%= response_form.file_field "echantillon_#{index}_fichiers",
                   class: "fr-upload",
+                  direct_upload: true,
                   accept: ".pdf,.jpg,.jpeg,.png",
                   multiple: true %>
-            <% if index != 'NEW_RECORD' %>
-              <% files = market_attribute_response.echantillon_fichiers(index) %>
-              <% if files.any? %>
-                <div class="fr-mt-1w fr-text--sm">
-                  <strong>Fichiers actuels :</strong>
-                  <% files.each do |file| %>
-                    <div>
-                      <%= link_to file.filename.to_s, url_for(file), target: "_blank", rel: "noopener" %>
-                    </div>
-                  <% end %>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
+          <% end %>
         </div>
         <div class="fr-col-4">
           <%= response_form.hidden_field "echantillon_#{index}__destroy", value: '0' %>
           <div class="fr-mt-4w">
-            <button type="button"
-                    class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
-                    data-action="nested-form#remove"
-                    title="Supprimer cet échantillon">
-              Supprimer cet échantillon
-            </button>
+            <%= nested_form_delete_button("cet échantillon") %>
           </div>
         </div>
       </div>

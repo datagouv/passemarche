@@ -81,37 +81,25 @@
 
       <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div class="fr-col-8">
-          <div class="fr-upload-group">
+          <% attestations = index == 'NEW_RECORD' ? nil : market_attribute_response.realisation_attestations(index) %>
+          <%= direct_upload_field documents: attestations,
+                                  market_application_identifier: market_attribute_response.market_application.identifier,
+                                  deletable: true,
+                                  form: response_form,
+                                  field_name: "realisation_#{index}_attestation_bonne_execution" do %>
             <%= response_form.label "realisation_#{index}_attestation_bonne_execution", "Attestations de bonne exécution", class: "fr-label" %>
             <span class="fr-hint-text">Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo. Vous pouvez joindre plusieurs fichiers.</span>
             <%= response_form.file_field "realisation_#{index}_attestation_bonne_execution",
                   class: "fr-upload",
+                  direct_upload: true,
                   accept: ".pdf,.doc,.docx",
                   multiple: true %>
-            <% if index != 'NEW_RECORD' %>
-              <% attestations = market_attribute_response.realisation_attestations(index) %>
-              <% if attestations.any? %>
-                <div class="fr-mt-1w fr-text--sm">
-                  <strong>Attestations actuelles :</strong>
-                  <% attestations.each do |attestation| %>
-                    <div>
-                      <%= link_to attestation.filename.to_s, url_for(attestation), target: "_blank", rel: "noopener" %>
-                    </div>
-                  <% end %>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
+          <% end %>
         </div>
         <div class="fr-col-4">
           <%= response_form.hidden_field "realisation_#{index}__destroy", value: '0' %>
           <div class="fr-mt-4w">
-            <button type="button"
-                    class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
-                    data-action="nested-form#remove"
-                    title="Supprimer cette réalisation">
-              Supprimer cette réalisation
-            </button>
+            <%= nested_form_delete_button("cette réalisation") %>
           </div>
         </div>
       </div>

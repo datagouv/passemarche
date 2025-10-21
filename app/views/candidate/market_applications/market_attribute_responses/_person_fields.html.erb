@@ -52,36 +52,24 @@
 
       <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div class="fr-col-8">
-          <div class="fr-upload-group">
+          <% cv_attachments = index == 'NEW_RECORD' ? nil : market_attribute_response.person_cv_attachment(index) %>
+          <%= direct_upload_field documents: cv_attachments,
+                                  market_application_identifier: market_attribute_response.market_application.identifier,
+                                  deletable: true,
+                                  form: response_form,
+                                  field_name: "person_#{index}_cv_attachment_id" do %>
             <%= response_form.label "person_#{index}_cv_attachment_id", "Ajouter un CV", class: "fr-label" %>
             <span class="fr-hint-text">Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo.</span>
             <%= response_form.file_field "person_#{index}_cv_attachment_id",
                   class: "fr-upload",
+                  direct_upload: true,
                   accept: ".pdf,.doc,.docx" %>
-            <% if index != 'NEW_RECORD' %>
-              <% cv_attachments = market_attribute_response.person_cv_attachment(index) %>
-              <% if cv_attachments.any? %>
-                <div class="fr-mt-1w fr-text--sm">
-                  <strong>CV actuel :</strong>
-                  <% cv_attachments.each do |cv| %>
-                    <div>
-                      <%= link_to cv.filename.to_s, url_for(cv), target: "_blank", rel: "noopener" %>
-                    </div>
-                  <% end %>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
+          <% end %>
         </div>
         <div class="fr-col-4">
           <%= response_form.hidden_field "person_#{index}__destroy", value: '0' %>
           <div class="fr-mt-4w">
-            <button type="button"
-                    class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
-                    data-action="nested-form#remove"
-                    title="Supprimer cette personne">
-              Supprimer cette personne
-            </button>
+            <%= nested_form_delete_button("cette personne") %>
           </div>
         </div>
       </div>

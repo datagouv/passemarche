@@ -47,6 +47,7 @@ Rails.application.routes.draw do
         put ':id', to: 'market_applications#update'
         patch ':id', to: 'market_applications#update'
         post 'retry_sync', to: 'market_applications#retry_sync'
+        delete 'attachments/:signed_id', to: 'attachments#destroy', as: :delete_attachment
       end
     end
 

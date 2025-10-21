@@ -23,18 +23,53 @@ module MarketAttributeResponse::FileAttachable
   def files=(uploaded_files)
     return if uploaded_files.blank?
 
-    uploaded_files.compact_blank.each do |f|
-      next unless f.respond_to?(:tempfile) || f.is_a?(ActionDispatch::Http::UploadedFile)
-
-      documents.attach(
-        io: f.respond_to?(:tempfile) ? f.tempfile : f,
-        filename: f.original_filename,
-        content_type: f.content_type
-      )
-    end
+    uploaded_files.compact_blank.each { |file| attach_file(file) }
   end
 
   private
+
+  def attach_file(file, metadata: {})
+    if file.is_a?(String)
+      attach_direct_upload(file, metadata)
+    elsif file.respond_to?(:tempfile) || file.is_a?(ActionDispatch::Http::UploadedFile)
+      attach_traditional_upload(file, metadata)
+      true
+    else
+      false
+    end
+  rescue ActiveSupport::MessageVerifier::InvalidSignature,
+         ActiveRecord::RecordNotFound,
+         ActiveStorage::IntegrityError
+    errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
+    false
+  end
+
+  def attach_direct_upload(signed_id, metadata)
+    blob = ActiveStorage::Blob.find_signed!(signed_id)
+
+    blob.update(metadata: blob.metadata.merge(metadata)) if metadata.present?
+
+    # Only attach if not already attached (prevents duplicate key errors on resubmit)
+    documents.attach(blob) unless documents.any? { |doc| doc.blob_id == blob.id }
+    true
+  rescue ActiveSupport::MessageVerifier::InvalidSignature,
+         ActiveRecord::RecordNotFound,
+         ActiveStorage::IntegrityError
+    errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
+    false
+  end
+
+  def attach_traditional_upload(file, metadata)
+    attachment_params = {
+      io: file.respond_to?(:tempfile) ? file.tempfile : file,
+      filename: file.original_filename,
+      content_type: file.content_type
+    }
+
+    attachment_params[:metadata] = metadata if metadata.present?
+
+    documents.attach(attachment_params)
+  end
 
   def validate_attached_files
     return if documents.blank?
@@ -47,30 +82,27 @@ module MarketAttributeResponse::FileAttachable
   end
 
   def validate_file_content_type(doc)
-    if doc.content_type.blank?
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.required'))
-    elsif ALLOWED_CONTENT_TYPES.exclude?(doc.content_type)
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
-    end
+    return add_document_error('required') if doc.content_type.blank?
+
+    add_document_error('invalid') if ALLOWED_CONTENT_TYPES.exclude?(doc.content_type)
   end
 
   def validate_file_size(doc)
     size = doc.byte_size
-    if size.blank?
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.required'))
-    elsif !size.is_a?(Numeric)
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.wrong_type'))
-    elsif !size.positive? || size > MAX_FILE_SIZE
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
-    end
+    return add_document_error('required') if size.blank?
+    return add_document_error('wrong_type') unless size.is_a?(Numeric)
+
+    add_document_error('invalid') unless size.positive? && size <= MAX_FILE_SIZE
   end
 
   def validate_file_name(doc)
     name = doc.filename.to_s
-    if name.blank?
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.required'))
-    elsif !name.is_a?(String) || name.length > 255
-      errors.add(:documents, I18n.t('activerecord.errors.json_schema.invalid'))
-    end
+    return add_document_error('required') if name.blank?
+
+    add_document_error('invalid') if !name.is_a?(String) || name.length > 255
+  end
+
+  def add_document_error(message_key)
+    errors.add(:documents, I18n.t("activerecord.errors.json_schema.#{message_key}"))
   end
 end
