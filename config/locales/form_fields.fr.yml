@@ -50,9 +50,7 @@ fr:
           name: Nom et prénom du dirigeant
         identite_entreprise_identification_categorie:
           name: Catégorie de l'entreprise
-        identite_entreprise_identification_code_postal:
-          name: Adresse postale
-        identite_entreprise_identification_adresse:
+        identite_entreprise_identification_adresse_siege_social:
           name: Adresse du siège social
         identite_entreprise_contact_email:
           name: Email
@@ -92,8 +90,9 @@ fr:
         motifs_exclusion_fiscaux_taxes_impots_faillite_interdiction:
           name: Attestation sur l'honneur que l'opérateur économique n'est pas en
             faillite ou qu'il ne lui est pas interdit de gérer une entreprise
-          description: Le candidat doit attester qu'il n'est pas en liquidation judiciaire,
-            ou dans une procédure équivalente s'il est établi hors de France.
+          description: Le candidat doit attester que son dirigeant n’est pas en faillite
+            personnelle et ne fait pas l’objet d’une interdiction de gérer, d'administrer
+            ou de diriger une entreprise.
         motifs_exclusion_fiscaux_taxes_impots_infractions_impots:
           name: Condamnation définitive pour certaines infractions au Code général
             des impôts
@@ -167,7 +166,7 @@ fr:
           name: Plan de vigilance
           description: Le candidat devra attester qu'il a réalisé un plan de vigilance
             l'année précédant l'appel à concurrence (uniquement pour les entreprises
-            soumise à l'article L.225-102-1 du Code de commerce).
+            soumises à l'article L.225-102-1 du Code de commerce).
         capacite_economique_financiere_chiffre_affaires_global_annuel:
           name: Chiffre d'affaires global annuel
           description: Le candidat devra déclarer le chiffre d'affaires de son entreprise
@@ -190,6 +189,9 @@ fr:
             personnel d'encadrement
         capacites_techniques_professionnelles_effectifs_cv_intervenants:
           name: Les titres d'études et professionnels des cadres de l'entreprise
+          description: Le candidat devra indiquer les titres d'études et titres professionnels
+            des cadres de l'entreprise (responsables de prestation, responsable de
+            conduite de travaux ...).
         capacites_techniques_professionnelles_effectifs_techniciens_organismes:
           name: Les techniciens ou organismes responsables du contrôle de la qualité
           description: Le candidat devra présenter les techniciens ou les organismes
@@ -254,7 +256,7 @@ fr:
             années
           description: Le candidat devra fournir les documents pouvant attester de
             la bonne réalisation des prestations
-        realisations_livraisons_cinq_ans:
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
           name: Liste des principaux travaux effectués au cours des cinq (5) dernières
             années 
           description: Le candidat doit fournir la liste des principaux travaux exécutés
@@ -375,9 +377,7 @@ fr:
           name: Nom et prénom du dirigeant
         identite_entreprise_identification_categorie:
           name: Catégorie de l'entreprise
-        identite_entreprise_identification_code_postal:
-          name: Adresse postale
-        identite_entreprise_identification_adresse:
+        identite_entreprise_identification_adresse_siege_social:
           name: Adresse du siège social
         identite_entreprise_contact_email:
           name: Email
@@ -404,14 +404,14 @@ fr:
           name: Votre entreprise a-t-elle été condamnée pour méconnaissance de certaines
             obligations dans le domaine du droit du travail puni également par le
             Code pénal ?
-          description: 'Exemple : travail dissimulé par dissimulation d''activité,
-            travail dissimulé par dissimulation d''emploi salarié, marchandage, prêt
-            illicite de main-d''œuvre, emploi d''étrangers non autorisés à travailler.'
+          description: 'Exemple : travail dissimulé, travail dissimulé par dissimulation
+            d''activité, travail dissimulé par dissimulation d''emploi salarié, marchandage,
+            prêt illicite de main-d''œuvre, emploi d''étrangers non autorisés à travailler.'
         motifs_exclusion_condamnations_penales_negociation_remuneration:
-          name: Votre entreprise a-t-elle manquée à ses obligations de négociation
+          name: Votre entreprise a-t-elle manqué à ses obligations de négociation
             périodique sur la rémunération et sur l'égalité professionnelle hommes-femmes
             ?
-          description: Tout les 4 ans, les négociations sont obligatoires et prévues
+          description: Tous les 4 ans, les négociations sont obligatoires et prévues
             par le Code du travail (rémunération, temps de travail, égalité femmes-hommes,
             conditions de travail).
         motifs_exclusion_fiscaux_taxes_impots_liquidation_judiciaire:
@@ -421,27 +421,26 @@ fr:
             justifier l'absence de redressement ou liquidation judiciaire ou tout
             autre procédure équivalente.
         motifs_exclusion_fiscaux_taxes_impots_faillite_interdiction:
-          name: Le dirigeant de l'entreprise est-il en faillite personnelle ou il
-            lui est il interdit de gérer une entreprise ?
+          name: Le dirigeant de l'entreprise est-il en faillite personnelle ou lui
+            est-il interdit de gérer une entreprise ?
         motifs_exclusion_fiscaux_taxes_impots_infractions_impots:
           name: Votre entreprise a t-elle été condamnée pénalement pour certaines
             infractions issues du Code général des impôts ?
           description: 'Par exemple : fraude fiscale, refus de contrôle par l''administration
             ou délivrance de faux documents (Code général des impôts).'
         motifs_exclusion_fiscaux_taxes_impots_declarations_fiscales:
-          name: Votre entreprise a t-elle manqué à ses obligations d'acquittement
-            des impôts, taxes, contributions sociales exigibles ?
+          name: Votre entreprise ne s'est-elle pas acquittée des impôts, taxes, contributions
+            sociales exigibles ?
           description: 'Par exemple : impôt sur le revenu ou sociétés, TVA, etc'
         motifs_exclusion_sociaux_declarations_cotisations_sociales:
-          name: Votre entreprise a t-elle manqué à ses obligations relatives au déclaration
-            et paiement des cotisations sociales ?
+          name: Votre entreprise a-t-elle manqué à ses obligations de déclaration
+            et de paiement des cotisations sociales ?
         motifs_exclusion_sociaux_declarations_travailleurs_handicapes:
           name: Votre entreprise a t-elle manqué à ses obligations d'emploi de travailleurs
             handicapés ?
-          description: Sont concernées, les entreprises employant au moins 20 salariés,
-            concernée par l'emploi de travailleurs handicapés prévue par le Code du
-            travail (art. L.5212-1 à L.5212-11), conformément au Code de la commande
-            publique.
+          description: Sont concernées par l'obligation d'emploi de travailleurs handicapés,
+            les entreprises employant au moins 20 salariés (art. L.5212-1 à L.5212-11
+            du Code du travail)
         motifs_exclusion_sociaux_declarations_travailleurs_etrangers:
           name: Votre entreprise emploie t-elle des travailleurs étrangers ?
           description: Si votre entreprise emploie des salariés étrangers, elle doit
@@ -469,10 +468,10 @@ fr:
             manquements graves ou répétés dans l''exécution d''un précédent contrat
             public.'
         motifs_exclusion_appreciation_acheteur_discretionnaire_influence_preparation:
-          name: Votre entreprise a-telle tentée d'influencer indûment la décision
+          name: Votre entreprise a-t-elle tenté d'influencer indûment la décision
             de l'acheteur, obtenu ou utilisé des informations confidentielles, fourni
             des informations trompeuses, ou encore profité d'une participation préalable
-            préalable à la procédure créant une distorsion de concurrence ?
+            à la procédure créant une distorsion de concurrence ?
         motifs_exclusion_appreciation_acheteur_discretionnaire_presomption_entente:
           name: Votre entreprise a-t-elle fait l'objet d'une présomption d'entente
             ?
@@ -486,14 +485,14 @@ fr:
             ou son indépendance. Il existe un doute sur l'impartialité de votre entreprise
             en tant que candidate.
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-          name: Votre entreprise a-t-elle manquée à l'obligation d'établir un Bilan
+          name: Votre entreprise a-t-elle manqué à l'obligation d'établir un Bilan
             de gaz à effet de serre (BEGES), alors qu'elle est concernée ?
           description: Uniquement pour les entreprises, soumise à l'article L.229-25
             du Code de l'environnement, n'a pas réalisé son bilan des émissions de
             gaz à effet de serre pour l'année précédant l'appel à la concurrence ou
             d'engagement de la consultation.
         motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
-          name: Votre entreprise a-t-elle manquée à l'obligation d'établissement d'un
+          name: Votre entreprise a-t-elle manqué à l'obligation d'établissement d'un
             plan de vigilance ?
           description: Uniquement pour les entreprises soumises à l'article L.225-102-1
             du Code de commerce, n'a pas établi son plan de vigilance (mesures prévues
@@ -505,7 +504,7 @@ fr:
             des trois années précédentes, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
           name: Les bilans ou extraits de bilans de votre entreprise au cours des
-            trois derniers exercices comptables clôturées
+            trois derniers exercices comptables clôturés
           description: Vous devez fournir les bilans ou extraits de bilans de votre
             entreprise qui concernent les trois derniers exercices comptables clôturés.
         capacite_economique_financiere_assurance_risques_professionnels:
@@ -590,10 +589,10 @@ fr:
             en lien avec le marché et qui démontrent les capacités techniques et professionnelles
             de votre entreprise
         capacites_techniques_professionnelles_realisations_attestations_trois_ans:
-          name: Attestation de bonnes exécution
+          name: Attestation de bonne exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
             exécuté des contrats similaires
-        realisations_livraisons_cinq_ans:
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
           name: Les principaux travaux effectués par votre entreprise au cours des
             cinq dernières années
           description: Décrivez les principaux travaux effectués au cours des cinq
@@ -601,16 +600,16 @@ fr:
             Veillez à sélectionner les travaux en lien avec le marché et qui démontrent
             les capacités techniques et professionnelles de votre entreprise
         capacites_techniques_professionnelles_realisations_attestations_cinq_ans:
-          name: Attestation de bonnes exécution
+          name: Attestation de bonne exécution
           description: Joignez les attestations prouvant que votre entreprise a bien
             exécuté des contrats similaires. Elles doivent indiquer le montant, la
             date, le lieu des travaux et confirmer qu'ils ont été réalisés dans les
             règles de l'art et menés à bonne fin.
         capacites_techniques_professionnelles_outillage_materiel_equipements:
           name: L'outillage, le matériel, les équipements techniques qui serviront
-            à la bonne exécution du marché
+            à la bonne exécution du contrat
           description: 'Précisez les moyens techniques que votre entreprise mobilisera
-            pour exécuter le marché : types d''outils, machines, matériel spécialisé
+            pour exécuter le contrat : types d''outils, machines, matériel spécialisé
             ou équipements particuliers. L''objectif est de montrer que vous disposez
             des ressources nécessaires et adaptées pour garantir la bonne réalisation
             des prestations.'
@@ -631,7 +630,7 @@ fr:
             gestion des stocks et respect des délais.'
         capacites_techniques_professionnelles_assurance_qualite_gestion_environnementale:
           name: Les mesures de gestion environnementale que vous appliquerez dans
-            le cadre de ce marché
+            le cadre de ce contrat
           description: 'Précisez les actions mises en place pour limiter l''impact
             environnemental : gestion des déchets, économies d''énergie, utilisation
             de matériaux durables ou pratiques écoresponsables.'
@@ -662,6 +661,7 @@ fr:
             peuvent être proposées, à condition de garantir le même niveau d'exigence
         capacites_techniques_professionnelles_securite_et_confidentialite_description_source_approvisionnement:
           name: Les systèmes de gestion, de suivi de la chaîne d'approvisionnement
+            et la capacité de réponse à une hausse des besoins
           description: Mon entreprise doit décrire ses sources d'approvisionnement
             (et leur localisation si elles sont hors Europe), ainsi que sa capacité
             à répondre à une hausse des besoins, à assurer la maintenance, la modernisation
