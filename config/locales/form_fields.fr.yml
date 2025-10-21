@@ -50,9 +50,7 @@ fr:
           name: Nom et prénom du dirigeant
         identite_entreprise_identification_categorie:
           name: Catégorie de l'entreprise
-        identite_entreprise_identification_code_postal:
-          name: Adresse postale
-        identite_entreprise_identification_adresse:
+        identite_entreprise_identification_adresse_siege_social:
           name: Adresse du siège social
         identite_entreprise_contact_email:
           name: Email
@@ -254,7 +252,7 @@ fr:
             années
           description: Le candidat devra fournir les documents pouvant attester de
             la bonne réalisation des prestations
-        realisations_livraisons_cinq_ans:
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
           name: Liste des principaux travaux effectués au cours des cinq (5) dernières
             années 
           description: Le candidat doit fournir la liste des principaux travaux exécutés
@@ -375,9 +373,7 @@ fr:
           name: Nom et prénom du dirigeant
         identite_entreprise_identification_categorie:
           name: Catégorie de l'entreprise
-        identite_entreprise_identification_code_postal:
-          name: Adresse postale
-        identite_entreprise_identification_adresse:
+        identite_entreprise_identification_adresse_siege_social:
           name: Adresse du siège social
         identite_entreprise_contact_email:
           name: Email
@@ -593,7 +589,7 @@ fr:
           name: Attestation de bonnes exécution
           description: Joignez les attestations prouvant que votre entreprise a déjà
             exécuté des contrats similaires
-        realisations_livraisons_cinq_ans:
+        capacites_techniques_professionnelles_realisations_livraisons_cinq_ans:
           name: Les principaux travaux effectués par votre entreprise au cours des
             cinq dernières années
           description: Décrivez les principaux travaux effectués au cours des cinq
