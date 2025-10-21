@@ -38,6 +38,7 @@ class MarketApplicationStepUpdateService < ApplicationService
   def populate_api_data
     populate_insee_data
     populate_rne_data
+    populate_qualibat_data
   end
 
   def populate_insee_data
@@ -66,6 +67,20 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     mark_api_attributes_as_manual_after_failure('rne')
     @flash_messages[:alert] = I18n.t('candidate.market_applications.rne_api_error', error: result.error)
+  end
+
+  def populate_qualibat_data
+    return if market_application.siret.blank?
+
+    result = Qualibat.call(
+      params: { siret: market_application.siret },
+      market_application:
+    )
+
+    return if result.success?
+
+    mark_api_attributes_as_manual_after_failure('qualibat')
+    @flash_messages[:alert] = I18n.t('candidate.market_applications.qualibat_api_error', error: result.error)
   end
 
   def mark_api_attributes_as_manual_after_failure(api_name)
