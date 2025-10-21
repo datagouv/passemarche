@@ -39,3 +39,9 @@ fake_editor_app/fake_editor.db
 /config/form_fields/fields_cleaned.csv
 
 /.claude
+
+/config/credentials/sandbox.key
+
+/config/credentials/staging.key
+
+/config/credentials/preprod.key
