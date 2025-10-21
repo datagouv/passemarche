@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ApiResponses::InseeResponses
   include ApiResponses::RneResponses
+  include ApiResponses::QualibatResponses
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
