@@ -28,6 +28,7 @@ gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'wicked'
 gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 gem 'sentry-rails'
 gem 'sentry-ruby'
