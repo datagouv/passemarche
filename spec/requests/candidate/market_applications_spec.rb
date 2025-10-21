@@ -6,6 +6,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ActiveJob::TestHelper
   include ApiResponses::InseeResponses
   include ApiResponses::RneResponses
+  include ApiResponses::QualibatResponses
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
