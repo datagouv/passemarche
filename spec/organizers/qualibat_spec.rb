@@ -4,9 +4,9 @@ RSpec.describe Qualibat, type: :organizer do
   include ApiResponses::QualibatResponses
 
   let(:siret) { '78824266700020' }
-  let(:base_url) { 'https://staging.entreprise.api.gouv.fr' }
+  let(:base_url) { 'https://staging.entreprise.api.gouv.fr/' }
   let(:token) { 'test-token-12345' }
-  let(:api_url) { "#{base_url}/v4/qualibat/etablissements/#{siret}/certification_batiment" }
+  let(:api_url) { "#{base_url}v4/qualibat/etablissements/#{siret}/certification_batiment" }
 
   before do
     allow(Rails.application.credentials).to receive(:api_entreprise).and_return(
@@ -138,6 +138,68 @@ RSpec.describe Qualibat, type: :organizer do
       it 'sets an error message' do
         result = subject
         expect(result.error).to eq('Missing API credentials')
+      end
+    end
+
+    context 'when the API returns server error (500)' do
+      before do
+        stub_request(:get, api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013',
+              'object' => 'Réponse appel offre'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 500,
+            body: { error: 'Internal Server Error' }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'sets an error message' do
+        result = subject
+        expect(result.error).to be_present
+      end
+
+      it 'does not create bundled_data' do
+        result = subject
+        expect(result.bundled_data).to be_nil
+      end
+    end
+
+    context 'when the API request times out' do
+      before do
+        stub_request(:get, api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013',
+              'object' => 'Réponse appel offre'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_timeout
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'sets an error message about timeout' do
+        result = subject
+        expect(result.error).to be_present
+      end
+
+      it 'does not create bundled_data' do
+        result = subject
+        expect(result.bundled_data).to be_nil
       end
     end
 
