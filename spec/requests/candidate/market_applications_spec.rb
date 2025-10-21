@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Candidate::MarketApplications', type: :request do
+  include ActiveJob::TestHelper
   include ApiResponses::InseeResponses
   include ApiResponses::RneResponses
 
@@ -287,21 +288,37 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
 
       it 'calls INSEE API and populates market_attribute_responses' do
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: valid_siret } }
+        # Perform jobs as they're enqueued
+        perform_enqueued_jobs do
+          # First submit SIRET - this enqueues background jobs
+          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
+            params: { market_application: { siret: valid_siret } }
+        end
 
         expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+          "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
         )
 
         market_application.reload
         expect(market_application.siret).to eq(valid_siret)
 
+        # Verify API data was populated by jobs
         siret_response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
         category_response = market_application.market_attribute_responses.find_by(market_attribute: category_attribute)
 
         expect(siret_response.text).to eq('41816609600069')
         expect(category_response.text).to eq('PME')
+
+        # Verify API statuses in JSONB
+        expect(market_application.api_fetch_status['Insee']['status']).to eq('completed')
+        expect(market_application.api_fetch_status['Insee']['fields_filled']).to eq(2)
+
+        # Then navigate through the status page
+        patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/market_information"
+        )
       end
 
       context 'when INSEE API fails' do
@@ -339,20 +356,37 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         end
 
         it 'still saves SIRET and creates responses marked as manual_after_api_failure' do
-          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-            params: { market_application: { siret: valid_siret } }
+          # Perform jobs as they're enqueued
+          perform_enqueued_jobs do
+            # First submit SIRET - this enqueues background jobs
+            patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
+              params: { market_application: { siret: valid_siret } }
+          end
 
           expect(response).to redirect_to(
-            "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+            "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
           )
 
           market_application.reload
           expect(market_application.siret).to eq(valid_siret)
+
+          # Verify API failure was handled by jobs
           expect(market_application.market_attribute_responses.count).to eq(2)
 
           # Verify responses are marked as manual_after_api_failure
           responses = market_application.market_attribute_responses.reload
           expect(responses.map(&:source).uniq).to eq(['manual_after_api_failure'])
+
+          # Verify API statuses in JSONB show failures
+          expect(market_application.api_fetch_status['Insee']['status']).to eq('failed')
+          expect(market_application.api_fetch_status['rne']['status']).to eq('failed')
+
+          # Then navigate through the status page
+          patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+          expect(response).to redirect_to(
+            "/candidate/market_applications/#{market_application.identifier}/market_information"
+          )
         end
       end
     end

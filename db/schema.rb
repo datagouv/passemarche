@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_14_094858) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_21_200037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,6 +74,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_14_094858) do
     t.datetime "updated_at", null: false
     t.datetime "completed_at"
     t.integer "sync_status", default: 0, null: false
+    t.jsonb "api_fetch_status", default: {}, null: false
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"

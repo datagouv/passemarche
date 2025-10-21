@@ -20,133 +20,30 @@ RSpec.describe MarketApplicationStepUpdateService do
   describe '.call' do
     context 'with company_identification step' do
       let(:params) { { siret: '41816609600069' } }
-      let(:siren) { '418166096' }
-      let(:insee_url) { "#{base_url}v3/insee/sirene/etablissements/#{params[:siret]}" }
-      let(:rne_url) { "#{base_url}v3/inpi/rne/unites_legales/#{siren}/extrait_rne" }
 
-      before do
-        # Create market attributes that will be populated by APIs
-        create(:market_attribute, :text_input, :from_api,
-          key: 'identite_entreprise_identification_siret',
-          api_name: 'Insee',
-          api_key: 'siret',
-          public_markets: [public_market])
+      it 'returns success' do
+        result = described_class.call(market_application, :company_identification, params)
 
-        create(:market_attribute, :text_input, :from_api,
-          key: 'identite_entreprise_identification_nom_prenom',
-          api_name: 'rne',
-          api_key: 'first_name_last_name',
-          public_markets: [public_market])
+        expect(result[:success]).to be true
       end
 
-      context 'when API calls succeed' do
-        before do
-          stub_request(:get, insee_url)
-            .with(
-              query: hash_including(
-                'context' => 'Candidature marché public',
-                'recipient' => '13002526500013'
-              ),
-              headers: { 'Authorization' => "Bearer #{token}" }
-            )
-            .to_return(
-              status: 200,
-              body: insee_etablissement_success_response(siret: params[:siret]),
-              headers: { 'Content-Type' => 'application/json' }
-            )
+      it 'saves the SIRET' do
+        described_class.call(market_application, :company_identification, params)
 
-          stub_request(:get, rne_url)
-            .with(
-              query: hash_including(
-                'context' => 'Candidature marché public',
-                'recipient' => '13002526500013'
-              ),
-              headers: { 'Authorization' => "Bearer #{token}" }
-            )
-            .to_return(
-              status: 200,
-              body: rne_extrait_success_response(siren:),
-              headers: { 'Content-Type' => 'application/json' }
-            )
-        end
-
-        it 'returns success' do
-          result = described_class.call(market_application, :company_identification, params)
-
-          expect(result[:success]).to be true
-        end
-
-        it 'saves the SIRET' do
-          described_class.call(market_application, :company_identification, params)
-
-          expect(market_application.reload.siret).to eq('41816609600069')
-        end
-
-        it 'populates data from APIs' do
-          described_class.call(market_application, :company_identification, params)
-
-          expect(market_application.market_attribute_responses.count).to eq(2)
-        end
-
-        it 'has no flash messages' do
-          result = described_class.call(market_application, :company_identification, params)
-
-          expect(result[:flash_messages]).to be_empty
-        end
+        expect(market_application.reload.siret).to eq('41816609600069')
       end
 
-      context 'when INSEE API fails' do
-        before do
-          stub_request(:get, insee_url)
-            .with(
-              query: hash_including(
-                'context' => 'Candidature marché public',
-                'recipient' => '13002526500013'
-              ),
-              headers: { 'Authorization' => "Bearer #{token}" }
-            )
-            .to_return(
-              status: 404,
-              body: insee_etablissement_not_found_response,
-              headers: { 'Content-Type' => 'application/json' }
-            )
+      it 'does not call APIs' do
+        expect(Insee).not_to receive(:call)
+        expect(Rne).not_to receive(:call)
 
-          stub_request(:get, rne_url)
-            .with(
-              query: hash_including(
-                'context' => 'Candidature marché public',
-                'recipient' => '13002526500013'
-              ),
-              headers: { 'Authorization' => "Bearer #{token}" }
-            )
-            .to_return(
-              status: 200,
-              body: rne_extrait_success_response(siren:),
-              headers: { 'Content-Type' => 'application/json' }
-            )
-        end
+        described_class.call(market_application, :company_identification, params)
+      end
 
-        it 'still returns success' do
-          result = described_class.call(market_application, :company_identification, params)
+      it 'has no flash messages' do
+        result = described_class.call(market_application, :company_identification, params)
 
-          expect(result[:success]).to be true
-        end
-
-        it 'marks INSEE attributes as manual_after_api_failure' do
-          described_class.call(market_application, :company_identification, params)
-
-          insee_attribute = public_market.market_attributes.find_by(api_name: 'Insee')
-          response = market_application.market_attribute_responses.find_by(market_attribute: insee_attribute)
-
-          expect(response.source).to eq('manual_after_api_failure')
-        end
-
-        it 'includes error flash message' do
-          result = described_class.call(market_application, :company_identification, params)
-
-          expect(result[:flash_messages][:alert]).to be_present
-          expect(result[:flash_messages][:alert]).to include('récupérer les informations')
-        end
+        expect(result[:flash_messages]).to be_empty
       end
 
       context 'when validation fails' do
@@ -157,6 +54,31 @@ RSpec.describe MarketApplicationStepUpdateService do
 
           expect(result[:success]).to be false
         end
+      end
+    end
+
+    context 'with api_data_recovery_status step' do
+      let(:params) { {} }
+
+      it 'returns success' do
+        result = described_class.call(market_application, :api_data_recovery_status, params)
+
+        expect(result[:success]).to be true
+      end
+
+      it 'has no flash messages' do
+        result = described_class.call(market_application, :api_data_recovery_status, params)
+
+        expect(result[:flash_messages]).to be_empty
+      end
+
+      it 'is a simple passthrough (API calls happen in background jobs)' do
+        # This step doesn't trigger API calls directly anymore
+        # API calls are triggered via background jobs in company_identification step
+        result = described_class.call(market_application, :api_data_recovery_status, params)
+
+        expect(result[:success]).to be true
+        expect(result[:market_application]).to eq(market_application)
       end
     end
 

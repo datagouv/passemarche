@@ -32,13 +32,14 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     return build_result(false) unless market_application.save(context: step)
 
-    populate_api_data
+    # Enqueue coordinator job to fetch API data
+    FetchApiDataCoordinatorJob.perform_later(market_application.id)
 
     build_result(true)
   end
 
   def handle_api_data_recovery_status
-    # Simple passthrough step - no data processing needed
+    # Simple passthrough - this step is just for displaying sync status
     build_result(true)
   end
 
