@@ -9,10 +9,7 @@ if Rails.env.test?
     enable_local_file_access: true
   })
 else
-  # Use the actual wkhtmltopdf installation (patched version)
-  WickedPdf.config.merge!({
-    exe_path: '/usr/local/bin/wkhtmltopdf',
-    enable_local_file_access: true,
-    wkhtmltopdf: '/usr/local/bin/wkhtmltopdf'
-  })
+  # Use the bundled wkhtmltopdf binary from wkhtmltopdf-binary gem
+  # This removes the dependency on external system installation
+  WickedPdf.config[:enable_local_file_access] = true
 end
