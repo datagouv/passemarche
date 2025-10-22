@@ -11,26 +11,13 @@ class FetchApiDataCoordinatorJob < ApplicationJob
   ].freeze
 
   def perform(market_application_id)
-    market_application = MarketApplication.find(market_application_id)
-
-    # Initialize all APIs as pending
-    initialize_api_statuses(market_application)
-
     # Spawn all individual API jobs in parallel
+    # Note: API statuses are already initialized as 'pending' by the service before this job runs
     API_JOBS.each do |job_class|
       job_class.perform_later(market_application_id)
     end
   rescue StandardError => e
     Rails.logger.error "Error in coordinator for market application #{market_application_id}: #{e.message}"
     raise
-  end
-
-  private
-
-  def initialize_api_statuses(market_application)
-    API_JOBS.each do |job_class|
-      api_name = job_class.api_name
-      market_application.update_api_status(api_name, status: 'pending')
-    end
   end
 end

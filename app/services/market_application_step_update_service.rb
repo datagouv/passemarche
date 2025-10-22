@@ -32,6 +32,9 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     return build_result(false) unless market_application.save(context: step)
 
+    # Reset API statuses to pending synchronously to avoid showing stale "completed" status
+    reset_api_statuses_to_pending
+
     # Enqueue coordinator job to fetch API data
     FetchApiDataCoordinatorJob.perform_later(market_application.id)
 
@@ -74,6 +77,16 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     mark_api_attributes_as_manual_after_failure('rne')
     @flash_messages[:alert] = I18n.t('candidate.market_applications.rne_api_error', error: result.error)
+  end
+
+  def reset_api_statuses_to_pending
+    # Get list of API names from coordinator job
+    api_jobs = [FetchInseeDataJob, FetchRneDataJob]
+
+    api_jobs.each do |job_class|
+      api_name = job_class.api_name
+      market_application.update_api_status(api_name, status: 'pending', fields_filled: 0)
+    end
   end
 
   def mark_api_attributes_as_manual_after_failure(api_name)
