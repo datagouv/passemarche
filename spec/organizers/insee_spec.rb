@@ -297,7 +297,7 @@ RSpec.describe Insee, type: :organizer do
       let!(:siret_attribute) do
         create(:market_attribute, :text_input, :from_api,
           key: 'identite_entreprise_identification_siret',
-          api_name: 'Insee',
+          api_name: 'insee',
           api_key: 'siret',
           public_markets: [public_market])
       end
@@ -305,7 +305,7 @@ RSpec.describe Insee, type: :organizer do
       let!(:category_attribute) do
         create(:market_attribute, :text_input, :from_api,
           key: 'identite_entreprise_identification_categorie',
-          api_name: 'Insee',
+          api_name: 'insee',
           api_key: 'category',
           public_markets: [public_market])
       end

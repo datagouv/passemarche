@@ -239,7 +239,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       let!(:siret_attribute) do
         create(:market_attribute, :text_input, :from_api,
           key: 'identite_entreprise_identification_siret',
-          api_name: 'Insee',
+          api_name: 'insee',
           api_key: 'siret',
           public_markets: [public_market])
       end
@@ -247,7 +247,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       let!(:category_attribute) do
         create(:market_attribute, :text_input, :from_api,
           key: 'identite_entreprise_identification_categorie',
-          api_name: 'Insee',
+          api_name: 'insee',
           api_key: 'category',
           public_markets: [public_market])
       end
@@ -310,8 +310,8 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         expect(category_response.text).to eq('PME')
 
         # Verify API statuses in JSONB
-        expect(market_application.api_fetch_status['Insee']['status']).to eq('completed')
-        expect(market_application.api_fetch_status['Insee']['fields_filled']).to eq(2)
+        expect(market_application.api_fetch_status['insee']['status']).to eq('completed')
+        expect(market_application.api_fetch_status['insee']['fields_filled']).to eq(2)
 
         # Then navigate through the status page
         patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
@@ -378,7 +378,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           expect(responses.map(&:source).uniq).to eq(['manual_after_api_failure'])
 
           # Verify API statuses in JSONB show failures
-          expect(market_application.api_fetch_status['Insee']['status']).to eq('failed')
+          expect(market_application.api_fetch_status['insee']['status']).to eq('failed')
           expect(market_application.api_fetch_status['rne']['status']).to eq('failed')
 
           # Then navigate through the status page

@@ -4,7 +4,7 @@ class Insee < ApplicationOrganizer
     MapApiData
 
   def self.call(context = {})
-    context[:api_name] ||= 'Insee'
+    context[:api_name] ||= 'insee'
     super
   end
 end
