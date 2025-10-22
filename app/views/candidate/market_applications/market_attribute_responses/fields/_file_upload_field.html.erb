@@ -1,15 +1,13 @@
 <%# Expected variables: form:, attribute_response: %>
 <%
-  # For repeatable fields with specialized documents, show only generic documents
-  # For other types, show all documents
-  documents = if attribute_response.respond_to?(:generic_documents)
-                attribute_response.generic_documents
-              else
-                attribute_response.documents
-              end
+  documents = attribute_response.documents
+  market_application_identifier = attribute_response.market_application&.identifier
 %>
 
-<div class="fr-upload-group fr-card fr-p-2w">
+<div class="fr-upload-group fr-card fr-p-2w"
+     data-controller="direct-upload"
+     data-direct-upload-market-application-identifier-value="<%= market_application_identifier %>"
+     data-direct-upload-deletable-value="true">
   <%= form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{attribute_response.id}" %>
   <span class="fr-hint-text fr-mb-2w fr-text--sm">
     Taille maximale : <%= MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte %> Mo.
@@ -23,36 +21,38 @@
       id: "upload-#{attribute_response.id}",
       aria: { describedby: "upload-#{attribute_response.id}-messages" } %>
 
-  <% if documents.is_a?(Array) ? documents.any? : documents.attached? %>
-    <div class="fr-mt-2w fr-text--sm fr-mb-0">
-      <strong>Fichiers actuels :</strong>
-      <% documents.each do |document| %>
-        <div>
-          <% if document.persisted? %>
-            <turbo-frame id="document_<%= document.id %>">
-                <div class="uploaded-file"
-                  data-controller="delete-document-confirm"
-                  data-market-application-id="<%= @market_application.identifier %>">
-                <%= link_to document.filename.to_s,
-                  url_for(document),
-                  target: "_blank", rel: "noopener" %>
-
-                <button type="button"
-                  data-document-id="<%= document.id %>"
-                  data-turbo-confirm="Êtes-vous sûr de vouloir supprimer ce document ?"
-                  title="Supprimer ce document"
-                  class="fr-btn--icon delete-document-btn">
-                    <span class="fr-icon--sm fr-icon-delete-line fr-text-title--blue-france" aria-hidden="true"></span>
-                </button>
-              </div>
-            </turbo-frame>
-          <% else %>
-            <span><%= document.filename.to_s %> (en cours de téléchargement)</span>
-          <% end %>
-        </div>
-      <% end %>
+  <div data-direct-upload-target="progress" class="hidden fr-mt-1w">
+    <div class="direct-upload-progress">
+      <div data-direct-upload-target="progressBar" class="direct-upload-progress-bar"></div>
     </div>
-  <% end %>
+  </div>
+
+  <div data-direct-upload-target="filesList" class="files-list">
+    <% if documents.attached? %>
+      <div class="fr-mt-2w fr-text--sm fr-mb-0">
+        <strong>Fichiers actuels :</strong>
+        <% documents.each do |document| %>
+          <%# Add hidden field to preserve file on form resubmit (backend handles duplicates) %>
+          <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil) %>
+          <div class="file-item" data-signed-id="<%= document.signed_id %>">
+            <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener", class: "file-link" %>
+            <span class="file-delete-wrapper">
+              <button type="button"
+                      class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-delete-line"
+                      data-controller="file-delete"
+                      data-file-delete-signed-id-value="<%= document.signed_id %>"
+                      data-file-delete-url-value="<%= delete_attachment_candidate_market_application_path(market_application_identifier, document.signed_id) %>"
+                      data-file-delete-filename-value="<%= document.filename %>"
+                      data-action="click->file-delete#delete"
+                      title="Supprimer <%= document.filename %>">
+                Supprimer
+              </button>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
   <% if form.object.errors[:base].present? %>
     <p class="fr-error-text">

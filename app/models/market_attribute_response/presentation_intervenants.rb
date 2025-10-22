@@ -36,12 +36,8 @@ class MarketAttributeResponse::PresentationIntervenants < MarketAttributeRespons
     ['cv_attachment_id']
   end
 
-  def cleanup_old_specialized_documents?
-    true
-  end
-
   def person_cv_attachment(person_timestamp)
-    get_specialized_document(person_timestamp, 'cv_attachment_id')
+    get_specialized_documents(person_timestamp, 'cv_attachment_id')
   end
 
   def item_prefix

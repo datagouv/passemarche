@@ -2,7 +2,7 @@
   persons_data = market_attribute_response.persons
   key = market_attribute_response.market_attribute.key
   has_persons = persons_data.present? && persons_data.values.any? { |person| person.present? && person.any? { |_, v| v.present? } }
-  documents = market_attribute_response.generic_documents
+  documents = market_attribute_response.documents
   context ||= :web
   # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
   show_value = !market_attribute_response.auto? || context == :buyer
@@ -50,16 +50,20 @@
                   <% end %>
 
                   <% if person['cv_attachment_id'].present? %>
-                    <% cv_attachment = market_attribute_response.person_cv_attachment(timestamp) %>
-                    <% if cv_attachment %>
+                    <% cv_attachments = market_attribute_response.person_cv_attachment(timestamp) %>
+                    <% if cv_attachments.any? %>
                       <div class="fr-mb-1v">
                         <strong>CV :</strong>
-                        <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                        <%= link_to cv_attachment.filename.to_s,
-                                    url_for(cv_attachment),
-                                    target: "_blank", rel: "noopener",
-                                    class: "fr-link fr-text--sm" %>
-                        (<%= number_to_human_size(cv_attachment.byte_size) %>)
+                        <% cv_attachments.each do |cv| %>
+                          <div>
+                            <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                            <%= link_to cv.filename.to_s,
+                                        url_for(cv),
+                                        target: "_blank", rel: "noopener",
+                                        class: "fr-link fr-text--sm" %>
+                            (<%= number_to_human_size(cv.byte_size) %>)
+                          </div>
+                        <% end %>
                       </div>
                     <% end %>
                   <% end %>

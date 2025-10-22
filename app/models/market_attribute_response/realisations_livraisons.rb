@@ -43,10 +43,6 @@ class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
     ['attestation_bonne_execution']
   end
 
-  def cleanup_old_specialized_documents?
-    false
-  end
-
   alias realisations items
   alias realisations= items=
   alias realisations_ordered items_ordered
@@ -54,13 +50,7 @@ class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
   validate :validate_realisations_structure
 
   def realisation_attestations(realisation_timestamp)
-    return [] unless documents.attached?
-
-    documents.select do |doc|
-      doc.metadata['field_type'] == 'specialized' &&
-        doc.metadata['item_timestamp'] == realisation_timestamp.to_s &&
-        doc.metadata['field_name'] == 'attestation_bonne_execution'
-    end
+    get_specialized_documents(realisation_timestamp, 'attestation_bonne_execution')
   end
 
   def set_item_field(item_timestamp, field_name, field_value)

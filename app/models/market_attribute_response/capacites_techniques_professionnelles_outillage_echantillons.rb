@@ -32,10 +32,6 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchan
     ['fichiers']
   end
 
-  def cleanup_old_specialized_documents?
-    false
-  end
-
   alias echantillons items
   alias echantillons= items=
   alias echantillons_ordered items_ordered
@@ -43,13 +39,7 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchan
   validate :validate_echantillons_structure
 
   def echantillon_fichiers(echantillon_timestamp)
-    return [] unless documents.attached?
-
-    documents.select do |doc|
-      doc.metadata['field_type'] == 'specialized' &&
-        doc.metadata['item_timestamp'] == echantillon_timestamp.to_s &&
-        doc.metadata['field_name'] == 'fichiers'
-    end
+    get_specialized_documents(echantillon_timestamp, 'fichiers')
   end
 
   private

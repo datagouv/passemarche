@@ -91,3 +91,46 @@
 .certificate-col {
   width: 100%;
 }
+
+/* Direct upload progress bar */
+.direct-upload-progress {
+  width: 100%;
+  height: 4px;
+  background-color: #e5e5e5;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.direct-upload-progress-bar {
+  height: 100%;
+  background-color: var(--background-action-high-blue-france, #000091);
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* Visibility utility */
+.hidden {
+  display: none !important;
+}
+
+/* File item with delete button */
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.file-link {
+  flex: 1;
+}
+
+.file-delete-wrapper {
+  flex-shrink: 0;
+}
+
+.file-delete-wrapper .fr-btn {
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}

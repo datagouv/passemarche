@@ -7,15 +7,20 @@ Given('a public market with capacites_techniques_professionnelles_outillage_echa
   @editor = create(:editor, :authorized_and_active)
   @public_market = create(:public_market, :completed, editor: @editor)
 
-  @echantillons_attr = MarketAttribute.find_or_create_by(
+  @echantillons_attr = MarketAttribute.find_or_initialize_by(
     key: 'capacites_techniques_professionnelles_outillage_echantillons'
-  ) do |attr|
-    attr.input_type = 'capacites_techniques_professionnelles_outillage_echantillons'
-    attr.category_key = 'capacites_techniques_professionnelles'
-    attr.subcategory_key = 'capacites_techniques_professionnelles_outillage'
-    attr.required = true
-  end
+  )
+  @echantillons_attr.assign_attributes(
+    input_type: 'capacites_techniques_professionnelles_outillage_echantillons',
+    category_key: 'capacites_techniques_professionnelles',
+    subcategory_key: 'capacites_techniques_professionnelles_outillage',
+    required: true
+  )
+  @echantillons_attr.save!
   @echantillons_attr.public_markets << @public_market unless @echantillons_attr.public_markets.include?(@public_market)
+
+  # Verify the attribute is required for this test
+  raise 'MarketAttribute not properly configured' unless @echantillons_attr.reload.required?
 end
 
 Given('a candidate starts an application for this echantillons market') do
@@ -87,19 +92,28 @@ Given('I have submitted echantillons data with multiple items:') do |table|
 end
 
 When('I submit échantillon without description') do
+  # Directly create the échantillon with a file but no description via the model
+  # This tests the validation logic without involving the complex JavaScript file upload UI
+  response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchantillons.find_or_create_by!(
+    market_application: @market_application,
+    market_attribute: @echantillons_attr
+  )
+
   timestamp = Time.now.to_i.to_s
 
-  page.driver.submit :patch, "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_outillage",
-    market_application: {
-      market_attribute_responses_attributes: {
-        '0' => {
-          id: '',
-          market_attribute_id: @echantillons_attr.id.to_s,
-          type: 'CapacitesTechniquesProfessionnellesOutillageEchantillons',
-          "echantillon_#{timestamp}_fichiers" => 'attached'
-        }
-      }
-    }
+  # Create and attach a real file
+  file_path = Rails.root.join('spec/fixtures/files/test.pdf')
+  file = fixture_file_upload(file_path, 'application/pdf')
+  response.attach_specialized_document(timestamp, 'fichiers', file)
+  response.set_item_field(timestamp, 'fichiers', 'attached')
+  # Intentionally NOT setting description to trigger validation error
+  response.save!(validate: false) # Save without validation to persist the invalid state
+
+  # Visit the step page which will load the invalid data
+  visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_outillage"
+
+  # Try to move to next step - this should fail validation and stay on same page with error
+  click_button 'Suivant'
 end
 
 Then('I should see échantillon validation error {string}') do |error_text|

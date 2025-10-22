@@ -348,12 +348,4 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutil
       expect(response.specialized_document_fields).to include('fichiers')
     end
   end
-
-  describe 'cleanup_old_specialized_documents?' do
-    let(:value) { nil }
-
-    it 'returns false (keeps all files)' do
-      expect(response.cleanup_old_specialized_documents?).to be false
-    end
-  end
 end

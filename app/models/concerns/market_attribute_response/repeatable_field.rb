@@ -1,27 +1,7 @@
 # frozen_string_literal: true
 
-# Generic concern for MarketAttributeResponse types that need to store
-# repeating items (e.g., list of persons, list of projects, list of references).
-#
-# Storage Structure:
-#   {
-#     "items" => {
-#       "1738234567890" => { "field_name" => "value" },
-#       "1738234567891" => { "field_name" => "value" }
-#     }
-#   }
-#
-# Usage:
-#   class MarketAttributeResponse::MyRepeatableField < MarketAttributeResponse
-#     include RepeatableField
-#
-#     def self.item_schema
-#       {
-#         'field_name' => { type: 'string', required: true },
-#         'another_field' => { type: 'text', required: false }
-#       }
-#     end
-#   end
+# Generic concern for MarketAttributeResponse types that need to store repeating items.
+# Items are stored with timestamps as keys for uniqueness and ordering.
 #
 module MarketAttributeResponse::RepeatableField
   extend ActiveSupport::Concern
@@ -80,52 +60,22 @@ module MarketAttributeResponse::RepeatableField
     []
   end
 
-  def cleanup_old_specialized_documents?
-    false
-  end
-
   def attach_specialized_document(timestamp, field_name, file)
-    purge_old_specialized_documents(timestamp, field_name) if cleanup_old_specialized_documents?
-
-    documents.attach(
-      io: file.respond_to?(:tempfile) ? file.tempfile : file,
-      filename: file.original_filename,
-      content_type: file.content_type,
-      metadata: {
-        field_type: 'specialized',
-        item_timestamp: timestamp.to_s,
-        field_name: field_name.to_s
-      }
-    )
+    metadata = {
+      field_type: 'specialized',
+      item_timestamp: timestamp.to_s,
+      field_name: field_name.to_s
+    }
+    attach_file(file, metadata:)
   end
 
-  def purge_old_specialized_documents(timestamp, field_name)
-    return unless documents.attached?
+  def get_specialized_documents(timestamp, field_name)
+    return [] unless documents.attached?
 
     documents.select do |doc|
       doc.metadata['field_type'] == 'specialized' &&
         doc.metadata['item_timestamp'] == timestamp.to_s &&
         doc.metadata['field_name'] == field_name.to_s
-    end.each(&:purge)
-  end
-
-  def get_specialized_document(timestamp, field_name)
-    return nil unless documents.attached?
-
-    matching_docs = documents.select do |doc|
-      doc.metadata['field_type'] == 'specialized' &&
-        doc.metadata['item_timestamp'] == timestamp.to_s &&
-        doc.metadata['field_name'] == field_name.to_s
-    end
-
-    matching_docs.max_by(&:created_at)
-  end
-
-  def generic_documents
-    return [] unless documents.attached?
-
-    documents.reject do |doc|
-      doc.metadata['field_type'] == 'specialized'
     end
   end
 
@@ -185,9 +135,9 @@ module MarketAttributeResponse::RepeatableField
   def handle_specialized_document(timestamp, field_name, file_or_files)
     if file_or_files.is_a?(Array)
       handle_multiple_document(timestamp, field_name, file_or_files)
-    elsif file_or_files.respond_to?(:tempfile)
-      attach_specialized_document(timestamp, field_name, file_or_files)
-      set_item_field(timestamp, field_name, 'attached')
+    elsif file_or_files.is_a?(String) || file_or_files.respond_to?(:tempfile)
+      success = attach_specialized_document(timestamp, field_name, file_or_files)
+      set_item_field(timestamp, field_name, 'attached') if success
     else
       set_item_field(timestamp, field_name, file_or_files)
     end
@@ -200,11 +150,9 @@ module MarketAttributeResponse::RepeatableField
   end
 
   def handle_multiple_document(timestamp, field_name, files)
-    files.each do |file|
-      next if file.blank?
-
-      attach_specialized_document(timestamp, field_name, file) if file.respond_to?(:tempfile)
+    successes = files.compact_blank.map do |file|
+      attach_specialized_document(timestamp, field_name, file)
     end
-    set_item_field(timestamp, field_name, 'attached') if files.any?
+    set_item_field(timestamp, field_name, 'attached') if successes.any?
   end
 end

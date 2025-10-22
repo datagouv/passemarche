@@ -76,14 +76,6 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisons,
     end
   end
 
-  describe '#cleanup_old_specialized_documents?' do
-    let(:value) { nil }
-
-    it 'returns false to allow multiple attestations per realisation' do
-      expect(response.cleanup_old_specialized_documents?).to be false
-    end
-  end
-
   describe 'aliases' do
     let(:value) do
       {
