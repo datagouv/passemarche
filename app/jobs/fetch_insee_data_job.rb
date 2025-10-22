@@ -21,7 +21,8 @@ class FetchInseeDataJob < ApplicationJob
   private
 
   def fetch_and_process_data(market_application)
-    market_application.update_api_status(self.class.api_name, status: 'processing')
+    log_start(market_application)
+    update_to_processing(market_application)
 
     result = Insee.call(
       params: { siret: market_application.siret },
@@ -29,13 +30,30 @@ class FetchInseeDataJob < ApplicationJob
     )
 
     handle_result(market_application, result)
+    log_completion(market_application)
+  end
+
+  def log_start(market_application)
+    Rails.logger.info "Starting INSEE fetch for MA #{market_application.id}, current status: #{market_application.api_fetch_status}"
+  end
+
+  def update_to_processing(market_application)
+    market_application.update_api_status(self.class.api_name, status: 'processing')
+    Rails.logger.info "Set INSEE to processing, status now: #{market_application.reload.api_fetch_status}"
+  end
+
+  def log_completion(market_application)
+    Rails.logger.info "Completed INSEE fetch for MA #{market_application.id}, final status: #{market_application.reload.api_fetch_status}"
   end
 
   def handle_result(market_application, result)
     if result.success?
       fields_count = count_filled_fields(market_application)
+      Rails.logger.info "INSEE success: updating status to completed with #{fields_count} fields"
       market_application.update_api_status(self.class.api_name, status: 'completed', fields_filled: fields_count)
+      Rails.logger.info "After update_api_status, persisted status: #{market_application.reload.api_fetch_status}"
     else
+      Rails.logger.warn 'INSEE failed: result was not successful'
       handle_failure(market_application)
     end
   end
