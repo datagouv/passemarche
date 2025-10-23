@@ -28,7 +28,9 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
     Rails.application.routes.url_helpers.step_buyer_public_market_url(
       public_market.identifier,
       :setup,
-      host: request.host_with_port
+      host: request.host,
+      port: request.port,
+      protocol: request.protocol
     )
   end
 end
