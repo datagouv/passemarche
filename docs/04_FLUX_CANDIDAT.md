@@ -184,10 +184,20 @@ Lors de la soumission finale :
 - QR code de vérification
 
 **Dossier Documents ZIP** :
-- Formulaires complétés
-- Pièces justificatives
-- Métadonnées de soumission
-- Checksums de vérification
+- Attestation acheteur (PDF officiel)
+- Documents des candidats issus de tous les types de champs permettant l'attachement de fichiers :
+  - `FileUpload` : Fichiers téléchargés standard
+  - `InlineFileUpload` : Fichiers téléchargés en ligne
+  - `CheckboxWithDocument` : Fichiers conditionnels aux cases à cocher
+  - `RadioWithFileAndText` : Fichiers avec sélection radio
+  - `RadioWithJustificationRequired` : Justifications obligatoires
+  - `RadioWithJustificationOptional` : Justifications optionnelles
+  - `FileOrTextarea` : Fichiers ou texte
+  - `PresentationIntervenants` : CV des intervenants
+  - `RealisationsLivraisons` : Attestations de réalisations
+  - `CapacitesTechniquesProfessionnellesOutillageEchantillons` : Échantillons et outillage
+- Nom de fichiers structuré : `{index_réponse}_{index_document}_{clé_champ}_{nom_original}`
+- Exemple : `01_01_kbis_Kbis_Entreprise.pdf`
 
 ### 5. Statuts de la Candidature
 
