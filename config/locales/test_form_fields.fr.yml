@@ -72,6 +72,13 @@ fr:
           text_label: "Précisions (optionnel)"
           text_hint: "Vous pouvez fournir des détails supplémentaires"
           justification_required: "Vous devez fournir un document justificatif obligatoire."
+        test_radio_with_justification_optional_field:
+          name: "Question de conformité (justification optionnelle)"
+          description: "Indiquez votre conformité. Si non, vous pouvez fournir un document justificatif (optionnel)."
+          radio_yes: "Oui"
+          radio_no: "Non"
+          text_label: "Précisions (optionnel)"
+          text_hint: "Vous pouvez ajouter des informations complémentaires"
         test_realisations_livraisons:
           name: "Les principaux travaux effectués par votre entreprise au cours des dernières années (3 ou 5 ans)"
           description: "Décrivez les principaux travaux effectués, en précisant leur date, leur montant et leurs destinataires."
