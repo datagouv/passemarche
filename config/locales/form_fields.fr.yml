@@ -198,6 +198,10 @@ fr:
             techniques, qu'ils soient ou non intégrés au candidat, en particulier
             ceux qui sont responsables du contrôle de la qualité et auquel le candidat
             pourra faire appel pour l'exécution de l'ouvrage.
+        capacites_techniques_professionnelles_certificats_inscription_registre:
+          name: Les certificats d’inscription sur un registre de profession règlementée
+          description: Le candidat devra transmettre les certificats d’inscription
+            sur un registre de profession règlementée pour chaque membre de son équipe
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
@@ -532,6 +536,10 @@ fr:
             (internes ou externes, chargés notamment du contrôle qualité) qui participeront
             au projet. Si vous ne disposez pas de cette liste, décrivez manuellement
             les techniciens ou organismes techniques mobilisés pour le marché.
+        capacites_techniques_professionnelles_certificats_inscription_registre:
+          name: Les certificats d’inscription sur un registre de profession règlementée
+          description: Intégrez les certificats d’inscription sur un registre de profession
+            règlementée pour chaque membre de l'équipe
         capacites_techniques_professionnelles_certificats_qualibat:
           name: Certificat Qualibat
           description: La certification QUALIBAT représente un label de qualification
