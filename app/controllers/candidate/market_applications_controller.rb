@@ -11,10 +11,9 @@ module Candidate
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
 
-      if custom_view_exists?
-        render_wizard
-      else
-        render 'generic_step', locals: { step: }
+      respond_to do |format|
+        format.html { render_html_step }
+        format.json { render_json_step }
       end
     end
 
@@ -119,6 +118,33 @@ module Candidate
 
     def finish_wizard_path
       root_path
+    end
+
+    def set_no_cache_headers
+      response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Expires'] = '0'
+    end
+
+    def api_fetch_status_response
+      { api_fetch_status: @market_application.api_fetch_status }
+    end
+
+    def render_html_step
+      if custom_view_exists?
+        render_wizard
+      else
+        render 'generic_step', locals: { step: }
+      end
+    end
+
+    def render_json_step
+      if step == :api_data_recovery_status
+        set_no_cache_headers
+        render json: api_fetch_status_response
+      else
+        head :not_found
+      end
     end
   end
 end

@@ -58,6 +58,7 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
     it 'returns fixed steps, subcategories, and summary' do
       expected_steps = %i[
         company_identification
+        api_data_recovery_status
         market_information
         identification
         exclusion_criteria
@@ -153,7 +154,7 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
 
   describe 'constants' do
     it 'has correct initial wizard steps' do
-      expect(described_class::INITIAL_WIZARD_STEPS).to eq(%i[company_identification market_information])
+      expect(described_class::INITIAL_WIZARD_STEPS).to eq(%i[company_identification api_data_recovery_status market_information])
     end
 
     it 'has correct final wizard step' do

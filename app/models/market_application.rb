@@ -22,6 +22,30 @@ class MarketApplication < ApplicationRecord
 
   before_validation :generate_identifier, on: :create
 
+  def find_authorized_document(attachment_id)
+    market_attribute_responses
+      .select { |r| r.class.file_attachable? }
+      .flat_map(&:documents)
+      .find { |doc| doc.id.to_s == attachment_id.to_s }
+  end
+
+  def update_api_status(api_name, status:, fields_filled: 0)
+    # Use pessimistic locking to prevent race conditions when multiple jobs
+    # update the api_fetch_status hash concurrently
+    with_lock do
+      # Create a new hash to ensure Rails detects the change
+      updated_status = (api_fetch_status || {}).dup
+      updated_status[api_name] = {
+        'status' => status,
+        'fields_filled' => fields_filled,
+        'updated_at' => Time.current.iso8601
+      }
+      # Reassign the entire hash so Rails detects the change
+      self.api_fetch_status = updated_status
+      save!
+    end
+  end
+
   private
 
   def generate_identifier
