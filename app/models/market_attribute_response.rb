@@ -35,7 +35,26 @@ class MarketAttributeResponse < ApplicationRecord
     'inline_url_input' => 'InlineUrlInput'
   }.freeze
 
+  # List of STI types that can have file attachments.
+  # These responses will have their documents included in the buyer's ZIP package.
+  FILE_ATTACHABLE_TYPES = %w[
+    FileUpload
+    InlineFileUpload
+    CheckboxWithDocument
+    RadioWithFileAndText
+    RadioWithJustificationRequired
+    RadioWithJustificationOptional
+    FileOrTextarea
+    PresentationIntervenants
+    RealisationsLivraisons
+    CapacitesTechniquesProfessionnellesOutillageEchantillons
+  ].freeze
+
   validates :type, presence: true, inclusion: { in: INPUT_TYPE_MAP.values }
+
+  # Scope to retrieve only responses that can have file attachments.
+  # Used by GenerateDocumentsPackage to collect all documents for the ZIP.
+  scope :with_file_attachments, -> { where(type: FILE_ATTACHABLE_TYPES) }
 
   before_validation :set_type_from_market_attribute, on: :create
 
