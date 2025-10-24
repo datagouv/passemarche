@@ -74,8 +74,21 @@ RSpec.describe MarketAttributeResponse::TextInput, type: :model do
         expect(text_response).to be_valid
       end
 
-      it 'validates empty string' do
+      it 'rejects empty string for manual input' do
         text_response.value = { 'text' => '' }
+        expect(text_response).not_to be_valid
+        expect(text_response.errors[:text]).to be_present
+      end
+
+      it 'allows empty string for auto-filled data' do
+        text_response.source = :auto
+        text_response.value = { 'text' => '' }
+        expect(text_response).to be_valid
+      end
+
+      it 'allows nil text for auto-filled data' do
+        text_response.source = :auto
+        text_response.text = nil
         expect(text_response).to be_valid
       end
 
