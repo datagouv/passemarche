@@ -56,5 +56,9 @@ FactoryBot.define do
     trait :radio_with_justification_required do
       input_type { :radio_with_justification_required }
     end
+
+    trait :radio_with_justification_optional do
+      input_type { :radio_with_justification_optional }
+    end
   end
 end

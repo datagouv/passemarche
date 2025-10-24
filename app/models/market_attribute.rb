@@ -29,7 +29,8 @@ class MarketAttribute < ApplicationRecord
     url_input: 14,
     radio_with_justification_required: 15,
     inline_file_upload: 16,
-    inline_url_input: 17
+    inline_url_input: 17,
+    radio_with_justification_optional: 18
   }
 
   scope :required, -> { where(required: true) }

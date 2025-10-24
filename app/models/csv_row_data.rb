@@ -34,6 +34,8 @@ class CsvRowData
     phone
     radio_with_file_and_text
     radio_with_justification_required
+    radio_with_justification_optional
+    radio_with_justification_optionnal
     textarea
     texte
     capacite_economique_financiere_chiffre_affaires_global_annuel
@@ -62,6 +64,8 @@ class CsvRowData
     'phone' => :phone_input,
     'radio_with_file_and_text' => :radio_with_file_and_text,
     'radio_with_justification_required' => :radio_with_justification_required,
+    'radio_with_justification_optional' => :radio_with_justification_optional,
+    'radio_with_justification_optionnal' => :radio_with_justification_optional,
     'textarea' => :textarea,
     'texte' => :text_input,
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => :capacite_economique_financiere_chiffre_affaires_global_annuel,

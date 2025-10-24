@@ -25,6 +25,7 @@ class MarketAttributeResponse < ApplicationRecord
     'checkbox_with_document' => 'CheckboxWithDocument',
     'radio_with_file_and_text' => 'RadioWithFileAndText',
     'radio_with_justification_required' => 'RadioWithJustificationRequired',
+    'radio_with_justification_optional' => 'RadioWithJustificationOptional',
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => 'CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel',
     'capacite_economique_financiere_effectifs_moyens_annuels' => 'CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels',
     'presentation_intervenants' => 'PresentationIntervenants',
