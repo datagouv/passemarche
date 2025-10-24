@@ -92,4 +92,40 @@ RSpec.describe MarketAttributeResponse, type: :model do
       expect(response).to be_manual_after_api_failure
     end
   end
+
+  describe '::FILE_ATTACHABLE_TYPES' do
+    it 'includes all file-attachable types' do
+      expect(MarketAttributeResponse::FILE_ATTACHABLE_TYPES).to contain_exactly(
+        'FileUpload',
+        'InlineFileUpload',
+        'CheckboxWithDocument',
+        'RadioWithFileAndText',
+        'RadioWithJustificationRequired',
+        'RadioWithJustificationOptional',
+        'FileOrTextarea',
+        'PresentationIntervenants',
+        'RealisationsLivraisons',
+        'CapacitesTechniquesProfessionnellesOutillageEchantillons'
+      )
+    end
+
+    it 'is frozen' do
+      expect(MarketAttributeResponse::FILE_ATTACHABLE_TYPES).to be_frozen
+    end
+  end
+
+  describe '.with_file_attachments' do
+    it 'generates correct SQL query' do
+      scope = MarketAttributeResponse.with_file_attachments
+      expect(scope.to_sql).to include(
+        "WHERE \"market_attribute_responses\".\"type\" IN ('FileUpload', 'InlineFileUpload', 'CheckboxWithDocument', 'RadioWithFileAndText', 'RadioWithJustificationRequired', 'RadioWithJustificationOptional', 'FileOrTextarea', 'PresentationIntervenants', 'RealisationsLivraisons', 'CapacitesTechniquesProfessionnellesOutillageEchantillons')"
+      )
+    end
+
+    it 'can be chained with other scopes' do
+      market_application = create(:market_application)
+      scope = market_application.market_attribute_responses.with_file_attachments
+      expect(scope).to be_a(ActiveRecord::Relation)
+    end
+  end
 end
