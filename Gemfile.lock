@@ -490,6 +490,7 @@ GEM
     wicked_pdf (2.8.2)
       activesupport
       ostruct
+    wkhtmltopdf-binary (0.12.6.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
@@ -547,6 +548,7 @@ DEPENDENCIES
   webmock (~> 3.26)
   wicked
   wicked_pdf
+  wkhtmltopdf-binary
 
 RUBY VERSION
    ruby 3.4.5p51

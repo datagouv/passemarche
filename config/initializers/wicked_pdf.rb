@@ -2,16 +2,8 @@
 
 WickedPdf.config ||= {}
 
-if Rails.env.test?
-  # Mock wkhtmltopdf for tests
-  WickedPdf.config.merge!({
-    exe_path: '/bin/echo', # Use echo to mock PDF generation in tests
-    enable_local_file_access: true
-  })
-else
-  WickedPdf.config.merge!({
-    exe_path: '/usr/local/bin/wkhtmltopdf',
-    enable_local_file_access: true,
-    wkhtmltopdf: '/usr/local/bin/wkhtmltopdf'
-  })
-end
+gem_binary_path = Gem.bin_path('wkhtmltopdf-binary', 'wkhtmltopdf')
+WickedPdf.config.merge!({
+  exe_path: gem_binary_path,
+  enable_local_file_access: true
+})

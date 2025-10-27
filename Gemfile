@@ -40,6 +40,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec-rails', '~> 8.0'
   gem 'rubocop-rails-omakase', require: false
+  gem 'wkhtmltopdf-binary'
 end
 
 group :development do
