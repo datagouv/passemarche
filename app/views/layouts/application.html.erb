@@ -28,10 +28,22 @@
 
     <main role="main" id="content">
       <div class="fr-container fr-pt-4w fr-pb-4w">
+        <% if flash.any? %>
+          <% flash.each do |type, message| %>
+            <% alert_type = case type.to_sym
+                            when :notice then "success"
+                            when :alert, :error then "error"
+                            when :warning then "warning"
+                            else "info"
+                            end %>
+            <div class="fr-alert fr-alert--<%= alert_type %> fr-mb-4w">
+              <p><%= message %></p>
+            </div>
+          <% end %>
+        <% end %>
         <%= yield %>
       </div>
     </main>
-
     <%= render 'shared/footer' %>
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr/dsfr.module.min.js"></script>

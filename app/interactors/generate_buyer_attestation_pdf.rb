@@ -12,25 +12,52 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
 
   private
 
-  # rubocop:disable Metrics/AbcSize
   def generate_and_attach_pdf
-    ActiveRecord::Base.transaction do
-      pdf_content = generate_pdf_content
+    pdf_content = generate_pdf_content
 
-      market_application.buyer_attestation.attach(
-        io: StringIO.new(pdf_content),
-        filename:,
-        content_type: 'application/pdf'
-      )
-    end
-  rescue ActiveStorage::Error => e
-    context.fail!(message: "Erreur de stockage du fichier: #{e.message}")
-  rescue ActiveRecord::ActiveRecordError => e
-    context.fail!(message: "Erreur de base de données lors de l'attachement: #{e.message}")
+    market_application.buyer_attestation.attach(
+      io: StringIO.new(pdf_content),
+      filename:,
+      content_type: 'application/pdf'
+    )
   rescue StandardError => e
-    context.fail!(message: "Erreur inattendue lors de la génération de l'attestation acheteur #{market_application.identifier}: #{e.message}")
+    handle_error(e)
   end
-  # rubocop:enable Metrics/AbcSize
+
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def handle_error(error)
+    error_message = "Failed to generate buyer attestation PDF for application #{market_application.identifier}"
+
+    Rails.logger.error "#{error_message}: #{error.class} - #{error.message}"
+    Rails.logger.error error.backtrace.first(10).join("\n")
+
+    Sentry.capture_exception(
+      error,
+      extra: {
+        market_application_id: market_application.id,
+        market_application_identifier: market_application.identifier,
+        siret: market_application.siret,
+        public_market_id: market_application.public_market_id,
+        error_stage: 'buyer_attestation_pdf_generation'
+      },
+      tags: {
+        component: 'pdf_generation',
+        document_type: 'buyer_attestation'
+      }
+    )
+
+    user_message = case error
+                   when ActiveStorage::Error
+                     "Erreur de stockage du fichier acheteur: #{error.message}"
+                   when ActiveRecord::ActiveRecordError
+                     "Erreur de base de données lors de l'attachement de l'attestation acheteur: #{error.message}"
+                   else
+                     "Erreur inattendue lors de la génération de l'attestation acheteur: #{error.message}"
+                   end
+
+    context.fail!(message: user_message)
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def filename
     "buyer_attestation_FT#{market_application.identifier}.pdf"
