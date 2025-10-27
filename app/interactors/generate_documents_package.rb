@@ -31,7 +31,7 @@ class GenerateDocumentsPackage < ApplicationInteractor
     handle_error(e)
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def handle_error(error)
     error_message = "Failed to generate documents package for application #{market_application.identifier}"
 
@@ -45,7 +45,9 @@ class GenerateDocumentsPackage < ApplicationInteractor
         market_application_identifier: market_application.identifier,
         siret: market_application.siret,
         public_market_id: market_application.public_market_id,
-        error_stage: 'documents_package_generation'
+        error_stage: 'documents_package_generation',
+        error_class: error.class.name,
+        error_message: error.message
       },
       tags: {
         component: 'zip_generation',
@@ -53,18 +55,9 @@ class GenerateDocumentsPackage < ApplicationInteractor
       }
     )
 
-    user_message = case error
-                   when ActiveStorage::Error
-                     "Erreur de stockage du package de documents: #{error.message}"
-                   when ActiveRecord::ActiveRecordError
-                     "Erreur de base de données lors de l'attachement du package: #{error.message}"
-                   else
-                     "Erreur inattendue lors de la génération du package de documents: #{error.message}"
-                   end
-
-    context.fail!(message: user_message)
+    context.fail!(message: I18n.t('errors.market_application.documents_package_generation_failed'))
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def filename
     "documents_package_FT#{market_application.identifier}.zip"

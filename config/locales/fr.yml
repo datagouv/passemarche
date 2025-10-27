@@ -83,6 +83,12 @@ fr:
     submit_summary: "Transmettre ma candidature"
     continue: "Continuer"
 
+  errors:
+    market_application:
+      attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
+      buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
+      documents_package_generation_failed: "Une erreur technique est survenue lors de la génération du package de documents. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
+
   home:
     title: "Voie Rapide"
     subtitle: "La plateforme de candidature simplifiée aux marchés publics"
