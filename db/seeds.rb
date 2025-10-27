@@ -11,8 +11,8 @@
 # Create demo editor for fake_editor_app in development
 if Rails.env.development? || Rails.env.sandbox?
   # Set base URL based on environment
-  base_url = Rails.env.sandbox? ? 'https://sandbox.voie-rapide-edition.services.api.gouv.fr' : 'http://localhost:4567'
-  
+  base_url = Rails.env.sandbox? ? "https://#{Rails.env}.voie-rapide-edition.services.api.gouv.fr" : 'http://localhost:4567'
+
   demo_editor = Editor.find_or_create_by(client_id: 'demo_editor_client') do |editor|
     editor.name = 'Demo Editor App'
     editor.client_secret = 'demo_editor_secret'
@@ -65,12 +65,12 @@ puts "\n📝 Importing field configuration from CSV..."
 begin
   service = FieldConfigurationImportService.new
   stats = service.perform
-  
+
   if service.success?
-    puts "✅ Field configuration imported successfully!"
+    puts '✅ Field configuration imported successfully!'
     puts "   • #{stats[:created]} created, #{stats[:updated]} updated, #{stats[:skipped]} skipped"
   else
-    puts "❌ Field configuration import failed:"
+    puts '❌ Field configuration import failed:'
     service.errors.each do |key, messages|
       messages.each { |msg| puts "   #{key}: #{msg}" }
     end
