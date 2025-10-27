@@ -81,37 +81,38 @@ class GenerateDocumentsPackage < ApplicationInteractor
   end
 
   def add_uploaded_documents_to_zip(zip)
-    file_uploads = load_file_uploads
-    return if file_uploads.empty?
+    responses = load_file_attachable_responses
+    return if responses.empty?
 
-    file_uploads.each_with_index do |upload, index|
-      add_documents_from_upload_to_zip(zip, upload, index)
+    responses.each_with_index do |response, index|
+      add_documents_from_response_to_zip(zip, response, index)
     end
   end
 
-  def load_file_uploads
+  def load_file_attachable_responses
     market_application.market_attribute_responses
-      .where(type: 'FileUpload')
+      .with_file_attachments
       .includes(:market_attribute, documents_attachments: :blob)
+      .order(:id)
   end
 
   # rubocop:disable Metrics/AbcSize
-  def add_documents_from_upload_to_zip(zip, upload, index)
-    return unless upload.documents.attached?
+  def add_documents_from_response_to_zip(zip, response, response_index)
+    return unless response.documents.attached?
 
-    upload.documents.each_with_index do |document, doc_index|
-      add_single_document_to_zip(zip, document, upload, index, doc_index)
+    response.documents.each_with_index do |document, doc_index|
+      add_single_document_to_zip(zip, document, response, response_index, doc_index)
     end
   rescue StandardError => e
-    Rails.logger.warn "Failed to add document to ZIP for upload #{upload.id}: #{e.message}"
+    Rails.logger.warn "Failed to add document to ZIP for response #{response.id}: #{e.message}"
     Sentry.capture_exception(
       e,
       level: :warning,
       extra: {
         market_application_id: market_application.id,
         market_application_identifier: market_application.identifier,
-        upload_id: upload.id,
-        market_attribute_key: upload.market_attribute&.key
+        response_id: response.id,
+        market_attribute_key: response.market_attribute&.key
       },
       tags: {
         component: 'zip_generation',
@@ -122,13 +123,16 @@ class GenerateDocumentsPackage < ApplicationInteractor
   end
   # rubocop:enable Metrics/AbcSize
 
-  def add_single_document_to_zip(zip, document, upload, upload_index, doc_index)
-    field_key = upload.market_attribute.key
+  def add_single_document_to_zip(zip, document, response, response_index, doc_index)
+    field_key = response.market_attribute.key
     original_filename = document.filename.to_s
-    zip_filename = build_zip_filename(upload_index, doc_index, field_key, original_filename)
+    zip_filename = build_zip_filename(response_index, doc_index, field_key, original_filename)
 
     zip.put_next_entry(zip_filename)
     zip.write(document.download)
+  rescue StandardError => e
+    Rails.logger.error "Failed to add document #{original_filename} to ZIP: #{e.message}"
+    # Continue processing other documents
   end
 
   def build_zip_filename(upload_index, doc_index, field_key, original_filename)
