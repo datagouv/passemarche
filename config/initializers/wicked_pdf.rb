@@ -5,7 +5,7 @@ WickedPdf.config ||= {}
 if Rails.env.test?
   # Mock wkhtmltopdf for tests
   WickedPdf.config.merge!({
-    exe_path: '/bin/echo', # Use echo to mock PDF generation in tests
+    exe_path: '/usr/local/bin/wkhtmltopdf', # Use echo to mock PDF generation in tests
     enable_local_file_access: true
   })
 else
