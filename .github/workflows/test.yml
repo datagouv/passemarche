@@ -56,3 +56,32 @@ jobs:
         CUCUMBER_PUBLISH_QUIET: true
       run: |
         bundle exec cucumber
+
+  deploy-sandbox:
+    needs: test
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        app:
+          - { name: voie_rapide_sandbox, host_prefix: host }
+          - { name: voie_rapide_edition_sandbox, host_prefix: host }
+        host: [services1, services2]
+      fail-fast: false
+    environment: sandbox
+    env:
+      DEPLOY_HTTPS_LOGIN: ${{ secrets.DEPLOY_HTTPS_LOGIN }}
+      DEPLOY_HTTPS_PASSWORD: ${{ secrets.DEPLOY_HTTPS_PASSWORD }}
+      DEPLOY_HTTPS_REQUEST_URL: ${{ vars.DEPLOY_HTTPS_REQUEST_URL }}
+      DEPLOY_HTTPS_RESPONSE_URL: ${{ vars.DEPLOY_HTTPS_RESPONSE_URL }}
+      DEPLOY_HOST: ${{ matrix.app.host_prefix }}_${{ matrix.host }}
+      DEPLOY_APP: ${{ matrix.app.name }}
+      DEPLOY_BRANCH: develop
+    steps:
+      - name: Download and run deploy script
+        shell: bash
+        run: |
+          git clone https://github.com/etalab/api-entreprise-integration
+          cd api-entreprise-integration
+          ./deploy-parteprise.sh

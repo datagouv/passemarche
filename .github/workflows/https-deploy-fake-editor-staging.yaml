@@ -1,4 +1,4 @@
-name: Deploy to Sandbox (manual)
+name: Deploy Fake Editor via HTTPS (staging)
 
 on:
   workflow_dispatch:
@@ -11,14 +11,14 @@ jobs:
       matrix:
         host: [services1, services2]
       fail-fast: false
-    environment: sandbox
+    environment: staging
     env:
       DEPLOY_HTTPS_LOGIN: ${{ secrets.DEPLOY_HTTPS_LOGIN }}
       DEPLOY_HTTPS_PASSWORD: ${{ secrets.DEPLOY_HTTPS_PASSWORD }}
       DEPLOY_HTTPS_REQUEST_URL: ${{ vars.DEPLOY_HTTPS_REQUEST_URL }}
       DEPLOY_HTTPS_RESPONSE_URL: ${{ vars.DEPLOY_HTTPS_RESPONSE_URL }}
       DEPLOY_HOST: host_${{ matrix.host }}
-      DEPLOY_APP: voie_rapide_sandbox
+      DEPLOY_APP: voie_rapide_edition_staging
       DEPLOY_BRANCH: ${{ github.ref_name }}
     steps:
       - name: Download and run deploy script

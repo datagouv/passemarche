@@ -1,9 +1,7 @@
-name: Deploy Fake Editor via HTTPS (sandbox)
+name: Deploy Fake Editor to Sandbox (manual)
 
 on:
   workflow_dispatch:
-    branches:
-      - '*'
 
 jobs:
   deployment:
