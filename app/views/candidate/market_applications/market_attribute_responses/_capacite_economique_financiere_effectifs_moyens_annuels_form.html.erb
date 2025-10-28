@@ -52,8 +52,9 @@
                   >
                     Année <%= label %>
                   </label>
-                  <%= response_form.number_field(
+                  <%= response_form.text_field(
                         "#{year_key}_year",
+                        type: "number",
                         class: "fr-input fr-input--sm",
                         id: "market_attribute_response_#{year_key}_year",
                         step: 1,
@@ -72,8 +73,9 @@
                   >
                     Effectif moyen
                   </label>
-                  <%= response_form.number_field(
+                  <%= response_form.text_field(
                         "#{year_key}_average_staff",
+                        type: "number",
                         class: "fr-input fr-input--sm flex-basis: 0; flex-grow: 1;",
                         id: "market_attribute_response_#{year_key}_average_staff",
                         step: 1,
