@@ -1,0 +1,332 @@
+name: Claude Code Review
+
+# IMPORTANT: This workflow ONLY runs when someone comments "@claude review" on a PR
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  claude-review:
+    # Triple check: Must be a PR, must contain "@claude review", must be a created comment
+    if: |
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, '@claude review')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Acknowledge review request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // React with eyes emoji to show we're processing
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'eyes'
+            });
+
+      - name: Get PR information
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            core.setOutput('head_ref', pr.data.head.ref);
+            core.setOutput('head_sha', pr.data.head.sha);
+            core.setOutput('base_ref', pr.data.base.ref);
+            core.setOutput('pr_number', context.issue.number);
+            core.setOutput('pr_title', pr.data.title);
+            core.setOutput('pr_body', pr.data.body || 'No description provided');
+
+            console.log('PR Details:');
+            console.log(`  Number: ${context.issue.number}`);
+            console.log(`  Title: ${pr.data.title}`);
+            console.log(`  Head: ${pr.data.head.ref}`);
+            console.log(`  Base: ${pr.data.base.ref}`);
+
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.head_ref }}
+          fetch-depth: 0
+
+      - name: Fetch base branch for diff
+        run: |
+          git fetch origin ${{ steps.pr.outputs.base_ref }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.5
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: |
+          bundle install
+
+      - name: Get PR diff and files
+        id: diff
+        run: |
+          # Get the full diff
+          git diff origin/${{ steps.pr.outputs.base_ref }}...${{ steps.pr.outputs.head_ref }} > pr_diff.txt
+
+          # Get list of changed files
+          git diff --name-only origin/${{ steps.pr.outputs.base_ref }}...${{ steps.pr.outputs.head_ref }} > changed_files.txt
+
+          # Get stats
+          LINES_CHANGED=$(wc -l < pr_diff.txt)
+          FILES_CHANGED=$(wc -l < changed_files.txt)
+
+          echo "lines_changed=$LINES_CHANGED" >> $GITHUB_OUTPUT
+          echo "files_changed=$FILES_CHANGED" >> $GITHUB_OUTPUT
+
+          echo "📊 Changes Summary:"
+          echo "  Files changed: $FILES_CHANGED"
+          echo "  Lines changed: $LINES_CHANGED"
+          echo ""
+          echo "📁 Changed files:"
+          cat changed_files.txt
+
+      - name: Create review request
+        id: prompt
+        run: |
+          cat > review_prompt.md << 'PROMPT_EOF'
+          # Code Review Request for Pull Request
+
+          **PR #${{ steps.pr.outputs.pr_number }}**: ${{ steps.pr.outputs.pr_title }}
+
+          **Description**: ${{ steps.pr.outputs.pr_body }}
+
+          ---
+
+          You are an expert Ruby on Rails code reviewer. Please provide a thorough review of this pull request.
+
+          ## Review Guidelines
+
+          Analyze the code changes and provide feedback on:
+
+          ### 1. Code Quality & Rails Standards
+          - [ ] Follows Rails conventions and best practices
+          - [ ] RuboCop compliance
+          - [ ] Proper use of Interactors/Service objects pattern
+          - [ ] Clear, descriptive method and variable names
+          - [ ] No code duplication (DRY principle)
+
+          ### 2. Security
+          - [ ] No SQL injection vulnerabilities
+          - [ ] Mass assignment properly protected (strong parameters)
+          - [ ] No hardcoded secrets or credentials
+          - [ ] Proper authentication/authorization checks
+          - [ ] Input validation and sanitization
+
+          ### 3. Performance
+          - [ ] No N+1 query problems (check for proper use of includes/preload/eager_load)
+          - [ ] Efficient database queries
+          - [ ] Appropriate use of background jobs for long-running tasks
+          - [ ] No unnecessary database calls in loops
+
+          ### 4. Testing
+          - [ ] Adequate test coverage (RSpec + Cucumber)
+          - [ ] Tests follow project patterns
+          - [ ] Edge cases are covered
+          - [ ] No testing of Rails associations/validations directly
+
+          ### 5. Architecture & Design
+          - [ ] Proper separation of concerns
+          - [ ] Controllers are thin, logic in services/interactors
+          - [ ] No business logic in views
+          - [ ] RESTful route conventions followed
+          - [ ] Database migrations are reversible
+
+          ### 6. Error Handling
+          - [ ] Proper error handling and recovery
+          - [ ] Meaningful error messages
+          - [ ] Sentry integration for critical errors
+          - [ ] Graceful degradation where appropriate
+
+          ---
+
+          ## Changed Files
+
+          ${{ steps.diff.outputs.files_changed }} files changed, ${{ steps.diff.outputs.lines_changed }} lines affected
+
+          $(cat changed_files.txt)
+
+          ---
+
+          ## Review Format
+
+          Please structure your review as follows:
+
+          ### 🔴 Critical Issues (Must Fix Before Merge)
+          Issues that could cause bugs, security vulnerabilities, or data loss
+
+          ### 🟡 Important Improvements (Should Address)
+          Significant code quality issues that should be fixed
+
+          ### 🔵 Suggestions (Consider)
+          Nice-to-have improvements and best practices
+
+          ### ✅ Positive Observations
+          Good practices and well-implemented features
+
+          ### 📝 Overall Assessment
+          Brief summary and merge recommendation
+
+          PROMPT_EOF
+
+          cat review_prompt.md
+
+      - name: Run Claude review via API
+        id: claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Truncate diff if too large (max 40KB to stay within token limits)
+          if [ $(wc -c < pr_diff.txt) -gt 40000 ]; then
+            echo "⚠️ Diff is large, truncating to 40KB"
+            head -c 40000 pr_diff.txt > pr_diff_truncated.txt
+            mv pr_diff_truncated.txt pr_diff.txt
+            echo "\n\n... [diff truncated due to size] ..." >> pr_diff.txt
+          fi
+
+          # Create API request
+          PROMPT=$(cat review_prompt.md)
+          DIFF=$(cat pr_diff.txt)
+
+          # Escape for JSON
+          PROMPT_JSON=$(jq -Rs . <<< "$PROMPT")
+          DIFF_JSON=$(jq -Rs . <<< "$DIFF")
+
+          # Call Claude API
+          cat > api_request.json << API_EOF
+          {
+            "model": "claude-sonnet-4-5-20250929",
+            "max_tokens": 4096,
+            "messages": [{
+              "role": "user",
+              "content": "$(echo $PROMPT_JSON | sed 's/^\"//;s/\"$//')\n\n## Code Changes (Diff)\n\n\`\`\`diff\n$(echo $DIFF_JSON | sed 's/^\"//;s/\"$//')\n\`\`\`\n\nPlease provide your detailed code review following the format above."
+            }]
+          }
+          API_EOF
+
+          echo "📡 Calling Claude API..."
+
+          HTTP_CODE=$(curl -s -w "%{http_code}" -o api_response.json \
+            https://api.anthropic.com/v1/messages \
+            --header "x-api-key: $ANTHROPIC_API_KEY" \
+            --header "anthropic-version: 2023-06-01" \
+            --header "content-type: application/json" \
+            --data @api_request.json)
+
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Claude API call successful"
+            jq -r '.content[0].text' api_response.json > review_output.md
+          else
+            echo "❌ Claude API call failed with HTTP $HTTP_CODE"
+            echo "## ⚠️ Review Generation Failed" > review_output.md
+            echo "" >> review_output.md
+            echo "The Claude API request failed with HTTP status $HTTP_CODE." >> review_output.md
+            echo "" >> review_output.md
+            echo "**Error details:**" >> review_output.md
+            echo '```json' >> review_output.md
+            cat api_response.json >> review_output.md
+            echo '```' >> review_output.md
+            echo "" >> review_output.md
+            echo "Please check:" >> review_output.md
+            echo "- ANTHROPIC_API_KEY is correctly set in repository secrets" >> review_output.md
+            echo "- API key has sufficient credits" >> review_output.md
+            echo "- Check workflow logs for more details" >> review_output.md
+            exit 1
+          fi
+
+      - name: Post review comment
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reviewContent = fs.readFileSync('review_output.md', 'utf8');
+
+            const comment = `## 🤖 Claude Code Review
+
+            ${reviewContent}
+
+            ---
+            <sub>
+            Triggered by @${{ github.event.comment.user.login }} •
+            Reviewed commit [\`${{ steps.pr.outputs.head_sha }}\`](https://github.com/${{ github.repository }}/commit/${{ steps.pr.outputs.head_sha }}) •
+            Model: Claude Sonnet 4.5
+            </sub>`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+
+      - name: React with success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+      - name: Post error comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## ⚠️ Claude Review Failed
+
+            Unfortunately, the automated review could not be completed.
+
+            **Possible causes:**
+            - API key configuration issue
+            - API rate limits or quota exceeded
+            - Network connectivity problem
+            - Diff too large to process
+
+            Please check the [workflow run logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
+
+            You can try again by commenting \`@claude review\` or review the code manually.
+
+            ---
+            <sub>Triggered by @${{ github.event.comment.user.login }}</sub>`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+
+      - name: React with failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'confused'
+            });
