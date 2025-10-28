@@ -61,7 +61,8 @@
                     </td>
                     <td>
                       <div class="fr-input-group">
-                        <%= response_form.number_field "#{year_key}_turnover",
+                        <%= response_form.text_field "#{year_key}_turnover",
+                              type: "number",
                               class: "fr-input fr-input--sm",
                               placeholder: "ex: 500000",
                               step: 1,
@@ -71,7 +72,8 @@
                     </td>
                     <td>
                       <div class="fr-input-group">
-                        <%= response_form.number_field "#{year_key}_market_percentage",
+                        <%= response_form.text_field "#{year_key}_market_percentage",
+                              type: "number",
                               class: "fr-input fr-input--sm",
                               placeholder: "ex: 75",
                               step: 1,
@@ -82,7 +84,8 @@
                     </td>
                     <td>
                       <div class="fr-input-group">
-                        <%= response_form.date_field "#{year_key}_fiscal_year_end",
+                        <%= response_form.text_field "#{year_key}_fiscal_year_end",
+                              type: "date",
                               class: "fr-input fr-input--sm",
                               required: true %>
                       </div>

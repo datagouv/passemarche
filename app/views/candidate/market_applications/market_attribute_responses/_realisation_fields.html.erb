@@ -31,7 +31,8 @@
         <div class="fr-col-6">
           <div class="fr-input-group">
             <%= response_form.label "realisation_#{index}_date_debut", "Date de début", class: "fr-label fr-label--required" %>
-            <%= response_form.date_field "realisation_#{index}_date_debut",
+            <%= response_form.text_field "realisation_#{index}_date_debut",
+                  type: "date",
                   value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'date_debut'),
                   class: "fr-input",
                   required: true %>
@@ -40,7 +41,8 @@
         <div class="fr-col-6">
           <div class="fr-input-group">
             <%= response_form.label "realisation_#{index}_date_fin", "Date de fin", class: "fr-label fr-label--required" %>
-            <%= response_form.date_field "realisation_#{index}_date_fin",
+            <%= response_form.text_field "realisation_#{index}_date_fin",
+                  type: "date",
                   value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'date_fin'),
                   class: "fr-input",
                   required: true %>
@@ -53,7 +55,8 @@
           <div class="fr-input-group">
             <%= response_form.label "realisation_#{index}_montant", "Montant (€)", class: "fr-label fr-label--required" %>
             <span class="fr-hint-text">Montant en euros</span>
-            <%= response_form.number_field "realisation_#{index}_montant",
+            <%= response_form.text_field "realisation_#{index}_montant",
+                  type: "number",
                   value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'montant'),
                   class: "fr-input",
                   placeholder: "ex: 500000",
