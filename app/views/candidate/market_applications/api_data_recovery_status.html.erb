@@ -73,6 +73,13 @@
                       <% end %>
                     </div>
                   </div>
+
+                  <div class="fr-mt-2w" style="display: flex; gap: 0.5rem;">
+                    <% block.api_statuses.each do |api_status| %>
+                      <div style="height: 6px; flex: 1; background-color: <%= api_status[:color] %>; border-radius: 2px;"
+                           title="<%= api_status[:name] %>: <%= api_status[:status] %>"></div>
+                    <% end %>
+                  </div>
                 </div>
               </div>
             </div>

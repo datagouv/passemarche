@@ -100,7 +100,37 @@ class ApiBlockStatusPresenter
       @error_message_template
     end
 
+    def api_statuses
+      apis.map do |api_name|
+        {
+          name: api_name,
+          status: individual_api_status(api_name),
+          color: status_color(individual_api_status(api_name))
+        }
+      end
+    end
+
     private
+
+    def individual_api_status(api_name)
+      api_data = api_status_for(api_name)
+      return 'pending' if api_data['status'].nil? || api_data['status'] == 'pending'
+      return 'processing' if api_data['status'] == 'processing'
+      return 'completed' if api_data['status'] == 'completed'
+
+      'failed'
+    end
+
+    def status_color(status)
+      case status
+      when 'pending', 'processing'
+        'var(--blue-france-sun-113-625)'
+      when 'completed'
+        '#18753C'
+      when 'failed'
+        '#B34000'
+      end
+    end
 
     def api_status_for(api_name)
       @market_application.api_fetch_status&.dig(api_name.to_s.downcase) || default_api_status
