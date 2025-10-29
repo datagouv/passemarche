@@ -6,15 +6,16 @@ RSpec.describe Qualibat::MakeRequest, type: :interactor do
   let(:siret) { '78824266700020' }
   let(:base_url) { 'https://entreprise.api.gouv.fr' }
   let(:token) { 'test_bearer_token_123' }
-  let(:endpoint_url) { "#{base_url}/v4/qualibat/etablissements/#{siret}/certification_batiment" }
+  let(:endpoint_url) { "#{base_url}v4/qualibat/etablissements/#{siret}/certification_batiment" }
   let(:successful_response_body) { qualibat_success_response }
 
   before do
-    allow(Rails.application.credentials)
-      .to receive_message_chain(:api_entreprise, :base_url).and_return(base_url)
-
-    allow(Rails.application.credentials)
-      .to receive_message_chain(:api_entreprise, :token).and_return(token)
+    allow(Rails.application.credentials).to receive(:api_entreprise).and_return(
+      OpenStruct.new(
+        base_url:,
+        token:
+      )
+    )
   end
 
   describe '.call' do
