@@ -6,6 +6,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ActiveJob::TestHelper
   include ApiResponses::InseeResponses
   include ApiResponses::RneResponses
+  include ApiResponses::DgfipResponses
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
@@ -285,6 +286,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             body: rne_extrait_success_response(siren:),
             headers: { 'Content-Type' => 'application/json' }
           )
+
+        # Stub DGFIP API call
+        dgfip_api_url = "https://entreprise.api.gouv.fr/v4/dgfip/unites_legales/#{siren}/attestation_fiscale"
+        stub_request(:get, dgfip_api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: dgfip_attestation_fiscale_success_response(siren:),
+            headers: { 'Content-Type' => 'application/json' }
+          )
       end
 
       it 'calls INSEE API and populates market_attribute_responses' do
@@ -351,6 +368,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             .to_return(
               status: 404,
               body: rne_extrait_not_found_response,
+              headers: { 'Content-Type' => 'application/json' }
+            )
+
+          # Also stub DGFIP API call to fail
+          dgfip_api_url = "https://entreprise.api.gouv.fr/v4/dgfip/unites_legales/#{siren}/attestation_fiscale"
+          stub_request(:get, dgfip_api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => '13002526500013'
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 404,
+              body: dgfip_attestation_fiscale_not_found_response,
               headers: { 'Content-Type' => 'application/json' }
             )
         end

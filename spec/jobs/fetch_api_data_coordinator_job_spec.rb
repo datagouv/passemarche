@@ -11,14 +11,14 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
       it 'spawns all individual API fetch jobs' do
         expect(FetchInseeDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchRneDataJob).to receive(:perform_later).with(market_application.id)
+        expect(FetchDgfipDataJob).to receive(:perform_later).with(market_application.id)
 
         described_class.perform_now(market_application.id)
       end
 
       it 'spawns jobs for all defined API jobs' do
-        # Ensure we test all jobs in the constant
-        expect(described_class::API_JOBS.count).to eq(2)
-        expect(described_class::API_JOBS).to include(FetchInseeDataJob, FetchRneDataJob)
+        expect(described_class::API_JOBS.count).to eq(3)
+        expect(described_class::API_JOBS).to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob)
       end
     end
 
