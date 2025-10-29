@@ -4,16 +4,23 @@
      data-controller="sync-status"
      data-sync-status-url-value="<%= step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status, format: :json) %>">
   <div class="fr-grid-row fr-grid-row--gutters">
-    <div class="fr-col-12 fr-col-md-6">
-      <div class="fr-callout">
-        <h1 class="fr-callout__title">
-          <%= t('candidate.market_applications.api_data_recovery_status.title') %>
-        </h1>
-        <p class="fr-callout__text">
-          <%= t('candidate.market_applications.api_data_recovery_status.description') %>
+    <div class="fr-col-12 fr-col-md-6 fr-px-5w fr-py-8w">
+      <h1 class="fr-h4 fr-mb-3w" style="color: var(--blue-france-sun-113-625);">
+        <%= t('candidate.market_applications.api_data_recovery_status.title') %>
+      </h1>
+
+      <p class="fr-text--lg fr-mb-3w">
+        <%= t('candidate.market_applications.api_data_recovery_status.description') %>
+      </p>
+
+      <div class="fr-mb-4w">
+        <p class="fr-text--lg fr-p-3w fr-mb-2w fr-background-alt--grey" style="display: flex; align-items: center; gap: 0.75rem;">
+          <%= image_tag "icon-target.svg", width: 30, height: 30, aria: { hidden: true }, style: "flex-shrink: 0;" %>
+          <span><%= t('candidate.market_applications.api_data_recovery_status.benefit_accuracy') %></span>
         </p>
-        <p class="fr-callout__text">
-          <%= @api_block_status_presenter.overall_status_message %>
+        <p class="fr-text--lg fr-p-3w fr-mb-0 fr-background-alt--grey" style="display: flex; align-items: center; gap: 0.75rem;">
+          <%= image_tag "icon-info.svg", width: 32, height: 32, aria: { hidden: true }, style: "flex-shrink: 0;" %>
+          <span><%= t('candidate.market_applications.api_data_recovery_status.benefit_locked') %></span>
         </p>
       </div>
 
@@ -34,42 +41,35 @@
       <% end %>
     </div>
 
-    <div class="fr-col-12 fr-col-md-6">
+    <div class="fr-col-12 fr-col-md-6 fr-background-alt--blue-france fr-px-5w fr-py-8w">
       <h2 class="fr-h5 fr-mb-3w">
         <%= t('candidate.market_applications.api_data_recovery_status.blocks_list_title') %>
       </h2>
 
-      <ul class="fr-list fr-list--unstyled">
+      <ul class="fr-list fr-list--unstyled" style="list-style-type: none; padding-left: 0;">
         <% @api_block_status_presenter.blocks.each do |block| %>
           <li class="fr-mb-3w" data-block-name="<%= block.name %>">
             <div class="fr-card fr-card--sm">
               <div class="fr-card__body">
                 <div class="fr-card__content">
                   <div class="fr-grid-row fr-grid-row--middle">
-                    <div class="fr-col-2 fr-text-center">
-                      <span class="fr-icon-<%= block.icon %> fr-icon--lg"
-                            aria-hidden="true"></span>
-                    </div>
-                    <div class="fr-col-8">
-                      <h3 class="fr-card__title fr-mb-1v">
+                    <div class="fr-col-10">
+                      <h3 class="fr-card__title fr-mb-1v" style="color: var(--blue-france-sun-113-625);">
                         <%= block.name %>
                       </h3>
                       <p class="fr-card__desc fr-text--xs fr-mb-0">
                         <%= block.description %>
                       </p>
                     </div>
-                    <div class="fr-col-2 fr-text-center">
+                    <div class="fr-col-2" style="display: flex; justify-content: flex-end; align-items: center;">
                       <% if block.loading? %>
-                        <span class="fr-icon-refresh-line fr-icon--lg"
-                              aria-hidden="true"></span>
+                        <div class="sync-loader sync-loader--sm"
+                             role="img"
+                             aria-label="Chargement en cours..."></div>
                       <% elsif block.completed? %>
-                        <span class="fr-icon-checkbox-circle-line fr-icon--lg"
-                              style="color: var(--success-425-625);"
-                              aria-hidden="true"></span>
+                        <%= image_tag "icon-api-success.svg", width: 40, height: 40, aria: { hidden: true } %>
                       <% elsif block.failed? %>
-                        <span class="fr-icon-close-circle-line fr-icon--lg"
-                              style="color: var(--error-425-625);"
-                              aria-hidden="true"></span>
+                        <%= image_tag "icon-api-error.svg", width: 40, height: 40, aria: { hidden: true } %>
                       <% end %>
                     </div>
                   </div>

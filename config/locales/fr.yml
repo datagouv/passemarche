@@ -203,10 +203,12 @@ fr:
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       api_data_recovery_status:
-        title: "Récupération automatique de vos données"
-        description: "Nous allons récupérer automatiquement certaines informations de votre entreprise via les APIs suivantes :"
+        title: "Nous pré-remplissons votre dossier de candidature"
+        description: "Nos systèmes vérifient l'intégrité et la validité de chaque document et information récupérés. Ils sont ensuite formatés pour répondre aux exigences du marché."
+        benefit_accuracy: "Gagner du temps, éviter les erreurs de saisie et garantir l'exactitude des données !"
+        benefit_locked: "Ces champs seront grisés et non modifiables."
         apis_list_title: "APIs qui seront interrogées :"
-        blocks_list_title: "État de récupération des données"
+        blocks_list_title: "Nous récupérons vos documents et informations"
         blocks:
           identite_entreprise:
             name: "Identité de l'entreprise"

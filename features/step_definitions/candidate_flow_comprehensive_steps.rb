@@ -394,7 +394,7 @@ Then('it should have both checked status and attached file') do
 end
 
 Then('I should see API names list') do
-  expect(page).to have_content('État de récupération des données')
+  expect(page).to have_content('Nous récupérons vos documents et informations')
 end
 
 When('all APIs complete successfully') do
