@@ -206,6 +206,27 @@ fr:
         title: "Récupération automatique de vos données"
         description: "Nous allons récupérer automatiquement certaines informations de votre entreprise via les APIs suivantes :"
         apis_list_title: "APIs qui seront interrogées :"
+        blocks_list_title: "État de récupération des données"
+        blocks:
+          identite_entreprise:
+            name: "Identité de l'entreprise"
+            description: "Informations générales et données légales de votre entreprise"
+            icon: "building-line"
+            order: 1
+            apis:
+              - insee
+              - rne
+            success_message: "L'ensemble des informations et documents ont été récupérés"
+            error_message: "Certaines informations n'ont pas pu être récupérées automatiquement"
+          capacites_economiques:
+            name: "Capacités économiques et financières"
+            description: "Attestations fiscales et données financières"
+            icon: "money-euro-circle-line"
+            order: 2
+            apis:
+              - attestations_fiscales
+            success_message: "L'ensemble des informations et documents ont été récupérés"
+            error_message: "Les données fiscales n'ont pas pu être récupérées"
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"
