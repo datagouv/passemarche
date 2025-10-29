@@ -394,7 +394,18 @@ Then('it should have both checked status and attached file') do
 end
 
 Then('I should see API names list') do
-  expect(page).to have_content('APIs qui seront interrogées')
+  expect(page).to have_content('État de récupération des données')
+end
+
+When('all APIs complete successfully') do
+  @market_application.update!(
+    api_fetch_status: {
+      'insee' => { 'status' => 'completed', 'fields_filled' => 5 },
+      'rne' => { 'status' => 'completed', 'fields_filled' => 3 },
+      'attestations_fiscales' => { 'status' => 'completed', 'fields_filled' => 2 }
+    }
+  )
+  visit current_path
 end
 
 Given('I have filled all required fields across all steps') do
@@ -402,7 +413,15 @@ Given('I have filled all required fields across all steps') do
   fill_in 'market_application_siret', with: '73282932000074'
   click_button 'Continuer'
 
-  # Skip api_data_recovery_status step
+  # Complete APIs before proceeding
+  @market_application.update!(
+    api_fetch_status: {
+      'insee' => { 'status' => 'completed', 'fields_filled' => 5 },
+      'rne' => { 'status' => 'completed', 'fields_filled' => 3 },
+      'attestations_fiscales' => { 'status' => 'completed', 'fields_filled' => 2 }
+    }
+  )
+  visit current_path
   click_button 'Continuer'
 
   fill_in_all_available_fields

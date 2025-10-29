@@ -30,17 +30,13 @@ class MarketApplication < ApplicationRecord
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
-    # Use pessimistic locking to prevent race conditions when multiple jobs
-    # update the api_fetch_status hash concurrently
     with_lock do
-      # Create a new hash to ensure Rails detects the change
       updated_status = (api_fetch_status || {}).dup
       updated_status[api_name] = {
         'status' => status,
         'fields_filled' => fields_filled,
         'updated_at' => Time.current.iso8601
       }
-      # Reassign the entire hash so Rails detects the change
       self.api_fetch_status = updated_status
       save!
     end
