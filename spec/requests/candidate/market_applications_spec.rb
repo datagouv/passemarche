@@ -302,6 +302,15 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             body: dgfip_attestation_fiscale_success_response(siren:),
             headers: { 'Content-Type' => 'application/json' }
           )
+
+        # Stub DGFIP document download
+        dgfip_document_url = "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf"
+        stub_request(:get, dgfip_document_url)
+          .to_return(
+            status: 200,
+            body: '%PDF-1.4 test document',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
       end
 
       it 'calls INSEE API and populates market_attribute_responses' do

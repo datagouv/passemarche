@@ -34,10 +34,22 @@ class MapApiData < ApplicationInteractor
     response = find_or_initialize_response(market_attribute)
     value = extract_value_from_resource(market_attribute)
 
-    response.text = value
-    # Set source to auto unless it's already manual_after_api_failure
+    if value.is_a?(Hash) && value.key?(:io)
+      attach_document_to_response(response, value)
+    else
+      response.text = value
+    end
+
     response.source = :auto unless response.manual_after_api_failure?
     response.save!
+  end
+
+  def attach_document_to_response(response, document_hash)
+    if response.respond_to?(:documents)
+      response.documents.attach(document_hash)
+    else
+      Rails.logger.warn "Attempted to attach document to non-file-attachable response: #{response.class}"
+    end
   end
 
   def find_or_initialize_response(market_attribute)

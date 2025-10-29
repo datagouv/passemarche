@@ -23,7 +23,10 @@ RSpec.describe Dgfip, type: :organizer do
   describe '.call' do
     subject { described_class.call(params: { siret: }) }
 
-    context 'when the API call is successful' do
+    context 'when the API call and document download are successful' do
+      let(:document_url) { "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf" }
+      let(:document_body) { '%PDF-1.4 fake pdf content' }
+
       before do
         stub_request(:get, api_url)
           .with(
@@ -38,6 +41,14 @@ RSpec.describe Dgfip, type: :organizer do
             status: 200,
             body: dgfip_attestation_fiscale_success_response(siren:),
             headers: { 'Content-Type' => 'application/json' }
+          )
+
+        stub_request(:get, document_url)
+          .with(headers: { 'Authorization' => "Bearer #{token}" })
+          .to_return(
+            status: 200,
+            body: document_body,
+            headers: { 'Content-Type' => 'application/pdf' }
           )
       end
 
@@ -55,9 +66,19 @@ RSpec.describe Dgfip, type: :organizer do
         expect(result.bundled_data.data).to be_a(Resource)
       end
 
-      it 'stores document_url as document key' do
+      it 'stores downloaded document as document hash' do
         result = subject
-        expect(result.bundled_data.data.document).to eq('https://storage.entreprise.api.gouv.fr/siade/1569139162-418166096-attestation_fiscale_dgfip.pdf')
+        document = result.bundled_data.data.document
+
+        expect(document).to be_a(Hash)
+        expect(document[:io]).to be_a(StringIO)
+        expect(document[:io].read).to eq(document_body)
+        expect(document[:filename]).to eq("1569139162-#{siren}-attestation_fiscale_dgfip.pdf")
+        expect(document[:content_type]).to eq('application/pdf')
+        expect(document[:metadata]).to include(
+          source: 'api_attestations_fiscales',
+          api_name: 'attestations_fiscales'
+        )
       end
 
       it 'sets api_name to attestations_fiscales' do
@@ -114,8 +135,36 @@ RSpec.describe Dgfip, type: :organizer do
       end
     end
 
+    context 'when document download fails' do
+      let(:document_url) { "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf" }
+
+      before do
+        stub_request(:get, api_url)
+          .with(query: hash_including('context' => 'Candidature marché public'))
+          .to_return(
+            status: 200,
+            body: dgfip_attestation_fiscale_success_response(siren:),
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        stub_request(:get, document_url)
+          .to_return(status: 404, body: 'Not Found')
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'includes error about failed download' do
+        result = subject
+        expect(result.error).to include('Failed to download document')
+        expect(result.error).to include('HTTP 404')
+      end
+    end
+
     context 'when api_name is pre-set in context' do
       subject { described_class.call(params: { siret: }, api_name: 'custom_name') }
+      let(:custom_document_url) { 'https://example.com/doc.pdf' }
 
       before do
         stub_request(:get, api_url)
@@ -124,8 +173,15 @@ RSpec.describe Dgfip, type: :organizer do
             status: 200,
             body: dgfip_attestation_fiscale_success_response(
               siren:,
-              overrides: { data: { document_url: 'https://example.com/doc.pdf' } }
+              overrides: { data: { document_url: custom_document_url } }
             )
+          )
+
+        stub_request(:get, custom_document_url)
+          .to_return(
+            status: 200,
+            body: '%PDF-1.4 test',
+            headers: { 'Content-Type' => 'application/pdf' }
           )
       end
 
