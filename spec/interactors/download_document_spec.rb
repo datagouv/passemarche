@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe DownloadDocument, type: :interactor do
   let(:document_url) { 'https://storage.entreprise.api.gouv.fr/documents/test_document.pdf' }
-  let(:document_body) { 'PDF content here' }
+  let(:document_body) { '%PDF-1.4 fake pdf content with enough bytes to pass minimum size validation requiring at least 100 bytes total' }
   let(:token) { 'test_bearer_token_123' }
   let(:api_name) { 'test_api' }
   let(:resource) { Resource.new(document_url:) }
@@ -20,7 +20,6 @@ RSpec.describe DownloadDocument, type: :interactor do
     context 'when document is successfully downloaded' do
       before do
         stub_request(:get, document_url)
-          .with(headers: { 'Authorization' => "Bearer #{token}" })
           .to_return(
             status: 200,
             body: document_body,
@@ -48,10 +47,10 @@ RSpec.describe DownloadDocument, type: :interactor do
         )
       end
 
-      it 'sends Authorization header' do
+      it 'does not send Authorization header' do
         subject
         expect(a_request(:get, document_url)
-          .with(headers: { 'Authorization' => "Bearer #{token}" }))
+          .with { |req| !req.headers.key?('Authorization') })
           .to have_been_made.once
       end
     end
@@ -251,27 +250,85 @@ RSpec.describe DownloadDocument, type: :interactor do
       end
     end
 
-    context 'when API credentials are missing' do
-      before do
-        allow(Rails.application.credentials).to receive_message_chain(:api_entreprise, :token).and_return(nil)
+    context 'PDF validation' do
+      context 'when downloaded file is not a valid PDF' do
+        before do
+          stub_request(:get, document_url)
+            .to_return(
+              status: 200,
+              body: '<html>Error page that is long enough to exceed 100 bytes minimum but is not a PDF file at all, just HTML</html>',
+              headers: { 'Content-Type' => 'application/pdf' }
+            )
+        end
 
-        stub_request(:get, document_url)
-          .to_return(
-            status: 200,
-            body: document_body,
-            headers: { 'Content-Type' => 'application/pdf' }
-          )
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'includes PDF validation error message' do
+          expect(subject.error).to include('not a valid PDF')
+        end
       end
 
-      it 'succeeds without Authorization header' do
-        expect(subject).to be_success
+      context 'when downloaded file is too small' do
+        before do
+          stub_request(:get, document_url)
+            .to_return(
+              status: 200,
+              body: '%PDF-',
+              headers: { 'Content-Type' => 'application/pdf' }
+            )
+        end
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'includes file size error message' do
+          expect(subject.error).to include('too small')
+          expect(subject.error).to include('5 bytes')
+        end
       end
 
-      it 'does not send Authorization header' do
-        subject
-        expect(a_request(:get, document_url)
-          .with { |req| req.headers['Authorization'].nil? })
-          .to have_been_made.once
+      context 'when downloaded file is empty' do
+        before do
+          stub_request(:get, document_url)
+            .to_return(
+              status: 200,
+              body: '',
+              headers: { 'Content-Type' => 'application/pdf' }
+            )
+        end
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'includes file size error message' do
+          expect(subject.error).to include('too small')
+          expect(subject.error).to include('0 bytes')
+        end
+      end
+
+      context 'when valid PDF is downloaded' do
+        before do
+          stub_request(:get, document_url)
+            .to_return(
+              status: 200,
+              body: '%PDF-1.7 valid content with sufficient length to pass validation checks requiring at least 100 bytes total',
+              headers: { 'Content-Type' => 'application/pdf' }
+            )
+        end
+
+        it 'succeeds' do
+          expect(subject).to be_success
+        end
+
+        it 'stores the valid PDF document' do
+          result = subject
+          document = result.bundled_data.data.document
+          expect(document[:io].read).to start_with('%PDF-')
+        end
       end
     end
   end

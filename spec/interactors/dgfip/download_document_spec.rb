@@ -6,14 +6,9 @@ RSpec.describe Dgfip::DownloadDocument, type: :interactor do
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
   let(:document_url) { "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf" }
-  let(:document_body) { '%PDF-1.4 fake pdf content' }
-  let(:token) { 'test_bearer_token_123' }
+  let(:document_body) { '%PDF-1.4 fake pdf content with enough bytes to pass minimum size validation requiring at least 100 bytes total' }
   let(:resource) { Resource.new(document: document_url) }
   let(:bundled_data) { BundledData.new(data: resource) }
-
-  before do
-    allow(Rails.application.credentials).to receive_message_chain(:api_entreprise, :token).and_return(token)
-  end
 
   describe '.call' do
     subject { described_class.call(bundled_data:, params: { siret: }, api_name: 'attestations_fiscales') }
@@ -21,7 +16,6 @@ RSpec.describe Dgfip::DownloadDocument, type: :interactor do
     context 'when document is successfully downloaded' do
       before do
         stub_request(:get, document_url)
-          .with(headers: { 'Authorization' => "Bearer #{token}" })
           .to_return(
             status: 200,
             body: document_body,
@@ -127,6 +121,25 @@ RSpec.describe Dgfip::DownloadDocument, type: :interactor do
       it 'generates filename using SIREN from params' do
         result = subject
         expect(result.bundled_data.data.document[:filename]).to eq("attestation_fiscale_#{siren}.pdf")
+      end
+    end
+
+    context 'when downloaded document is invalid' do
+      before do
+        stub_request(:get, document_url)
+          .to_return(
+            status: 200,
+            body: 'Not a PDF - just some HTML error page content that is long enough to pass size check requiring over 100 bytes',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'includes validation error' do
+        expect(subject.error).to include('not a valid PDF')
       end
     end
   end

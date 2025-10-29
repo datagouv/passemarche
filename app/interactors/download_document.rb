@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class DownloadDocument < ApplicationInteractor
+  DOWNLOAD_READ_TIMEOUT = 60
+  DOWNLOAD_OPEN_TIMEOUT = 30
+
   def call
     validate_context
     return if context.failure?
@@ -35,7 +38,7 @@ class DownloadDocument < ApplicationInteractor
     end
 
     url = begin
-      context.bundled_data.data.public_send(document_url_key)
+      bundled_data.public_send(document_url_key)
     rescue NoMethodError
       nil
     end
@@ -46,26 +49,38 @@ class DownloadDocument < ApplicationInteractor
   end
 
   def download_and_store_document
-    url = context.bundled_data.data.public_send(document_url_key)
-    uri = URI(url)
-    downloaded_file = download_file_from_uri(uri)
-
-    context.bundled_data.data.deep_merge!(
-      storage_key => downloaded_file
-    )
+    downloaded_file = download_document
+    store_document(downloaded_file)
   rescue StandardError => e
     context.fail!(error: "Failed to download document: #{e.message}")
+  end
+
+  def download_document
+    uri = URI(bundled_data.public_send(document_url_key))
+    response = perform_http_request(uri)
+    validate_pdf_content!(response.body)
+    build_document_hash(response, uri)
+  end
+
+  def store_document(downloaded_file)
+    bundled_data.deep_merge!(
+      storage_key => downloaded_file
+    )
   end
 
   def storage_key
     document_url_key.to_s.gsub(/_url$/, '').to_sym
   end
 
-  def download_file_from_uri(uri)
+  def bundled_data
+    @bundled_data ||= context.bundled_data&.data
+  end
+
+  def perform_http_request(uri)
     http_options = {
       use_ssl: uri.scheme == 'https',
-      read_timeout: 60,
-      open_timeout: 30
+      read_timeout: DOWNLOAD_READ_TIMEOUT,
+      open_timeout: DOWNLOAD_OPEN_TIMEOUT
     }
 
     response = Net::HTTP.start(uri.host, uri.port, http_options) do |http|
@@ -76,6 +91,10 @@ class DownloadDocument < ApplicationInteractor
 
     raise "HTTP #{response.code}: #{response.message}" unless response.is_a?(Net::HTTPSuccess)
 
+    response
+  end
+
+  def build_document_hash(response, uri)
     {
       io: StringIO.new(response.body),
       filename: extract_filename(response, uri),
@@ -84,9 +103,8 @@ class DownloadDocument < ApplicationInteractor
     }
   end
 
-  def add_request_headers(request)
-    token = Rails.application.credentials.api_entreprise&.token
-    request['Authorization'] = "Bearer #{token}" if token.present?
+  def add_request_headers(_request)
+    # Override in subclasses if authentication is needed
   end
 
   def extract_filename(response, uri)
@@ -103,5 +121,13 @@ class DownloadDocument < ApplicationInteractor
 
   def extract_content_type(response)
     response['content-type']&.split(';')&.first || 'application/octet-stream'
+  end
+
+  def validate_pdf_content!(body)
+    raise "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
+
+    return if body.start_with?('%PDF-')
+
+    raise 'Downloaded file is not a valid PDF (missing PDF header)'
   end
 end

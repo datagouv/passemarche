@@ -25,7 +25,7 @@ RSpec.describe Dgfip, type: :organizer do
 
     context 'when the API call and document download are successful' do
       let(:document_url) { "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf" }
-      let(:document_body) { '%PDF-1.4 fake pdf content' }
+      let(:document_body) { '%PDF-1.4 fake pdf content with enough bytes to pass minimum size validation requiring at least 100 bytes total' }
 
       before do
         stub_request(:get, api_url)
@@ -44,7 +44,6 @@ RSpec.describe Dgfip, type: :organizer do
           )
 
         stub_request(:get, document_url)
-          .with(headers: { 'Authorization' => "Bearer #{token}" })
           .to_return(
             status: 200,
             body: document_body,
