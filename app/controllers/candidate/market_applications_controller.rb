@@ -11,6 +11,12 @@ module Candidate
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
 
+      # Auto-skip steps that should not be displayed
+      if SkippableStepCalculator.call(@market_application, step)
+        skip_step
+        return
+      end
+
       respond_to do |format|
         format.html { render_html_step }
         format.json { render_json_step }

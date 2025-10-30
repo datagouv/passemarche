@@ -94,7 +94,8 @@ class MarketApplicationPresenter
   end
 
   def wizard_steps
-    (INITIAL_WIZARD_STEPS + subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
+    all_steps = (INITIAL_WIZARD_STEPS + subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
+    all_steps.reject { |step| SkippableStepCalculator.call(@market_application, step) }
   end
 
   def should_display_subcategory?(subcategories)
