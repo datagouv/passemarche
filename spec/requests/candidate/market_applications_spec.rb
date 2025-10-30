@@ -7,6 +7,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ApiResponses::InseeResponses
   include ApiResponses::RneResponses
   include ApiResponses::DgfipResponses
+  include ApiResponses::QualibatResponses
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
@@ -253,6 +254,14 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           public_markets: [public_market])
       end
 
+      let!(:qualibat_attribute) do
+        create(:market_attribute, :inline_url_input, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_qualibat',
+          api_name: 'qualibat',
+          api_key: 'document_url',
+          public_markets: [public_market])
+      end
+
       before do
         # Credentials are already mocked in the main before block, no need to re-mock
 
@@ -284,6 +293,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           .to_return(
             status: 200,
             body: rne_extrait_success_response(siren:),
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        # Stub Qualibat API call
+        qualibat_api_url = "https://entreprise.api.gouv.fr/v4/qualibat/etablissements/#{valid_siret}/certification_batiment"
+        stub_request(:get, qualibat_api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: qualibat_success_response,
             headers: { 'Content-Type' => 'application/json' }
           )
 
@@ -331,13 +356,18 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         # Verify API data was populated by jobs
         siret_response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
         category_response = market_application.market_attribute_responses.find_by(market_attribute: category_attribute)
+        qualibat_response = market_application.market_attribute_responses.find_by(market_attribute: qualibat_attribute)
 
         expect(siret_response.text).to eq('41816609600069')
         expect(category_response.text).to eq('PME')
+        expect(qualibat_response.text).to eq('https://qualibat.example.com/certificat.pdf')
 
         # Verify API statuses in JSONB
         expect(market_application.api_fetch_status['insee']['status']).to eq('completed')
         expect(market_application.api_fetch_status['insee']['fields_filled']).to eq(2)
+        expect(market_application.api_fetch_status['rne']['status']).to eq('completed')
+        expect(market_application.api_fetch_status['qualibat']['status']).to eq('completed')
+        expect(market_application.api_fetch_status['qualibat']['fields_filled']).to eq(1)
 
         # Then navigate through the status page
         patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
@@ -380,6 +410,21 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
               headers: { 'Content-Type' => 'application/json' }
             )
 
+          qualibat_api_url = "https://entreprise.api.gouv.fr/v4/qualibat/etablissements/#{valid_siret}/certification_batiment"
+          stub_request(:get, qualibat_api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => '13002526500013'
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 404,
+              body: qualibat_not_found_response,
+              headers: { 'Content-Type' => 'application/json' }
+            )
+
           # Also stub DGFIP API call to fail
           dgfip_api_url = "https://entreprise.api.gouv.fr/v4/dgfip/unites_legales/#{siren}/attestation_fiscale"
           stub_request(:get, dgfip_api_url)
@@ -413,7 +458,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           expect(market_application.siret).to eq(valid_siret)
 
           # Verify API failure was handled by jobs
-          expect(market_application.market_attribute_responses.count).to eq(2)
+          expect(market_application.market_attribute_responses.count).to eq(3)
 
           # Verify responses are marked as manual_after_api_failure
           responses = market_application.market_attribute_responses.reload
@@ -422,6 +467,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           # Verify API statuses in JSONB show failures
           expect(market_application.api_fetch_status['insee']['status']).to eq('failed')
           expect(market_application.api_fetch_status['rne']['status']).to eq('failed')
+          expect(market_application.api_fetch_status['qualibat']['status']).to eq('failed')
 
           # Then navigate through the status page
           patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"

@@ -46,42 +46,9 @@ class MarketApplicationStepUpdateService < ApplicationService
     build_result(true)
   end
 
-  def populate_api_data
-    populate_insee_data
-    populate_rne_data
-  end
-
-  def populate_insee_data
-    return if market_application.siret.blank?
-
-    result = Insee.call(
-      params: { siret: market_application.siret },
-      market_application:
-    )
-
-    return if result.success?
-
-    mark_api_attributes_as_manual_after_failure('Insee')
-    @flash_messages[:alert] = I18n.t('candidate.market_applications.insee_api_error', error: result.error)
-  end
-
-  def populate_rne_data
-    return if market_application.siret.blank?
-
-    result = Rne.call(
-      params: { siret: market_application.siret },
-      market_application:
-    )
-
-    return if result.success?
-
-    mark_api_attributes_as_manual_after_failure('rne')
-    @flash_messages[:alert] = I18n.t('candidate.market_applications.rne_api_error', error: result.error)
-  end
-
   def reset_api_statuses_to_pending
     # Get list of API names from coordinator job
-    api_jobs = [FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob]
+    api_jobs = [FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob]
 
     api_jobs.each do |job_class|
       api_name = job_class.api_name

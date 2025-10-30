@@ -4,6 +4,7 @@ class MarketApplicationPresenter
   INITIAL_WIZARD_STEPS = %i[company_identification api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
+
   def initialize(market_application)
     @market_application = market_application
   end

@@ -37,6 +37,14 @@ FactoryBot.define do
       input_type { :file_upload }
     end
 
+    trait :inline_file_upload do
+      input_type { :inline_file_upload }
+    end
+
+    trait :url_input do
+      input_type { :url_input }
+    end
+
     trait :file_or_textarea do
       input_type { :file_or_textarea }
     end

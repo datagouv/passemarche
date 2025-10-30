@@ -12,19 +12,23 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchInseeDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchRneDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchDgfipDataJob).to receive(:perform_later).with(market_application.id)
+        expect(FetchQualibatDataJob).to receive(:perform_later).with(market_application.id)
 
         described_class.perform_now(market_application.id)
       end
 
       it 'spawns jobs for all defined API jobs' do
-        expect(described_class::API_JOBS.count).to eq(3)
-        expect(described_class::API_JOBS).to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob)
+        # Ensure we test all jobs in the constant
+        expect(described_class::API_JOBS.count).to eq(4)
+        expect(described_class::API_JOBS)
+          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob)
       end
     end
 
     context 'when an error occurs spawning jobs' do
       before do
-        allow(FetchInseeDataJob).to receive(:perform_later).and_raise(StandardError, 'Queue error')
+        allow(FetchInseeDataJob)
+          .to receive(:perform_later).and_raise(StandardError, 'Queue error')
       end
 
       it 'logs the error and re-raises' do
