@@ -336,6 +336,15 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             body: '%PDF-1.4 test document',
             headers: { 'Content-Type' => 'application/pdf' }
           )
+
+        # Stub Qualibat document download
+        qualibat_document_url = 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf'
+        stub_request(:get, qualibat_document_url)
+          .to_return(
+            status: 200,
+            body: '%PDF-1.4 qualibat test document with enough bytes to pass minimum size validation requiring at least 100 bytes total',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
       end
 
       it 'calls INSEE API and populates market_attribute_responses' do
@@ -360,7 +369,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
         expect(siret_response.text).to eq('41816609600069')
         expect(category_response.text).to eq('PME')
-        expect(qualibat_response.text).to eq('https://qualibat.example.com/certificat.pdf')
+        expect(qualibat_response.text).to eq('https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf')
 
         # Verify API statuses in JSONB (only for APIs with market attributes)
         expect(market_application.api_fetch_status['insee']['status']).to eq('completed')

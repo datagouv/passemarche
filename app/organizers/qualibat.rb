@@ -1,6 +1,7 @@
 class Qualibat < ApplicationOrganizer
   organize Qualibat::MakeRequest,
     Qualibat::BuildResource,
+    Qualibat::DownloadDocument,
     MapApiData
 
   def self.call(context = {})
