@@ -206,6 +206,8 @@ fr:
         prohibition_question:
           label: "Votre entreprise est-elle concernée par un cas d'interdiction de soumissionner ?"
           hint: "Sont exclues de la procédure de passation des marchés, les entreprises condamnées pénalement, en défaut fiscal ou social, en liquidation judiciaire ou en faillite personnelle"
+          locked: "Réponse verrouillée"
+          locked_hint: "Vous avez déjà répondu à cette question. Votre réponse est utilisée pour toutes les étapes de motifs d'exclusion."
           yes: "Oui"
           no: "Non"
       api_data_recovery_status:

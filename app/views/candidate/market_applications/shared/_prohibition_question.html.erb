@@ -1,41 +1,71 @@
-<div class="prohibition-question fr-mb-6w" data-controller="conditional-fields">
-  <div class="fr-form-group">
-    <fieldset class="fr-fieldset">
-      <legend class="fr-fieldset__legend fr-text--bold">
-        <%= t('.prohibition_question.label') %>
-      </legend>
+<%
+  first_exclusion_step = "motifs_exclusion_condamnations_penales"
+  is_first_step = (step.to_s == first_exclusion_step)
+  should_disable = !is_first_step && !@market_application.subject_to_prohibition.nil?
+  # Default to false (no) when nil
+  current_value = @market_application.subject_to_prohibition.nil? ? false : @market_application.subject_to_prohibition
+%>
 
-      <div class="fr-hint-text fr-mb-3w">
-        <%= t('.prohibition_question.hint') %>
+<div class="fr-input-group">
+  <div class="fr-mb-3w">
+    <% unless current_value == false %>
+      <h6 class="fr-mb-2w fr-text--md">
+        <%= t('candidate.market_applications.shared.prohibition_question.label') %>
+        <% if should_disable %>
+          <span class="fr-badge fr-badge--sm fr-badge--info fr-ml-2w">
+            <%= t('candidate.market_applications.shared.prohibition_question.locked') %>
+          </span>
+        <% end %>
+      </h6>
+    <% end %>
+    <% if should_disable %>
+      <div class="fr-alert fr-alert--info fr-alert--sm fr-mb-3w">
+        <p>
+          <%= t('candidate.market_applications.shared.prohibition_question.locked_hint') %>
+        </p>
       </div>
+    <% else %>
+      <div class="fr-alert fr-alert--info fr-alert--sm fr-mb-3w">
+        <p>
+          <%= t('candidate.market_applications.shared.prohibition_question.hint') %>
+        </p>
+      </div>
+    <% end %>
 
-      <div class="fr-fieldset__element">
+    <div class="fr-fieldset fr-fieldset--inline fr-mt-3w">
+      <div class="fr-radio-group">
         <%= form.radio_button :subject_to_prohibition, true,
               class: "fr-radio",
               id: "subject_to_prohibition_yes_#{step}",
+              checked: current_value == true,
+              disabled: should_disable,
               data: {
                 action: "conditional-fields#show",
                 conditional_fields_target: "trigger"
               } %>
-        <%= form.label :subject_to_prohibition, t('.prohibition_question.yes'),
+        <%= form.label :subject_to_prohibition,
+              t('candidate.market_applications.shared.prohibition_question.yes'),
               value: true,
               class: "fr-label",
               for: "subject_to_prohibition_yes_#{step}" %>
       </div>
 
-      <div class="fr-fieldset__element">
+      <div class="fr-radio-group">
         <%= form.radio_button :subject_to_prohibition, false,
               class: "fr-radio",
               id: "subject_to_prohibition_no_#{step}",
+              checked: current_value == false,
+              disabled: should_disable,
               data: {
                 action: "conditional-fields#hide",
                 conditional_fields_target: "trigger"
               } %>
-        <%= form.label :subject_to_prohibition, t('.prohibition_question.no'),
+        <%= form.label :subject_to_prohibition,
+              t('candidate.market_applications.shared.prohibition_question.no'),
               value: false,
               class: "fr-label",
               for: "subject_to_prohibition_no_#{step}" %>
       </div>
-    </fieldset>
+    </div>
   </div>
 </div>
