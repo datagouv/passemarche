@@ -241,6 +241,14 @@ fr:
               - probtp
             success_message: "L'ensemble des informations et documents ont été récupérés"
             error_message: "Les données fiscales n'ont pas pu être récupérées"
+          capacites_techniques_professionnelles:
+            name: "Capacités techniques et professionnelles"
+            description: "Certifications professionnelles et qualifications techniques de votre entreprise"
+            order: 3
+            apis:
+              - qualibat
+            success_message: "L'ensemble des certifications et qualifications ont été récupérées"
+            error_message: "Certaines certifications n'ont pas pu être récupérées automatiquement"
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"
