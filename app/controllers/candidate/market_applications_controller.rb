@@ -112,6 +112,7 @@ module Candidate
     def market_application_params
       params.fetch(:market_application, {}).permit(
         :siret,
+        :subject_to_prohibition,
         market_attribute_responses_attributes: {}
       )
     end
