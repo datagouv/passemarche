@@ -11,7 +11,7 @@
 # Create demo editor for fake_editor_app in development
 if Rails.env.development? || Rails.env.sandbox? || Rails.env.staging?
   # Set base URL based on environment
-  base_url = Rails.env.development? ? 'http://localhost:4567' : "https://#{Rails.env}.voie-rapide-edition.services.api.gouv.fr"
+  base_url = Rails.env.development? ? 'http://localhost:4567' : "https://#{Rails.env}.editeur.passemarche.data.gouv.fr"
 
   demo_editor = Editor.find_or_create_by(client_id: 'demo_editor_client') do |editor|
     editor.name = 'Demo Editor App'
