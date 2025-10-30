@@ -126,7 +126,7 @@ class GenerateDocumentsPackage < ApplicationInteractor
   def add_single_document_to_zip(zip, document, response, response_index, doc_index)
     field_key = response.market_attribute.key
     original_filename = document.filename.to_s
-    zip_filename = build_zip_filename(response_index, doc_index, field_key, original_filename)
+    zip_filename = build_zip_filename(document, response_index, doc_index, field_key, original_filename)
 
     zip.put_next_entry(zip_filename)
     zip.write(document.download)
@@ -135,7 +135,12 @@ class GenerateDocumentsPackage < ApplicationInteractor
     # Continue processing other documents
   end
 
-  def build_zip_filename(upload_index, doc_index, field_key, original_filename)
-    "documents/#{format('%02d', upload_index + 1)}_#{format('%02d', doc_index + 1)}_#{field_key}_#{original_filename}"
+  def build_zip_filename(document, upload_index, doc_index, field_key, original_filename)
+    prefix = document_from_api?(document) ? 'api' : 'user'
+    "documents/#{prefix}_#{format('%02d', upload_index + 1)}_#{format('%02d', doc_index + 1)}_#{field_key}_#{original_filename}"
+  end
+
+  def document_from_api?(document)
+    document.metadata['source']&.start_with?('api_')
   end
 end

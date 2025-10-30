@@ -6,6 +6,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ActiveJob::TestHelper
   include ApiResponses::InseeResponses
   include ApiResponses::RneResponses
+  include ApiResponses::DgfipResponses
   include ApiResponses::QualibatResponses
 
   let(:editor) { create(:editor) }
@@ -310,6 +311,31 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             body: qualibat_success_response,
             headers: { 'Content-Type' => 'application/json' }
           )
+
+        # Stub DGFIP API call
+        dgfip_api_url = "https://entreprise.api.gouv.fr/v4/dgfip/unites_legales/#{siren}/attestation_fiscale"
+        stub_request(:get, dgfip_api_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: dgfip_attestation_fiscale_success_response(siren:),
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        # Stub DGFIP document download
+        dgfip_document_url = "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf"
+        stub_request(:get, dgfip_document_url)
+          .to_return(
+            status: 200,
+            body: '%PDF-1.4 test document',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
       end
 
       it 'calls INSEE API and populates market_attribute_responses' do
@@ -396,6 +422,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             .to_return(
               status: 404,
               body: qualibat_not_found_response,
+              headers: { 'Content-Type' => 'application/json' }
+            )
+
+          # Also stub DGFIP API call to fail
+          dgfip_api_url = "https://entreprise.api.gouv.fr/v4/dgfip/unites_legales/#{siren}/attestation_fiscale"
+          stub_request(:get, dgfip_api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => '13002526500013'
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 404,
+              body: dgfip_attestation_fiscale_not_found_response,
               headers: { 'Content-Type' => 'application/json' }
             )
         end

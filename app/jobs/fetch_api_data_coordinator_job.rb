@@ -8,6 +8,7 @@ class FetchApiDataCoordinatorJob < ApplicationJob
   API_JOBS = [
     FetchInseeDataJob,
     FetchRneDataJob,
+    FetchDgfipDataJob,
     FetchQualibatDataJob
   ].freeze
 
