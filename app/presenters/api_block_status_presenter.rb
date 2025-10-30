@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class ApiBlockStatusPresenter
+  STATUS_COLORS = {
+    'pending' => 'var(--blue-france-sun-113-625)',
+    'processing' => 'var(--blue-france-sun-113-625)',
+    'completed' => '#18753C',
+    'failed' => '#B34000'
+  }.freeze
+
   def initialize(market_application)
     @market_application = market_application
   end
@@ -102,10 +109,11 @@ class ApiBlockStatusPresenter
 
     def api_statuses
       apis.map do |api_name|
+        api_status = individual_api_status(api_name)
         {
           name: api_name,
-          status: individual_api_status(api_name),
-          color: status_color(individual_api_status(api_name))
+          status: api_status,
+          color: status_color(api_status)
         }
       end
     end
@@ -113,43 +121,40 @@ class ApiBlockStatusPresenter
     private
 
     def individual_api_status(api_name)
-      api_data = api_status_for(api_name)
-      return 'pending' if api_data['status'].nil? || api_data['status'] == 'pending'
-      return 'processing' if api_data['status'] == 'processing'
-      return 'completed' if api_data['status'] == 'completed'
+      api_status = api_status_for(api_name)
+      return 'pending' if api_status.nil? || api_status == 'pending'
+      return 'processing' if api_status == 'processing'
+      return 'completed' if api_status == 'completed'
 
       'failed'
     end
 
     def status_color(status)
-      case status
-      when 'pending', 'processing'
-        'var(--blue-france-sun-113-625)'
-      when 'completed'
-        '#18753C'
-      when 'failed'
-        '#B34000'
-      end
+      STATUS_COLORS[status]
     end
 
-    def api_status_for(api_name)
+    def api_data_for(api_name)
       @market_application.api_fetch_status&.dig(api_name.to_s.downcase) || default_api_status
     end
 
     def api_completed?(api_name)
-      api_status_for(api_name)['status'] == 'completed'
+      api_status_for(api_name) == 'completed'
     end
 
     def api_failed?(api_name)
-      api_status_for(api_name)['status'] == 'failed'
+      api_status_for(api_name) == 'failed'
     end
 
     def api_processing?(api_name)
-      api_status_for(api_name)['status'] == 'processing'
+      api_status_for(api_name) == 'processing'
     end
 
     def api_pending?(api_name)
-      api_status_for(api_name)['status'] == 'pending'
+      api_status_for(api_name) == 'pending'
+    end
+
+    def api_status_for(api_name)
+      api_data_for(api_name)['status']
     end
 
     def default_api_status
