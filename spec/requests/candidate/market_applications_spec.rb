@@ -336,6 +336,16 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             body: '%PDF-1.4 test document',
             headers: { 'Content-Type' => 'application/pdf' }
           )
+
+        # Stub Qualibat document download
+        qualibat_document_url = 'https://qualibat.example.com/certificat.pdf'
+        stub_request(:get, qualibat_document_url)
+          .with(headers: { 'Authorization' => "Bearer #{token}" })
+          .to_return(
+            status: 200,
+            body: '%PDF-1.4 qualibat test document with enough bytes to pass minimum size validation requiring at least 100 bytes total',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
       end
 
       it 'calls INSEE API and populates market_attribute_responses' do
