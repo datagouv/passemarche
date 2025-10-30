@@ -202,6 +202,12 @@ fr:
         data_from_api: "Données récupérées automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
+      shared:
+        prohibition_question:
+          label: "Votre entreprise est-elle concernée par un cas d'interdiction de soumissionner ?"
+          hint: "Sont exclues de la procédure de passation des marchés, les entreprises condamnées pénalement, en défaut fiscal ou social, en liquidation judiciaire ou en faillite personnelle"
+          yes: "Oui"
+          no: "Non"
       api_data_recovery_status:
         title: "Récupération automatique de vos données"
         description: "Nous allons récupérer automatiquement certaines informations de votre entreprise via les APIs suivantes :"

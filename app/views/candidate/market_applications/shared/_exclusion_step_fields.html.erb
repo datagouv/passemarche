@@ -1,5 +1,7 @@
 <% auto_responses = subcategory_responses.select(&:auto?) %>
 <% manual_responses = subcategory_responses.reject(&:auto?) %>
+<% required_fields = manual_responses.select { |r| r.type == "MarketAttributeResponse::RadioWithJustificationRequired" } %>
+<% optional_fields = manual_responses.reject { |r| r.type == "MarketAttributeResponse::RadioWithJustificationRequired" } %>
 
 <% if auto_responses.any? %>
   <div class="fr-fieldset fr-mb-4w">
@@ -12,18 +14,24 @@
   </div>
 <% end %>
 
-<% if manual_responses.any? %>
-  <div class="prohibition-fields"
-       data-prohibition-toggle-target="fields"
-       style="display: none;">
-    <div class="fr-fieldset">
-      <% manual_responses.each do |response| %>
-        <div class="fr-fieldset__element"
-             data-field-type="<%= response.type.underscore %>">
-          <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
-                  market_attribute_response: response, form: form %>
-        </div>
-      <% end %>
-    </div>
+<% if required_fields.any? %>
+  <div class="fr-fieldset fr-mb-4w">
+    <% required_fields.each do |response| %>
+      <div class="fr-fieldset__element">
+        <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
+                market_attribute_response: response, form: form %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if optional_fields.any? %>
+  <div data-conditional-fields-target="content" class="fr-hidden fr-fieldset fr-mb-4w">
+    <% optional_fields.each do |response| %>
+      <div class="fr-fieldset__element">
+        <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
+                market_attribute_response: response, form: form %>
+      </div>
+    <% end %>
   </div>
 <% end %>

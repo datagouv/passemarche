@@ -1,4 +1,4 @@
-<div class="prohibition-question fr-mb-6w" data-controller="prohibition-toggle">
+<div class="prohibition-question fr-mb-6w" data-controller="conditional-fields">
   <div class="fr-form-group">
     <fieldset class="fr-fieldset">
       <legend class="fr-fieldset__legend fr-text--bold">
@@ -14,8 +14,8 @@
               class: "fr-radio",
               id: "subject_to_prohibition_yes_#{step}",
               data: {
-                action: "change->prohibition-toggle#toggle",
-                prohibition_toggle_target: "radio"
+                action: "conditional-fields#show",
+                conditional_fields_target: "trigger"
               } %>
         <%= form.label :subject_to_prohibition, t('.prohibition_question.yes'),
               value: true,
@@ -28,8 +28,8 @@
               class: "fr-radio",
               id: "subject_to_prohibition_no_#{step}",
               data: {
-                action: "change->prohibition-toggle#toggle",
-                prohibition_toggle_target: "radio"
+                action: "conditional-fields#hide",
+                conditional_fields_target: "trigger"
               } %>
         <%= form.label :subject_to_prohibition, t('.prohibition_question.no'),
               value: false,
