@@ -7,7 +7,8 @@ class FetchApiDataCoordinatorJob < ApplicationJob
   # List of all APIs to fetch
   API_JOBS = [
     FetchInseeDataJob,
-    FetchRneDataJob
+    FetchRneDataJob,
+    FetchDgfipDataJob
   ].freeze
 
   def perform(market_application_id)

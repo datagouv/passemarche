@@ -81,7 +81,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   def reset_api_statuses_to_pending
     # Get list of API names from coordinator job
-    api_jobs = [FetchInseeDataJob, FetchRneDataJob]
+    api_jobs = [FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob]
 
     api_jobs.each do |job_class|
       api_name = job_class.api_name
