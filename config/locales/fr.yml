@@ -204,9 +204,32 @@ fr:
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       api_data_recovery_status:
-        title: "Récupération automatique de vos données"
-        description: "Nous allons récupérer automatiquement certaines informations de votre entreprise via les APIs suivantes :"
+        title: "Nous pré-remplissons votre dossier de candidature"
+        description: "Nos systèmes vérifient l'intégrité et la validité de chaque document et information récupérés. Ils sont ensuite formatés pour répondre aux exigences du marché."
+        benefit_accuracy: "Gagner du temps, éviter les erreurs de saisie et garantir l'exactitude des données !"
+        benefit_locked: "Ces champs seront grisés et non modifiables."
         apis_list_title: "APIs qui seront interrogées :"
+        blocks_list_title: "Nous récupérons vos documents et informations"
+        blocks:
+          identite_entreprise:
+            name: "Identité de l'entreprise"
+            description: "Informations générales et données légales de votre entreprise"
+            icon: "building-line"
+            order: 1
+            apis:
+              - insee
+              - rne
+            success_message: "L'ensemble des informations et documents ont été récupérés"
+            error_message: "Certaines informations n'ont pas pu être récupérées automatiquement"
+          capacites_economiques:
+            name: "Capacités économiques et financières"
+            description: "Attestations fiscales et données financières"
+            icon: "money-euro-circle-line"
+            order: 2
+            apis:
+              - attestations_fiscales
+            success_message: "L'ensemble des informations et documents ont été récupérés"
+            error_message: "Les données fiscales n'ont pas pu être récupérées"
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"

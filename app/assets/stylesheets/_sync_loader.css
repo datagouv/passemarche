@@ -10,6 +10,14 @@
   max-width: 100%;
 }
 
+/* Small variant for inline use */
+.sync-loader--sm {
+  width: 47px;
+  height: 53px;
+  background-size: 235px 53px; /* Scale down to ~1/6 of original size */
+  animation: sync-frames-sm 1.5s steps(5) infinite;
+}
+
 /* Responsive sizing */
 @media (max-width: 768px) {
   .sync-loader {
@@ -28,6 +36,11 @@
 @keyframes sync-frames {
   from { background-position: 0px 0px; }
   to { background-position: -1410px 0px; }
+}
+
+@keyframes sync-frames-sm {
+  from { background-position: 0px 0px; }
+  to { background-position: -235px 0px; }
 }
 
 /* Pause animation on hover for accessibility */

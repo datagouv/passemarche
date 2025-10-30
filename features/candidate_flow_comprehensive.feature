@@ -18,7 +18,8 @@ Feature: Comprehensive Candidate Application Flow
 
     Then I should be on the "api_data_recovery_status" step
     And I should see API names list
-    When I click "Continuer"
+    When all APIs complete successfully
+    And I click "Continuer"
 
     Then I should be on the "market_information" step
     And I should see market information

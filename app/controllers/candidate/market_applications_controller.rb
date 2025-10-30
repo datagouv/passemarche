@@ -10,6 +10,7 @@ module Candidate
 
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
+      @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application) if step == :api_data_recovery_status
 
       respond_to do |format|
         format.html { render_html_step }
