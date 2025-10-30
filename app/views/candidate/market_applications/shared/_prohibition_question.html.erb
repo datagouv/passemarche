@@ -1,0 +1,41 @@
+<div class="prohibition-question fr-mb-6w" data-controller="prohibition-toggle">
+  <div class="fr-form-group">
+    <fieldset class="fr-fieldset">
+      <legend class="fr-fieldset__legend fr-text--bold">
+        <%= t('.prohibition_question.label') %>
+      </legend>
+
+      <div class="fr-hint-text fr-mb-3w">
+        <%= t('.prohibition_question.hint') %>
+      </div>
+
+      <div class="fr-fieldset__element">
+        <%= form.radio_button :subject_to_prohibition, true,
+              class: "fr-radio",
+              id: "subject_to_prohibition_yes_#{step}",
+              data: {
+                action: "change->prohibition-toggle#toggle",
+                prohibition_toggle_target: "radio"
+              } %>
+        <%= form.label :subject_to_prohibition, t('.prohibition_question.yes'),
+              value: true,
+              class: "fr-label",
+              for: "subject_to_prohibition_yes_#{step}" %>
+      </div>
+
+      <div class="fr-fieldset__element">
+        <%= form.radio_button :subject_to_prohibition, false,
+              class: "fr-radio",
+              id: "subject_to_prohibition_no_#{step}",
+              data: {
+                action: "change->prohibition-toggle#toggle",
+                prohibition_toggle_target: "radio"
+              } %>
+        <%= form.label :subject_to_prohibition, t('.prohibition_question.no'),
+              value: false,
+              class: "fr-label",
+              for: "subject_to_prohibition_no_#{step}" %>
+      </div>
+    </fieldset>
+  </div>
+</div>

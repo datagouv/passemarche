@@ -1,0 +1,29 @@
+<% auto_responses = subcategory_responses.select(&:auto?) %>
+<% manual_responses = subcategory_responses.reject(&:auto?) %>
+
+<% if auto_responses.any? %>
+  <div class="fr-fieldset fr-mb-4w">
+    <% auto_responses.each do |response| %>
+      <div class="fr-fieldset__element">
+        <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
+                market_attribute_response: response, form: form %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if manual_responses.any? %>
+  <div class="prohibition-fields"
+       data-prohibition-toggle-target="fields"
+       style="display: none;">
+    <div class="fr-fieldset">
+      <% manual_responses.each do |response| %>
+        <div class="fr-fieldset__element"
+             data-field-type="<%= response.type.underscore %>">
+          <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
+                  market_attribute_response: response, form: form %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
