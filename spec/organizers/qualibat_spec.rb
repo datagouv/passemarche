@@ -7,6 +7,7 @@ RSpec.describe Qualibat, type: :organizer do
   let(:base_url) { 'https://staging.entreprise.api.gouv.fr/' }
   let(:token) { 'test-token-12345' }
   let(:api_url) { "#{base_url}v4/qualibat/etablissements/#{siret}/certification_batiment" }
+  let(:document_body) { '%PDF-1.4 fake pdf content with enough bytes to pass minimum size validation requiring at least 100 bytes total' }
 
   before do
     allow(Rails.application.credentials).to receive(:api_entreprise).and_return(
@@ -35,6 +36,15 @@ RSpec.describe Qualibat, type: :organizer do
             status: 200,
             body: qualibat_success_response,
             headers: { 'Content-Type' => 'application/json' }
+          )
+
+        # Stub the document download from the URL returned in the API response
+        stub_request(:get, 'https://qualibat.example.com/certificat.pdf')
+          .with(headers: { 'Authorization' => "Bearer #{token}" })
+          .to_return(
+            status: 200,
+            body: document_body,
+            headers: { 'Content-Type' => 'application/pdf' }
           )
       end
 
@@ -330,6 +340,15 @@ RSpec.describe Qualibat, type: :organizer do
             status: 200,
             body: qualibat_success_response,
             headers: { 'Content-Type' => 'application/json' }
+          )
+
+        # Stub the document download from the URL returned in the API response
+        stub_request(:get, 'https://qualibat.example.com/certificat.pdf')
+          .with(headers: { 'Authorization' => "Bearer #{token}" })
+          .to_return(
+            status: 200,
+            body: document_body,
+            headers: { 'Content-Type' => 'application/pdf' }
           )
       end
 
