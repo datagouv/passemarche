@@ -56,13 +56,32 @@ module ApiFetchable
   end
 
   def handle_failure(market_application)
+    clear_api_response_data(market_application)
     mark_api_attributes_as_manual_after_failure(market_application)
     market_application.update_api_status(self.class.api_name, status: 'failed', fields_filled: 0)
   end
 
+  def clear_api_response_data(market_application)
+    api_responses = market_application.market_attribute_responses
+      .joins(:market_attribute)
+      .where(market_attributes: { api_name: self.class.api_name })
+      .where(source: :auto)
+
+    api_responses.find_each do |response|
+      response.text = nil
+      response.documents.purge if response.respond_to?(:documents)
+      response.save!
+    end
+  end
+
   def handle_error(market_application, market_application_id, error)
     Rails.logger.error "Error fetching #{self.class.api_name} data for #{market_application_id}: #{error.message}"
-    market_application&.update_api_status(self.class.api_name, status: 'failed', fields_filled: 0)
+
+    if market_application
+      clear_api_response_data(market_application)
+      market_application.update_api_status(self.class.api_name, status: 'failed', fields_filled: 0)
+    end
+
     raise
   end
 

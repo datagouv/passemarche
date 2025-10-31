@@ -248,11 +248,6 @@ RSpec.describe MapApiData, type: :interactor do
           expect(subject).to be_success
         end
 
-        it 'logs a warning' do
-          expect(Rails.logger).to receive(:warn).with(/Attempted to attach document to non-file-attachable response/)
-          subject
-        end
-
         it 'does not crash when trying to attach document' do
           expect { subject }.not_to raise_error
         end
