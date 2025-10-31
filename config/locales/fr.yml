@@ -210,6 +210,8 @@ fr:
           locked_hint: "Vous avez déjà répondu à cette question. Votre réponse est utilisée pour toutes les étapes de motifs d'exclusion."
           yes: "Oui"
           no: "Non"
+        exclusion_step_fields:
+          not_subject_message: "Vous avez indiqué que votre entreprise n'est pas concernée par un cas d'interdiction. Vous pouvez passer à l'étape suivante."
       api_data_recovery_status:
         title: "Récupération automatique de vos données"
         description: "Nous allons récupérer automatiquement certaines informations de votre entreprise via les APIs suivantes :"

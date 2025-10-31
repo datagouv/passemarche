@@ -39,8 +39,7 @@
 <% if optional_fields.any? && required_fields.empty? && auto_responses.empty? %>
   <div data-conditional-fields-target="inverseContent" class="fr-alert fr-alert--success fr-alert--sm">
     <p>
-      Vous avez indiqué que votre entreprise n'est pas concernée par un cas d'interdiction.
-      Vous pouvez passer à l'étape suivante.
+      <%= t('candidate.market_applications.shared.exclusion_step_fields.not_subject_message') %>
     </p>
   </div>
 <% end %>

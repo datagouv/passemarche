@@ -138,7 +138,10 @@ module Candidate
     end
 
     def render_html_step
-      if custom_view_exists?
+      # Check if this is a motifs_exclusion step
+      if step.to_s.start_with?('motifs_exclusion_')
+        render 'motifs_exclusion_generic', locals: { step: }
+      elsif custom_view_exists?
         render_wizard
       else
         render 'generic_step', locals: { step: }
