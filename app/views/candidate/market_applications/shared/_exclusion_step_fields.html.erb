@@ -1,7 +1,7 @@
 <% auto_responses = subcategory_responses.select(&:auto?) %>
 <% manual_responses = subcategory_responses.reject(&:auto?) %>
-<% required_fields = manual_responses.select { |r| r.type == "MarketAttributeResponse::RadioWithJustificationRequired" } %>
-<% optional_fields = manual_responses.reject { |r| r.type == "MarketAttributeResponse::RadioWithJustificationRequired" } %>
+<% required_fields = manual_responses.select { |r| r.type == "RadioWithJustificationRequired" } %>
+<% optional_fields = manual_responses.reject { |r| r.type == "RadioWithJustificationRequired" } %>
 
 <% if auto_responses.any? %>
   <div class="fr-fieldset fr-mb-4w">
@@ -33,5 +33,14 @@
                 market_attribute_response: response, form: form %>
       </div>
     <% end %>
+  </div>
+<% end %>
+
+<% if optional_fields.any? && required_fields.empty? && auto_responses.empty? %>
+  <div data-conditional-fields-target="inverseContent" class="fr-alert fr-alert--success fr-alert--sm">
+    <p>
+      Vous avez indiqué que votre entreprise n'est pas concernée par un cas d'interdiction.
+      Vous pouvez passer à l'étape suivante.
+    </p>
   </div>
 <% end %>

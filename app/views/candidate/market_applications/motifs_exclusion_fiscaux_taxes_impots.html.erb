@@ -12,15 +12,15 @@
 ) %>
 
 <% subcategories = @presenter.subcategories_for_category(current_category) %>
-<%= form_with model: @market_application, url: wizard_path, local: true, multipart: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
-  <div class="fr-grid-row">
+<%= form_with model: @market_application, url: wizard_path, local: true, multipart: true, data: { turbo: false, controller: "conditional-fields" }, class: "fr-mb-4w" do |form| %>
+  <%= render "candidate/market_applications/shared/prohibition_question", form: form, step: step %>
+
+  <div class="fr-grid-row <%= 'fr-hidden' if @market_application.subject_to_prohibition.nil? %>" data-conditional-fields-target="mainContent">
     <% if subcategories.any? %>
       <%= render "sidemenu_subcategories", subcategories:, step:%>
     <% end %>
 
-    <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>" data-controller="conditional-fields">
-      <%= render "candidate/market_applications/shared/prohibition_question", form: form, step: step %>
-
+    <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
       <% if subcategories.any? %>
         <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(current_category) %>
         <div class="fr-mb-4w">
