@@ -11,5 +11,17 @@ FactoryBot.define do
       completed_at { Time.zone.now }
       sync_status { :sync_completed }
     end
+
+    trait :subject_to_prohibition do
+      subject_to_prohibition { true }
+    end
+
+    trait :not_subject_to_prohibition do
+      subject_to_prohibition { false }
+    end
+
+    trait :prohibition_not_answered do
+      subject_to_prohibition { nil }
+    end
   end
 end

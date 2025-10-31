@@ -16,6 +16,7 @@ class MarketApplication < ApplicationRecord
 
   validates :identifier, presence: true, uniqueness: true
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
+  validates :subject_to_prohibition, inclusion: { in: [true, false], allow_nil: true }
   validate :market_must_be_completed
   validate :siret_must_be_valid
   validate :nested_attributes_valid
@@ -40,6 +41,10 @@ class MarketApplication < ApplicationRecord
       self.api_fetch_status = updated_status
       save!
     end
+  end
+
+  def prohibition_declared?
+    subject_to_prohibition == true
   end
 
   private

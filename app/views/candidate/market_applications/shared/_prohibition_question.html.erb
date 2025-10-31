@@ -1,0 +1,56 @@
+<%
+  first_exclusion_step = "motifs_exclusion_condamnations_penales"
+  is_first_step = (step.to_s == first_exclusion_step)
+  has_answer = !@market_application.subject_to_prohibition.nil?
+  show_radio = is_first_step || !has_answer
+  current_value = @market_application.subject_to_prohibition
+%>
+
+<div class="fr-input-group">
+  <div class="fr-mb-3w">
+    <% if show_radio %>
+      <h6 class="fr-mb-2w fr-text--md">
+        <%= t('candidate.market_applications.shared.prohibition_question.label') %>
+      </h6>
+      <div class="fr-alert fr-alert--info fr-alert--sm fr-mb-3w">
+        <p>
+          <%= t('candidate.market_applications.shared.prohibition_question.hint') %>
+        </p>
+      </div>
+
+      <div class="fr-fieldset fr-fieldset--inline fr-mt-3w fr-px-4w">
+        <div class="fr-radio-group">
+          <%= form.radio_button :subject_to_prohibition, true,
+                class: "fr-radio",
+                id: "subject_to_prohibition_yes_#{step}",
+                checked: current_value == true,
+                data: {
+                  action: "conditional-fields#show",
+                  conditional_fields_target: "trigger"
+                } %>
+          <%= form.label :subject_to_prohibition,
+                t('candidate.market_applications.shared.prohibition_question.yes'),
+                value: true,
+                class: "fr-label",
+                for: "subject_to_prohibition_yes_#{step}" %>
+        </div>
+
+        <div class="fr-radio-group">
+          <%= form.radio_button :subject_to_prohibition, false,
+                class: "fr-radio",
+                id: "subject_to_prohibition_no_#{step}",
+                checked: current_value == false,
+                data: {
+                  action: "conditional-fields#hide",
+                  conditional_fields_target: "trigger"
+                } %>
+          <%= form.label :subject_to_prohibition,
+                t('candidate.market_applications.shared.prohibition_question.no'),
+                value: false,
+                class: "fr-label",
+                for: "subject_to_prohibition_no_#{step}" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<% content_for :title, "#{@market_application.siret} - #{t("form_fields.candidate.categories.#{step}", default: step.to_s.humanize)}" %>
+
+<%
+  current_category = @presenter.parent_category_for(step.to_s)
+%>
+
+<%= stepper(
+  current_step: current_category,
+  steps: @wizard_steps,
+  i18n_scope: 'candidate',
+  show_separator: true
+) %>
+
+<% subcategories = @presenter.subcategories_for_category(current_category) %>
+<%= form_with model: @market_application, url: wizard_path, local: true, multipart: true, data: { turbo: false, controller: "conditional-fields" }, class: "fr-mb-4w" do |form| %>
+  <%= render "candidate/market_applications/shared/prohibition_question", form: form, step: step %>
+
+  <div class="fr-grid-row <%= 'fr-hidden' if @market_application.subject_to_prohibition.nil? %>" data-conditional-fields-target="mainContent">
+    <% if subcategories.any? %>
+      <%= render "sidemenu_subcategories", subcategories:, step:%>
+    <% end %>
+
+    <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
+      <% if subcategories.any? %>
+        <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(current_category) %>
+        <div class="fr-mb-4w">
+          <h6 id="<%= step %>" class="fr-mb-2w">
+            <%= t("form_fields.candidate.subcategories.#{step}",
+                  default: t("candidate.market_applications.manual_subcategories.#{step}",
+                            default: step.to_s.humanize)) %>
+          </h6>
+
+          <% subcategory_responses = responses_by_subcategory[step.to_s] || [] %>
+          <%= render "candidate/market_applications/shared/exclusion_step_fields", subcategory_responses: subcategory_responses, form: form %>
+        </div>
+      <% else %>
+        <p class="fr-text--sm fr-text--mention-grey">Aucun contenu disponible pour cette étape.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render "wizard_nav" %>
+<% end %>
