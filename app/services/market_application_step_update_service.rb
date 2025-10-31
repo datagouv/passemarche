@@ -32,22 +32,30 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     return build_result(false) unless market_application.save(context: step)
 
-    # Reset API statuses to pending synchronously to avoid showing stale "completed" status
+    clear_all_api_data
     reset_api_statuses_to_pending
-
-    # Enqueue coordinator job to fetch API data
     FetchApiDataCoordinatorJob.perform_later(market_application.id)
 
     build_result(true)
   end
 
   def handle_api_data_recovery_status
-    # Simple passthrough - this step is just for displaying sync status
     build_result(true)
   end
 
+  def clear_all_api_data
+    market_application.market_attribute_responses
+      .where(source: :auto)
+      .find_each do |response|
+        response.documents.purge if response.respond_to?(:documents)
+        response.destroy
+      end
+
+    market_application.api_fetch_status = {}
+    market_application.save!(validate: false)
+  end
+
   def reset_api_statuses_to_pending
-    # Get list of API names from coordinator job
     api_jobs = [FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob]
 
     api_jobs.each do |job_class|

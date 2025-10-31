@@ -45,11 +45,14 @@ class MapApiData < ApplicationInteractor
   end
 
   def attach_document_to_response(response, document_hash)
-    if response.respond_to?(:documents)
-      response.documents.attach(document_hash)
-    else
-      Rails.logger.warn "Attempted to attach document to non-file-attachable response: #{response.class}"
+    return unless response.respond_to?(:documents)
+
+    existing_document = response.documents.find do |doc|
+      doc.metadata['api_name'] == context.api_name
     end
+
+    existing_document.purge if existing_document.present?
+    response.documents.attach(document_hash)
   end
 
   def find_or_initialize_response(market_attribute)
