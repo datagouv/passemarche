@@ -423,8 +423,8 @@ GEM
     sentry-ruby (6.0.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shoulda-matchers (6.5.0)
-      activesupport (>= 5.2.0)
+    shoulda-matchers (7.0.1)
+      activesupport (>= 7.1)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -539,7 +539,7 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
-  shoulda-matchers (~> 6.4)
+  shoulda-matchers (~> 7.0)
   solid_cable
   solid_cache
   solid_queue
