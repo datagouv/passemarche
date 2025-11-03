@@ -238,6 +238,7 @@ fr:
             order: 2
             apis:
               - attestations_fiscales
+              - probtp
             success_message: "L'ensemble des informations et documents ont été récupérés"
             error_message: "Les données fiscales n'ont pas pu être récupérées"
       steps:
