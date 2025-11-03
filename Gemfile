@@ -52,6 +52,6 @@ group :test do
   gem 'cucumber-rails', '~> 4.0', require: false
   gem 'database_cleaner-active_record', '~> 2.2'
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers', '~> 6.4'
+  gem 'shoulda-matchers', '~> 7.0'
   gem 'webmock', '~> 3.26'
 end

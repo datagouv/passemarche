@@ -200,7 +200,7 @@ GEM
     jbuilder (2.14.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (2.15.1)
+    json (2.15.2)
     kamal (2.8.1)
       activesupport (>= 7.0)
       base64 (~> 0.2)
@@ -423,8 +423,8 @@ GEM
     sentry-ruby (6.0.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shoulda-matchers (6.5.0)
-      activesupport (>= 5.2.0)
+    shoulda-matchers (7.0.1)
+      activesupport (>= 7.1)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -470,7 +470,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    uri (1.0.4)
+    uri (1.1.0)
     useragent (0.16.11)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -539,7 +539,7 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
-  shoulda-matchers (~> 6.4)
+  shoulda-matchers (~> 7.0)
   solid_cable
   solid_cache
   solid_queue
