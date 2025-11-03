@@ -362,12 +362,13 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         expect(category_response.text).to eq('PME')
         expect(qualibat_response.text).to eq('https://qualibat.example.com/certificat.pdf')
 
-        # Verify API statuses in JSONB
+        # Verify API statuses in JSONB (only for APIs with market attributes)
         expect(market_application.api_fetch_status['insee']['status']).to eq('completed')
         expect(market_application.api_fetch_status['insee']['fields_filled']).to eq(2)
-        expect(market_application.api_fetch_status['rne']['status']).to eq('completed')
         expect(market_application.api_fetch_status['qualibat']['status']).to eq('completed')
         expect(market_application.api_fetch_status['qualibat']['fields_filled']).to eq(1)
+        expect(market_application.api_fetch_status['rne']).to be_nil
+        expect(market_application.api_fetch_status['dgfip']).to be_nil
 
         # Then navigate through the status page
         patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
@@ -464,10 +465,11 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           responses = market_application.market_attribute_responses.reload
           expect(responses.map(&:source).uniq).to eq(['manual_after_api_failure'])
 
-          # Verify API statuses in JSONB show failures
+          # Verify API statuses in JSONB show failures (only for APIs with market attributes)
           expect(market_application.api_fetch_status['insee']['status']).to eq('failed')
-          expect(market_application.api_fetch_status['rne']['status']).to eq('failed')
           expect(market_application.api_fetch_status['qualibat']['status']).to eq('failed')
+          expect(market_application.api_fetch_status['rne']).to be_nil
+          expect(market_application.api_fetch_status['dgfip']).to be_nil
 
           # Then navigate through the status page
           patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"

@@ -34,7 +34,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
     clear_all_api_data
     reset_api_statuses_to_pending
-    FetchApiDataCoordinatorJob.perform_later(market_application.id)
+    enqueue_api_data_fetch
 
     build_result(true)
   end
@@ -55,12 +55,17 @@ class MarketApplicationStepUpdateService < ApplicationService
     market_application.save!(validate: false)
   end
 
-  def reset_api_statuses_to_pending
-    api_jobs = [FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob]
+  def enqueue_api_data_fetch
+    FetchApiDataCoordinatorJob.perform_later(market_application.id)
+  end
 
-    api_jobs.each do |job_class|
-      api_name = job_class.api_name
-      market_application.update_api_status(api_name, status: 'pending', fields_filled: 0)
+  def reset_api_statuses_to_pending
+    api_names = market_application.api_names_to_fetch
+
+    FetchApiDataCoordinatorJob::API_JOBS.each do |job_class|
+      next unless api_names.include?(job_class.api_name)
+
+      market_application.update_api_status(job_class.api_name, status: 'pending', fields_filled: 0)
     end
   end
 
