@@ -203,6 +203,16 @@ fr:
         data_from_api: "Données récupérées automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
+      shared:
+        prohibition_question:
+          label: "Votre entreprise est-elle concernée par un cas d'interdiction de soumissionner ?"
+          hint: "Sont exclues de la procédure de passation des marchés, les entreprises condamnées pénalement, en défaut fiscal ou social, en liquidation judiciaire ou en faillite personnelle"
+          locked: "Réponse verrouillée"
+          locked_hint: "Vous avez déjà répondu à cette question. Votre réponse est utilisée pour toutes les étapes de motifs d'exclusion."
+          yes: "Oui"
+          no: "Non"
+        exclusion_step_fields:
+          not_subject_message: "Vous avez indiqué que votre entreprise n'est pas concernée par un cas d'interdiction. Vous pouvez passer à l'étape suivante."
       api_data_recovery_status:
         title: "Nous pré-remplissons votre dossier de candidature"
         description: "Nos systèmes vérifient l'intégrité et la validité de chaque document et information récupérés. Ils sont ensuite formatés pour répondre aux exigences du marché."

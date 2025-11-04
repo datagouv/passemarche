@@ -12,6 +12,12 @@ module Candidate
       @presenter = MarketApplicationPresenter.new(@market_application)
       @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application) if step == :api_data_recovery_status
 
+      # Auto-skip steps that should not be displayed
+      if SkippableStepCalculator.call(@market_application, step)
+        skip_step
+        return
+      end
+
       respond_to do |format|
         format.html { render_html_step }
         format.json { render_json_step }
@@ -113,6 +119,7 @@ module Candidate
     def market_application_params
       params.fetch(:market_application, {}).permit(
         :siret,
+        :subject_to_prohibition,
         market_attribute_responses_attributes: {}
       )
     end
@@ -132,7 +139,10 @@ module Candidate
     end
 
     def render_html_step
-      if custom_view_exists?
+      # Check if this is a motifs_exclusion step
+      if step.to_s.start_with?('motifs_exclusion_')
+        render 'motifs_exclusion_generic', locals: { step: }
+      elsif custom_view_exists?
         render_wizard
       else
         render 'generic_step', locals: { step: }
