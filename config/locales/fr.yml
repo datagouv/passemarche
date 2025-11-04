@@ -166,7 +166,9 @@ fr:
       delete_confirm: "Êtes-vous sûr de vouloir supprimer ce fichier ?"
       delete_success: "Fichier supprimé avec succès"
       delete_error: "Erreur lors de la suppression du fichier"
+      network_error: "Erreur réseau lors de la suppression"
       not_found: "Fichier introuvable ou non autorisé"
+      application_not_found: "Candidature introuvable"
     market_applications:
       form_fields:
         capacite_economique_financiere_assurance_risques_professionnels:
