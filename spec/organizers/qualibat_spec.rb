@@ -6,7 +6,7 @@ RSpec.describe Qualibat, type: :organizer do
   include ApiResponses::QualibatResponses
 
   let(:siret) { '78824266700020' }
-  let(:base_url) { 'https://entreprise.api.gouv.fr/' }
+  let(:base_url) { 'https://storage.entreprise.api.gouv.fr/' }
   let(:api_url) { "#{base_url}v4/qualibat/etablissements/#{siret}/certification_batiment" }
   let(:token) { 'test-token-12345' }
 
@@ -59,10 +59,11 @@ RSpec.describe Qualibat, type: :organizer do
         expect(result.bundled_data).to be_a(BundledData)
       end
 
-      it 'extracts the document_url correctly' do
+      it 'extracts the document correctly' do
         result = subject
-        expect(result.bundled_data.data.document_url)
-          .to eq('https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf')
+        expect(result.bundled_data.data.document).to be_a(Hash)
+        expect(result.bundled_data.data.document[:io]).to be_a(StringIO)
+        expect(result.bundled_data.data.document[:filename]).to eq('exemple-qualibat.pdf')
       end
     end
 
@@ -171,10 +172,10 @@ RSpec.describe Qualibat, type: :organizer do
       let(:document_body) { '%PDF-1.4 fake qualibat document with enough bytes to pass minimum size validation requiring at least 100 bytes total' }
 
       let!(:certificate_attribute) do
-        create(:market_attribute, :url_input, :from_api,
+        create(:market_attribute, :inline_file_upload, :from_api,
           key: 'capacites_techniques_professionnelles_certificats_qualibat',
           api_name: 'qualibat',
-          api_key: 'document_url',
+          api_key: 'document',
           public_markets: [public_market])
       end
 
@@ -214,13 +215,15 @@ RSpec.describe Qualibat, type: :organizer do
           .to change { market_application.market_attribute_responses.count }.by(1)
       end
 
-      it 'stores the certificate document URL' do
+      it 'stores the certificate document' do
         subject
         response =
           market_application.market_attribute_responses
             .find_by(market_attribute: certificate_attribute)
 
-        expect(response.text).to eq('https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf')
+        expect(response.documents).to be_attached
+        expect(response.documents.first.filename.to_s).to eq('exemple-qualibat.pdf')
+        expect(response.source).to eq('auto')
       end
 
       it 'creates both BundledData and responses' do

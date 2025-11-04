@@ -7,7 +7,7 @@ RSpec.describe Qualibat::DownloadDocument, type: :interactor do
   let(:siren) { '788242667' }
   let(:document_url) { 'https://qualibat.example.com/certificat.pdf' }
   let(:document_body) { '%PDF-1.4 fake pdf content with enough bytes to pass minimum size validation requiring at least 100 bytes total' }
-  let(:resource) { Resource.new(document_url:) }
+  let(:resource) { Resource.new(document: document_url) }
   let(:bundled_data) { BundledData.new(data: resource) }
   let(:token) { 'test-token-12345' }
 
@@ -37,7 +37,7 @@ RSpec.describe Qualibat::DownloadDocument, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'replaces document_url with downloaded document hash' do
+      it 'replaces document with downloaded document hash' do
         result = subject
         document = result.bundled_data.data.document
 
@@ -72,7 +72,7 @@ RSpec.describe Qualibat::DownloadDocument, type: :interactor do
       end
 
       it 'includes error message about missing document' do
-        expect(subject.error).to eq('Missing document_url in response')
+        expect(subject.error).to eq('Missing document in response')
       end
     end
 

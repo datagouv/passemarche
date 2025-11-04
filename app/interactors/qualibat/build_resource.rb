@@ -3,7 +3,7 @@ class Qualibat::BuildResource < BuildResource
 
   def resource_attributes
     {
-      document_url:
+      document: document_url
     }
   end
 
