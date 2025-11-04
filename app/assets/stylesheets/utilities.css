@@ -134,3 +134,31 @@
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
 }
+
+/* API Status Display */
+.api-status-summary {
+  font-size: 14px;
+}
+
+.api-status-count {
+  font-weight: bold;
+}
+
+.api-status-count--success {
+  color: #18753C;
+}
+
+.api-status-count--warning {
+  color: #B34000;
+}
+
+.api-status-segments {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.api-status-segment {
+  height: 6px;
+  flex: 1;
+  border-radius: 2px;
+}

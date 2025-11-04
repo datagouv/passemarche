@@ -220,6 +220,9 @@ fr:
         benefit_locked: "Ces champs seront grisés et non modifiables."
         apis_list_title: "APIs qui seront interrogées :"
         blocks_list_title: "Nous récupérons vos documents et informations"
+        messages:
+          all_success: "L'ensemble des informations et documents ont été récupérés"
+          partial_success: "Certaines informations ou documents n'ont pas pu être récupérés automatiquement, nous vous demanderont de compléter ces informations manuellement"
         blocks:
           identite_entreprise:
             name: "Identité de l'entreprise"
@@ -229,8 +232,6 @@ fr:
             apis:
               - insee
               - rne
-            success_message: "L'ensemble des informations et documents ont été récupérés"
-            error_message: "Certaines informations n'ont pas pu être récupérées automatiquement"
           capacites_economiques:
             name: "Capacités économiques et financières"
             description: "Attestations fiscales et données financières"
@@ -239,16 +240,13 @@ fr:
             apis:
               - attestations_fiscales
               - probtp
-            success_message: "L'ensemble des informations et documents ont été récupérés"
-            error_message: "Les données fiscales n'ont pas pu être récupérées"
           capacites_techniques_professionnelles:
             name: "Capacités techniques et professionnelles"
             description: "Certifications professionnelles et qualifications techniques de votre entreprise"
+            icon: "award-line"
             order: 3
             apis:
               - qualibat
-            success_message: "L'ensemble des certifications et qualifications ont été récupérées"
-            error_message: "Certaines certifications n'ont pas pu être récupérées automatiquement"
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"

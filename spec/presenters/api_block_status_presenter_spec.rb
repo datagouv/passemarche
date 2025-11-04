@@ -10,6 +10,7 @@ RSpec.describe ApiBlockStatusPresenter do
 
   before do
     allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(market_application).to receive(:api_names_to_fetch).and_return(%w[insee rne attestations_fiscales probtp qualibat])
   end
 
   describe '#blocks' do
@@ -63,7 +64,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'processing' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be false
@@ -74,7 +76,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'pending' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be false
@@ -87,7 +90,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'processing' },
-        'probtp' => { 'status' => 'pending' }
+        'probtp' => { 'status' => 'pending' },
+        'qualibat' => { 'status' => 'pending' }
       })
 
       current = presenter.current_block
@@ -167,7 +171,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'processing' },
         'rne' => { 'status' => 'pending' },
         'attestations_fiscales' => { 'status' => 'pending' },
-        'probtp' => { 'status' => 'pending' }
+        'probtp' => { 'status' => 'pending' },
+        'qualibat' => { 'status' => 'pending' }
       })
 
       expect(presenter.overall_status_message).to eq('Récupération en cours, veuillez patienter...')
@@ -176,7 +181,7 @@ RSpec.describe ApiBlockStatusPresenter do
 
   describe ApiBlockStatusPresenter::ApiBlock do
     let(:identity_block) { presenter.blocks.first }
-    let(:economic_block) { presenter.blocks.last }
+    let(:economic_block) { presenter.blocks.second }
 
     describe '#status' do
       it 'returns loading when any API is pending' do
@@ -254,10 +259,126 @@ RSpec.describe ApiBlockStatusPresenter do
       end
     end
 
-    describe '#success_message and #error_message' do
-      it 'returns the configured messages' do
-        expect(identity_block.success_message).to eq('L\'ensemble des informations et documents ont été récupérés')
-        expect(identity_block.error_message).to include('n\'ont pas pu être récupérées')
+    describe '#completed_count' do
+      it 'returns count of completed APIs when all completed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'completed' }
+        })
+
+        expect(identity_block.completed_count).to eq(2)
+      end
+
+      it 'returns count of completed APIs when some failed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'failed' }
+        })
+
+        expect(identity_block.completed_count).to eq(1)
+      end
+
+      it 'returns 0 when all APIs failed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'failed' },
+          'rne' => { 'status' => 'failed' }
+        })
+
+        expect(identity_block.completed_count).to eq(0)
+      end
+
+      it 'returns 0 when all APIs pending' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'pending' },
+          'rne' => { 'status' => 'pending' }
+        })
+
+        expect(identity_block.completed_count).to eq(0)
+      end
+    end
+
+    describe '#total_count' do
+      it 'returns total number of APIs in the block' do
+        expect(identity_block.total_count).to eq(2)
+        expect(economic_block.total_count).to eq(2)
+      end
+    end
+
+    describe '#all_completed?' do
+      it 'returns true when all APIs completed successfully' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'completed' }
+        })
+
+        expect(identity_block).to be_all_completed
+      end
+
+      it 'returns false when any API failed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'failed' }
+        })
+
+        expect(identity_block).not_to be_all_completed
+      end
+
+      it 'returns false when APIs are still pending' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'pending' }
+        })
+
+        expect(identity_block).not_to be_all_completed
+      end
+    end
+
+    describe '#done_message' do
+      it 'returns all_success message when all APIs completed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'completed' }
+        })
+
+        expect(identity_block.done_message).to eq('L\'ensemble des informations et documents ont été récupérés')
+      end
+
+      it 'returns partial_success message when some APIs failed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'failed' }
+        })
+
+        expect(identity_block.done_message).to eq('Certaines informations ou documents n\'ont pas pu être récupérés automatiquement, nous vous demanderont de compléter ces informations manuellement')
+      end
+
+      it 'returns partial_success message when all APIs failed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'failed' },
+          'rne' => { 'status' => 'failed' }
+        })
+
+        expect(identity_block.done_message).to eq('Certaines informations ou documents n\'ont pas pu être récupérés automatiquement, nous vous demanderont de compléter ces informations manuellement')
+      end
+    end
+
+    describe '#status_count_class' do
+      it 'returns success class when all completed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'completed' }
+        })
+
+        expect(identity_block.status_count_class).to eq('api-status-count--success')
+      end
+
+      it 'returns warning class when some failed' do
+        market_application.update(api_fetch_status: {
+          'insee' => { 'status' => 'completed' },
+          'rne' => { 'status' => 'failed' }
+        })
+
+        expect(identity_block.status_count_class).to eq('api-status-count--warning')
       end
     end
   end
