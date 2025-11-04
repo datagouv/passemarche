@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'webmock/cucumber'
+
 World(FactoryBot::Syntax::Methods)
 
-# Background steps
 Given('a public market with capacite_economique_financiere_chiffre_affaires_global_annuel field exists') do
   # Clean up any existing test data
   MarketApplication.where("identifier LIKE 'VR-2025-TEST%'").destroy_all
@@ -17,6 +18,28 @@ Given('a public market with capacite_economique_financiere_chiffre_affaires_glob
     attr.category_key = 'capacite_economique_financiere'
     attr.subcategory_key = 'chiffre_affaires'
     attr.required = true
+    attr.api_name = 'dgfip_chiffres_affaires'
+    attr.api_key = 'chiffres_affaires_data'
+  end
+  @chiffre_affaires_attr.public_markets << @public_market unless @chiffre_affaires_attr.public_markets.include?(@public_market)
+end
+
+Given('a market attribute exists for chiffre affaires global annuel') do
+  # Clean up any existing test data
+  MarketApplication.where("identifier LIKE 'VR-2025-TEST%'").destroy_all
+  PublicMarket.where("name LIKE 'Test Market%'").destroy_all
+  Editor.where("name LIKE 'Test Editor%'").destroy_all
+
+  @editor = create(:editor, :authorized_and_active, name: "Test Editor #{Time.current.to_i}")
+  @public_market = create(:public_market, :completed, editor: @editor, name: "Test Market #{Time.current.to_i}")
+
+  @chiffre_affaires_attr = MarketAttribute.find_or_create_by(key: 'capacite_economique_financiere_chiffre_affaires_global_annuel') do |attr|
+    attr.input_type = 'capacite_economique_financiere_chiffre_affaires_global_annuel'
+    attr.category_key = 'capacite_economique_financiere'
+    attr.subcategory_key = 'chiffre_affaires'
+    attr.required = true
+    attr.api_name = 'dgfip_chiffres_affaires'
+    attr.api_key = 'chiffres_affaires_data'
   end
   @chiffre_affaires_attr.public_markets << @public_market unless @chiffre_affaires_attr.public_markets.include?(@public_market)
 end
@@ -24,12 +47,22 @@ end
 Given('a candidate starts an application for this market') do
   @market_application = create(:market_application,
     public_market: @public_market,
-    siret: nil)
+    siret: '41816609600069')
 end
 
 # Navigation steps
 When('I visit the economic capacities step') do
   visit "/candidate/market_applications/#{@market_application.identifier}/chiffre_affaires"
+
+  market_attr = @market_application.public_market.market_attributes.find_by(
+    key: 'capacite_economique_financiere_chiffre_affaires_global_annuel'
+  )
+
+  if market_attr&.api_name == 'dgfip_chiffres_affaires'
+    sleep 0.1
+
+    visit current_path
+  end
 end
 
 When('I visit the summary step') do
