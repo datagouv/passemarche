@@ -513,8 +513,7 @@ fr:
         capacite_economique_financiere_chiffre_affaires_global_annuel:
           name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
             années
-          description: Indiquez le chiffre d'affaires de votre entreprise au cours
-            des trois années précédentes, en euros.
+          description: Indiquez le chiffre d'affaires de votre entreprise au cours des trois années précédentes, en euros. Indiquez également le pourcentage du chiffre d'affaires dans le secteur d'activité concerné par le contrat par rapport au chiffre d'affaires global de votre entreprise.
         capacite_economique_financiere_chiffre_affaires_domaine_marche:
           name: Le pourcentage du chiffre d'affaires concerné par le type de marché
             public

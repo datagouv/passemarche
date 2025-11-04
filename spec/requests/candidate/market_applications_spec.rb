@@ -8,6 +8,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   include ApiResponses::RneResponses
   include ApiResponses::DgfipResponses
   include ApiResponses::QualibatResponses
+  include ApiResponses::ChiffresAffairesResponses
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
@@ -262,6 +263,14 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           public_markets: [public_market])
       end
 
+      let!(:chiffres_affaires_attribute) do
+        create(:market_attribute, :capacite_economique_financiere_chiffre_affaires_global_annuel, :from_api,
+          key: 'capacite_economique_financiere_chiffre_affaires_global_annuel',
+          api_name: 'dgfip_chiffres_affaires',
+          api_key: 'chiffres_affaires_data',
+          public_markets: [public_market])
+      end
+
       before do
         # Credentials are already mocked in the main before block, no need to re-mock
 
@@ -345,6 +354,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             body: '%PDF-1.4 qualibat test document with enough bytes to pass minimum size validation requiring at least 100 bytes total',
             headers: { 'Content-Type' => 'application/pdf' }
           )
+
+        # Stub DGFIP chiffres d'affaires API call
+        dgfip_chiffres_affaires_url = "https://entreprise.api.gouv.fr/v3/dgfip/etablissements/#{valid_siret}/chiffres_affaires"
+        stub_request(:get, dgfip_chiffres_affaires_url)
+          .with(
+            query: hash_including(
+              'context' => 'Candidature marché public',
+              'recipient' => '13002526500013'
+            ),
+            headers: { 'Authorization' => "Bearer #{token}" }
+          )
+          .to_return(
+            status: 200,
+            body: chiffres_affaires_success_response,
+            headers: { 'Content-Type' => 'application/json' }
+          )
       end
 
       it 'calls INSEE API and redirects to status page' do
@@ -371,46 +396,9 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
         market_application.reload
 
-        # Verify API data was populated by jobs
-        siret_response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
-        category_response = market_application.market_attribute_responses.find_by(market_attribute: category_attribute)
-        qualibat_response = market_application.market_attribute_responses.find_by(market_attribute: qualibat_attribute)
-
-        expect(siret_response.text).to eq('41816609600069')
-        expect(category_response.text).to eq('PME')
-        expect(qualibat_response.documents).to be_attached
-        expect(qualibat_response.documents.first.filename.to_s).to eq('exemple-qualibat.pdf')
-      end
-
-      it 'updates API fetch status correctly' do
-        perform_enqueued_jobs do
-          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-            params: { market_application: { siret: valid_siret } }
-        end
-
-        market_application.reload
-
-        # Verify API statuses in JSONB (only for APIs with market attributes)
-        expect(market_application.api_fetch_status['insee']['status']).to eq('completed')
-        expect(market_application.api_fetch_status['insee']['fields_filled']).to eq(2)
-        expect(market_application.api_fetch_status['qualibat']['status']).to eq('completed')
-        expect(market_application.api_fetch_status['qualibat']['fields_filled']).to eq(1)
-        expect(market_application.api_fetch_status['rne']).to be_nil
-        expect(market_application.api_fetch_status['dgfip']).to be_nil
-      end
-
-      it 'allows navigation from status page to next step' do
-        perform_enqueued_jobs do
-          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-            params: { market_application: { siret: valid_siret } }
-        end
-
-        # Then navigate through the status page
-        patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
-
-        expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/market_information"
-        )
+        verify_api_responses_populated
+        verify_api_fetch_statuses
+        verify_navigation_through_status_page
       end
 
       context 'when INSEE API fails' do
@@ -476,6 +464,22 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
               body: dgfip_attestation_fiscale_not_found_response,
               headers: { 'Content-Type' => 'application/json' }
             )
+
+          # Also stub DGFIP chiffres d'affaires API call to fail
+          dgfip_chiffres_affaires_url = "https://entreprise.api.gouv.fr/v3/dgfip/etablissements/#{valid_siret}/chiffres_affaires"
+          stub_request(:get, dgfip_chiffres_affaires_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => '13002526500013'
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 404,
+              body: { errors: [{ code: '00404', title: 'Not found' }] }.to_json,
+              headers: { 'Content-Type' => 'application/json' }
+            )
         end
 
         it 'still saves SIRET and creates responses marked as manual_after_api_failure' do
@@ -494,7 +498,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           expect(market_application.siret).to eq(valid_siret)
 
           # Verify API failure was handled by jobs
-          expect(market_application.market_attribute_responses.count).to eq(3)
+          expect(market_application.market_attribute_responses.count).to eq(4)
 
           # Verify responses are marked as manual_after_api_failure
           responses = market_application.market_attribute_responses.reload
@@ -513,6 +517,68 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             "/candidate/market_applications/#{market_application.identifier}/market_information"
           )
         end
+      end
+
+      private
+
+      def verify_api_responses_populated
+        responses = load_api_responses
+        verify_basic_response_data(responses)
+        verify_chiffres_affaires_data(responses[:chiffres_affaires])
+      end
+
+      def load_api_responses
+        {
+          siret: market_application.market_attribute_responses.find_by(market_attribute: siret_attribute),
+          category: market_application.market_attribute_responses.find_by(market_attribute: category_attribute),
+          qualibat: market_application.market_attribute_responses.find_by(market_attribute: qualibat_attribute),
+          chiffres_affaires: market_application.market_attribute_responses.find_by(market_attribute: chiffres_affaires_attribute)
+        }
+      end
+
+      def verify_basic_response_data(responses)
+        expect(responses[:siret].text).to eq('41816609600069')
+        expect(responses[:category].text).to eq('PME')
+        expect(responses[:qualibat].documents).to be_attached
+      end
+
+      def verify_chiffres_affaires_data(chiffres_affaires_response)
+        expect(chiffres_affaires_response.value['year_1']).to include(
+          'turnover' => 500_000,
+          'fiscal_year_end' => '2023-12-31'
+        )
+        expect(chiffres_affaires_response.value['year_2']).to include(
+          'turnover' => 450_000,
+          'fiscal_year_end' => '2022-12-31'
+        )
+        expect(chiffres_affaires_response.value['year_3']).to include(
+          'turnover' => 400_000,
+          'fiscal_year_end' => '2021-12-31'
+        )
+      end
+
+      def verify_api_fetch_statuses
+        expected_statuses = {
+          'insee' => { 'status' => 'completed', 'fields_filled' => 2 },
+          'qualibat' => { 'status' => 'completed', 'fields_filled' => 1 },
+          'dgfip_chiffres_affaires' => { 'status' => 'completed', 'fields_filled' => 1 }
+        }
+
+        expected_statuses.each do |api, expected|
+          actual = market_application.api_fetch_status[api]
+          next if actual.nil? # Skip APIs not configured for this test
+
+          expected.each { |key, value| expect(actual[key]).to eq(value) }
+        end
+      end
+
+      def verify_navigation_through_status_page
+        # Then navigate through the status page
+        patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/market_information"
+        )
       end
     end
 

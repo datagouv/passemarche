@@ -10,7 +10,7 @@ RSpec.describe ApiBlockStatusPresenter do
 
   before do
     allow(SiretValidationService).to receive(:call).and_return(true)
-    allow(market_application).to receive(:api_names_to_fetch).and_return(%w[insee rne attestations_fiscales probtp qualibat])
+    allow(market_application).to receive(:api_names_to_fetch).and_return(%w[insee rne attestations_fiscales probtp qualibat dgfip_chiffres_affaires])
   end
 
   describe '#blocks' do
@@ -29,7 +29,7 @@ RSpec.describe ApiBlockStatusPresenter do
       technical_block = presenter.blocks.last
 
       expect(identity_block.apis).to contain_exactly('insee', 'rne')
-      expect(economic_block.apis).to contain_exactly('attestations_fiscales', 'probtp')
+      expect(economic_block.apis).to contain_exactly('attestations_fiscales', 'probtp', 'dgfip_chiffres_affaires')
       expect(technical_block.apis).to contain_exactly('qualibat')
     end
   end
@@ -41,7 +41,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'completed' },
         'probtp' => { 'status' => 'completed' },
-        'qualibat' => { 'status' => 'completed' }
+        'qualibat' => { 'status' => 'completed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be true
@@ -53,7 +54,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'failed' },
         'attestations_fiscales' => { 'status' => 'completed' },
         'probtp' => { 'status' => 'completed' },
-        'qualibat' => { 'status' => 'failed' }
+        'qualibat' => { 'status' => 'failed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be true
@@ -65,7 +67,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'processing' },
         'attestations_fiscales' => { 'status' => 'completed' },
         'probtp' => { 'status' => 'completed' },
-        'qualibat' => { 'status' => 'completed' }
+        'qualibat' => { 'status' => 'completed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be false
@@ -77,7 +80,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'pending' },
         'attestations_fiscales' => { 'status' => 'completed' },
         'probtp' => { 'status' => 'completed' },
-        'qualibat' => { 'status' => 'completed' }
+        'qualibat' => { 'status' => 'completed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be false
@@ -91,7 +95,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'processing' },
         'probtp' => { 'status' => 'pending' },
-        'qualibat' => { 'status' => 'pending' }
+        'qualibat' => { 'status' => 'pending' },
+        'dgfip_chiffres_affaires' => { 'status' => 'pending' }
       })
 
       current = presenter.current_block
@@ -106,7 +111,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'completed' },
         'probtp' => { 'status' => 'completed' },
-        'qualibat' => { 'status' => 'completed' }
+        'qualibat' => { 'status' => 'completed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.current_block).to be_nil
@@ -148,7 +154,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'completed' },
         'probtp' => { 'status' => 'completed' },
-        'qualibat' => { 'status' => 'completed' }
+        'qualibat' => { 'status' => 'completed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.overall_status_message).to eq('L\'ensemble des informations et documents ont été récupérés')
@@ -160,7 +167,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'failed' },
         'probtp' => { 'status' => 'failed' },
-        'qualibat' => { 'status' => 'completed' }
+        'qualibat' => { 'status' => 'completed' },
+        'dgfip_chiffres_affaires' => { 'status' => 'completed' }
       })
 
       expect(presenter.overall_status_message).to include('bloc(s) n\'ont pas pu être récupérés')
@@ -300,7 +308,7 @@ RSpec.describe ApiBlockStatusPresenter do
     describe '#total_count' do
       it 'returns total number of APIs in the block' do
         expect(identity_block.total_count).to eq(2)
-        expect(economic_block.total_count).to eq(2)
+        expect(economic_block.total_count).to eq(3)
       end
     end
 
