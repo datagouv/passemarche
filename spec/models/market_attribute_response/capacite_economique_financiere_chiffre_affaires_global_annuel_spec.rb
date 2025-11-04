@@ -342,7 +342,7 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
   describe 'class methods' do
     describe '.json_schema_properties' do
       it 'returns the expected properties' do
-        expect(described_class.json_schema_properties).to eq(%w[year_1 year_2 year_3])
+        expect(described_class.json_schema_properties).to eq(%w[year_1 year_2 year_3 _api_fields])
       end
     end
 

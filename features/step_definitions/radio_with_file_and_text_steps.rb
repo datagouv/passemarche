@@ -83,16 +83,19 @@ Then('the radio form should be submitted successfully') do
 end
 
 Then('the radio choice should be {string}') do |choice|
-  @market_attribute_response.reload
-  expect(@market_attribute_response.radio_choice).to eq(choice)
+  response = @market_application.market_attribute_responses.reload.find_by(market_attribute: @market_attribute)
+  expect(response).to be_present
+  expect(response.radio_choice).to eq(choice)
 end
 
 Then('the radio response should contain text {string}') do |text|
-  @market_attribute_response.reload
-  expect(@market_attribute_response.text).to eq(text)
+  response = @market_application.market_attribute_responses.reload.find_by(market_attribute: @market_attribute)
+  expect(response).to be_present
+  expect(response.text).to eq(text)
 end
 
 Then('the radio response should have {int} attached file(s)') do |count|
-  @market_attribute_response.reload
-  expect(@market_attribute_response.documents.count).to eq(count)
+  response = @market_application.market_attribute_responses.reload.find_by(market_attribute: @market_attribute)
+  expect(response).to be_present
+  expect(response.documents.count).to eq(count)
 end
