@@ -10,7 +10,7 @@ RSpec.describe ApiBlockStatusPresenter do
 
   before do
     allow(SiretValidationService).to receive(:call).and_return(true)
-    allow(market_application).to receive(:api_names_to_fetch).and_return(%w[insee rne attestations_fiscales probtp])
+    allow(market_application).to receive(:api_names_to_fetch).and_return(%w[insee rne attestations_fiscales probtp qualibat])
   end
 
   describe '#blocks' do
@@ -64,7 +64,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'processing' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be false
@@ -75,7 +76,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'pending' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be false
@@ -88,7 +90,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'processing' },
-        'probtp' => { 'status' => 'pending' }
+        'probtp' => { 'status' => 'pending' },
+        'qualibat' => { 'status' => 'pending' }
       })
 
       current = presenter.current_block
@@ -168,7 +171,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'processing' },
         'rne' => { 'status' => 'pending' },
         'attestations_fiscales' => { 'status' => 'pending' },
-        'probtp' => { 'status' => 'pending' }
+        'probtp' => { 'status' => 'pending' },
+        'qualibat' => { 'status' => 'pending' }
       })
 
       expect(presenter.overall_status_message).to eq('Récupération en cours, veuillez patienter...')
@@ -177,7 +181,7 @@ RSpec.describe ApiBlockStatusPresenter do
 
   describe ApiBlockStatusPresenter::ApiBlock do
     let(:identity_block) { presenter.blocks.first }
-    let(:economic_block) { presenter.blocks.last }
+    let(:economic_block) { presenter.blocks.second }
 
     describe '#status' do
       it 'returns loading when any API is pending' do
