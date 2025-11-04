@@ -255,10 +255,10 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
 
       let!(:qualibat_attribute) do
-        create(:market_attribute, :inline_url_input, :from_api,
+        create(:market_attribute, :inline_file_upload, :from_api,
           key: 'capacites_techniques_professionnelles_certificats_qualibat',
           api_name: 'qualibat',
-          api_key: 'document_url',
+          api_key: 'document',
           public_markets: [public_market])
       end
 
@@ -347,7 +347,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           )
       end
 
-      it 'calls INSEE API and populates market_attribute_responses' do
+      it 'calls INSEE API and redirects to status page' do
         # Perform jobs as they're enqueued
         perform_enqueued_jobs do
           # First submit SIRET - this enqueues background jobs
@@ -361,6 +361,15 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
         market_application.reload
         expect(market_application.siret).to eq(valid_siret)
+      end
+
+      it 'populates market_attribute_responses with API data' do
+        perform_enqueued_jobs do
+          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
+            params: { market_application: { siret: valid_siret } }
+        end
+
+        market_application.reload
 
         # Verify API data was populated by jobs
         siret_response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
@@ -369,7 +378,17 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
         expect(siret_response.text).to eq('41816609600069')
         expect(category_response.text).to eq('PME')
-        expect(qualibat_response.text).to eq('https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf')
+        expect(qualibat_response.documents).to be_attached
+        expect(qualibat_response.documents.first.filename.to_s).to eq('exemple-qualibat.pdf')
+      end
+
+      it 'updates API fetch status correctly' do
+        perform_enqueued_jobs do
+          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
+            params: { market_application: { siret: valid_siret } }
+        end
+
+        market_application.reload
 
         # Verify API statuses in JSONB (only for APIs with market attributes)
         expect(market_application.api_fetch_status['insee']['status']).to eq('completed')
@@ -378,6 +397,13 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         expect(market_application.api_fetch_status['qualibat']['fields_filled']).to eq(1)
         expect(market_application.api_fetch_status['rne']).to be_nil
         expect(market_application.api_fetch_status['dgfip']).to be_nil
+      end
+
+      it 'allows navigation from status page to next step' do
+        perform_enqueued_jobs do
+          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
+            params: { market_application: { siret: valid_siret } }
+        end
 
         # Then navigate through the status page
         patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"

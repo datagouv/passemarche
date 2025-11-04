@@ -4,7 +4,7 @@ class Qualibat::DownloadDocument < DownloadDocument
   protected
 
   def document_url_key
-    :document_url
+    :document
   end
 
   def generate_filename(_uri)

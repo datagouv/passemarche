@@ -11,8 +11,8 @@ RSpec.describe Qualibat::BuildResource, type: :interactor do
     subject { described_class.call(response:) }
 
     context 'when the response contains valid data' do
-      it 'extracts the document_url' do
-        expect(subject.bundled_data.data.document_url).to eq('https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf')
+      it 'extracts the document' do
+        expect(subject.bundled_data.data.document).to eq('https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf')
       end
     end
 
