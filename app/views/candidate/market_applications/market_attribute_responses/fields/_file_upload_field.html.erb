@@ -33,7 +33,7 @@
         <strong>Fichiers actuels :</strong>
         <% documents.each do |document| %>
           <%# Add hidden field to preserve file on form resubmit (backend handles duplicates) %>
-          <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil) %>
+          <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil, data: { signed_id: document.signed_id }) %>
           <div class="file-item" data-signed-id="<%= document.signed_id %>">
             <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener", class: "file-link" %>
             <span class="file-delete-wrapper">
@@ -43,6 +43,9 @@
                       data-file-delete-signed-id-value="<%= document.signed_id %>"
                       data-file-delete-url-value="<%= delete_attachment_candidate_market_application_path(market_application_identifier, document.signed_id) %>"
                       data-file-delete-filename-value="<%= document.filename %>"
+                      data-file-delete-confirm-message-value="<%= t('candidate.attachments.delete_confirm') %>"
+                      data-file-delete-error-message-value="<%= t('candidate.attachments.delete_error') %>"
+                      data-file-delete-network-error-message-value="<%= t('candidate.attachments.network_error') %>"
                       data-action="click->file-delete#delete"
                       title="Supprimer <%= document.filename %>">
                 Supprimer

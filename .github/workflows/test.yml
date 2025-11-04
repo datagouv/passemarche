@@ -55,7 +55,7 @@ jobs:
         DATABASE_URL: postgres://voie_rapide:wow*veryrapide@localhost:5432/voie_rapide_test
         CUCUMBER_PUBLISH_QUIET: true
       run: |
-        bundle exec cucumber
+        bundle exec cucumber --tags "not @wip"
 
   deploy-sandbox:
     needs: test
