@@ -34,14 +34,37 @@ class MapApiData < ApplicationInteractor
     response = find_or_initialize_response(market_attribute)
     value = extract_value_from_resource(market_attribute)
 
+    assign_value_to_response(response, value)
+    response.source = :auto unless response.manual_after_api_failure?
+
+    # For complex economic capacity responses, allow saving even if incomplete
+    # The user will complete the missing data in the form
+    if complex_economic_capacity_response?(response, value)
+      response.save(validate: false)
+    else
+      response.save!
+    end
+  end
+
+  def assign_value_to_response(response, value)
     if value.is_a?(Hash) && value.key?(:io)
       attach_document_to_response(response, value)
+    elsif complex_economic_capacity_response?(response, value)
+      assign_parsed_json_value(response, value)
     else
       response.text = value
     end
+  end
 
-    response.source = :auto unless response.manual_after_api_failure?
-    response.save!
+  def complex_economic_capacity_response?(response, value)
+    response.class.name.include?('CapaciteEconomique') && value.is_a?(String)
+  end
+
+  def assign_parsed_json_value(response, value)
+    parsed_data = JSON.parse(value)
+    response.value = parsed_data
+  rescue JSON::ParserError
+    response.text = value
   end
 
   def attach_document_to_response(response, document_hash)
