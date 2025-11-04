@@ -47,6 +47,13 @@ class MarketApplication < ApplicationRecord
     subject_to_prohibition == true
   end
 
+  def api_names_to_fetch
+    public_market.market_attributes
+      .where.not(api_name: nil)
+      .distinct
+      .pluck(:api_name)
+  end
+
   private
 
   def generate_identifier

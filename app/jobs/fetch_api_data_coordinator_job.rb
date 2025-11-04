@@ -1,25 +1,36 @@
 # frozen_string_literal: true
 
-# Coordinator job that spawns individual API fetch jobs
 class FetchApiDataCoordinatorJob < ApplicationJob
   queue_as :default
 
-  # List of all APIs to fetch
   API_JOBS = [
     FetchInseeDataJob,
     FetchRneDataJob,
     FetchDgfipDataJob,
-    FetchQualibatDataJob
+    FetchQualibatDataJob,
+    FetchProbtpDataJob
   ].freeze
 
   def perform(market_application_id)
-    # Spawn all individual API jobs in parallel
-    # Note: API statuses are already initialized as 'pending' by the service before this job runs
-    API_JOBS.each do |job_class|
-      job_class.perform_later(market_application_id)
-    end
+    market_application = MarketApplication.find(market_application_id)
+
+    spawn_relevant_api_jobs(market_application, market_application_id)
   rescue StandardError => e
-    Rails.logger.error "Error in coordinator for market application #{market_application_id}: #{e.message}"
+    log_coordinator_error(market_application_id, e)
     raise
+  end
+
+  private
+
+  def spawn_relevant_api_jobs(market_application, market_application_id)
+    api_names = market_application.api_names_to_fetch
+
+    API_JOBS.each do |job_class|
+      job_class.perform_later(market_application_id) if api_names.include?(job_class.api_name)
+    end
+  end
+
+  def log_coordinator_error(market_application_id, error)
+    Rails.logger.error "Error in coordinator for market application #{market_application_id}: #{error.message}"
   end
 end
