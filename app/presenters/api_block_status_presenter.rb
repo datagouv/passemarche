@@ -13,8 +13,11 @@ class ApiBlockStatusPresenter
   end
 
   def blocks
-    @blocks ||= blocks_config.map do |block_config|
-      ApiBlock.new(block_config, @market_application)
+    @blocks ||= begin
+      all_blocks = blocks_config.map do |block_config|
+        ApiBlock.new(block_config, @market_application)
+      end
+      all_blocks.reject { |block| block.apis.empty? }
     end
   end
 
@@ -70,10 +73,8 @@ class ApiBlockStatusPresenter
       @name = block_config[:name]
       @description = block_config[:description]
       @icon = block_config[:icon]
-      @apis = block_config[:apis]
-      @success_message_template = block_config[:success_message]
-      @error_message_template = block_config[:error_message]
       @market_application = market_application
+      @apis = filter_relevant_apis(block_config[:apis])
     end
 
     def status
@@ -99,12 +100,28 @@ class ApiBlockStatusPresenter
       completed? || failed?
     end
 
-    def success_message
-      @success_message_template
+    def completed_count
+      api_statuses.count { |s| s[:status] == 'completed' }
     end
 
-    def error_message
-      @error_message_template
+    def total_count
+      apis.length
+    end
+
+    def all_completed?
+      completed_count == total_count
+    end
+
+    def done_message
+      if all_completed?
+        I18n.t('candidate.market_applications.api_data_recovery_status.messages.all_success')
+      else
+        I18n.t('candidate.market_applications.api_data_recovery_status.messages.partial_success')
+      end
+    end
+
+    def status_count_class
+      all_completed? ? 'api-status-count--success' : 'api-status-count--warning'
     end
 
     def api_statuses
@@ -159,6 +176,11 @@ class ApiBlockStatusPresenter
 
     def default_api_status
       { 'status' => 'pending', 'fields_filled' => 0 }
+    end
+
+    def filter_relevant_apis(configured_apis)
+      market_apis = @market_application.api_names_to_fetch.map(&:downcase)
+      configured_apis.select { |api| market_apis.include?(api.downcase) }
     end
   end
 end

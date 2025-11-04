@@ -74,10 +74,22 @@
                     </div>
                   </div>
 
-                  <div class="fr-mt-2w" style="display: flex; gap: 0.5rem;">
-                    <% block.api_statuses.each do |api_status| %>
-                      <div style="height: 6px; flex: 1; background-color: <%= api_status[:color] %>; border-radius: 2px;"
-                           title="<%= api_status[:name] %>: <%= api_status[:status] %>"></div>
+                  <div class="fr-mt-2w">
+                    <% if block.done? %>
+                      <p class="fr-mb-0 api-status-summary">
+                        <span class="api-status-count <%= block.status_count_class %>">
+                          <%= block.completed_count %>/<%= block.total_count %>:
+                        </span>
+                        <%= block.done_message %>
+                      </p>
+                    <% else %>
+                      <div class="api-status-segments">
+                        <% block.api_statuses.each do |api_status| %>
+                          <div class="api-status-segment"
+                               style="background-color: <%= api_status[:color] %>;"
+                               title="<%= api_status[:name] %>: <%= api_status[:status] %>"></div>
+                        <% end %>
+                      </div>
                     <% end %>
                   </div>
                 </div>
