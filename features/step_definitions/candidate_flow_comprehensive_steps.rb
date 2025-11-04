@@ -403,7 +403,8 @@ When('all APIs complete successfully') do
       'insee' => { 'status' => 'completed', 'fields_filled' => 5 },
       'rne' => { 'status' => 'completed', 'fields_filled' => 3 },
       'attestations_fiscales' => { 'status' => 'completed', 'fields_filled' => 2 },
-      'probtp' => { 'status' => 'completed', 'fields_filled' => 1 }
+      'probtp' => { 'status' => 'completed', 'fields_filled' => 1 },
+      'qualibat' => { 'status' => 'completed', 'fields_filled' => 0 }
     }
   )
   visit current_path
@@ -420,7 +421,8 @@ Given('I have filled all required fields across all steps') do
       'insee' => { 'status' => 'completed', 'fields_filled' => 5 },
       'rne' => { 'status' => 'completed', 'fields_filled' => 3 },
       'attestations_fiscales' => { 'status' => 'completed', 'fields_filled' => 2 },
-      'probtp' => { 'status' => 'completed', 'fields_filled' => 1 }
+      'probtp' => { 'status' => 'completed', 'fields_filled' => 1 },
+      'qualibat' => { 'status' => 'completed', 'fields_filled' => 0 }
     }
   )
   visit current_path

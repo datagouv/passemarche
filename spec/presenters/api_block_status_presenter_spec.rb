@@ -16,17 +16,20 @@ RSpec.describe ApiBlockStatusPresenter do
     it 'returns all configured blocks' do
       blocks = presenter.blocks
 
-      expect(blocks.size).to eq(2)
+      expect(blocks.size).to eq(3)
       expect(blocks.first.name).to eq('Identité de l\'entreprise')
-      expect(blocks.last.name).to eq('Capacités économiques et financières')
+      expect(blocks.second.name).to eq('Capacités économiques et financières')
+      expect(blocks.last.name).to eq('Capacités techniques et professionnelles')
     end
 
     it 'returns blocks with correct APIs' do
       identity_block = presenter.blocks.first
-      economic_block = presenter.blocks.last
+      economic_block = presenter.blocks.second
+      technical_block = presenter.blocks.last
 
       expect(identity_block.apis).to contain_exactly('insee', 'rne')
       expect(economic_block.apis).to contain_exactly('attestations_fiscales', 'probtp')
+      expect(technical_block.apis).to contain_exactly('qualibat')
     end
   end
 
@@ -36,7 +39,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.all_blocks_done?).to be true
@@ -47,7 +51,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'failed' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'failed' }
       })
 
       expect(presenter.all_blocks_done?).to be true
@@ -96,7 +101,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.current_block).to be_nil
@@ -109,7 +115,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'processing' },
-        'probtp' => { 'status' => 'pending' }
+        'probtp' => { 'status' => 'pending' },
+        'qualibat' => { 'status' => 'pending' }
       })
 
       expect(presenter.completed_blocks_count).to eq(1)
@@ -122,7 +129,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'failed' },
         'rne' => { 'status' => 'failed' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'pending' }
       })
 
       expect(presenter.failed_blocks_count).to eq(1)
@@ -135,7 +143,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'completed' },
-        'probtp' => { 'status' => 'completed' }
+        'probtp' => { 'status' => 'completed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.overall_status_message).to eq('L\'ensemble des informations et documents ont été récupérés')
@@ -146,7 +155,8 @@ RSpec.describe ApiBlockStatusPresenter do
         'insee' => { 'status' => 'completed' },
         'rne' => { 'status' => 'completed' },
         'attestations_fiscales' => { 'status' => 'failed' },
-        'probtp' => { 'status' => 'failed' }
+        'probtp' => { 'status' => 'failed' },
+        'qualibat' => { 'status' => 'completed' }
       })
 
       expect(presenter.overall_status_message).to include('bloc(s) n\'ont pas pu être récupérés')

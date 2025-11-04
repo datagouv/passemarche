@@ -5,7 +5,7 @@ module ApiResponses
     def qualibat_success_response(overrides: {})
       default_response = {
         data: {
-          document_url: 'https://qualibat.example.com/certificat.pdf'
+          document_url: 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf'
         }
       }
 
