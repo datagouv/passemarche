@@ -23,9 +23,7 @@ fr:
         identite_entreprise_contact: Informations de contact
         motifs_exclusion_condamnations_penales: Motifs d'exclusion liés à des condamnations
           définitives
-        motifs_exclusion_fiscaux_taxes_impots: Motifs d' exclusion liés aux obligations
-          fiscales et sociales, redressement/liquidation
-        motifs_exclusion_sociaux_declarations: Motifs d' exclusion liés aux obligations
+        motifs_exclusion_fiscales_et_sociales: Motifs d' exclusion liés aux obligations
           fiscales et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur_discretionnaire: Motifs d'exclusion
           à l'appréciation de l'acheteur et prévus dans les documents de la consultation
@@ -88,52 +86,52 @@ fr:
             il a bien mené au cours des 4 dernières années les négociations obligatoires
             prévues par le Code du travail (rémunération, temps de travail, égalité
             femmes-hommes, conditions de travail).
-        motifs_exclusion_fiscaux_taxes_impots_liquidation_judiciaire:
+        motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
           name: Attestation sur l'honneur que l'opérateur économique n'est pas en
             procédure de liquidation judiciaire
           description: Le candidat doit attester qu'il n'est pas en liquidation judiciaire,
             ou dans une procédure équivalente s'il est établi hors de France.
-        motifs_exclusion_fiscaux_taxes_impots_faillite_interdiction:
+        motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
           name: Attestation sur l'honneur que l'opérateur économique n'est pas en
             faillite ou qu'il ne lui est pas interdit de gérer une entreprise
           description: Le candidat doit attester que son dirigeant n’est pas en faillite
             personnelle et ne fait pas l’objet d’une interdiction de gérer, d'administrer
             ou de diriger une entreprise.
-        motifs_exclusion_fiscaux_taxes_impots_infractions_impots:
+        motifs_exclusion_fiscales_et_sociales_infractions_impots:
           name: Condamnation définitive pour certaines infractions au Code général
             des impôts
           description: Le candidat doit attester qu'il n'a pas fait l'objet, lui ou
             l'un de ses dirigeants, d'une condamnation pour infractions fiscales (fraude,
             refus de contrôle, délivrance de faux documents), entraînant l'exclusion
             des marchés publics ou contrats de concession.
-        motifs_exclusion_fiscaux_taxes_impots_declarations_fiscales:
+        motifs_exclusion_fiscales_et_sociales_declarations_fiscales:
           name: Défaut de déclarations en matière fiscale
           description: Le candidat doit attester qu'il s'est acquitté de l'ensemble
             de ses impôts, taxes et contributions exigibles.
-        motifs_exclusion_sociaux_declarations_cotisations_sociales:
+        motifs_exclusion_fiscales_et_sociales_declarations_cotisations_sociales:
           name: Déclaration de l'opérateur économique qu'il s'est acquitté des cotisations
             sociales exigibles
           description: Le candidat doit attester qu'il a bien déclaré et payé toutes
             les cotisations et contributions sociales qui lui incombent, conformément
             à la réglementation en vigueur.
-        motifs_exclusion_sociaux_declarations_travailleurs_handicapes:
+        motifs_exclusion_fiscales_et_sociales_travailleurs_handicapes:
           name: Obligations d'emploi de travailleurs handicapés
           description: Si l'entreprise du candidat compte au moins 20 salariés, il
             doit attester qu'il respecte l'obligation d'emploi de travailleurs handicapés
             prévue par le Code du travail (art. L.5212-1 à L.5212-11).
-        motifs_exclusion_sociaux_declarations_travailleurs_etrangers:
+        motifs_exclusion_fiscales_et_sociales_travailleurs_etrangers:
           name: Liste nominative des travailleurs étrangers
           description: Le candidat doit attester que ses salariés étrangers sont en
             situation régulière en fournissant une liste issue du registre du personnel
             (mise à jour tous les 6 mois), précisant la date d'embauche, la nationalité
             et le titre de travail de chaque salarié.
-        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
+        motifs_exclusion_fiscales_et_sociales_cibtp_cnetp:
           name: Attestation de régularité sociale dans le secteur des travaux publics
             (CIBTP - CNETP)
           description: Le candidat devra fournir une attestation délivrée par un organisme
             en charge de la gestion des congés payés et du chômage intempéries dans
             le secteur du BTP
-        motifs_exclusion_sociaux_declarations_pro_btp:
+        motifs_exclusion_fiscales_et_sociales_pro_btp:
           name: Attestation de régularité des cotisations retraite Pro BTP
           description: Le candidat devra fournir une attestation délivrée par un organisme
             proposant des services de protection sociale dans le secteur du BTP
@@ -367,8 +365,7 @@ fr:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
         motifs_exclusion_condamnations_penales: Condamnation définitive
-        motifs_exclusion_fiscaux_taxes_impots: Obligations fiscales et sociales
-        motifs_exclusion_sociaux_declarations: Obligations fiscales et sociales
+        motifs_exclusion_fiscales_et_sociales: Obligations fiscales et sociales
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs
         capacite_economique_financiere_chiffre_affaires: Chiffre d'affaires
         capacite_economique_financiere_bilans: Bilans
@@ -430,48 +427,48 @@ fr:
           description: Tous les 4 ans, les négociations sont obligatoires et prévues
             par le Code du travail (rémunération, temps de travail, égalité femmes-hommes,
             conditions de travail).
-        motifs_exclusion_fiscaux_taxes_impots_liquidation_judiciaire:
+        motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
           name: Votre entreprise est-elle en procédure de liquidation judiciaire ?
           description: Si votre entreprise n'est pas établie en France, vous devez
             avoir un extrait d'inscription au registre professionnel permettant de
             justifier l'absence de redressement ou liquidation judiciaire ou tout
             autre procédure équivalente.
-        motifs_exclusion_fiscaux_taxes_impots_faillite_interdiction:
+        motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
           name: Le dirigeant de l'entreprise est-il en faillite personnelle ou lui
             est-il interdit de gérer une entreprise ?
-        motifs_exclusion_fiscaux_taxes_impots_infractions_impots:
+        motifs_exclusion_fiscales_et_sociales_infractions_impots:
           name: Votre entreprise a t-elle été condamnée pénalement pour certaines
             infractions issues du Code général des impôts ?
           description: 'Par exemple : fraude fiscale, refus de contrôle par l''administration
             ou délivrance de faux documents (Code général des impôts).'
-        motifs_exclusion_fiscaux_taxes_impots_declarations_fiscales:
+        motifs_exclusion_fiscales_et_sociales_declarations_fiscales:
           name: Votre entreprise ne s'est-elle pas acquittée des impôts, taxes, contributions
             sociales exigibles ?
           description: 'Par exemple : impôt sur le revenu ou sociétés, TVA, etc'
-        motifs_exclusion_sociaux_declarations_cotisations_sociales:
+        motifs_exclusion_fiscales_et_sociales_declarations_cotisations_sociales:
           name: Votre entreprise a-t-elle manqué à ses obligations de déclaration
             et de paiement des cotisations sociales ?
-        motifs_exclusion_sociaux_declarations_travailleurs_handicapes:
+        motifs_exclusion_fiscales_et_sociales_travailleurs_handicapes:
           name: Votre entreprise a t-elle manqué à ses obligations d'emploi de travailleurs
             handicapés ?
           description: Sont concernées par l'obligation d'emploi de travailleurs handicapés,
             les entreprises employant au moins 20 salariés (art. L.5212-1 à L.5212-11
             du Code du travail)
-        motifs_exclusion_sociaux_declarations_travailleurs_etrangers:
+        motifs_exclusion_fiscales_et_sociales_travailleurs_etrangers:
           name: Votre entreprise emploie t-elle des travailleurs étrangers ?
           description: Si votre entreprise emploie des salariés étrangers, elle doit
             attester qu'ils sont en situation régulière en fournissant à l'acheteur
             ou à l'autorité concédante une liste issue du registre du personnel (mise
             à jour tous les 6 mois) précisant la date d'embauche, la nationalité et
             le titre de travail de chaque salarié (art. D8254-2 du Code du travail).
-        motifs_exclusion_sociaux_declarations_cibtp_cnetp:
+        motifs_exclusion_fiscales_et_sociales_cibtp_cnetp:
           name: Votre entreprise a t-elle manqué à ses obligations de déclaration
             et paiement  de ses cotisations CIBTP-CNETP ?
           description: Si votre entreprise exerce dans le secteur du BTP, elle doit
             fournir une attestation de la caisse CIBTP confirmant qu'elle est à jour
             de ses déclarations et cotisations (congés payés et chômage-intempéries),
             conformément au Code du travail.
-        motifs_exclusion_sociaux_declarations_pro_btp:
+        motifs_exclusion_fiscales_et_sociales_pro_btp:
           name: Votre entreprise a t-elle manqué à ses obligations de déclaration
             et paiement  de ses cotisations retraite Pro-BTP ?
           description: Si votre entreprise exerce dans le secteur du BTP, elle doit
