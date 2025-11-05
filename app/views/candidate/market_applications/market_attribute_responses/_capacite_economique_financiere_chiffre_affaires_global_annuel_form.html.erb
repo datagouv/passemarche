@@ -6,8 +6,7 @@
 %>
 
 <div class="fr-input-group<%= ' fr-input-group--error' if has_errors %>">
-  <%= form.fields_for :market_attribute_responses, market_attribute_response,
-        child_index: market_attribute_response.id do |response_form| %>
+  <%= form.fields_for :market_attribute_responses, market_attribute_response do |response_form| %>
 
     <%= response_form.hidden_field :id %>
     <%= response_form.hidden_field :market_attribute_id %>
@@ -23,11 +22,40 @@
       </div>
     <% end %>
 
-    <div class="fr-table">
-      <div class="fr-table__wrapper">
-        <div class="fr-table__container">
-          <div class="fr-table__content">
-            <table>
+    <%# --- INFO NOTICE FOR AUTO-RETRIEVED DATA --- %>
+    <%
+      has_api_data = false
+      if is_auto && value_data['_api_fields'].present?
+        %w[year_1 year_2 year_3].each do |year_key|
+          year_api_fields = value_data['_api_fields'][year_key] || []
+          if year_api_fields.any?
+            has_api_data = true
+            break
+          end
+        end
+      end
+    %>
+
+    <% if has_api_data %>
+      <div class="fr-notice fr-notice--info fr-mb-2w">
+        <div class="fr-notice__body fr-px-2w fr-py-1w">
+          <p class="fr-notice__title">
+            Données récupérées automatiquement
+          </p>
+          <p class="fr-notice__desc">
+            Certaines informations ont été automatiquement récupérées via les services de l'administration.
+            Ces données sont pré-remplies et ne peuvent pas être modifiées.
+            <br>
+            Vous devez compléter les champs restants.
+          </p>
+        </div>
+      </div>
+    <% end %>
+      <div class="fr-table">
+        <div class="fr-table__wrapper">
+          <div class="fr-table__container">
+            <div class="fr-table__content">
+              <table>
               <thead>
                 <tr>
                   <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.year') %></th>
@@ -43,6 +71,7 @@
                     year_api_fields = api_fields[year_key] || []
                     turnover_from_api = is_auto && year_api_fields.include?('turnover')
                     fiscal_year_end_from_api = is_auto && year_api_fields.include?('fiscal_year_end')
+                    has_api_data_for_year = turnover_from_api || fiscal_year_end_from_api
                   %>
                   <tr>
                     <td>
@@ -84,7 +113,8 @@
                     <%# --- FISCAL YEAR END --- %>
                     <td>
                       <% if fiscal_year_end_from_api %>
-                        <div class="fr-badge fr-badge--success fr-badge--sm">Récupéré automatiquement</div>
+                        <%= l(Date.parse(value_data[year_key]['fiscal_year_end']), format: '%d/%m/%Y') rescue value_data[year_key]['fiscal_year_end'] %>
+                        <span class="fr-icon-checkbox-circle-fill fr-icon--sm fr-ml-1w" style="color: #18753C;" title="Récupéré automatiquement" aria-label="Récupéré automatiquement"></span>
                         <%= response_form.hidden_field "#{year_key}_fiscal_year_end" %>
                       <% else %>
                         <div class="fr-input-group">
