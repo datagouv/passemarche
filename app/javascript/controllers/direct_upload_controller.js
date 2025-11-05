@@ -5,7 +5,10 @@ export default class extends Controller {
   static targets = ["progress", "progressBar", "filesList"]
   static values = {
     marketApplicationIdentifier: String,
-    deletable: Boolean
+    deletable: Boolean,
+    deleteConfirmMessage: String,
+    deleteErrorMessage: String,
+    networkErrorMessage: String
   }
 
   connect() {
@@ -109,6 +112,9 @@ export default class extends Controller {
       deleteButton.dataset.fileDeleteSignedIdValue = signedId
       deleteButton.dataset.fileDeleteUrlValue = `/candidate/market_applications/${this.marketApplicationIdentifierValue}/attachments/${signedId}`
       deleteButton.dataset.fileDeleteFilenameValue = filename
+      deleteButton.dataset.fileDeleteConfirmMessageValue = this.deleteConfirmMessageValue
+      deleteButton.dataset.fileDeleteErrorMessageValue = this.deleteErrorMessageValue
+      deleteButton.dataset.fileDeleteNetworkErrorMessageValue = this.networkErrorMessageValue
       deleteButton.dataset.action = 'click->file-delete#delete'
 
       deleteWrapper.appendChild(deleteButton)

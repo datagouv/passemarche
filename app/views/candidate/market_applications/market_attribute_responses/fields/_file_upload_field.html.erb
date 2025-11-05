@@ -7,7 +7,10 @@
 <div class="fr-upload-group fr-card fr-p-2w"
      data-controller="direct-upload"
      data-direct-upload-market-application-identifier-value="<%= market_application_identifier %>"
-     data-direct-upload-deletable-value="true">
+     data-direct-upload-deletable-value="true"
+     data-direct-upload-delete-confirm-message-value="<%= t('candidate.attachments.delete_confirm') %>"
+     data-direct-upload-delete-error-message-value="<%= t('candidate.attachments.delete_error') %>"
+     data-direct-upload-network-error-message-value="<%= t('candidate.attachments.network_error') %>">
   <%= form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{attribute_response.id}" %>
   <span class="fr-hint-text fr-mb-2w fr-text--sm">
     Taille maximale : <%= MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte %> Mo.
