@@ -14,8 +14,8 @@ class MarketApplicationStepUpdateService < ApplicationService
     case step
     when :company_identification
       handle_company_identification
-    when :api_data_recovery_status
-      handle_api_data_recovery_status
+    when :api_data_recovery_status, :market_information
+      handle_navigation_only_step
     when :summary
       handle_summary_completion
     else
@@ -39,7 +39,7 @@ class MarketApplicationStepUpdateService < ApplicationService
     build_result(true)
   end
 
-  def handle_api_data_recovery_status
+  def handle_navigation_only_step
     build_result(true)
   end
 
