@@ -3,6 +3,7 @@
   key = market_attribute_response.market_attribute.key
   has_data = value_data.present? && value_data.any? { |_, year_data| year_data.present? }
   is_auto = market_attribute_response.auto?
+  context ||= :web
 %>
 
 <div class="field-layout-container">
@@ -42,7 +43,7 @@
                             <strong><%= t("candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.year_labels.#{year_key}", default: "Année #{index + 1}") %></strong>
                           </td>
                           <td>
-                            <% if turnover_from_api %>
+                            <% if turnover_from_api && context != :buyer %>
                               <div class="fr-badge fr-badge--success fr-badge--sm">Récupéré automatiquement</div>
                             <% elsif year_data['turnover'].present? %>
                               <%= number_with_delimiter(year_data['turnover'], delimiter: ' ') %> €
@@ -59,7 +60,7 @@
                           </td>
                           <td>
                             <% if fiscal_year_end_from_api %>
-                              <div class="fr-badge fr-badge--success fr-badge--sm">Récupéré automatiquement</div>
+                              <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
                             <% elsif year_data['fiscal_year_end'].present? %>
                               <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
                             <% else %>
