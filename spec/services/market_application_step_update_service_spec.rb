@@ -83,7 +83,7 @@ RSpec.describe MarketApplicationStepUpdateService do
     end
 
     context 'with generic step' do
-      let(:step) { :market_information }
+      let(:step) { :contact }
 
       it 'returns success when validation passes' do
         result = described_class.call(market_application, step, {})

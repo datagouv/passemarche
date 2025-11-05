@@ -60,6 +60,10 @@ Feature: Comprehensive Candidate Application Flow
     When I handle optional checkbox with document
     And I click "Suivant"
 
+    Then I should be on the "capacite_economique_financiere_chiffre_affaires" step
+    When I fill in the turnover percentages
+    And I click "Suivant"
+
     Then I should be on the "summary" step
     And I should see a summary of all my responses
     When I click "Transmettre ma candidature"

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'webmock/cucumber'
+
 World(FactoryBot::Syntax::Methods)
 
 Given('a comprehensive public market with all input types exists') do
@@ -73,12 +75,91 @@ Given('a comprehensive public market with all input types exists') do
     attr.required = true
   end
   @certifications_attr.public_markets << @public_market unless @certifications_attr.public_markets.include?(@public_market)
+
+  @chiffres_affaires_attr = MarketAttribute.find_or_create_by(key: 'capacite_economique_financiere_chiffre_affaires_global_annuel') do |attr|
+    attr.input_type = 'capacite_economique_financiere_chiffre_affaires_global_annuel'
+    attr.category_key = 'capacite_economique_financiere'
+    attr.subcategory_key = 'capacite_economique_financiere_chiffre_affaires'
+    attr.required = false
+    attr.api_name = 'dgfip_chiffres_affaires'
+    attr.api_key = 'chiffres_affaires_data'
+  end
+  @chiffres_affaires_attr.public_markets << @public_market unless @chiffres_affaires_attr.public_markets.include?(@public_market)
 end
 
 Given('a candidate starts a comprehensive application') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: nil)
+
+  # Configure API stubs for comprehensive tests
+  stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v3/insee/sirene/etablissements/73282932000074.*})
+    .with(
+      headers: {
+        'Accept' => '*/*',
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization' => /Bearer .*/,
+        'Content-Type' => 'application/json',
+        'Host' => 'staging.entreprise.api.gouv.fr',
+        'User-Agent' => 'Ruby'
+      }
+    )
+    .to_return(
+      status: 200,
+      body: {
+        data: {
+          denomination: 'Test Company Comprehensive',
+          category_entreprise: 'PME'
+        }
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+  # Stub RNE API
+  stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v3/inpi/rne/unites_legales/.*/extrait_rne})
+    .to_return(
+      status: 200,
+      body: { data: { document_url: 'https://example.com/rne.pdf' } }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+  # Stub Qualibat API
+  stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v4/qualibat/etablissements/.*/certification_batiment})
+    .to_return(
+      status: 200,
+      body: { data: { document_url: 'https://qualibat.example.com/cert.pdf' } }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+  # Stub DGFIP API
+  stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v4/dgfip/unites_legales/.*/attestation_fiscale})
+    .to_return(
+      status: 200,
+      body: { data: { document_url: 'https://storage.exemple.com/dgfip.pdf' } }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+  # Stub DGFIP chiffres d'affaires API
+  stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v3/dgfip/etablissements/.*/chiffres_affaires})
+    .to_return(
+      status: 200,
+      body: {
+        data: [
+          { data: { chiffre_affaires: 500_000.0, date_fin_exercice: '2023-12-31' } },
+          { data: { chiffre_affaires: 450_000.0, date_fin_exercice: '2022-12-31' } },
+          { data: { chiffre_affaires: 400_000.0, date_fin_exercice: '2021-12-31' } }
+        ]
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+  # Stub document downloads
+  stub_request(:get, %r{https://.*\.pdf})
+    .to_return(
+      status: 200,
+      body: '%PDF-1.4 test document',
+      headers: { 'Content-Type' => 'application/pdf' }
+    )
 end
 
 When('I visit the company identification step') do
@@ -97,9 +178,9 @@ When('I fill in the SIRET with {string}') do |siret|
   fill_in 'market_application_siret', with: siret
 end
 
-Then('I should be on the {string} step') do |step_name|
-  expected_path = "/candidate/market_applications/#{@market_application.identifier}/#{step_name}"
-  expect(page).to have_current_path(expected_path, ignore_query: true)
+Then('I should be on the {string} step') do |expected_step|
+  expected_path = "/candidate/market_applications/#{@market_application.identifier}/#{expected_step}"
+  expect(current_path).to eq(expected_path)
 end
 
 Then('I should see all required identity fields') do
@@ -404,7 +485,8 @@ When('all APIs complete successfully') do
       'rne' => { 'status' => 'completed', 'fields_filled' => 3 },
       'attestations_fiscales' => { 'status' => 'completed', 'fields_filled' => 2 },
       'probtp' => { 'status' => 'completed', 'fields_filled' => 1 },
-      'qualibat' => { 'status' => 'completed', 'fields_filled' => 0 }
+      'qualibat' => { 'status' => 'completed', 'fields_filled' => 0 },
+      'dgfip_chiffres_affaires' => { 'status' => 'completed', 'fields_filled' => 1 }
     }
   )
   visit current_path
@@ -421,6 +503,7 @@ Given('I have filled all required fields across all steps') do
       'insee' => { 'status' => 'completed', 'fields_filled' => 5 },
       'rne' => { 'status' => 'completed', 'fields_filled' => 3 },
       'attestations_fiscales' => { 'status' => 'completed', 'fields_filled' => 2 },
+      'dgfip_chiffres_affaires' => { 'status' => 'completed', 'fields_filled' => 3 },
       'probtp' => { 'status' => 'completed', 'fields_filled' => 1 },
       'qualibat' => { 'status' => 'completed', 'fields_filled' => 0 }
     }
@@ -428,13 +511,23 @@ Given('I have filled all required fields across all steps') do
   visit current_path
   click_button 'Continuer'
 
-  fill_in_all_available_fields
-  click_button 'Suivant'
-
-  while page.has_button?('Suivant')
-    fill_in_all_available_fields
-    click_button 'Suivant'
-  end
+  step('I click "Suivant"')  # market_information -> contact
+  step('I fill in contact fields with valid data')
+  step('I click "Suivant"')  # contact -> identification
+  step('I fill in identification fields with valid data')
+  step('I click "Suivant"')  # identification -> declarations
+  step('I check the required exclusion checkboxes')
+  step('I click "Suivant"')  # declarations -> description
+  step('I fill in the economic capacity information')
+  step('I click "Suivant"')  # description -> documents
+  step('I upload required documents')
+  step('I click "Suivant"')  # documents -> attestations
+  step('I handle optional checkbox with document')
+  step('I click "Suivant"')  # attestations -> certifications
+  step('I handle optional checkbox with document')
+  step('I click "Suivant"')  # certifications -> capacite_economique_financiere_chiffre_affaires
+  step('I fill in the turnover percentages')
+  step('I click "Suivant"')  # capacite_economique_financiere_chiffre_affaires -> summary
 end
 
 When('I complete the application on summary step') do
@@ -517,7 +610,7 @@ When('I fill in all required fields correctly') do
 end
 
 Then('I should progress to the next step') do
-  raise 'Expected to progress to next step but did not' unless on_expected_path?(/summary/) || page.has_content?('Synthèse')
+  raise 'Expected to progress to next step but did not' unless on_expected_path?(/attestations/) || page.has_content?('attestations')
 
   true
 end
@@ -673,6 +766,14 @@ When('I handle optional checkbox with document') do
   # For testing purposes, let's check it
   checkbox = page.first('input[type="checkbox"]')
   checkbox&.check
+end
+
+When('I fill in the turnover percentages') do
+  # En mode hybride, on a toujours des champs de pourcentage à remplir
+  # même quand l'API a pré-rempli les chiffres d'affaires
+  find("input[name*='year_1_market_percentage']").set('75')
+  find("input[name*='year_2_market_percentage']").set('80')
+  find("input[name*='year_3_market_percentage']").set('70')
 end
 
 When('I leave identification fields empty') do

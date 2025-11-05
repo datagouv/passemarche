@@ -14,7 +14,7 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
   # }
 
   def self.json_schema_properties
-    %w[year_1 year_2 year_3]
+    %w[year_1 year_2 year_3 _api_fields]
   end
 
   def self.json_schema_required
@@ -36,6 +36,9 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
       end
 
       define_method "#{year_key}_#{field_name}=" do |val|
+        # Protect API data: do not overwrite a field that comes from the API
+        return if api_field_protected?(year_key, field_name)
+
         self.value ||= {}
         value[year_key] ||= {}
         value[year_key][field_name] = coerce_field_value(field_name, val)
@@ -53,24 +56,61 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     end
   end
 
+  def api_field_protected?(year_key, field_name)
+    # Protect only if in auto mode and the field is marked as coming from the API
+    return false unless auto?
+
+    api_fields = value&.dig('_api_fields') || {}
+    year_api_fields = api_fields[year_key] || []
+    year_api_fields.include?(field_name)
+  end
+
   def validate_year_data_structure
     return if value.blank?
 
     YEAR_KEYS.each do |year_key|
-      year_data = value[year_key]
-      next if year_data.blank?
-
-      unless year_data.is_a?(Hash)
-        errors.add(:value, "#{year_key} must be a hash")
-        next
-      end
-
-      next unless year_has_any_data?(year_data)
-
-      FIELD_NAMES.each do |field|
-        errors.add(:value, "#{year_key}.#{field} is required") if year_data[field].nil?
-      end
+      validate_single_year_structure(year_key)
     end
+  end
+
+  def validate_single_year_structure(year_key)
+    year_data = value[year_key]
+    return if year_data.blank?
+
+    unless year_data.is_a?(Hash)
+      errors.add(:value, "#{year_key} must be a hash")
+      return
+    end
+
+    return unless year_has_any_data?(year_data)
+
+    validate_year_fields(year_key, year_data)
+  end
+
+  def validate_year_fields(year_key, year_data)
+    FIELD_NAMES.each do |field|
+      validate_single_field(year_key, year_data, field)
+    end
+  end
+
+  def validate_single_field(year_key, year_data, field)
+    return if skip_field_validation?(year_data, field)
+    return unless in_validation_context?
+
+    errors.add(:value, "#{year_key}.#{field} is required") if year_data[field].nil?
+  end
+
+  def skip_field_validation?(year_data, field)
+    # In auto mode, allow creation with only turnover and fiscal_year_end
+    # market_percentage will be required when submitting the form
+    auto? && field == 'market_percentage' && year_data['turnover'].blank?
+  end
+
+  def in_validation_context?
+    step_key = market_attribute&.subcategory_key
+    market_application&.validation_context.nil? ||
+      market_application&.validation_context.to_s == step_key ||
+      market_application&.validation_context.to_s == 'summary'
   end
 
   def year_has_any_data?(year_data)

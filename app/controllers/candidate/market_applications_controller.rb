@@ -117,11 +117,22 @@ module Candidate
     end
 
     def market_application_params
-      params.fetch(:market_application, {}).permit(
+      permitted_params = params.fetch(:market_application, {}).permit(
         :siret,
-        :subject_to_prohibition,
-        market_attribute_responses_attributes: {}
+        :subject_to_prohibition
       )
+
+      permitted_params[:market_attribute_responses_attributes] = permitted_nested_attributes if params[:market_application] && params[:market_application][:market_attribute_responses_attributes]
+
+      permitted_params
+    end
+
+    def permitted_nested_attributes
+      nested_params = params.dig(:market_application, :market_attribute_responses_attributes)
+      return {} unless nested_params
+
+      # Validation is handled at the model level
+      nested_params.permit!
     end
 
     def finish_wizard_path
