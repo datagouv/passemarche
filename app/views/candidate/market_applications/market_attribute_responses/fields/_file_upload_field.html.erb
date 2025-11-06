@@ -7,7 +7,10 @@
 <div class="fr-upload-group fr-card fr-p-2w"
      data-controller="direct-upload"
      data-direct-upload-market-application-identifier-value="<%= market_application_identifier %>"
-     data-direct-upload-deletable-value="true">
+     data-direct-upload-deletable-value="true"
+     data-direct-upload-delete-confirm-message-value="<%= t('candidate.attachments.delete_confirm') %>"
+     data-direct-upload-delete-error-message-value="<%= t('candidate.attachments.delete_error') %>"
+     data-direct-upload-network-error-message-value="<%= t('candidate.attachments.network_error') %>">
   <%= form.label :files, "Ajouter vos documents", class: "fr-label fr-mb-2w fr-text--md", for: "upload-#{attribute_response.id}" %>
   <span class="fr-hint-text fr-mb-2w fr-text--sm">
     Taille maximale : <%= MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte %> Mo.
@@ -33,7 +36,7 @@
         <strong>Fichiers actuels :</strong>
         <% documents.each do |document| %>
           <%# Add hidden field to preserve file on form resubmit (backend handles duplicates) %>
-          <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil) %>
+          <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil, data: { signed_id: document.signed_id }) %>
           <div class="file-item" data-signed-id="<%= document.signed_id %>">
             <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener", class: "file-link" %>
             <span class="file-delete-wrapper">
@@ -43,6 +46,9 @@
                       data-file-delete-signed-id-value="<%= document.signed_id %>"
                       data-file-delete-url-value="<%= delete_attachment_candidate_market_application_path(market_application_identifier, document.signed_id) %>"
                       data-file-delete-filename-value="<%= document.filename %>"
+                      data-file-delete-confirm-message-value="<%= t('candidate.attachments.delete_confirm') %>"
+                      data-file-delete-error-message-value="<%= t('candidate.attachments.delete_error') %>"
+                      data-file-delete-network-error-message-value="<%= t('candidate.attachments.network_error') %>"
                       data-action="click->file-delete#delete"
                       title="Supprimer <%= document.filename %>">
                 Supprimer

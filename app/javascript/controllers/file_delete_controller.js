@@ -4,15 +4,16 @@ export default class extends Controller {
   static values = {
     signedId: String,
     url: String,
-    filename: String
+    filename: String,
+    confirmMessage: String,
+    errorMessage: String,
+    networkErrorMessage: String
   }
 
   delete(event) {
     event.preventDefault()
 
-    const confirmMessage = `Êtes-vous sûr de vouloir supprimer le fichier "${this.filenameValue}" ?`
-
-    if (!confirm(confirmMessage)) {
+    if (!confirm(this.confirmMessageValue)) {
       return
     }
 
@@ -37,10 +38,10 @@ export default class extends Controller {
       if (response.ok && data.success) {
         this.removeFileFromDOM()
       } else {
-        this.showError(data.message || 'Erreur lors de la suppression')
+        this.showError(data.message || this.errorMessageValue)
       }
     } catch (error) {
-      this.showError('Erreur réseau lors de la suppression')
+      this.showError(this.networkErrorMessageValue)
       console.error('Delete error:', error)
     }
   }
@@ -48,6 +49,13 @@ export default class extends Controller {
   removeFileFromDOM() {
     const fileItem = this.element.closest('.file-item')
     if (fileItem) {
+      const signedId = fileItem.dataset.signedId
+
+      if (signedId) {
+        const hiddenFields = document.querySelectorAll(`input[type="hidden"][data-signed-id="${signedId}"]`)
+        hiddenFields.forEach(field => field.remove())
+      }
+
       fileItem.remove()
     }
   }
