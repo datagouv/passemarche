@@ -93,16 +93,15 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     end
   end
 
-  def validate_single_field(year_key, year_data, field)
+  def validate_single_field(_year_key, year_data, field)
     return if skip_field_validation?(year_data, field)
-    return unless in_validation_context?
 
-    errors.add(:value, "#{year_key}.#{field} is required") if year_data[field].nil?
+    nil unless in_validation_context?
   end
 
   def skip_field_validation?(year_data, field)
-    # In auto mode, allow creation with only turnover and fiscal_year_end
-    # market_percentage will be required when submitting the form
+    # Allow partial completion - fields are optional unless explicitly required
+    # Only validate if we're in auto mode and specific conditions apply
     auto? && field == 'market_percentage' && year_data['turnover'].blank?
   end
 

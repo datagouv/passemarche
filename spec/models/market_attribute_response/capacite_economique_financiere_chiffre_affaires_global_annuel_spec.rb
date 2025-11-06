@@ -110,9 +110,8 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
         base_value.tap { |v| v['year_1'].delete('turnover') }
       end
 
-      it 'is invalid' do
-        expect(response).not_to be_valid
-        expect(response.errors[:value]).to include('year_1.turnover is required')
+      it 'is valid (fields are now optional)' do
+        expect(response).to be_valid
       end
     end
 
@@ -173,9 +172,8 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
         base_value.tap { |v| v['year_1'].delete('market_percentage') }
       end
 
-      it 'is invalid' do
-        expect(response).not_to be_valid
-        expect(response.errors[:value]).to include('year_1.market_percentage is required')
+      it 'is valid (fields are now optional)' do
+        expect(response).to be_valid
       end
     end
 
@@ -263,9 +261,8 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
         base_value.tap { |v| v['year_1'].delete('fiscal_year_end') }
       end
 
-      it 'is invalid' do
-        expect(response).not_to be_valid
-        expect(response.errors[:value]).to include('year_1.fiscal_year_end is required')
+      it 'is valid (fields are now optional)' do
+        expect(response).to be_valid
       end
     end
 

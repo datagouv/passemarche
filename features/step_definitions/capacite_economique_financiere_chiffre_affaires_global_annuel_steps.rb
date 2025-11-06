@@ -207,6 +207,34 @@ Then('the data should be saved with correct structure') do
   expect(response.value['year_1']).to have_key('fiscal_year_end')
 end
 
+Then('the data should be saved with partial completion') do
+  @market_application.reload
+  response = @market_application.market_attribute_responses.last
+
+  expect(response).to be_present
+  expect(response.type).to eq('CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel')
+  expect(response.value).to be_a(Hash)
+
+  # Verify that partial data is saved correctly
+  # year_1 should have turnover and fiscal_year_end but no market_percentage
+  expect(response.value).to have_key('year_1')
+  expect(response.value['year_1']['turnover']).to eq(500_000)
+  expect(response.value['year_1']['fiscal_year_end']).to eq('2023-12-31')
+  expect(response.value['year_1']['market_percentage']).to be_blank
+
+  # year_2 should have market_percentage only
+  expect(response.value).to have_key('year_2')
+  expect(response.value['year_2']['market_percentage']).to eq(80)
+  expect(response.value['year_2']['turnover']).to be_blank
+  expect(response.value['year_2']['fiscal_year_end']).to be_blank
+
+  # year_3 should have all fields filled
+  expect(response.value).to have_key('year_3')
+  expect(response.value['year_3']['turnover']).to eq(400_000)
+  expect(response.value['year_3']['market_percentage']).to eq(70)
+  expect(response.value['year_3']['fiscal_year_end']).to eq('2021-12-31')
+end
+
 Then('the economic capacity response should be created with class {string}') do |class_name|
   @market_application.reload
   response = @market_application.market_attribute_responses.last
