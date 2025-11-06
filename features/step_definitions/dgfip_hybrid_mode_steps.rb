@@ -44,10 +44,12 @@ Given('the DGFIP API will return valid chiffres d\'affaires data') do
   FetchChiffresAffairesDataJob.perform_now(@market_application.id)
 end
 
-Then('I should see a form with pre-filled turnover and fiscal year end fields') do
+Then('I should see DGFIP data with badges and icons correctly displayed') do
   within '.fr-table' do
-    expect(page).to have_css('.fr-badge', text: 'Récupéré automatiquement', minimum: 6)
+    expect(page).to have_css('.fr-badge', text: 'Récupéré automatiquement', count: 3)
+    expect(page).to have_css('.fr-icon-checkbox-circle-fill', count: 3)
 
+    # Verify that percentage fields are empty and editable
     %w[year_1 year_2 year_3].each do |year|
       field = find("input[name*='#{year}_market_percentage']")
       expect(field).not_to be_readonly

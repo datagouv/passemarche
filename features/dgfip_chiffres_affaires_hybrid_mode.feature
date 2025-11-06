@@ -15,7 +15,7 @@ Feature: Mode hybride DGFIP chiffres d'affaires
   Scenario: Mode hybride avec API DGFIP
     Given the DGFIP API will return valid chiffres d'affaires data
     When I visit the economic capacities step
-    Then I should see a form with pre-filled turnover and fiscal year end fields
+    Then I should see DGFIP data with badges and icons correctly displayed
     And I should see empty market percentage fields that I can edit
     When I fill in the market percentages:
       | year   | percentage |
