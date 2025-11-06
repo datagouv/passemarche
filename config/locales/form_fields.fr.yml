@@ -25,6 +25,8 @@ fr:
           définitives
         motifs_exclusion_fiscales_et_sociales: Motifs d' exclusion liés aux obligations
           fiscales et sociales, redressement/liquidation
+        motifs_exclusion_sociaux_declarations: Motifs d' exclusion liés aux obligations
+          fiscales et sociales, redressement/liquidation
         motifs_exclusion_appreciation_acheteur_discretionnaire: Motifs d'exclusion
           à l'appréciation de l'acheteur et prévus dans les documents de la consultation
         capacite_economique_financiere_chiffre_affaires: Capacités économiques et
@@ -131,7 +133,7 @@ fr:
           description: Le candidat devra fournir une attestation délivrée par un organisme
             en charge de la gestion des congés payés et du chômage intempéries dans
             le secteur du BTP
-        motifs_exclusion_fiscales_et_sociales_pro_btp:
+        motifs_exclusion_sociaux_declarations_pro_btp:
           name: Attestation de régularité des cotisations retraite Pro BTP
           description: Le candidat devra fournir une attestation délivrée par un organisme
             proposant des services de protection sociale dans le secteur du BTP
@@ -366,6 +368,7 @@ fr:
         identite_entreprise_contact: Informations de contact
         motifs_exclusion_condamnations_penales: Condamnation définitive
         motifs_exclusion_fiscales_et_sociales: Obligations fiscales et sociales
+        motifs_exclusion_sociaux_declarations: Obligations fiscales et sociales
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs
         capacite_economique_financiere_chiffre_affaires: Chiffre d'affaires
         capacite_economique_financiere_bilans: Bilans
@@ -468,7 +471,7 @@ fr:
             fournir une attestation de la caisse CIBTP confirmant qu'elle est à jour
             de ses déclarations et cotisations (congés payés et chômage-intempéries),
             conformément au Code du travail.
-        motifs_exclusion_fiscales_et_sociales_pro_btp:
+        motifs_exclusion_sociaux_declarations_pro_btp:
           name: Votre entreprise a t-elle manqué à ses obligations de déclaration
             et paiement  de ses cotisations retraite Pro-BTP ?
           description: Si votre entreprise exerce dans le secteur du BTP, elle doit
@@ -513,7 +516,8 @@ fr:
         capacite_economique_financiere_chiffre_affaires_global_annuel:
           name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
             années
-          description: Indiquez le chiffre d'affaires de votre entreprise au cours des trois années précédentes, en euros. Indiquez également le pourcentage du chiffre d'affaires dans le secteur d'activité concerné par le contrat par rapport au chiffre d'affaires global de votre entreprise.
+          description: Indiquez le chiffre d'affaires de votre entreprise au cours
+            des trois années précédentes, en euros.
         capacite_economique_financiere_chiffre_affaires_domaine_marche:
           name: Le pourcentage du chiffre d'affaires concerné par le type de marché
             public
