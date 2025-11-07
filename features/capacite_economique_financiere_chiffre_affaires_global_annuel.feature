@@ -30,7 +30,7 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
     Then the economic capacity form should be submitted successfully
     And the data should be saved with correct structure
 
-  Scenario: Validation errors for missing required fields
+  Scenario: Allow partial completion with optional fields
     When I visit the economic capacities step
     And I fill in partial turnover data:
       | year   | turnover | percentage | fiscal_year_end |
@@ -38,12 +38,8 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
       | year_2 |          | 80         |                 |
       | year_3 | 400000   | 70         | 2021-12-31      |
     And I click "Suivant"
-    Then I should see validation errors:
-      | error |
-      | year_1.market_percentage is required |
-      | year_2.turnover is required |
-      | year_2.fiscal_year_end is required |
-    And the economic capacity form should not be submitted
+    Then the economic capacity form should be submitted successfully
+    And the data should be saved with partial completion
 
   Scenario: Validation errors for invalid data types
     When I visit the economic capacities step
