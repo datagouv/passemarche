@@ -28,9 +28,20 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
 
       it 'has all defined API jobs in constant' do
         # Ensure we test all jobs in the constant
-        expect(described_class::API_JOBS.count).to eq(6)
+        expect(described_class::API_JOBS.count).to eq(7)
         expect(described_class::API_JOBS)
-          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchChiffresAffairesDataJob)
+          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchCotisationRetraiteDataJob, FetchChiffresAffairesDataJob)
+      end
+    end
+
+    context 'with market that has cotisation_retraite attribute' do
+      it 'spawns FetchCotisationRetraiteDataJob' do
+        cotisation_retraite_attr = create(:market_attribute, api_name: 'cotisation_retraite')
+        public_market.market_attributes << [cotisation_retraite_attr]
+
+        expect(FetchCotisationRetraiteDataJob).to receive(:perform_later).with(market_application.id)
+
+        described_class.perform_now(market_application.id)
       end
     end
 
@@ -45,6 +56,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchRneDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchDgfipDataJob).not_to receive(:perform_later)
         expect(FetchQualibatDataJob).not_to receive(:perform_later)
+        expect(FetchCotisationRetraiteDataJob).not_to receive(:perform_later)
         expect(FetchChiffresAffairesDataJob).not_to receive(:perform_later)
 
         described_class.perform_now(market_application.id)
@@ -61,6 +73,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchRneDataJob).not_to receive(:perform_later)
         expect(FetchDgfipDataJob).not_to receive(:perform_later)
         expect(FetchQualibatDataJob).not_to receive(:perform_later)
+        expect(FetchCotisationRetraiteDataJob).not_to receive(:perform_later)
         expect(FetchChiffresAffairesDataJob).not_to receive(:perform_later)
 
         described_class.perform_now(market_application.id)
