@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Insee::MakeRequest < MakeRequest
+  include SiretHelpers
+
   def call
     validate_credentials
     super
@@ -16,9 +18,5 @@ class Insee::MakeRequest < MakeRequest
     return if Rails.application.credentials.api_entreprise&.token.present?
 
     context.fail!(error: 'Missing API credentials')
-  end
-
-  def siret
-    context.params[:siret]
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Rne::MakeRequest < MakeRequest
+  include SiretHelpers
+
   def call
     validate_credentials
     super
@@ -16,10 +18,5 @@ class Rne::MakeRequest < MakeRequest
     return if Rails.application.credentials.api_entreprise&.token.present?
 
     context.fail!(error: 'Missing API credentials')
-  end
-
-  def siren
-    # Extract SIREN (first 9 digits) from SIRET (14 digits)
-    context.params[:siret][0..8]
   end
 end
