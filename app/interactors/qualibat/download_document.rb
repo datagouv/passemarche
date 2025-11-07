@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Qualibat::DownloadDocument < DownloadDocument
+  include SiretHelpers
+
   protected
 
   def document_url_key
@@ -8,8 +10,6 @@ class Qualibat::DownloadDocument < DownloadDocument
   end
 
   def generate_filename(_uri)
-    siret = context.params[:siret]
-    siren = siret[0..8]
     "certificat_qualibat_#{siren}.pdf"
   end
 end

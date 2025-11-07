@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Dgfip::DownloadDocument < DownloadDocument
+  include SiretHelpers
+
   protected
 
   def document_url_key
@@ -8,7 +10,6 @@ class Dgfip::DownloadDocument < DownloadDocument
   end
 
   def generate_filename(_uri)
-    siren = context.params[:siret][0..8]
     "attestation_fiscale_#{siren}.pdf"
   end
 end
