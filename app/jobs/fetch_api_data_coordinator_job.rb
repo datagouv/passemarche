@@ -9,7 +9,8 @@ class FetchApiDataCoordinatorJob < ApplicationJob
     FetchDgfipDataJob,
     FetchQualibatDataJob,
     FetchProbtpDataJob,
-    FetchChiffresAffairesDataJob
+    FetchChiffresAffairesDataJob,
+    FetchUrssafDataJob
   ].freeze
 
   def perform(market_application_id)
