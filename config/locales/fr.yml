@@ -201,6 +201,7 @@ fr:
       insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"
       rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       qualibat_api_error: "Impossible de récupérer la certification Qualibat de votre entreprise : %{error}"
+      urssaf_api_error: "Impossible de récupérer l'attestation de vigilance URSSAF : %{error}"
       badges:
         data_from_api: "Données récupérées automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
@@ -234,11 +235,18 @@ fr:
             apis:
               - insee
               - rne
+          motifs_exclusion:
+            name: "Motifs d'exclusion"
+            description: "Attestations relatives aux obligations fiscales et sociales"
+            icon: "shield-check-line"
+            order: 2
+            apis:
+              - urssaf_attestation_vigilance
           capacites_economiques:
             name: "Capacités économiques et financières"
             description: "Attestations fiscales et données financières"
             icon: "money-euro-circle-line"
-            order: 2
+            order: 3
             apis:
               - attestations_fiscales
               - probtp
