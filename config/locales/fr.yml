@@ -252,6 +252,7 @@ fr:
             order: 3
             apis:
               - qualibat
+              - qualifelec
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"
