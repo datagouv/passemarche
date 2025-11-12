@@ -34,8 +34,8 @@ class MapApiData < ApplicationInteractor
     response = find_or_initialize_response(market_attribute)
     value = extract_value_from_resource(market_attribute)
 
-    assign_value_to_response(response, value)
     response.source = :auto unless response.manual_after_api_failure?
+    assign_value_to_response(response, value)
 
     # For complex economic capacity responses, allow saving even if incomplete
     # The user will complete the missing data in the form
@@ -47,24 +47,14 @@ class MapApiData < ApplicationInteractor
   end
 
   def assign_value_to_response(response, value)
-    if value.is_a?(Array)
-      attach_multiple_documents_to_response(response, value)
-    elsif value.is_a?(Hash) && value.key?(:io)
+    if value.is_a?(Hash) && value.key?(:io)
       attach_document_to_response(response, value)
+    elsif value.is_a?(Array) && value.all? { |item| item.is_a?(Hash) && item.key?(:io) }
+      attach_multiple_documents_to_response(response, value)
     elsif complex_economic_capacity_response?(response, value)
       assign_parsed_json_value(response, value)
     else
       response.text = value
-    end
-  end
-
-  def attach_multiple_documents_to_response(response, documents)
-    return unless response.respond_to?(:documents)
-
-    documents.each do |document_hash|
-      next unless document_hash.is_a?(Hash) && document_hash.key?(:io)
-
-      attach_document_to_response(response, document_hash)
     end
   end
 
@@ -82,29 +72,49 @@ class MapApiData < ApplicationInteractor
   def attach_document_to_response(response, document_hash)
     return unless response.respond_to?(:documents)
 
-    purge_existing_document(response, document_hash)
+    existing_document = response.documents.find do |doc|
+      doc.metadata['api_name'] == context.api_name
+    end
+
+    existing_document.purge if existing_document.present?
     response.documents.attach(document_hash)
   end
 
-  def purge_existing_document(response, document_hash)
-    existing_document = find_existing_document(response, document_hash)
-    existing_document.purge if existing_document.present?
-  end
+  def attach_multiple_documents_to_response(response, document_hashes)
+    return unless response.respond_to?(:documents)
 
-  def find_existing_document(response, document_hash)
-    if document_hash[:metadata]
-      find_document_by_source(response, document_hash[:metadata][:source])
+    if documents_have_source_metadata?(document_hashes)
+      purge_documents_by_source(response, document_hashes)
     else
-      find_document_by_api_name(response)
+      purge_documents_by_api_name(response)
+    end
+
+    document_hashes.each do |document_hash|
+      response.documents.attach(document_hash)
     end
   end
 
-  def find_document_by_source(response, source)
-    response.documents.find { |doc| doc.metadata['source'] == source }
+  def documents_have_source_metadata?(document_hashes)
+    first_metadata = document_hashes.first&.[](:metadata)
+    first_metadata.is_a?(Hash) && first_metadata[:source].present?
   end
 
-  def find_document_by_api_name(response)
-    response.documents.find { |doc| doc.metadata['api_name'] == context.api_name }
+  def purge_documents_by_source(response, document_hashes)
+    documents_to_purge = document_hashes.filter_map do |document_hash|
+      source = document_hash.dig(:metadata, :source)
+      next if source.blank?
+
+      response.documents.find { |doc| doc.metadata['source'] == source }
+    end
+
+    documents_to_purge.each(&:purge)
+  end
+
+  def purge_documents_by_api_name(response)
+    existing_documents = response.documents.select do |doc|
+      doc.metadata['api_name'] == context.api_name
+    end
+    existing_documents.each(&:purge)
   end
 
   def find_or_initialize_response(market_attribute)
