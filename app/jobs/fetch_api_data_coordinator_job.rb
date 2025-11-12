@@ -9,7 +9,10 @@ class FetchApiDataCoordinatorJob < ApplicationJob
     FetchDgfipDataJob,
     FetchQualibatDataJob,
     FetchProbtpDataJob,
+    FetchFntpDataJob,
+    FetchQualifelecDataJob,
     FetchChiffresAffairesDataJob,
+    FetchCotisationRetraiteDataJob,
     FetchRgeDataJob
   ].freeze
 
