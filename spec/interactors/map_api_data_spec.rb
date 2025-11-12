@@ -330,5 +330,217 @@ RSpec.describe MapApiData, type: :interactor do
         expect(response.documents).to be_attached
       end
     end
+
+    context 'when resource contains an array of documents (cotisation_retraite)' do
+      let(:cibtp_io) { StringIO.new('PDF content CIBTP') }
+      let(:cnetp_io) { StringIO.new('PDF content CNETP') }
+
+      let(:cibtp_document) do
+        {
+          io: cibtp_io,
+          filename: 'attestation_cibtp_41816609600069.pdf',
+          content_type: 'application/pdf',
+          metadata: { source: 'api_cibtp', api_name: 'cibtp' }
+        }
+      end
+
+      let(:cnetp_document) do
+        {
+          io: cnetp_io,
+          filename: 'attestation_cnetp_418166096.pdf',
+          content_type: 'application/pdf',
+          metadata: { source: 'api_cnetp', api_name: 'cnetp' }
+        }
+      end
+
+      let(:resource) { Resource.new(documents: [cibtp_document, cnetp_document]) }
+      let(:api_name) { 'cotisation_retraite' }
+
+      let!(:cotisation_retraite_attribute) do
+        create(:market_attribute, :radio_with_justification_required, :from_api,
+          key: 'motifs_exclusion_fiscales_et_sociales_cibtp_cnetp',
+          api_name: 'cotisation_retraite',
+          api_key: 'documents',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates market_attribute_response for the documents' do
+        expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+      end
+
+      it 'attaches both documents to the response' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+        expect(response.documents).to be_attached
+        expect(response.documents.count).to eq(2)
+      end
+
+      it 'attaches CIBTP document with correct filename' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+        cibtp_doc = response.documents.find { |d| d.filename.to_s.include?('cibtp') }
+        expect(cibtp_doc.filename.to_s).to eq('attestation_cibtp_41816609600069.pdf')
+      end
+
+      it 'attaches CNETP document with correct filename' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+        cnetp_doc = response.documents.find { |d| d.filename.to_s.include?('cnetp') }
+        expect(cnetp_doc.filename.to_s).to eq('attestation_cnetp_418166096.pdf')
+      end
+
+      it 'sets source to auto' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+        expect(response.source).to eq('auto')
+      end
+
+      context 'when only CIBTP document is present' do
+        let(:resource) { Resource.new(documents: [cibtp_document]) }
+
+        it 'attaches only the CIBTP document' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+          expect(response.documents.count).to eq(1)
+          expect(response.documents.first.filename.to_s).to include('cibtp')
+        end
+      end
+
+      context 'when only CNETP document is present' do
+        let(:resource) { Resource.new(documents: [cnetp_document]) }
+
+        it 'attaches only the CNETP document' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+          expect(response.documents.count).to eq(1)
+          expect(response.documents.first.filename.to_s).to include('cnetp')
+        end
+      end
+
+      context 'when response already exists with one document and we re-attach both' do
+        before do
+          # First call - attach only CIBTP
+          described_class.call(
+            market_application:,
+            api_name: 'cotisation_retraite',
+            bundled_data: BundledData.new(
+              data: Resource.new(documents: [cibtp_document]),
+              context: {}
+            )
+          )
+        end
+
+        it 'replaces old CIBTP document and adds new CNETP document' do
+          # Second call - attach both CIBTP (updated) and CNETP (new)
+          new_cibtp_io = StringIO.new('NEW PDF content CIBTP')
+          updated_cibtp_document = {
+            io: new_cibtp_io,
+            filename: 'attestation_cibtp_updated.pdf',
+            content_type: 'application/pdf',
+            metadata: { source: 'api_cibtp', api_name: 'cibtp' }
+          }
+
+          described_class.call(
+            market_application:,
+            api_name: 'cotisation_retraite',
+            bundled_data: BundledData.new(
+              data: Resource.new(documents: [updated_cibtp_document, cnetp_document]),
+              context: {}
+            )
+          )
+
+          response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+          expect(response.documents.count).to eq(2)
+
+          # Verify old CIBTP was purged and new one attached
+          cibtp_doc = response.documents.find { |d| d.filename.to_s.include?('cibtp') }
+          expect(cibtp_doc.filename.to_s).to eq('attestation_cibtp_updated.pdf')
+
+          # Verify CNETP was added
+          cnetp_doc = response.documents.find { |d| d.filename.to_s.include?('cnetp') }
+          expect(cnetp_doc).to be_present
+        end
+      end
+
+      context 'when response already exists with both documents and we update one' do
+        before do
+          # First call - attach both documents
+          described_class.call(
+            market_application:,
+            api_name: 'cotisation_retraite',
+            bundled_data: BundledData.new(
+              data: Resource.new(documents: [cibtp_document, cnetp_document]),
+              context: {}
+            )
+          )
+        end
+
+        it 'updates only the CIBTP document, keeps CNETP unchanged' do
+          # Second call - update only CIBTP
+          new_cibtp_io = StringIO.new('UPDATED PDF content CIBTP')
+          updated_cibtp_document = {
+            io: new_cibtp_io,
+            filename: 'attestation_cibtp_v2.pdf',
+            content_type: 'application/pdf',
+            metadata: { source: 'api_cibtp', api_name: 'cibtp' }
+          }
+
+          described_class.call(
+            market_application:,
+            api_name: 'cotisation_retraite',
+            bundled_data: BundledData.new(
+              data: Resource.new(documents: [updated_cibtp_document]),
+              context: {}
+            )
+          )
+
+          response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+          expect(response.documents.count).to eq(2)
+
+          # Verify CIBTP was updated
+          cibtp_doc = response.documents.find { |d| d.filename.to_s.include?('cibtp') }
+          expect(cibtp_doc.filename.to_s).to eq('attestation_cibtp_v2.pdf')
+
+          # Verify CNETP was preserved (still has original filename)
+          cnetp_doc = response.documents.find { |d| d.filename.to_s.include?('cnetp') }
+          expect(cnetp_doc.filename.to_s).to eq('attestation_cnetp_418166096.pdf')
+        end
+
+        it 'updates only the CNETP document, keeps CIBTP unchanged' do
+          # Second call - update only CNETP
+          new_cnetp_io = StringIO.new('UPDATED PDF content CNETP')
+          updated_cnetp_document = {
+            io: new_cnetp_io,
+            filename: 'attestation_cnetp_v2.pdf',
+            content_type: 'application/pdf',
+            metadata: { source: 'api_cnetp', api_name: 'cnetp' }
+          }
+
+          described_class.call(
+            market_application:,
+            api_name: 'cotisation_retraite',
+            bundled_data: BundledData.new(
+              data: Resource.new(documents: [updated_cnetp_document]),
+              context: {}
+            )
+          )
+
+          response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
+          expect(response.documents.count).to eq(2)
+
+          # Verify CIBTP was preserved (still has original filename)
+          cibtp_doc = response.documents.find { |d| d.filename.to_s.include?('cibtp') }
+          expect(cibtp_doc.filename.to_s).to eq('attestation_cibtp_41816609600069.pdf')
+
+          # Verify CNETP was updated
+          cnetp_doc = response.documents.find { |d| d.filename.to_s.include?('cnetp') }
+          expect(cnetp_doc.filename.to_s).to eq('attestation_cnetp_v2.pdf')
+        end
+      end
+    end
   end
 end
