@@ -133,10 +133,15 @@ class DownloadDocument < ApplicationInteractor
   end
 
   def valid_pdf?(body)
-    body.start_with?('%PDF-')
+    binary_body = body.dup.force_encoding('ASCII-8BIT')
+    pdf_header = '%PDF-'.dup.force_encoding('ASCII-8BIT')
+    binary_body.start_with?(pdf_header)
   end
 
   def valid_image?(body)
-    body.start_with?("\xFF\xD8\xFF", "\x89PNG")
+    binary_body = body.dup.force_encoding('ASCII-8BIT')
+    jpeg_header = "\xFF\xD8\xFF".dup.force_encoding('ASCII-8BIT')
+    png_header = "\x89PNG".dup.force_encoding('ASCII-8BIT')
+    binary_body.start_with?(jpeg_header, png_header)
   end
 end

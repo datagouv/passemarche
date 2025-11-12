@@ -140,7 +140,7 @@ RSpec.describe Qualifelec::DownloadDocument, type: :interactor do
       end
 
       it 'includes validation error' do
-        expect(subject.error).to include('not a valid image')
+        expect(subject.error).to include('not a valid PDF or image')
       end
     end
 

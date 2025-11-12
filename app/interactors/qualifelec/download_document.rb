@@ -48,7 +48,7 @@ class Qualifelec::DownloadDocument < DownloadDocument
   def download_single_document(url, index)
     uri = URI(url)
     response = perform_http_request(uri)
-    validate_image_content!(response.body)
+    validate_pdf_content!(response.body)
     build_document_hash(response, uri, index)
   end
 
@@ -69,17 +69,5 @@ class Qualifelec::DownloadDocument < DownloadDocument
 
   def storage_key
     :documents
-  end
-
-  def validate_image_content!(body)
-    raise "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
-
-    binary_body = body.dup.force_encoding('ASCII-8BIT')
-    jpeg_header = "\xFF\xD8\xFF".dup.force_encoding('ASCII-8BIT')
-    png_header = "\x89PNG".dup.force_encoding('ASCII-8BIT')
-
-    return if binary_body.start_with?(jpeg_header, png_header)
-
-    raise 'Downloaded file is not a valid image (missing valid image header)'
   end
 end
