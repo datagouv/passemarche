@@ -28,9 +28,9 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
 
       it 'has all defined API jobs in constant' do
         # Ensure we test all jobs in the constant
-        expect(described_class::API_JOBS.count).to eq(8)
+        expect(described_class::API_JOBS.count).to eq(10)
         expect(described_class::API_JOBS)
-          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchFntpDataJob, FetchChiffresAffairesDataJob, FetchRgeDataJob)
+          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchFntpDataJob, FetchQualifelecDataJob, FetchChiffresAffairesDataJob, FetchCotisationRetraiteDataJob, FetchRgeDataJob)
       end
     end
 
