@@ -126,8 +126,17 @@ class DownloadDocument < ApplicationInteractor
   def validate_pdf_content!(body)
     raise "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
 
-    return if body.start_with?('%PDF-')
+    return if valid_pdf?(body)
+    return if valid_image?(body)
 
-    raise 'Downloaded file is not a valid PDF (missing PDF header)'
+    raise 'Downloaded file is not a valid PDF or image (missing valid file header)'
+  end
+
+  def valid_pdf?(body)
+    body.start_with?('%PDF-')
+  end
+
+  def valid_image?(body)
+    body.start_with?("\xFF\xD8\xFF", "\x89PNG")
   end
 end
