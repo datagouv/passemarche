@@ -38,5 +38,9 @@ FactoryBot.define do
     factory :market_attribute_response_radio_with_file_and_text, class: 'MarketAttributeResponse::RadioWithFileAndText' do
       association :market_attribute, :radio_with_file_and_text
     end
+
+    factory :market_attribute_response_radio_with_justification_required, class: 'MarketAttributeResponse::RadioWithJustificationRequired' do
+      association :market_attribute, :radio_with_justification_required
+    end
   end
 end
