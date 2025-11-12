@@ -174,7 +174,6 @@ fr:
         capacite_economique_financiere_assurance_risques_professionnels:
           extra: Je certifie que mon entreprise est à jour de ses obligations d'assurance
         capacite_economique_financiere_chiffre_affaires_global_annuel:
-          notice: Certaines informations ont été automatiquement récupérées via les services de l'administration. Ces données sont pré-remplies et ne peuvent pas être modifiées.
           table_headers:
             year: "Année"
             turnover: "Chiffre d'affaires (€)"
@@ -244,7 +243,6 @@ fr:
               - attestations_fiscales
               - probtp
               - dgfip_chiffres_affaires
-              - cotisation_retraite
           capacites_techniques_professionnelles:
             name: "Capacités techniques et professionnelles"
             description: "Certifications professionnelles et qualifications techniques de votre entreprise"
@@ -252,7 +250,7 @@ fr:
             order: 3
             apis:
               - qualibat
-              - qualifelec
+              - rge
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"

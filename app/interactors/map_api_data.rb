@@ -34,8 +34,8 @@ class MapApiData < ApplicationInteractor
     response = find_or_initialize_response(market_attribute)
     value = extract_value_from_resource(market_attribute)
 
-    response.source = :auto unless response.manual_after_api_failure?
     assign_value_to_response(response, value)
+    response.source = :auto unless response.manual_after_api_failure?
 
     # For complex economic capacity responses, allow saving even if incomplete
     # The user will complete the missing data in the form
@@ -47,10 +47,10 @@ class MapApiData < ApplicationInteractor
   end
 
   def assign_value_to_response(response, value)
-    if value.is_a?(Hash) && value.key?(:io)
+    if value.is_a?(Array) && value.first.is_a?(Hash) && value.first.key?(:io)
+      attach_documents_to_response(response, value)
+    elsif value.is_a?(Hash) && value.key?(:io)
       attach_document_to_response(response, value)
-    elsif value.is_a?(Array) && value.all? { |item| item.is_a?(Hash) && item.key?(:io) }
-      attach_multiple_documents_to_response(response, value)
     elsif complex_economic_capacity_response?(response, value)
       assign_parsed_json_value(response, value)
     else
@@ -80,16 +80,16 @@ class MapApiData < ApplicationInteractor
     response.documents.attach(document_hash)
   end
 
-  def attach_multiple_documents_to_response(response, document_hashes)
+  def attach_documents_to_response(response, documents_array)
     return unless response.respond_to?(:documents)
 
-    if documents_have_source_metadata?(document_hashes)
-      purge_documents_by_source(response, document_hashes)
+    if documents_have_source_metadata?(documents_array)
+      purge_documents_by_source(response, documents_array)
     else
       purge_documents_by_api_name(response)
     end
 
-    document_hashes.each do |document_hash|
+    documents_array.each do |document_hash|
       response.documents.attach(document_hash)
     end
   end
