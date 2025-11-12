@@ -15,22 +15,24 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         dgfip_attr = create(:market_attribute, api_name: 'attestations_fiscales')
         dgfip_chiffres_affaires_attr = create(:market_attribute, api_name: 'dgfip_chiffres_affaires')
         qualibat_attr = create(:market_attribute, api_name: 'qualibat')
-        public_market.market_attributes << [insee_attr, rne_attr, dgfip_attr, dgfip_chiffres_affaires_attr, qualibat_attr]
+        urssaf_attr = create(:market_attribute, api_name: 'urssaf_attestation_vigilance')
+        public_market.market_attributes << [insee_attr, rne_attr, dgfip_attr, dgfip_chiffres_affaires_attr, qualibat_attr, urssaf_attr]
 
         expect(FetchInseeDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchRneDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchDgfipDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchChiffresAffairesDataJob).to receive(:perform_later).with(market_application.id)
         expect(FetchQualibatDataJob).to receive(:perform_later).with(market_application.id)
+        expect(FetchUrssafDataJob).to receive(:perform_later).with(market_application.id)
 
         described_class.perform_now(market_application.id)
       end
 
       it 'has all defined API jobs in constant' do
         # Ensure we test all jobs in the constant
-        expect(described_class::API_JOBS.count).to eq(6)
+        expect(described_class::API_JOBS.count).to eq(7)
         expect(described_class::API_JOBS)
-          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchChiffresAffairesDataJob)
+          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchChiffresAffairesDataJob, FetchUrssafDataJob)
       end
     end
 
@@ -46,6 +48,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchDgfipDataJob).not_to receive(:perform_later)
         expect(FetchQualibatDataJob).not_to receive(:perform_later)
         expect(FetchChiffresAffairesDataJob).not_to receive(:perform_later)
+        expect(FetchUrssafDataJob).not_to receive(:perform_later)
 
         described_class.perform_now(market_application.id)
       end
@@ -62,6 +65,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchDgfipDataJob).not_to receive(:perform_later)
         expect(FetchQualibatDataJob).not_to receive(:perform_later)
         expect(FetchChiffresAffairesDataJob).not_to receive(:perform_later)
+        expect(FetchUrssafDataJob).not_to receive(:perform_later)
 
         described_class.perform_now(market_application.id)
       end
