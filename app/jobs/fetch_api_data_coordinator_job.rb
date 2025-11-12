@@ -11,6 +11,7 @@ class FetchApiDataCoordinatorJob < ApplicationJob
     FetchProbtpDataJob,
     FetchFntpDataJob,
     FetchQualifelecDataJob,
+    FetchOpqibiDataJob,
     FetchChiffresAffairesDataJob,
     FetchCotisationRetraiteDataJob,
     FetchRgeDataJob
