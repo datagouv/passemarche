@@ -61,6 +61,7 @@
                           <td>
                             <% if fiscal_year_end_from_api %>
                               <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
+                              <span class="fr-icon-checkbox-circle-fill fr-icon--sm fr-ml-1w" style="color: #18753C;" title="Récupéré automatiquement" aria-label="Récupéré automatiquement"></span>
                             <% elsif year_data['fiscal_year_end'].present? %>
                               <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
                             <% else %>
