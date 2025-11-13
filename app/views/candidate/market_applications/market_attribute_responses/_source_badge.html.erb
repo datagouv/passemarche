@@ -2,12 +2,16 @@
   # Display badge indicating data source for market attribute response
   # @param market_attribute_response [MarketAttributeResponse] The response to show badge for
 %>
+
 <% if market_attribute_response.auto? %>
-  <span class="fr-badge fr-badge--success fr-ml-1w">
-    <%= t('candidate.market_applications.badges.data_from_api') %>
-  </span>
-<% elsif market_attribute_response.manual_after_api_failure? %>
-  <span class="fr-badge fr-badge--warning fr-ml-1w">
-    <%= t('candidate.market_applications.badges.data_filled_after_api_failure') %>
-  </span>
+  <% if local_assigns[:inline] %>
+    <span class="fr-badge fr-badge--success fr-badge--sm">
+      <%= t('candidate.market_applications.badges.data_from_api') %>
+    </span>
+  <% else %>
+    <br>
+    <span class="fr-badge fr-badge--success fr-badge--sm">
+      <%= t('candidate.market_applications.badges.data_from_api') %>
+    </span>
+  <% end %>
 <% end %>
