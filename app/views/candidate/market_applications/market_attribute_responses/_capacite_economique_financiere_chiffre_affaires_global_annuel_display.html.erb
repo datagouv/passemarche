@@ -6,75 +6,104 @@
   context ||= :web
 %>
 
+<% if context != :web %>
+  <style>
+    table.ca-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5em;
+      font-size: 12px;
+    }
+    table.ca-table th, table.ca-table td {
+      border: 1px solid #333;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    table.ca-table th {
+      background: #f2f2f2;
+      font-weight: bold;
+    }
+    table.ca-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+  </style>
+<% end %>
+
 <div class="field-layout-container">
   <div class="field-layout-content">
+
     <strong>
       <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
     </strong>
 
     <% if has_data %>
       <br>
-
-      <div class="fr-table fr-mt-2w">
-          <div class="fr-table__wrapper">
-            <div class="fr-table__container">
-              <div class="fr-table__content">
-                <table>
-                  <thead>
+        <div class="fr-table__container">
+          <div class="fr-table__content">
+            <table class="<%= context != :web ? 'ca-table' : 'fr-table' %>" style="<%= context == :web ? 'border:1px solid #ddd;width:100%;' : '' %>">
+              <thead>
+                <tr>
+                  <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.year') %></th>
+                  <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.turnover') %></th>
+                  <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.market_percentage') %></th>
+                  <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.fiscal_year_end') %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% %w[year_1 year_2 year_3].each_with_index do |year_key, index| %>
+                  <% year_data = value_data[year_key] || {} %>
+                  <% if year_data.present? %>
+                    <%
+                      api_fields = value_data['_api_fields'] || {}
+                      year_api_fields = api_fields[year_key] || []
+                      turnover_from_api = is_auto && year_api_fields.include?('turnover')
+                      fiscal_year_end_from_api = is_auto && year_api_fields.include?('fiscal_year_end')
+                    %>
                     <tr>
-                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.year') %></th>
-                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.turnover') %></th>
-                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.market_percentage') %></th>
-                      <th scope="col"><%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.table_headers.fiscal_year_end') %></th>
+                      <td>
+                        <strong><%= t("candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.year_labels.#{year_key}", default: "Année #{index + 1}") %></strong>
+                      </td>
+                      <td>
+                        <% if turnover_from_api && context != :buyer %>
+                          <span class="fr-badge fr-badge--success fr-badge--sm">Récupéré automatiquement</span>
+                        <% elsif year_data['turnover'].present? %>
+                          <%= number_with_delimiter(year_data['turnover'], delimiter: ' ') %> €
+                          <%if context == :buyer %>
+                            <span class="fr-badge fr-badge--success fr-badge--sm">Récupéré automatiquement</span>
+                          <% end %>
+                        <% else %>
+                          <span class="fr-text--mention-grey">Non renseigné</span>
+                        <% end %>
+                      </td>
+                      <td>
+                        <% if year_data['market_percentage'].present? %>
+                          <%= year_data['market_percentage'] %> %
+                        <% else %>
+                          <span class="fr-text--mention-grey">Non renseigné</span>
+                        <% end %>
+                      </td>
+                      <td>
+                        <% if fiscal_year_end_from_api %>
+                          <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
+                          <% if context == :web %>
+                            <span class="fr-icon-checkbox-circle-fill fr-icon--sm fr-ml-1w"
+                                  style="color: #18753C;"
+                                  title="Récupéré automatiquement"
+                                  aria-label="Récupéré automatiquement"></span>
+                          <% else %>
+                            <span style="color:#18753C;font-weight:bold;margin-left:4px;">✓</span>
+                          <% end %>
+                        <% elsif year_data['fiscal_year_end'].present? %>
+                          <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
+                        <% else %>
+                          <span class="fr-text--mention-grey">Non renseigné</span>
+                        <% end %>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <% %w[year_1 year_2 year_3].each_with_index do |year_key, index| %>
-                      <% year_data = value_data[year_key] || {} %>
-                      <% if year_data.present? %>
-                        <%
-                          api_fields = value_data['_api_fields'] || {}
-                          year_api_fields = api_fields[year_key] || []
-                          turnover_from_api = is_auto && year_api_fields.include?('turnover')
-                          fiscal_year_end_from_api = is_auto && year_api_fields.include?('fiscal_year_end')
-                        %>
-                        <tr>
-                          <td>
-                            <strong><%= t("candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.year_labels.#{year_key}", default: "Année #{index + 1}") %></strong>
-                          </td>
-                          <td>
-                            <% if turnover_from_api && context != :buyer %>
-                              <div class="fr-badge fr-badge--success fr-badge--sm">Récupéré automatiquement</div>
-                            <% elsif year_data['turnover'].present? %>
-                              <%= number_with_delimiter(year_data['turnover'], delimiter: ' ') %> €
-                            <% else %>
-                              <span class="fr-text--mention-grey">Non renseigné</span>
-                            <% end %>
-                          </td>
-                          <td>
-                            <% if year_data['market_percentage'].present? %>
-                              <%= year_data['market_percentage'] %> %
-                            <% else %>
-                              <span class="fr-text--mention-grey">Non renseigné</span>
-                            <% end %>
-                          </td>
-                          <td>
-                            <% if fiscal_year_end_from_api %>
-                              <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
-                              <span class="fr-icon-checkbox-circle-fill fr-icon--sm fr-ml-1w" style="color: #18753C;" title="Récupéré automatiquement" aria-label="Récupéré automatiquement"></span>
-                            <% elsif year_data['fiscal_year_end'].present? %>
-                              <%= l(Date.parse(year_data['fiscal_year_end']), format: :default) rescue year_data['fiscal_year_end'] %>
-                            <% else %>
-                              <span class="fr-text--mention-grey">Non renseigné</span>
-                            <% end %>
-                          </td>
-                        </tr>
-                      <% end %>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                  <% end %>
+                <% end %>
+              </tbody>
+            </table>
           </div>
         </div>
       <% else %>
