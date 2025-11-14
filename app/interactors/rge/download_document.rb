@@ -31,15 +31,21 @@ class Rge::DownloadDocument < ApplicationInteractor
   def download_all_certificates
     certificates = bundled_data.documents
 
+    # If API returns no certificates, that's valid - succeed with empty array
+    return bundled_data.deep_merge!(documents: []) if certificates.empty?
+
     downloaded_documents = certificates.map.with_index do |cert, index|
       download_single_certificate(cert, index)
     end.compact
 
-    bundled_data.deep_merge!(
-      documents: downloaded_documents
-    )
-  rescue StandardError => e
-    context.fail!(error: "Failed to download RGE certificates: #{e.message}")
+    # Fail only if API returned certificates but we couldn't download any
+    if downloaded_documents.empty?
+      context.fail!(error: 'Failed to download any RGE certificates')
+    else
+      bundled_data.deep_merge!(
+        documents: downloaded_documents
+      )
+    end
   end
 
   def download_single_certificate(cert, index)
