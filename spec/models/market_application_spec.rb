@@ -370,4 +370,129 @@ RSpec.describe MarketApplication, type: :model do
     # accepts_nested_attributes_for implementation which automatically builds
     # the correct STI class based on the 'type' parameter
   end
+
+  describe 'context-aware validation' do
+    let(:public_market) do
+      create(:public_market, :completed, editor:).tap do |market|
+        # Create attributes for two different steps
+        create(:market_attribute, :text_input, public_markets: [market],
+          subcategory_key: 'step_one',
+          required: true)
+        create(:market_attribute, :text_input, public_markets: [market],
+          subcategory_key: 'step_two',
+          required: true)
+      end
+    end
+
+    let(:application) { create(:market_application, public_market:, siret: '12345678901234') }
+
+    let(:step_one_attribute) { public_market.market_attributes.find_by(subcategory_key: 'step_one') }
+    let(:step_two_attribute) { public_market.market_attributes.find_by(subcategory_key: 'step_two') }
+
+    before do
+      # Create invalid responses for both steps (bypass validation during creation)
+      response_one = application.market_attribute_responses.build(
+        market_attribute: step_one_attribute,
+        type: 'TextInput',
+        value: {}, # Empty, will fail validation
+        source: :manual
+      )
+      response_one.save(validate: false)
+
+      response_two = application.market_attribute_responses.build(
+        market_attribute: step_two_attribute,
+        type: 'TextInput',
+        value: {}, # Empty, will fail validation
+        source: :manual
+      )
+      response_two.save(validate: false)
+
+      # Reload to ensure associations are fresh
+      application.reload
+    end
+
+    it 'sets current_validation_step when validating with context' do
+      expect(application.current_validation_step).to be_nil
+
+      application.valid?(:step_one)
+
+      expect(application.current_validation_step).to eq(:step_one)
+    end
+
+    it 'only validates responses for the current step' do
+      # When validating step_one, only step_one response should cause errors
+      expect(application.valid?(:step_one)).to be false
+      expect(application.errors[:siret]).to be_empty
+      expect(application.errors.messages.keys.map(&:to_s)).to include('market_attribute_responses.text')
+    end
+
+    it 'does not validate responses from other steps' do
+      # Clear errors and validate step_one with valid data
+      step_one_response = application.market_attribute_responses.find_by(market_attribute: step_one_attribute)
+      step_one_response.update_column(:value, { 'text' => 'valid text' })
+
+      # Now step_one validation should pass even though step_two response is invalid
+      expect(application.valid?(:step_one)).to be true
+    end
+
+    it 'skips validation for responses not in the current step' do
+      step_two_response = application.market_attribute_responses.find_by(market_attribute: step_two_attribute)
+
+      # When validating step_one, step_two response should not be validated
+      application.valid?(:step_one)
+
+      expect(step_two_response.should_validate_for_current_step?).to be false
+    end
+
+    it 'validates responses in the current step' do
+      step_one_response = application.market_attribute_responses.find_by(market_attribute: step_one_attribute)
+
+      application.valid?(:step_one)
+
+      expect(step_one_response.should_validate_for_current_step?).to be true
+    end
+
+    it 'matches responses by subcategory_key not category_key' do # rubocop:disable Metrics/BlockLength
+      # Create two attributes with the same category but different subcategories
+      same_category_attr1 = create(:market_attribute, :text_input,
+        public_markets: [public_market],
+        category_key: 'identite', # Same category
+        subcategory_key: 'subcategory_a', # Different subcategory
+        required: true)
+
+      same_category_attr2 = create(:market_attribute, :text_input,
+        public_markets: [public_market],
+        category_key: 'identite', # Same category
+        subcategory_key: 'subcategory_b', # Different subcategory
+        required: true)
+
+      # Create responses for both
+      response_a = application.market_attribute_responses.build(
+        market_attribute: same_category_attr1,
+        type: 'TextInput',
+        value: {},
+        source: :manual
+      )
+      response_a.save(validate: false)
+
+      response_b = application.market_attribute_responses.build(
+        market_attribute: same_category_attr2,
+        type: 'TextInput',
+        value: {},
+        source: :manual
+      )
+      response_b.save(validate: false)
+
+      application.reload
+
+      # Validate only subcategory_a
+      application.valid?(:subcategory_a)
+
+      # Response A should be validated (belongs to subcategory_a)
+      expect(response_a.should_validate_for_current_step?).to be true
+
+      # Response B should NOT be validated (belongs to subcategory_b, even though same category)
+      expect(response_b.should_validate_for_current_step?).to be false
+    end
+  end
 end

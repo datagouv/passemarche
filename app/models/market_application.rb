@@ -14,6 +14,8 @@ class MarketApplication < ApplicationRecord
 
   accepts_nested_attributes_for :market_attribute_responses, allow_destroy: true, reject_if: :all_blank
 
+  attr_accessor :current_validation_step
+
   validates :identifier, presence: true, uniqueness: true
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
   validates :subject_to_prohibition, inclusion: { in: [true, false], allow_nil: true }
@@ -52,6 +54,24 @@ class MarketApplication < ApplicationRecord
       .where.not(api_name: nil)
       .distinct
       .pluck(:api_name)
+  end
+
+  def valid?(context = nil)
+    self.current_validation_step = context
+    super
+  end
+
+  def response_ids_for_step(step_name)
+    return [] if step_name.blank?
+
+    step_attributes = public_market.market_attributes
+      .where(subcategory_key: step_name.to_s)
+
+    attribute_ids = step_attributes.pluck(:id)
+
+    market_attribute_responses
+      .select { |r| attribute_ids.include?(r.market_attribute_id) }
+      .map(&:id)
   end
 
   private
