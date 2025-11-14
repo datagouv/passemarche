@@ -141,15 +141,12 @@ RSpec.describe Rge::DownloadDocument, type: :interactor do
           .to_return(status: 500, body: 'Server Error')
       end
 
-      it 'succeeds (best-effort approach)' do
-        expect(subject).to be_success
+      it 'fails' do
+        expect(subject).to be_failure
       end
 
-      it 'results in empty documents array' do
-        result = subject
-        documents = result.bundled_data.data.documents
-
-        expect(documents).to be_empty
+      it 'includes error message' do
+        expect(subject.error).to eq('Failed to download any RGE certificates')
       end
     end
 
@@ -220,7 +217,7 @@ RSpec.describe Rge::DownloadDocument, type: :interactor do
       end
     end
 
-    context 'when downloaded content is not a valid PDF' do
+    context 'when one downloaded file is not a valid PDF' do
       before do
         stub_request(:get, cert1_url)
           .to_return(
@@ -237,16 +234,42 @@ RSpec.describe Rge::DownloadDocument, type: :interactor do
           )
       end
 
-      it 'succeeds (best-effort)' do
+      it 'succeeds with valid documents only' do
         expect(subject).to be_success
       end
 
-      it 'skips invalid documents and keeps valid ones' do
+      it 'includes only valid documents' do
         result = subject
         documents = result.bundled_data.data.documents
 
         expect(documents.size).to eq(1)
         expect(documents[0][:filename]).to eq("certificat_rge_#{siret}_qualipv-elec.pdf")
+      end
+    end
+
+    context 'when all downloaded files are invalid' do
+      before do
+        stub_request(:get, cert1_url)
+          .to_return(
+            status: 200,
+            body: 'Not a PDF - just HTML error page content that is long enough to pass minimum size validation requiring 100 bytes',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
+
+        stub_request(:get, cert2_url)
+          .to_return(
+            status: 200,
+            body: 'Also not a PDF - HTML content that is long enough to pass the minimum size check requiring over 100 bytes',
+            headers: { 'Content-Type' => 'application/pdf' }
+          )
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'includes error message' do
+        expect(subject.error).to eq('Failed to download any RGE certificates')
       end
     end
 

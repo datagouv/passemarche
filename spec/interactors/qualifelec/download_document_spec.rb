@@ -116,21 +116,81 @@ RSpec.describe Qualifelec::DownloadDocument, type: :interactor do
           )
       end
 
+      it 'succeeds with partial results' do
+        expect(subject).to be_success
+      end
+
+      it 'includes only successfully downloaded documents' do
+        result = subject
+        documents = result.bundled_data.data.documents
+
+        expect(documents.size).to eq(1)
+        expect(documents[0][:io]).to be_a(StringIO)
+        expect(documents[0][:filename]).to eq("certificat_qualifelec_#{siren}_2.jpg")
+      end
+    end
+
+    context 'when all document downloads fail' do
+      before do
+        stub_request(:get, document_url_1)
+          .to_return(status: 404, body: 'Not Found')
+
+        stub_request(:get, document_url_2)
+          .to_return(status: 500, body: 'Server Error')
+      end
+
       it 'fails' do
         expect(subject).to be_failure
       end
 
       it 'includes error message' do
-        expect(subject.error).to include('Failed to download document')
+        expect(subject.error).to eq('Failed to download any documents')
       end
     end
 
-    context 'when downloaded file is not a valid image' do
+    context 'when one downloaded file is not a valid image' do
       before do
         stub_request(:get, document_url_1)
           .to_return(
             status: 200,
             body: 'Not an image - just some HTML error page content that is long enough to pass size check requiring over 100 bytes',
+            headers: { 'Content-Type' => 'image/jpeg' }
+          )
+
+        stub_request(:get, document_url_2)
+          .to_return(
+            status: 200,
+            body: document_body_2,
+            headers: { 'Content-Type' => 'image/jpeg' }
+          )
+      end
+
+      it 'succeeds with valid documents only' do
+        expect(subject).to be_success
+      end
+
+      it 'includes only valid documents' do
+        result = subject
+        documents = result.bundled_data.data.documents
+
+        expect(documents.size).to eq(1)
+        expect(documents[0][:filename]).to eq("certificat_qualifelec_#{siren}_2.jpg")
+      end
+    end
+
+    context 'when all downloaded files are invalid' do
+      before do
+        stub_request(:get, document_url_1)
+          .to_return(
+            status: 200,
+            body: 'Not an image - just some HTML error page content that is long enough to pass size check requiring over 100 bytes',
+            headers: { 'Content-Type' => 'image/jpeg' }
+          )
+
+        stub_request(:get, document_url_2)
+          .to_return(
+            status: 200,
+            body: 'Also not an image - HTML content that is long enough to pass the minimum size check requiring over 100 bytes',
             headers: { 'Content-Type' => 'image/jpeg' }
           )
       end
@@ -139,8 +199,8 @@ RSpec.describe Qualifelec::DownloadDocument, type: :interactor do
         expect(subject).to be_failure
       end
 
-      it 'includes validation error' do
-        expect(subject.error).to include('not a valid PDF or image')
+      it 'includes error message' do
+        expect(subject.error).to eq('Failed to download any documents')
       end
     end
 

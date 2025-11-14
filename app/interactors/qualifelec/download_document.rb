@@ -34,15 +34,20 @@ class Qualifelec::DownloadDocument < DownloadDocument
 
   def download_and_store_document
     document_urls = bundled_data.public_send(document_url_key)
+
+    # If API returns no documents, that's valid - succeed with empty array
     return store_documents([]) if document_urls.empty?
 
-    downloaded_files = document_urls.each_with_index.map do |url, index|
+    downloaded_files = document_urls.each_with_index.filter_map do |url, index|
       download_single_document(url, index + 1)
     end
 
-    store_documents(downloaded_files)
-  rescue StandardError => e
-    context.fail!(error: "Failed to download document: #{e.message}")
+    # Fail only if API returned documents but we couldn't download any
+    if downloaded_files.empty?
+      context.fail!(error: 'Failed to download any documents')
+    else
+      store_documents(downloaded_files)
+    end
   end
 
   def download_single_document(url, index)
@@ -50,6 +55,9 @@ class Qualifelec::DownloadDocument < DownloadDocument
     response = perform_http_request(uri)
     validate_pdf_content!(response.body)
     build_document_hash(response, uri, index)
+  rescue StandardError => e
+    Rails.logger.warn("Failed to download document from #{url}: #{e.message}")
+    nil
   end
 
   def build_document_hash(response, uri, index)
