@@ -28,9 +28,9 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
 
       it 'has all defined API jobs in constant' do
         # Ensure we test all jobs in the constant
-        expect(described_class::API_JOBS.count).to eq(10)
+        expect(described_class::API_JOBS.count).to eq(11)
         expect(described_class::API_JOBS)
-          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchFntpDataJob, FetchQualifelecDataJob, FetchChiffresAffairesDataJob, FetchCotisationRetraiteDataJob, FetchRgeDataJob)
+          .to include(FetchInseeDataJob, FetchRneDataJob, FetchDgfipDataJob, FetchQualibatDataJob, FetchProbtpDataJob, FetchFntpDataJob, FetchQualifelecDataJob, FetchOpqibiDataJob, FetchChiffresAffairesDataJob, FetchCotisationRetraiteDataJob, FetchRgeDataJob)
       end
     end
 
@@ -46,6 +46,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchDgfipDataJob).not_to receive(:perform_later)
         expect(FetchQualibatDataJob).not_to receive(:perform_later)
         expect(FetchChiffresAffairesDataJob).not_to receive(:perform_later)
+        expect(FetchOpqibiDataJob).not_to receive(:perform_later)
 
         described_class.perform_now(market_application.id)
       end
@@ -62,6 +63,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
         expect(FetchDgfipDataJob).not_to receive(:perform_later)
         expect(FetchQualibatDataJob).not_to receive(:perform_later)
         expect(FetchChiffresAffairesDataJob).not_to receive(:perform_later)
+        expect(FetchOpqibiDataJob).not_to receive(:perform_later)
 
         described_class.perform_now(market_application.id)
       end

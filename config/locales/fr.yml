@@ -251,6 +251,7 @@ fr:
             apis:
               - qualibat
               - qualifelec
+              - opqibi
               - rge
               - fntp
       steps:
