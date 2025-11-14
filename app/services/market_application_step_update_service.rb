@@ -44,8 +44,10 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def clear_all_api_data
+    # Clear all API-related responses (both auto and manual_after_api_failure)
+    # to ensure a fresh start when SIRET is resubmitted
     market_application.market_attribute_responses
-      .where(source: :auto)
+      .where(source: %i[auto manual_after_api_failure])
       .find_each do |response|
         response.documents.purge if response.respond_to?(:documents)
         response.destroy
