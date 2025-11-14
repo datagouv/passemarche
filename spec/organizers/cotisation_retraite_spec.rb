@@ -207,4 +207,95 @@ RSpec.describe CotisationRetraite, type: :organizer do
       end
     end
   end
+
+  describe 'MapApiData integration' do
+    let(:public_market) { create(:public_market, :completed) }
+    let(:market_application) { create(:market_application, public_market:, siret:) }
+
+    let!(:cotisation_retraite_attribute) do
+      create(:market_attribute, api_name: 'cotisation_retraite', api_key: 'documents').tap do |attr|
+        attr.public_markets << public_market
+      end
+    end
+
+    let(:query_params_with_market) do
+      {
+        'context' => 'Candidature marché public',
+        'recipient' => '13002526500013',
+        'object' => "Réponse marché: #{public_market.name}"
+      }
+    end
+
+    subject do
+      described_class.call(
+        params: { siret:, siren: },
+        market_application:
+      )
+    end
+
+    context 'when at least one API succeeds' do
+      before do
+        # CIBTP succeeds
+        stub_request(:get, cibtp_endpoint)
+          .with(query: hash_including(query_params_with_market))
+          .to_return(status: 200, body: cibtp_response, headers: { 'Content-Type' => 'application/json' })
+
+        stub_request(:get, cibtp_doc_url)
+          .to_return(
+            status: 200,
+            body: document_body,
+            headers: {
+              'Content-Type' => 'application/pdf',
+              'Content-Disposition' => "attachment; filename=\"attestation_cibtp_#{siret}.pdf\""
+            }
+          )
+
+        # CNETP fails
+        stub_request(:get, cnetp_endpoint)
+          .with(query: hash_including(query_params_with_market))
+          .to_return(status: 404, body: { errors: [{ title: 'Not found' }] }.to_json)
+      end
+
+      it 'calls MapApiData and creates responses with source=auto' do
+        expect do
+          subject
+        end.to change { market_application.market_attribute_responses.count }.by(1)
+
+        response = market_application.market_attribute_responses
+          .joins(:market_attribute)
+          .find_by(market_attributes: { api_name: 'cotisation_retraite' })
+
+        expect(response).to be_present
+        expect(response.source).to eq('auto')
+        expect(response.documents).to be_attached
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+    end
+
+    context 'when both APIs fail' do
+      before do
+        # Both APIs fail
+        stub_request(:get, cibtp_endpoint)
+          .with(query: hash_including(query_params_with_market))
+          .to_return(status: 404, body: { errors: [{ title: 'Not found' }] }.to_json)
+
+        stub_request(:get, cnetp_endpoint)
+          .with(query: hash_including(query_params_with_market))
+          .to_return(status: 404, body: { errors: [{ title: 'Not found' }] }.to_json)
+      end
+
+      it 'does not call MapApiData and does not create responses' do
+        expect do
+          subject
+        end.not_to change { market_application.market_attribute_responses.count }
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+    end
+  end
 end
