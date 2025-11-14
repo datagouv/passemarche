@@ -13,11 +13,11 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
   Scenario: Display of 3x3 grid form
     When I visit the economic capacities step
     Then I should see a table with headers:
-      | Année | Chiffre d'affaires (€) | % CA dans le secteur du marché | Fin de l'exercice |
+      | Année | Chiffre d'affaires | Pourcentage du marché | Fin de l'exercice |
     And I should see 3 rows with labels:
-      | Année N-1 |
-      | Année N-2 |
-      | Année N-3 |
+      | Exercice N-1 |
+      | Exercice N-2 |
+      | Exercice N-3 |
 
   Scenario: Successful form submission with valid data
     When I visit the economic capacities step
@@ -67,9 +67,9 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
     When I visit the summary step
     Then I should see the turnover data displayed in a table:
       | year      | turnover  | percentage | fiscal_year_end |
-      | Année N-1 | 500 000 € | 75 %       | 31/12/2023      |
-      | Année N-2 | 450 000 € | 80 %       | 31/12/2022      |
-      | Année N-3 | 400 000 € | 70 %       | 31/12/2021      |
+      | Exercice N-1 | 500 000 € | 75 %       | 31/12/2023      |
+      | Exercice N-2 | 450 000 € | 80 %       | 31/12/2022      |
+      | Exercice N-3 | 400 000 € | 70 %       | 31/12/2021      |
 
   Scenario: STI class verification for capacite_economique_financiere_chiffre_affaires_global_annuel
     When I visit the economic capacities step
