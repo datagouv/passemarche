@@ -202,7 +202,7 @@ fr:
       rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       qualibat_api_error: "Impossible de récupérer la certification Qualibat de votre entreprise : %{error}"
       badges:
-        data_from_api: "Données récupérées automatiquement"
+        data_from_api: "Récupéré automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       shared:
