@@ -62,6 +62,27 @@ class MarketAttributeResponse < ApplicationRecord
     false
   end
 
+  def run_validations!
+    # Skip all validations if this response is not part of the current validation step
+    return true unless should_validate_for_current_step?
+
+    super
+  end
+
+  def should_validate_for_current_step?
+    # If no market_application or no step specified, validate everything (e.g., summary step)
+    return true if market_application.nil? || market_application.current_validation_step.nil?
+
+    # Get the IDs of responses that should be validated for this step
+    valid_response_ids = market_application.response_ids_for_step(market_application.current_validation_step)
+
+    # If no responses for this step (empty step like company_identification), skip validation
+    return false if valid_response_ids.empty?
+
+    # Only validate if this response is in the list
+    valid_response_ids.include?(id)
+  end
+
   def self.find_sti_class(type_name)
     "MarketAttributeResponse::#{type_name}".constantize
   end
