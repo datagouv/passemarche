@@ -4,15 +4,16 @@ class CotisationRetraite < ApplicationOrganizer
   def self.call(context = {})
     context[:api_name] ||= 'cotisation_retraite'
 
-    # Call both APIs independently (failures are expected - companies belong to one OR the other)
     cibtp_result = call_organizer_safely(Cibtp, context)
     cnetp_result = call_organizer_safely(Cnetp, context)
 
-    # Merge results from both APIs
     merged_context = merge_api_results(context, cibtp_result, cnetp_result)
 
-    # Merge the documents into a single resource
-    CotisationRetraite::MergeResources.call(merged_context)
+    result = CotisationRetraite::MergeResources.call(merged_context)
+
+    return result if result.failure?
+
+    MapApiData.call(result)
   end
 
   def self.call_organizer_safely(organizer_class, context)
