@@ -32,9 +32,15 @@ class MapApiData < ApplicationInteractor
 
   def create_or_update_response(market_attribute)
     response = find_or_initialize_response(market_attribute)
-    value = extract_value_from_resource(market_attribute)
 
-    assign_value_to_response(response, value)
+    if opqibi_structured_data?(market_attribute)
+      assign_opqibi_metadata(response)
+      value = nil
+    else
+      value = extract_value_from_resource(market_attribute)
+      assign_value_to_response(response, value)
+    end
+
     response.source = :auto unless response.manual_after_api_failure?
 
     # For complex economic capacity responses, allow saving even if incomplete
@@ -67,6 +73,19 @@ class MapApiData < ApplicationInteractor
     response.value = parsed_data
   rescue JSON::ParserError
     response.text = value
+  end
+
+  def opqibi_structured_data?(market_attribute)
+    context.api_name == 'opqibi' && market_attribute.api_key == 'data'
+  end
+
+  def assign_opqibi_metadata(response)
+    resource = context.bundled_data.data
+    response.value = {
+      'text' => resource.url,
+      'date_delivrance_certificat' => resource.date_delivrance_certificat,
+      'duree_validite_certificat' => resource.duree_validite_certificat
+    }
   end
 
   def attach_document_to_response(response, document_hash)

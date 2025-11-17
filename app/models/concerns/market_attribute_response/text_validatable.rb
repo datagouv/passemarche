@@ -23,6 +23,7 @@ module MarketAttributeResponse::TextValidatable
   end
 
   def text_additional_properties_valid
+    return if auto?
     return if value.blank?
 
     allowed_keys = ['text']

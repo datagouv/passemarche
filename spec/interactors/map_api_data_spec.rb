@@ -542,5 +542,85 @@ RSpec.describe MapApiData, type: :interactor do
         end
       end
     end
+
+    context 'when resource contains OPQIBI metadata (api_key=data)' do
+      let(:resource) do
+        Resource.new(
+          url: 'https://www.opqibi.com/fiche/1777',
+          date_delivrance_certificat: '2021-01-28',
+          duree_validite_certificat: 'valable un an'
+        )
+      end
+      let(:bundled_data) { BundledData.new(data: resource, context: {}) }
+      let(:api_name) { 'opqibi' }
+
+      let!(:opqibi_attribute) do
+        create(:market_attribute, :inline_url_input, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_opqibi',
+          api_name: 'opqibi',
+          api_key: 'data',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates market_attribute_response for OPQIBI' do
+        expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+      end
+
+      it 'stores URL in text field' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: opqibi_attribute)
+        expect(response.text).to eq('https://www.opqibi.com/fiche/1777')
+      end
+
+      it 'stores metadata in value JSONB field' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: opqibi_attribute)
+        expect(response.value['date_delivrance_certificat']).to eq('2021-01-28')
+        expect(response.value['duree_validite_certificat']).to eq('valable un an')
+      end
+
+      it 'sets source to auto' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: opqibi_attribute)
+        expect(response.source).to eq('auto')
+      end
+
+      context 'when response already exists' do
+        before do
+          response = MarketAttributeResponse.build_for_attribute(
+            opqibi_attribute,
+            market_application:
+          )
+          response.value = {
+            'text' => 'https://www.opqibi.com/fiche/old',
+            'date_delivrance_certificat' => '2020-01-01',
+            'duree_validite_certificat' => 'old'
+          }
+          response.source = :auto
+          response.save!
+        end
+
+        it 'updates existing response instead of creating new one' do
+          expect { subject }.not_to change { market_application.market_attribute_responses.count }
+        end
+
+        it 'updates the URL in text field' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: opqibi_attribute)
+          expect(response.text).to eq('https://www.opqibi.com/fiche/1777')
+        end
+
+        it 'updates the metadata in value field' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: opqibi_attribute)
+          expect(response.value['date_delivrance_certificat']).to eq('2021-01-28')
+          expect(response.value['duree_validite_certificat']).to eq('valable un an')
+        end
+      end
+    end
   end
 end

@@ -30,7 +30,7 @@ RSpec.describe Opqibi::BuildResource, type: :interactor do
         expect(result.bundled_data.data).to be_a(Resource)
       end
 
-      it 'extracts url from data and stores it as url key' do
+      it 'extracts url from data' do
         result = subject
         expect(result.bundled_data.data.url).to eq('https://www.opqibi.com/fiche/1777')
       end
