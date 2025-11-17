@@ -5,7 +5,9 @@ class Opqibi::BuildResource < BuildResource
 
   def resource_attributes
     {
-      url: certificate_url
+      url: certificate_url,
+      date_delivrance_certificat: json_body['date_delivrance_certificat'],
+      duree_validite_certificat: json_body['duree_validite_certificat']
     }
   end
 
