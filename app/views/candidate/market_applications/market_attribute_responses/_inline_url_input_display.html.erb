@@ -36,6 +36,24 @@
           Certificat non renseigné
         <% end %>
       </span>
+    <% elsif market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata? %>
+      <div class="fr-text--sm fr-text--mention-grey">
+        <p class="fr-mb-1v">
+          <em>Les informations suivantes ont été récupérées automatiquement depuis l'API OPQIBI :</em>
+        </p>
+        <% if market_attribute_response.formatted_date_delivrance.present? %>
+          <p class="fr-mb-1v">
+            <strong>Date de délivrance :</strong>
+            <%= l(market_attribute_response.formatted_date_delivrance, format: :long) %>
+          </p>
+        <% end %>
+        <% if market_attribute_response.duree_validite_certificat.present? %>
+          <p class="fr-mb-0">
+            <strong>Durée de validité :</strong>
+            <%= market_attribute_response.duree_validite_certificat %>
+          </p>
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>
