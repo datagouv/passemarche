@@ -54,6 +54,12 @@ RSpec.describe Opqibi, type: :organizer do
         result = subject
         expect(result.bundled_data.data.url).to eq('https://www.opqibi.com/fiche/1777')
       end
+
+      it 'extracts metadata fields' do
+        result = subject
+        expect(result.bundled_data.data.date_delivrance_certificat).to eq('2021-01-28')
+        expect(result.bundled_data.data.duree_validite_certificat).to eq('valable un an')
+      end
     end
 
     context 'when the API returns unauthorized (401)' do
@@ -163,7 +169,7 @@ RSpec.describe Opqibi, type: :organizer do
         create(:market_attribute, :inline_url_input, :from_api,
           key: 'capacites_techniques_professionnelles_certificats_opqibi',
           api_name: 'opqibi',
-          api_key: 'url',
+          api_key: 'data',
           public_markets: [public_market])
       end
 
@@ -195,7 +201,7 @@ RSpec.describe Opqibi, type: :organizer do
           .to change { market_application.market_attribute_responses.count }.by(1)
       end
 
-      it 'stores the certificate URL' do
+      it 'stores the certificate URL in text field' do
         subject
         response =
           market_application.market_attribute_responses
@@ -203,6 +209,34 @@ RSpec.describe Opqibi, type: :organizer do
 
         expect(response.text).to eq('https://www.opqibi.com/fiche/1777')
         expect(response.source).to eq('auto')
+      end
+
+      it 'stores metadata in value JSONB field' do
+        subject
+        response =
+          market_application.market_attribute_responses
+            .find_by(market_attribute: certificate_attribute)
+
+        expect(response.value['date_delivrance_certificat']).to eq('2021-01-28')
+        expect(response.value['duree_validite_certificat']).to eq('valable un an')
+      end
+
+      it 'provides formatted date through accessor' do
+        subject
+        response =
+          market_application.market_attribute_responses
+            .find_by(market_attribute: certificate_attribute)
+
+        expect(response.formatted_date_delivrance).to eq(Date.parse('2021-01-28'))
+      end
+
+      it 'identifies as having OPQIBI metadata' do
+        subject
+        response =
+          market_application.market_attribute_responses
+            .find_by(market_attribute: certificate_attribute)
+
+        expect(response.opqibi_metadata?).to be true
       end
 
       it 'creates both BundledData and responses' do
