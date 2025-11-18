@@ -11,6 +11,7 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 # return unless Rails.env.test?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'view_component/test_helpers'
 
 # Configure shoulda-matchers
 require 'shoulda/matchers'
@@ -65,6 +66,9 @@ RSpec.configure do |config|
 
   # Configure Devise test helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  # Configure ViewComponent test helpers
+  config.include ViewComponent::TestHelpers, type: :component
 
   # Configure ActiveJob test adapter
   config.before(:each) do

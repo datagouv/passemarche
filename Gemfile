@@ -26,11 +26,16 @@ gem 'stimulus-rails'
 gem 'thruster', require: false
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
+gem 'view_component'
 gem 'wicked'
 gem 'wicked_pdf'
 
 gem 'sentry-rails'
 gem 'sentry-ruby'
+
+group :development, :test, :sandbox do
+  gem 'lookbook'
+end
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]

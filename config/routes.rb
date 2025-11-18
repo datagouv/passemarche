@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   namespace :admin do
     resources :editors do
@@ -55,7 +56,10 @@ Rails.application.routes.draw do
       path: 'market_application/:identifier/sync_status'
   end
 
+  mount Lookbook::Engine, at: '/lookbook' if Rails.env.development? || Rails.env.sandbox?
+
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   root 'home#index'
 end
+# rubocop:enable Metrics/BlockLength
