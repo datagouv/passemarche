@@ -30,9 +30,19 @@ RSpec.describe Opqibi::BuildResource, type: :interactor do
         expect(result.bundled_data.data).to be_a(Resource)
       end
 
-      it 'extracts url from data and stores it as url key' do
+      it 'extracts url from data' do
         result = subject
         expect(result.bundled_data.data.url).to eq('https://www.opqibi.com/fiche/1777')
+      end
+
+      it 'extracts date_delivrance_certificat from data' do
+        result = subject
+        expect(result.bundled_data.data.date_delivrance_certificat).to eq('2021-01-28')
+      end
+
+      it 'extracts duree_validite_certificat from data' do
+        result = subject
+        expect(result.bundled_data.data.duree_validite_certificat).to eq('valable un an')
       end
     end
 
