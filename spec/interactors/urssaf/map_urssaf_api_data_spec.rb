@@ -4,32 +4,22 @@ require 'rails_helper'
 
 RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
   let(:public_market) { create(:public_market, :completed) }
-  let(:market_type) { MarketType.find_or_create_by(code: public_market.market_type_codes.first) }
+  let(:market_application) { create(:market_application, public_market:) }
   let(:market_attribute1) do
-    attr = create(
+    create(
       :market_attribute,
-      :radio_with_justification_required,
-      api_key: 'declarations_cotisations_sociales',
-      api_name: 'urssaf_attestation_vigilance',
-      public_markets: [public_market]
+      api_key: 'document_cotisations_sociales',
+      input_type: 'radio_with_justification_required'
     )
-    attr.market_types << market_type
-    attr
   end
 
   let(:market_attribute2) do
-    attr = create(
+    create(
       :market_attribute,
-      :radio_with_justification_required,
-      api_key: 'travailleurs_handicapes',
-      api_name: 'urssaf_attestation_vigilance',
-      public_markets: [public_market]
+      api_key: 'document_travailleurs_handicapes',
+      input_type: 'radio_with_justification_required'
     )
-    attr.market_types << market_type
-    attr
   end
-
-  let(:market_application) { create(:market_application, public_market:) }
   let(:document_io) { StringIO.new('fake pdf content') }
   let(:document_hash) do
     {
@@ -39,19 +29,17 @@ RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
     }
   end
 
-  let(:bundled_data) do
-    OpenStruct.new(
-      data: OpenStruct.new(
-        declarations_cotisations_sociales: document_hash,
-        travailleurs_handicapes: document_hash
-      )
-    )
-  end
+  let(:bundled_data) { OpenStruct.new(data: OpenStruct.new(document: document_hash)) }
   let(:context) do
     OpenStruct.new(
       market_application:,
       bundled_data:
     )
+  end
+
+  before do
+    public_market.market_attributes << market_attribute1
+    public_market.market_attributes << market_attribute2
   end
 
   it 'attaches the document to both URSSAF responses and sets them as auto' do

@@ -7,10 +7,20 @@ class MapApiData < ApplicationInteractor
     validate_context
     return if context.failure?
 
+    handle_special_api_treatments if handles_special_api_treatments?
+
     map_attributes_to_responses
   end
 
   private
+
+  def handles_special_api_treatments?
+    false
+  end
+
+  def handle_special_api_treatments
+    throw NotImplementedError, 'This method should be overridden in subclasses'
+  end
 
   def validate_context
     return if context.bundled_data.present?
