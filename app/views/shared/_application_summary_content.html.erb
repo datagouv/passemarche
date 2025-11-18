@@ -81,8 +81,20 @@
             <%= render 'shared/card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
               <% market_attributes.each do |attribute| %>
                 <% response = presenter.market_attribute_response_for(attribute) %>
-                <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
-                <%= render partial_name, market_attribute_response: response, context: context %>
+                <%
+                  component_class = begin
+                    "MarketAttributeResponse::#{response.type}Component".constantize
+                  rescue NameError
+                    nil
+                  end
+                %>
+
+                <% if component_class %>
+                  <%= render component_class.new(market_attribute_response: response, context: context) %>
+                <% else %>
+                  <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
+                  <%= render partial_name, market_attribute_response: response, context: context %>
+                <% end %>
               <% end %>
             <% end %>
           </div>

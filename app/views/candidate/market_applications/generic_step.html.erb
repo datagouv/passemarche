@@ -32,8 +32,20 @@
             <div class="fr-fieldset">
               <% subcategory_responses.each do |response| %>
                 <div class="fr-fieldset__element">
-                  <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
-                          market_attribute_response: response, form: form %>
+                  <%
+                    component_class = begin
+                      "MarketAttributeResponse::#{response.type}Component".constantize
+                    rescue NameError
+                      nil
+                    end
+                  %>
+
+                  <% if component_class %>
+                    <%= render component_class.new(market_attribute_response: response, form: form) %>
+                  <% else %>
+                    <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",
+                            market_attribute_response: response, form: form %>
+                  <% end %>
                 </div>
               <% end %>
             </div>
