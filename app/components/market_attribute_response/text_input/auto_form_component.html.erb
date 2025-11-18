@@ -1,0 +1,12 @@
+<%= form.hidden_field :id, value: market_attribute_response.id %>
+<%= form.hidden_field :market_attribute_id, value: market_attribute_response.market_attribute_id %>
+<%= form.hidden_field :type, value: market_attribute_response.type %>
+<%= form.hidden_field :text, value: text_value %>
+
+<label class="fr-label">
+  <%= field_label %>
+  <%= render SourceBadgeComponent.new(market_attribute_response: market_attribute_response, inline: true) %>
+</label>
+<p class="fr-text--sm fr-text--mention-grey fr-mb-2w">
+  <%= auto_filled_message %>
+</p>

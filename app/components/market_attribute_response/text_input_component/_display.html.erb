@@ -1,0 +1,15 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    </strong>
+
+    <% if component.show_value? %>
+      <br>
+      <span class="fr-text--md fr-text--mention-grey">
+        <%= component.display_value %>
+      </span>
+    <% end %>
+  </div>
+</div>
