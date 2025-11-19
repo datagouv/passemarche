@@ -27,6 +27,7 @@ RSpec.describe UniqueAssociationValidator do
         editor:,
         name: 'Test Market',
         deadline: 1.week.from_now,
+        siret: '13002526500013',
         market_type_codes: ['supplies']
       )
     end

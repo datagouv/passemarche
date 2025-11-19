@@ -15,6 +15,7 @@ Feature: API Public Markets Management
       | name  | Fourniture de matériel informatique |
       | lot_name     | Lot 1 - Ordinateurs portables       |
       | deadline     | 2025-12-31T23:59:59Z                |
+      | siret        | 13002526500013                      |
       | market_types | supplies                            |
     Then the response status should be 201
     And I should receive a public market identifier starting with "VR-"
@@ -25,6 +26,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Services de maintenance            |
       | deadline    | 2025-06-30T18:00:00Z              |
+      | siret        | 13002526500013                    |
       | market_types | services                          |
     Then the response status should be 201
     And I should receive a public market identifier
@@ -35,6 +37,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | supplies            |
     Then the response status should be 401
     And I should receive an authentication error
@@ -44,6 +47,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | supplies            |
     Then the response status should be 401
     And I should receive an authentication error
@@ -52,6 +56,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | lot_name    | Lot 1              |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | supplies            |
     Then the response status should be 422
     And the response should contain validation errors
@@ -59,6 +64,7 @@ Feature: API Public Markets Management
   Scenario: Échec de création sans deadline
     When I create a public market with the following details:
       | name | Test Market |
+      | siret        | 13002526500013 |
       | market_types | supplies    |
     Then the response status should be 422
     And the response should contain validation errors
@@ -67,6 +73,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
     Then the response status should be 422
     And the response should contain validation errors
 
@@ -74,10 +81,12 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Premier marché     |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | supplies            |
     And I create another public market with the following details:
       | name | Deuxième marché    |
       | deadline    | 2025-11-30T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | services            |
     Then both public markets should be created successfully
     And each public market should have a unique identifier
@@ -87,6 +96,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | supplies            |
     Then the identifier should match the format "VR-YYYY-XXXXXXXXXXXX"
     And the year part should be the current year
@@ -96,6 +106,7 @@ Feature: API Public Markets Management
     When I create a public market with the following details:
       | name | Test Market        |
       | deadline    | 2025-12-31T23:59:59Z |
+      | siret        | 13002526500013       |
       | market_types | supplies            |
     Then the configuration URL should contain the identifier
     And the configuration URL should use the correct host
