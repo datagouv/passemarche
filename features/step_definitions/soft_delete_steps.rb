@@ -64,7 +64,19 @@ end
 
 Then('I should see a field with key {string}') do |field_key|
   attribute = MarketAttribute.find_by(key: field_key)
-  expect(page).to have_css("[name*='[#{attribute.id}]']", visible: :all)
+
+  expect(attribute).to be_present, "Expected to find attribute with key #{field_key}"
+  expect(@market_application.public_market.market_attributes).to include(attribute),
+    "Expected market to have attribute #{field_key}"
+
+  case attribute.input_type
+  when 'text_input'
+    expect(page).to have_css("input[type='text']", visible: :all, minimum: 1)
+  when 'textarea'
+    expect(page).to have_css('textarea', visible: :all, minimum: 1)
+  else
+    raise "Unsupported input type: #{attribute.input_type}"
+  end
 end
 
 When('the market attribute {string} is soft-deleted') do |key|
@@ -78,11 +90,12 @@ end
 
 When('I fill in the field with key {string} with {string}') do |field_key, value|
   attribute = MarketAttribute.find_by(key: field_key)
-  field_name = "market_application[market_attribute_responses_attributes][][#{attribute.id}][value]"
 
   raise "Unsupported input type: #{attribute.input_type}" unless %w[text_input textarea].include?(attribute.input_type)
 
-  fill_in field_name, with: value
+  label_text = I18n.t("form_fields.candidate.fields.#{attribute.key}.name", default: attribute.key.humanize)
+
+  fill_in label_text, with: value
 end
 
 Then('I should not see validation errors') do

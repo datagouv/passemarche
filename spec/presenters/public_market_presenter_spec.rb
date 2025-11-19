@@ -154,4 +154,42 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       expect(optional_keys).to include('test_company_category')
     end
   end
+
+  describe 'with soft-deleted market attributes' do
+    let!(:soft_deleted_attribute) do
+      attr = create(:market_attribute,
+        key: 'soft_deleted_field',
+        category_key: 'test_company_identity',
+        subcategory_key: 'test_basic_information',
+        required: true,
+        deleted_at: 1.day.ago)
+      market_type.market_attributes << attr
+      public_market.market_attributes << attr
+      attr
+    end
+
+    it 'excludes soft-deleted attributes from all_fields' do
+      result = presenter.all_fields_by_category_and_subcategory
+      all_field_keys = result.values.flat_map(&:values).flatten
+
+      expect(all_field_keys).not_to include('soft_deleted_field')
+      expect(all_field_keys).to include('test_siret')
+    end
+
+    it 'excludes soft-deleted attributes from available_required_fields' do
+      result = presenter.available_required_fields_by_category_and_subcategory
+      all_field_keys = result.values.flat_map(&:values).flatten
+
+      expect(all_field_keys).not_to include('soft_deleted_field')
+    end
+
+    it 'excludes soft-deleted attributes from available_optional_fields' do
+      soft_deleted_attribute.update!(required: false)
+
+      result = presenter.available_optional_fields_by_category_and_subcategory
+      all_field_keys = result.values.flat_map(&:values).flatten
+
+      expect(all_field_keys).not_to include('soft_deleted_field')
+    end
+  end
 end
