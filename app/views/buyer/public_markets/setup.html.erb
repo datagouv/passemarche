@@ -34,7 +34,7 @@
         </p>
       </div>
 
-      <div class="fr-mb-0">
+      <div class="fr-mb-2w">
         <h3 class="fr-text--md fr-mb-1w fr-text--bold">Typologie de marché</h3>
         <% if @public_market.market_type_codes.any? %>
           <% @public_market.market_type_codes.each do |market_type_code| %>
@@ -45,6 +45,11 @@
         <% else %>
           <p class="fr-text--sm fr-mb-0">Aucun type de marché défini</p>
         <% end %>
+      </div>
+
+      <div class="fr-mb-0">
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold">SIRET de l'organisation publique</h3>
+        <p class="fr-text--sm fr-mb-0"><%= @public_market.siret %></p>
       </div>
     </div>
 
