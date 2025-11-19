@@ -17,6 +17,7 @@ Contactez l'équipe Voie Rapide pour obtenir :
 - **HTTPS** : Obligatoire en production
 - **Dépendances** : Client HTTP compatible OAuth2
 - **Outils requis** : curl, jq (pour les tests)
+- **Données requises** : SIRET de l'organisation publique (14 chiffres) pour créer un marché
 
 ---
 
@@ -53,6 +54,7 @@ curl -X POST https://voie-rapide.gouv.fr/api/v1/public_markets \
       "name": "Test - Fourniture équipements informatiques",
       "lot_name": "Lot unique - Ordinateurs",
       "deadline": "2024-12-31T23:59:59Z",
+      "siret": "13002526500013",
       "market_type_codes": ["supplies"]
     }
   }'

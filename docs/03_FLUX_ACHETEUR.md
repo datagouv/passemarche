@@ -53,6 +53,7 @@ Content-Type: application/json
     "name": "Fourniture de matériel informatique pour les services municipaux",
     "lot_name": "Lot 1 - Ordinateurs portables et stations de travail",
     "deadline": "2024-06-15T23:59:59Z",
+    "siret": "13002526500013",
     "market_type_codes": ["supplies", "services"]
   }
 }
@@ -64,6 +65,7 @@ Content-Type: application/json
 |-------|------|-------------|-------------|
 | `name` | string | Nom du marché public | Requis, max 255 caractères |
 | `deadline` | datetime | Date limite de candidature | Requis, format ISO 8601 |
+| `siret` | string | SIRET de l'organisation publique | Requis, exactement 14 chiffres, validation Luhn |
 | `market_type_codes` | array | Types de marché | Requis, minimum 1 élément |
 | `lot_name` | string | Nom du lot spécifique | Optionnel, max 255 caractères |
 
@@ -130,7 +132,9 @@ Une fois le marché créé, l'éditeur redirige l'acheteur vers l'URL fournie da
 - **Actions** :
   - Vérification de l'identifiant marché
   - Ajout optionnel du type "defense" si pertinent
-  - Affichage des informations de base du marché
+  - Affichage des informations de base du marché (incluant le SIRET de l'organisation publique)
+
+**Note** : Le SIRET de l'organisation publique est requis pour la conformité avec l'API Entreprise
 
 #### Étape 2 : Champs Obligatoires
 - **URL** : `/buyer/public_markets/{identifier}/required_fields`

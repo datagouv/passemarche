@@ -139,6 +139,7 @@ Content-Type: application/json
     "name": "Fourniture de matériel informatique",
     "lot_name": "Lot 1 - Ordinateurs portables",
     "deadline": "2024-12-31T23:59:59Z",
+    "siret": "13002526500013",
     "market_type_codes": ["supplies", "services"]
   }
 }
@@ -150,6 +151,7 @@ Content-Type: application/json
 |-------|------|--------|-------------|-------------|
 | `name` | string | Oui | Nom du marché public | Max 255 caractères |
 | `deadline` | datetime | Oui | Date limite candidature | Format ISO 8601, futur |
+| `siret` | string | Oui | SIRET de l'organisation publique (14 chiffres, validation Luhn) | Exactement 14 chiffres numériques |
 | `market_type_codes` | array | Oui | Types de marché | Au moins 1 élément |
 | `lot_name` | string | Non | Nom du lot spécifique | Max 255 caractères |
 
@@ -190,6 +192,15 @@ Content-Type: application/json
   "errors": [
     "Market type codes defense cannot be used alone"
   ]
+}
+```
+
+**422 - SIRET invalide** :
+```json
+{
+  "errors": {
+    "siret": ["Le numéro de SIRET saisi est invalide ou non reconnu"]
+  }
 }
 ```
 
