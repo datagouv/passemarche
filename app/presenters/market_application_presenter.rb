@@ -106,7 +106,7 @@ class MarketApplicationPresenter
   private
 
   def all_market_attributes
-    @market_application.public_market.market_attributes.active.order(:id)
+    @market_application.public_market.market_attributes.order(:id)
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)

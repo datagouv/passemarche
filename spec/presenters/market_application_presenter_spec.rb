@@ -165,4 +165,55 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
       expect(described_class::MARKET_INFO_PARENT_CATEGORY).to eq('identite_entreprise')
     end
   end
+
+  describe 'with soft-deleted market attributes' do
+    let(:active_attribute) do
+      create(:market_attribute,
+        key: 'active_field',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identification',
+        deleted_at: nil)
+    end
+
+    let(:soft_deleted_attribute) do
+      create(:market_attribute,
+        key: 'deleted_field',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identification',
+        deleted_at: 1.day.ago)
+    end
+
+    let(:public_market_with_soft_deleted) do
+      create(:public_market, :completed, editor:).tap do |pm|
+        pm.market_attributes << [active_attribute, soft_deleted_attribute]
+      end
+    end
+
+    let(:market_application) { create(:market_application, public_market: public_market_with_soft_deleted) }
+    let(:presenter) { described_class.new(market_application) }
+
+    it 'includes soft-deleted attributes in all_market_attributes' do
+      attributes = presenter.send(:all_market_attributes)
+
+      expect(attributes).to include(active_attribute)
+      expect(attributes).to include(soft_deleted_attribute)
+    end
+
+    it 'includes soft-deleted attributes in fields structure' do
+      fields = presenter.fields_by_category_and_subcategory
+
+      all_field_keys = fields.values.flat_map(&:values).flatten
+
+      expect(all_field_keys).to include(active_attribute.key)
+      expect(all_field_keys).to include(soft_deleted_attribute.key)
+    end
+
+    it 'creates responses for both active and soft-deleted attributes' do
+      response_for_active = presenter.market_attribute_response_for(active_attribute)
+      response_for_deleted = presenter.market_attribute_response_for(soft_deleted_attribute)
+
+      expect(response_for_active).to be_present
+      expect(response_for_deleted).to be_present
+    end
+  end
 end
