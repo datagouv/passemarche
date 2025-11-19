@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_30_132224) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_19_105437) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -189,10 +189,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_30_132224) do
     t.string "lot_name"
     t.text "market_type_codes", default: [], array: true
     t.string "name"
+    t.string "siret", null: false
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["editor_id"], name: "index_public_markets_on_editor_id"
     t.index ["identifier"], name: "index_public_markets_on_identifier", unique: true
+    t.index ["siret"], name: "index_public_markets_on_siret"
     t.index ["sync_status"], name: "index_public_markets_on_sync_status"
   end
 

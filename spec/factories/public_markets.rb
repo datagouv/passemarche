@@ -8,6 +8,7 @@ FactoryBot.define do
     name { "Système d'acquisition dynamique pour matériels informatiques" }
     lot_name { 'Consommables informatiques neufs' }
     deadline { 1.month.from_now }
+    siret { '13002526500013' }
 
     after(:build) do |public_market|
       if public_market.market_type_codes.empty?
