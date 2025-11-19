@@ -7,6 +7,9 @@ RSpec.describe Opqibi, type: :organizer do
 
   let(:siret) { '41816609600069' }
   let(:siren) { siret[0..8] }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://storage.entreprise.api.gouv.fr/' }
   let(:api_url) { "#{base_url}v3/opqibi/unites_legales/#{siren}/certification_ingenierie" }
   let(:token) { 'test-token-12345' }
@@ -21,7 +24,7 @@ RSpec.describe Opqibi, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API call is successful' do
       before do
@@ -29,8 +32,8 @@ RSpec.describe Opqibi, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -68,8 +71,8 @@ RSpec.describe Opqibi, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -101,8 +104,8 @@ RSpec.describe Opqibi, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -134,8 +137,8 @@ RSpec.describe Opqibi, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -180,7 +183,7 @@ RSpec.describe Opqibi, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
+              'recipient' => public_market.siret,
               'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }

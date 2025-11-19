@@ -6,6 +6,9 @@ RSpec.describe Qualibat, type: :organizer do
   include ApiResponses::QualibatResponses
 
   let(:siret) { '78824266700020' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://storage.entreprise.api.gouv.fr/' }
   let(:api_url) { "#{base_url}v4/qualibat/etablissements/#{siret}/certification_batiment" }
   let(:token) { 'test-token-12345' }
@@ -20,7 +23,7 @@ RSpec.describe Qualibat, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API call and document download are successful' do
       let(:document_url) { 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v4_qualibat_certifications_batiment/exemple-qualibat.pdf' }
@@ -31,8 +34,8 @@ RSpec.describe Qualibat, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -73,8 +76,8 @@ RSpec.describe Qualibat, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -106,8 +109,8 @@ RSpec.describe Qualibat, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -139,8 +142,8 @@ RSpec.describe Qualibat, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )

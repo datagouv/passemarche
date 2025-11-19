@@ -7,6 +7,9 @@ RSpec.describe Dgfip, type: :organizer do
 
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:api_url) { "#{base_url}v4/dgfip/unites_legales/#{siren}/attestation_fiscale" }
   let(:token) { 'test_token_123' }
@@ -21,7 +24,7 @@ RSpec.describe Dgfip, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API call and document download are successful' do
       let(:document_url) { "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siren}-attestation_fiscale_dgfip.pdf" }
@@ -32,8 +35,8 @@ RSpec.describe Dgfip, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -162,7 +165,7 @@ RSpec.describe Dgfip, type: :organizer do
     end
 
     context 'when api_name is pre-set in context' do
-      subject { described_class.call(params: { siret: }, api_name: 'custom_name') }
+      subject { described_class.call(params: { siret: }, market_application:, api_name: 'custom_name') }
       let(:custom_document_url) { 'https://example.com/doc.pdf' }
 
       before do
