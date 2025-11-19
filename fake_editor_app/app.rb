@@ -468,6 +468,7 @@ class FakeEditorApp < Sinatra::Base
       name: params[:name],
       lot_name: params[:lot_name] && params[:lot_name].empty? ? nil : params[:lot_name],
       deadline: params[:deadline],
+      siret: params[:siret],
       market_type_codes: market_type_codes_array
     }
   end
@@ -475,6 +476,8 @@ class FakeEditorApp < Sinatra::Base
   def validate_market_data(market_data)
     return 'Veuillez remplir le nom du marché.' if market_data[:name].to_s.strip.empty?
     return 'Veuillez remplir la date limite.' if market_data[:deadline].to_s.strip.empty?
+    return 'Veuillez remplir le SIRET de l\'organisation.' if market_data[:siret].to_s.strip.empty?
+    return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
     return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].nil? || market_data[:market_type_codes].empty?
 
     nil

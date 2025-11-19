@@ -94,6 +94,27 @@
                   required>
               </div>
 
+              <!-- SIRET -->
+              <div class="fr-input-group">
+                <label class="fr-label" for="siret">
+                  SIRET de l'organisation publique
+                  <span class="fr-hint-text">
+                    14 chiffres du SIRET de votre organisation.<br>
+                    Exemples valides : 13002526500013 (DINUM), 21750001600019 (Ville de Paris),
+                    11000101100010 (Ministère Intérieur)
+                  </span>
+                </label>
+                <input
+                  class="fr-input"
+                  type="text"
+                  id="siret"
+                  name="siret"
+                  required
+                  pattern="\d{14}"
+                  placeholder="Ex: 13002526500013"
+                  maxlength="14">
+              </div>
+
               <!-- Market Type Codes -->
               <div class="fr-form-group">
                 <fieldset class="fr-fieldset" id="market-type-codes">
