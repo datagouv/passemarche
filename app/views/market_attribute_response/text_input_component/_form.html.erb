@@ -1,0 +1,48 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                  child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+    <%= response_form.hidden_field :text, value: component.text_value %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response, inline: true) %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= component.auto_filled_message %>
+    </p>
+  </div>
+<% else %>
+  <div class="<%= component.input_group_css_class %>">
+    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                    child_index: component.market_attribute_response.id do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+
+      <%= response_form.label :text, class: "fr-label fr-label--required" do %>
+        <%= component.field_label %>
+        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response, inline: true) %>
+      <% end %>
+
+      <% if component.field_description.present? %>
+        <span class="fr-hint-text"><%= component.field_description %></span>
+      <% end %>
+
+      <%= response_form.text_field :text,
+                          value: component.text_value,
+                          class: component.input_css_class,
+                          required: component.market_attribute.required? %>
+
+      <% if component.errors? %>
+        <% component.error_messages.each do |error| %>
+          <p class="fr-error-text"><%= error %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

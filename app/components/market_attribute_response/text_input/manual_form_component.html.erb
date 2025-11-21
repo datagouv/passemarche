@@ -1,0 +1,23 @@
+<div class="<%= input_group_css_class %>">
+  <% label_html = capture do %>
+    <span style="display: inline;">
+      <%= field_label %>&nbsp;<span style="color: #ce0500;">*</span><% if auto? || manual_after_api_failure? %>&nbsp;<%= render SourceBadgeComponent.new(market_attribute_response: market_attribute_response, inline: true) %><% end %>
+    </span>
+  <% end %>
+  <%= form.label :text, label_html.html_safe, class: "fr-label" %>
+
+  <% if field_description.present? %>
+    <span class="fr-hint-text"><%= field_description %></span>
+  <% end %>
+
+  <%= form.text_field :text,
+                      value: text_value,
+                      class: input_css_class,
+                      required: market_attribute.required? %>
+
+  <% if errors? %>
+    <% error_messages.each do |error| %>
+      <p class="fr-error-text"><%= error %></p>
+    <% end %>
+  <% end %>
+</div>

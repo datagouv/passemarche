@@ -1,0 +1,36 @@
+<% if component.auto? %>
+  <%= component.form.hidden_field :id, value: component.market_attribute_response.id %>
+  <%= component.form.hidden_field :market_attribute_id, value: component.market_attribute_response.market_attribute_id %>
+  <%= component.form.hidden_field :type, value: component.market_attribute_response.type %>
+  <%= component.form.hidden_field :text, value: component.text_value %>
+
+  <label class="fr-label">
+    <%= component.field_label %>
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response, inline: true) %>
+  </label>
+  <p class="fr-text--sm fr-text--mention-grey fr-mb-2w">
+    <%= component.auto_filled_message %>
+  </p>
+<% else %>
+  <div class="<%= component.input_group_css_class %>">
+    <%= component.form.label :text, class: "fr-label fr-label--required" do %>
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response, inline: true) %>
+    <% end %>
+
+    <% if component.field_description.present? %>
+      <span class="fr-hint-text"><%= component.field_description %></span>
+    <% end %>
+
+    <%= component.form.text_field :text,
+                        value: component.text_value,
+                        class: component.input_css_class,
+                        required: component.market_attribute.required? %>
+
+    <% if component.has_errors? %>
+      <% component.error_messages.each do |error| %>
+        <p class="fr-error-text"><%= error %></p>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

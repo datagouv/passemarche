@@ -23,7 +23,7 @@ module VoieRapide
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    config.time_zone = "Europe/Paris"
+    config.time_zone = 'Europe/Paris'
     # config.eager_load_paths << Rails.root.join("extras")
 
     # I18n configuration
@@ -33,9 +33,9 @@ module VoieRapide
     # Configure Active Job to use SolidQueue
     config.active_job.queue_adapter = :solid_queue
     config.solid_queue.connects_to = { database: { writing: :queue } }
-    
+
     # Configure Mission Control Jobs
-    config.mission_control.jobs.base_controller_class = "Admin::ApplicationController"
+    config.mission_control.jobs.base_controller_class = 'Admin::ApplicationController'
     config.mission_control.jobs.http_basic_auth_enabled = false
   end
 end
