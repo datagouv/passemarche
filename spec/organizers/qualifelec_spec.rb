@@ -6,6 +6,9 @@ RSpec.describe Qualifelec, type: :organizer do
   include ApiResponses::QualifelecResponses
 
   let(:siret) { '78824266700020' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://storage.entreprise.api.gouv.fr/' }
   let(:api_url) { "#{base_url}v3/qualifelec/etablissements/#{siret}/certificats" }
   let(:token) { 'test-token-12345' }
@@ -20,7 +23,7 @@ RSpec.describe Qualifelec, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API call and document downloads are successful' do
       let(:document_url_1) { 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v3_qualifelec_certificats/exemple-certificat-qualifelec-bac-a-sable-1.jpg' }
@@ -34,8 +37,8 @@ RSpec.describe Qualifelec, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -90,8 +93,8 @@ RSpec.describe Qualifelec, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -123,8 +126,8 @@ RSpec.describe Qualifelec, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -156,8 +159,8 @@ RSpec.describe Qualifelec, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -191,8 +194,8 @@ RSpec.describe Qualifelec, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )

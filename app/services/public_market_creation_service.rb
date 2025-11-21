@@ -40,6 +40,6 @@ class PublicMarketCreationService < ApplicationServiceObject
   end
 
   def market_params
-    params.slice(:name, :lot_name, :deadline, :market_type_codes)
+    params.slice(:name, :lot_name, :deadline, :siret, :market_type_codes)
   end
 end

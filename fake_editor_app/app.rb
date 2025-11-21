@@ -36,7 +36,7 @@ class FakeEditorApp < Sinatra::Base
 
       case seconds
       when 0..59
-        "Il y a quelques secondes"
+        'Il y a quelques secondes'
       when 60..3599
         minutes = (seconds / 60).floor
         "Il y a #{minutes} minute#{'s' if minutes > 1}"
@@ -91,7 +91,7 @@ class FakeEditorApp < Sinatra::Base
       @current_token = Token.current_token
 
       unless @current_token&.valid?
-        @error = "Vous devez être authentifié pour créer un marché."
+        @error = 'Vous devez être authentifié pour créer un marché.'
         redirect '/technical'
       end
 
@@ -127,7 +127,7 @@ class FakeEditorApp < Sinatra::Base
           market_type_codes: market_data[:market_type_codes]
         })
 
-        @success = "Marché créé avec succès!"
+        @success = 'Marché créé avec succès!'
         @market = market
         @configuration_url = api_response['configuration_url']
         erb :'buyer/market_created'
@@ -141,7 +141,7 @@ class FakeEditorApp < Sinatra::Base
       @market = Market.find_by_identifier(params[:identifier])
 
       unless @market
-        @error = "Marché non trouvé"
+        @error = 'Marché non trouvé'
         redirect '/buyer'
         return
       end
@@ -156,7 +156,7 @@ class FakeEditorApp < Sinatra::Base
       @application = MarketApplication.find_by_identifier(params[:identifier])
 
       unless @application
-        @error = "Candidature non trouvée"
+        @error = 'Candidature non trouvée'
         redirect '/buyer'
         return
       end
@@ -190,7 +190,7 @@ class FakeEditorApp < Sinatra::Base
       @market = Market.find_by_identifier(params[:identifier])
 
       unless @market
-        @error = "Marché non trouvé"
+        @error = 'Marché non trouvé'
         redirect '/candidate'
         return
       end
@@ -221,8 +221,8 @@ class FakeEditorApp < Sinatra::Base
         # Store the application locally
         MarketApplication.create_from_api({
           identifier: api_response['identifier'],
-          market_identifier: market_identifier,
-          siret: siret
+          market_identifier:,
+          siret:
         })
 
         # Redirect to the application URL in Voie Rapide
@@ -239,7 +239,7 @@ class FakeEditorApp < Sinatra::Base
       @application = MarketApplication.find_by_identifier(params[:identifier])
 
       unless @application
-        @error = "Candidature non trouvée"
+        @error = 'Candidature non trouvée'
         redirect '/candidate'
         return
       end
@@ -253,22 +253,14 @@ class FakeEditorApp < Sinatra::Base
     get '/applications/:identifier/download_attestation' do
       @application = MarketApplication.find_by_identifier(params[:identifier])
 
-      unless @application
-        halt 404, "Candidature non trouvée"
-      end
+      halt 404, 'Candidature non trouvée' unless @application
 
-      unless @application.status == 'completed'
-        halt 400, "La candidature n'est pas terminée"
-      end
+      halt 400, "La candidature n'est pas terminée" unless @application.status == 'completed'
 
-      unless @application.attestation_url
-        halt 404, "URL d'attestation non disponible"
-      end
+      halt 404, "URL d'attestation non disponible" unless @application.attestation_url
 
       current_token = Token.current_token
-      unless current_token&.valid?
-        halt 401, "Token d'accès non valide. Veuillez vous authentifier d'abord."
-      end
+      halt 401, "Token d'accès non valide. Veuillez vous authentifier d'abord." unless current_token&.valid?
 
       begin
         pdf_content = @fast_track_client.download_attestation(current_token.access_token, @application.identifier)
@@ -284,22 +276,14 @@ class FakeEditorApp < Sinatra::Base
     get '/applications/:identifier/download_documents_package' do
       @application = MarketApplication.find_by_identifier(params[:identifier])
 
-      unless @application
-        halt 404, "Candidature non trouvée"
-      end
+      halt 404, 'Candidature non trouvée' unless @application
 
-      unless @application.status == 'completed'
-        halt 400, "La candidature n'est pas terminée"
-      end
+      halt 400, "La candidature n'est pas terminée" unless @application.status == 'completed'
 
-      unless @application.documents_package_url
-        halt 404, "URL du package de documents non disponible"
-      end
+      halt 404, 'URL du package de documents non disponible' unless @application.documents_package_url
 
       current_token = Token.current_token
-      unless current_token&.valid?
-        halt 401, "Token d'accès non valide. Veuillez vous authentifier d'abord."
-      end
+      halt 401, "Token d'accès non valide. Veuillez vous authentifier d'abord." unless current_token&.valid?
 
       begin
         zip_content = @fast_track_client.download_documents_package(current_token.access_token, @application.identifier)
@@ -339,11 +323,19 @@ class FakeEditorApp < Sinatra::Base
     redirect redirect_back
   rescue SQLite3::ReadOnlyException => e
     @error = "Database error: #{e.message}. Check file permissions."
-    @current_token = Token.current_token rescue nil
+    @current_token = begin
+      Token.current_token
+    rescue StandardError
+      nil
+    end
     erb :'technical/dashboard'
   rescue StandardError => e
     @error = "Authentication failed: #{e.message}"
-    @current_token = Token.current_token rescue nil
+    @current_token = begin
+      Token.current_token
+    rescue StandardError
+      nil
+    end
     erb :'technical/dashboard'
   end
 
@@ -371,11 +363,19 @@ class FakeEditorApp < Sinatra::Base
     redirect redirect_back
   rescue SQLite3::ReadOnlyException => e
     @error = "Database error: #{e.message}. Check file permissions."
-    @current_token = Token.current_token rescue nil
+    @current_token = begin
+      Token.current_token
+    rescue StandardError
+      nil
+    end
     erb :'technical/dashboard'
   rescue StandardError => e
     @error = "Clear tokens failed: #{e.message}"
-    @current_token = Token.current_token rescue nil
+    @current_token = begin
+      Token.current_token
+    rescue StandardError
+      nil
+    end
     erb :'technical/dashboard'
   end
 
@@ -394,7 +394,7 @@ class FakeEditorApp < Sinatra::Base
 
   post '/webhooks/voie-rapide' do
     payload = request.body.read
-    signature = request.env['HTTP_X_WEBHOOK_SIGNATURE_SHA256']
+    request.env['HTTP_X_WEBHOOK_SIGNATURE_SHA256']
 
     # In a real app, you'd verify the signature here
     # For demo purposes, we'll just process the webhook
@@ -432,16 +432,16 @@ class FakeEditorApp < Sinatra::Base
   def handle_market_completion(webhook_data)
     market_data = webhook_data['market']
 
-    if market_data && market_data['identifier']
-      market = Market.find_by_identifier(market_data['identifier'])
-      if market
-        market.store_webhook_payload!(webhook_data)
-        market.mark_completed!(webhook_data)
-        puts "✅ Webhook received: Market #{market_data['identifier']} completed"
-        puts "🔍 Debug: Webhook payload stored for debugging"
-      else
-        puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
-      end
+    return unless market_data && market_data['identifier']
+
+    market = Market.find_by_identifier(market_data['identifier'])
+    if market
+      market.store_webhook_payload!(webhook_data)
+      market.mark_completed!(webhook_data)
+      puts "✅ Webhook received: Market #{market_data['identifier']} completed"
+      puts '🔍 Debug: Webhook payload stored for debugging'
+    else
+      puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
     end
   end
 
@@ -455,7 +455,7 @@ class FakeEditorApp < Sinatra::Base
       application.store_webhook_payload!(webhook_data)
       application.mark_completed!(webhook_data)
       puts "✅ Application #{identifier} completed for market #{market_identifier}"
-      puts "🔍 Debug: Webhook payload stored for debugging"
+      puts '🔍 Debug: Webhook payload stored for debugging'
     else
       puts "⚠️ Unknown application: #{identifier}"
     end
@@ -468,6 +468,7 @@ class FakeEditorApp < Sinatra::Base
       name: params[:name],
       lot_name: params[:lot_name] && params[:lot_name].empty? ? nil : params[:lot_name],
       deadline: params[:deadline],
+      siret: params[:siret],
       market_type_codes: market_type_codes_array
     }
   end
@@ -475,7 +476,9 @@ class FakeEditorApp < Sinatra::Base
   def validate_market_data(market_data)
     return 'Veuillez remplir le nom du marché.' if market_data[:name].to_s.strip.empty?
     return 'Veuillez remplir la date limite.' if market_data[:deadline].to_s.strip.empty?
-    return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].nil? || market_data[:market_type_codes].empty?
+    return 'Veuillez remplir le SIRET de l\'organisation.' if market_data[:siret].to_s.strip.empty?
+    return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
+    return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].nil?
 
     nil
   end

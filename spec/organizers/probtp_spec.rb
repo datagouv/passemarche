@@ -6,6 +6,9 @@ RSpec.describe Probtp, type: :organizer do
   include ApiResponses::ProbtpResponses
 
   let(:siret) { '41816609600069' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:api_url) { "#{base_url}v3/probtp/etablissements/#{siret}/attestation_cotisations_retraite" }
   let(:token) { 'test_token_123' }
@@ -20,7 +23,7 @@ RSpec.describe Probtp, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API call and document download are successful' do
       let(:document_url) { "https://storage.entreprise.api.gouv.fr/siade/1569139162-#{siret}-attestation_probtp.pdf" }
@@ -31,8 +34,8 @@ RSpec.describe Probtp, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )

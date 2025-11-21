@@ -4,6 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Cibtp, type: :organizer do
   let(:siret) { '41816609600069' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
   let(:endpoint_url) { "#{base_url}v3/cibtp/etablissements/#{siret}/attestation_cotisations_conges_payes_chomage_intemperies" }
@@ -12,8 +15,8 @@ RSpec.describe Cibtp, type: :organizer do
   let(:query_params) do
     {
       'context' => 'Candidature marché public',
-      'recipient' => '13002526500013',
-      'object' => 'Réponse appel offre'
+      'recipient' => recipient_siret,
+      'object' => "Réponse marché: #{public_market.name}"
     }
   end
 
@@ -34,7 +37,7 @@ RSpec.describe Cibtp, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when full pipeline succeeds' do
       before do

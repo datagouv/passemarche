@@ -12,6 +12,7 @@ Feature: Buyer Configuration Flow
       | name | Fourniture de matériel informatique |
       | lot_name    | Lot 1 - Ordinateurs portables       |
       | deadline    | 2025-12-31T23:59:59Z                |
+      | siret        | 13002526500013                      |
       | market_types | supplies                            |
 
   Scenario: Navigation complète du flux acheteur - aller simple
@@ -119,6 +120,7 @@ Feature: Buyer Configuration Flow
     When I create a defense_industry public market with the following details:
       | name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
+      | siret        | 13002526500013                  |
       | market_types | supplies                        |
       | defense_industry     | true                            |
     And I visit the setup page for my public market

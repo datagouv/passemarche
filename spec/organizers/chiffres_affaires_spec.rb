@@ -4,6 +4,9 @@ RSpec.describe ChiffresAffaires, type: :organizer do
   include ApiResponses::ChiffresAffairesResponses
 
   let(:siret) { '41816609600069' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test-token-12345' }
   let(:api_url) { "#{base_url}v3/dgfip/etablissements/#{siret}/chiffres_affaires" }
@@ -18,7 +21,7 @@ RSpec.describe ChiffresAffaires, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API returns valid chiffres d\'affaires data' do
       before do
@@ -26,8 +29,8 @@ RSpec.describe ChiffresAffaires, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -75,8 +78,8 @@ RSpec.describe ChiffresAffaires, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -108,8 +111,8 @@ RSpec.describe ChiffresAffaires, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -141,8 +144,8 @@ RSpec.describe ChiffresAffaires, type: :organizer do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )

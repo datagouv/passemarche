@@ -4,16 +4,16 @@ require 'rails_helper'
 
 RSpec.describe MarketApplicationCreationService, type: :service do
   let(:editor) { create(:editor) }
-  let(:public_market) { create(:public_market, :completed, editor:) }
   let(:siret) { '12345678901234' }
-
-  before do
-    allow(SiretValidationService).to receive(:call).and_return(true)
-  end
 
   describe '#perform' do
     context 'when valid' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
       let(:service) { described_class.new(public_market:, siret:).perform }
+
+      before do
+        allow(SiretValidationService).to receive(:call).and_return(true)
+      end
 
       it 'returns success' do
         expect(service.success?).to be true
@@ -33,10 +33,12 @@ RSpec.describe MarketApplicationCreationService, type: :service do
     end
 
     context 'when validation fails' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
       let(:service) { described_class.new(public_market:, siret:).perform }
 
       before do
-        allow(SiretValidationService).to receive(:call).and_return(false)
+        allow(SiretValidationService).to receive(:call).with(public_market.siret).and_return(true)
+        allow(SiretValidationService).to receive(:call).with(siret).and_return(false)
       end
 
       it 'returns failure' do

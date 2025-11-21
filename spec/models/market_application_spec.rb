@@ -12,7 +12,8 @@ RSpec.describe MarketApplication, type: :model do
 
   describe 'business validations' do
     it 'calls SiretValidationService for SIRET validation' do
-      allow(SiretValidationService).to receive(:call).and_return(false)
+      allow(SiretValidationService).to receive(:call).with(public_market.siret).and_return(true)
+      allow(SiretValidationService).to receive(:call).with('12345678901234').and_return(false)
 
       application = build(:market_application, public_market:, siret: '12345678901234')
 

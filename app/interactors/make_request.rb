@@ -50,7 +50,7 @@ class MakeRequest < ApplicationInteractor
   end
 
   def request_recipient
-    '13002526500013'
+    context.market_application.public_market.siret
   end
 
   def request_object

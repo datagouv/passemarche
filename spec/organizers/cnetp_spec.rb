@@ -4,6 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Cnetp, type: :organizer do
   let(:siren) { '418166096' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret: "#{siren}00069") }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
   let(:endpoint_url) { "#{base_url}v3/cnetp/unites_legales/#{siren}/attestation_cotisations_conges_payes_chomage_intemperies" }
@@ -12,8 +15,8 @@ RSpec.describe Cnetp, type: :organizer do
   let(:query_params) do
     {
       'context' => 'Candidature marché public',
-      'recipient' => '13002526500013',
-      'object' => 'Réponse appel offre'
+      'recipient' => recipient_siret,
+      'object' => "Réponse marché: #{public_market.name}"
     }
   end
 
@@ -34,7 +37,7 @@ RSpec.describe Cnetp, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siren: }) }
+    subject { described_class.call(params: { siren: }, market_application:) }
 
     context 'when full pipeline succeeds' do
       before do

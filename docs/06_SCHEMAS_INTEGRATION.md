@@ -154,6 +154,7 @@ SÉQUENCE COMPLÈTE FLUX ACHETEUR
        │       "public_market": {        │                │                │
        │         "name": "Marché IT",    │                │                │
        │         "deadline": "2024-12-31",│               │                │
+       │         "siret": "13002526500013",│              │                │
        │         "market_type_codes": [  │                │                │
        │           "supplies", "services"│                │                │
        │         ]                       │                │                │
@@ -592,7 +593,58 @@ TAILLES MAXIMALES
 
 ---
 
-## 8. Checklist d'Intégration
+## 8. Schémas de Données JSON
+
+### Schéma de Création de Marché Public
+
+Le payload pour créer un marché public doit respecter la structure suivante :
+
+```json
+{
+  "public_market": {
+    "name": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Nom du marché public",
+      "required": true
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date limite de candidature (ISO 8601)",
+      "required": true
+    },
+    "siret": {
+      "type": "string",
+      "pattern": "^\\d{14}$",
+      "description": "SIRET de l'organisation publique",
+      "required": true
+    },
+    "market_type_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["supplies", "services", "works", "defense"]
+      },
+      "minItems": 1,
+      "description": "Types de marché (defense ne peut pas être seul)",
+      "required": true
+    },
+    "lot_name": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Nom du lot spécifique",
+      "required": false
+    }
+  }
+}
+```
+
+**Note sur les diagrammes de séquence** : Les diagrammes de flux acheteur et candidat ci-dessus reflètent déjà l'inclusion du SIRET dans les requêtes de création de marché. Aucune mise à jour visuelle des diagrammes n'est nécessaire.
+
+---
+
+## 9. Checklist d'Intégration
 
 ```
 CHECKLIST TECHNIQUE D'INTÉGRATION

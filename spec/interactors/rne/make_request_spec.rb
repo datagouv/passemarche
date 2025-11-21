@@ -6,6 +6,9 @@ RSpec.describe Rne::MakeRequest, type: :interactor do
   include ApiResponses::RneResponses
 
   let(:siret) { '41816609600069' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:siren) { siret[0..8] }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
@@ -13,8 +16,8 @@ RSpec.describe Rne::MakeRequest, type: :interactor do
   let(:query_params) do
     {
       'context' => 'Candidature marché public',
-      'recipient' => '13002526500013',
-      'object' => 'Réponse appel offre'
+      'recipient' => recipient_siret,
+      'object' => "Réponse marché: #{public_market.name}"
     }
   end
 
@@ -27,7 +30,7 @@ RSpec.describe Rne::MakeRequest, type: :interactor do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API request is successful (HTTP 200)' do
       before do
@@ -176,24 +179,6 @@ RSpec.describe Rne::MakeRequest, type: :interactor do
       it 'extracts SIREN from SIRET and builds the correct endpoint URL' do
         subject
         expect(a_request(:get, endpoint_url).with(query: hash_including(query_params))).to have_been_made.once
-      end
-    end
-
-    context 'with market_application context' do
-      let(:market_application) { create(:market_application) }
-
-      subject { described_class.call(params: { siret: }, market_application:) }
-
-      before do
-        stub_request(:get, endpoint_url)
-          .with(query: hash_including('object' => "Réponse marché: #{market_application.public_market.name}"))
-          .to_return(status: 200, body: successful_response_body)
-      end
-
-      it 'includes market name in request object parameter' do
-        subject
-        expect(a_request(:get, endpoint_url)
-          .with(query: hash_including('object' => "Réponse marché: #{market_application.public_market.name}"))).to have_been_made
       end
     end
   end

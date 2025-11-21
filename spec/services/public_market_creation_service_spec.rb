@@ -9,6 +9,7 @@ RSpec.describe PublicMarketCreationService do
       name: 'Test Market',
       lot_name: 'Lot A',
       deadline: 1.month.from_now,
+      siret: '13002526500013',
       market_type_codes: ['supplies']
     }
   end
@@ -74,6 +75,68 @@ RSpec.describe PublicMarketCreationService do
 
         it 'has no result' do
           expect(service.result).to be_nil
+        end
+      end
+
+      context 'with missing SIRET' do
+        let(:invalid_params) { valid_params.except(:siret) }
+        let(:service) { described_class.new(editor, invalid_params).perform }
+
+        it 'returns failure' do
+          expect(service.success?).to be false
+          expect(service.failure?).to be true
+        end
+
+        it 'has SIRET validation error' do
+          expect(service.errors[:siret]).to be_present
+        end
+
+        it 'has no result' do
+          expect(service.result).to be_nil
+        end
+      end
+
+      context 'with invalid SIRET format' do
+        let(:invalid_params) { valid_params.merge(siret: '1300252650001') }
+        let(:service) { described_class.new(editor, invalid_params).perform }
+
+        it 'returns failure' do
+          expect(service.success?).to be false
+          expect(service.failure?).to be true
+        end
+
+        it 'has SIRET validation error' do
+          expect(service.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+        end
+
+        it 'has no result' do
+          expect(service.result).to be_nil
+        end
+      end
+
+      context 'with invalid SIRET checksum' do
+        let(:invalid_params) { valid_params.merge(siret: '13002526500014') }
+        let(:service) { described_class.new(editor, invalid_params).perform }
+
+        it 'returns failure' do
+          expect(service.success?).to be false
+          expect(service.failure?).to be true
+        end
+
+        it 'has SIRET validation error' do
+          expect(service.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+        end
+
+        it 'has no result' do
+          expect(service.result).to be_nil
+        end
+      end
+
+      context 'with valid SIRET' do
+        let(:service) { described_class.new(editor, valid_params).perform }
+
+        it 'stores the SIRET correctly' do
+          expect(service.result.siret).to eq('13002526500013')
         end
       end
     end

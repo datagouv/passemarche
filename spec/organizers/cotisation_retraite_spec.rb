@@ -5,6 +5,9 @@ require 'rails_helper'
 RSpec.describe CotisationRetraite, type: :organizer do
   let(:siret) { '41816609600069' }
   let(:siren) { siret[0..8] }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
 
@@ -19,8 +22,8 @@ RSpec.describe CotisationRetraite, type: :organizer do
   let(:query_params) do
     {
       'context' => 'Candidature marché public',
-      'recipient' => '13002526500013',
-      'object' => 'Réponse appel offre'
+      'recipient' => recipient_siret,
+      'object' => "Réponse marché: #{public_market.name}"
     }
   end
 
@@ -46,7 +49,7 @@ RSpec.describe CotisationRetraite, type: :organizer do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret:, siren: }) }
+    subject { described_class.call(params: { siret:, siren: }, market_application:) }
 
     context 'when both CIBTP and CNETP succeed' do
       before do
@@ -221,7 +224,7 @@ RSpec.describe CotisationRetraite, type: :organizer do
     let(:query_params_with_market) do
       {
         'context' => 'Candidature marché public',
-        'recipient' => '13002526500013',
+        'recipient' => public_market.siret,
         'object' => "Réponse marché: #{public_market.name}"
       }
     end

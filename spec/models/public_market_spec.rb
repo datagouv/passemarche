@@ -27,6 +27,37 @@ RSpec.describe PublicMarket, type: :model do
 
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:deadline) }
+    it { should validate_presence_of(:siret) }
+
+    describe 'siret validation' do
+      it 'accepts valid SIRET' do
+        public_market = build(:public_market, editor:, siret: '13002526500013')
+        expect(public_market).to be_valid
+      end
+
+      it 'rejects SIRET with invalid format (not 14 digits)' do
+        public_market = build(:public_market, editor:, siret: '1300252650001')
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+      end
+
+      it 'rejects SIRET with invalid Luhn checksum' do
+        public_market = build(:public_market, editor:, siret: '13002526500014')
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+      end
+
+      it 'accepts La Poste SIRET (special case)' do
+        public_market = build(:public_market, editor:, siret: '35600000012345')
+        expect(public_market).to be_valid
+      end
+
+      it 'rejects non-numeric SIRET' do
+        public_market = build(:public_market, editor:, siret: 'ABCD1234567890')
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+      end
+    end
 
     describe 'market_type_codes validation' do
       let(:supplies_market_type) { create(:market_type, code: 'supplies') }

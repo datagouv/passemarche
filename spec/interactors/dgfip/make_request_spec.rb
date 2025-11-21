@@ -6,6 +6,9 @@ RSpec.describe Dgfip::MakeRequest, type: :interactor do
   include ApiResponses::DgfipResponses
 
   let(:siret) { '41816609600069' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:siren) { '418166096' }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
@@ -13,8 +16,8 @@ RSpec.describe Dgfip::MakeRequest, type: :interactor do
   let(:query_params) do
     {
       'context' => 'Candidature marché public',
-      'recipient' => '13002526500013',
-      'object' => 'Réponse appel offre'
+      'recipient' => recipient_siret,
+      'object' => "Réponse marché: #{public_market.name}"
     }
   end
 
@@ -26,7 +29,7 @@ RSpec.describe Dgfip::MakeRequest, type: :interactor do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API request is successful (HTTP 200)' do
       before do

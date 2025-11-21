@@ -25,6 +25,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           name: 'Test Market Name',
           lot_name: 'Test Lot Name',
           deadline: 1.month.from_now.iso8601,
+          siret: '13002526500013',
           market_type_codes: ['supplies']
         }
       }
@@ -60,6 +61,12 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         json_response = response.parsed_body
         public_market = PublicMarket.find_by(identifier: json_response['identifier'])
         expect(public_market.editor).to eq(editor)
+      end
+
+      it 'stores the SIRET correctly' do
+        json_response = response.parsed_body
+        public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+        expect(public_market.siret).to eq('13002526500013')
       end
     end
 
@@ -154,6 +161,89 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         json_response = response.parsed_body
         expect(json_response['errors']).to be_a(Hash)
         expect(json_response['errors']).to have_key('name')
+      end
+    end
+
+    context 'with missing SIRET' do
+      let(:invalid_params) do
+        {
+          public_market: {
+            name: 'Test Market Name',
+            lot_name: 'Test Lot Name',
+            deadline: 1.month.from_now.iso8601,
+            market_type_codes: ['supplies']
+          }
+        }
+      end
+
+      before do
+        post '/api/v1/public_markets',
+          params: invalid_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns SIRET validation error' do
+        json_response = response.parsed_body
+        expect(json_response['errors']).to have_key('siret')
+      end
+    end
+
+    context 'with invalid SIRET format' do
+      let(:invalid_params) do
+        market_params.deep_merge(
+          public_market: { siret: '1300252650001' }
+        )
+      end
+
+      before do
+        post '/api/v1/public_markets',
+          params: invalid_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns SIRET validation error' do
+        json_response = response.parsed_body
+        expect(json_response['errors']['siret']).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+      end
+    end
+
+    context 'with invalid SIRET checksum' do
+      let(:invalid_params) do
+        market_params.deep_merge(
+          public_market: { siret: '13002526500014' }
+        )
+      end
+
+      before do
+        post '/api/v1/public_markets',
+          params: invalid_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns SIRET validation error' do
+        json_response = response.parsed_body
+        expect(json_response['errors']['siret']).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
       end
     end
 

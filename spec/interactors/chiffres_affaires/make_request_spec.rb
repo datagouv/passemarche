@@ -4,6 +4,9 @@ RSpec.describe Dgfip::ChiffresAffaires::MakeRequest, type: :interactor do
   include ApiResponses::ChiffresAffairesResponses
 
   let(:siret) { '41816609600069' }
+  let(:recipient_siret) { '13002526500013' }
+  let(:public_market) { create(:public_market, :completed, siret: recipient_siret) }
+  let(:market_application) { create(:market_application, public_market:, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
   let(:endpoint_url) { "#{base_url}v3/dgfip/etablissements/#{siret}/chiffres_affaires" }
@@ -19,7 +22,7 @@ RSpec.describe Dgfip::ChiffresAffaires::MakeRequest, type: :interactor do
   end
 
   describe '.call' do
-    subject { described_class.call(params: { siret: }) }
+    subject { described_class.call(params: { siret: }, market_application:) }
 
     context 'when the API request is successful (HTTP 200)' do
       before do
@@ -27,8 +30,8 @@ RSpec.describe Dgfip::ChiffresAffaires::MakeRequest, type: :interactor do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -53,8 +56,8 @@ RSpec.describe Dgfip::ChiffresAffaires::MakeRequest, type: :interactor do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
@@ -81,8 +84,8 @@ RSpec.describe Dgfip::ChiffresAffaires::MakeRequest, type: :interactor do
           .with(
             query: hash_including(
               'context' => 'Candidature marché public',
-              'recipient' => '13002526500013',
-              'object' => 'Réponse appel offre'
+              'recipient' => recipient_siret,
+              'object' => "Réponse marché: #{public_market.name}"
             ),
             headers: { 'Authorization' => "Bearer #{token}" }
           )
