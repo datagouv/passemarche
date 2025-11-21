@@ -81,7 +81,7 @@ development:
 # for a full overview on how database connection configuration can be specified.
 #
 #
-#
+
 test:
   primary:
     <<: *default
@@ -89,21 +89,3 @@ test:
   queue:
     <<: *default
     database: 'voie_rapide_test'
-
-staging:
-  primary:
-    <<: *default
-  queue:
-    <<: *default
-
-sandbox:
-  primary:
-    <<: *default
-  queue:
-    <<: *default
-
-production:
-  primary:
-    <<: *default
-  queue:
-    <<: *default
