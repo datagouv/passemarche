@@ -2,7 +2,7 @@ class Urssaf < ApplicationOrganizer
   organize Urssaf::MakeRequest,
     Urssaf::BuildResource,
     Urssaf::DownloadDocument,
-    MapApiData
+    Urssaf::MapUrssafApiData
 
   def self.call(context = {})
     context[:api_name] ||= 'urssaf_attestation_vigilance'
