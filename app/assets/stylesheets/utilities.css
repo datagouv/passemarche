@@ -162,3 +162,16 @@
   flex: 1;
   border-radius: 2px;
 }
+
+.fr-header__operator {
+  width: 128px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fr-header__operator .fr-responsive-img {
+  width: 128px;
+  height: 72px;
+  object-fit: contain;
+}

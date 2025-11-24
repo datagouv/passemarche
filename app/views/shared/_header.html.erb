@@ -4,18 +4,23 @@
       <div class="fr-header__body-row">
         <div class="fr-header__brand fr-enlarge-link">
           <div class="fr-header__brand-top">
-            <div class="fr-header__logo">
-              <%= link_to root_path, title: t('header.home_title') do %>
-                <p class="fr-logo">
-                  République<br>Française
-                </p>
-              <% end %>
+            <%= link_to root_path, class: "fr-header__logo", title: t('header.home_title') do %>
+              <p class="fr-logo">
+                République<br>Française
+              </p>
+            <% end %>
+            <div class="fr-header__operator">
+              <%= image_tag 'passe-marche-logo.png',
+                  alt: t('header.logo_operator_alt'),
+                  class: 'fr-responsive-img' %>
             </div>
           </div>
           <div class="fr-header__service">
-            <p class="fr-header__service-title">
-              <%= link_to t('header.service_title'), root_path, title: t('header.home_title') %>
-            </p>
+            <%= link_to root_path, title: t('header.home_title') do %>
+              <p class="fr-header__service-title">
+                <%= t('header.service_title') %>
+              </p>
+            <% end %>
             <p class="fr-header__service-tagline"><%= t('header.service_tagline') %></p>
           </div>
         </div>
