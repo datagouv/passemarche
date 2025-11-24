@@ -2,14 +2,14 @@
 
 ## Vue d'ensemble
 
-Ce document présente les schémas techniques détaillés de l'architecture d'intégration Voie Rapide, incluant les flux de données, les interactions entre composants et les séquences d'appels API.
+Ce document présente les schémas techniques détaillés de l'architecture d'intégration Passe Marché, incluant les flux de données, les interactions entre composants et les séquences d'appels API.
 
 ---
 
 ## 1. Architecture Globale
 
 ```
-                              VOIE RAPIDE - ARCHITECTURE D'INTÉGRATION
+                              PASSE MARCHE - ARCHITECTURE D'INTÉGRATION
 
 ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                         PLATEFORME ÉDITEUR                                              │
@@ -31,7 +31,7 @@ Ce document présente les schémas techniques détaillés de l'architecture d'in
             │                       │                       │                       │
             ▼                       ▼                       ▼                       │
 ┌─────────────────────────────────────────────────────────────────────────────────┼────────────────────┐
-│                                      VOIE RAPIDE API                              │                    │
+│                                     PASSE MARCHE API                              │                    │
 ├─────────────────────────────────────────────────────────────────────────────────┼────────────────────┤
 │  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐         │                    │
 │  │   OAuth2    │   │   Marchés   │   │ Candidatures│   │   Fichiers  │         │                    │
@@ -74,7 +74,7 @@ Ce document présente les schémas techniques détaillés de l'architecture d'in
 SÉQUENCE D'AUTHENTIFICATION OAUTH2 CLIENT CREDENTIALS
 
 ┌─────────────────┐                                  ┌─────────────────┐
-│   Plateforme    │                                  │   Voie Rapide   │
+│   Plateforme    │                                  │   Passe Marché  │
 │   Éditeur       │                                  │   API OAuth     │
 └─────────────────┘                                  └─────────────────┘
          │                                                    │
@@ -140,7 +140,7 @@ GESTION EXPIRATION TOKEN:
 SÉQUENCE COMPLÈTE FLUX ACHETEUR
 
 ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│ Plateforme  │  │ Voie Rapide │  │ Interface   │  │ Acheteur    │  │ Webhook     │
+│ Plateforme  │  │ Passe Marché│  │ Interface   │  │ Acheteur    │  │ Webhook     │
 │ Éditeur     │  │ API         │  │ Config      │  │ Public      │  │ Système     │
 └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
        │                │                │                │                │
@@ -253,7 +253,7 @@ SÉQUENCE COMPLÈTE FLUX ACHETEUR
 SÉQUENCE COMPLÈTE FLUX CANDIDAT
 
 ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│ Plateforme  │  │ Voie Rapide │  │ Interface   │  │ Candidat    │  │ Webhook +   │
+│ Plateforme  │  │ Passe Marché│  │ Interface   │  │ Candidat    │  │ Webhook +   │
 │ Éditeur     │  │ API         │  │ Candidature │  │ Entreprise  │  │ Documents   │
 └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
        │                │                │                │                │
@@ -726,4 +726,4 @@ CHECKLIST TECHNIQUE D'INTÉGRATION
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Ces schémas techniques fournissent une vision complète de l'architecture d'intégration Voie Rapide et servent de référence pour l'implémentation et le debugging des intégrations éditeurs.
+Ces schémas techniques fournissent une vision complète de l'architecture d'intégration Passe Marché et servent de référence pour l'implémentation et le debugging des intégrations éditeurs.

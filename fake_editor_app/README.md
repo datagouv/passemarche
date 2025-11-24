@@ -1,10 +1,10 @@
-# Fake Editor App - Démonstration d'Intégration Voie Rapide
+# Fake Editor App - Démonstration d'Intégration Passe Marché
 
-Cette application Sinatra démontre comment intégrer une plateforme d'éditeur avec l'API OAuth2 de Voie Rapide.
+Cette application Sinatra démontre comment intégrer une plateforme d'éditeur avec l'API OAuth2 de Passe Marché.
 
 ## 🎯 Objectif
 
-Fournir un exemple concret d'intégration OAuth2 avec Voie Rapide, incluant :
+Fournir un exemple concret d'intégration OAuth2 avec Passe Marché, incluant :
 - Authentification via Client Credentials flow
 - Stockage et gestion des tokens
 - Interface utilisateur pour visualiser les tokens
@@ -21,8 +21,8 @@ Fournir un exemple concret d'intégration OAuth2 avec Voie Rapide, incluant :
 ## 📋 Prérequis
 
 - Ruby 3.4.5
-- Voie Rapide en cours d'exécution sur http://localhost:3000
-- Éditeur demo configuré dans Voie Rapide
+- Passe Marché en cours d'exécution sur http://localhost:3000
+- Éditeur demo configuré dans Passe Marché
 
 ## 🚀 Installation
 
@@ -49,9 +49,9 @@ PORT=4567
 RACK_ENV=development
 ```
 
-### 3. Configurer l'éditeur demo dans Voie Rapide
+### 3. Configurer l'éditeur demo dans Passe Marché
 
-Dans la console Rails de Voie Rapide :
+Dans la console Rails de Passe Marché :
 
 ```ruby
 demo_editor = Editor.create!(
@@ -84,10 +84,10 @@ Ouvrez votre navigateur à : http://localhost:4567
 ### 3. Tester l'intégration complète
 
 1. Cliquez sur **"S'authentifier"** pour obtenir un token OAuth2
-2. Le token sera affiché avec ses détails (type, scope, expiration)  
+2. Le token sera affiché avec ses détails (type, scope, expiration)
 3. Créez un marché public avec le formulaire
-4. Cliquez sur l'URL de configuration pour accéder à Voie Rapide
-5. Complétez la configuration du marché dans Voie Rapide
+4. Cliquez sur l'URL de configuration pour accéder à Passe Marché
+5. Complétez la configuration du marché dans Passe Marché
 6. À la fin, le marché sera marqué comme "Terminé" via webhook
 7. Utilisez **"Rafraîchir le Token"** si nécessaire
 8. Utilisez **"Effacer les Tokens"** pour nettoyer la base de données
@@ -102,7 +102,7 @@ fake_editor_app/
 ├── .env.example              # Template de configuration
 ├── lib/
 │   ├── database.rb           # Configuration SQLite et modèles
-│   └── fast_track_client.rb  # Client OAuth2 pour Voie Rapide
+│   └── fast_track_client.rb  # Client OAuth2 pour Passe Marché
 ├── views/
 │   ├── layout.erb            # Template de base
 │   └── dashboard.erb         # Interface du dashboard
@@ -121,10 +121,10 @@ fake_editor_app/
 
 ### Création de marchés publics
 - Formulaire de création avec validation
-- Intégration avec l'API Voie Rapide
+- Intégration avec l'API Passe Marché
 - Stockage local des marchés créés
 
-### Réception de webhooks  
+### Réception de webhooks
 - Endpoint `/webhooks/voie-rapide` pour les notifications
 - Traitement automatique des événements de completion
 - Mise à jour du statut des marchés en temps réel
@@ -139,7 +139,7 @@ fake_editor_app/
 ### Stockage des données
 - Base de données SQLite locale
 - Modèle Token avec validation d'expiration
-- Modèle Market pour les marchés publics  
+- Modèle Market pour les marchés publics
 - Nettoyage automatique des anciens tokens
 
 ## 🛡 Sécurité
@@ -152,7 +152,7 @@ fake_editor_app/
 ## 🐛 Dépannage
 
 ### Erreur d'authentification
-- Vérifiez que Voie Rapide est lancé
+- Vérifiez que Passe Marché est lancé
 - Vérifiez les variables d'environnement
 - Assurez-vous que l'éditeur demo est créé et autorisé
 
@@ -182,4 +182,4 @@ Cette application est un exemple de démonstration. Pour des améliorations :
 
 ---
 
-*Application de démonstration pour l'intégration OAuth2 avec Voie Rapide*
+*Application de démonstration pour l'intégration OAuth2 avec Passe Marché*

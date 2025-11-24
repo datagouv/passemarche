@@ -11,4 +11,4 @@
 # 4. Update this comment with new version number
 #
 # Version history:
-# - 1.13.0 (December 2024) - Initial stable version for Voie Rapide
+# - 1.13.0 (December 2024) - Initial stable version for Passe Marché

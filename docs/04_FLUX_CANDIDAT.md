@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Le flux candidat dans Voie Rapide permet aux éditeurs de créer des candidatures pour leurs entreprises utilisatrices, puis de les rediriger vers une interface dédiée pour compléter leur dossier de candidature. Ce processus garantit la conformité réglementaire tout en simplifiant l'expérience utilisateur.
+Le flux candidat dans Passe Marché permet aux éditeurs de créer des candidatures pour leurs entreprises utilisatrices, puis de les rediriger vers une interface dédiée pour compléter leur dossier de candidature. Ce processus garantit la conformité réglementaire tout en simplifiant l'expérience utilisateur.
 
 ## Architecture du Flux
 

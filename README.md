@@ -1,10 +1,10 @@
-# Voie Rapide
+# Passe Marché
 
 [![Ruby](https://img.shields.io/badge/Ruby-3.4.5-red.svg)](https://www.ruby-lang.org/)
 [![Rails](https://img.shields.io/badge/Rails-8.0.2-red.svg)](https://rubyonrails.org/)
 [![DSFR](https://img.shields.io/badge/DSFR-1.13.0-blue.svg)](https://www.systeme-de-design.gouv.fr/)
 
-**Voie Rapide** est une application Rails 8 qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Le projet vise à transformer les procédures d'appel d'offres complexes en un processus rationalisé et convivial, intégré aux plateformes d'achat existantes.
+**Passe Marché** est une application Rails 8 qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Le projet vise à transformer les procédures d'appel d'offres complexes en un processus rationalisé et convivial, intégré aux plateformes d'achat existantes.
 
 ## 🎯 Objectif
 
@@ -83,7 +83,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ### 🧪 Sandbox (environnement de test)
 
-- **Voie Rapide (Fast Track)** : https://sandbox.voie-rapide.services.api.gouv.fr/
+- **Passe Marché** : https://sandbox.voie-rapide.services.api.gouv.fr/
 - **Éditeur de démonstration (Fake Editor)** : https://sandbox.voie-rapide-edition.services.api.gouv.fr/
 
 Ces environnements permettent de tester l'intégration complète sans affecter les données de production.
@@ -228,7 +228,7 @@ Ces tâches permettent d'extraire et de mettre à jour les traductions français
 #### Structure du fichier CSV attendu
 Le fichier CSV doit contenir les colonnes suivantes (ligne 4 = en-têtes) :
 - `category_key`, `subcategory_key`, `key` : Clés techniques
-- `category_acheteur`, `subcategory_acheteur` : Traductions des catégories/sous-catégories  
+- `category_acheteur`, `subcategory_acheteur` : Traductions des catégories/sous-catégories
 - `titre_acheteur`, `description_acheteur` : Traductions des champs côté acheteur
 - `import` : `oui` pour les lignes à traiter
 - Colonnes de types de marchés : `services`, `fournitures`, `travaux`, `défense`
@@ -306,7 +306,7 @@ fr:
 
 ## 🎭 Application de Démonstration (Fake Editor App)
 
-Une application Sinatra complète qui démontre l'intégration OAuth2 avec Voie Rapide.
+Une application Sinatra complète qui démontre l'intégration OAuth2 avec Passe Marché.
 
 ### Fonctionnalités
 - **Authentification OAuth2** : Client Credentials flow
@@ -317,7 +317,7 @@ Une application Sinatra complète qui démontre l'intégration OAuth2 avec Voie 
 
 ### Démarrage rapide
 ```bash
-# 1. Démarrer Voie Rapide
+# 1. Démarrer Passe Marché
 bin/dev
 
 # 2. Dans un autre terminal, démarrer l'app de démo
@@ -442,4 +442,4 @@ Pour toute question ou problème :
 
 ---
 
-**Voie Rapide** - Simplifiez vos candidatures aux marchés publics 🚀
+**Passe Marché** - Simplifiez vos candidatures aux marchés publics 🚀

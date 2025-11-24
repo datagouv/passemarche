@@ -2,18 +2,18 @@
 
 ## Vue d'ensemble
 
-Le flux acheteur dans Voie Rapide permet aux éditeurs de créer et configurer des marchés publics via API, puis de rediriger les acheteurs vers une interface dédiée pour finaliser la configuration. Ce processus garantit une expérience utilisateur optimale tout en maintenant le contrôle technique via API.
+Le flux acheteur dans Passe Marché permet aux éditeurs de créer et configurer des marchés publics via API, puis de rediriger les acheteurs vers une interface dédiée pour finaliser la configuration. Ce processus garantit une expérience utilisateur optimale tout en maintenant le contrôle technique via API.
 
 ## Architecture du Flux
 
 ```
 ┌─────────────────┐    1. Authentification   ┌─────────────────┐
-│   Plateforme    │ ────────────────────────▶│   Voie Rapide   │
+│   Plateforme    │ ────────────────────────▶│   Passe Marché  │
 │   Éditeur       │◄──────────────────────── │   API OAuth     │
 └─────────────────┘    2. Token d'accès      └─────────────────┘
 
 ┌─────────────────┐    3. Création marché    ┌─────────────────┐
-│   Plateforme    │ ────────────────────────▶│   Voie Rapide   │
+│   Plateforme    │ ────────────────────────▶│   Passe Marché  │
 │   Éditeur       │◄──────────────────────── │   API           │
 └─────────────────┘    4. URL config         └─────────────────┘
 

@@ -225,7 +225,7 @@ class FakeEditorApp < Sinatra::Base
           siret:
         })
 
-        # Redirect to the application URL in Voie Rapide
+        # Redirect to the application URL in Passe Marché
         redirect api_response['application_url']
       rescue StandardError => e
         @error = "Erreur lors du démarrage de la candidature: #{e.message}"
