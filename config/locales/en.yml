@@ -35,13 +35,14 @@ en:
     title: "Fast Track"
 
   header:
-    home_title: "Home - Fast Track"
-    service_title: "Fast Track"
+    home_title: "Home - Passe Marché"
+    service_title: "Passe Marché"
     service_tagline: "Simplify your public procurement applications"
     logo_alt: "French Republic"
+    logo_operator_alt: "Logo Passe Marché"
 
   footer:
-    description: "Fast Track facilitates SME access to French public markets."
+    description: "Passe Marché facilitates SME access to French public markets."
     links:
       accessibility: "Accessibility: not compliant"
       legal: "Legal notice"
@@ -49,7 +50,7 @@ en:
       cookies: "Cookie management"
 
   home:
-    title: "Fast Track"
+    title: "Passe Marché"
     subtitle: "The simplified platform for public procurement applications"
     description: "Facilitate your administrative procedures to respond to public calls for tenders."
 
