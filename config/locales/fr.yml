@@ -137,11 +137,12 @@ fr:
         title: "Les documents et informations réglementaires et obligatoires"
         subtitle: "Ces documents et informations sont obligatoires et démandés systématiquement aux candidats. "
       additional_fields:
-        title: "Les documents et informations demandés à titre non réglementaire"
-        subtitle: "Ces documents et informations sont facultatifs, vous pouvez en sélectionner un ou plusieurs. "
+        title: "Les renseignements complémentaires relatifs à la capacité des candidats"
+        subtitle: "Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats."
+        notice: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique).\n\nCertains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
         config_title: "Configuration"
         config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs réglementaires et obligatoires."
-        question: "Je veux demander des informations et documents complémentaires au candidat"
+        question: "Je veux demander des renseignements complémentaires relatifs à la capacité des candidats ?"
         yes_option: "Oui"
         no_option: "Non"
       summary:
