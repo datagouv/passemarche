@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dgfip::DownloadDocument < DownloadDocument
+class Urssaf::DownloadDocument < DownloadDocument
   include SiretHelpers
 
   protected
@@ -10,6 +10,6 @@ class Dgfip::DownloadDocument < DownloadDocument
   end
 
   def generate_filename(_uri)
-    "attestation_fiscale_#{siren}.pdf"
+    "attestation_vigilance_urssaf_#{siret}.pdf"
   end
 end
