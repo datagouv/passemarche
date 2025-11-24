@@ -34,7 +34,9 @@ Feature: Buyer Configuration Flow
     When I click on "Suivant"
     Then I should be on the optional documents page
     And I should see "Sélection des informations non réglementaires"
-    And I should see "Les documents et informations demandés à titre non réglementaire"
+    And I should see "Les renseignements complémentaires relatifs à la capacité des candidats"
+    And I should see "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique)."
+    And I should see "Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
     And I should see "Test: Capacité économique et financière"
     And I should see "Test: Motifs d'exclusion à l'appréciation"
     And I should see a "Précédent" button
@@ -97,7 +99,9 @@ Feature: Buyer Configuration Flow
 
     When I visit the optional documents page for my public market
     Then I should be on the optional documents page
-    And I should see "Les documents et informations demandés à titre non réglementaire"
+    And I should see "Les renseignements complémentaires relatifs à la capacité des candidats"
+    And I should see "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique)."
+    And I should see "Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
 
     When I visit the summary page for my public market
     Then I should be on the summary page
@@ -129,7 +133,7 @@ Feature: Buyer Configuration Flow
 
   Scenario: Sélection de documents supplémentaires avec question oui/non
     When I visit the optional documents page for my public market
-    Then I should see "Je veux demander des informations et documents complémentaires au candidat"
+    Then I should see "Je veux demander des renseignements complémentaires relatifs à la capacité des candidats ?"
     And I should see "Oui"
     And I should see "Non"
 
