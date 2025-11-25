@@ -33,6 +33,16 @@ module MarketAttributeResponsesHelper
     "Taille maximale : #{max_size_mb} Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles."
   end
 
+  def document_display_name(document, market_application:, context:)
+    naming_service = DocumentNamingService.new(market_application)
+    original = naming_service.original_filename_for(document)
+    system_name = naming_service.system_filename_for(document)
+
+    return system_name if context == :buyer
+
+    "#{original} → #{system_name}"
+  end
+
   # rubocop:disable Metrics/ParameterLists
   def current_documents_list(documents, market_application_identifier: nil, show_empty: false, deletable: false, form: nil, field_name: :files)
     # rubocop:enable Metrics/ParameterLists
