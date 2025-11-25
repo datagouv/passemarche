@@ -176,103 +176,36 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisons,
         end
       end
 
-      context 'with missing resume' do
+      context 'with partial data (all fields optional)' do
+        let(:value) do
+          {
+            'items' => {
+              '1738234567890' => {
+                'resume' => 'Test'
+              }
+            }
+          }
+        end
+
+        it 'is valid with only resume' do
+          expect(response).to be_valid
+        end
+      end
+
+      context 'with only dates' do
         let(:value) do
           {
             'items' => {
               '1738234567890' => {
                 'date_debut' => '2023-01-01',
-                'date_fin' => '2023-12-31',
-                'montant' => 500_000,
-                'description' => 'Description complète'
+                'date_fin' => '2023-12-31'
               }
             }
           }
         end
 
-        it 'is invalid' do
-          expect(response).not_to be_valid
-          expect(response.errors[:value]).to include(match(/resume is required/))
-        end
-      end
-
-      context 'with missing date_debut' do
-        let(:value) do
-          {
-            'items' => {
-              '1738234567890' => {
-                'resume' => 'Test',
-                'date_fin' => '2023-12-31',
-                'montant' => 500_000,
-                'description' => 'Description'
-              }
-            }
-          }
-        end
-
-        it 'is invalid' do
-          expect(response).not_to be_valid
-          expect(response.errors[:value]).to include(match(/date_debut is required/))
-        end
-      end
-
-      context 'with missing date_fin' do
-        let(:value) do
-          {
-            'items' => {
-              '1738234567890' => {
-                'resume' => 'Test',
-                'date_debut' => '2023-01-01',
-                'montant' => 500_000,
-                'description' => 'Description'
-              }
-            }
-          }
-        end
-
-        it 'is invalid' do
-          expect(response).not_to be_valid
-          expect(response.errors[:value]).to include(match(/date_fin is required/))
-        end
-      end
-
-      context 'with missing montant' do
-        let(:value) do
-          {
-            'items' => {
-              '1738234567890' => {
-                'resume' => 'Test',
-                'date_debut' => '2023-01-01',
-                'date_fin' => '2023-12-31',
-                'description' => 'Description'
-              }
-            }
-          }
-        end
-
-        it 'is invalid' do
-          expect(response).not_to be_valid
-          expect(response.errors[:value]).to include(match(/montant is required/))
-        end
-      end
-
-      context 'with missing description' do
-        let(:value) do
-          {
-            'items' => {
-              '1738234567890' => {
-                'resume' => 'Test',
-                'date_debut' => '2023-01-01',
-                'date_fin' => '2023-12-31',
-                'montant' => 500_000
-              }
-            }
-          }
-        end
-
-        it 'is invalid' do
-          expect(response).not_to be_valid
-          expect(response.errors[:value]).to include(match(/description is required/))
+        it 'is valid' do
+          expect(response).to be_valid
         end
       end
 

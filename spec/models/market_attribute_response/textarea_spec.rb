@@ -74,10 +74,9 @@ RSpec.describe MarketAttributeResponse::Textarea, type: :model do
         expect(textarea_response).to be_valid
       end
 
-      it 'rejects empty string for manual fields' do
+      it 'allows empty string for manual fields' do
         textarea_response.value = { 'text' => '' }
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to be_present
+        expect(textarea_response).to be_valid
       end
 
       it 'rejects text exceeding length limit' do
@@ -92,90 +91,18 @@ RSpec.describe MarketAttributeResponse::Textarea, type: :model do
         expect(textarea_response.errors[:text]).to be_present
       end
 
-      it 'rejects missing text field' do
+      it 'allows missing text field' do
         textarea_response.value = {}
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to be_present
+        expect(textarea_response).to be_valid
       end
 
-      it 'rejects nil value' do
+      it 'allows nil value' do
         textarea_response.value = nil
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to be_present
+        expect(textarea_response).to be_valid
       end
 
       it 'rejects additional properties' do
         textarea_response.value = { 'text' => 'Valid text', 'extra' => 'field' }
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to be_present
-      end
-    end
-  end
-
-  describe 'mandatory validation for manual fields' do
-    before do
-      # Save the record to make it persisted
-      textarea_response.save!(validate: false)
-      textarea_response.reload
-    end
-
-    context 'when source is manual' do
-      before { textarea_response.update_column(:source, :manual) }
-
-      it 'requires text to be present' do
-        textarea_response.text = nil
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to include(I18n.t('activerecord.errors.json_schema.required'))
-      end
-
-      it 'rejects empty string' do
-        textarea_response.text = ''
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to include(I18n.t('activerecord.errors.json_schema.required'))
-      end
-
-      it 'rejects blank string' do
-        textarea_response.text = '   '
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to include(I18n.t('activerecord.errors.json_schema.required'))
-      end
-
-      it 'accepts valid text' do
-        textarea_response.text = 'Valid content'
-        expect(textarea_response).to be_valid
-      end
-    end
-
-    context 'when source is manual_after_api_failure' do
-      before { textarea_response.update_column(:source, :manual_after_api_failure) }
-
-      it 'requires text to be present' do
-        textarea_response.text = nil
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to include(I18n.t('activerecord.errors.json_schema.required'))
-      end
-
-      it 'accepts valid text' do
-        textarea_response.text = 'Valid content'
-        expect(textarea_response).to be_valid
-      end
-    end
-
-    context 'regardless of market_attribute.required flag' do
-      it 'validates even when market_attribute.required is false' do
-        textarea_response.market_attribute.update(required: false)
-        textarea_response.update_column(:source, :manual)
-        textarea_response.text = ''
-
-        expect(textarea_response).not_to be_valid
-        expect(textarea_response.errors[:text]).to include(I18n.t('activerecord.errors.json_schema.required'))
-      end
-
-      it 'validates when market_attribute.required is true' do
-        textarea_response.market_attribute.update(required: true)
-        textarea_response.update_column(:source, :manual)
-        textarea_response.text = ''
-
         expect(textarea_response).not_to be_valid
         expect(textarea_response.errors[:text]).to be_present
       end

@@ -32,14 +32,24 @@ RSpec.describe MarketAttributeResponse::UrlInput, type: :model do
         'http://example',           # pas de TLD
         'example',                  # pas de TLD
         'ftp://example.com',        # schéma non accepté
-        'http://',                  # incomplet
-        '',                         # vide
-        nil                         # nil
+        'http://'                   # incomplet
       ].each do |invalid_url|
         it "rejects '#{invalid_url.inspect}'" do
           url_response.text = invalid_url
           expect(url_response).not_to be_valid
         end
+      end
+    end
+
+    context 'with blank values' do
+      it 'allows empty string' do
+        url_response.text = ''
+        expect(url_response).to be_valid
+      end
+
+      it 'allows nil' do
+        url_response.text = nil
+        expect(url_response).to be_valid
       end
     end
   end

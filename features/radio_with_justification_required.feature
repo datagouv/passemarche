@@ -10,12 +10,12 @@ Feature: Radio with justification required field
     Given a public market with radio_with_justification_required field exists
     And a candidate starts an application for this market justification
 
-  Scenario: Submit with "No" and no document (INVALID)
+  Scenario: Submit with "No" and no document (VALID - document now optional)
     When I visit the justification field step
     And I select the "No" radio button for justification
     And I click "Suivant"
-    Then the justification form should fail validation
-    And I should see a document required error
+    Then the justification form should be submitted successfully
+    And the justification radio choice should be "no"
 
   Scenario: Submit with "No" and document (VALID)
     When I visit the justification field step

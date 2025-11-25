@@ -25,7 +25,6 @@ class MarketAttributeResponse::RadioWithJustificationRequired < MarketAttributeR
   def conditional_fields_based_on_radio
     return unless radio_no?
 
-    errors.add(:documents, :required) unless documents.attached?
     errors.add(:value, :invalid) if text.present?
   end
 end

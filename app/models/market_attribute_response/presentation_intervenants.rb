@@ -44,6 +44,10 @@ class MarketAttributeResponse::PresentationIntervenants < MarketAttributeRespons
     'person'
   end
 
+  def item_data_fields
+    PERSON_FIELDS
+  end
+
   private
 
   def validate_persons_structure
@@ -68,16 +72,9 @@ class MarketAttributeResponse::PresentationIntervenants < MarketAttributeRespons
   end
 
   def validate_single_person(person, display_number)
-    unless person.is_a?(Hash)
-      errors.add(:value, "Person #{display_number} must be a hash")
-      return
-    end
+    return if person.is_a?(Hash)
 
-    return unless person_has_data?(person)
-    return unless market_attribute&.required?
-    return if person['nom'].present?
-
-    errors.add(:value, "Person #{display_number}: nom is required when person data is provided")
+    errors.add(:value, "Person #{display_number} must be a hash")
   end
 
   def person_has_data?(person)

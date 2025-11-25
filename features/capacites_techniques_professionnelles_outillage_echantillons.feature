@@ -39,10 +39,10 @@ Feature: Capacités techniques et professionnelles - Illustration des réalisati
       | Prototype de signalétique PMR        |
     Then only echantillon 2 data should be saved
 
-  Scenario: Description validation - required field
+  Scenario: Échantillon with only file attachment is valid (description optional)
     When I visit the echantillons step
-    And I submit échantillon without description
-    Then I should see échantillon validation error "description is required when echantillon data is provided"
+    And I submit échantillon with only file attachment
+    Then the échantillon form should be submitted successfully
 
   Scenario: Display of submitted data in summary
     Given I have submitted echantillons data with multiple items:

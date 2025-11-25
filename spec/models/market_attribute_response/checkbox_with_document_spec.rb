@@ -14,7 +14,7 @@ RSpec.describe MarketAttributeResponse::CheckboxWithDocument, type: :model do
     it 'is invalid when checked is nil' do
       response.checked = nil
       expect(response).not_to be_valid
-      expect(response.errors[:checked]).to include(I18n.t('activerecord.errors.json_schema.required'))
+      expect(response.errors[:checked]).to be_present
     end
 
     it 'is valid when checked is true' do

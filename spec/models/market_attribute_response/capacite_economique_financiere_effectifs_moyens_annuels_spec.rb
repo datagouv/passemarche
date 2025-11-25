@@ -63,14 +63,13 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
       }
     end
 
-    context 'with missing average_staff' do
+    context 'with missing average_staff (optional field)' do
       let(:value) do
         base_value.tap { |v| v['year_1'].delete('average_staff') }
       end
 
-      it 'is invalid' do
-        expect(response).not_to be_valid
-        expect(response.errors[:value]).to include('year_1.average_staff is required')
+      it 'is valid' do
+        expect(response).to be_valid
       end
     end
 
@@ -114,14 +113,13 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
       }
     end
 
-    context 'with missing year' do
+    context 'with missing year (optional field)' do
       let(:value) do
         base_value.tap { |v| v['year_1'].delete('year') }
       end
 
-      it 'is invalid' do
-        expect(response).not_to be_valid
-        expect(response.errors[:value]).to include('year_1.year is required')
+      it 'is valid' do
+        expect(response).to be_valid
       end
     end
 

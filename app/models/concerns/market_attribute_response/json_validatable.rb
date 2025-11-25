@@ -24,14 +24,7 @@ module MarketAttributeResponse::JsonValidatable
   private
 
   def validate_json_structure
-    validate_required_fields
     validate_allowed_properties if value.present?
-  end
-
-  def validate_required_fields
-    self.class.json_schema_required.each do |field|
-      errors.add(field, I18n.t('activerecord.errors.json_schema.required')) if value.blank? || !value.key?(field.to_s)
-    end
   end
 
   def validate_allowed_properties

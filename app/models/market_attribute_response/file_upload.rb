@@ -4,8 +4,6 @@ class MarketAttributeResponse::FileUpload < MarketAttributeResponse
 
   store_accessor :value
 
-  validates :documents, presence: { message: I18n.t('activerecord.errors.json_schema.required') }
-
   def self.json_schema_properties
     ['files']
   end

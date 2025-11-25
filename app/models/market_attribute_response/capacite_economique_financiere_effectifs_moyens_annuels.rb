@@ -68,19 +68,8 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
       year_data = value[year_key]
       next if year_data.blank?
 
-      unless year_data.is_a?(Hash)
-        errors.add(:value, "#{year_key} must be a hash")
-        next
-      end
-      validate_presence_for_year(year_key, year_data)
+      errors.add(:value, "#{year_key} must be a hash") unless year_data.is_a?(Hash)
     end
-  end
-
-  def validate_presence_for_year(year_key, year_data)
-    return unless year_has_any_data?(year_data)
-
-    errors.add(:value, "#{year_key}.#{STAFF_FIELD} is required") if year_data[STAFF_FIELD].blank?
-    errors.add(:value, "#{year_key}.#{YEAR_FIELD} is required") if year_data[YEAR_FIELD].blank?
   end
 
   def validate_staff_and_year_fields

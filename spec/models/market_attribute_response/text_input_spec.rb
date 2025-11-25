@@ -74,10 +74,9 @@ RSpec.describe MarketAttributeResponse::TextInput, type: :model do
         expect(text_response).to be_valid
       end
 
-      it 'rejects empty string for manual input' do
+      it 'allows empty string for manual input' do
         text_response.value = { 'text' => '' }
-        expect(text_response).not_to be_valid
-        expect(text_response.errors[:text]).to be_present
+        expect(text_response).to be_valid
       end
 
       it 'allows empty string for auto-filled data' do
@@ -104,16 +103,14 @@ RSpec.describe MarketAttributeResponse::TextInput, type: :model do
         expect(text_response.errors[:text]).to be_present
       end
 
-      it 'rejects missing text field' do
+      it 'allows missing text field' do
         text_response.value = {}
-        expect(text_response).not_to be_valid
-        expect(text_response.errors[:text]).to be_present
+        expect(text_response).to be_valid
       end
 
-      it 'rejects nil value' do
+      it 'allows nil value' do
         text_response.value = nil
-        expect(text_response).not_to be_valid
-        expect(text_response.errors[:text]).to be_present
+        expect(text_response).to be_valid
       end
 
       it 'rejects additional properties' do
