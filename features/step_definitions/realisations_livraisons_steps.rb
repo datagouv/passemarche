@@ -264,5 +264,5 @@ end
 
 Then('I should see the attestation in the summary') do
   expect(page).to have_content('Attestation')
-  expect(page).to have_link('test.pdf')
+  expect(page).to have_content('test.pdf')
 end

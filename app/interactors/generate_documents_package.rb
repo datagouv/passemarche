@@ -123,24 +123,17 @@ class GenerateDocumentsPackage < ApplicationInteractor
   end
   # rubocop:enable Metrics/AbcSize
 
-  def add_single_document_to_zip(zip, document, response, response_index, doc_index)
-    field_key = response.market_attribute.key
-    original_filename = document.filename.to_s
-    zip_filename = build_zip_filename(document, response_index, doc_index, field_key, original_filename)
+  def add_single_document_to_zip(zip, document, _response, _response_index, _doc_index)
+    system_filename = naming_service.system_filename_for(document)
+    zip_filename = "documents/#{system_filename}"
 
     zip.put_next_entry(zip_filename)
     zip.write(document.download)
   rescue StandardError => e
-    Rails.logger.error "Failed to add document #{original_filename} to ZIP: #{e.message}"
-    # Continue processing other documents
+    Rails.logger.error "Failed to add document #{document.filename} to ZIP: #{e.message}"
   end
 
-  def build_zip_filename(document, upload_index, doc_index, field_key, original_filename)
-    prefix = document_from_api?(document) ? 'api' : 'user'
-    "documents/#{prefix}_#{format('%02d', upload_index + 1)}_#{format('%02d', doc_index + 1)}_#{field_key}_#{original_filename}"
-  end
-
-  def document_from_api?(document)
-    document.metadata['source']&.start_with?('api_')
+  def naming_service
+    @naming_service ||= DocumentNamingService.new(market_application)
   end
 end

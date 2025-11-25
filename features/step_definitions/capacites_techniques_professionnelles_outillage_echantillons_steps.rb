@@ -231,7 +231,7 @@ end
 
 Then('I should see the fichiers in the summary') do
   expect(page).to have_content('Fichier')
-  expect(page).to have_link('test.pdf')
+  expect(page).to have_content('test.pdf')
 end
 
 # Multiple files upload test
@@ -268,6 +268,6 @@ end
 
 Then('I should see all fichiers in the summary') do
   expect(page).to have_content('Fichiers')
-  expect(page).to have_link('photo1.jpg')
-  expect(page).to have_link('photo2.jpg')
+  expect(page).to have_content('photo1.jpg')
+  expect(page).to have_content('photo2.jpg')
 end

@@ -5,6 +5,7 @@
   context ||= :web
   show_value = !market_attribute_response.auto? || context == :buyer
   market_application = market_attribute_response.market_application
+  naming_service = DocumentNamingService.new(market_application)
 %>
 
 <div class="field-layout-container">
@@ -47,7 +48,8 @@
                             <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
                                        document: fichier,
                                        market_application: market_application,
-                                       context: context %>
+                                       context: context,
+                                       naming_service: naming_service %>
                           <% end %>
                         </div>
                       </div>

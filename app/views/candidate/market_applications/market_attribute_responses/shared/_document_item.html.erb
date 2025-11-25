@@ -1,6 +1,7 @@
 <%
   show_size = local_assigns.fetch(:show_size, true)
-  display_name = document_display_name(document, market_application: market_application, context: context)
+  naming_service = local_assigns[:naming_service]
+  display_name = document_display_name(document, market_application: market_application, context: context, naming_service: naming_service)
 %>
 
 <div>

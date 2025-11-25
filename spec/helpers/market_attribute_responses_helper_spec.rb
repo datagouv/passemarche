@@ -47,6 +47,14 @@ RSpec.describe MarketAttributeResponsesHelper, type: :helper do
       end
     end
 
+    context 'when context is nil' do
+      it 'returns original → system format (same as :web)' do
+        result = helper.document_display_name(document, market_application:, context: nil)
+
+        expect(result).to eq('my_document.pdf → user_01_01_test_document_field_my_document.pdf')
+      end
+    end
+
     context 'with special characters in filename' do
       let(:special_attribute) do
         create(:market_attribute, :file_upload,
