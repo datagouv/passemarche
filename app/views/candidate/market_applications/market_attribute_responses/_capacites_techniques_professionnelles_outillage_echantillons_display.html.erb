@@ -3,8 +3,8 @@
   key = market_attribute_response.market_attribute.key
   has_echantillons = echantillons_data.present? && echantillons_data.values.any? { |echantillon| echantillon.present? && echantillon.any? { |_, v| v.present? } }
   context ||= :web
-  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
   show_value = !market_attribute_response.auto? || context == :buyer
+  market_application = market_attribute_response.market_application
 %>
 
 <div class="field-layout-container">
@@ -44,13 +44,10 @@
                         <strong><%= fichiers.size == 1 ? 'Fichier' : 'Fichiers' %> :</strong>
                         <div class="fr-mt-1v">
                           <% fichiers.each do |fichier| %>
-                              <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                              <%= link_to fichier.filename.to_s,
-                                          url_for(fichier),
-                                          target: "_blank", rel: "noopener",
-                                          class: "fr-link fr-text--sm" %>
-                              (<%= number_to_human_size(fichier.byte_size) %>)
-                              </br>
+                            <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
+                                       document: fichier,
+                                       market_application: market_application,
+                                       context: context %>
                           <% end %>
                         </div>
                       </div>

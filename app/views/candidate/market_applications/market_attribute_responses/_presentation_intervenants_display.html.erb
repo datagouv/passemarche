@@ -4,8 +4,8 @@
   has_persons = persons_data.present? && persons_data.values.any? { |person| person.present? && person.any? { |_, v| v.present? } }
   documents = market_attribute_response.documents
   context ||= :web
-  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
   show_value = !market_attribute_response.auto? || context == :buyer
+  market_application = market_attribute_response.market_application
 %>
 
 <div class="field-layout-container">
@@ -55,14 +55,10 @@
                       <div class="fr-mb-1v">
                         <strong>CV :</strong>
                         <% cv_attachments.each do |cv| %>
-                          <div>
-                            <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                            <%= link_to cv.filename.to_s,
-                                        url_for(cv),
-                                        target: "_blank", rel: "noopener",
-                                        class: "fr-link fr-text--sm" %>
-                            (<%= number_to_human_size(cv.byte_size) %>)
-                          </div>
+                          <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
+                                     document: cv,
+                                     market_application: market_application,
+                                     context: context %>
                         <% end %>
                       </div>
                     <% end %>
@@ -76,20 +72,15 @@
         <span class="fr-text--sm fr-text--mention-grey">Aucune personne renseignée</span>
       <% end %>
 
-      <!-- Display attached documents if any -->
       <% if documents.any? %>
         <div class="fr-mt-3w">
           <h6 class="fr-text--sm fr-mb-1w">Documents associés</h6>
           <div class="fr-text--sm fr-text--mention-grey">
             <% documents.each do |doc| %>
-              <div class="fr-mb-1v">
-                <span class="fr-icon-file-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                <%= link_to doc.filename.to_s,
-                            url_for(doc),
-                            target: "_blank", rel: "noopener",
-                            class: "fr-link fr-text--sm" %>
-                (<%= number_to_human_size(doc.byte_size) %>)
-              </div>
+              <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
+                         document: doc,
+                         market_application: market_application,
+                         context: context %>
             <% end %>
           </div>
         </div>
