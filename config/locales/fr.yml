@@ -65,13 +65,14 @@ fr:
     title: "Voie Rapide"
 
   header:
-    home_title: "Accueil - Pass marché public"
-    service_title: "Pass marché public"
+    home_title: "Accueil - Passe marché public"
+    service_title: "Passe marché public"
     service_tagline: "Un dossier de candidature, adapté à chaque marché public, en toute simplicité"
     logo_alt: "République Française"
+    logo_operator_alt: "Logo Passe Marché"
 
   footer:
-    description: "Voie Rapide facilite l'accès des PME aux marchés publics français."
+    description: "Passe Marché facilite l'accès des PME aux marchés publics français."
     links:
       accessibility: "Accessibilité : non conforme"
       legal: "Mentions légales"
@@ -90,7 +91,7 @@ fr:
       documents_package_generation_failed: "Une erreur technique est survenue lors de la génération du package de documents. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
 
   home:
-    title: "Voie Rapide"
+    title: "Passe Marché"
     subtitle: "La plateforme de candidature simplifiée aux marchés publics"
     description: "Facilitez vos démarches administratives pour répondre aux appels d'offres publics."
 
