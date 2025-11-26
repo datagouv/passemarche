@@ -27,7 +27,6 @@ class MarketApplicationPresenter
 
   def parent_category_for(subcategory_key)
     return MARKET_INFO_PARENT_CATEGORY if subcategory_key.to_s == 'market_information'
-    return ATTESTATION_MOTIFS_EXCLUSION_STEP.to_s if subcategory_key.to_s == ATTESTATION_MOTIFS_EXCLUSION_STEP.to_s
 
     all_market_attributes
       .where(subcategory_key: subcategory_key.to_s)

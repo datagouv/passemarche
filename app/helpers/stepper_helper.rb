@@ -96,10 +96,11 @@ module StepperHelper
 
   def candidate_page_header(step, i18n_scope, custom_subtitle)
     page_title = resolve_step_title(step, i18n_scope)
+    page_subtitle = custom_subtitle || t("candidate.market_applications.#{step}.subtitle", default: nil)
 
     return if page_title.blank?
 
-    render_page_header(page_title, custom_subtitle)
+    render_page_header(page_title, page_subtitle)
   end
 
   def render_page_header(title, subtitle)

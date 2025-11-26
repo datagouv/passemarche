@@ -266,8 +266,8 @@ fr:
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"
-        attestation_motifs_exclusion: "Attestation sur l'honneur"
-        exclusion_criteria: "Les motifs d'exclusion"
+        attestation_motifs_exclusion: "Les motifs d'exclusion"
+        exclusion_criteria: "Les justificatifs relatifs aux motifs d'exclusion obligatoires"
         economic_capacities: "Les capacités économiques et financières"
         technical_capacities: "Les capacités techniques et professionnelles"
         summary: "Synthèse de votre candidature"
@@ -282,8 +282,10 @@ fr:
           market_information: "Informations du marché"
           company_information: "Informations de votre entreprise"
           contact_information: "Informations de contact"
+      motifs_exclusion:
+        subtitle: "Vous pouvez justifier que votre entreprise est à jour de ses obligations sociales et fiscales, d'autres justificatifs attendus par l'acheteur vous sont demandés (ces derniers ne sont pas obligatoires mais seront exigés si vous êtes attributaire du marché)."
       exclusion_criteria:
-        title: "Les motifs d'exclusion"
+        title: "Les justificatifs relatifs aux motifs d'exclusion obligatoires"
         subtitle: "Lorem ipsum..."
       economic_capacities:
         title: "Les capacités économiques et financières"
