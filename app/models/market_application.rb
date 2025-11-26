@@ -18,7 +18,7 @@ class MarketApplication < ApplicationRecord
 
   validates :identifier, presence: true, uniqueness: true
   validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
-  validates :attests_no_exclusion_motifs, inclusion: { in: [true, false] }
+  validates :attests_no_exclusion_motifs, inclusion: { in: [true, false] }, allow_nil: false
   validate :market_must_be_completed
   validate :siret_must_be_valid
   validate :nested_attributes_valid

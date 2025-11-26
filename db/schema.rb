@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_26_104707) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_26_113519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,13 +74,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_26_104707) do
     t.string "identifier", null: false
     t.bigint "public_market_id", null: false
     t.string "siret", limit: 14
-    t.boolean "subject_to_prohibition"
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"
-    t.index ["subject_to_prohibition"], name: "index_market_applications_on_subject_to_prohibition"
     t.index ["sync_status"], name: "index_market_applications_on_sync_status"
   end
 
