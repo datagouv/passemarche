@@ -20,6 +20,7 @@ Given('a market attribute exists for URSSAF attestation vigilance') do
   ].each do |attrs|
     create(
       :market_attribute,
+      :radio_with_justification_required,
       key: attrs[:key],
       api_name: 'urssaf_attestation_vigilance',
       api_key: 'document',
@@ -175,8 +176,8 @@ Then('I should be able to provide a justification') do
 end
 
 Then('I should be able to complete the field manually') do
-  expect(page).to have_selector('input[type="radio"][value="true"]')
-  expect(page).to have_selector('input[type="radio"][value="false"]')
+  expect(page).to have_selector('input[type="radio"][value="yes"]')
+  expect(page).to have_selector('input[type="radio"][value="no"]')
 end
 
 Then('I should be able to upload supporting documents') do
