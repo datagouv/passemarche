@@ -150,6 +150,17 @@ fr:
         question: "Je veux demander des renseignements complémentaires relatifs à la capacité des candidats ?"
         yes_option: "Oui"
         no_option: "Non"
+      generic_step:
+        required_fields_title: "Les documents et informations réglementaires et obligatoires"
+        required_fields_description: "Ces documents et informations seront demandés systématiquement aux candidats."
+        optional_question: "Souhaitez-vous demander des informations complémentaires aux candidats pour cette catégorie ?"
+        yes_option: "Oui, je souhaite demander des informations complémentaires"
+        no_option: "Non, les informations obligatoires me suffisent"
+        optional_fields_title: "Informations complémentaires"
+        optional_fields_description: "Vous devez sélectionner au moins une information complémentaire avant de poursuivre."
+      navigation:
+        previous: "Précédent"
+        next: "Suivant"
       summary:
         title: "Synthèse des paramètres de la candidature"
         subtitle: "Vérifiez les paramètres de votre marché avant de finaliser la configuration."
