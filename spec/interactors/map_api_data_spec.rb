@@ -191,7 +191,7 @@ RSpec.describe MapApiData, type: :interactor do
       let(:resource) { Resource.new(attestation: document_hash) }
 
       let!(:attestation_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'fiscalite_attestations_fiscales',
           api_name: 'Insee',
           api_key: 'attestation',
@@ -303,7 +303,7 @@ RSpec.describe MapApiData, type: :interactor do
       end
 
       let!(:attestation_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'fiscalite_attestations_fiscales',
           api_name: 'Insee',
           api_key: 'attestation',
@@ -357,7 +357,7 @@ RSpec.describe MapApiData, type: :interactor do
       let(:api_name) { 'cotisation_retraite' }
 
       let!(:cotisation_retraite_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'motifs_exclusion_fiscales_et_sociales_cibtp_cnetp',
           api_name: 'cotisation_retraite',
           api_key: 'documents',

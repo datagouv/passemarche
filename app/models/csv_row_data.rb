@@ -25,7 +25,6 @@ class CsvRowData
   attribute :"Informations récupérées par l'API", :string
 
   SUPPORTED_TYPES = %w[
-    checkbox
     checkbox_with_document
     document
     inline_document
@@ -33,8 +32,6 @@ class CsvRowData
     file_or_textarea
     phone
     radio_with_file_and_text
-    radio_with_justification_required
-    radio_with_justification_optional
     textarea
     texte
     capacite_economique_financiere_chiffre_affaires_global_annuel
@@ -42,7 +39,6 @@ class CsvRowData
     presentation_intervenants
     realisations_livraisons
     capacites_techniques_professionnelles_outillage_echantillons
-    url_input
     inline_url_input
   ].freeze
 
@@ -54,7 +50,6 @@ class CsvRowData
   }.freeze
 
   INPUT_TYPE_MAPPING = {
-    'checkbox' => :checkbox,
     'checkbox_with_document' => :checkbox_with_document,
     'document' => :file_upload,
     'inline_document' => :inline_file_upload,
@@ -62,8 +57,6 @@ class CsvRowData
     'file_or_textarea' => :file_or_textarea,
     'phone' => :phone_input,
     'radio_with_file_and_text' => :radio_with_file_and_text,
-    'radio_with_justification_required' => :radio_with_justification_required,
-    'radio_with_justification_optional' => :radio_with_justification_optional,
     'textarea' => :textarea,
     'texte' => :text_input,
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => :capacite_economique_financiere_chiffre_affaires_global_annuel,
@@ -71,7 +64,6 @@ class CsvRowData
     'presentation_intervenants' => :presentation_intervenants,
     'realisations_livraisons' => :realisations_livraisons,
     'capacites_techniques_professionnelles_outillage_echantillons' => :capacites_techniques_professionnelles_outillage_echantillons,
-    'url_input' => :url_input,
     'inline_url_input' => :inline_url_input
   }.freeze
 

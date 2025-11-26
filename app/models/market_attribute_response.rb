@@ -17,15 +17,12 @@ class MarketAttributeResponse < ApplicationRecord
     'file_upload' => 'FileUpload',
     'inline_file_upload' => 'InlineFileUpload',
     'text_input' => 'TextInput',
-    'checkbox' => 'Checkbox',
     'textarea' => 'Textarea',
     'email_input' => 'EmailInput',
     'file_or_textarea' => 'FileOrTextarea',
     'phone_input' => 'PhoneInput',
     'checkbox_with_document' => 'CheckboxWithDocument',
     'radio_with_file_and_text' => 'RadioWithFileAndText',
-    'radio_with_justification_required' => 'RadioWithJustificationRequired',
-    'radio_with_justification_optional' => 'RadioWithJustificationOptional',
     'capacite_economique_financiere_chiffre_affaires_global_annuel' => 'CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel',
     'capacite_economique_financiere_effectifs_moyens_annuels' => 'CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels',
     'presentation_intervenants' => 'PresentationIntervenants',
@@ -42,8 +39,6 @@ class MarketAttributeResponse < ApplicationRecord
     InlineFileUpload
     CheckboxWithDocument
     RadioWithFileAndText
-    RadioWithJustificationRequired
-    RadioWithJustificationOptional
     FileOrTextarea
     PresentationIntervenants
     RealisationsLivraisons

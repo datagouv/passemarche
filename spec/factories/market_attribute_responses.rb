@@ -6,10 +6,6 @@ FactoryBot.define do
     association :market_attribute, :text_input
     value { nil }
 
-    factory :market_attribute_response_checkbox, class: 'MarketAttributeResponse::Checkbox' do
-      association :market_attribute, :checkbox
-    end
-
     factory :market_attribute_response_checkbox_with_document, class: 'MarketAttributeResponse::CheckboxWithDocument' do
       association :market_attribute, :checkbox_with_document
     end
@@ -37,10 +33,6 @@ FactoryBot.define do
 
     factory :market_attribute_response_radio_with_file_and_text, class: 'MarketAttributeResponse::RadioWithFileAndText' do
       association :market_attribute, :radio_with_file_and_text
-    end
-
-    factory :market_attribute_response_radio_with_justification_required, class: 'MarketAttributeResponse::RadioWithJustificationRequired' do
-      association :market_attribute, :radio_with_justification_required
     end
   end
 end

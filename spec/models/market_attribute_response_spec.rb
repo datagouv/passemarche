@@ -15,7 +15,7 @@ RSpec.describe MarketAttributeResponse, type: :model do
 
     it 'validates presence and inclusion of type' do
       expect(subject).to validate_presence_of(:type)
-      expect(subject).to validate_inclusion_of(:type).in_array(%w[Checkbox TextInput FileUpload FileOrTextarea])
+      expect(subject).to validate_inclusion_of(:type).in_array(%w[TextInput FileUpload FileOrTextarea])
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe MarketAttributeResponse, type: :model do
     end
 
     it 'does not override existing type' do
-      market_attribute = create(:market_attribute, input_type: 'checkbox')
+      market_attribute = create(:market_attribute, input_type: 'file_upload')
       response = build(:market_attribute_response, market_attribute:, type: 'TextInput')
 
       response.valid?
@@ -38,10 +38,6 @@ RSpec.describe MarketAttributeResponse, type: :model do
   end
 
   describe 'STI class resolution' do
-    it 'finds Checkbox class' do
-      expect(MarketAttributeResponse.find_sti_class('Checkbox')).to eq(MarketAttributeResponse::Checkbox)
-    end
-
     it 'finds TextInput class' do
       expect(MarketAttributeResponse.find_sti_class('TextInput')).to eq(MarketAttributeResponse::TextInput)
     end
@@ -62,10 +58,6 @@ RSpec.describe MarketAttributeResponse, type: :model do
   end
 
   describe 'sti_name' do
-    it 'returns demodulized class name for Checkbox' do
-      expect(MarketAttributeResponse::Checkbox.sti_name).to eq('Checkbox')
-    end
-
     it 'returns demodulized class name for TextInput' do
       expect(MarketAttributeResponse::TextInput.sti_name).to eq('TextInput')
     end
@@ -100,8 +92,6 @@ RSpec.describe MarketAttributeResponse, type: :model do
         'InlineFileUpload',
         'CheckboxWithDocument',
         'RadioWithFileAndText',
-        'RadioWithJustificationRequired',
-        'RadioWithJustificationOptional',
         'FileOrTextarea',
         'PresentationIntervenants',
         'RealisationsLivraisons',
@@ -118,7 +108,7 @@ RSpec.describe MarketAttributeResponse, type: :model do
     it 'generates correct SQL query' do
       scope = MarketAttributeResponse.with_file_attachments
       expect(scope.to_sql).to include(
-        "WHERE \"market_attribute_responses\".\"type\" IN ('FileUpload', 'InlineFileUpload', 'CheckboxWithDocument', 'RadioWithFileAndText', 'RadioWithJustificationRequired', 'RadioWithJustificationOptional', 'FileOrTextarea', 'PresentationIntervenants', 'RealisationsLivraisons', 'CapacitesTechniquesProfessionnellesOutillageEchantillons')"
+        "WHERE \"market_attribute_responses\".\"type\" IN ('FileUpload', 'InlineFileUpload', 'CheckboxWithDocument', 'RadioWithFileAndText', 'FileOrTextarea', 'PresentationIntervenants', 'RealisationsLivraisons', 'CapacitesTechniquesProfessionnellesOutillageEchantillons')"
       )
     end
 

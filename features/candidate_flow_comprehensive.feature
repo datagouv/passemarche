@@ -74,7 +74,7 @@ Feature: Comprehensive Candidate Application Flow
     Then each form field should have a type hidden field with correct STI class
 
     When I visit the "declarations" step
-    Then each checkbox field should have type "Checkbox"
+    Then each checkbox field should have type "CheckboxWithDocument"
 
     When I visit the "description" step
     Then each textarea field should have type "Textarea"
@@ -114,7 +114,7 @@ Feature: Comprehensive Candidate Application Flow
     And the email response should be of class "MarketAttributeResponse::EmailInput"
     And the phone response should be of class "MarketAttributeResponse::PhoneInput"
     And the text response should be of class "MarketAttributeResponse::TextInput"
-    And the checkbox response should be of class "MarketAttributeResponse::Checkbox"
+    And the checkbox response should be of class "MarketAttributeResponse::CheckboxWithDocument"
     And the textarea response should be of class "MarketAttributeResponse::Textarea"
     And the file upload response should be of class "MarketAttributeResponse::FileUpload"
 

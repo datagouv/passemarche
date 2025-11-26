@@ -44,7 +44,7 @@ RSpec.describe DocumentNamingService, type: :service do
 
     context 'when market application has API-downloaded documents' do
       let(:api_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'fiscalite_attestations_fiscales',
           api_name: 'attestations_fiscales',
           api_key: 'document',
@@ -209,7 +209,7 @@ RSpec.describe DocumentNamingService, type: :service do
   describe '#api_document?' do
     context 'when document has api source metadata' do
       let(:api_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'api_field',
           api_name: 'test_api',
           api_key: 'document',
