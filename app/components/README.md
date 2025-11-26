@@ -1,6 +1,6 @@
-# ViewComponents - Voie Rapide
+# ViewComponents - Passe Marché
 
-This directory contains ViewComponent-based components for the Voie Rapide application. ViewComponents provide a modern, testable, and maintainable approach to building reusable view logic.
+This directory contains ViewComponent-based components for the Passe Marché application. ViewComponents provide a modern, testable, and maintainable approach to building reusable view logic.
 
 ## What is ViewComponent?
 

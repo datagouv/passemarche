@@ -1,9 +1,8 @@
-# Guide de Démarrage - Intégration Voie Rapide
+# Guide de Démarrage - Intégration Passe Marché
 
 ## 🎯 Vue d'Ensemble
 
-**Voie Rapide** est une API gouvernementale qui simplifie les candidatures aux marchés publics pour les PME. Ce guide vous orientera vers la documentation appropriée selon vos besoins d'intégration.
-
+**Passe Marché** est une API gouvernementale qui simplifie les candidatures aux marchés publics pour les PME. Ce guide vous orientera vers la documentation appropriée selon vos besoins d'intégration.
 ## 📖 Comment Utiliser Cette Documentation
 
 ### 🚀 Démarrage Rapide (Recommandé pour Commencer)
@@ -48,7 +47,7 @@
 ### Authentification
 - **OAuth2 Client Credentials** : Authentification machine-à-machine sans utilisateur
 - **Bearer Token** : Token JWT de 24h à inclure dans l'en-tête Authorization
-- **Client ID/Secret** : Identifiants fournis par l'administration Voie Rapide
+- **Client ID/Secret** : Identifiants fournis par l'administration Passe Marché
 
 ### Marchés Publics
 - **Marché Public (Tender)** : Appel d'offres créé par un acheteur public
@@ -101,7 +100,7 @@
                               │ OAuth2 + API Calls
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      API VOIE RAPIDE                       │
+│                      API PASSE MARCHE                       │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
 │  │   OAuth2        │  │  Gestion        │  │   Génération    │ │

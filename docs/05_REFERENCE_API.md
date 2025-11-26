@@ -1,8 +1,8 @@
-# Référence API - Voie Rapide
+# Référence API - Passe Marché
 
 ## Vue d'ensemble
 
-Cette référence technique détaille tous les endpoints disponibles dans l'API Voie Rapide pour l'intégration des éditeurs de plateformes de marchés publics. L'API suit les standards REST avec authentification OAuth2.
+Cette référence technique détaille tous les endpoints disponibles dans l'API Passe Marché pour l'intégration des éditeurs de plateformes de marchés publics. L'API suit les standards REST avec authentification OAuth2.
 
 ## Base URL et Versioning
 
@@ -522,4 +522,4 @@ X-RateLimit-Reset: 1640995200
 
 **🔗 Scripts complets** : [Scripts de Référence - Workflows et gestion d'erreurs](99_SCRIPTS_REFERENCE.md#workflows-api)
 
-Cette référence API fournit tous les détails techniques nécessaires pour une intégration complète et robuste avec l'API Voie Rapide.
+Cette référence API fournit tous les détails techniques nécessaires pour une intégration complète et robuste avec l'API Passe Marché.

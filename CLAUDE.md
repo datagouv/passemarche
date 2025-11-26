@@ -9,15 +9,15 @@ We're building production-quality code together. Your role is to create maintain
 When you seem stuck or overly complex, I'll redirect you - my guidance helps you stay on track.
 
 ## 🚨 CODE QUALITY STANDARDS
-**ALL quality checks must pass - EVERYTHING must be ✅ GREEN!**  
-No errors. No formatting issues. No linting problems. Zero tolerance.  
+**ALL quality checks must pass - EVERYTHING must be ✅ GREEN!**
+No errors. No formatting issues. No linting problems. Zero tolerance.
 These are not suggestions. Fix ALL issues before continuing.
 
 Your code must be 100% clean. No exceptions.
 
 ## Project Overview
 
-**Voie Rapide** (Fast Track) is a Rails 8 application that simplifies public procurement applications for small and medium enterprises (SMEs). The project aims to transform complex bidding procedures into a streamlined, user-friendly process integrated with existing procurement platforms.
+**Passe Marché** is a Rails 8 application that simplifies public procurement applications for small and medium enterprises (SMEs). The project aims to transform complex bidding procedures into a streamlined, user-friendly process integrated with existing procurement platforms.
 
 ### Key Features
 - OAuth integration with procurement platform editors
@@ -109,7 +109,7 @@ bin/rails assets:precompile
 
 ### Our code is complete when:
 - ✅ All RuboCop rules pass with zero issues
-- ✅ All tests pass  
+- ✅ All tests pass
 - ✅ Feature works end-to-end
 - ✅ Database migrations are reversible
 - ✅ Strong parameters are properly configured

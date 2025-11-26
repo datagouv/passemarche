@@ -61,8 +61,8 @@ fr:
       - déc
 
   application:
-    name: "Voie Rapide"
-    title: "Voie Rapide"
+    name: "Passe Marché"
+    title: "Passe Marché"
 
   header:
     home_title: "Accueil - Passe marché public"

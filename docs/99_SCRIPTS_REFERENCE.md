@@ -1,8 +1,8 @@
-# Scripts de Référence - Voie Rapide
+# Scripts de Référence - Passe Marché
 
 ## Vue d'ensemble
 
-Cette section regroupe tous les scripts bash, exemples curl et utilitaires pratiques pour l'intégration avec l'API Voie Rapide. Ces scripts sont des outils complémentaires à la documentation technique principale.
+Cette section regroupe tous les scripts bash, exemples curl et utilitaires pratiques pour l'intégration avec l'API Passe Marché. Ces scripts sont des outils complémentaires à la documentation technique principale.
 
 ---
 
@@ -445,7 +445,7 @@ test_webhook_signature() {
   local secret="test_secret_123"
   local payload='{"event":"test","timestamp":"2024-01-01T00:00:00Z"}'
 
-  # Générer signature (comme Voie Rapide)
+  # Générer signature (comme Passe Marché)
   local signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "$secret" -hex | cut -d' ' -f2)
   local header_value="sha256=$signature"
 
@@ -591,7 +591,7 @@ get_token_with_logging() {
 
 create_env_file() {
   cat > .env << EOF
-# Configuration Voie Rapide
+# Configuration Passe Marché
 CLIENT_ID=votre_client_id
 CLIENT_SECRET=votre_client_secret
 BASE_URL=https://voie-rapide.gouv.fr

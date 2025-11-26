@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-Feature: Fast Track Home Page
-  As a user visiting the Fast Track application
+Feature: Passe Marché Home Page
+  As a user visiting the Passe Marché application
   I want to see the home page
   So that I can confirm the application is working
 
   Scenario: User visits the home page
     Given I am on the home page
-    Then I should see "Voie Rapide"
+    Then I should see "Passe Marché"
     And I should see "La plateforme de candidature simplifiée aux marchés publics"
     And I should see "Facilitez vos démarches administratives"
 

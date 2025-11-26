@@ -2,13 +2,13 @@
 
 ## Vue d'ensemble
 
-Les webhooks Voie Rapide permettent aux éditeurs de recevoir des notifications en temps réel lors d'événements importants (complétion de marchés, finalisation de candidatures). Ce système garantit une synchronisation fiable et automatique entre Voie Rapide et les plateformes éditrices.
+Les webhooks Passe Marché permettent aux éditeurs de recevoir des notifications en temps réel lors d'événements importants (complétion de marchés, finalisation de candidatures). Ce système garantit une synchronisation fiable et automatique entre Passe Marché et les plateformes éditrices.
 
 ## Architecture des Webhooks
 
 ```
 ┌─────────────────┐    Événement     ┌─────────────────┐
-│   Voie Rapide   │    Métier        │   File d'Attente│
+│   Passe Marché  │    Métier        │   File d'Attente│
 │   Application   │ ─────────────────▶│   Webhooks      │
 └─────────────────┘                  └─────────────────┘
                                               │
@@ -27,7 +27,7 @@ Les webhooks Voie Rapide permettent aux éditeurs de recevoir des notifications 
 
 ### Configuration Éditeur
 
-Les webhooks sont configurés par l'administrateur Voie Rapide au niveau de chaque éditeur.
+Les webhooks sont configurés par l'administrateur Passe Marché au niveau de chaque éditeur.
 
 ### Paramètres de Configuration
 
@@ -145,7 +145,7 @@ header_value = "sha256=" + hex(signature)
 
 ### Stratégie de Retry
 
-Voie Rapide implémente un système de retry robuste avec circuit breaker :
+Passe Marché implémente un système de retry robuste avec circuit breaker :
 
 **Configuration par défaut** :
 - **Tentatives** : 3 essais maximum
@@ -155,7 +155,7 @@ Voie Rapide implémente un système de retry robuste avec circuit breaker :
 
 ### Codes de Réponse et Actions
 
-| Code HTTP | Type | Action Voie Rapide | Description |
+| Code HTTP | Type | Action Passe Marché| Description |
 |-----------|------|-------------------|-------------|
 | 200-299 | Succès | ✅ Marquer comme traité | Webhook délivré avec succès |
 | 400, 401, 403, 404, 405, 410, 422 | Erreur client | ❌ Pas de retry | Erreur configuration côté éditeur |
@@ -213,4 +213,4 @@ Exposez un endpoint `/webhooks/stats` pour surveiller :
 - Temps de réponse moyens
 - Distribution des erreurs
 
-Cette documentation webhook fournit les éléments nécessaires pour une intégration robuste et sécurisée des notifications en temps réel avec Voie Rapide.
+Cette documentation webhook fournit les éléments nécessaires pour une intégration robuste et sécurisée des notifications en temps réel avec Passe Marché.

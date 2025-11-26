@@ -1,19 +1,19 @@
-# Authentification OAuth2 - Voie Rapide
+# Authentification OAuth2 - Passe Marché
 
 ## Vue d'ensemble
 
-Voie Rapide utilise le protocole OAuth2 avec le flux **Client Credentials** pour l'authentification des éditeurs de plateformes de marchés publics. Cette méthode garantit une communication sécurisée et standardisée entre votre plateforme et l'API Voie Rapide.
+Passe Marché utilise le protocole OAuth2 avec le flux **Client Credentials** pour l'authentification des éditeurs de plateformes de marchés publics. Cette méthode garantit une communication sécurisée et standardisée entre votre plateforme et l'API Passe Marché.
 
 ## Prérequis d'Intégration
 
 ### Enregistrement Éditeur
 
-**Important** : L'enregistrement d'un éditeur doit être effectué manuellement par un administrateur Voie Rapide pour des raisons de sécurité et de contrôle d'accès.
+**Important** : L'enregistrement d'un éditeur doit être effectué manuellement par un administrateur Passe Marché pour des raisons de sécurité et de contrôle d'accès.
 
 #### Processus d'Enregistrement
 
 1. **Demande d'Intégration**
-   - Contactez l'équipe Voie Rapide
+   - Contactez l'équipe Passe Marché
    - Fournissez les informations de votre plateforme
    - Décrivez votre cas d'usage
 
@@ -217,4 +217,4 @@ curl -X GET https://voie-rapide.gouv.fr/api/v1/public_markets \
 | 429 | `rate_limit_exceeded` | Trop de requêtes | Implémenter un délai |
 | 500 | `server_error` | Erreur serveur | Réessayer plus tard |
 
-Cette spécification OAuth2 garantit une intégration sécurisée et standardisée avec l'API Voie Rapide.
+Cette spécification OAuth2 garantit une intégration sécurisée et standardisée avec l'API Passe Marché.

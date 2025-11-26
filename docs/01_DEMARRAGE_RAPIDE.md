@@ -1,13 +1,13 @@
-# Démarrage Rapide - Intégration Voie Rapide
+# Démarrage Rapide - Intégration Passe Marché
 
 ## Vue d'ensemble
 
-Ce guide vous permet de réaliser votre première intégration avec l'API Voie Rapide en moins de 30 minutes. Il couvre les étapes essentielles depuis l'authentification jusqu'au test complet des flux acheteur et candidat.
+Ce guide vous permet de réaliser votre première intégration avec l'API Passe Marché en moins de 30 minutes. Il couvre les étapes essentielles depuis l'authentification jusqu'au test complet des flux acheteur et candidat.
 
 ## Prérequis
 
 ### Enregistrement Éditeur
-Contactez l'équipe Voie Rapide pour obtenir :
+Contactez l'équipe Passe Marché pour obtenir :
 - `client_id` : Identifiant unique de votre éditeur
 - `client_secret` : Clé secrète OAuth2
 - `webhook_secret` : Secret pour vérification signatures HMAC

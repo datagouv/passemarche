@@ -3,7 +3,7 @@
 Feature: OAuth2 Authentication pour les Éditeurs
   En tant qu'éditeur de plateforme de marchés publics
   Je veux pouvoir m'authentifier via OAuth2 avec client credentials
-  Afin d'accéder aux services de Voie Rapide via API
+  Afin d'accéder aux services de Passe Marché via API
 
   Background:
     Given an authorized and active editor exists with credentials "test_editor_id" and "test_editor_secret"
