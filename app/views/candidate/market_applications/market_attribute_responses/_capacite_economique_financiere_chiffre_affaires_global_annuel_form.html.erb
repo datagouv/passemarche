@@ -37,14 +37,13 @@
     %>
 
     <% if has_api_data %>
-      <div class="fr-notice fr-notice--info fr-mb-2w">
-        <div class="fr-notice__body fr-px-2w fr-py-1w">
-          <p class="fr-notice__title"></p>
-          <p class="fr-notice__desc">
-            <%= t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.notice') %>
-          </p>
-        </div>
-      </div>
+      <%= render(
+        'shared/notice',
+        notice_text: t(
+          'candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.notice'
+        )
+        )
+      %>
     <% end %>
       <div class="fr-table">
         <div class="fr-table__wrapper">

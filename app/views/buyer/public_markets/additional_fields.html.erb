@@ -7,6 +7,10 @@
       steps: @wizard_steps,
       i18n_scope: 'buyer'
     ) %>
+    <%= render(
+      'shared/notice',
+      notice_text: t('buyer.public_markets.additional_fields.notice').gsub("\n", '<br>')
+    ) %>
   </div>
 </div>
 
