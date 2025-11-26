@@ -33,14 +33,22 @@ module MarketAttributeResponsesHelper
     "Taille maximale : #{max_size_mb} Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles."
   end
 
-  # rubocop:disable Metrics/ParameterLists
-  def current_documents_list(documents, market_application_identifier: nil, show_empty: false, deletable: false, form: nil, field_name: :files)
-    # rubocop:enable Metrics/ParameterLists
+  def document_display_name(document, market_application:, context:, naming_service: nil)
+    naming_service ||= DocumentNamingService.new(market_application)
+    original = naming_service.original_filename_for(document)
+    system_name = naming_service.system_filename_for(document)
+
+    return system_name if context == :buyer
+
+    t('helpers.market_attribute_responses.document_display_name', original:, system: system_name)
+  end
+
+  def current_documents_list(documents, **options)
     persisted_documents = documents.select(&:persisted?)
 
     if persisted_documents.any?
-      render_documents_list(persisted_documents, market_application_identifier, deletable, form, field_name)
-    elsif show_empty
+      render_documents_list(persisted_documents, options)
+    elsif options.fetch(:show_empty, false)
       render_empty_documents_list
     end
   end
@@ -54,33 +62,12 @@ module MarketAttributeResponsesHelper
     end
   end
 
-  # rubocop:disable Metrics/ParameterLists
-  def direct_upload_field(documents: nil, market_application_identifier: nil, show_empty: false,
-                          deletable: false, wrapper_class: '', form: nil, field_name: :files, &)
-    # rubocop:enable Metrics/ParameterLists
-    content_tag :div, class: "fr-upload-group #{wrapper_class}".strip,
-      data: {
-        controller: 'direct-upload',
-        direct_upload_market_application_identifier_value: market_application_identifier,
-        direct_upload_deletable_value: deletable
-      } do
+  def direct_upload_field(**options, &)
+    content_tag :div, class: direct_upload_wrapper_class(options),
+      data: direct_upload_data_attributes(options) do
       concat capture(&)
       concat render('candidate/market_applications/market_attribute_responses/shared/progress_bar')
-
-      files_content = if documents
-                        current_documents_list(documents,
-                          market_application_identifier:,
-                          show_empty:,
-                          deletable:,
-                          form:,
-                          field_name:)
-                      elsif show_empty
-                        render_empty_documents_list
-                      else
-                        ''.html_safe
-                      end
-
-      concat content_tag(:div, files_content, class: 'files-list', data: { direct_upload_target: 'filesList' })
+      concat content_tag(:div, direct_upload_files_content(options), class: 'files-list', data: { direct_upload_target: 'filesList' })
     end
   end
 
@@ -106,11 +93,40 @@ module MarketAttributeResponsesHelper
       class: 'fr-text--sm fr-text--mention-grey')
   end
 
-  def render_documents_list(persisted_documents, market_application_identifier, deletable, form, field_name)
+  def direct_upload_wrapper_class(options)
+    "fr-upload-group #{options.fetch(:wrapper_class, '')}".strip
+  end
+
+  def direct_upload_data_attributes(options)
+    {
+      controller: 'direct-upload',
+      direct_upload_market_application_identifier_value: options[:market_application_identifier],
+      direct_upload_deletable_value: options.fetch(:deletable, false)
+    }
+  end
+
+  def direct_upload_files_content(options)
+    documents = options[:documents]
+    show_empty = options.fetch(:show_empty, false)
+
+    if documents
+      current_documents_list(documents, **options)
+    elsif show_empty
+      render_empty_documents_list
+    else
+      ''.html_safe
+    end
+  end
+
+  def render_documents_list(persisted_documents, options)
+    form = options[:form]
+    field_name = options.fetch(:field_name, :files)
+    deletable = options.fetch(:deletable, false)
+    market_application_identifier = options[:market_application_identifier]
+
     content_tag :div, class: 'fr-mt-2w fr-text--sm fr-mb-0' do
       concat content_tag(:strong, 'Documents actuels :')
       persisted_documents.each do |document|
-        # Add hidden field to preserve file on form resubmit (backend now handles duplicates)
         concat form.hidden_field(field_name, multiple: true, value: document.signed_id, id: nil) if form
 
         if deletable && market_application_identifier

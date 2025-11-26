@@ -4,14 +4,14 @@
   text = market_attribute_response.text
   documents = market_attribute_response.documents
   context ||= :web
-  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
   show_value = !market_attribute_response.auto? || context == :buyer
+  market_application = market_attribute_response.market_application
+  naming_service = DocumentNamingService.new(market_application)
 %>
 
 <div class="field-layout-container">
   <div class="field-layout-content">
     <div class="fr-grid-row fr-mb-2w">
-      <!-- Colonne 1 : titre + infos complémentaires -->
       <div class="fr-col">
         <strong>
           <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
@@ -33,14 +33,11 @@
               <div>
                 <strong class="fr-text--sm">Documents joints :</strong><br>
                 <% documents.each do |doc| %>
-                  <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-                  <%= link_to doc.filename.to_s,
-                              url_for(doc),
-                              target: "_blank",
-                              rel: "noopener",
-                              class: "fr-text--sm"%>
-                  (<%= number_to_human_size(doc.byte_size) %>)
-                  <br>
+                  <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
+                             document: doc,
+                             market_application: market_application,
+                             context: context,
+                             naming_service: naming_service %>
                 <% end %>
               </div>
             <% end %>
@@ -52,7 +49,6 @@
         <% end %>
       </div>
 
-      <!-- Colonne 2 : badge Oui/Non -->
       <div class="fr-col-auto" style="display: flex; align-items: flex-start; justify-content: flex-end;">
         <% if show_value %>
           <% if radio_choice == 'yes' %>

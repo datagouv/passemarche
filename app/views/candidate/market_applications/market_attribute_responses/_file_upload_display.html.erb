@@ -1,8 +1,9 @@
 <%
   documents = market_attribute_response.documents
   context ||= :web
-  # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
   show_value = !market_attribute_response.auto? || context == :buyer
+  market_application = market_attribute_response.market_application
+  naming_service = DocumentNamingService.new(market_application)
 %>
 
 <div class="field-layout-container">
@@ -18,16 +19,13 @@
 
       <span class="fr-text--sm fr-text--mention-grey">
         <% if documents.attached? %>
-          <div>
-            <% documents.each do |doc| %>
-              <span class="fr-icon--sm fr-icon-file-fill fr-mr-1v" aria-hidden="true"></span>
-              <%= link_to doc.filename.to_s,
-                          url_for(doc),
-                          target: "_blank", rel: "noopener" %>
-              (<%= number_to_human_size(doc.byte_size) %>)
-              <br>
-            <% end %>
-          </div>
+          <% documents.each do |doc| %>
+            <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
+                       document: doc,
+                       market_application: market_application,
+                       context: context,
+                       naming_service: naming_service %>
+          <% end %>
         <% else %>
           <span>Aucun fichier téléchargé</span>
         <% end %>
