@@ -42,26 +42,16 @@ RSpec.describe MarketAttributeResponse::RadioWithJustificationRequired, type: :m
   end
 
   describe 'JSON schema validation' do
-    context 'with empty value (new record defaults to "no", needs documents)' do
+    context 'with empty value (new record defaults to "no")' do
       let(:value) { nil }
 
-      it { is_expected.to be_invalid }
-
-      it 'requires documents when defaulting to no' do
-        response.valid?
-        expect(response.errors[:documents]).to be_present
-      end
+      it { is_expected.to be_valid }
     end
 
-    context 'with empty hash (defaults to "no", needs documents)' do
+    context 'with empty hash (defaults to "no")' do
       let(:value) { {} }
 
-      it { is_expected.to be_invalid }
-
-      it 'requires documents when defaulting to no' do
-        response.valid?
-        expect(response.errors[:documents]).to be_present
-      end
+      it { is_expected.to be_valid }
     end
 
     context 'with radio_choice only' do
@@ -83,15 +73,10 @@ RSpec.describe MarketAttributeResponse::RadioWithJustificationRequired, type: :m
   end
 
   describe 'radio choice scenarios' do
-    context 'when radio is "no" with no documents (INVALID - documents required)' do
+    context 'when radio is "no" with no documents (VALID - documents optional)' do
       let(:value) { { 'radio_choice' => 'no' } }
 
-      it { is_expected.to be_invalid }
-
-      it 'requires documents' do
-        response.valid?
-        expect(response.errors[:documents]).to be_present
-      end
+      it { is_expected.to be_valid }
 
       it 'radio_no? returns true' do
         expect(response.radio_no?).to be true
@@ -209,7 +194,7 @@ RSpec.describe MarketAttributeResponse::RadioWithJustificationRequired, type: :m
   end
 
   describe 'file validation' do
-    let(:value) { { 'radio_choice' => 'no' } }
+    let(:value) { { 'radio_choice' => 'yes' } }
 
     it 'validates file content type' do
       invalid_blob = ActiveStorage::Blob.create_and_upload!(
@@ -244,6 +229,11 @@ RSpec.describe MarketAttributeResponse::RadioWithJustificationRequired, type: :m
       response.documents.attach(valid_blob)
 
       expect(response).to be_valid
+    end
+
+    it 'allows no files attached' do
+      expect(response).to be_valid
+      expect(response.documents).not_to be_attached
     end
   end
 
@@ -360,25 +350,17 @@ RSpec.describe MarketAttributeResponse::RadioWithJustificationRequired, type: :m
   describe 'data consistency validation' do
     let(:value) { {} }
 
-    context 'when radio is no without documents (inconsistent state)' do
-      it 'is invalid' do
+    context 'when radio is no without documents (valid - documents optional)' do
+      it 'is valid' do
         response.value = { 'radio_choice' => 'no' }
 
-        expect(response).to be_invalid
-        expect(response.errors[:documents]).to be_present
+        expect(response).to be_valid
       end
     end
 
     context 'when radio is no with text in value (inconsistent state)' do
       it 'is invalid' do
         response.value = { 'radio_choice' => 'no', 'text' => 'leftover data' }
-        response.documents.attach(
-          ActiveStorage::Blob.create_and_upload!(
-            io: StringIO.new('test'),
-            filename: 'test.pdf',
-            content_type: 'application/pdf'
-          )
-        )
 
         expect(response).to be_invalid
         expect(response.errors[:value]).to be_present

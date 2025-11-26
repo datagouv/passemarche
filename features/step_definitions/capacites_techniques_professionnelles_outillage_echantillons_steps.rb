@@ -91,9 +91,8 @@ Given('I have submitted echantillons data with multiple items:') do |table|
     }
 end
 
-When('I submit échantillon without description') do
+When('I submit échantillon with only file attachment') do
   # Directly create the échantillon with a file but no description via the model
-  # This tests the validation logic without involving the complex JavaScript file upload UI
   response = MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchantillons.find_or_create_by!(
     market_application: @market_application,
     market_attribute: @echantillons_attr
@@ -106,18 +105,18 @@ When('I submit échantillon without description') do
   file = fixture_file_upload(file_path, 'application/pdf')
   response.attach_specialized_document(timestamp, 'fichiers', file)
   response.set_item_field(timestamp, 'fichiers', 'attached')
-  # Intentionally NOT setting description to trigger validation error
-  response.save!(validate: false) # Save without validation to persist the invalid state
+  # NOT setting description - this is now valid since description is optional
+  response.save!
 
-  # Visit the step page which will load the invalid data
+  # Visit the step page which will load the data
   visit "/candidate/market_applications/#{@market_application.identifier}/capacites_techniques_professionnelles_outillage"
 
-  # Try to move to next step - this should fail validation and stay on same page with error
+  # Move to next step - this should succeed since all fields are optional
   click_button 'Suivant'
 end
 
-Then('I should see échantillon validation error {string}') do |error_text|
-  expect(page).to have_content(error_text)
+Then('the échantillon form should be submitted successfully') do
+  expect(page).to have_current_path(%r{/summary})
 end
 
 # Data verification steps

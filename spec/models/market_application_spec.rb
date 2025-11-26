@@ -392,10 +392,11 @@ RSpec.describe MarketApplication, type: :model do
 
     before do
       # Create invalid responses for both steps (bypass validation during creation)
+      # Use text exceeding max length to trigger validation error
       response_one = application.market_attribute_responses.build(
         market_attribute: step_one_attribute,
         type: 'TextInput',
-        value: {}, # Empty, will fail validation
+        value: { 'text' => 'a' * 10_001 }, # Exceeds max length, will fail validation
         source: :manual
       )
       response_one.save(validate: false)
@@ -403,7 +404,7 @@ RSpec.describe MarketApplication, type: :model do
       response_two = application.market_attribute_responses.build(
         market_attribute: step_two_attribute,
         type: 'TextInput',
-        value: {}, # Empty, will fail validation
+        value: { 'text' => 'a' * 10_001 }, # Exceeds max length, will fail validation
         source: :manual
       )
       response_two.save(validate: false)

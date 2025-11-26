@@ -9,6 +9,12 @@ module MarketAttributeResponse::RepeatableField
   included do
     include MarketAttributeResponse::FileAttachable
     include MarketAttributeResponse::JsonValidatable
+
+    before_validation :remove_empty_items
+  end
+
+  def item_data_fields
+    raise NotImplementedError, "#{self.class} must implement item_data_fields"
   end
 
   def items
@@ -80,6 +86,20 @@ module MarketAttributeResponse::RepeatableField
   end
 
   private
+
+  def remove_empty_items
+    return if value.blank? || value['items'].blank?
+    return unless value['items'].is_a?(Hash)
+
+    value['items'].reject! { |_timestamp, item| item_is_empty?(item) }
+    value_will_change!
+  end
+
+  def item_is_empty?(item)
+    return true unless item.is_a?(Hash)
+
+    item_data_fields.none? { |field| item[field].present? }
+  end
 
   def ensure_item_exists(timestamp)
     self.value = {} if value.blank?

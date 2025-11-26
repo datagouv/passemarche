@@ -26,7 +26,7 @@ Feature: Capacité économique et financière - Effectifs moyens annuels
     Then the effectifs form should be submitted successfully
     And the year data should be saved with correct structure
 
-  Scenario: Validation errors for missing required fields
+  Scenario: Partial data submission is valid (all fields optional)
     When I visit the economic capacities step (effectifs moyens annuels)
     And I fill in partial average staff data:
       | year   | year_value | average_staff |
@@ -34,11 +34,7 @@ Feature: Capacité économique et financière - Effectifs moyens annuels
       | year_2 |            | 32           |
       | year_3 | 2022       | 35           |
     And I click "Suivant"
-    Then I should see the effectifs validation errors:
-      | error |
-      | year_1.average_staff is required |
-      | year_2.year is required |
-    And the effectifs form should not be submitted
+    Then the effectifs form should be submitted successfully
 
   Scenario: Validation errors for invalid data types
     When I visit the economic capacities step (effectifs moyens annuels)

@@ -3,10 +3,7 @@ class MarketAttributeResponse::UrlInput < MarketAttributeResponse
 
   URL_REGEX = %r{\A(https?://)?(www\.)?[a-z0-9-]+(\.[a-z0-9-]+)+([/?#][^\s]*)?\z}i
 
-  validates :text, presence: true, format: {
-    with: URL_REGEX,
-    message: :invalid_url
-  }
+  validates :text, format: { with: URL_REGEX, message: :invalid_url }, allow_blank: true
 
   before_save :normalize_url
 

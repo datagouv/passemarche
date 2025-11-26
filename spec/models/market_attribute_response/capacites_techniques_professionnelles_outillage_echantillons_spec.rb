@@ -86,7 +86,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutil
       end
     end
 
-    context 'with echantillon missing description' do
+    context 'with echantillon missing description (all fields optional)' do
       let(:value) do
         {
           'items' => {
@@ -97,22 +97,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutil
         }
       end
 
-      context 'when market attribute is required' do
-        before { allow(market_attribute).to receive(:required?).and_return(true) }
-
-        it { is_expected.to be_invalid }
-
-        it 'adds validation error' do
-          response.valid?
-          expect(response.errors[:value]).to include('Échantillon 1: description is required when echantillon data is provided')
-        end
-      end
-
-      context 'when market attribute is not required' do
-        before { allow(market_attribute).to receive(:required?).and_return(false) }
-
-        it { is_expected.to be_valid }
-      end
+      it { is_expected.to be_valid }
     end
 
     context 'with empty echantillon entry' do

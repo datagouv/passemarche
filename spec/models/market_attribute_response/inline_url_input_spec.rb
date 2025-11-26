@@ -39,14 +39,24 @@ RSpec.describe MarketAttributeResponse::InlineUrlInput, type: :model do
       [
         'http://example',
         'example',
-        'ftp://example.com',
-        '',
-        nil
+        'ftp://example.com'
       ].each do |invalid_url|
         it "rejects '#{invalid_url.inspect}'" do
           inline_url_input.text = invalid_url
           expect(inline_url_input).not_to be_valid
         end
+      end
+    end
+
+    context 'with blank values' do
+      it 'allows empty string' do
+        inline_url_input.text = ''
+        expect(inline_url_input).to be_valid
+      end
+
+      it 'allows nil' do
+        inline_url_input.text = nil
+        expect(inline_url_input).to be_valid
       end
     end
   end

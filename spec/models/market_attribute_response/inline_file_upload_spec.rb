@@ -21,10 +21,8 @@ RSpec.describe MarketAttributeResponse::InlineFileUpload, type: :model do
   end
 
   describe 'validation' do
-    it 'validates presence of documents when required' do
-      market_attribute.update!(required: true)
-      expect(inline_file_upload).not_to be_valid
-      expect(inline_file_upload.errors[:documents]).to be_present
+    it 'allows no documents attached' do
+      expect(inline_file_upload).to be_valid
     end
   end
 

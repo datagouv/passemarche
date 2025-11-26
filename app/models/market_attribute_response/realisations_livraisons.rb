@@ -39,6 +39,10 @@ class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
     'realisation'
   end
 
+  def item_data_fields
+    REALISATION_FIELDS
+  end
+
   def specialized_document_fields
     ['attestation_bonne_execution']
   end
@@ -96,9 +100,7 @@ class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
     end
 
     return unless realisation_has_data?(realisation)
-    return unless market_attribute&.required?
 
-    validate_realisation_required_fields(realisation, display_number)
     validate_realisation_dates(realisation, display_number, timestamp)
     validate_realisation_montant(realisation, display_number)
   end
@@ -107,16 +109,6 @@ class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
     return false unless realisation.is_a?(Hash)
 
     REALISATION_FIELDS.any? { |field| realisation[field].present? }
-  end
-
-  def validate_realisation_required_fields(realisation, display_number)
-    required_fields = %w[resume date_debut date_fin montant description]
-
-    required_fields.each do |field|
-      next if realisation[field].present?
-
-      errors.add(:value, "Réalisation #{display_number}: #{field} is required when realisation data is provided")
-    end
   end
 
   def validate_realisation_dates(realisation, display_number, _timestamp)

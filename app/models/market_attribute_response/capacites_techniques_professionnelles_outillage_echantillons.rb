@@ -28,6 +28,10 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchan
     'echantillon'
   end
 
+  def item_data_fields
+    ECHANTILLON_FIELDS
+  end
+
   def specialized_document_fields
     ['fichiers']
   end
@@ -66,17 +70,9 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchan
   end
 
   def validate_single_echantillon(_timestamp, echantillon, display_number)
-    unless echantillon.is_a?(Hash)
-      errors.add(:value, "Échantillon #{display_number} must be a hash")
-      return
-    end
+    return if echantillon.is_a?(Hash)
 
-    return unless echantillon_has_data?(echantillon)
-    return unless market_attribute&.required?
-
-    return if echantillon['description'].present?
-
-    errors.add(:value, "Échantillon #{display_number}: description is required when echantillon data is provided")
+    errors.add(:value, "Échantillon #{display_number} must be a hash")
   end
 
   def echantillon_has_data?(echantillon)
