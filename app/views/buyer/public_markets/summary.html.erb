@@ -58,67 +58,33 @@
 
     <div class="fr-mb-4w">
       <div class="fr-mb-4w">
-        <% required_fields = @presenter.required_fields_by_category_and_subcategory %>
-        <% optional_fields = @presenter.optional_fields_by_category_and_subcategory %>
+        <% fields_by_category = @presenter.selected_fields_by_category_and_subcategory %>
 
-        <% if required_fields.any? || optional_fields.any? %>
-          <% if required_fields.any? %>
-            <h2 class="fr-h2 fr-mb-3w" style="color: var(--background-action-high-blue-france);">1. <%= t('buyer.public_markets.required_fields.title') %></h2>
-            <div class="fr-mb-5w">
-              <% required_fields.each do |category, subcategories| %>
-                <div class="fr-card fr-mb-4w">
-                  <%= render 'card_header', title: t("form_fields.buyer.categories.#{category}") %>
-                  <div class="fr-card__body fr-mt-3w fr-mb-3w">
-                    <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
-                      <%= render 'subcategory_section',
-                            subcategory: subcategory,
-                            subcategories: subcategories,
-                            is_last: (subcat_index == subcategories.size - 1) do %>
-                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
-                          <% fields.each do |field_key| %>
-                            <% field = @presenter.field_by_key(field_key) %>
-                            <%= render 'field_display',
-                                  field_key: field_key,
-                                  field: field,
-                                  html_tag: :li,
-                                  wrapper_classes: 'fr-list__item' %>
-                          <% end %>
-                        </ul>
+        <% if fields_by_category.any? %>
+          <% fields_by_category.each_with_index do |(category, subcategories), category_index| %>
+            <h2 class="fr-h2 fr-mb-3w <%= 'fr-mt-8w' if category_index > 0 %>" style="color: var(--background-action-high-blue-france);">
+              <%= category_index + 1 %>. <%= t("form_fields.buyer.categories.#{category}", default: category.humanize) %>
+            </h2>
+            <div class="fr-card fr-mb-4w">
+              <div class="fr-card__body fr-mt-3w fr-mb-3w">
+                <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
+                  <%= render 'subcategory_section',
+                        subcategory: subcategory,
+                        subcategories: subcategories,
+                        is_last: (subcat_index == subcategories.size - 1) do %>
+                    <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
+                      <% fields.each do |field_key| %>
+                        <% field = @presenter.field_by_key(field_key) %>
+                        <%= render 'field_display',
+                              field_key: field_key,
+                              field: field,
+                              html_tag: :li,
+                              wrapper_classes: 'fr-list__item' %>
                       <% end %>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-
-          <% if optional_fields.any? %>
-            <h2 class="fr-h2 fr-mb-3w fr-mt-8w" style="color: var(--background-action-high-blue-france);">2. <%= t('buyer.public_markets.additional_fields.title') %></h2>
-            <div>
-              <% optional_fields.each do |category, subcategories| %>
-                <div class="fr-card fr-mb-4w">
-                  <%= render 'card_header', title: t("form_fields.buyer.categories.#{category}") %>
-                  <div class="fr-card__body fr-mt-3w fr-mb-3w">
-                    <% subcategories.each_with_index do |(subcategory, fields), subcat_index| %>
-                      <%= render 'subcategory_section',
-                            subcategory: subcategory,
-                            subcategories: subcategories,
-                            is_last: (subcat_index == subcategories.size - 1) do %>
-                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
-                          <% fields.each do |field_key| %>
-                            <% field = @presenter.field_by_key(field_key) %>
-                            <%= render 'field_display',
-                                  field_key: field_key,
-                                  field: field,
-                                  html_tag: :li,
-                                  wrapper_classes: 'fr-list__item' %>
-                          <% end %>
-                        </ul>
-                      <% end %>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
+                    </ul>
+                  <% end %>
+                <% end %>
+              </div>
             </div>
           <% end %>
         <% else %>

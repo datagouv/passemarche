@@ -69,6 +69,19 @@ class PublicMarketPresenter
     organize_fields_by_category_and_subcategory(all_market_attributes.additional)
   end
 
+  # Returns selected market attributes organized by category and subcategory
+  # Categories are ordered by ID (same order as CSV import)
+  def selected_fields_by_category_and_subcategory
+    organize_selected_fields_by_category_and_subcategory(selected_market_attributes_ordered)
+  end
+
+  # Returns the category keys for selected attributes in the correct order
+  def selected_category_keys
+    @selected_category_keys ||= selected_market_attributes_ordered
+      .filter_map(&:category_key)
+      .uniq
+  end
+
   def should_display_subcategory?(subcategories)
     subcategories.keys.size > 1
   end
@@ -93,6 +106,22 @@ class PublicMarketPresenter
 
   def all_market_attributes
     @public_market.market_attributes.active.ordered
+  end
+
+  # Returns selected market attributes ordered by ID (preserves CSV import order)
+  def selected_market_attributes_ordered
+    @selected_market_attributes_ordered ||= @public_market.market_attributes.active.order(:id).to_a
+  end
+
+  # Organizes fields maintaining category order from selected_category_keys
+  def organize_selected_fields_by_category_and_subcategory(market_attributes)
+    grouped = market_attributes.group_by(&:category_key)
+
+    selected_category_keys.each_with_object({}) do |category_key, result|
+      next unless grouped[category_key]
+
+      result[category_key] = group_by_subcategory(grouped[category_key])
+    end
   end
 
   # Use order(:id) to maintain the same category order as the candidate flow
