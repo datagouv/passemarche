@@ -12,16 +12,12 @@ FactoryBot.define do
       sync_status { :sync_completed }
     end
 
-    trait :subject_to_prohibition do
-      subject_to_prohibition { true }
+    trait :attests_no_exclusion do
+      attests_no_exclusion_motifs { true }
     end
 
-    trait :not_subject_to_prohibition do
-      subject_to_prohibition { false }
-    end
-
-    trait :prohibition_not_answered do
-      subject_to_prohibition { nil }
+    trait :does_not_attest_no_exclusion do
+      attests_no_exclusion_motifs { false }
     end
   end
 end

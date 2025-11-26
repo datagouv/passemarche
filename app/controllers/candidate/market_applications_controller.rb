@@ -119,7 +119,7 @@ module Candidate
     def market_application_params
       permitted_params = params.fetch(:market_application, {}).permit(
         :siret,
-        :subject_to_prohibition
+        :attests_no_exclusion_motifs
       )
 
       permitted_params[:market_attribute_responses_attributes] = permitted_nested_attributes if params[:market_application] && params[:market_application][:market_attribute_responses_attributes]
