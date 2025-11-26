@@ -1,0 +1,36 @@
+<% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.attestation_motifs_exclusion.title')}" %>
+
+<%= stepper(
+  current_step: :attestation_motifs_exclusion,
+  steps: @wizard_steps,
+  i18n_scope: 'candidate',
+  show_separator: true
+) %>
+
+<%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      <h2 class="fr-h4 fr-mb-3w">
+        <%= t('candidate.market_applications.attestation_motifs_exclusion.title') %>
+      </h2>
+
+      <div class="fr-checkbox-group fr-mb-3w">
+        <%= form.check_box :attests_no_exclusion_motifs,
+              class: "fr-checkbox",
+              id: "attests_no_exclusion_motifs" %>
+        <%= form.label :attests_no_exclusion_motifs,
+              t('candidate.market_applications.attestation_motifs_exclusion.checkbox_label'),
+              class: "fr-label",
+              for: "attests_no_exclusion_motifs" %>
+      </div>
+
+      <div class="fr-alert fr-alert--info fr-alert--sm fr-mb-3w">
+        <p>
+          <%= t('candidate.market_applications.attestation_motifs_exclusion.info_banner') %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%= render "wizard_nav" %>
+<% end %>

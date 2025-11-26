@@ -4,6 +4,7 @@ class MarketApplicationPresenter
   INITIAL_WIZARD_STEPS = %i[company_identification api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
+  ATTESTATION_MOTIFS_EXCLUSION_STEP = :attestation_motifs_exclusion
 
   def initialize(market_application)
     @market_application = market_application
@@ -26,6 +27,7 @@ class MarketApplicationPresenter
 
   def parent_category_for(subcategory_key)
     return MARKET_INFO_PARENT_CATEGORY if subcategory_key.to_s == 'market_information'
+    return ATTESTATION_MOTIFS_EXCLUSION_STEP.to_s if subcategory_key.to_s == ATTESTATION_MOTIFS_EXCLUSION_STEP.to_s
 
     all_market_attributes
       .where(subcategory_key: subcategory_key.to_s)
@@ -91,11 +93,14 @@ class MarketApplicationPresenter
   end
 
   def stepper_steps
-    category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
+    steps = category_keys.map(&:to_sym)
+    steps = inject_attestation_motifs_exclusion_step(steps)
+    steps + [FINAL_WIZARD_STEP]
   end
 
   def wizard_steps
     all_steps = (INITIAL_WIZARD_STEPS + subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
+    all_steps = inject_attestation_motifs_exclusion_step(all_steps)
     all_steps.reject { |step| SkippableStepCalculator.call(@market_application, step) }
   end
 
@@ -142,5 +147,13 @@ class MarketApplicationPresenter
       .pluck(:subcategory_key)
       .compact
       .uniq
+  end
+
+  def inject_attestation_motifs_exclusion_step(steps)
+    first_exclusion_index = steps.find_index { |s| s.to_s.start_with?('motifs_exclusion') }
+    return steps unless first_exclusion_index
+
+    steps.insert(first_exclusion_index, ATTESTATION_MOTIFS_EXCLUSION_STEP)
+    steps
   end
 end
