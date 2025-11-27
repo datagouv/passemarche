@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublicMarketPresenter
+  include SidemenuHelper
+
   def initialize(public_market)
     @public_market = public_market
   end
@@ -23,10 +25,6 @@ class PublicMarketPresenter
 
   def optional_fields_by_category_and_subcategory
     organize_fields_by_category_and_subcategory(all_market_attributes.additional)
-  end
-
-  def should_display_subcategory?(subcategories)
-    subcategories.keys.size > 1
   end
 
   def source_types
