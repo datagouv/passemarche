@@ -1,45 +1,37 @@
 <% content_for :title, "#{@market_application.siret} - #{t("form_fields.candidate.categories.#{step}", default: step.to_s.humanize)}" %>
-
-<%
-  current_category = @presenter.parent_category_for(step.to_s)
-%>
-
-<%= stepper(
-  current_step: current_category,
-  steps: @wizard_steps,
-  i18n_scope: 'candidate',
-  show_separator: true
-) %>
-
+<% current_category = @presenter.parent_category_for(step.to_s) %>
+<%= stepper(current_step: current_category, steps: @wizard_steps, i18n_scope: 'candidate', show_separator: true) %>
 <% subcategories = @presenter.subcategories_for_category(current_category) %>
+<% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(current_category) %>
+
 <%= form_with model: @market_application, url: wizard_path, local: true, multipart: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
   <div class="fr-grid-row">
-    <% if subcategories.any? %>
-      <%= render "sidemenu_subcategories", subcategories:, step:%>
+
+    <% if @presenter.display_sidemenu?(subcategories) %>
+      <%= render "sidemenu_subcategories", subcategories: subcategories, step: step %>
     <% end %>
 
-    <div class="<%= subcategories.any? ? 'fr-col-9' : 'fr-col-12' %>">
+    <div class="<%= @presenter.display_sidemenu?(subcategories) ? 'fr-col-9' : 'fr-col-12' %>">
       <% if subcategories.any? %>
-        <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(current_category) %>
-          <div class="fr-mb-4w">
+        <div class="fr-mb-4w">
+          <% if @presenter.display_sidemenu?(subcategories) %>
             <h6 id="<%= step %>" class="fr-mb-2w">
               <%= t("form_fields.candidate.subcategories.#{step}",
                     default: t("candidate.market_applications.manual_subcategories.#{step}",
                               default: step.to_s.humanize)) %>
             </h6>
+          <% end %>
 
-            <% subcategory_responses = responses_by_subcategory[step.to_s] || [] %>
+          <% subcategory_responses = (responses_by_subcategory[step.to_s] || []).select { |r| r.type.present? } %>
+          <% if subcategory_responses.any? %>
             <div class="fr-fieldset">
               <% subcategory_responses.each do |response| %>
                 <div class="fr-fieldset__element">
-                  <%
-                    component_class = begin
-                      "MarketAttributeResponse::#{response.type}Component".constantize
-                    rescue NameError
-                      nil
-                    end
-                  %>
-
+                  <% component_class = begin
+                    "MarketAttributeResponse::#{response.type}Component".safe_constantize
+                  rescue NameError
+                    nil
+                  end %>
                   <% if component_class %>
                     <%= render component_class.new(market_attribute_response: response, form: form) %>
                   <% else %>
@@ -49,12 +41,14 @@
                 </div>
               <% end %>
             </div>
-          </div>
+          <% else %>
+            <p class="fr-text--sm fr-text--mention-grey">Aucun contenu disponible pour cette étape.</p>
+          <% end %>
+        </div>
       <% else %>
         <p class="fr-text--sm fr-text--mention-grey">Aucun contenu disponible pour cette étape.</p>
       <% end %>
     </div>
   </div>
-
   <%= render "wizard_nav" %>
 <% end %>

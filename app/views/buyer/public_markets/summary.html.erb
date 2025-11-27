@@ -74,7 +74,7 @@
                             subcategory: subcategory,
                             subcategories: subcategories,
                             is_last: (subcat_index == subcategories.size - 1) do %>
-                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
+                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.display_sidemenu?(subcategories) %>">
                           <% fields.each do |field_key| %>
                             <% field = @presenter.field_by_key(field_key) %>
                             <%= render 'field_display',
@@ -104,7 +104,7 @@
                             subcategory: subcategory,
                             subcategories: subcategories,
                             is_last: (subcat_index == subcategories.size - 1) do %>
-                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
+                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.display_sidemenu?(subcategories) %>">
                           <% fields.each do |field_key| %>
                             <% field = @presenter.field_by_key(field_key) %>
                             <%= render 'field_display',
