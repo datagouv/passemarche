@@ -27,10 +27,8 @@ fr:
           à l'appréciation de l'acheteur et prévus dans les documents de la consultation
         capacite_economique_financiere_chiffre_affaires: Capacités économiques et
           financières Pourcentage du chiffre d'affaires
-        capacite_economique_financiere_bilans: Capacités économiques et financières
-          Bilans
-        capacite_economique_financiere_assurance: Capacités économiques et financières
-          Assurance
+        capacite_economique_financiere_bilans: Bilans
+        capacite_economique_financiere_assurance: Assurance
         capacites_techniques_professionnelles_effectifs: Les effectifs
         capacites_techniques_professionnelles_certificats: Les certificats de qualification
           professionnelle ou équivalents
@@ -286,7 +284,7 @@ fr:
     candidate:
       categories:
         identite_entreprise: Les informations du marché et de votre entreprise
-        motifs_exclusion: Les justificatifs relatifs aux motifs d'exclusion obligatoires
+        motifs_exclusion: Les justificatifs relatifs aux motifs d'exclusion
         capacite_economique_financiere: Capacités économiques et financières de votre
           entreprise
         capacites_techniques_professionnelles: Capacités techniques et professionnelles
@@ -294,8 +292,9 @@ fr:
       subcategories:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
-        motifs_exclusion_fiscales_et_sociales: Obligations fiscales et sociales
-        motifs_exclusion_appreciation_acheteur_discretionnaire: Autres motifs
+        motifs_exclusion_fiscales_et_sociales: Justificatifs concernant les obligations
+          fiscales et sociales
+        motifs_exclusion_appreciation_acheteur_discretionnaire: Autres justificatifs
         capacite_economique_financiere_chiffre_affaires: Chiffre d'affaires
         capacite_economique_financiere_bilans: Bilans
         capacite_economique_financiere_assurance: Banque et assurance
@@ -326,50 +325,52 @@ fr:
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
         motifs_exclusion_fiscales_et_sociales_declarations_fiscales:
-          name: Votre entreprise ne s'est-elle pas acquittée des impôts, taxes, contributions
-            sociales exigibles ?
-          description: 'Par exemple : impôt sur le revenu ou sociétés, TVA, etc'
+          name: Impôts, taxes et contributions sociales
+          description: Vous pouvez justifier que votre entreprise est à jour de ses
+            impôts, taxes et contributions sociales exigibles.
         motifs_exclusion_fiscales_et_sociales_declarations_cotisations_sociales:
-          name: Votre entreprise a-t-elle manqué à ses obligations de déclaration
-            et de paiement des cotisations sociales ?
+          name: Cotisations sociales
+          description: Vous pouvez justifier que votre entreprise est à jour de ses
+            cotisations sociales.
         motifs_exclusion_fiscales_et_sociales_travailleurs_handicapes:
-          name: Votre entreprise a t-elle manqué à ses obligations d'emploi de travailleurs
-            handicapés ?
-          description: Sont concernées par l'obligation d'emploi de travailleurs handicapés,
-            les entreprises employant au moins 20 salariés (art. L.5212-1 à L.5212-11
-            du code du travail)
+          name: Emploi de travailleurs handicapés
+          description: Vous pouvez justifier que votre entreprise n’a pas manqué à
+            ses obligations d’emploi de travailleurs handicapés.
         motifs_exclusion_fiscales_et_sociales_cibtp_cnetp:
-          name: Votre entreprise a t-elle manqué à ses obligations de déclaration
-            et paiement  de ses cotisations CIBTP-CNETP ?
-          description: Si votre entreprise exerce dans le secteur du BTP, elle doit
-            fournir une attestation de la caisse CIBTP confirmant qu'elle est à jour
-            de ses déclarations et cotisations (congés payés et chômage-intempéries),
-            conformément au code du travail.
+          name: Cotisations CIBTP - CNETP
+          description: Vous pouvez justifier que votre entreprise est à jour du paiement
+            de ses cotisations CIBTP-CNETP.
         motifs_exclusion_fiscales_et_sociales_pro_btp:
-          name: Votre entreprise a t-elle manqué à ses obligations de déclaration
-            et paiement  de ses cotisations retraite Pro-BTP ?
-          description: Si votre entreprise exerce dans le secteur du BTP, elle doit
-            fournir une attestation PRO BTP prouvant qu'elle s'est acquittée de ses
-            obligations de retraites complémentaires.
+          name: Cotisations Pro-BTP
+          description: Vous pouvez justifier que votre entreprise est à jour du paiement
+            de ses cotisations Pro-BTP
         motifs_exclusion_appreciation_acheteur_discretionnaire_manquement_execution:
           name: Votre entreprise a-t-elle été sanctionnée pour manquement dans l'exécution
-            d'un contrat antérieur au cours des 3 dernières années?
-          description: 'Exemple : dommages et intérêts, résiliation ou équivalent,  pour
-            manquements graves ou répétés dans l''exécution d''un précédent contrat
+            d'un contrat antérieur au cours des 3 dernières années ?
+          description: 'Exemple : dommages et intérêts, résiliation ou équivalent, 
+            pour manquements graves ou répétés dans l''exécution d''un précédent contrat
             public.'
         motifs_exclusion_appreciation_acheteur_discretionnaire_bilan_ges:
-          name: Votre entreprise a-t-elle manqué à l'obligation d'établir un Bilan
-            de gaz à effet de serre (BEGES), alors qu'elle est concernée ?
-          description: Uniquement pour les entreprises, soumise à l'article L.229-25
-            du code de l'environnement, n'a pas réalisé son bilan des émissions de
-            gaz à effet de serre pour l'année précédant l'appel à la concurrence ou
-            d'engagement de la consultation.
+          name: Votre entreprise a-t-elle établi un Bilan de gaz à effet de serre
+            (BEGES) l'année dernière, (si votre entreprise est concernée par l'obligation)
+            ?
+          description: L'obligation d'établir un BEGES s'impose aux personnes morales
+            de droit privé de plus de 500 personnes (250 personnes pour les entités
+            établies dans les régions et départements d'outre-mer), l'Etat, les régions,
+            les départements, les métropoles, les communautés urbaines et d'agglomération
+            et les communes ou communautés de communes de plus de 50 000 habitants
+            ainsi que les personnes morales de droit public employant plus de 250
+            personnes, (article L.229-25 du code de l'environnement).
         motifs_exclusion_appreciation_acheteur_discretionnaire_plan_vigilance:
           name: Votre entreprise a-t-elle manqué à l'obligation d'établissement d'un
-            plan de vigilance ?
-          description: Uniquement pour les entreprises soumises à l'article L.225-102-1
-            du Code de commerce, n'a pas établi son plan de vigilance (mesures prévues
-            à l'art. L.225-102-4) pour l'année précédant l'appel à concurrence.
+            plan de vigilance ? 
+          description: Votre entreprise est concernée par l’obligation d’établir un
+            plan de vigilance si, à la clôture de deux exercices consécutifs, elle
+            emploie au moins 5 000 salariés en France (y compris ses filiales françaises),
+            ou au moins 10 000 salariés en France et à l’étranger (elle et ses filiales).
+            Si une société mère met en œuvre un tel plan couvrant ses filiales, celles-ci
+            sont considérées comme ayant rempli leurs obligations (Article L.225-102-1
+            du code de commerce).
         capacite_economique_financiere_chiffre_affaires_global_annuel:
           name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
             années
