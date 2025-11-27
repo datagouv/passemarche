@@ -1,4 +1,4 @@
-<% required = market_attribute_response.market_attribute.required? %>
+
 
 <% if market_attribute_response.auto? %>
   <%= auto_filled_field_display(form, market_attribute_response) %>
@@ -28,12 +28,11 @@
           <%= file_upload_hint_text(MarketAttributeResponse::FileUpload::MAX_FILE_SIZE) %>
         </span>
         <%= response_form.file_field :files,
-            class: "fr-upload",
-            required: required,
-            multiple: true,
-            direct_upload: true,
-            accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
-            id: "upload-#{market_attribute_response.id}" %>
+          class: "fr-upload",
+          multiple: true,
+          direct_upload: true,
+          accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png",
+          id: "upload-#{market_attribute_response.id}" %>
 
         <div class="fr-messages-group" id="upload-<%= market_attribute_response.id %>-messages" aria-live="polite">
           <% if response_form.object.errors[:documents].present? %>

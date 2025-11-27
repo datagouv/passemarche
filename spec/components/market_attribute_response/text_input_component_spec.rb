@@ -84,7 +84,7 @@ RSpec.describe MarketAttributeResponse::TextInputComponent, type: :component do
 
         render_inline(component)
 
-        expect(response_form).to have_received(:label).with(:text, hash_including(class: 'fr-label fr-label--required'))
+        expect(response_form).to have_received(:label).with(:text, hash_including(class: 'fr-label'))
       end
     end
 

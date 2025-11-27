@@ -104,7 +104,7 @@ RSpec.describe DocumentNamingService, type: :service do
 
       it 'returns unique system filenames for each document' do
         service = described_class.new(market_application)
-        system_names = service.filename_mapping.values.map { |m| m[:system] }
+        system_names = service.filename_mapping.values.pluck(:system)
 
         expect(system_names).to contain_exactly(
           'user_01_01_first_field_document.pdf',
@@ -137,7 +137,7 @@ RSpec.describe DocumentNamingService, type: :service do
 
       it 'returns sequential doc indices for documents in same response' do
         service = described_class.new(market_application)
-        system_names = service.filename_mapping.values.map { |m| m[:system] }
+        system_names = service.filename_mapping.values.pluck(:system)
 
         expect(system_names).to contain_exactly(
           'user_01_01_multi_upload_field_first.pdf',

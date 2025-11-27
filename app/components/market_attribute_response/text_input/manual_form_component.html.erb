@@ -12,8 +12,7 @@
 
   <%= form.text_field :text,
                       value: text_value,
-                      class: input_css_class,
-                      required: market_attribute.required? %>
+                      class: input_css_class %>
 
   <% if errors? %>
     <% error_messages.each do |error| %>
