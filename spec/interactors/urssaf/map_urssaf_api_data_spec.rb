@@ -10,7 +10,7 @@ RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
       :market_attribute,
       api_name: 'urssaf_attestation_vigilance',
       api_key: 'declarations_cotisations_sociales',
-      input_type: 'radio_with_justification_required'
+      input_type: 'file_upload'
     )
   end
 
@@ -19,7 +19,7 @@ RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
       :market_attribute,
       api_name: 'urssaf_attestation_vigilance',
       api_key: 'travailleurs_handicapes',
-      input_type: 'radio_with_justification_required'
+      input_type: 'file_upload'
     )
   end
   let(:document_io) { StringIO.new('fake pdf content') }
@@ -54,7 +54,6 @@ RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
     responses.each do |response|
       expect(response.documents.attached?).to be true
       expect(response.source).to eq('auto')
-      expect(response.value['radio_choice']).to eq('no') if response.value.is_a?(Hash)
     end
   end
 end

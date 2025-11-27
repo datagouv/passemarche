@@ -192,14 +192,14 @@ RSpec.describe Urssaf, type: :organizer do
     before do
       create(
         :market_attribute,
-        :radio_with_justification_required,
+        :file_upload,
         api_name: 'urssaf_attestation_vigilance',
         api_key: 'declarations_cotisations_sociales',
         public_markets: [public_market]
       )
       create(
         :market_attribute,
-        :radio_with_justification_required,
+        :file_upload,
         api_name: 'urssaf_attestation_vigilance',
         api_key: 'travailleurs_handicapes',
         public_markets: [public_market]

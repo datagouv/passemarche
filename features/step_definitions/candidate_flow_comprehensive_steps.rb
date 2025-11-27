@@ -37,7 +37,7 @@ Given('a comprehensive public market with all input types exists') do
   @company_name_attr.public_markets << @public_market unless @company_name_attr.public_markets.include?(@public_market)
 
   @exclusion_checkbox_attr = MarketAttribute.find_or_create_by(key: 'comprehensive_test_exclusion') do |attr|
-    attr.input_type = 'checkbox'
+    attr.input_type = 'checkbox_with_document'
     attr.category_key = 'exclusion_criteria'
     attr.subcategory_key = 'declarations'
     attr.required = true
@@ -326,7 +326,7 @@ end
 
 Then('the checkbox response should be of class {string}') do |expected_class|
   checkbox_response = @market_application.market_attribute_responses
-    .find { |r| r.market_attribute.input_type == 'checkbox' }
+    .find { |r| r.market_attribute.input_type == 'checkbox_with_document' }
   expect(checkbox_response).to be_present
   expect(checkbox_response.class.name).to eq(expected_class)
 end

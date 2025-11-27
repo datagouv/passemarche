@@ -101,7 +101,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
       let(:attestation_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'fiscalite_attestations_fiscales',
           api_name: 'attestations_fiscales',
           api_key: 'document',
@@ -150,7 +150,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
       let(:document_attribute) do
-        create(:market_attribute, :radio_with_justification_required,
+        create(:market_attribute, :file_upload,
           key: 'custom_document_field',
           public_markets: [public_market])
       end
@@ -196,14 +196,14 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
       let(:api_attribute) do
-        create(:market_attribute, :radio_with_justification_required, :from_api,
+        create(:market_attribute, :file_upload, :from_api,
           key: 'fiscalite_attestations_fiscales',
           api_name: 'attestations_fiscales',
           api_key: 'document',
           public_markets: [public_market])
       end
       let(:user_attribute) do
-        create(:market_attribute, :radio_with_justification_required,
+        create(:market_attribute, :file_upload,
           key: 'custom_document_field',
           public_markets: [public_market])
       end

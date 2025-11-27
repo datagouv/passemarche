@@ -213,16 +213,10 @@ fr:
         data_from_api: "Récupéré automatiquement"
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
-      shared:
-        prohibition_question:
-          label: "Votre entreprise est-elle concernée par un cas d'interdiction de soumissionner ?"
-          hint: "Sont exclues de la procédure de passation des marchés, les entreprises condamnées pénalement, en défaut fiscal ou social, en liquidation judiciaire ou en faillite personnelle"
-          locked: "Réponse verrouillée"
-          locked_hint: "Vous avez déjà répondu à cette question. Votre réponse est utilisée pour toutes les étapes de motifs d'exclusion."
-          yes: "Oui"
-          no: "Non"
-        exclusion_step_fields:
-          not_subject_message: "Vous avez indiqué que votre entreprise n'est pas concernée par un cas d'interdiction. Vous pouvez passer à l'étape suivante."
+      attestation_motifs_exclusion:
+        title: "Attestation sur l'honneur - Motifs d'exclusion"
+        checkbox_label: "J'atteste sur l'honneur que mon entreprise ne fait l'objet d'aucun des motifs d'exclusion prévus par le code de la commande publique"
+        info_banner: "L'entreprise ne doit pas faire l'objet d'un motif d'exclusion tel que prévu aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique."
       api_data_recovery_status:
         title: "Nous pré-remplissons votre dossier de candidature"
         description: "Nos systèmes vérifient l'intégrité et la validité de chaque document et information récupérés. Ils sont ensuite formatés pour répondre aux exigences du marché."
@@ -272,7 +266,8 @@ fr:
       steps:
         api_data_recovery_status: "Récupération automatique des données"
         market_and_company_information: "Les informations du marché et de votre entreprise"
-        exclusion_criteria: "Les motifs d'exclusion"
+        attestation_motifs_exclusion: "Les motifs d'exclusion"
+        exclusion_criteria: "Les justificatifs relatifs aux motifs d'exclusion obligatoires"
         economic_capacities: "Les capacités économiques et financières"
         technical_capacities: "Les capacités techniques et professionnelles"
         summary: "Synthèse de votre candidature"
@@ -287,8 +282,10 @@ fr:
           market_information: "Informations du marché"
           company_information: "Informations de votre entreprise"
           contact_information: "Informations de contact"
+      motifs_exclusion:
+        subtitle: "Vous pouvez justifier que votre entreprise est à jour de ses obligations sociales et fiscales, d'autres justificatifs attendus par l'acheteur vous sont demandés (ces derniers ne sont pas obligatoires mais seront exigés si vous êtes attributaire du marché)."
       exclusion_criteria:
-        title: "Les motifs d'exclusion"
+        title: "Les justificatifs relatifs aux motifs d'exclusion obligatoires"
         subtitle: "Lorem ipsum..."
       economic_capacities:
         title: "Les capacités économiques et financières"

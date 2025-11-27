@@ -31,48 +31,23 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
-  describe 'subject_to_prohibition' do
+  describe 'attests_no_exclusion_motifs' do
     it 'accepts true' do
-      application = build(:market_application, :subject_to_prohibition, public_market:)
+      application = build(:market_application, public_market:, attests_no_exclusion_motifs: true)
       expect(application).to be_valid
     end
 
     it 'accepts false' do
-      application = build(:market_application, :not_subject_to_prohibition, public_market:)
-      expect(application).to be_valid
-    end
-
-    it 'accepts nil (not answered)' do
-      application = build(:market_application, :prohibition_not_answered, public_market:)
+      application = build(:market_application, public_market:, attests_no_exclusion_motifs: false)
       expect(application).to be_valid
     end
 
     it 'handles Rails boolean type casting' do
-      application = build(:market_application, public_market:, subject_to_prohibition: 1)
-      expect(application.subject_to_prohibition).to be true
+      application = build(:market_application, public_market:, attests_no_exclusion_motifs: 1)
+      expect(application.attests_no_exclusion_motifs).to be true
 
-      application = build(:market_application, public_market:, subject_to_prohibition: 0)
-      expect(application.subject_to_prohibition).to be false
-
-      application = build(:market_application, public_market:, subject_to_prohibition: '')
-      expect(application.subject_to_prohibition).to be_nil
-    end
-  end
-
-  describe '#prohibition_declared?' do
-    it 'returns true when subject_to_prohibition is true' do
-      application = build(:market_application, :subject_to_prohibition, public_market:)
-      expect(application.prohibition_declared?).to be true
-    end
-
-    it 'returns false when subject_to_prohibition is false' do
-      application = build(:market_application, :not_subject_to_prohibition, public_market:)
-      expect(application.prohibition_declared?).to be false
-    end
-
-    it 'returns false when subject_to_prohibition is nil' do
-      application = build(:market_application, :prohibition_not_answered, public_market:)
-      expect(application.prohibition_declared?).to be false
+      application = build(:market_application, public_market:, attests_no_exclusion_motifs: 0)
+      expect(application.attests_no_exclusion_motifs).to be false
     end
   end
 
