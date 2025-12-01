@@ -16,14 +16,13 @@
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
           <div class="fr-input-group">
-            <%= response_form.label "echantillon_#{index}_description", "Description de l'échantillon", class: "fr-label fr-label--required" %>
+            <%= response_form.label "echantillon_#{index}_description", "Description de l'échantillon", class: "fr-label" %>
             <span class="fr-hint-text">Décrivez l'échantillon, la photographie ou la fourniture que vous souhaitez présenter</span>
             <%= response_form.text_area "echantillon_#{index}_description",
-                  value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'description'),
-                  class: "fr-input",
-                  placeholder: "ex: Échantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, matériau acier inoxydable",
-                  rows: 3,
-                  required: true %>
+              value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'description'),
+              class: "fr-input",
+              placeholder: "ex: Échantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, matériau acier inoxydable",
+              rows: 3 %>
           </div>
         </div>
       </div>

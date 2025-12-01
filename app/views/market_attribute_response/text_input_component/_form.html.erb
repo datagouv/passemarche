@@ -24,7 +24,7 @@
       <%= response_form.hidden_field :market_attribute_id %>
       <%= response_form.hidden_field :type %>
 
-      <%= response_form.label :text, class: "fr-label fr-label--required" do %>
+      <%= response_form.label :text, class: "fr-label" do %>
         <%= component.field_label %>
         <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response, inline: true) %>
       <% end %>
@@ -35,8 +35,7 @@
 
       <%= response_form.text_field :text,
                           value: component.text_value,
-                          class: component.input_css_class,
-                          required: component.market_attribute.required? %>
+                          class: component.input_css_class %>
 
       <% if component.errors? %>
         <% component.error_messages.each do |error| %>

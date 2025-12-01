@@ -32,7 +32,7 @@
       <%= response_form.hidden_field :market_attribute_id %>
       <%= response_form.hidden_field :type %>
 
-      <%= response_form.label :text, label_text, class: "fr-label fr-label--required" do %>
+      <%= response_form.label :text, label_text, class: "fr-label" do %>
         <%= label_text %>
         <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
       <% end %>
@@ -45,8 +45,7 @@
 
       <%= response_form.email_field :text,
             value: text_value,
-            class: "fr-input#{ ' fr-input--error' if market_attribute_response.errors[:text].any? }",
-            required: true %>
+            class: "fr-input#{ ' fr-input--error' if market_attribute_response.errors[:text].any? }"%>
 
       <% if market_attribute_response.errors[:text].any? %>
         <p class="fr-error-text">

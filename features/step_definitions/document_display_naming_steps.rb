@@ -12,7 +12,6 @@ Given('a public market with file upload field exists') do
     attr.input_type = 'file_upload'
     attr.category_key = 'technical_capacities'
     attr.subcategory_key = 'documents'
-    attr.required = true
   end
   @file_upload_attr.public_markets << @public_market unless @file_upload_attr.public_markets.include?(@public_market)
 end
@@ -131,7 +130,6 @@ def fill_in_current_step_fields
   fill_in_phone_fields
   fill_in_textarea_fields
   check_all_checkboxes
-  upload_required_files
 end
 
 def fill_in_text_fields
