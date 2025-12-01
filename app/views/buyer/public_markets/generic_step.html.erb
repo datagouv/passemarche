@@ -47,7 +47,7 @@
     </div>
 
     <% if @has_optional_fields %>
-      <div data-controller="additional-fields">
+      <div data-controller="additional-fields" data-additional-fields-category-value="<%= @current_category %>">
         <div class="fr-mb-4w fr-border-default--grey">
           <div class="fr-p-4w">
             <h3 class="fr-h6 fr-mb-3w"><%= t('buyer.public_markets.generic_step.optional_question') %></h3>

@@ -112,6 +112,40 @@ RSpec.describe MarketConfigurationService do
 
         expect(public_market.reload.market_attributes.count { |a| a.key == optional_attribute.key }).to eq(1)
       end
+
+      it 'removes previously selected optional attributes when deselected' do
+        public_market.market_attributes << optional_attribute
+
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(public_market.reload.market_attributes).to include(required_attribute)
+        expect(public_market.reload.market_attributes).not_to include(optional_attribute)
+      end
+
+      it 'removes only deselected attributes while keeping newly selected ones' do
+        other_optional = create(:market_attribute, key: 'other_optional', required: false, category_key: 'test_category')
+        supplies_market_type.market_attributes << other_optional
+        public_market.market_attributes << optional_attribute
+
+        params = { selected_attribute_keys: [other_optional.key] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(public_market.reload.market_attributes).to include(required_attribute, other_optional)
+        expect(public_market.reload.market_attributes).not_to include(optional_attribute)
+      end
+
+      it 'does not affect optional attributes from other categories when deselecting' do
+        other_category_attr = create(:market_attribute, key: 'other_cat_field', required: false, category_key: 'other')
+        supplies_market_type.market_attributes << other_category_attr
+        public_market.market_attributes << [optional_attribute, other_category_attr]
+
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(public_market.reload.market_attributes).to include(required_attribute, other_category_attr)
+        expect(public_market.reload.market_attributes).not_to include(optional_attribute)
+      end
     end
 
     context 'with summary step' do

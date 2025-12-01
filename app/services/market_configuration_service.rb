@@ -48,25 +48,36 @@ class MarketConfigurationService < ApplicationService
 
   def accumulate_optional_fields
     selected_keys = params[:selected_attribute_keys] || []
-    return if selected_keys.empty?
-
-    valid_keys = filter_valid_optional_keys(selected_keys)
-    return if valid_keys.empty?
-
-    add_new_attributes(valid_keys)
+    sync_optional_fields_for_category(selected_keys)
   end
 
-  def filter_valid_optional_keys(selected_keys)
-    available_keys = MarketAttributeFilteringService.call(public_market)
+  def sync_optional_fields_for_category(selected_keys)
+    available_optional_keys = available_optional_keys_for_category
+    valid_selected_keys = selected_keys & available_optional_keys
+
+    remove_deselected_optional_fields(available_optional_keys, valid_selected_keys)
+    add_new_optional_fields(valid_selected_keys)
+  end
+
+  def available_optional_keys_for_category
+    MarketAttributeFilteringService.call(public_market)
       .additional
       .to_a
       .select { |attr| attr.category_key == step.to_s }
       .map(&:key)
-
-    selected_keys & available_keys
   end
 
-  def add_new_attributes(valid_keys)
+  def remove_deselected_optional_fields(available_keys, selected_keys)
+    keys_to_remove = available_keys - selected_keys
+    return if keys_to_remove.empty?
+
+    attributes_to_remove = public_market.market_attributes.where(key: keys_to_remove)
+    public_market.market_attributes.delete(attributes_to_remove)
+  end
+
+  def add_new_optional_fields(valid_keys)
+    return if valid_keys.empty?
+
     new_attributes = MarketAttribute.where(key: valid_keys).reject do |attr|
       public_market.market_attributes.include?(attr)
     end
