@@ -39,13 +39,11 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
       end
 
       it 'includes API-sourced data (auto) in the PDF content' do
-        # Create a text input market attribute
         market_attribute = create(:market_attribute,
           :text_input,
           key: 'test_field',
           public_markets: [market_application.public_market])
 
-        # Create a response with source: :auto (API-sourced data)
         create(:market_attribute_response_text_input,
           market_application:,
           market_attribute:,
@@ -54,15 +52,51 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
 
         market_application.reload
 
-        # Mock WickedPdf to capture HTML content
         allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
         allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
-          # Verify API-sourced data is present in buyer attestation
           expect(html_content).to include('API sourced value')
           'fake pdf content'
         end
 
         subject
+      end
+
+      context 'with motifs_exclusion category' do
+        let(:market_application) { create(:market_application, siret: nil, attests_no_exclusion_motifs: true) }
+
+        before do
+          create(:market_attribute,
+            :text_input,
+            key: 'test_motif_field',
+            category_key: 'motifs_exclusion',
+            subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
+            public_markets: [market_application.public_market])
+        end
+
+        it 'includes candidate attestation block when attests_no_exclusion_motifs is true' do
+          allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+          allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+            expect(html_content).to include('Attestation du candidat')
+            expect(html_content).to include('Engagement sur l&#39;honneur')
+            expect(html_content).to include('Le candidat a attesté sur l&#39;honneur')
+            'fake pdf content'
+          end
+
+          subject
+        end
+
+        it 'includes candidate attestation block when attests_no_exclusion_motifs is false' do
+          market_application.update!(attests_no_exclusion_motifs: false)
+
+          allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+          allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+            expect(html_content).to include('Attestation du candidat')
+            expect(html_content).to include('Le candidat n&#39;a pas confirmé')
+            'fake pdf content'
+          end
+
+          subject
+        end
       end
     end
 
