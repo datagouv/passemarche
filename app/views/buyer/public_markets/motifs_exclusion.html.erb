@@ -24,26 +24,6 @@
           <p class="fr-mb-0"><%= t("buyer.public_markets.generic_step.steps.#{step}.box_content") %></p>
         </div>
       <% end %>
-
-      <% if @required_fields.present? %>
-        <% @required_fields.each_with_index do |(subcategory, fields), subcat_index| %>
-          <%= render 'subcategory_section',
-                subcategory: subcategory,
-                subcategories: @required_fields,
-                is_last: (subcat_index == @required_fields.size - 1) do %>
-            <ul class="fr-list">
-              <% fields.each do |field_key| %>
-                <% field = @presenter.field_by_key(field_key) %>
-                <%= render 'field_display',
-                      field_key: field_key,
-                      field: field,
-                      html_tag: :li,
-                      wrapper_classes: 'fr-list__item' %>
-              <% end %>
-            </ul>
-          <% end %>
-        <% end %>
-      <% end %>
     </div>
 
     <% if @has_optional_fields %>

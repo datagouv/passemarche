@@ -141,9 +141,9 @@ fr:
         capacites_techniques_professionnelles: Sélections des renseignements complémentaires (partie 2)
         summary: "Synthèse"
       generic_step:
-        optional_question: Souhaitez-vous demander des renseignements complémentaires ?
-        yes_option: oui
-        no_option: non
+        optional_question: Souhaitez-vous demander des informations complémentaires aux candidats ?
+        yes_option: Oui
+        no_option: Non
         steps:
           identite_entreprise:
             title: Les informations concernant l'identité de l'entreprise

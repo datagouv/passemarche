@@ -20,7 +20,7 @@ module Buyer
         @required_fields = @presenter.required_fields_for_category(@current_category)
         @optional_fields = @presenter.optional_fields_for_category(@current_category)
         @has_optional_fields = @presenter.optional_fields_for_category?(@current_category)
-        render_wizard nil, template: 'buyer/public_markets/generic_step'
+        render_wizard nil, template: step_template
       end
     end
 
@@ -83,6 +83,15 @@ module Buyer
 
     def finish_wizard_path
       root_path
+    end
+
+    def step_template
+      step_specific_template = "buyer/public_markets/#{step}"
+      if template_exists?(step_specific_template)
+        step_specific_template
+      else
+        'buyer/public_markets/generic_step'
+      end
     end
   end
 end
