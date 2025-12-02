@@ -66,7 +66,7 @@ class MarketAttributeResponse::RealisationsLivraisons < MarketAttributeResponse
 
   def coerce_field_value(field_name, val)
     if field_name == 'montant'
-      val.present? ? val.to_i : nil
+      val.presence&.to_i
     else
       val.presence
     end

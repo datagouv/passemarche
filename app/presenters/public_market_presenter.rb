@@ -72,7 +72,7 @@ class PublicMarketPresenter
   # Returns selected market attributes organized by category and subcategory
   # Categories are ordered by ID (same order as CSV import)
   def selected_fields_by_category_and_subcategory
-    organize_selected_fields_by_category_and_subcategory(selected_market_attributes_ordered)
+    @selected_fields_by_category_and_subcategory ||= organize_selected_fields_by_category_and_subcategory(selected_market_attributes_ordered)
   end
 
   # Returns the category keys for selected attributes in the correct order

@@ -86,12 +86,17 @@ module Buyer
     end
 
     def step_template
-      step_specific_template = "buyer/public_markets/#{step}"
-      if template_exists?(step_specific_template)
-        step_specific_template
-      else
-        'buyer/public_markets/generic_step'
-      end
+      return specific_step_template if template_exists?(specific_step_template)
+
+      generic_step_template
+    end
+
+    def specific_step_template
+      "buyer/public_markets/#{step}"
+    end
+
+    def generic_step_template
+      'buyer/public_markets/generic_step'
     end
   end
 end
