@@ -1,15 +1,21 @@
 <div class="nested-form-wrapper fr-card fr-card--sm fr-mb-2w" data-new-record="<%= index == 'NEW_RECORD' %>">
   <div class="fr-card__body">
     <div class="fr-card__content">
-      <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
-        <div class="fr-col-12">
-          <h6 class="fr-text--sm fr-mb-2w">
+      <div class="fr-grid-row fr-grid-row--gutters fr-mb-2w" style="align-items: center;">
+        <div class="fr-col-8" style="display: flex; align-items: center;">
+          <h6 class="fr-text--sm fr-mb-0" style="margin-bottom: 0;">
             <% if display_number %>
               Échantillon <%= display_number %>
             <% else %>
               Nouvel échantillon
             <% end %>
           </h6>
+        </div>
+        <div class="fr-col-4" style="display: flex; align-items: center; justify-content: flex-end;">
+          <%= response_form.hidden_field "echantillon_#{index}__destroy", value: '0' %>
+          <div class="fr-mt-0">
+            <%= nested_form_delete_button("cet échantillon") %>
+          </div>
         </div>
       </div>
 
@@ -43,12 +49,6 @@
                   accept: ".pdf,.jpg,.jpeg,.png",
                   multiple: true %>
           <% end %>
-        </div>
-        <div class="fr-col-4">
-          <%= response_form.hidden_field "echantillon_#{index}__destroy", value: '0' %>
-          <div class="fr-mt-4w">
-            <%= nested_form_delete_button("cet échantillon") %>
-          </div>
         </div>
       </div>
     </div>
