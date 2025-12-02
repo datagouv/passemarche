@@ -25,6 +25,10 @@ class DocumentNamingService
     document.metadata['source']&.start_with?('api_') || false
   end
 
+  def renamed_documents
+    filename_mapping.values
+  end
+
   private
 
   def compute_filename_mapping

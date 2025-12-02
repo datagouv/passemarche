@@ -110,3 +110,7 @@
 <% else %>
   <p class="fr-text--sm fr-text--mention-grey">Aucun document requis configuré pour ce marché.</p>
 <% end %>
+
+<%= render 'shared/renamed_documents_section',
+           market_application: market_application,
+           context: context %>

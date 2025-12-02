@@ -260,4 +260,54 @@ RSpec.describe DocumentNamingService, type: :service do
       end
     end
   end
+
+  describe '#renamed_documents' do
+    context 'when market application has no documents' do
+      it 'returns empty array' do
+        service = described_class.new(market_application)
+
+        expect(service.renamed_documents).to eq([])
+      end
+    end
+
+    context 'when market application has documents' do
+      let(:first_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'first_field',
+          public_markets: [public_market])
+      end
+      let(:second_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'second_field',
+          public_markets: [public_market])
+      end
+
+      before do
+        first_response = MarketAttributeResponse.build_for_attribute(first_attribute, market_application:)
+        first_response.documents.attach(
+          io: StringIO.new('First PDF'),
+          filename: 'document.pdf',
+          content_type: 'application/pdf'
+        )
+        first_response.save!
+
+        second_response = MarketAttributeResponse.build_for_attribute(second_attribute, market_application:)
+        second_response.documents.attach(
+          io: StringIO.new('Second PDF'),
+          filename: 'another.pdf',
+          content_type: 'application/pdf'
+        )
+        second_response.save!
+      end
+
+      it 'returns array of all documents with original and system names' do
+        service = described_class.new(market_application)
+
+        expect(service.renamed_documents).to contain_exactly(
+          { original: 'document.pdf', system: 'user_01_01_first_field_document.pdf' },
+          { original: 'another.pdf', system: 'user_02_01_second_field_another.pdf' }
+        )
+      end
+    end
+  end
 end

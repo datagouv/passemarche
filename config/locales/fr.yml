@@ -88,6 +88,11 @@ fr:
     market_attribute_responses:
       document_display_name: "%{original} → %{system}"
 
+  shared:
+    renamed_documents:
+      title: "Vos documents"
+      description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
+
   errors:
     market_application:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
