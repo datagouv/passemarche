@@ -18,8 +18,10 @@
     <% if show_value %>
       <br>
       <% if checked %>
-        <span class="fr-badge fr-badge--success badge--no-background" aria-hidden="true"></span>
-        <span class="fr-text-md">Je certifie que mon entreprise est à jour de ses obligations d'assurance</span>
+        <%= render CheckIconComponent.new(context: context) %>
+        <span class="fr-text-md">
+          <%= t("candidate.market_applications.form_fields.capacite_economique_financiere_assurance_risques_professionnels.extra") %>
+        </span>
       <% else  %>
         <span>Non certifié</span>
       <% end %>
