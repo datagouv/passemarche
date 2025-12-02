@@ -398,22 +398,29 @@ strong {
 }
 
 .renamed-document-item {
-  display: block;
-  line-height: 24px;
+  margin-bottom: 8px;
+  line-height: 20px;
 }
 
-.renamed-document-item .document-icon,
-.renamed-document-item .rename-arrow {
+.renamed-document-item > span {
   display: inline-block;
   vertical-align: middle;
+}
+
+.renamed-document-item .document-icon {
   margin-right: 8px;
 }
 
 .renamed-document-item .rename-arrow {
   margin-left: 8px;
+  margin-right: 8px;
 }
 
 .renamed-document-item svg {
   display: inline-block;
   vertical-align: middle;
+}
+
+.renamed-document-text {
+  font-size: 14px;
 }

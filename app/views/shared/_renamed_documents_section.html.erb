@@ -17,18 +17,10 @@
     <div class="renamed-documents-list">
       <% renamed_docs.each do |doc| %>
         <div class="renamed-document-item fr-mb-1w">
-          <span class="document-icon">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M2.00002 5.99967H6.00002C6.36821 5.99967 6.66668 5.7012 6.66668 5.33301V1.33301H13.3347C13.702 1.33301 14 1.63634 14 1.99434V14.005C13.9996 14.3704 13.7034 14.6663 13.338 14.6663H2.66202C2.4852 14.6651 2.31612 14.5937 2.19197 14.4678C2.06782 14.3419 1.99877 14.1718 2.00002 13.995V5.99967ZM2.00002 4.66634L5.33335 1.33501V4.66634H2.00002Z" fill="#929292"/>
-            </svg>
-          </span>
-          <span class="fr-text--sm"><%= doc[:original] %></span>
-          <span class="rename-arrow">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M6.66667 0C10.3467 0 13.3333 2.98667 13.3333 6.66667C13.3333 10.3467 10.3467 13.3333 6.66667 13.3333C2.98667 13.3333 0 10.3467 0 6.66667C0 2.98667 2.98667 0 6.66667 0ZM6.66667 6H4V7.33333H6.66667V9.33333L9.33333 6.66667L6.66667 4V6Z" fill="#161616"/>
-            </svg>
-          </span>
-          <span class="fr-text--sm"><%= doc[:system] %></span>
+          <span class="document-icon"><%= render IconComponent.new(name: :document) %></span>
+          <span class="renamed-document-text"><%= doc[:original] %></span>
+          <span class="rename-arrow"><%= render IconComponent.new(name: :arrow_right_circle) %></span>
+          <span class="renamed-document-text"><%= doc[:system] %></span>
         </div>
       <% end %>
     </div>

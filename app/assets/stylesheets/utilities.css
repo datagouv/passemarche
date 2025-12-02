@@ -174,23 +174,29 @@
 }
 
 .renamed-document-item {
-  display: flex;
-  align-items: center;
-  line-height: 1.5rem;
   margin-bottom: 0.5rem;
+  line-height: 1.5;
 }
 
-.renamed-document-item .document-icon,
-.renamed-document-item .rename-arrow {
-  display: inline-flex;
-  align-items: center;
+.renamed-document-item > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.renamed-document-item .document-icon {
   margin-right: 0.5rem;
 }
 
 .renamed-document-item .rename-arrow {
   margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .renamed-document-item svg {
-  display: block;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.renamed-document-text {
+  font-size: 14px;
 }

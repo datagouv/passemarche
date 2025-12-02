@@ -90,15 +90,17 @@ Then('I should see the system filename prefix {string}') do |prefix|
 end
 
 Then('I should see the arrow symbol between filenames') do
-  # The arrow symbol is the Unicode arrow used in document_display_name helper
-  expect(page).to have_content('→')
+  # The arrow is now an SVG icon, so we check for the rename-arrow element
+  expect(page).to have_css('.rename-arrow')
 end
 
 Then('I should see {string} with system prefix {string}') do |original_filename, prefix|
-  # Check that both the original filename and system prefix are present
-  expect(page).to have_content(original_filename)
-  expect(page).to have_content(prefix)
-  expect(page).to have_content('→')
+  # Check that both the original filename and system prefix are present in the renamed documents section
+  within('.renamed-documents-list') do
+    expect(page).to have_content(original_filename)
+    expect(page).to have_content(prefix)
+    expect(page).to have_css('.rename-arrow')
+  end
 end
 
 def stub_api_requests
