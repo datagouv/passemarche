@@ -76,21 +76,25 @@ module MarketAttributeResponsesHelper
   def auto_filled_field_content(market_attribute_response)
     content_tag :div, class: 'fr-mb-2w' do
       concat auto_filled_field_label(market_attribute_response)
-      concat auto_filled_field_message
     end
   end
 
   def auto_filled_field_label(market_attribute_response)
-    content_tag(:label, class: 'fr-label') do
-      concat field_label(market_attribute_response)
-      concat render('candidate/market_applications/market_attribute_responses/source_badge',
-        market_attribute_response:)
-    end
-  end
+    content_tag(:div, class: 'fr-grid-row fr-align-items-center", style: "display:flex; align-items:center;') do
+      left_col = content_tag(:div, style: 'flex:0 1 auto; max-width: 45%;') do
+        safe_join([
+          content_tag(:label, content_tag(:strong, field_label(market_attribute_response)), class: 'fr-label'),
+          (desc = field_description(market_attribute_response)) ? content_tag(:div, desc, class: 'fr-text--sm fr-mb-0') : nil
+        ].compact)
+      end
 
-  def auto_filled_field_message
-    content_tag(:p, t('candidate.market_applications.auto_filled_message'),
-      class: 'fr-text--sm fr-text--mention-grey')
+      right_col = content_tag(:div, style: 'margin-left:auto; flex:0 0 auto;') do
+        render('candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response:)
+      end
+
+      concat left_col
+      concat right_col
+    end
   end
 
   def direct_upload_wrapper_class(options)
