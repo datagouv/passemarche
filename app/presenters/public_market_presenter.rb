@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublicMarketPresenter
+  include SidemenuHelper
+
   INITIAL_WIZARD_STEP = :setup
   FINAL_WIZARD_STEP = :summary
 

@@ -3,8 +3,8 @@
   subcategories ||= {}
   presenter ||= @presenter
   is_last = false if is_last.nil?
-  
-  show_header = presenter&.should_display_subcategory?(subcategories)
+
+  show_header = presenter&.display_sidemenu?(subcategories)
   margin_class = is_last ? '' : 'fr-mb-3w'
 %>
 

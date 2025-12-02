@@ -59,7 +59,6 @@
     <div class="fr-mb-4w">
       <div class="fr-mb-4w">
         <% fields_by_category = @presenter.selected_fields_by_category_and_subcategory %>
-
         <%# Build ordered categories list following wizard steps order %>
         <%# For motifs_exclusion: always show if it's a step (even without optional fields) %>
         <% display_categories = [] %>
@@ -96,7 +95,7 @@
                             subcategory: subcategory,
                             subcategories: optional_subcategories,
                             is_last: (subcat_index == optional_subcategories.size - 1) do %>
-                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(optional_subcategories) %>">
+                        <ul class="fr-list <%= 'fr-mb-3w' if @presenter.display_sidemenu?(optional_subcategories) %>">
                           <% fields.each do |field_key| %>
                             <% field = @presenter.field_by_key(field_key) %>
                             <%= render 'field_display',
@@ -115,7 +114,7 @@
                           subcategory: subcategory,
                           subcategories: subcategories,
                           is_last: (subcat_index == subcategories.size - 1) do %>
-                      <ul class="fr-list <%= 'fr-mb-3w' if @presenter.should_display_subcategory?(subcategories) %>">
+                      <ul class="fr-list <%= 'fr-mb-3w' if @presenter.display_sidemenu?(subcategories) %>">
                         <% fields.each do |field_key| %>
                           <% field = @presenter.field_by_key(field_key) %>
                           <%= render 'field_display',

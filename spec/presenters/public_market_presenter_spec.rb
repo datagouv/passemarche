@@ -86,15 +86,15 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
-  describe '#should_display_subcategory?' do
+  describe '#display_sidemenu?' do
     it 'returns true when there are multiple subcategories' do
       subcategories = { 'sub1' => [], 'sub2' => [] }
-      expect(presenter.should_display_subcategory?(subcategories)).to be true
+      expect(presenter.display_sidemenu?(subcategories)).to be true
     end
 
     it 'returns false when there is only one subcategory' do
       subcategories = { 'sub1' => [] }
-      expect(presenter.should_display_subcategory?(subcategories)).to be false
+      expect(presenter.display_sidemenu?(subcategories)).to be false
     end
   end
 

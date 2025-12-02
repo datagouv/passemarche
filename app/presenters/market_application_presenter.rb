@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class MarketApplicationPresenter
+  include SidemenuHelper
+
   INITIAL_WIZARD_STEPS = %i[company_identification api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
@@ -100,10 +102,6 @@ class MarketApplicationPresenter
   def wizard_steps
     all_steps = (INITIAL_WIZARD_STEPS + subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
     inject_attestation_motifs_exclusion_step(all_steps)
-  end
-
-  def should_display_subcategory?(subcategories)
-    subcategories.keys.size > 1
   end
 
   private
