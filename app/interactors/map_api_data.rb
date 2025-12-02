@@ -95,7 +95,7 @@ class MapApiData < ApplicationInteractor
       doc.metadata['api_name'] == context.api_name
     end
 
-    existing_document.purge if existing_document.present?
+    existing_document.presence&.purge
     response.documents.attach(document_hash)
   end
 

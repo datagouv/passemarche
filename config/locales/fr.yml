@@ -135,21 +135,41 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
-        required_fields: "Vérification des informations réglementaires et obligatoires"
-        additional_fields: "Sélection des informations non réglementaires"
+        identite_entreprise: "Les informations concernant l'identité de l'entreprise"
+        motifs_exclusion: "Les motifs d'exclusion"
+        capacite_economique_financiere: Sélection des renseignements complémentaires (partie 1)
+        capacites_techniques_professionnelles: Sélections des renseignements complémentaires (partie 2)
         summary: "Synthèse"
-      required_fields:
-        title: "Les documents et informations réglementaires et obligatoires"
-        subtitle: "Ces documents et informations sont obligatoires et démandés systématiquement aux candidats. "
-      additional_fields:
-        title: "Les renseignements complémentaires relatifs à la capacité des candidats"
-        subtitle: "Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats."
-        notice: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique).\n\nCertains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
-        config_title: "Configuration"
-        config_text: "Cochez les champs supplémentaires que vous souhaitez demander aux candidats. Ces champs s'ajouteront aux champs réglementaires et obligatoires."
-        question: "Je veux demander des renseignements complémentaires relatifs à la capacité des candidats ?"
-        yes_option: "Oui"
-        no_option: "Non"
+      generic_step:
+        optional_question: Souhaitez-vous demander des informations complémentaires aux candidats ?
+        yes_option: Oui
+        no_option: Non
+        steps:
+          identite_entreprise:
+            title: Les informations concernant l'identité de l'entreprise
+          motifs_exclusion:
+            title: "Les motifs d'exclusion"
+            box_title: "Motifs d'exclusion obligatoire"
+            box_content: "Le candidat attestera sur son honneur ne pas entrer dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique et informera l'acheteur de tout changement de situation sans délai. Sauf pour les marchés de défense et de sécurité, l'acheteur ne pourra exiger que du seul candidat attributaire les justificatifs prouvant leur conformité aux exigences posées par les L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
+            optional_fields_title: Les motifs d'exclusion faculative
+            optional_fields_description: Vous pouvez sélectionner un ou plusieurs motifs d'exclusion facultative en considération de l'objet du marché ou à ses conditions d'éxécution.
+          capacite_economique_financiere: 
+            title: Les renseignements complémentaires relatifs aux capacités économiques et financières des candidats
+            subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
+            box_title: Précision concernant les informations complémentaires
+            box_content: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique). <br /> Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
+            optional_fields_title: Capacités économiques et financières facultatives des candidats
+            optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations qui seront demandées aux candidats
+          capacites_techniques_professionnelles:
+            title: Les renseignements complémentaires relatifs aux capacités techniques et professionnelles des candidats
+            subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
+            box_title: Précision concernant les informations complémentaires
+            box_content: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique). <br /> Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
+            optional_fields_title: Capacités techniques et professionnelles facultatives des candidats
+            optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations qui seront demandées aux candidats
+      navigation:
+        previous: "Précédent"
+        next: "Suivant"
       summary:
         title: "Synthèse des paramètres de la candidature"
         subtitle: "Vérifiez les paramètres de votre marché avant de finaliser la configuration."
@@ -166,6 +186,12 @@ fr:
           message: "Une erreur s'est produite lors de la synchronisation. Notre équipe a été notifiée. Vous pouvez nous contacter si le problème persiste."
         continue: "Continuer"
         contact_support: "Contacter le support"
+    attestations:
+      motifs_exclusion:
+        candidate_attestation_title: "Attestation du candidat"
+        candidate_attestation_label: "Engagement sur l'honneur"
+        candidate_attestation_confirmed: "Le candidat a attesté sur l'honneur que son entreprise ne fait l'objet d'aucun des motifs d'exclusion prévus par le code de la commande publique"
+        candidate_attestation_not_confirmed: "Le candidat n'a pas confirmé l'attestation sur l'honneur"
 
   candidate:
     attachments:

@@ -58,7 +58,7 @@ module Candidate
       elsif custom_view_exists?
         render_wizard(nil, status: :unprocessable_entity)
       else
-        render 'generic_step', locals: { step: }, status: :unprocessable_entity
+        render 'generic_step', locals: { step: }, status: :unprocessable_content
       end
     end
 

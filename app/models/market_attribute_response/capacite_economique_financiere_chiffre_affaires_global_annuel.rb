@@ -50,7 +50,7 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
 
   def coerce_field_value(field_name, val)
     if %w[turnover market_percentage].include?(field_name)
-      val.present? ? val.to_i : nil
+      val.presence&.to_i
     else
       val.presence
     end

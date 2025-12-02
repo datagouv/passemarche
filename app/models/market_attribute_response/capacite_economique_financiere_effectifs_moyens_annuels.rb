@@ -54,11 +54,11 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
   private
 
   def coerce_field_value(val)
-    val.present? ? val.to_i : nil
+    val.presence&.to_i
   end
 
   def coerce_year_value(val)
-    val.present? ? val.to_i : nil
+    val.presence&.to_i
   end
 
   def validate_year_data_structure
