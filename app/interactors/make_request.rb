@@ -2,7 +2,7 @@
 
 class MakeRequest < ApplicationInteractor
   def call
-    api_call_with_error_handing
+    api_call_with_error_handling
     check_response_status
   end
 
@@ -63,7 +63,7 @@ class MakeRequest < ApplicationInteractor
 
   private
 
-  def api_call_with_error_handing
+  def api_call_with_error_handling
     api_call
   rescue Net::OpenTimeout, Net::ReadTimeout, EOFError => e
     context.fail!(error: "Timeout: #{e.message}")
