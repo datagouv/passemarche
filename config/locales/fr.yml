@@ -186,6 +186,12 @@ fr:
           message: "Une erreur s'est produite lors de la synchronisation. Notre équipe a été notifiée. Vous pouvez nous contacter si le problème persiste."
         continue: "Continuer"
         contact_support: "Contacter le support"
+    attestations:
+      motifs_exclusion:
+        candidate_attestation_title: "Attestation du candidat"
+        candidate_attestation_label: "Engagement sur l'honneur"
+        candidate_attestation_confirmed: "Le candidat a attesté sur l'honneur que son entreprise ne fait l'objet d'aucun des motifs d'exclusion prévus par le code de la commande publique"
+        candidate_attestation_not_confirmed: "Le candidat n'a pas confirmé l'attestation sur l'honneur"
 
   candidate:
     attachments:
