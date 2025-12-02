@@ -115,6 +115,92 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
+  describe '#wizard_steps' do
+    it 'returns steps starting with setup, then categories, ending with summary' do
+      steps = presenter.wizard_steps
+      expect(steps.first).to eq(:setup)
+      expect(steps.last).to eq(:summary)
+      expect(steps).to include(:test_company_identity)
+      expect(steps).to include(:test_exclusion_criteria)
+      expect(steps).to include(:test_economic_capacity)
+      expect(steps).to include(:test_technical_capacity)
+    end
+
+    it 'returns unique category keys as symbols' do
+      steps = presenter.wizard_steps
+      category_steps = steps[1..-2]
+      expect(category_steps).to all(be_a(Symbol))
+      expect(category_steps.uniq).to eq(category_steps)
+    end
+  end
+
+  describe '#stepper_steps' do
+    it 'returns categories plus summary without setup' do
+      steps = presenter.stepper_steps
+      expect(steps).not_to include(:setup)
+      expect(steps.last).to eq(:summary)
+      expect(steps).to include(:test_company_identity)
+    end
+  end
+
+  describe '#parent_category_for' do
+    it 'returns the category key when given a category key' do
+      expect(presenter.parent_category_for('test_company_identity')).to eq('test_company_identity')
+    end
+
+    it 'returns the parent category when given a subcategory key' do
+      expect(presenter.parent_category_for('test_basic_information')).to eq('test_company_identity')
+    end
+  end
+
+  describe '#subcategories_for_category' do
+    it 'returns subcategories for a given category' do
+      subcategories = presenter.subcategories_for_category('test_company_identity')
+      expect(subcategories).to include('test_basic_information')
+    end
+
+    it 'returns empty array for blank category' do
+      expect(presenter.subcategories_for_category(nil)).to eq([])
+      expect(presenter.subcategories_for_category('')).to eq([])
+    end
+  end
+
+  describe '#required_fields_for_category' do
+    it 'returns required fields organized by subcategory' do
+      result = presenter.required_fields_for_category('test_company_identity')
+      expect(result).to be_a(Hash)
+      expect(result['test_basic_information']).to include('test_siret')
+    end
+
+    it 'returns empty hash for category with no required fields' do
+      result = presenter.required_fields_for_category('test_economic_capacity')
+      expect(result).to be_empty
+    end
+  end
+
+  describe '#optional_fields_for_category' do
+    it 'returns optional fields organized by subcategory' do
+      result = presenter.optional_fields_for_category('test_economic_capacity')
+      expect(result).to be_a(Hash)
+      expect(result['test_financial_data']).to include('test_annual_turnover')
+    end
+
+    it 'returns empty hash for category with no optional fields' do
+      result = presenter.optional_fields_for_category('test_company_identity')
+      expect(result).to be_empty
+    end
+  end
+
+  describe '#optional_fields_for_category?' do
+    it 'returns true when category has optional fields' do
+      expect(presenter.optional_fields_for_category?('test_economic_capacity')).to be true
+    end
+
+    it 'returns false when category has no optional fields' do
+      expect(presenter.optional_fields_for_category?('test_company_identity')).to be false
+    end
+  end
+
   context 'with defense industry enabled' do
     let(:defense_market_type) { create(:market_type, code: 'defense') }
     let(:defense_public_market) do

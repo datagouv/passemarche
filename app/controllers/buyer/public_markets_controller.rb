@@ -4,22 +4,24 @@ module Buyer
   class PublicMarketsController < ApplicationController
     include Wicked::Wizard
 
-    steps :setup, :required_fields, :additional_fields, :summary
-
-    before_action :find_public_market
+    prepend_before_action :set_dynamic_steps, except: [:retry_sync]
+    prepend_before_action :initialize_presenter, except: [:retry_sync]
+    prepend_before_action :find_public_market
     before_action :check_market_not_completed, except: [:retry_sync]
-    before_action :initialize_presenter, except: [:retry_sync]
     before_action :set_wizard_steps
 
     def show
       case step
-      when :required_fields
-        @required_fields = @presenter.available_required_fields_by_category_and_subcategory
-      when :additional_fields
-        @optional_fields = @presenter.available_optional_fields_by_category_and_subcategory
+      when :setup, :summary
+        render_wizard
+      else
+        # Dynamic category step
+        @current_category = step.to_s
+        @required_fields = @presenter.required_fields_for_category(@current_category)
+        @optional_fields = @presenter.optional_fields_for_category(@current_category)
+        @has_optional_fields = @presenter.optional_fields_for_category?(@current_category)
+        render_wizard nil, template: step_template
       end
-
-      render_wizard
     end
 
     def update
@@ -44,19 +46,21 @@ module Buyer
 
     private
 
+    def set_dynamic_steps
+      self.steps = @presenter.wizard_steps
+    end
+
     def set_wizard_steps
-      # setup doesn't count as a step
-      @wizard_steps = steps - [:setup]
+      @wizard_steps = @presenter.stepper_steps
     end
 
     def step_params
       case step
       when :setup, :summary
         params[:public_market] || {}
-      when :additional_fields
-        { selected_attribute_keys: params[:selected_attribute_keys] || [] }
       else
-        {}
+        # Category step - collect selected optional fields
+        { selected_attribute_keys: params[:selected_attribute_keys] || [] }
       end
     end
 
@@ -79,6 +83,20 @@ module Buyer
 
     def finish_wizard_path
       root_path
+    end
+
+    def step_template
+      return specific_step_template if template_exists?(specific_step_template)
+
+      generic_step_template
+    end
+
+    def specific_step_template
+      "buyer/public_markets/#{step}"
+    end
+
+    def generic_step_template
+      'buyer/public_markets/generic_step'
     end
   end
 end

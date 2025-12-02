@@ -1,0 +1,23 @@
+<div class="fr-card fr-mb-1w fr-card--no-border">
+  <%= render 'shared/card_sub_header',
+             title: t('buyer.attestations.motifs_exclusion.candidate_attestation_title'),
+             background: "fr-background-alt--blue-ecume",
+             color: "fr-text-title--blue-france",
+             additional_classes: "fr-text--md" do %>
+    <div class="field-layout-container">
+      <div class="field-layout-content">
+        <strong><%= t('buyer.attestations.motifs_exclusion.candidate_attestation_label') %></strong>
+        <br>
+        <span class="fr-text--md fr-text--mention-grey">
+          <% if market_application.attests_no_exclusion_motifs %>
+            <span class="fr-icon-checkbox-circle-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+            <%= t('buyer.attestations.motifs_exclusion.candidate_attestation_confirmed') %>
+          <% else %>
+            <span class="fr-icon-close-circle-fill fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+            <%= t('buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed') %>
+          <% end %>
+        </span>
+      </div>
+    </div>
+  <% end %>
+</div>

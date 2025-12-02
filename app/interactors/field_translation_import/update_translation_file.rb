@@ -40,7 +40,7 @@ class FieldTranslationImport::UpdateTranslationFile < ApplicationInteractor
         'form_fields' => {
           'source_types' => {
             'authentic_source' => {
-              'label' => 'Source authentique',
+              'label' => 'Récupéré automatiquement',
               'badge_class' => 'fr-badge--success'
             },
             'honor_declaration' => {

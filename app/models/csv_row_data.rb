@@ -89,10 +89,6 @@ class CsvRowData
     should_import? && valid?
   end
 
-  def required?
-    oui_to_boolean(obligatoire)
-  end
-
   def from_api?
     oui_to_boolean(apifiable)
   end
@@ -115,7 +111,6 @@ class CsvRowData
     {
       category_key:,
       subcategory_key:,
-      required: required?,
       input_type: mapped_input_type,
       api_name: api_name.presence,
       api_key: api_key.presence,

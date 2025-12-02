@@ -73,6 +73,10 @@
           <% end %>
           </div>
         <% end %>
+        <% if category == 'motifs_exclusion' %>
+          <%= render 'shared/candidate_attestation_motifs_exclusion',
+                     market_application: market_application %>
+        <% end %>
         <% subcategories.each do |subcategory| %>
           <% market_attributes = presenter.market_attributes_for_subcategory(category, subcategory) %>
           <% next if market_attributes.empty? %>
@@ -81,19 +85,20 @@
             <%= render 'shared/card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
               <% market_attributes.each do |attribute| %>
                 <% response = presenter.market_attribute_response_for(attribute) %>
-                <%
-                  component_class = begin
-                    "MarketAttributeResponse::#{response.type}Component".constantize
-                  rescue NameError
-                    nil
-                  end
-                %>
-
-                <% if component_class %>
-                  <%= render component_class.new(market_attribute_response: response, context: context) %>
-                <% else %>
-                  <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
-                  <%= render partial_name, market_attribute_response: response, context: context %>
+                <% if response&.type.present? %>
+                  <%
+                    component_class = begin
+                      "MarketAttributeResponse::#{response.type}Component".constantize
+                    rescue NameError
+                      nil
+                    end
+                  %>
+                  <% if component_class %>
+                    <%= render component_class.new(market_attribute_response: response, context: context) %>
+                  <% else %>
+                    <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
+                    <%= render partial_name, market_attribute_response: response, context: context %>
+                  <% end %>
                 <% end %>
               <% end %>
             <% end %>

@@ -10,15 +10,11 @@ class MarketConfigurationService < ApplicationService
   def call
     case step
     when :setup
-      handle_defense_market_type
-    when :required_fields
-      snapshot_required_fields
-    when :additional_fields
-      snapshot_additional_fields
+      handle_setup_step
     when :summary
       complete_market
     else
-      raise ArgumentError, "Unknown step: #{step}"
+      handle_category_step
     end
   end
 
@@ -26,28 +22,66 @@ class MarketConfigurationService < ApplicationService
 
   attr_reader :public_market, :step, :params
 
-  def handle_defense_market_type
-    return public_market if params.blank? || params[:add_defense_market_type] != 'true'
-    return public_market if public_market.market_type_codes.include?('defense')
-
-    public_market.market_type_codes << 'defense'
-    public_market.save!
+  def handle_setup_step
+    handle_defense_market_type
+    snapshot_required_fields
     public_market
   end
 
-  def snapshot_required_fields
-    required_attributes = MarketAttributeFilteringService.call(@public_market).required
-    public_market.add_market_attributes(required_attributes)
+  def handle_defense_market_type
+    return if params.blank? || params[:add_defense_market_type] != 'true'
+    return if public_market.market_type_codes.include?('defense')
 
-    { public_market:, next_step: :additional_fields }
+    public_market.market_type_codes << 'defense'
+    public_market.save!
   end
 
-  def snapshot_additional_fields
-    selected_attribute_keys = params[:selected_attribute_keys] || []
-    selected_optional_attributes = MarketAttribute.where(key: selected_attribute_keys)
-    public_market.sync_optional_market_attributes(selected_optional_attributes)
+  def snapshot_required_fields
+    required_attributes = MarketAttributeFilteringService.call(public_market).required
+    public_market.add_market_attributes(required_attributes)
+  end
 
-    { public_market:, next_step: :summary }
+  def handle_category_step
+    accumulate_optional_fields
+    public_market
+  end
+
+  def accumulate_optional_fields
+    selected_keys = params[:selected_attribute_keys] || []
+    sync_optional_fields_for_category(selected_keys)
+  end
+
+  def sync_optional_fields_for_category(selected_keys)
+    available_optional_keys = available_optional_keys_for_category
+    valid_selected_keys = selected_keys & available_optional_keys
+
+    remove_deselected_optional_fields(available_optional_keys, valid_selected_keys)
+    add_new_optional_fields(valid_selected_keys)
+  end
+
+  def available_optional_keys_for_category
+    MarketAttributeFilteringService.call(public_market)
+      .additional
+      .to_a
+      .select { |attr| attr.category_key == step.to_s }
+      .map(&:key)
+  end
+
+  def remove_deselected_optional_fields(available_keys, selected_keys)
+    keys_to_remove = available_keys - selected_keys
+    return if keys_to_remove.empty?
+
+    attributes_to_remove = public_market.market_attributes.where(key: keys_to_remove)
+    public_market.market_attributes.delete(attributes_to_remove)
+  end
+
+  def add_new_optional_fields(valid_keys)
+    return if valid_keys.empty?
+
+    new_attributes = MarketAttribute.where(key: valid_keys).reject do |attr|
+      public_market.market_attributes.include?(attr)
+    end
+    public_market.market_attributes << new_attributes
   end
 
   def complete_market

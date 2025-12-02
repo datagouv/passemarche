@@ -1,5 +1,5 @@
 <%
-  required = market_attribute_response.market_attribute.required?
+
   text_value = market_attribute_response.text || ''
   key = market_attribute_response.market_attribute.key
   is_opqibi = key == "capacites_techniques_professionnelles_certificats_opqibi"
@@ -72,11 +72,10 @@
         <%= response_form.hidden_field :type %>
 
         <%= response_form.label :text, "URL", class: "fr-hint-text fr-text--md fr-mb-1w", for: "certificat-#{market_attribute_response.id}-url" %>
-        <%= response_form.text_field :text,
-              value: text_value,
-              id: "certificat-#{market_attribute_response.id}-url",
-              class: "fr-input#{' fr-input--error' if market_attribute_response.errors[:text].any?}",
-              required: required %>
+          <%= response_form.text_field :text,
+            value: text_value,
+            id: "certificat-#{market_attribute_response.id}-url",
+            class: "fr-input#{' fr-input--error' if market_attribute_response.errors[:text].any?}" %>
 
         <% if market_attribute_response.errors[:text].any? %>
           <p class="fr-error-text">
