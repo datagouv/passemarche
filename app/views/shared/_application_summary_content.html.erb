@@ -75,7 +75,8 @@
         <% end %>
         <% if category == 'motifs_exclusion' %>
           <%= render 'shared/candidate_attestation_motifs_exclusion',
-                     market_application: market_application %>
+                     market_application: market_application,
+                     context: context %>
         <% end %>
         <% subcategories.each do |subcategory| %>
           <% market_attributes = presenter.market_attributes_for_subcategory(category, subcategory) %>

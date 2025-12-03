@@ -105,8 +105,8 @@
                     <%# --- FISCAL YEAR END --- %>
                     <td>
                       <% if fiscal_year_end_from_api %>
+                        <%= render(CheckIconComponent.new(context: :web)) %>
                         <%= l(Date.parse(value_data[year_key]['fiscal_year_end']), format: '%d/%m/%Y') rescue value_data[year_key]['fiscal_year_end'] %>
-                        <span class="fr-icon-checkbox-circle-fill fr-icon--sm fr-ml-1w" style="color: #18753C;" title="Récupéré automatiquement" aria-label="Récupéré automatiquement"></span>
                         <%= response_form.hidden_field "#{year_key}_fiscal_year_end" %>
                       <% else %>
                         <div class="fr-input-group">
