@@ -25,7 +25,7 @@
       </div>
     <% end %>
 
-    <span class="fr-text--sm fr-text--mention-grey">
+    <span class="fr-text--md fr-text--mention-grey">
       <% if documents.attached? %>
         <% documents.each do |doc| %>
           <%= render 'candidate/market_applications/market_attribute_responses/shared/document_item',
@@ -34,13 +34,11 @@
                      context: context,
                      naming_service: naming_service %>
         <% end %>
+      <% elsif text_value.blank? && !documents.attached? %>
+        <span class="fr-text-md fr-text--mention-grey">Aucune description ni fichier fourni</span>
       <% else %>
-        <span>Aucun fichier téléchargé</span>
+        <span class="fr-text-md fr-text--mention-grey">Aucun fichier téléchargé</span>
       <% end %>
     </span>
-
-    <% if text_value.blank? && !documents.attached? %>
-      <p class="fr-text--sm fr-mt-2w">Aucune description ni fichier fourni.</p>
-    <% end %>
   <% end %>
 </div>
