@@ -15,7 +15,9 @@
 <%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
   <div class="field-layout-container">
     <div class="field-layout-content">
-      <strong><%= t("form_fields.buyer.fields.#{field_key}.name") %></strong>
+      <span class="fr-text--md">
+        <%= t("form_fields.buyer.fields.#{field_key}.name") %>
+      </span>
       <% description_key = "form_fields.buyer.fields.#{field_key}.description" %>
       <% if I18n.exists?(description_key) %>
         <br>
