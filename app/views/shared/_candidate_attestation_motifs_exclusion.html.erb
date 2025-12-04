@@ -22,7 +22,7 @@
         <span class="fr-text--md fr-text--mention-grey">
           <%= confirmed ?
                 render(CheckIconComponent.new(context: context)) :
-                content_tag(:span, '', class: 'fr-icon-close-circle-fill fr-icon--sm fr-mr-1v', aria: { hidden: true }) %>
+                render(AlertIconComponent.new(context: context)) %>
           <%= t(
                 confirmed ?
                   'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed' :
