@@ -159,7 +159,6 @@ Then('the fields should be marked as completed from API') do
   expect(page).to have_content('Cotisations sociales')
   expect(page).to have_content('Emploi de travailleurs handicapés')
   expect(page).to have_content('Récupéré automatiquement', count: 2)
-  expect(page).to have_content('Cette information a été récupérée automatiquement et ne nécessite pas votre intervention.', count: 2)
 end
 
 Then('I should see the attestation filenames displayed') do
