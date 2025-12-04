@@ -1,7 +1,26 @@
-<div class="fr-notice fr-notice--info fr-mb-2w">
-  <div class="fr-notice__body fr-px-2w fr-py-1w">
-    <p class="fr-notice__title"></p>
-    <p class="fr-notice__desc">
+<% color ||= 'info' %>
+
+<% classes = {
+  'error' => {
+    wrapper: 'fr-notice fr-notice--alert fr-mb-2w',
+    body: 'fr-notice__body fr-px-2w fr-py-1w',
+    title: 'fr-notice__title',
+    desc: 'fr-notice__desc'
+  },
+  'info' => {
+    wrapper: 'fr-notice fr-notice--info fr-mb-2w',
+    body: 'fr-notice__body fr-px-2w fr-py-1w',
+    title: 'fr-notice__title',
+    desc: 'fr-notice__desc'
+  }
+} %>
+
+<% current_classes = classes[color] || classes['info'] %>
+
+<div class="<%= current_classes[:wrapper] %>">
+  <div class="<%= current_classes[:body] %>">
+    <p class="<%= current_classes[:title] %>"></p>
+    <p class="<%= current_classes[:desc] %>">
       <%= notice_text.html_safe %>
     </p>
   </div>
