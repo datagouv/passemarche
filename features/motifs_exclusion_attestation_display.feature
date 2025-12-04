@@ -13,11 +13,10 @@ Feature: Motifs d'exclusion attestation display
   Scenario: Summary displays candidate attestation block when attests_no_exclusion_motifs is true
     When I visit the summary page for my application
     Then I should see "Attestation du candidat"
-    And I should see "Engagement sur l'honneur"
-    And I should see "Le candidat a attesté sur l'honneur"
+    And I should see "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun motif d’exclusion."
 
   Scenario: Summary displays candidate attestation block when attests_no_exclusion_motifs is false
     Given the candidate has not confirmed the exclusion motifs attestation
     When I visit the summary page for my application
     Then I should see "Attestation du candidat"
-    And I should see "Le candidat n'a pas confirmé"
+    And I should see "L'attestation sur l'honneur est manquante."
