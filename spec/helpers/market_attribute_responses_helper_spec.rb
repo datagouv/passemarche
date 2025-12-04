@@ -24,18 +24,18 @@ RSpec.describe MarketAttributeResponsesHelper, type: :helper do
     let(:document) { response.documents.first }
 
     context 'when context is :web' do
-      it 'returns original → system format' do
+      it 'returns only original filename' do
         result = helper.document_display_name(document, market_application:, context: :web)
 
-        expect(result).to eq('my_document.pdf → user_01_01_test_document_field_my_document.pdf')
+        expect(result).to eq('my_document.pdf')
       end
     end
 
     context 'when context is :pdf' do
-      it 'returns original → system format' do
+      it 'returns only original filename' do
         result = helper.document_display_name(document, market_application:, context: :pdf)
 
-        expect(result).to eq('my_document.pdf → user_01_01_test_document_field_my_document.pdf')
+        expect(result).to eq('my_document.pdf')
       end
     end
 
@@ -48,10 +48,10 @@ RSpec.describe MarketAttributeResponsesHelper, type: :helper do
     end
 
     context 'when context is nil' do
-      it 'returns original → system format (same as :web)' do
+      it 'returns only original filename (same as :web)' do
         result = helper.document_display_name(document, market_application:, context: nil)
 
-        expect(result).to eq('my_document.pdf → user_01_01_test_document_field_my_document.pdf')
+        expect(result).to eq('my_document.pdf')
       end
     end
 
@@ -76,8 +76,7 @@ RSpec.describe MarketAttributeResponsesHelper, type: :helper do
       it 'handles special characters correctly' do
         result = helper.document_display_name(document_special, market_application:, context: :web)
 
-        expect(result).to include('document (1) été.pdf')
-        expect(result).to include('→')
+        expect(result).to eq('document (1) été.pdf')
       end
     end
   end

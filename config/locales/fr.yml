@@ -84,9 +84,10 @@ fr:
     submit_summary: "Transmettre ma candidature"
     continue: "Continuer"
 
-  helpers:
-    market_attribute_responses:
-      document_display_name: "%{original} → %{system}"
+  shared:
+    renamed_documents:
+      title: "Vos documents"
+      description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
 
   errors:
     market_application:

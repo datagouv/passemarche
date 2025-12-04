@@ -1,0 +1,14 @@
+<svg
+  width="<%= icon_data[:width] %>"
+  height="<%= icon_data[:height] %>"
+  viewBox="0 0 <%= icon_data[:width] %> <%= icon_data[:height] %>"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+  <% if css_class.present? %>class="<%= css_class %>"<% end %>
+><path
+    d="<%= icon_data[:path] %>"
+    fill="<%= icon_data[:fill] %>"
+    <% if icon_data[:fill_rule] %>fill-rule="<%= icon_data[:fill_rule] %>"<% end %>
+    <% if icon_data[:clip_rule] %>clip-rule="<%= icon_data[:clip_rule] %>"<% end %>
+  /></svg>

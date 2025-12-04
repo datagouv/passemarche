@@ -391,3 +391,36 @@ strong {
   color: #666666;
   font-style: italic;
 }
+
+/* Renamed documents section */
+.renamed-documents-list {
+  margin-top: 8px;
+}
+
+.renamed-document-item {
+  margin-bottom: 8px;
+  line-height: 20px;
+}
+
+.renamed-document-item > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.renamed-document-item .document-icon {
+  margin-right: 8px;
+}
+
+.renamed-document-item .rename-arrow {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.renamed-document-item svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.renamed-document-text {
+  font-size: 14px;
+}

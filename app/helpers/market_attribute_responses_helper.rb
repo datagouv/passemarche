@@ -40,7 +40,7 @@ module MarketAttributeResponsesHelper
 
     return system_name if context == :buyer
 
-    t('helpers.market_attribute_responses.document_display_name', original:, system: system_name)
+    original
   end
 
   def current_documents_list(documents, **options)

@@ -1,0 +1,28 @@
+<%
+  # Only show this section for candidate contexts (web, pdf), not buyer
+  return if context == :buyer
+
+  naming_service = DocumentNamingService.new(market_application)
+  renamed_docs = naming_service.renamed_documents
+  return if renamed_docs.empty?
+%>
+
+<div class="fr-card fr-mb-2w category-card">
+  <%= render 'shared/card_header', title: t('shared.renamed_documents.title'), background: "fr-background-alt--grey" %>
+  <div class="fr-card__body fr-mt-1w fr-mb-1w">
+    <p class="fr-text--sm fr-text--mention-grey fr-mb-2w">
+      <%= t('shared.renamed_documents.description') %>
+    </p>
+
+    <div class="renamed-documents-list">
+      <% renamed_docs.each do |doc| %>
+        <div class="renamed-document-item fr-mb-1w">
+          <span class="document-icon"><%= render IconComponent.new(name: :document) %></span>
+          <span class="renamed-document-text"><%= doc[:original] %></span>
+          <span class="rename-arrow"><%= render IconComponent.new(name: :arrow_right_circle) %></span>
+          <span class="renamed-document-text"><%= doc[:system] %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
