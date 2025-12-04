@@ -169,9 +169,9 @@ module MarketAttributeResponsesHelper
   end
 
   def render_empty_documents_list
-    content_tag :div, class: 'fr-mt-2w fr-text--sm fr-mb-0' do
+    content_tag :div, class: 'fr-mt-2w fr-text--md fr-mb-0' do
       concat content_tag(:strong, 'Fichiers actuels :')
-      concat content_tag(:span, 'Aucun fichier téléchargé')
+      concat content_tag(:span, 'Aucun fichier téléchargé', class: 'fr-text-md fr-text--mention-grey')
     end
   end
 end
