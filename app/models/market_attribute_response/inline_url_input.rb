@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class MarketAttributeResponse::InlineUrlInput < MarketAttributeResponse::UrlInput
+  # OPQIBI metadata accessors
   def date_delivrance_certificat
     value&.[]('date_delivrance_certificat')
   end
@@ -20,5 +21,16 @@ class MarketAttributeResponse::InlineUrlInput < MarketAttributeResponse::UrlInpu
   def opqibi_metadata?
     market_attribute&.api_name == 'opqibi' &&
       (date_delivrance_certificat.present? || duree_validite_certificat.present?)
+  end
+
+  # France Competences metadata accessors
+  def france_competence_metadata?
+    market_attribute&.api_name == 'carif_oref' &&
+      market_attribute&.api_key == 'france_competence' &&
+      habilitations.present?
+  end
+
+  def habilitations
+    value&.[]('habilitations') || []
   end
 end

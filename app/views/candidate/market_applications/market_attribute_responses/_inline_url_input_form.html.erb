@@ -17,38 +17,111 @@
     <%= response_form.hidden_field :text, value: text_value %>
   <% end %>
 
-  <div class="fr-mb-2w">
-    <label class="fr-label">
-      <%= label_text %>
-      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
-    </label>
-
-    <% if market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata? %>
-      <%# Special case for OPQIBI: show metadata but not URL %>
-      <div class="fr-text--sm fr-text--mention-grey">
-        <p class="fr-mb-1v">
-          <em>Les informations suivantes ont été récupérées automatiquement depuis l'API OPQIBI :</em>
-        </p>
-        <% if market_attribute_response.formatted_date_delivrance.present? %>
-          <p class="fr-mb-1v">
-            <strong>Date de délivrance :</strong>
-            <%= l(market_attribute_response.formatted_date_delivrance, format: :long) %>
-          </p>
-        <% end %>
-        <% if market_attribute_response.duree_validite_certificat.present? %>
-          <p class="fr-mb-0">
-            <strong>Durée de validité :</strong>
-            <%= market_attribute_response.duree_validite_certificat %>
-          </p>
+  <% if market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata? %>
+    <%# Special case for OPQIBI: show metadata but not URL %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= label_text %>
+        </h6>
+        <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+          <span class="fr-mb-2w fr-text--sm">
+            <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+          </span>
         <% end %>
       </div>
-    <% else %>
-      <%# Other auto-filled fields - generic message %>
-      <p class="fr-text--sm fr-text--mention-grey">
-        <%= t('candidate.market_applications.auto_filled_message') %>
-      </p>
-    <% end %>
-  </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response, inline: true %>
+        </div>
+        <div class="fr-text--sm fr-text--mention-grey">
+          <% if market_attribute_response.formatted_date_delivrance.present? %>
+            <p class="fr-mb-1v">
+              <strong>Date de délivrance :</strong>
+              <%= l(market_attribute_response.formatted_date_delivrance, format: :long) %>
+            </p>
+          <% end %>
+          <% if market_attribute_response.duree_validite_certificat.present? %>
+            <p class="fr-mb-0">
+              <strong>Durée de validité :</strong>
+              <%= market_attribute_response.duree_validite_certificat %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% elsif market_attribute_response.respond_to?(:france_competence_metadata?) && market_attribute_response.france_competence_metadata? %>
+    <%# Special case for France Competences: show all habilitations %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= label_text %>
+        </h6>
+        <% if t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description", default: nil).present? %>
+          <span class="fr-mb-2w fr-text--sm">
+            <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description") %>
+          </span>
+        <% end %>
+      </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response, inline: true %>
+        </div>
+        <div class="fr-text--sm fr-text--mention-grey">
+          <% market_attribute_response.habilitations.each_with_index do |habilitation, index| %>
+            <% if index > 0 %><hr class="fr-hr fr-my-2v"><% end %>
+            <p class="fr-mb-1v">
+              <strong><%= t('form_fields.candidate.carif_oref.france_competence.actif') %> :</strong>
+              <%= habilitation['actif'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
+            </p>
+            <% if habilitation['date_actif'].present? %>
+              <p class="fr-mb-1v">
+                <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_actif') %> :</strong>
+                <%= Date.parse(habilitation['date_actif']).strftime('%d/%m/%Y') rescue habilitation['date_actif'] %>
+              </p>
+            <% end %>
+            <% if habilitation['date_fin_enregistrement'].present? %>
+              <p class="fr-mb-1v">
+                <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_fin_enregistrement') %> :</strong>
+                <%= Date.parse(habilitation['date_fin_enregistrement']).strftime('%d/%m/%Y') rescue habilitation['date_fin_enregistrement'] %>
+              </p>
+            <% end %>
+            <p class="fr-mb-1v">
+              <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_former') %> :</strong>
+              <%= habilitation['habilitation_pour_former'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
+            </p>
+            <p class="fr-mb-1v">
+              <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_organiser_evaluation') %> :</strong>
+              <%= habilitation['habilitation_pour_organiser_l_evaluation'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
+            </p>
+            <% if habilitation['sirets_organismes_certificateurs'].present? %>
+              <p class="fr-mb-0">
+                <strong><%= t('form_fields.candidate.carif_oref.france_competence.siret_organisme_certificateur') %> :</strong>
+                <%= habilitation['sirets_organismes_certificateurs'].join(', ') %>
+              </p>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <%# Other auto-filled fields - generic message %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= label_text %>
+        </h6>
+      </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response, inline: true %>
+        </div>
+        <p class="fr-text--sm fr-text--mention-grey">
+          <%= t('candidate.market_applications.auto_filled_message') %>
+        </p>
+      </div>
+    </div>
+  <% end %>
 <% else %>
   <%# Manual input or manual after API failure %>
   <div class="certificate-row">

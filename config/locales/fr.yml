@@ -289,6 +289,7 @@ fr:
               - qualibat
               - qualifelec
               - opqibi
+              - carif_oref
               - rge
               - fntp
       steps:
@@ -334,6 +335,31 @@ fr:
       summary:
         title: "Synthèse de votre candidature"
         subtitle: "Lorem ipsum"
+
+  form_fields:
+    candidate:
+      carif_oref:
+        qualiopi:
+          action_formation: Action de formation
+          bilan_competences: Bilan de compétences
+          validation_acquis_experience: VAE
+          apprentissage: Apprentissage
+          obtention_via_unite_legale: Obtention via l'unité légale
+          specialites: Spécialités
+          certified: Entreprise certifiée
+          not_certified: Non certifié
+        france_competence:
+          code: Code
+          actif: Actif
+          inactif: Inactif
+          date_actif: Date
+          date_fin_enregistrement: Date de fin d'enregistrement
+          habilitation_pour_former: Habilitation pour former
+          habilitation_pour_organiser_evaluation: Habilitation pour organiser l'évaluation
+          siret_organisme_certificateur: SIRET de l'organisme certificateur
+      shared:
+        "yes": Oui
+        "no": Non
 
   admin:
     editors:
