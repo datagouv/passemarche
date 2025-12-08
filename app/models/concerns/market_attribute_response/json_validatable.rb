@@ -24,6 +24,8 @@ module MarketAttributeResponse::JsonValidatable
   private
 
   def validate_json_structure
+    return if auto?
+
     validate_allowed_properties if value.present?
   end
 

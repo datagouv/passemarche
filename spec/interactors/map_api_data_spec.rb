@@ -543,6 +543,188 @@ RSpec.describe MapApiData, type: :interactor do
       end
     end
 
+    context 'when resource contains CARIF-OREF qualiopi metadata' do
+      let(:qualiopi_data) do
+        {
+          'numero_de_declaration' => '11910843391',
+          'actif' => true,
+          'date_derniere_declaration' => '2021-01-30',
+          'certification_qualiopi' => {
+            'action_formation' => true,
+            'bilan_competences' => true,
+            'validation_acquis_experience' => false,
+            'apprentissage' => true,
+            'obtention_via_unite_legale' => true
+          },
+          'specialites' => [
+            { 'code' => '313', 'libelle' => 'Finances, banque, assurances' }
+          ]
+        }
+      end
+      let(:resource) { Resource.new(qualiopi: qualiopi_data, france_competence: nil) }
+      let(:bundled_data) { BundledData.new(data: resource, context: {}) }
+      let(:api_name) { 'carif_oref' }
+
+      let!(:qualiopi_attribute) do
+        create(:market_attribute, :inline_file_upload, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_qualiopi_france',
+          api_name: 'carif_oref',
+          api_key: 'qualiopi',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates market_attribute_response for qualiopi' do
+        expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+      end
+
+      it 'stores qualiopi data in value JSONB field' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: qualiopi_attribute)
+        expect(response.value['numero_de_declaration']).to eq('11910843391')
+        expect(response.value['certification_qualiopi']['action_formation']).to be true
+        expect(response.value['specialites'].first['libelle']).to eq('Finances, banque, assurances')
+      end
+
+      it 'sets source to auto' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: qualiopi_attribute)
+        expect(response.source).to eq('auto')
+      end
+    end
+
+    context 'when resource contains CARIF-OREF france_competence metadata' do
+      let(:france_competence_data) do
+        {
+          'habilitations' => [
+            {
+              'code' => 'RNCP10013',
+              'actif' => true,
+              'date_actif' => '2020-01-30',
+              'date_fin_enregistrement' => '2030-01-30',
+              'habilitation_pour_former' => true,
+              'habilitation_pour_organiser_l_evaluation' => true,
+              'sirets_organismes_certificateurs' => ['12345678901234']
+            }
+          ]
+        }
+      end
+      let(:resource) { Resource.new(qualiopi: nil, france_competence: france_competence_data) }
+      let(:bundled_data) { BundledData.new(data: resource, context: {}) }
+      let(:api_name) { 'carif_oref' }
+
+      let!(:france_competence_attribute) do
+        create(:market_attribute, :inline_url_input, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_france_competences',
+          api_name: 'carif_oref',
+          api_key: 'france_competence',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates market_attribute_response for france_competence' do
+        expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+      end
+
+      it 'stores france_competence habilitations in value JSONB field' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: france_competence_attribute)
+        expect(response.value['habilitations']).to be_an(Array)
+        expect(response.value['habilitations'].first['code']).to eq('RNCP10013')
+        expect(response.value['habilitations'].first['actif']).to be true
+      end
+
+      it 'sets source to auto' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: france_competence_attribute)
+        expect(response.source).to eq('auto')
+      end
+    end
+
+    context 'when resource contains both CARIF-OREF qualiopi and france_competence' do
+      let(:qualiopi_data) do
+        {
+          'numero_de_declaration' => '11910843391',
+          'certification_qualiopi' => { 'action_formation' => true },
+          'specialites' => []
+        }
+      end
+      let(:france_competence_data) do
+        {
+          'habilitations' => [{ 'code' => 'RNCP10013', 'actif' => true }]
+        }
+      end
+      let(:resource) { Resource.new(qualiopi: qualiopi_data, france_competence: france_competence_data) }
+      let(:bundled_data) { BundledData.new(data: resource, context: {}) }
+      let(:api_name) { 'carif_oref' }
+
+      let!(:qualiopi_attribute) do
+        create(:market_attribute, :inline_file_upload, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_qualiopi_france',
+          api_name: 'carif_oref',
+          api_key: 'qualiopi',
+          public_markets: [public_market])
+      end
+
+      let!(:france_competence_attribute) do
+        create(:market_attribute, :inline_url_input, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_france_competences',
+          api_name: 'carif_oref',
+          api_key: 'france_competence',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates market_attribute_responses for both fields' do
+        expect { subject }.to change { market_application.market_attribute_responses.count }.by(2)
+      end
+
+      it 'stores qualiopi data correctly' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: qualiopi_attribute)
+        expect(response.value['numero_de_declaration']).to eq('11910843391')
+      end
+
+      it 'stores france_competence data correctly' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: france_competence_attribute)
+        expect(response.value['habilitations'].first['code']).to eq('RNCP10013')
+      end
+    end
+
+    context 'when CARIF-OREF returns nil data' do
+      let(:resource) { Resource.new(qualiopi: nil, france_competence: nil) }
+      let(:bundled_data) { BundledData.new(data: resource, context: {}) }
+      let(:api_name) { 'carif_oref' }
+
+      let!(:qualiopi_attribute) do
+        create(:market_attribute, :inline_file_upload, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_qualiopi_france',
+          api_name: 'carif_oref',
+          api_key: 'qualiopi',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates response with empty value' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: qualiopi_attribute)
+        expect(response.value).to eq({})
+      end
+    end
+
     context 'when resource contains OPQIBI metadata (api_key=data)' do
       let(:resource) do
         Resource.new(

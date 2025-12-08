@@ -32,19 +32,26 @@ class MapApiData < ApplicationInteractor
 
   def create_or_update_response(market_attribute)
     response = find_or_initialize_response(market_attribute)
+    value = populate_response_value(response, market_attribute)
+    response.source = :auto unless response.manual_after_api_failure?
+    save_response(response, value)
+  end
 
+  def populate_response_value(response, market_attribute)
     if opqibi_structured_data?(market_attribute)
       assign_opqibi_metadata(response)
-      value = nil
+      nil
+    elsif carif_oref_structured_data?(market_attribute)
+      assign_carif_oref_metadata(response, market_attribute)
+      nil
     else
       value = extract_value_from_resource(market_attribute)
       assign_value_to_response(response, value)
+      value
     end
+  end
 
-    response.source = :auto unless response.manual_after_api_failure?
-
-    # For complex economic capacity responses, allow saving even if incomplete
-    # The user will complete the missing data in the form
+  def save_response(response, value)
     if complex_economic_capacity_response?(response, value)
       response.save(validate: false)
     else
@@ -86,6 +93,17 @@ class MapApiData < ApplicationInteractor
       'date_delivrance_certificat' => resource.date_delivrance_certificat,
       'duree_validite_certificat' => resource.duree_validite_certificat
     }
+  end
+
+  def carif_oref_structured_data?(market_attribute)
+    context.api_name == 'carif_oref' &&
+      %w[qualiopi france_competence].include?(market_attribute.api_key)
+  end
+
+  def assign_carif_oref_metadata(response, market_attribute)
+    resource = context.bundled_data.data
+    data = resource.public_send(market_attribute.api_key)
+    response.value = data if data.present?
   end
 
   def attach_document_to_response(response, document_hash)
