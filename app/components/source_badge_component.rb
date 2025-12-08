@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class SourceBadgeComponent < ViewComponent::Base
-  attr_reader :market_attribute_response, :inline
+  attr_reader :market_attribute_response
 
-  def initialize(market_attribute_response:, inline: false)
+  def initialize(market_attribute_response:)
     @market_attribute_response = market_attribute_response
-    @inline = inline
   end
 
   def render?

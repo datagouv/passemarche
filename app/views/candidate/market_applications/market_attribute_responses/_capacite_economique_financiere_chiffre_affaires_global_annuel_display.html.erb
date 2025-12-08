@@ -65,11 +65,11 @@
                       </td>
                       <td>
                         <% if turnover_from_api && context != :buyer %>
-                          <%= render "candidate/market_applications/market_attribute_responses/source_badge", market_attribute_response: market_attribute_response, inline: true %>
+                          <%= render "candidate/market_applications/market_attribute_responses/source_badge", market_attribute_response: market_attribute_response %>
                         <% elsif year_data['turnover'].present? %>
                           <%= number_with_delimiter(year_data['turnover'], delimiter: ' ') %> €
                           <% if context == :buyer %>
-                            <%= render "candidate/market_applications/market_attribute_responses/source_badge", market_attribute_response: market_attribute_response, inline: true %>
+                            <%= render "candidate/market_applications/market_attribute_responses/source_badge", market_attribute_response: market_attribute_response %>
                           <% end %>
                         <% else %>
                           <span class="fr-text--mention-grey">Non renseigné</span>
@@ -102,5 +102,8 @@
       <% else %>
         <span class="fr-text--sm fr-text--mention-grey">Non renseigné</span>
       <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
   </div>
 </div>

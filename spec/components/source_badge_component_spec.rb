@@ -91,18 +91,9 @@ RSpec.describe SourceBadgeComponent, type: :component do
         expect(page).to have_css('span.fr-badge.fr-badge--success.fr-badge--sm')
       end
 
-      it 'includes line break when inline is false' do
+      it 'does not include line break' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :auto, value: { 'text' => 'Auto' })
-        component = described_class.new(market_attribute_response: response, inline: false)
-
-        render_inline(component)
-
-        expect(rendered_content).to include('<br>')
-      end
-
-      it 'does not include line break when inline is true' do
-        response = create(:market_attribute_response_text_input, market_attribute:, source: :auto, value: { 'text' => 'Auto' })
-        component = described_class.new(market_attribute_response: response, inline: true)
+        component = described_class.new(market_attribute_response: response)
 
         render_inline(component)
 

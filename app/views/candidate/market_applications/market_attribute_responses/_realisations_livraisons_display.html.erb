@@ -12,7 +12,6 @@
   <div class="field-layout-content">
     <strong>
       <%= t("form_fields.candidate.fields.#{key}.name", default: key.humanize) %>
-      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
 
     <% if show_value %>
@@ -90,5 +89,8 @@
         <span class="fr-text--md fr-text--mention-grey">Aucune réalisation renseignée</span>
       <% end %>
     <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
   </div>
 </div>
