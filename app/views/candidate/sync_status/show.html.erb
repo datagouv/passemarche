@@ -24,7 +24,10 @@
                 </button>
               <% end %>
               <%= link_to "Retourner sur #{@market_application.editor.name}",
-                          @market_application.editor.redirect_url&.gsub('{market_identifier}', @market_application.identifier) || root_path,
+                          @market_application.editor.build_redirect_url(
+                            market: @market_application.public_market,
+                            application: @market_application
+                          ) || root_path,
                           class: 'fr-btn' %>
             </div>
           </div>

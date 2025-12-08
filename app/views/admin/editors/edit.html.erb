@@ -75,8 +75,10 @@
           <div class="fr-fieldset__element">
             <div class="fr-input-group fr-mb-4w">
               <%= form.label :redirect_url, "URL de redirection", class: "fr-label" %>
-              <span class="fr-hint-text">URL où rediriger l'acheteur après complétion</span>
-              <%= form.text_field :redirect_url, class: "fr-input", placeholder: "https://example.com/success" %>
+              <span class="fr-hint-text">
+                URL de redirection après complétion. Les paramètres <code>market_identifier</code> et <code>application_identifier</code> seront automatiquement ajoutés.
+              </span>
+              <%= form.text_field :redirect_url, class: "fr-input", placeholder: "https://example.com/callback" %>
             </div>
           </div>
 

@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Buyer::SyncStatus', type: :request do
-  let(:editor) { create(:editor) }
+  let(:editor) { create(:editor, redirect_url:) }
+  let(:redirect_url) { nil }
   let(:public_market) { create(:public_market, editor:) }
 
   describe 'GET /buyer/public_markets/:identifier/sync_status' do
@@ -20,6 +21,29 @@ RSpec.describe 'Buyer::SyncStatus', type: :request do
 
       it 'contains sync status content' do
         expect(response.body).to include('Synchronisation')
+      end
+    end
+
+    describe 'redirect URL' do
+      before do
+        public_market.update!(sync_status: :sync_completed, completed_at: Time.current)
+        get sync_status_path
+      end
+
+      context 'when editor has redirect_url configured' do
+        let(:redirect_url) { 'https://editor.example.com/callback' }
+
+        it 'displays redirect link with market_identifier query param' do
+          expect(response.body).to include("market_identifier=#{public_market.identifier}")
+        end
+      end
+
+      context 'when editor has no redirect_url configured' do
+        let(:redirect_url) { nil }
+
+        it 'displays redirect link to root path' do
+          expect(response.body).to include('href="/"')
+        end
       end
     end
 

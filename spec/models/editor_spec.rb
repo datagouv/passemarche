@@ -147,4 +147,48 @@ RSpec.describe Editor, type: :model do
       expect(editor.active).to be true
     end
   end
+
+  describe '#build_redirect_url' do
+    let(:editor) { create(:editor, redirect_url:) }
+    let(:public_market) { create(:public_market, :completed, editor:) }
+    let(:market_application) { create(:market_application, public_market:) }
+
+    context 'when redirect_url is blank' do
+      let(:redirect_url) { nil }
+
+      it 'returns nil' do
+        expect(editor.build_redirect_url(market: public_market)).to be_nil
+      end
+    end
+
+    context 'when redirect_url has no query params' do
+      let(:redirect_url) { 'https://example.com/callback' }
+
+      it 'appends market_identifier as query param' do
+        result = editor.build_redirect_url(market: public_market)
+
+        expect(result).to eq("https://example.com/callback?market_identifier=#{public_market.identifier}")
+      end
+
+      it 'appends both identifiers when application is provided' do
+        result = editor.build_redirect_url(market: public_market, application: market_application)
+
+        expect(result).to eq(
+          "https://example.com/callback?market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
+        )
+      end
+    end
+
+    context 'when redirect_url already has query params' do
+      let(:redirect_url) { 'https://example.com/callback?existing=value' }
+
+      it 'preserves existing params and appends identifiers' do
+        result = editor.build_redirect_url(market: public_market, application: market_application)
+
+        expect(result).to eq(
+          "https://example.com/callback?existing=value&market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
+        )
+      end
+    end
+  end
 end

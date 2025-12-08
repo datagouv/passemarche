@@ -34,14 +34,35 @@ Les webhooks sont configurés par l'administrateur Passe Marché au niveau de ch
 | Paramètre | Description | Exemple |
 |-----------|-------------|---------|
 | `completion_webhook_url` | URL de réception des webhooks | `https://editeur.com/webhooks/voie-rapide` |
-| `redirect_url` | URL de redirection post-complétion | `https://editeur.com/markets/{market_identifier}/status` |
+| `redirect_url` | URL de redirection post-complétion | `https://editeur.com/callback` |
 | `webhook_secret` | Secret HMAC généré automatiquement | `a1b2c3d4e5f6...` |
 
-### Variables dans les URLs
+### Paramètres de Redirection
 
-Les URLs supportent les variables suivantes :
-- `{market_identifier}` : Identifiant du marché
-- `{status}` : Statut de complétion (`completed`, `failed`)
+Lors de la redirection vers l'URL configurée (`redirect_url`), Passe Marché ajoute automatiquement les paramètres suivants :
+
+| Paramètre | Description | Format | Ajouté dans |
+|-----------|-------------|--------|-------------|
+| `market_identifier` | Identifiant unique du marché public | `VR-YYYY-XXXXXXXXXXXX` | Flux acheteur et candidat |
+| `application_identifier` | Identifiant unique de la candidature | `VR-YYYY-TESTXXXXXXXX` | Flux candidat uniquement |
+
+**Exemple** :
+
+Si l'URL de redirection configurée est :
+```
+https://editeur.com/callback
+```
+
+L'utilisateur sera redirigé vers :
+```
+# Flux acheteur
+https://editeur.com/callback?market_identifier=VR-2024-A1B2C3D4E5F6
+
+# Flux candidat
+https://editeur.com/callback?market_identifier=VR-2024-A1B2C3D4E5F6&application_identifier=VR-2024-TEST00000001
+```
+
+Les paramètres existants dans l'URL sont préservés.
 
 ## Types d'Événements
 
