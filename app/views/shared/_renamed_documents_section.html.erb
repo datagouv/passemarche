@@ -16,12 +16,17 @@
 
     <div class="renamed-documents-list">
       <% renamed_docs.each do |doc| %>
-        <div class="renamed-document-item fr-mb-1w">
+      <div class="renamed-document-item fr-mb-1w">
+        <div class="fr-flex fr-items-center">
           <span class="document-icon"><%= render IconComponent.new(name: :document) %></span>
-          <span class="renamed-document-text"><%= doc[:original] %></span>
-          <span class="rename-arrow"><%= render IconComponent.new(name: :arrow_right_circle) %></span>
-          <span class="renamed-document-text"><%= doc[:system] %></span>
+          <span class="renamed-document-text fr-ml-1w"><%= doc[:original] %></span>
         </div>
+        <div class="fr-flex fr-items-center">
+          <span class="rename-arrow"><%= render IconComponent.new(name: :arrow_right_circle) %></span>
+          <span class="renamed-document-text fr-ml-1w"><%= doc[:system] %></span>
+        </div>
+        <hr class="fr-hr">
+      </div>
       <% end %>
     </div>
   </div>
