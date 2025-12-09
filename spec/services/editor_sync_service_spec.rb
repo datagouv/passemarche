@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe EditorSyncService do
-  let(:editor) { create(:editor, name: 'Test Editor', client_id: 'test_client', client_secret: 'test_secret') }
-
   describe '.call' do
     context 'when doorkeeper application does not exist' do
+      let(:editor) { build(:editor, name: 'Test Editor', client_id: 'test_client', client_secret: 'test_secret') }
+
       it 'creates a new doorkeeper application' do
         expect do
           described_class.call(editor)
@@ -29,12 +29,13 @@ RSpec.describe EditorSyncService do
       let!(:existing_app) do
         CustomDoorkeeperApplication.create!(
           name: 'Old Name',
-          uid: editor.client_id,
+          uid: 'existing_client_id',
           secret: 'old_secret',
           redirect_uri: '',
           scopes: 'api_access'
         )
       end
+      let(:editor) { build(:editor, name: 'Test Editor', client_id: 'existing_client_id', client_secret: 'test_secret') }
 
       it 'returns existing doorkeeper application without creating new one' do
         expect do

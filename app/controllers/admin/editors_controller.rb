@@ -50,7 +50,7 @@ class Admin::EditorsController < Admin::ApplicationController
 
   def editor_params
     params.expect(editor: %i[
-      name client_id client_secret authorized active
+      name authorized active
       completion_webhook_url redirect_url
     ])
   end
