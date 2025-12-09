@@ -242,6 +242,7 @@ fr:
         data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       attestation_motifs_exclusion:
+        header_title: "Les motifs d'exclusion"
         title: "Attestation sur l'honneur - Motifs d'exclusion"
         checkbox_label: "J’atteste que mon entreprise n’est concernée par aucun motif d’exclusion"
         info_banner: "L'entreprise ne doit pas faire l'objet d'un motif d'exclusion tel que prévu aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique."

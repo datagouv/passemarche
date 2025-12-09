@@ -76,8 +76,10 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
         it 'includes candidate attestation block when attests_no_exclusion_motifs is true' do
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
-            expect(html_content).to include('Attestation du candidat')
-            expect(html_content).to include('J’atteste sur l’honneur que mon entreprise n’est concernée par aucun motif d’exclusion.')
+            expect(html_content).to include('Les motifs d&#39;exclusion')
+            normalized_content = normalize_apostrophes(html_content)
+            expected_text = normalize_apostrophes("J'atteste sur l'honneur que mon entreprise n'est concernée par aucun motif d'exclusion.")
+            expect(normalized_content).to include(expected_text)
             'fake pdf content'
           end
 
@@ -89,7 +91,7 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
 
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
-            expect(html_content).to include('Attestation du candidat')
+            expect(html_content).to include('Les motifs d&#39;exclusion')
             expect(html_content).to include('L&#39;attestation sur l&#39;honneur est manquante.')
             'fake pdf content'
           end
