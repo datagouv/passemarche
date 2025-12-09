@@ -8,9 +8,7 @@ RSpec.describe Editor, type: :model do
   describe 'validations' do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:name) }
-    it { is_expected.to validate_presence_of(:client_id) }
     it { is_expected.to validate_uniqueness_of(:client_id) }
-    it { is_expected.to validate_presence_of(:client_secret) }
   end
 
   describe 'scopes' do
@@ -131,12 +129,10 @@ RSpec.describe Editor, type: :model do
       expect(duplicate_editor.errors[:client_id]).to be_present
     end
 
-    it 'requires all mandatory fields' do
+    it 'requires name field' do
       editor = Editor.new
       expect(editor).not_to be_valid
       expect(editor.errors[:name]).to be_present
-      expect(editor.errors[:client_id]).to be_present
-      expect(editor.errors[:client_secret]).to be_present
     end
   end
 
@@ -189,6 +185,68 @@ RSpec.describe Editor, type: :model do
           "https://example.com/callback?existing=value&market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
         )
       end
+    end
+  end
+
+  describe 'auto-generation of credentials' do
+    describe '#generate_client_id' do
+      context 'when client_id is not provided' do
+        it 'auto-generates a unique client_id on create' do
+          editor = described_class.new(name: 'Test Editor')
+          editor.valid?
+          expect(editor.client_id).to be_present
+          expect(editor.client_id.length).to eq(32)
+        end
+      end
+
+      context 'when client_id is explicitly provided' do
+        it 'does not override the provided client_id' do
+          editor = described_class.new(name: 'Test', client_id: 'my_custom_id')
+          editor.valid?
+          expect(editor.client_id).to eq('my_custom_id')
+        end
+      end
+    end
+
+    describe '#generate_client_secret' do
+      context 'when client_secret is not provided' do
+        it 'auto-generates a client_secret on create' do
+          editor = described_class.new(name: 'Test Editor')
+          editor.valid?
+          expect(editor.client_secret).to be_present
+          expect(editor.client_secret.length).to eq(64)
+        end
+      end
+
+      context 'when client_secret is explicitly provided' do
+        it 'does not override the provided client_secret' do
+          editor = described_class.new(name: 'Test', client_secret: 'my_custom_secret')
+          editor.valid?
+          expect(editor.client_secret).to eq('my_custom_secret')
+        end
+      end
+    end
+
+    it 'only auto-generates on create, not on update' do
+      editor = create(:editor)
+      original_client_id = editor.client_id
+      original_client_secret = editor.client_secret
+
+      editor.update!(name: 'Updated Name')
+
+      expect(editor.client_id).to eq(original_client_id)
+      expect(editor.client_secret).to eq(original_client_secret)
+    end
+  end
+
+  describe 'Doorkeeper sync on create' do
+    it 'automatically creates a Doorkeeper application after editor creation' do
+      editor = create(:editor)
+
+      doorkeeper_app = CustomDoorkeeperApplication.find_by(uid: editor.client_id)
+      expect(doorkeeper_app).to be_present
+      expect(doorkeeper_app.secret).to eq(editor.client_secret)
+      expect(doorkeeper_app.name).to eq(editor.name)
     end
   end
 end
