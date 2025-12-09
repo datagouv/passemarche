@@ -10,17 +10,24 @@
   context ||= :web
 %>
 
-<% category_keys = market_application.public_market.market_attributes
-     .order(:id)
-     .pluck(:category_key)
-     .compact
-     .uniq %>
+<% category_keys = presenter.category_keys_with_attestation_motifs_exclusion %>
 
 <% if category_keys.any? %>
   <% category_keys.each_with_index do |category, index| %>
+    <%# Attestation section %>
+    <% if category == :attestation_motifs_exclusion %>
+      <div class="fr-card fr-mb-2w category-card">
+        <%= render 'shared/card_header', title: t("candidate.market_applications.attestation_motifs_exclusion.header_title"), background: "fr-background-alt--grey" %>
+        <div class="fr-card__body fr-mt-1w fr-mb-1w">
+          <%= render 'shared/candidate_attestation_motifs_exclusion',
+                    market_application: market_application,
+                    context: context %>
+        </div>
+      </div>
+    <% end %>
+
     <% subcategories = presenter.subcategories_for_category(category) %>
     <% next if subcategories.empty? %>
-
     <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if [:pdf, :buyer].include?(context) && index > 0 %>">
       <%= render 'shared/card_header', title: t("form_fields.candidate.categories.#{category}"), background: "fr-background-alt--grey" %>
       <div class="fr-card__body fr-mt-1w fr-mb-1w">
@@ -73,11 +80,7 @@
           <% end %>
           </div>
         <% end %>
-        <% if category == 'motifs_exclusion' %>
-          <%= render 'shared/candidate_attestation_motifs_exclusion',
-                     market_application: market_application,
-                     context: context %>
-        <% end %>
+
         <% subcategories.each do |subcategory| %>
           <% market_attributes = presenter.market_attributes_for_subcategory(category, subcategory) %>
           <% next if market_attributes.empty? %>
