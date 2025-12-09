@@ -16,7 +16,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'email_input'
     attr.category_key = 'identite_entreprise'
     attr.subcategory_key = 'contact'
-    attr.required = true
+    attr.mandatory = true
   end
   @email_attr.public_markets << @public_market unless @email_attr.public_markets.include?(@public_market)
 
@@ -24,7 +24,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'phone_input'
     attr.category_key = 'identite_entreprise'
     attr.subcategory_key = 'contact'
-    attr.required = true
+    attr.mandatory = true
   end
   @phone_attr.public_markets << @public_market unless @phone_attr.public_markets.include?(@public_market)
 
@@ -32,7 +32,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'text_input'
     attr.category_key = 'identite_entreprise'
     attr.subcategory_key = 'identification'
-    attr.required = true
+    attr.mandatory = true
   end
   @company_name_attr.public_markets << @public_market unless @company_name_attr.public_markets.include?(@public_market)
 
@@ -40,7 +40,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'checkbox_with_document'
     attr.category_key = 'exclusion_criteria'
     attr.subcategory_key = 'declarations'
-    attr.required = true
+    attr.mandatory = true
   end
   @exclusion_checkbox_attr.public_markets << @public_market unless @exclusion_checkbox_attr.public_markets.include?(@public_market)
 
@@ -48,7 +48,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'textarea'
     attr.category_key = 'economic_capacities'
     attr.subcategory_key = 'description'
-    attr.required = true
+    attr.mandatory = true
   end
   @economic_textarea_attr.public_markets << @public_market unless @economic_textarea_attr.public_markets.include?(@public_market)
 
@@ -56,7 +56,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'file_upload'
     attr.category_key = 'technical_capacities'
     attr.subcategory_key = 'documents'
-    attr.required = true
+    attr.mandatory = true
   end
   @technical_file_attr.public_markets << @public_market unless @technical_file_attr.public_markets.include?(@public_market)
 
@@ -64,7 +64,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'checkbox_with_document'
     attr.category_key = 'technical_capacities'
     attr.subcategory_key = 'attestations'
-    attr.required = false
+    attr.mandatory = false
   end
   @checkbox_doc_attr.public_markets << @public_market unless @checkbox_doc_attr.public_markets.include?(@public_market)
 
@@ -72,7 +72,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'checkbox_with_document'
     attr.category_key = 'technical_capacities'
     attr.subcategory_key = 'certifications'
-    attr.required = true
+    attr.mandatory = true
   end
   @certifications_attr.public_markets << @public_market unless @certifications_attr.public_markets.include?(@public_market)
 
@@ -80,7 +80,7 @@ Given('a comprehensive public market with all input types exists') do
     attr.input_type = 'capacite_economique_financiere_chiffre_affaires_global_annuel'
     attr.category_key = 'capacite_economique_financiere'
     attr.subcategory_key = 'capacite_economique_financiere_chiffre_affaires'
-    attr.required = false
+    attr.mandatory = false
     attr.api_name = 'dgfip_chiffres_affaires'
     attr.api_key = 'chiffres_affaires_data'
   end
@@ -430,7 +430,7 @@ Given('a market with checkbox_with_document fields exists') do
     attr.input_type = 'checkbox_with_document'
     attr.category_key = 'technical_capacities'
     attr.subcategory_key = 'certifications'
-    attr.required = true
+    attr.mandatory = true
   end
   @checkbox_doc_attr.public_markets << @public_market unless @checkbox_doc_attr.public_markets.include?(@public_market)
 

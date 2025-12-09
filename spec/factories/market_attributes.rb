@@ -6,10 +6,10 @@ FactoryBot.define do
     input_type { :file_upload }
     category_key { 'test_company_identity' }
     subcategory_key { 'test_basic_information' }
-    required { false }
+    mandatory { false }
 
-    trait :required do
-      required { true }
+    trait :mandatory do
+      mandatory { true }
     end
 
     trait :from_api do

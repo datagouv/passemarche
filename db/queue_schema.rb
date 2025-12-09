@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_26_113519) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_09_101110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -103,7 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_26_113519) do
     t.datetime "deleted_at"
     t.integer "input_type", default: 0, null: false
     t.string "key", null: false
-    t.boolean "required", default: false, null: false
+    t.boolean "mandatory", default: false, null: false
     t.string "subcategory_key", null: false
     t.datetime "updated_at", null: false
     t.index ["api_name", "api_key"], name: "index_market_attributes_on_api_name_and_api_key"
@@ -111,7 +111,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_26_113519) do
     t.index ["deleted_at"], name: "index_market_attributes_on_deleted_at"
     t.index ["input_type"], name: "index_market_attributes_on_input_type"
     t.index ["key"], name: "index_market_attributes_on_key", unique: true
-    t.index ["required"], name: "index_market_attributes_on_required"
+    t.index ["mandatory"], name: "index_market_attributes_on_mandatory"
   end
 
   create_table "market_attributes_public_markets", id: false, force: :cascade do |t|

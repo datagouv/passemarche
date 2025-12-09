@@ -11,7 +11,7 @@ Given('a public market with presentation_intervenants field exists') do
     attr.input_type = 'presentation_intervenants'
     attr.category_key = 'capacites_techniques_professionnelles'
     attr.subcategory_key = 'capacites_techniques_professionnelles_effectifs'
-    attr.required = true
+    attr.mandatory = true
   end
   @cv_intervenants_attr.public_markets << @public_market unless @cv_intervenants_attr.public_markets.include?(@public_market)
 end

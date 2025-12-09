@@ -20,7 +20,7 @@ Given('a public market with soft-deletable attributes exists') do
     attr.input_type = 'text_input'
     attr.category_key = 'identite_entreprise'
     attr.subcategory_key = 'contact'
-    attr.required = true
+    attr.mandatory = true
     attr.deleted_at = nil
   end
   @active_field_1.public_markets << @public_market unless @active_field_1.public_markets.include?(@public_market)
@@ -29,7 +29,7 @@ Given('a public market with soft-deletable attributes exists') do
     attr.input_type = 'text_input'
     attr.category_key = 'identite_entreprise'
     attr.subcategory_key = 'contact'
-    attr.required = true
+    attr.mandatory = true
     attr.deleted_at = nil
   end
   @to_be_deleted_field.public_markets << @public_market unless @to_be_deleted_field.public_markets.include?(@public_market)
@@ -38,7 +38,7 @@ Given('a public market with soft-deletable attributes exists') do
     attr.input_type = 'textarea'
     attr.category_key = 'identite_entreprise'
     attr.subcategory_key = 'contact'
-    attr.required = false
+    attr.mandatory = false
     attr.deleted_at = nil
   end
   @active_field_2.public_markets << @public_market unless @active_field_2.public_markets.include?(@public_market)

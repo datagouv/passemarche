@@ -11,7 +11,7 @@ Given('a public market with radio_with_file_and_text field exists') do
     category_key: 'test_capacites_techniques_professionnelles',
     subcategory_key: 'test_capacites_techniques_professionnelles_certificats',
     public_markets: [@public_market],
-    required: false
+    mandatory: false
   )
 end
 

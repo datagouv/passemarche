@@ -31,10 +31,9 @@ class PublicMarket < ApplicationRecord
     save!
   end
 
-  # this naming sucks
   def sync_optional_market_attributes(selected_attributes)
-    required_attributes = market_attributes.required
-    all_attributes = (required_attributes + Array(selected_attributes)).uniq
+    mandatory_attrs = market_attributes.mandatory
+    all_attributes = (mandatory_attrs + Array(selected_attributes)).uniq
     self.market_attributes = all_attributes
     save!
   end

@@ -103,5 +103,5 @@ Feature: Buyer Configuration Flow
   Scenario: Les attributs obligatoires sont automatiquement ajoutés après setup
     When I visit the setup page for my public market
     And I click on "Débuter l'activation de"
-    Then the public market should have all required attributes from its market types
+    Then the public market should have all mandatory attributes from its market types
     And I should be on the first category page

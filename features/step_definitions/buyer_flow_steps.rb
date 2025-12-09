@@ -145,15 +145,15 @@ Then('the defense_industry checkbox should be disabled and checked') do
   expect(page).to have_field('defense_industry', checked: true, disabled: true)
 end
 
-Then('the public market should have all required attributes from its market types') do
+Then('the public market should have all mandatory attributes from its market types') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
 
   market_types = MarketType.where(code: public_market.market_type_codes)
-  expected_required_attributes = market_types
-    .flat_map(&:required_attributes)
+  expected_mandatory_attributes = market_types
+    .flat_map(&:mandatory_attributes)
     .uniq
 
   actual_attributes = public_market.market_attributes.to_a
 
-  expect(actual_attributes).to match_array(expected_required_attributes)
+  expect(actual_attributes).to match_array(expected_mandatory_attributes)
 end

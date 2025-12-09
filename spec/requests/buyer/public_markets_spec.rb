@@ -8,26 +8,26 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
   let(:services_type) { create(:market_type, code: 'services') }
   let(:defense_type) { create(:market_type, code: 'defense') }
 
-  let!(:required_attr_1) do
-    create(:market_attribute, key: 'req_attr_1', required: true,
+  let!(:mandatory_attr_1) do
+    create(:market_attribute, key: 'mand_attr_1', mandatory: true,
       category_key: 'test_category_1', subcategory_key: 'sub1')
   end
-  let!(:required_attr_2) do
-    create(:market_attribute, key: 'req_attr_2', required: true,
+  let!(:mandatory_attr_2) do
+    create(:market_attribute, key: 'mand_attr_2', mandatory: true,
       category_key: 'test_category_2', subcategory_key: 'sub2')
   end
   let!(:optional_attr_1) do
-    create(:market_attribute, key: 'opt_attr_1', required: false,
+    create(:market_attribute, key: 'opt_attr_1', mandatory: false,
       category_key: 'test_category_1', subcategory_key: 'sub1')
   end
   let!(:optional_attr_2) do
-    create(:market_attribute, key: 'opt_attr_2', required: false,
+    create(:market_attribute, key: 'opt_attr_2', mandatory: false,
       category_key: 'test_category_2', subcategory_key: 'sub2')
   end
 
   before do
-    supplies_type.market_attributes << [required_attr_1, optional_attr_1]
-    services_type.market_attributes << [required_attr_2, optional_attr_2]
+    supplies_type.market_attributes << [mandatory_attr_1, optional_attr_1]
+    services_type.market_attributes << [mandatory_attr_2, optional_attr_2]
   end
 
   let(:public_market) do
@@ -38,30 +38,29 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
 
   describe 'PATCH /buyer/public_markets/:identifier/setup' do
     context 'when updating from setup step' do
-      it 'adds all required attributes from associated market types' do
+      it 'adds all mandatory attributes from associated market types' do
         expect(public_market.market_attributes).to be_empty
 
         patch "/buyer/public_markets/#{public_market.identifier}/setup"
 
         public_market.reload
-        expect(public_market.market_attributes).to include(required_attr_1, required_attr_2)
+        expect(public_market.market_attributes).to include(mandatory_attr_1, mandatory_attr_2)
         expect(public_market.market_attributes).not_to include(optional_attr_1, optional_attr_2)
       end
 
       it 'redirects to first category step' do
         patch "/buyer/public_markets/#{public_market.identifier}/setup"
 
-        # Should redirect to first category (based on attribute ordering)
         expect(response).to have_http_status(:redirect)
       end
 
       it 'removes duplicates when market types share attributes' do
-        services_type.market_attributes << required_attr_1
+        services_type.market_attributes << mandatory_attr_1
 
         patch "/buyer/public_markets/#{public_market.identifier}/setup"
 
         public_market.reload
-        expect(public_market.market_attributes).to include(required_attr_1, required_attr_2)
+        expect(public_market.market_attributes).to include(mandatory_attr_1, mandatory_attr_2)
         attribute_ids = public_market.market_attributes.pluck(:id)
         expect(attribute_ids).to eq(attribute_ids.uniq)
       end
@@ -81,21 +80,20 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         public_market.reload
       end
 
-      it 'adds selected optional attributes while keeping required ones' do
+      it 'adds selected optional attributes while keeping mandatory ones' do
         patch "/buyer/public_markets/#{public_market.identifier}/#{first_category}",
           params: { selected_attribute_keys: [optional_attr_1.key] }
 
         public_market.reload
-        expect(public_market.market_attributes).to include(required_attr_1, required_attr_2)
-        # Only adds optionals from the current category
+        expect(public_market.market_attributes).to include(mandatory_attr_1, mandatory_attr_2)
       end
 
-      it 'keeps required attributes even when no optional ones are selected' do
+      it 'keeps mandatory attributes even when no optional ones are selected' do
         patch "/buyer/public_markets/#{public_market.identifier}/#{first_category}",
           params: { selected_attribute_keys: [] }
 
         public_market.reload
-        expect(public_market.market_attributes).to include(required_attr_1, required_attr_2)
+        expect(public_market.market_attributes).to include(mandatory_attr_1, mandatory_attr_2)
       end
 
       it 'redirects to next step' do

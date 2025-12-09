@@ -15,9 +15,8 @@ module Buyer
       when :setup, :summary
         render_wizard
       else
-        # Dynamic category step
         @current_category = step.to_s
-        @required_fields = @presenter.required_fields_for_category(@current_category)
+        @mandatory_fields = @presenter.mandatory_fields_for_category(@current_category)
         @optional_fields = @presenter.optional_fields_for_category(@current_category)
         @has_optional_fields = @presenter.optional_fields_for_category?(@current_category)
         render_wizard nil, template: step_template

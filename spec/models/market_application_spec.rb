@@ -155,7 +155,7 @@ RSpec.describe MarketApplication, type: :model do
         input_type: 'text_input',
         category_key: 'identite_entreprise',
         subcategory_key: 'identification',
-        required: true)
+        mandatory: true)
     end
 
     before do
@@ -235,7 +235,7 @@ RSpec.describe MarketApplication, type: :model do
           attr.input_type = 'presentation_intervenants'
           attr.category_key = 'capacites_techniques_professionnelles'
           attr.subcategory_key = 'effectifs'
-          attr.required = true
+          attr.mandatory = true
         end
       end
 
@@ -353,10 +353,10 @@ RSpec.describe MarketApplication, type: :model do
         # Create attributes for two different steps
         create(:market_attribute, :text_input, public_markets: [market],
           subcategory_key: 'step_one',
-          required: true)
+          mandatory: true)
         create(:market_attribute, :text_input, public_markets: [market],
           subcategory_key: 'step_two',
-          required: true)
+          mandatory: true)
       end
     end
 
@@ -435,13 +435,13 @@ RSpec.describe MarketApplication, type: :model do
         public_markets: [public_market],
         category_key: 'identite', # Same category
         subcategory_key: 'subcategory_a', # Different subcategory
-        required: true)
+        mandatory: true)
 
       same_category_attr2 = create(:market_attribute, :text_input,
         public_markets: [public_market],
         category_key: 'identite', # Same category
         subcategory_key: 'subcategory_b', # Different subcategory
-        required: true)
+        mandatory: true)
 
       # Create responses for both
       response_a = application.market_attribute_responses.build(

@@ -17,7 +17,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       key: 'test_siret',
       category_key: 'test_company_identity',
       subcategory_key: 'test_basic_information',
-      required: true)
+      mandatory: true)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
     attr
@@ -28,7 +28,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       key: 'test_criminal_conviction',
       category_key: 'test_exclusion_criteria',
       subcategory_key: 'test_criminal_convictions',
-      required: true)
+      mandatory: true)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
     attr
@@ -39,7 +39,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       key: 'test_annual_turnover',
       category_key: 'test_economic_capacity',
       subcategory_key: 'test_financial_data',
-      required: false)
+      mandatory: false)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
     attr
@@ -50,15 +50,15 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       key: 'test_team_presentation',
       category_key: 'test_technical_capacity',
       subcategory_key: 'test_workforce',
-      required: false)
+      mandatory: false)
     market_type.market_attributes << attr
     public_market.market_attributes << attr
     attr
   end
 
-  describe '#available_required_fields_by_category_and_subcategory' do
-    it 'organizes available required fields by category and subcategory' do
-      result = presenter.available_required_fields_by_category_and_subcategory
+  describe '#available_mandatory_fields_by_category_and_subcategory' do
+    it 'organizes available mandatory fields by category and subcategory' do
+      result = presenter.available_mandatory_fields_by_category_and_subcategory
       expect(result).to be_a(Hash)
       expect(result.keys).to include('test_company_identity', 'test_exclusion_criteria')
 
@@ -165,15 +165,15 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
-  describe '#required_fields_for_category' do
-    it 'returns required fields organized by subcategory' do
-      result = presenter.required_fields_for_category('test_company_identity')
+  describe '#mandatory_fields_for_category' do
+    it 'returns mandatory fields organized by subcategory' do
+      result = presenter.mandatory_fields_for_category('test_company_identity')
       expect(result).to be_a(Hash)
       expect(result['test_basic_information']).to include('test_siret')
     end
 
-    it 'returns empty hash for category with no required fields' do
-      result = presenter.required_fields_for_category('test_economic_capacity')
+    it 'returns empty hash for category with no mandatory fields' do
+      result = presenter.mandatory_fields_for_category('test_economic_capacity')
       expect(result).to be_empty
     end
   end
@@ -215,7 +215,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
         key: 'test_defense_supply_chain',
         category_key: 'test_defense_security',
         subcategory_key: 'test_defense_requirements',
-        required: true)
+        mandatory: true)
       defense_market_type.market_attributes << attr
       defense_public_market.market_attributes << attr
       attr
@@ -226,17 +226,17 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
         key: 'test_company_category',
         category_key: 'test_company_identity',
         subcategory_key: 'test_basic_information',
-        required: false)
+        mandatory: false)
       defense_market_type.market_attributes << attr
       defense_public_market.market_attributes << attr
       attr
     end
 
-    it 'includes defense fields in required and optional collections' do
-      required_keys = defense_presenter.available_required_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
+    it 'includes defense fields in mandatory and optional collections' do
+      mandatory_keys = defense_presenter.available_mandatory_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
       optional_keys = defense_presenter.available_optional_fields_by_category_and_subcategory.values.flat_map(&:values).flatten
 
-      expect(required_keys).to include('test_defense_supply_chain')
+      expect(mandatory_keys).to include('test_defense_supply_chain')
       expect(optional_keys).to include('test_company_category')
     end
   end
@@ -247,7 +247,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
         key: 'soft_deleted_field',
         category_key: 'test_company_identity',
         subcategory_key: 'test_basic_information',
-        required: true,
+        mandatory: true,
         deleted_at: 1.day.ago)
       market_type.market_attributes << attr
       public_market.market_attributes << attr
@@ -262,15 +262,15 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       expect(all_field_keys).to include('test_siret')
     end
 
-    it 'excludes soft-deleted attributes from available_required_fields' do
-      result = presenter.available_required_fields_by_category_and_subcategory
+    it 'excludes soft-deleted attributes from available_mandatory_fields' do
+      result = presenter.available_mandatory_fields_by_category_and_subcategory
       all_field_keys = result.values.flat_map(&:values).flatten
 
       expect(all_field_keys).not_to include('soft_deleted_field')
     end
 
     it 'excludes soft-deleted attributes from available_optional_fields' do
-      soft_deleted_attribute.update!(required: false)
+      soft_deleted_attribute.update!(mandatory: false)
 
       result = presenter.available_optional_fields_by_category_and_subcategory
       all_field_keys = result.values.flat_map(&:values).flatten

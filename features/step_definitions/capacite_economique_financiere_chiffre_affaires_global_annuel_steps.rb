@@ -17,7 +17,7 @@ Given('a public market with capacite_economique_financiere_chiffre_affaires_glob
     attr.input_type = 'capacite_economique_financiere_chiffre_affaires_global_annuel'
     attr.category_key = 'capacite_economique_financiere'
     attr.subcategory_key = 'chiffre_affaires'
-    attr.required = true
+    attr.mandatory = true
     attr.api_name = 'dgfip_chiffres_affaires'
     attr.api_key = 'chiffres_affaires_data'
   end
@@ -37,7 +37,7 @@ Given('a market attribute exists for chiffre affaires global annuel') do
     attr.input_type = 'capacite_economique_financiere_chiffre_affaires_global_annuel'
     attr.category_key = 'capacite_economique_financiere'
     attr.subcategory_key = 'chiffre_affaires'
-    attr.required = true
+    attr.mandatory = true
     attr.api_name = 'dgfip_chiffres_affaires'
     attr.api_key = 'chiffres_affaires_data'
   end

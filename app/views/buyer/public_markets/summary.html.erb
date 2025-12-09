@@ -86,8 +86,7 @@
                     <p class="fr-mb-0 fr-text--sm"><%= t('buyer.public_markets.generic_step.steps.motifs_exclusion.box_content') %></p>
                   </div>
 
-                  <%# Optional fields section - filter out required/mandatory fields %>
-                  <% optional_subcategories = subcategories.transform_values { |fields| fields.select { |key| !@presenter.field_by_key(key)&.required } }.reject { |_, fields| fields.empty? } %>
+                  <% optional_subcategories = subcategories.transform_values { |fields| fields.select { |key| !@presenter.field_by_key(key)&.mandatory } }.reject { |_, fields| fields.empty? } %>
                   <% if optional_subcategories.any? %>
                     <h4 class="fr-h6 fr-mb-2w fr-mt-3w"><%= t('buyer.public_markets.generic_step.steps.motifs_exclusion.optional_fields_title') %></h4>
                     <% optional_subcategories.each_with_index do |(subcategory, fields), subcat_index| %>

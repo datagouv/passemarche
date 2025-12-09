@@ -83,14 +83,13 @@ RSpec.describe MarketAttributeFilteringService do
       let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
 
       before do
-        supplies_only_attribute.update!(required: true, category_key: 'test_b', subcategory_key: 'test_b')
-        shared_attribute.update!(required: false, category_key: 'test_a', subcategory_key: 'test_a')
+        supplies_only_attribute.update!(mandatory: true, category_key: 'test_b', subcategory_key: 'test_b')
+        shared_attribute.update!(mandatory: false, category_key: 'test_a', subcategory_key: 'test_a')
       end
 
       it 'returns attributes in correct order' do
         result = described_class.call(public_market)
 
-        # Filter to just our test attributes - shared_field comes first because required=false, category=a
         test_attributes = result.select { |attr| %w[supplies_field shared_field].include?(attr.key) }
         expect(test_attributes.map(&:key)).to eq(%w[shared_field supplies_field])
       end
@@ -113,7 +112,7 @@ RSpec.describe MarketAttributeFilteringService do
         result = described_class.call(public_market)
 
         expect(result).to be_a(ActiveRecord::Relation)
-        expect(result.required).to be_a(ActiveRecord::Relation)
+        expect(result.mandatory).to be_a(ActiveRecord::Relation)
       end
     end
   end

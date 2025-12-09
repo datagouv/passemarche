@@ -37,22 +37,22 @@ class PublicMarketPresenter
       .uniq
   end
 
-  def required_fields_for_category(category_key)
-    attrs = available_attributes_array.select { |a| a.required && a.category_key == category_key.to_s }
+  def mandatory_fields_for_category(category_key)
+    attrs = available_attributes_array.select { |a| a.mandatory && a.category_key == category_key.to_s }
     organize_attrs_by_subcategory(attrs)
   end
 
   def optional_fields_for_category(category_key)
-    attrs = available_attributes_array.select { |a| !a.required && a.category_key == category_key.to_s }
+    attrs = available_attributes_array.select { |a| !a.mandatory && a.category_key == category_key.to_s }
     organize_attrs_by_subcategory(attrs)
   end
 
   def optional_fields_for_category?(category_key)
-    available_attributes_array.any? { |a| !a.required && a.category_key == category_key.to_s }
+    available_attributes_array.any? { |a| !a.mandatory && a.category_key == category_key.to_s }
   end
 
-  def available_required_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(available_required_market_attributes)
+  def available_mandatory_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(available_mandatory_market_attributes)
   end
 
   def available_optional_fields_by_category_and_subcategory
@@ -63,12 +63,12 @@ class PublicMarketPresenter
     organize_fields_by_category_and_subcategory(all_market_attributes)
   end
 
-  def required_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(all_market_attributes.required)
+  def mandatory_fields_by_category_and_subcategory
+    organize_fields_by_category_and_subcategory(all_market_attributes.mandatory)
   end
 
   def optional_fields_by_category_and_subcategory
-    organize_fields_by_category_and_subcategory(all_market_attributes.additional)
+    organize_fields_by_category_and_subcategory(all_market_attributes.optional)
   end
 
   # Returns selected market attributes organized by category and subcategory
@@ -96,14 +96,14 @@ class PublicMarketPresenter
     MarketAttribute.find_by(key: key.to_s)
   end
 
-  def available_required_market_attributes
-    available_attributes.required
+  def available_mandatory_market_attributes
+    available_attributes.mandatory
   end
 
   private
 
   def available_optional_market_attributes
-    available_attributes.additional
+    available_attributes.optional
   end
 
   def all_market_attributes

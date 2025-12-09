@@ -38,7 +38,7 @@ def create_siret_attribute
     attr.subcategory_key = 'test_identite_entreprise_identification'
     attr.api_name = 'Insee'
     attr.api_key = 'siret'
-    attr.required = true
+    attr.mandatory = true
   end
 end
 
@@ -47,7 +47,7 @@ def create_company_name_attribute
     attr.input_type = :text_input
     attr.category_key = 'test_identite_entreprise'
     attr.subcategory_key = 'test_identite_entreprise_identification'
-    attr.required = true
+    attr.mandatory = true
   end
 end
 
@@ -56,7 +56,7 @@ def create_criminal_conviction_attribute
     attr.input_type = :checkbox
     attr.category_key = 'test_motifs_exclusion_sociaux'
     attr.subcategory_key = 'test_motifs_exclusion_sociaux_declarations'
-    attr.required = true
+    attr.mandatory = true
   end
 end
 
@@ -65,7 +65,7 @@ def create_annual_turnover_attribute
     attr.input_type = :file_upload
     attr.category_key = 'test_capacite_economique_financiere'
     attr.subcategory_key = 'test_capacite_economique_financiere_bilans'
-    attr.required = false
+    attr.mandatory = false
   end
 end
 
@@ -74,7 +74,7 @@ def create_prior_contract_breach_attribute
     attr.input_type = :checkbox
     attr.category_key = 'test_motifs_exclusion_appreciation_acheteur'
     attr.subcategory_key = 'test_motifs_exclusion_appreciation_acheteur_discretionnaire'
-    attr.required = false
+    attr.mandatory = false
   end
 end
 
@@ -83,7 +83,7 @@ def create_undue_influence_attribute
     attr.input_type = :checkbox
     attr.category_key = 'test_motifs_exclusion_appreciation_acheteur'
     attr.subcategory_key = 'test_motifs_exclusion_appreciation_acheteur_discretionnaire'
-    attr.required = false
+    attr.mandatory = false
   end
 end
 
@@ -92,23 +92,23 @@ def create_defense_supply_chain_attribute
     attr.input_type = :file_upload
     attr.category_key = 'test_capacites_techniques_professionnelles'
     attr.subcategory_key = 'test_capacites_techniques_professionnelles_certificats'
-    attr.required = true
+    attr.mandatory = true
   end
 end
 
 def associate_attributes_with_market_types(market_types, attributes)
-  required_attrs = build_required_attributes(attributes)
+  mandatory_attrs = build_mandatory_attributes(attributes)
   optional_attrs = build_optional_attributes(attributes)
 
-  associate_attributes(market_types[:supplies], required_attrs + optional_attrs)
-  associate_attributes(market_types[:defense], required_attrs + [attributes[:defense_supply_chain]])
+  associate_attributes(market_types[:supplies], mandatory_attrs + optional_attrs)
+  associate_attributes(market_types[:defense], mandatory_attrs + [attributes[:defense_supply_chain]])
 
   [market_types[:services], market_types[:works]].each do |market_type|
-    associate_attributes(market_type, required_attrs + optional_attrs)
+    associate_attributes(market_type, mandatory_attrs + optional_attrs)
   end
 end
 
-def build_required_attributes(attributes)
+def build_mandatory_attributes(attributes)
   [attributes[:siret], attributes[:company_name], attributes[:criminal_conviction]]
 end
 
