@@ -77,8 +77,7 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
             expect(html_content).to include('Attestation du candidat')
-            expect(html_content).to include('Engagement sur l&#39;honneur')
-            expect(html_content).to include('Le candidat a attesté sur l&#39;honneur')
+            expect(html_content).to include('J’atteste sur l’honneur que mon entreprise n’est concernée par aucun motif d’exclusion.')
             'fake pdf content'
           end
 
@@ -91,7 +90,7 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
           allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
             expect(html_content).to include('Attestation du candidat')
-            expect(html_content).to include('Le candidat n&#39;a pas confirmé')
+            expect(html_content).to include('L&#39;attestation sur l&#39;honneur est manquante.')
             'fake pdf content'
           end
 
