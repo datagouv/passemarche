@@ -27,8 +27,8 @@
               </button>
             </div>
             <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
-              <%= link_to "Retourner sur #{@public_market.editor.name}", 
-                          @public_market.editor.redirect_url&.gsub('{market_identifier}', @public_market.identifier) || root_path,
+              <%= link_to "Retourner sur #{@public_market.editor.name}",
+                          @public_market.editor.build_redirect_url(market: @public_market) || root_path,
                           class: 'fr-btn' %>
             </div>
           </div>

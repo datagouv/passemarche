@@ -52,6 +52,17 @@ class Editor < ApplicationRecord
     OpenSSL::HMAC.hexdigest('SHA256', webhook_secret, payload)
   end
 
+  def build_redirect_url(market:, application: nil)
+    return nil if redirect_url.blank?
+
+    uri = URI.parse(redirect_url)
+    params = Rack::Utils.parse_nested_query(uri.query)
+    params['market_identifier'] = market.identifier
+    params['application_identifier'] = application.identifier if application
+    uri.query = Rack::Utils.build_nested_query(params)
+    uri.to_s
+  end
+
   private
 
   def validate_webhook_urls
