@@ -45,7 +45,7 @@ class MarketApplicationPresenter
 
     category_subcategories = all_market_attributes
       .where(category_key: category_key.to_s)
-      .order(:id)
+      .order(:position)
       .pluck(:subcategory_key)
       .compact
       .uniq
@@ -62,7 +62,7 @@ class MarketApplicationPresenter
 
     all_market_attributes
       .where(category_key:, subcategory_key:)
-      .order(:id)
+      .order(:position)
   end
 
   def market_attribute_response_for(market_attribute)
@@ -85,7 +85,7 @@ class MarketApplicationPresenter
 
     all_market_attributes
       .where(category_key:)
-      .order(:id)
+      .order(:position)
       .map { |attr| market_attribute_response_for(attr) }
   end
 
@@ -107,12 +107,12 @@ class MarketApplicationPresenter
   private
 
   def all_market_attributes
-    @market_application.public_market.market_attributes.order(:id)
+    @market_application.public_market.market_attributes.order(:position)
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)
     category_keys = @market_application.public_market.market_attributes
-      .order(:id)
+      .order(:position)
       .pluck(:category_key)
       .compact
       .uniq
@@ -131,7 +131,7 @@ class MarketApplicationPresenter
 
   def category_keys
     @category_keys ||= all_market_attributes
-      .order(:id)
+      .order(:position)
       .pluck(:category_key)
       .compact
       .uniq
@@ -139,7 +139,7 @@ class MarketApplicationPresenter
 
   def subcategory_keys
     @subcategory_keys ||= all_market_attributes
-      .order(:id)
+      .order(:position)
       .pluck(:subcategory_key)
       .compact
       .uniq

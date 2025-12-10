@@ -17,6 +17,7 @@ class CsvRowData
   attribute :travaux, :string
   attribute :défense, :string
   attribute :line_number, :integer
+  attribute :position, :integer
 
   attribute :obligatoire, :string
 
@@ -74,12 +75,12 @@ class CsvRowData
 
   validate :import_requirements, if: :should_import?
 
-  def initialize(raw_data = {}, line_number = nil)
+  def initialize(raw_data = {}, line_number: nil, position: nil)
     @raw_data = raw_data if raw_data.is_a?(Hash)
 
     if raw_data.is_a?(Hash)
       known_attributes = extract_known_attributes(raw_data)
-      super(known_attributes.merge(line_number:))
+      super(known_attributes.merge(line_number:, position:))
     else
       super(raw_data)
     end
@@ -114,6 +115,7 @@ class CsvRowData
       input_type: mapped_input_type,
       api_name: api_name.presence,
       api_key: api_key.presence,
+      position:,
       deleted_at: nil
     }
   end
