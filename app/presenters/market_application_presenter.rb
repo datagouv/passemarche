@@ -16,6 +16,16 @@ class MarketApplicationPresenter
     organize_fields_by_category_and_subcategory(all_market_attributes)
   end
 
+  def category_keys_with_attestation_motifs_exclusion
+    category_keys = @market_application.public_market.market_attributes
+      .order(:id)
+      .pluck(:category_key)
+      .compact
+      .uniq
+
+    inject_attestation_motifs_exclusion_step(category_keys)
+  end
+
   def find_parent_category(subcategory_key)
     return nil if subcategory_key.blank?
     return MARKET_INFO_PARENT_CATEGORY if subcategory_key == 'market_information'

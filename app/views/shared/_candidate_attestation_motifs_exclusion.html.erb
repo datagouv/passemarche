@@ -1,35 +1,26 @@
-<div class="fr-card fr-mb-1w fr-card--no-border">
-  <% confirmed = market_application.attests_no_exclusion_motifs %>
+<% confirmed = market_application.attests_no_exclusion_motifs %>
 
-  <%= render 'shared/card_sub_header',
-             title: t('buyer.attestations.motifs_exclusion.candidate_attestation_title'),
-             background: 'fr-background-alt--blue-ecume',
-             color: 'fr-text-title--blue-france',
-             additional_classes: 'fr-text--md' do %>
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <%# Notice %>
+    <%= render 'shared/notice',
+               notice_text: t(
+                 confirmed ?
+                   'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed_notice' :
+                   'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed_notice'
+               ),
+               color: (confirmed ? nil : 'error') %>
 
-    <div class="field-layout-container">
-      <div class="field-layout-content">
-        <%# Notice %>
-        <%= render 'shared/notice',
-                   notice_text: t(
-                     confirmed ?
-                       'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed_notice' :
-                       'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed_notice'
-                   ),
-                   color: (confirmed ? nil : 'error') %>
-
-        <%# Icon + Message %>
-        <span class="fr-text--md fr-text--mention-grey">
-          <%= confirmed ?
-                render(CheckIconComponent.new(context: context)) :
-                render(AlertIconComponent.new(context: context)) %>
-          <%= t(
-                confirmed ?
-                  'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed' :
-                  'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed'
-              ) %>
-        </span>
-      </div>
-    </div>
-  <% end %>
+    <%# Icon + Message %>
+    <span class="fr-text--md fr-text--mention-grey">
+      <%= confirmed ?
+            render(CheckIconComponent.new(context: context)) :
+            render(AlertIconComponent.new(context: context)) %>
+      <%= t(
+            confirmed ?
+              'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed' :
+              'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed'
+          ) %>
+    </span>
+  </div>
 </div>
