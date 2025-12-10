@@ -20,15 +20,14 @@
             <div class="fr-card__body">
               <h2 class="fr-card__title">Informations</h2>
               <div class="fr-card__content">
-                <p><strong>Client ID :</strong> <%= @editor.client_id %></p>
-                <p><strong>Autorisé :</strong> 
+                <p><strong>Autorisé :</strong>
                   <% if @editor.authorized %>
                     <span class="fr-badge fr-badge--success">Oui</span>
                   <% else %>
                     <span class="fr-badge fr-badge--error">Non</span>
                   <% end %>
                 </p>
-                <p><strong>Actif :</strong> 
+                <p><strong>Actif :</strong>
                   <% if @editor.active %>
                     <span class="fr-badge fr-badge--success">Oui</span>
                   <% else %>
@@ -36,6 +35,36 @@
                   <% end %>
                 </p>
                 <p><strong>Créé le :</strong> <%= l(@editor.created_at, format: :long) %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fr-col-12 fr-col-md-6">
+          <div class="fr-card">
+            <div class="fr-card__body">
+              <h2 class="fr-card__title">Identifiants OAuth</h2>
+              <div class="fr-card__content">
+                <p><strong>Client ID :</strong> <%= @editor.client_id %></p>
+                <p><strong>Client Secret :</strong></p>
+                <div data-controller="webhook-secret-toggle">
+                  <div class="fr-input-group" style="max-width: 500px;">
+                    <input type="text"
+                           class="fr-input fr-text--sm"
+                           value="<%= '•' * 64 %>"
+                           readonly
+                           data-webhook-secret-toggle-target="field"
+                           data-webhook-secret-toggle-masked-value="<%= '•' * 64 %>"
+                           data-webhook-secret-toggle-real-value="<%= @editor.client_secret %>">
+                    <button type="button"
+                            class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                            data-action="click->webhook-secret-toggle#toggle"
+                            data-webhook-secret-toggle-target="button"
+                            title="Afficher/Masquer le secret">
+                      <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

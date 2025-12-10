@@ -6,12 +6,16 @@ class EditorSyncService < ApplicationService
   end
 
   def call
-    editor.doorkeeper_application || create_doorkeeper_application!
+    find_doorkeeper_application || create_doorkeeper_application!
   end
 
   private
 
   attr_reader :editor
+
+  def find_doorkeeper_application
+    CustomDoorkeeperApplication.find_by(uid: editor.client_id)
+  end
 
   def create_doorkeeper_application!
     CustomDoorkeeperApplication.create!(

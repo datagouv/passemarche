@@ -5,6 +5,10 @@ class Editor < ApplicationRecord
 
   encrypts :webhook_secret
 
+  before_validation :generate_client_id, on: :create
+  before_validation :generate_client_secret, on: :create
+  after_create :sync_to_doorkeeper!
+
   validates :name, presence: true, uniqueness: true
   validates :client_id, presence: true, uniqueness: true
   validates :client_secret, presence: true
@@ -64,6 +68,18 @@ class Editor < ApplicationRecord
   end
 
   private
+
+  def generate_client_id
+    return if client_id.present?
+
+    self.client_id = SecureRandom.hex(16)
+  end
+
+  def generate_client_secret
+    return if client_secret.present?
+
+    self.client_secret = SecureRandom.hex(32)
+  end
 
   def validate_webhook_urls
     validate_url_format(:completion_webhook_url) if completion_webhook_url.present?
