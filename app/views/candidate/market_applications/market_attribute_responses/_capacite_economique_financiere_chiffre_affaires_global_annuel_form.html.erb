@@ -75,7 +75,7 @@
                     <%# --- TURNOVER --- %>
                     <td>
                       <% if turnover_from_api %>
-                        <%= render "candidate/market_applications/market_attribute_responses/source_badge", market_attribute_response: market_attribute_response, inline: true %>
+                        <%= render "candidate/market_applications/market_attribute_responses/source_badge", market_attribute_response: market_attribute_response %>
                         <%= response_form.hidden_field "#{year_key}_turnover" %>
                       <% else %>
                         <div class="fr-input-group">

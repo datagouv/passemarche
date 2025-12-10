@@ -5,16 +5,15 @@
   show_value = !market_attribute_response.auto? || context == :buyer
 %>
 
-<div class="certificate-row">
-  <div class="certificate-col certificate-col--left">
+<div class="field-layout-container">
+  <div class="field-layout-content">
     <strong>
       <%= t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
             default: market_attribute_response.market_attribute.key.humanize) %>
-      <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
     </strong>
-  </div>
-  <div class="certificate-col certificate-col--right">
+
     <% if show_value %>
+      <br>
       <span class="fr-text--sm fr-text--mention-grey">
         <% if text_value.present? %>
           <%= link_to text_value, text_value, target: "_blank", rel: "noopener" %>
@@ -37,6 +36,7 @@
         <% end %>
       </span>
     <% elsif market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata? %>
+      <br>
       <div class="fr-text--sm fr-text--mention-grey">
         <p class="fr-mb-1v">
           <em>Les informations suivantes ont été récupérées automatiquement depuis l'API OPQIBI :</em>
@@ -55,6 +55,9 @@
         <% end %>
       </div>
     <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response %>
   </div>
 </div>
 <hr class="fr-hr">

@@ -2,7 +2,6 @@
   <div class="field-layout-content">
     <strong>
       <%= component.field_label %>
-      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
     </strong>
 
     <% if component.show_value? %>
@@ -11,5 +10,8 @@
         <%= component.display_value %>
       </span>
     <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
   </div>
 </div>

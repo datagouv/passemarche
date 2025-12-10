@@ -218,9 +218,9 @@ h6 {
   margin: 16px 0;
 }
 
-/* Field Layout - From utilities.css */
+/* Field Layout - Table-based for PDF compatibility */
 .field-layout-container {
-  display: block;
+  display: table;
   width: 100%;
   margin-bottom: 16px;
   page-break-inside: avoid;
@@ -231,12 +231,17 @@ h6 {
 }
 
 .field-layout-content {
+  display: table-cell;
   width: 100%;
+  vertical-align: top;
 }
 
 .field-layout-badge {
-  display: inline-block;
-  margin-top: 8px;
+  display: table-cell;
+  vertical-align: top;
+  white-space: nowrap;
+  padding-left: 16px;
+  text-align: right;
 }
 
 /* Links */
