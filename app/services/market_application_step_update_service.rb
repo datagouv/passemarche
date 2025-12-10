@@ -28,14 +28,7 @@ class MarketApplicationStepUpdateService < ApplicationService
   attr_reader :market_application, :step, :params
 
   def handle_company_identification
-    market_application.assign_attributes(params)
-
-    return build_result(false) unless market_application.save(context: step)
-
-    clear_all_api_data
-    reset_api_statuses_to_pending
-    enqueue_api_data_fetch
-
+    enqueue_api_data_fetch_if_needed
     build_result(true)
   end
 
@@ -43,21 +36,10 @@ class MarketApplicationStepUpdateService < ApplicationService
     build_result(true)
   end
 
-  def clear_all_api_data
-    # Clear all API-related responses (both auto and manual_after_api_failure)
-    # to ensure a fresh start when SIRET is resubmitted
-    market_application.market_attribute_responses
-      .where(source: %i[auto manual_after_api_failure])
-      .find_each do |response|
-        response.documents.purge if response.respond_to?(:documents)
-        response.destroy
-      end
+  def enqueue_api_data_fetch_if_needed
+    return if market_application.api_fetch_status.present?
 
-    market_application.api_fetch_status = {}
-    market_application.save!(validate: false)
-  end
-
-  def enqueue_api_data_fetch
+    reset_api_statuses_to_pending
     FetchApiDataCoordinatorJob.perform_later(market_application.id)
   end
 
@@ -68,21 +50,6 @@ class MarketApplicationStepUpdateService < ApplicationService
       next unless api_names.include?(job_class.api_name)
 
       market_application.update_api_status(job_class.api_name, status: 'pending', fields_filled: 0)
-    end
-  end
-
-  def mark_api_attributes_as_manual_after_failure(api_name)
-    api_attributes = market_application.public_market.market_attributes
-      .where(api_name:)
-
-    api_attributes.each do |attribute|
-      response = market_application.market_attribute_responses
-        .find_or_initialize_by(market_attribute: attribute)
-
-      next if response.manual_after_api_failure?
-
-      response.source = :manual_after_api_failure
-      response.save! if response.persisted? || response.changed?
     end
   end
 

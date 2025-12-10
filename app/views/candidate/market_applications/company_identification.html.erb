@@ -11,27 +11,22 @@
           </p>
         </div>
       </div>
-        
+
       <div class="fr-grid-row">
-        <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false, controller: "input-validation" }, class: "fr-mb-4w" do |form| %>
+        <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
           <div class="fr-mb-4w">
-            <div class="fr-input-group<%= ' fr-input-group--error' if @market_application.errors[:siret].any? %>">
-              <%= form.label :siret, "Veuillez saisir votre numéro de SIRET", class: "fr-label" %>
-              <span class="fr-hint-text">Cela nous permets de récupérer des informations et documents automatiquement</span>
-              <%= form.text_field :siret, 
-                    class: "fr-input#{ ' fr-input--error' if @market_application.errors[:siret].any? }",
-                    placeholder: "12345678901234",
-                    data: { "input-validation-target": "input", action: "input->input-validation#validateInput" } %>
-              <% if @market_application.errors[:siret].any? %>
-                <p class="fr-error-text">
-                  <%= @market_application.errors[:siret].first %>
-                </p>
-              <% end %>
+            <div class="fr-input-group fr-input-group--disabled">
+              <%= form.label :siret, "Votre numéro de SIRET", class: "fr-label" %>
+              <span class="fr-hint-text">Ce numéro a été fourni par l'éditeur et ne peut pas être modifié</span>
+              <%= form.text_field :siret,
+                    class: "fr-input",
+                    disabled: true,
+                    readonly: true %>
             </div>
           </div>
 
           <div class="fr-mb-4w">
-            <%= form.submit "Continuer", class: "fr-btn fr-btn--lg", data: { "input-validation-target": "submitButton" } %>
+            <%= form.submit "Continuer", class: "fr-btn fr-btn--lg" %>
           </div>
         <% end %>
       </div>

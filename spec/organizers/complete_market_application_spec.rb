@@ -7,7 +7,7 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
     allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))
   end
-  let(:market_application) { create(:market_application, siret: nil) }
+  let(:market_application) { create(:market_application) }
 
   describe '.call' do
     subject { described_class.call(market_application:) }
@@ -74,7 +74,7 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
     end
 
     context 'when application is already completed' do
-      let(:market_application) { create(:market_application, siret: nil, completed_at: 1.hour.ago) }
+      let(:market_application) { create(:market_application, completed_at: 1.hour.ago) }
 
       it 'fails' do
         expect(subject).to be_failure

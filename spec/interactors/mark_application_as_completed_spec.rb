@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe MarkApplicationAsCompleted, type: :interactor do
-  let(:market_application) { create(:market_application, siret: nil) }
+  let(:market_application) { create(:market_application) }
 
   describe '.call' do
     subject { described_class.call(market_application:) }
@@ -26,7 +26,7 @@ RSpec.describe MarkApplicationAsCompleted, type: :interactor do
     end
 
     context 'when market application is already completed' do
-      let(:market_application) { create(:market_application, siret: nil, completed_at: 1.hour.ago) }
+      let(:market_application) { create(:market_application, completed_at: 1.hour.ago) }
 
       it 'fails' do
         expect(subject).to be_failure

@@ -41,15 +41,5 @@ RSpec.describe FetchUrssafDataJob, type: :job do
         expect { described_class.perform_now(market_application.id) }.not_to raise_error
       end
     end
-
-    context 'when market application has no SIRET' do
-      let(:market_application) { create(:market_application, public_market:, siret: nil) }
-
-      it 'exits early without calling the API' do
-        expect(Urssaf).not_to receive(:call)
-
-        described_class.perform_now(market_application.id)
-      end
-    end
   end
 end

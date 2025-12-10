@@ -90,7 +90,7 @@ end
 Given('a candidate starts a comprehensive application') do
   @market_application = create(:market_application,
     public_market: @public_market,
-    siret: nil)
+    siret: '73282932000074')
 
   # Configure API stubs for comprehensive tests
   stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v3/insee/sirene/etablissements/73282932000074.*})
@@ -171,11 +171,16 @@ When('I visit the {string} step') do |step_name|
 end
 
 Then('I should see the SIRET input field') do
-  expect(page).to have_field('market_application_siret')
+  expect(page).to have_field('market_application_siret', disabled: true)
 end
 
-When('I fill in the SIRET with {string}') do |siret|
-  fill_in 'market_application_siret', with: siret
+Then('I should see the locked SIRET field') do
+  expect(page).to have_field('market_application_siret', disabled: true)
+end
+
+When('I fill in the SIRET with {string}') do |_siret|
+  # SIRET is now locked and cannot be edited - this step is a no-op
+  # The SIRET is set at application creation time
 end
 
 Then('I should be on the {string} step') do |expected_step|
@@ -494,7 +499,7 @@ end
 
 Given('I have filled all required fields across all steps') do
   visit "/candidate/market_applications/#{@market_application.identifier}/company_identification"
-  fill_in 'market_application_siret', with: '73282932000074'
+  # SIRET is now locked - just click continue
   click_button 'Continuer'
 
   # Complete APIs before proceeding

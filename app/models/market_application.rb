@@ -17,7 +17,7 @@ class MarketApplication < ApplicationRecord
   attr_accessor :current_validation_step
 
   validates :identifier, presence: true, uniqueness: true
-  validates :siret, format: { with: /\A\d{14}\z/ }, allow_blank: true
+  validates :siret, presence: true, format: { with: /\A\d{14}\z/ }
   validates :attests_no_exclusion_motifs, inclusion: { in: [true, false] }, allow_nil: false
   validate :market_must_be_completed
   validate :siret_must_be_valid

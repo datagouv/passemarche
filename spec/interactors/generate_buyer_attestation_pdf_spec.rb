@@ -6,7 +6,7 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
   end
-  let(:market_application) { create(:market_application, siret: nil) }
+  let(:market_application) { create(:market_application) }
 
   describe '.call' do
     subject { described_class.call(market_application:) }
@@ -62,7 +62,7 @@ RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
       end
 
       context 'with motifs_exclusion category' do
-        let(:market_application) { create(:market_application, siret: nil, attests_no_exclusion_motifs: true) }
+        let(:market_application) { create(:market_application, attests_no_exclusion_motifs: true) }
 
         before do
           create(:market_attribute,
