@@ -7,9 +7,9 @@
   return if renamed_docs.empty?
 %>
 
-<div class="fr-card fr-mb-2w category-card">
+<div class="fr-card fr-mb-2w category-card fr-mt-2w">
   <%= render 'shared/card_header', title: t('shared.renamed_documents.title'), background: "fr-background-alt--grey" %>
-  <div class="fr-card__body fr-mt-1w fr-mb-1w">
+  <div class="fr-card__body fr-mt-1w fr-mb-1w fr-mt-3w">
     <p class="fr-text--md fr-text--mention-grey fr-mb-2w">
       <%= t('shared.renamed_documents.description') %>
     </p>
@@ -21,7 +21,7 @@
           <span class="document-icon"><%= render IconComponent.new(name: :document) %></span>
           <span class="renamed-document-text fr-ml-1w"><%= doc[:original] %></span>
         </div>
-        <div class="fr-flex fr-items-center">
+        <div class="fr-flex fr-items-center fr-mb-2w">
           <span class="rename-arrow"><%= render IconComponent.new(name: :arrow_right_circle) %></span>
           <span class="renamed-document-text fr-ml-1w"><%= doc[:system] %></span>
         </div>
