@@ -83,11 +83,11 @@ RSpec.describe MarketAttributeFilteringService do
       let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
 
       before do
-        supplies_only_attribute.update!(mandatory: true, category_key: 'test_b', subcategory_key: 'test_b')
-        shared_attribute.update!(mandatory: false, category_key: 'test_a', subcategory_key: 'test_a')
+        shared_attribute.update!(position: 1)
+        supplies_only_attribute.update!(position: 2)
       end
 
-      it 'returns attributes in correct order' do
+      it 'returns attributes in correct order based on position' do
         result = described_class.call(public_market)
 
         test_attributes = result.select { |attr| %w[supplies_field shared_field].include?(attr.key) }

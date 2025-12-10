@@ -56,7 +56,7 @@ class FieldConfigurationImport::ParseCsvFile < ApplicationInteractor
 
     sanitize_keys!(raw_data)
 
-    row = CsvRowData.new(raw_data, index + DATA_START_INDEX + 1)
+    row = CsvRowData.new(raw_data, line_number: index + DATA_START_INDEX + 1, position: index + 1)
 
     collect_validation_errors(row) unless row.valid?
 

@@ -38,9 +38,7 @@ class MarketAttribute < ApplicationRecord
   scope :from_api, -> { where.not(api_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
 
-  scope :ordered, lambda {
-    order(:mandatory, :category_key, :subcategory_key, :key)
-  }
+  scope :ordered, -> { order(:position) }
 
   # Check if this attribute's data comes from an API
   def from_api?
