@@ -185,4 +185,74 @@ RSpec.describe MarketAttributeResponse::InlineUrlInput, type: :model do
       end
     end
   end
+
+  describe 'France Competences metadata accessors' do
+    let(:market_attribute) do
+      create(:market_attribute, input_type: 'inline_url_input', api_name: 'carif_oref', api_key: 'france_competence')
+    end
+
+    describe '#habilitations' do
+      it 'returns habilitations array from value hash' do
+        inline_url_input.value = {
+          'habilitations' => [
+            { 'code' => 'RNCP10013', 'actif' => true },
+            { 'code' => 'RS12345', 'actif' => false }
+          ]
+        }
+        expect(inline_url_input.habilitations).to eq([
+          { 'code' => 'RNCP10013', 'actif' => true },
+          { 'code' => 'RS12345', 'actif' => false }
+        ])
+      end
+
+      it 'returns empty array when value is nil' do
+        inline_url_input.value = nil
+        expect(inline_url_input.habilitations).to eq([])
+      end
+
+      it 'returns empty array when habilitations key is missing' do
+        inline_url_input.value = { 'text' => 'https://example.com' }
+        expect(inline_url_input.habilitations).to eq([])
+      end
+    end
+
+    describe '#france_competence_metadata?' do
+      it 'returns true when carif_oref/france_competence with habilitations' do
+        inline_url_input.value = {
+          'habilitations' => [{ 'code' => 'RNCP10013', 'actif' => true }]
+        }
+        expect(inline_url_input.france_competence_metadata?).to be true
+      end
+
+      it 'returns false when carif_oref/france_competence without habilitations' do
+        inline_url_input.value = { 'text' => 'https://example.com' }
+        expect(inline_url_input.france_competence_metadata?).to be false
+      end
+
+      it 'returns false when carif_oref/france_competence with empty habilitations' do
+        inline_url_input.value = { 'habilitations' => [] }
+        expect(inline_url_input.france_competence_metadata?).to be false
+      end
+
+      it 'returns false when not carif_oref api' do
+        other_attribute = create(:market_attribute, input_type: 'inline_url_input', api_name: 'other', api_key: 'france_competence')
+        other_input = MarketAttributeResponse::InlineUrlInput.new(
+          market_application:,
+          market_attribute: other_attribute
+        )
+        other_input.value = { 'habilitations' => [{ 'code' => 'RNCP10013' }] }
+        expect(other_input.france_competence_metadata?).to be false
+      end
+
+      it 'returns false when wrong api_key' do
+        qualiopi_attribute = create(:market_attribute, input_type: 'inline_url_input', api_name: 'carif_oref', api_key: 'qualiopi')
+        qualiopi_input = MarketAttributeResponse::InlineUrlInput.new(
+          market_application:,
+          market_attribute: qualiopi_attribute
+        )
+        qualiopi_input.value = { 'habilitations' => [{ 'code' => 'RNCP10013' }] }
+        expect(qualiopi_input.france_competence_metadata?).to be false
+      end
+    end
+  end
 end

@@ -3,6 +3,8 @@
   context ||= :web
   # Show value if: not auto-filled, OR context is buyer (buyer sees all data)
   show_value = !market_attribute_response.auto? || context == :buyer
+  has_opqibi_metadata = market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata?
+  has_france_competence_metadata = market_attribute_response.respond_to?(:france_competence_metadata?) && market_attribute_response.france_competence_metadata?
 %>
 
 <div class="field-layout-container">
@@ -18,7 +20,7 @@
         <% if text_value.present? %>
           <%= link_to text_value, text_value, target: "_blank", rel: "noopener" %>
 
-          <% if context == :buyer && market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata? %>
+          <% if context == :buyer && has_opqibi_metadata %>
             <div class="fr-text--xs fr-text--mention-grey fr-mt-1v">
               <% if market_attribute_response.formatted_date_delivrance.present? %>
                 <strong>Date de délivrance :</strong>
@@ -35,12 +37,9 @@
           Certificat non renseigné
         <% end %>
       </span>
-    <% elsif market_attribute_response.respond_to?(:opqibi_metadata?) && market_attribute_response.opqibi_metadata? %>
+    <% elsif has_opqibi_metadata %>
       <br>
       <div class="fr-text--sm fr-text--mention-grey">
-        <p class="fr-mb-1v">
-          <em>Les informations suivantes ont été récupérées automatiquement depuis l'API OPQIBI :</em>
-        </p>
         <% if market_attribute_response.formatted_date_delivrance.present? %>
           <p class="fr-mb-1v">
             <strong>Date de délivrance :</strong>
@@ -52,6 +51,43 @@
             <strong>Durée de validité :</strong>
             <%= market_attribute_response.duree_validite_certificat %>
           </p>
+        <% end %>
+      </div>
+    <% elsif has_france_competence_metadata %>
+      <br>
+      <div class="fr-text--sm fr-text--mention-grey">
+        <% market_attribute_response.habilitations.each_with_index do |habilitation, index| %>
+          <% if index > 0 %><hr class="fr-hr fr-my-2v"><% end %>
+          <p class="fr-mb-1v">
+            <strong><%= t('form_fields.candidate.carif_oref.france_competence.actif') %> :</strong>
+            <%= habilitation['actif'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
+          </p>
+          <% if habilitation['date_actif'].present? %>
+            <p class="fr-mb-1v">
+              <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_actif') %> :</strong>
+              <%= Date.parse(habilitation['date_actif']).strftime('%d/%m/%Y') rescue habilitation['date_actif'] %>
+            </p>
+          <% end %>
+          <% if habilitation['date_fin_enregistrement'].present? %>
+            <p class="fr-mb-1v">
+              <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_fin_enregistrement') %> :</strong>
+              <%= Date.parse(habilitation['date_fin_enregistrement']).strftime('%d/%m/%Y') rescue habilitation['date_fin_enregistrement'] %>
+            </p>
+          <% end %>
+          <p class="fr-mb-1v">
+            <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_former') %> :</strong>
+            <%= habilitation['habilitation_pour_former'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
+          </p>
+          <p class="fr-mb-1v">
+            <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_organiser_evaluation') %> :</strong>
+            <%= habilitation['habilitation_pour_organiser_l_evaluation'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
+          </p>
+          <% if habilitation['sirets_organismes_certificateurs'].present? %>
+            <p class="fr-mb-0">
+              <strong><%= t('form_fields.candidate.carif_oref.france_competence.siret_organisme_certificateur') %> :</strong>
+              <%= habilitation['sirets_organismes_certificateurs'].join(', ') %>
+            </p>
+          <% end %>
         <% end %>
       </div>
     <% end %>
