@@ -24,7 +24,7 @@ class MarketConfigurationService < ApplicationService
 
   def handle_setup_step
     handle_defense_market_type
-    snapshot_required_fields
+    snapshot_mandatory_fields
     public_market
   end
 
@@ -36,9 +36,9 @@ class MarketConfigurationService < ApplicationService
     public_market.save!
   end
 
-  def snapshot_required_fields
-    required_attributes = MarketAttributeFilteringService.call(public_market).required
-    public_market.add_market_attributes(required_attributes)
+  def snapshot_mandatory_fields
+    mandatory_attributes = MarketAttributeFilteringService.call(public_market).mandatory
+    public_market.add_market_attributes(mandatory_attributes)
   end
 
   def handle_category_step
@@ -61,7 +61,7 @@ class MarketConfigurationService < ApplicationService
 
   def available_optional_keys_for_category
     MarketAttributeFilteringService.call(public_market)
-      .additional
+      .optional
       .to_a
       .select { |attr| attr.category_key == step.to_s }
       .map(&:key)

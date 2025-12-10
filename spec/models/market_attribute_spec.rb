@@ -36,35 +36,35 @@ RSpec.describe MarketAttribute, type: :model do
   end
 
   describe 'scopes' do
-    let!(:required_attribute) { create(:market_attribute, required: true) }
-    let!(:optional_attribute) { create(:market_attribute, required: false) }
+    let!(:mandatory_attribute) { create(:market_attribute, mandatory: true) }
+    let!(:optional_attribute) { create(:market_attribute, mandatory: false) }
     let!(:api_attribute) { create(:market_attribute, api_name: 'Insee', api_key: 'siret') }
     let!(:inactive_attribute) { create(:market_attribute, :inactive) }
 
-    describe '.required' do
-      it 'returns only required attributes' do
-        expect(MarketAttribute.required).to include(required_attribute)
-        expect(MarketAttribute.required).not_to include(optional_attribute)
+    describe '.mandatory' do
+      it 'returns only mandatory attributes' do
+        expect(MarketAttribute.mandatory).to include(mandatory_attribute)
+        expect(MarketAttribute.mandatory).not_to include(optional_attribute)
       end
     end
 
-    describe '.additional' do
-      it 'returns only non-required attributes' do
-        expect(MarketAttribute.additional).to include(optional_attribute)
-        expect(MarketAttribute.additional).not_to include(required_attribute)
+    describe '.optional' do
+      it 'returns only non-mandatory attributes' do
+        expect(MarketAttribute.optional).to include(optional_attribute)
+        expect(MarketAttribute.optional).not_to include(mandatory_attribute)
       end
     end
 
     describe '.from_api' do
       it 'returns only attributes with api_name set' do
         expect(MarketAttribute.from_api).to include(api_attribute)
-        expect(MarketAttribute.from_api).not_to include(required_attribute)
+        expect(MarketAttribute.from_api).not_to include(mandatory_attribute)
       end
     end
 
     describe '.active' do
       it 'returns only active attributes' do
-        expect(MarketAttribute.active).to include(required_attribute)
+        expect(MarketAttribute.active).to include(mandatory_attribute)
         expect(MarketAttribute.active).not_to include(inactive_attribute)
       end
     end
@@ -72,10 +72,10 @@ RSpec.describe MarketAttribute, type: :model do
     describe '.ordered' do
       before { MarketAttribute.delete_all }
 
-      let!(:economic_attr) { create(:market_attribute, required: false, category_key: 'test_economic', subcategory_key: 'test_financial', key: 'turnover') }
-      let!(:company_attr) { create(:market_attribute, required: true, category_key: 'test_company', subcategory_key: 'test_basic', key: 'name') }
+      let!(:economic_attr) { create(:market_attribute, mandatory: false, category_key: 'test_economic', subcategory_key: 'test_financial', key: 'turnover') }
+      let!(:company_attr) { create(:market_attribute, mandatory: true, category_key: 'test_company', subcategory_key: 'test_basic', key: 'name') }
 
-      it 'orders by required, category_key, subcategory_key, key' do
+      it 'orders by mandatory, category_key, subcategory_key, key' do
         ordered = MarketAttribute.ordered.to_a
         expect(ordered.first).to eq(economic_attr)
         expect(ordered.second).to eq(company_attr)

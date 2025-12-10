@@ -14,13 +14,13 @@ Given('a public market with capacites_techniques_professionnelles_outillage_echa
     input_type: 'capacites_techniques_professionnelles_outillage_echantillons',
     category_key: 'capacites_techniques_professionnelles',
     subcategory_key: 'capacites_techniques_professionnelles_outillage',
-    required: true
+    mandatory: true
   )
   @echantillons_attr.save!
   @echantillons_attr.public_markets << @public_market unless @echantillons_attr.public_markets.include?(@public_market)
 
-  # Verify the attribute is required for this test
-  raise 'MarketAttribute not properly configured' unless @echantillons_attr.reload.required?
+  # Verify the attribute is mandatory for this test
+  raise 'MarketAttribute not properly configured' unless @echantillons_attr.reload.mandatory?
 end
 
 Given('a candidate starts an application for this echantillons market') do

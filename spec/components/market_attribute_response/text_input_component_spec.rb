@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe MarketAttributeResponse::TextInputComponent, type: :component do
-  let(:market_attribute) { create(:market_attribute, :text_input, :required, key: 'company_name') }
+  let(:market_attribute) { create(:market_attribute, :text_input, :mandatory, key: 'company_name') }
 
   describe '#text_value' do
     context 'with text present' do

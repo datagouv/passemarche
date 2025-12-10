@@ -9,7 +9,7 @@ Given('a public market with capacite_economique_financiere_effectifs_moyens_annu
     attr.input_type = 'capacite_economique_financiere_effectifs_moyens_annuels'
     attr.category_key = 'capacites_techniques_professionnelles'
     attr.subcategory_key = 'capacites_techniques_professionnelles_effectifs'
-    attr.required = true
+    attr.mandatory = true
   end
   @effectifs_attr.public_markets << @public_market unless @effectifs_attr.public_markets.include?(@public_market)
 end

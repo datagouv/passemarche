@@ -33,13 +33,13 @@ class MarketAttribute < ApplicationRecord
     radio_with_justification_optional: 18
   }
 
-  scope :required, -> { where(required: true) }
-  scope :additional, -> { where(required: false) }
+  scope :mandatory, -> { where(mandatory: true) }
+  scope :optional, -> { where(mandatory: false) }
   scope :from_api, -> { where.not(api_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
 
   scope :ordered, lambda {
-    order(:required, :category_key, :subcategory_key, :key)
+    order(:mandatory, :category_key, :subcategory_key, :key)
   }
 
   # Check if this attribute's data comes from an API

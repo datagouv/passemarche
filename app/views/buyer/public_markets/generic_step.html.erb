@@ -25,12 +25,12 @@
         </div>
       <% end %>
 
-      <% if @required_fields.present? %>
-        <% @required_fields.each_with_index do |(subcategory, fields), subcat_index| %>
+      <% if @mandatory_fields.present? %>
+        <% @mandatory_fields.each_with_index do |(subcategory, fields), subcat_index| %>
           <%= render 'subcategory_section',
                 subcategory: subcategory,
-                subcategories: @required_fields,
-                is_last: (subcat_index == @required_fields.size - 1) do %>
+                subcategories: @mandatory_fields,
+                is_last: (subcat_index == @mandatory_fields.size - 1) do %>
             <ul class="fr-list">
               <% fields.each do |field_key| %>
                 <% field = @presenter.field_by_key(field_key) %>

@@ -8,7 +8,7 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisons,
   let(:market_attribute) do
     create(:market_attribute,
       input_type: :realisations_livraisons,
-      required: true)
+      mandatory: true)
   end
 
   subject(:response) do
@@ -117,11 +117,11 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisons,
   end
 
   describe 'validations' do
-    context 'when field is not required' do
+    context 'when field is not mandatory' do
       let(:market_attribute) do
         create(:market_attribute,
           input_type: :realisations_livraisons,
-          required: false)
+          mandatory: false)
       end
 
       context 'with empty value' do
@@ -149,11 +149,11 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisons,
       end
     end
 
-    context 'when field is required' do
+    context 'when field is mandatory' do
       let(:market_attribute) do
         create(:market_attribute,
           input_type: :realisations_livraisons,
-          required: true)
+          mandatory: true)
       end
 
       context 'with complete valid data' do

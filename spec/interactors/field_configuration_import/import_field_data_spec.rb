@@ -26,7 +26,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             input_type: 'text_input',
             category_key: 'test_identity',
             subcategory_key: 'test_basic',
-            required: true,
+            mandatory: true,
             deleted_at: nil
           },
           applicable_market_types: ['supplies'])
@@ -39,7 +39,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
 
         market_attribute = MarketAttribute.find_by(key: 'company_name')
         expect(market_attribute.input_type).to eq('text_input')
-        expect(market_attribute.required).to be(true)
+        expect(market_attribute.mandatory).to be(true)
         expect(market_attribute.market_types).to contain_exactly(supplies_market_type)
         expect(context.statistics[:created]).to eq(1)
       end
@@ -57,7 +57,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             input_type: 'text_input',
             category_key: 'new_category',
             subcategory_key: 'test_basic',
-            required: true,
+            mandatory: true,
             deleted_at: nil
           },
           applicable_market_types: ['supplies'])
@@ -82,7 +82,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             input_type: nil,
             category_key: 'test_identity',
             subcategory_key: 'test_basic',
-            required: true,
+            mandatory: true,
             deleted_at: nil
           },
           applicable_market_types: ['supplies'])

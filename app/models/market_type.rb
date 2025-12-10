@@ -10,11 +10,11 @@ class MarketType < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
 
-  def required_attributes
-    market_attributes.required.active.ordered
+  def mandatory_attributes
+    market_attributes.mandatory.active.ordered
   end
 
-  def additional_attributes
-    market_attributes.additional.active.ordered
+  def optional_attributes
+    market_attributes.optional.active.ordered
   end
 end

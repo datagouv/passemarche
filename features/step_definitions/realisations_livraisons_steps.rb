@@ -13,7 +13,7 @@ Given('a public market with realisations_livraisons field exists') do
     attr.input_type = 'realisations_livraisons'
     attr.category_key = 'test_capacites_techniques_professionnelles'
     attr.subcategory_key = 'test_capacites_techniques_professionnelles_realisations'
-    attr.required = true
+    attr.mandatory = true
   end
   @realisations_attr.public_markets << @public_market unless @realisations_attr.public_markets.include?(@public_market)
 end

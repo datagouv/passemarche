@@ -87,7 +87,7 @@ module MarketAttributeResponse
         attr.input_type = :text_input
         attr.category_key = 'identite_entreprise'
         attr.subcategory_key = 'informations_generales'
-        attr.required = true
+        attr.mandatory = true
       end
       market_attribute.save! unless market_attribute.persisted?
 
