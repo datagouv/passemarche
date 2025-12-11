@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :market_application do
     association :public_market, :completed
-    siret { nil }
+    siret { '73282932000074' }
 
     sequence(:identifier) { |n| "VR-#{Date.current.year}-TEST#{n.to_s.rjust(8, '0')}" }
 

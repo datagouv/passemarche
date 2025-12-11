@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe GenerateDocumentsPackage, type: :interactor do
-  let(:market_application) { create(:market_application, siret: nil) }
+  let(:market_application) { create(:market_application) }
 
   before do
     allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))

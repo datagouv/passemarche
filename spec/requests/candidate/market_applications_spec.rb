@@ -130,107 +130,41 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do
     let(:next_step) { 'api_data_recovery_status' }
 
-    context 'with valid SIRET on company_identification' do
-      it 'saves the SIRET and redirects to next step' do
-        valid_siret = '73282932000074'
-
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: valid_siret } }
-
-        expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
-        )
-
-        market_application.reload
-        expect(market_application.siret).to eq(valid_siret)
-      end
-
-      it 'accepts La Poste SIRET (special case)' do
-        la_poste_siret = '35600000000048'
-
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: la_poste_siret } }
-
-        expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
-        )
-
-        market_application.reload
-        expect(market_application.siret).to eq(la_poste_siret)
-      end
-
-      it 'allows empty SIRET and saves as empty string' do
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: '' } }
-
-        expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
-        )
-
-        market_application.reload
-        expect(market_application.siret).to eq('')
-      end
-    end
-
-    context 'with invalid SIRET on company_identification' do
-      it 'does not save invalid SIRET and renders the form with error' do
-        invalid_siret = '12345678901234'
-
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: invalid_siret } }
-
-        expect(response).to have_http_status(:unprocessable_content)
-        expect(response.body).to include('Le numéro de SIRET saisi est invalide')
-
-        market_application.reload
-        expect(market_application.siret).not_to eq(invalid_siret)
-        expect(market_application.siret).to eq('73282932000074') # Original value unchanged
-      end
-
-      it 'does not save SIRET with wrong format' do
-        wrong_format_siret = '123ABC'
-
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: wrong_format_siret } }
-
-        expect(response).to have_http_status(:unprocessable_content)
-        # The actual error shows as translated message in the HTML
-        expect(response.body).to include('Le numéro SIRET doit être composé de 14 chiffres valides')
-
-        market_application.reload
-        expect(market_application.siret).not_to eq(wrong_format_siret)
-      end
-
-      it 'does not save SIRET with wrong length' do
-        wrong_length_siret = '123456'
-
-        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-          params: { market_application: { siret: wrong_length_siret } }
-
-        expect(response).to have_http_status(:unprocessable_content)
-        expect(response.body).to include('Le numéro SIRET doit être composé de 14 chiffres valides')
-
-        market_application.reload
-        expect(market_application.siret).not_to eq(wrong_length_siret)
-      end
-    end
-
-    context 'without params on company_identification' do
-      it 'does not modify SIRET when no parameter provided' do
+    context 'with locked SIRET' do
+      it 'redirects to next step without changing SIRET' do
         original_siret = market_application.siret
 
         patch "/candidate/market_applications/#{market_application.identifier}/company_identification"
 
-        expect(response).to redirect_to("/candidate/market_applications/#{market_application.identifier}/#{next_step}")
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+        )
 
         market_application.reload
         expect(market_application.siret).to eq(original_siret)
       end
+
+      it 'ignores SIRET parameter attempts' do
+        original_siret = market_application.siret
+        attempted_siret = '35600000000048'
+
+        patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
+          params: { market_application: { siret: attempted_siret } }
+
+        expect(response).to redirect_to(
+          "/candidate/market_applications/#{market_application.identifier}/#{next_step}"
+        )
+
+        market_application.reload
+        expect(market_application.siret).to eq(original_siret)
+        expect(market_application.siret).not_to eq(attempted_siret)
+      end
     end
 
     context 'with INSEE API integration' do
-      let(:valid_siret) { '41816609600069' }
-      let(:api_url) { "https://entreprise.api.gouv.fr/v3/insee/sirene/etablissements/#{valid_siret}" }
+      let(:api_siret) { '41816609600069' }
+      let(:api_market_application) { create(:market_application, public_market:, siret: api_siret) }
+      let(:api_url) { "https://entreprise.api.gouv.fr/v3/insee/sirene/etablissements/#{api_siret}" }
       let(:token) { 'test_token_123' }
       let(:api_entreprise_credentials) do
         OpenStruct.new(
@@ -284,12 +218,12 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           )
           .to_return(
             status: 200,
-            body: insee_etablissement_success_response(siret: valid_siret),
+            body: insee_etablissement_success_response(siret: api_siret),
             headers: { 'Content-Type' => 'application/json' }
           )
 
         # Stub RNE API call
-        siren = valid_siret[0..8]
+        siren = api_siret[0..8]
         rne_api_url = "https://entreprise.api.gouv.fr/v3/inpi/rne/unites_legales/#{siren}/extrait_rne"
         stub_request(:get, rne_api_url)
           .with(
@@ -306,7 +240,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           )
 
         # Stub Qualibat API call
-        qualibat_api_url = "https://entreprise.api.gouv.fr/v4/qualibat/etablissements/#{valid_siret}/certification_batiment"
+        qualibat_api_url = "https://entreprise.api.gouv.fr/v4/qualibat/etablissements/#{api_siret}/certification_batiment"
         stub_request(:get, qualibat_api_url)
           .with(
             query: hash_including(
@@ -356,7 +290,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
           )
 
         # Stub DGFIP chiffres d'affaires API call
-        dgfip_chiffres_affaires_url = "https://entreprise.api.gouv.fr/v3/dgfip/etablissements/#{valid_siret}/chiffres_affaires"
+        dgfip_chiffres_affaires_url = "https://entreprise.api.gouv.fr/v3/dgfip/etablissements/#{api_siret}/chiffres_affaires"
         stub_request(:get, dgfip_chiffres_affaires_url)
           .with(
             query: hash_including(
@@ -373,28 +307,24 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
 
       it 'calls INSEE API and redirects to status page' do
-        # Perform jobs as they're enqueued
         perform_enqueued_jobs do
-          # First submit SIRET - this enqueues background jobs
-          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-            params: { market_application: { siret: valid_siret } }
+          patch "/candidate/market_applications/#{api_market_application.identifier}/company_identification"
         end
 
         expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+          "/candidate/market_applications/#{api_market_application.identifier}/api_data_recovery_status"
         )
 
-        market_application.reload
-        expect(market_application.siret).to eq(valid_siret)
+        api_market_application.reload
+        expect(api_market_application.siret).to eq(api_siret)
       end
 
       it 'populates market_attribute_responses with API data' do
         perform_enqueued_jobs do
-          patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-            params: { market_application: { siret: valid_siret } }
+          patch "/candidate/market_applications/#{api_market_application.identifier}/company_identification"
         end
 
-        market_application.reload
+        api_market_application.reload
 
         verify_api_responses_populated
         verify_api_fetch_statuses
@@ -418,7 +348,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             )
 
           # Also stub RNE API call
-          siren = valid_siret[0..8]
+          siren = api_siret[0..8]
           rne_api_url = "https://entreprise.api.gouv.fr/v3/inpi/rne/unites_legales/#{siren}/extrait_rne"
           stub_request(:get, rne_api_url)
             .with(
@@ -434,7 +364,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
               headers: { 'Content-Type' => 'application/json' }
             )
 
-          qualibat_api_url = "https://entreprise.api.gouv.fr/v4/qualibat/etablissements/#{valid_siret}/certification_batiment"
+          qualibat_api_url = "https://entreprise.api.gouv.fr/v4/qualibat/etablissements/#{api_siret}/certification_batiment"
           stub_request(:get, qualibat_api_url)
             .with(
               query: hash_including(
@@ -466,7 +396,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             )
 
           # Also stub DGFIP chiffres d'affaires API call to fail
-          dgfip_chiffres_affaires_url = "https://entreprise.api.gouv.fr/v3/dgfip/etablissements/#{valid_siret}/chiffres_affaires"
+          dgfip_chiffres_affaires_url = "https://entreprise.api.gouv.fr/v3/dgfip/etablissements/#{api_siret}/chiffres_affaires"
           stub_request(:get, dgfip_chiffres_affaires_url)
             .with(
               query: hash_including(
@@ -482,39 +412,36 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
             )
         end
 
-        it 'still saves SIRET and creates responses marked as manual_after_api_failure' do
-          # Perform jobs as they're enqueued
+        it 'creates responses marked as manual_after_api_failure' do
           perform_enqueued_jobs do
-            # First submit SIRET - this enqueues background jobs
-            patch "/candidate/market_applications/#{market_application.identifier}/company_identification",
-              params: { market_application: { siret: valid_siret } }
+            patch "/candidate/market_applications/#{api_market_application.identifier}/company_identification"
           end
 
           expect(response).to redirect_to(
-            "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+            "/candidate/market_applications/#{api_market_application.identifier}/api_data_recovery_status"
           )
 
-          market_application.reload
-          expect(market_application.siret).to eq(valid_siret)
+          api_market_application.reload
+          expect(api_market_application.siret).to eq(api_siret)
 
           # Verify API failure was handled by jobs
-          expect(market_application.market_attribute_responses.count).to eq(4)
+          expect(api_market_application.market_attribute_responses.count).to eq(4)
 
           # Verify responses are marked as manual_after_api_failure
-          responses = market_application.market_attribute_responses.reload
+          responses = api_market_application.market_attribute_responses.reload
           expect(responses.map(&:source).uniq).to eq(['manual_after_api_failure'])
 
           # Verify API statuses in JSONB show failures (only for APIs with market attributes)
-          expect(market_application.api_fetch_status['insee']['status']).to eq('failed')
-          expect(market_application.api_fetch_status['qualibat']['status']).to eq('failed')
-          expect(market_application.api_fetch_status['rne']).to be_nil
-          expect(market_application.api_fetch_status['dgfip']).to be_nil
+          expect(api_market_application.api_fetch_status['insee']['status']).to eq('failed')
+          expect(api_market_application.api_fetch_status['qualibat']['status']).to eq('failed')
+          expect(api_market_application.api_fetch_status['rne']).to be_nil
+          expect(api_market_application.api_fetch_status['dgfip']).to be_nil
 
           # Then navigate through the status page
-          patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+          patch "/candidate/market_applications/#{api_market_application.identifier}/api_data_recovery_status"
 
           expect(response).to redirect_to(
-            "/candidate/market_applications/#{market_application.identifier}/market_information"
+            "/candidate/market_applications/#{api_market_application.identifier}/market_information"
           )
         end
       end
@@ -529,10 +456,10 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
       def load_api_responses
         {
-          siret: market_application.market_attribute_responses.find_by(market_attribute: siret_attribute),
-          category: market_application.market_attribute_responses.find_by(market_attribute: category_attribute),
-          qualibat: market_application.market_attribute_responses.find_by(market_attribute: qualibat_attribute),
-          chiffres_affaires: market_application.market_attribute_responses.find_by(market_attribute: chiffres_affaires_attribute)
+          siret: api_market_application.market_attribute_responses.find_by(market_attribute: siret_attribute),
+          category: api_market_application.market_attribute_responses.find_by(market_attribute: category_attribute),
+          qualibat: api_market_application.market_attribute_responses.find_by(market_attribute: qualibat_attribute),
+          chiffres_affaires: api_market_application.market_attribute_responses.find_by(market_attribute: chiffres_affaires_attribute)
         }
       end
 
@@ -565,7 +492,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         }
 
         expected_statuses.each do |api, expected|
-          actual = market_application.api_fetch_status[api]
+          actual = api_market_application.api_fetch_status[api]
           next if actual.nil? # Skip APIs not configured for this test
 
           expected.each { |key, value| expect(actual[key]).to eq(value) }
@@ -573,11 +500,10 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
 
       def verify_navigation_through_status_page
-        # Then navigate through the status page
-        patch "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+        patch "/candidate/market_applications/#{api_market_application.identifier}/api_data_recovery_status"
 
         expect(response).to redirect_to(
-          "/candidate/market_applications/#{market_application.identifier}/market_information"
+          "/candidate/market_applications/#{api_market_application.identifier}/market_information"
         )
       end
     end

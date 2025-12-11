@@ -15,7 +15,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
 
   describe 'with valid OAuth token' do
     let(:public_market) { create(:public_market, :completed, editor:) }
-    let(:market_application) { create(:market_application, siret: nil, public_market:) }
+    let(:market_application) { create(:market_application, public_market:) }
 
     before do
       CompleteMarketApplication.call(market_application:)
@@ -32,7 +32,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
     end
 
     context 'when application is not completed' do
-      let(:incomplete_application) { create(:market_application, siret: nil, public_market:, completed_at: nil) }
+      let(:incomplete_application) { create(:market_application, public_market:, completed_at: nil) }
 
       it 'returns unprocessable entity' do
         get "/api/v1/market_applications/#{incomplete_application.identifier}/attestation",
@@ -44,7 +44,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
     end
 
     context 'when attestation is not available' do
-      let(:completed_application) { create(:market_application, siret: nil, public_market:, completed_at: 1.hour.ago) }
+      let(:completed_application) { create(:market_application, public_market:, completed_at: 1.hour.ago) }
 
       it 'returns not found' do
         get "/api/v1/market_applications/#{completed_application.identifier}/attestation",
@@ -58,7 +58,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
 
   describe 'with different editor OAuth token' do
     let(:public_market) { create(:public_market, :completed, editor:) }
-    let(:market_application) { create(:market_application, siret: nil, public_market:) }
+    let(:market_application) { create(:market_application, public_market:) }
 
     before do
       CompleteMarketApplication.call(market_application:)
@@ -75,7 +75,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
 
   describe 'without OAuth token' do
     let(:public_market) { create(:public_market, :completed, editor:) }
-    let(:market_application) { create(:market_application, siret: nil, public_market:) }
+    let(:market_application) { create(:market_application, public_market:) }
 
     it 'returns unauthorized' do
       get "/api/v1/market_applications/#{market_application.identifier}/attestation"
@@ -87,7 +87,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
 
   describe 'with invalid OAuth token' do
     let(:public_market) { create(:public_market, :completed, editor:) }
-    let(:market_application) { create(:market_application, siret: nil, public_market:) }
+    let(:market_application) { create(:market_application, public_market:) }
 
     it 'returns unauthorized' do
       get "/api/v1/market_applications/#{market_application.identifier}/attestation",

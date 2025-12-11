@@ -11,6 +11,20 @@ RSpec.describe MarketApplication, type: :model do
   end
 
   describe 'business validations' do
+    it 'requires SIRET to be present' do
+      application = build(:market_application, public_market:, siret: nil)
+
+      expect(application).not_to be_valid
+      expect(application.errors[:siret]).to be_present
+    end
+
+    it 'requires SIRET to have exactly 14 digits' do
+      application = build(:market_application, public_market:, siret: '123456')
+
+      expect(application).not_to be_valid
+      expect(application.errors[:siret]).to be_present
+    end
+
     it 'calls SiretValidationService for SIRET validation' do
       allow(SiretValidationService).to receive(:call).with(public_market.siret).and_return(true)
       allow(SiretValidationService).to receive(:call).with('12345678901234').and_return(false)

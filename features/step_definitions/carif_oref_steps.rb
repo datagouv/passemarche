@@ -55,12 +55,12 @@ end
 When('I start an application for the CARIF-OREF market') do
   @market_application = create(:market_application,
     public_market: @public_market,
-    siret: nil)
+    siret: '12000101100010')
 end
 
 When('I fill in the SIRET for CARIF-OREF application') do
   visit "/candidate/market_applications/#{@market_application.identifier}/company_identification"
-  fill_in 'market_application_siret', with: '12000101100010'
+  # SIRET is now locked - just click continue
   click_button 'Continuer'
 end
 

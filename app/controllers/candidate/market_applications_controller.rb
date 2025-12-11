@@ -112,7 +112,6 @@ module Candidate
 
     def market_application_params
       permitted_params = params.fetch(:market_application, {}).permit(
-        :siret,
         :attests_no_exclusion_motifs
       )
 

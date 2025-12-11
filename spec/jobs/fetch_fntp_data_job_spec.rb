@@ -26,22 +26,6 @@ RSpec.describe FetchFntpDataJob, type: :job do
   end
 
   describe '#perform' do
-    context 'when market application has no SIRET' do
-      let(:market_application) { create(:market_application, public_market:, siret: nil) }
-
-      it 'exits early without calling the API' do
-        expect(Fntp).not_to receive(:call)
-
-        described_class.perform_now(market_application.id)
-      end
-
-      it 'does not update api_fetch_status' do
-        expect do
-          described_class.perform_now(market_application.id)
-        end.not_to change { market_application.reload.api_fetch_status }
-      end
-    end
-
     context 'when API call is successful' do
       let(:successful_result) { double('Result', success?: true) }
 

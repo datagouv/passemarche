@@ -19,41 +19,47 @@ RSpec.describe MarketApplicationStepUpdateService do
 
   describe '.call' do
     context 'with company_identification step' do
-      let(:params) { { siret: '41816609600069' } }
-
       it 'returns success' do
-        result = described_class.call(market_application, :company_identification, params)
+        result = described_class.call(market_application, :company_identification, {})
 
         expect(result[:success]).to be true
       end
 
-      it 'saves the SIRET' do
-        described_class.call(market_application, :company_identification, params)
+      it 'does not modify SIRET (SIRET is locked)' do
+        original_siret = market_application.siret
 
-        expect(market_application.reload.siret).to eq('41816609600069')
+        described_class.call(market_application, :company_identification, {})
+
+        expect(market_application.reload.siret).to eq(original_siret)
       end
 
-      it 'does not call APIs' do
+      it 'does not call APIs directly' do
         expect(Insee).not_to receive(:call)
         expect(Rne).not_to receive(:call)
 
-        described_class.call(market_application, :company_identification, params)
+        described_class.call(market_application, :company_identification, {})
       end
 
       it 'has no flash messages' do
-        result = described_class.call(market_application, :company_identification, params)
+        result = described_class.call(market_application, :company_identification, {})
 
         expect(result[:flash_messages]).to be_empty
       end
 
-      context 'when validation fails' do
-        let(:params) { { siret: 'INVALID' } }
+      it 'enqueues API data fetch job when api_fetch_status is empty' do
+        market_application.update!(api_fetch_status: {})
 
-        it 'returns failure' do
-          result = described_class.call(market_application, :company_identification, params)
+        expect(FetchApiDataCoordinatorJob).to receive(:perform_later).with(market_application.id)
 
-          expect(result[:success]).to be false
-        end
+        described_class.call(market_application, :company_identification, {})
+      end
+
+      it 'does not enqueue API data fetch job when api_fetch_status is present' do
+        market_application.update!(api_fetch_status: { 'insee' => { 'status' => 'completed' } })
+
+        expect(FetchApiDataCoordinatorJob).not_to receive(:perform_later)
+
+        described_class.call(market_application, :company_identification, {})
       end
     end
 
