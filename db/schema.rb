@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_10_103027) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_10_103027) do
   create_table "editors", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "authorized", default: false, null: false
+    t.boolean "can_create_defense_markets", default: false, null: false
     t.string "client_id", null: false
     t.string "client_secret", null: false
     t.string "completion_webhook_url"

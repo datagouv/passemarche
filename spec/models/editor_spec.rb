@@ -141,6 +141,7 @@ RSpec.describe Editor, type: :model do
       editor = Editor.new(name: 'Test', client_id: 'test_id', client_secret: 'secret')
       expect(editor.authorized).to be false
       expect(editor.active).to be true
+      expect(editor.can_create_defense_markets).to be false
     end
   end
 
