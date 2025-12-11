@@ -145,6 +145,15 @@ Then('the defense_industry checkbox should be disabled and checked') do
   expect(page).to have_field('defense_industry', checked: true, disabled: true)
 end
 
+Then('the defense_industry checkbox should be disabled and unchecked') do
+  expect(page).to have_field('defense_industry', checked: false, disabled: true)
+end
+
+Then('the defense_industry checkbox should not be visible') do
+  expect(page).not_to have_field('defense_industry')
+  expect(page).not_to have_field('public_market_add_defense_market_type')
+end
+
 Then('the public market should have all mandatory attributes from its market types') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
 

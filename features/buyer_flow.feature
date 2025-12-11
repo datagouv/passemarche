@@ -20,7 +20,6 @@ Feature: Buyer Configuration Flow
     Then I should see "Bienvenue,"
     And I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité"
 
     When I click on "Débuter l'activation de"
     Then I should be on the first category page
@@ -70,20 +69,45 @@ Feature: Buyer Configuration Flow
     Then I should be on the summary page
     And I should see "Synthèse des paramètres de la candidature"
 
-  Scenario: Marquer un marché comme défense en cochant la case
+  Scenario: Éditeur sans permission défense - la case n'est pas visible
     Given I visit the setup page for my public market
+    Then the defense_industry checkbox should not be visible
+
+  @editor_with_defense_capability
+  Scenario: Marquer un marché comme défense en cochant la case
+    Given an authorized and active editor with defense capability exists with credentials "defense_editor_id" and "defense_editor_secret"
+    And I have a valid access token for defense editor
+    And I create a public market with the following details:
+      | name | Fourniture de matériel informatique |
+      | lot_name    | Lot 1 - Ordinateurs portables       |
+      | deadline    | 2025-12-31T23:59:59Z                |
+      | siret        | 13002526500013                      |
+      | market_types | supplies                            |
+    And I visit the setup page for my public market
     When I check the "defense_industry" checkbox
     And I click on "Débuter l'activation de"
     Then the public market should be marked as defense_industry
     And I should be on the first category page
 
+  @editor_with_defense_capability
   Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
-    Given I visit the setup page for my public market
+    Given an authorized and active editor with defense capability exists with credentials "defense_editor_id" and "defense_editor_secret"
+    And I have a valid access token for defense editor
+    And I create a public market with the following details:
+      | name | Fourniture de matériel informatique |
+      | lot_name    | Lot 1 - Ordinateurs portables       |
+      | deadline    | 2025-12-31T23:59:59Z                |
+      | siret        | 13002526500013                      |
+      | market_types | supplies                            |
+    And I visit the setup page for my public market
     When I click on "Débuter l'activation de"
     Then the public market should not be marked as defense_industry
     And I should be on the first category page
 
+  @editor_with_defense_capability
   Scenario: Marché avec défense pré-configuré par l'éditeur
+    Given an authorized and active editor with defense capability exists with credentials "defense_editor_id" and "defense_editor_secret"
+    And I have a valid access token for defense editor
     When I create a defense_industry public market with the following details:
       | name | Fourniture de matériel militaire |
       | deadline    | 2025-12-31T23:59:59Z            |
