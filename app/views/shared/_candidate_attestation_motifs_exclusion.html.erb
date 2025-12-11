@@ -1,26 +1,24 @@
 <% confirmed = market_application.attests_no_exclusion_motifs %>
 
-<div class="field-layout-container">
-  <div class="field-layout-content">
-    <%# Notice %>
-    <%= render 'shared/notice',
-               notice_text: t(
-                 confirmed ?
-                   'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed_notice' :
-                   'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed_notice'
-               ),
-               color: (confirmed ? nil : 'error') %>
+<div class="attestation-motifs-exclusion-content">
+  <%# Notice %>
+  <%= render 'shared/notice',
+             notice_text: t(
+               confirmed ?
+                 'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed_notice' :
+                 'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed_notice'
+             ),
+             color: (confirmed ? nil : 'error') %>
 
-    <%# Icon + Message %>
-    <span class="fr-text--md fr-text--mention-grey">
-      <%= confirmed ?
-            render(CheckIconComponent.new(context: context)) :
-            render(AlertIconComponent.new(context: context)) %>
-      <%= t(
-            confirmed ?
-              'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed' :
-              'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed'
-          ) %>
-    </span>
-  </div>
+  <%# Icon + Message %>
+  <span class="fr-text--md fr-text--mention-grey">
+    <%= confirmed ?
+          render(CheckIconComponent.new(context: context)) :
+          render(AlertIconComponent.new(context: context)) %>
+    <%= t(
+          confirmed ?
+            'buyer.attestations.motifs_exclusion.candidate_attestation_confirmed' :
+            'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed'
+        ) %>
+  </span>
 </div>
