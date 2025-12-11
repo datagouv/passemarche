@@ -75,7 +75,7 @@ body {
 }
 
 .fr-card__body {
-  padding: 16px;
+  padding: 8px 16px;
 }
 
 .fr-card__content {
@@ -162,6 +162,10 @@ h6 {
 
 .fr-mb-1w {
   margin-bottom: 8px;
+}
+
+.fr-mt-1w {
+  margin-top: 0;
 }
 
 .fr-mb-2w {
@@ -350,6 +354,53 @@ strong {
   font-size: 18px;
   color: #666666;
   margin: 0;
+}
+
+/* Notice component - PDF compatible styling */
+.fr-notice {
+  margin-bottom: 4px;
+  padding: 8px 12px;
+  background-color: #e3e3fd;
+  border-left: 4px solid #000091;
+  page-break-inside: avoid;
+}
+
+.fr-notice--info {
+  background-color: #e3e3fd;
+  border-left-color: #000091;
+}
+
+.fr-notice--alert {
+  background-color: #fee7e6;
+  border-left-color: #ce0500;
+}
+
+.fr-notice__body {
+  padding: 0;
+}
+
+.fr-notice__title {
+  display: none;
+}
+
+.fr-notice__desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #161616;
+}
+
+/* Motifs exclusion attestation section */
+.attestation-motifs-exclusion-content {
+  page-break-inside: avoid;
+}
+
+.attestation-motifs-exclusion-content .fr-notice.fr-mb-2w {
+  margin-bottom: 4px;
+}
+
+.attestation-motifs-exclusion-content .fr-notice__body.fr-px-2w.fr-py-1w {
+  padding: 0;
 }
 
 /* Footer section for attestation */
