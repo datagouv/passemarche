@@ -84,6 +84,12 @@
                 <%= form.label :active, "Actif", class: "fr-label", for: "editor_active" %>
               </div>
             </div>
+            <div class="fr-fieldset__element">
+              <div class="fr-checkbox-group">
+                <%= form.check_box :can_create_defense_markets, class: "fr-checkbox", id: "editor_can_create_defense_markets" %>
+                <%= form.label :can_create_defense_markets, "Peut créer des marchés de défense et sécurité (MDS)", class: "fr-label", for: "editor_can_create_defense_markets" %>
+              </div>
+            </div>
           </fieldset>
         </div>
 
