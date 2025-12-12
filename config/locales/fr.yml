@@ -282,6 +282,7 @@ fr:
             icon: "shield-check-line"
             order: 2
             apis:
+              - bodacc
               - urssaf_attestation_vigilance
           capacites_economiques:
             name: "Capacités économiques et financières"
