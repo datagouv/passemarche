@@ -9,6 +9,13 @@ Given('an authorized and active editor exists with credentials {string} and {str
   @editor.ensure_doorkeeper_application!
 end
 
+Given('an authorized and active editor with defense capability exists with credentials {string} and {string}') do |client_id, client_secret|
+  @editor = create(:editor_with_defense_capability,
+    client_id:,
+    client_secret:)
+  @editor.ensure_doorkeeper_application!
+end
+
 Given('an unauthorized editor exists with credentials {string} and {string}') do |client_id, client_secret|
   @unauthorized_editor = create(:editor,
     client_id:,
@@ -27,6 +34,18 @@ end
 Given('I have a valid access token') do
   # Use the editor created in Background
   step 'I request an OAuth token with valid credentials'
+  @previous_token = @response_body['access_token']
+end
+
+Given('I have a valid access token for defense editor') do
+  header 'Content-Type', 'application/x-www-form-urlencoded'
+  post '/oauth/token',
+    grant_type: 'client_credentials',
+    client_id: 'defense_editor_id',
+    client_secret: 'defense_editor_secret'
+
+  @response_status = last_response.status
+  @response_body = JSON.parse(last_response.body) if last_response.body.present?
   @previous_token = @response_body['access_token']
 end
 

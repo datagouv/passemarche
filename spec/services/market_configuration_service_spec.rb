@@ -36,22 +36,36 @@ RSpec.describe MarketConfigurationService do
         expect(public_market.market_type_codes).to eq(['supplies'])
       end
 
-      it 'adds defense market type when requested' do
-        params = { add_defense_market_type: 'true' }
-        result = described_class.call(public_market, :setup, params)
+      context 'when editor has defense market permission' do
+        let(:editor) { create(:editor_with_defense_capability) }
 
-        expect(result).to eq(public_market)
-        expect(public_market.reload.market_type_codes).to include('defense')
+        it 'adds defense market type when requested' do
+          params = { add_defense_market_type: 'true' }
+          result = described_class.call(public_market, :setup, params)
+
+          expect(result).to eq(public_market)
+          expect(public_market.reload.market_type_codes).to include('defense')
+        end
+
+        it 'does not duplicate defense market type if already present' do
+          public_market.update!(market_type_codes: %w[supplies defense])
+          params = { add_defense_market_type: 'true' }
+
+          result = described_class.call(public_market, :setup, params)
+
+          expect(result).to eq(public_market)
+          expect(public_market.reload.market_type_codes.count('defense')).to eq(1)
+        end
       end
 
-      it 'does not duplicate defense market type if already present' do
-        public_market.update!(market_type_codes: %w[supplies defense])
-        params = { add_defense_market_type: 'true' }
+      context 'when editor does not have defense market permission' do
+        it 'does not add defense market type even when requested' do
+          params = { add_defense_market_type: 'true' }
+          result = described_class.call(public_market, :setup, params)
 
-        result = described_class.call(public_market, :setup, params)
-
-        expect(result).to eq(public_market)
-        expect(public_market.reload.market_type_codes.count('defense')).to eq(1)
+          expect(result).to eq(public_market)
+          expect(public_market.reload.market_type_codes).not_to include('defense')
+        end
       end
 
       it 'snapshots mandatory fields during setup' do

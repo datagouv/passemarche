@@ -30,6 +30,7 @@ class MarketConfigurationService < ApplicationService
 
   def handle_defense_market_type
     return if params.blank? || params[:add_defense_market_type] != 'true'
+    return unless public_market.editor.can_create_defense_markets?
     return if public_market.market_type_codes.include?('defense')
 
     public_market.market_type_codes << 'defense'

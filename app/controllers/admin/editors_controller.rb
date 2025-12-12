@@ -52,6 +52,7 @@ class Admin::EditorsController < Admin::ApplicationController
     params.expect(editor: %i[
       name authorized active
       completion_webhook_url redirect_url
+      can_create_defense_markets
     ])
   end
 end

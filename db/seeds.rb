@@ -20,7 +20,10 @@ if Rails.env.development? || Rails.env.sandbox? || Rails.env.staging?
     editor.active = true
     editor.completion_webhook_url = "#{base_url}/webhooks/voie-rapide"
     editor.redirect_url = "#{base_url}/"
+    editor.can_create_defense_markets = true
   end
+
+  demo_editor.update!(can_create_defense_markets: true) unless demo_editor.can_create_defense_markets?
 
   # Generate webhook secret if not present
   if demo_editor.webhook_secret.blank?

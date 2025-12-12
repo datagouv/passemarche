@@ -34,6 +34,13 @@
                     <span class="fr-badge fr-badge--error">Non</span>
                   <% end %>
                 </p>
+                <p><strong>Marchés MDS :</strong>
+                  <% if @editor.can_create_defense_markets %>
+                    <span class="fr-badge fr-badge--success">Autorisé</span>
+                  <% else %>
+                    <span class="fr-badge fr-badge--warning">Non autorisé</span>
+                  <% end %>
+                </p>
                 <p><strong>Créé le :</strong> <%= l(@editor.created_at, format: :long) %></p>
               </div>
             </div>

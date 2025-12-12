@@ -248,7 +248,68 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
     end
 
     context 'with defense market type' do
-      context 'when defense is included with supplies' do
+      context 'when editor has defense market permission' do
+        let(:editor) do
+          Editor.create!(
+            name: 'Defense Editor',
+            client_id: 'defense_client_id',
+            client_secret: 'defense_client_secret',
+            authorized: true,
+            active: true,
+            can_create_defense_markets: true
+          )
+        end
+
+        context 'when defense is included with supplies' do
+          let(:defense_params) do
+            market_params.deep_merge(
+              public_market: { market_type_codes: %w[supplies defense] }
+            )
+          end
+
+          before do
+            post '/api/v1/public_markets',
+              params: defense_params.to_json,
+              headers: {
+                'Authorization' => "Bearer #{access_token}",
+                'Content-Type' => 'application/json'
+              }
+          end
+
+          it 'creates market with defense market type' do
+            expect(response).to have_http_status(:created)
+            json_response = response.parsed_body
+            public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+            expect(public_market.defense_industry?).to be(true)
+            expect(public_market.market_type_codes).to include('supplies', 'defense')
+          end
+        end
+
+        context 'when defense is provided alone' do
+          let(:defense_alone_params) do
+            market_params.deep_merge(
+              public_market: { market_type_codes: ['defense'] }
+            )
+          end
+
+          before do
+            post '/api/v1/public_markets',
+              params: defense_alone_params.to_json,
+              headers: {
+                'Authorization' => "Bearer #{access_token}",
+                'Content-Type' => 'application/json'
+              }
+          end
+
+          it 'returns validation error' do
+            expect(response).to have_http_status(:unprocessable_content)
+            json_response = response.parsed_body
+            expect(json_response['errors']['market_type_codes']).to include('Market type codes ne peut pas être seul')
+          end
+        end
+      end
+
+      context 'when editor does not have defense market permission' do
         let(:defense_params) do
           market_params.deep_merge(
             public_market: { market_type_codes: %w[supplies defense] }
@@ -264,35 +325,15 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
             }
         end
 
-        it 'creates market with defense market type' do
-          expect(response).to have_http_status(:created)
-          json_response = response.parsed_body
-          public_market = PublicMarket.find_by(identifier: json_response['identifier'])
-          expect(public_market.defense_industry?).to be(true)
-          expect(public_market.market_type_codes).to include('supplies', 'defense')
+        it 'returns forbidden status' do
+          expect(response).to have_http_status(:forbidden)
         end
-      end
 
-      context 'when defense is provided alone' do
-        let(:defense_alone_params) do
-          market_params.deep_merge(
-            public_market: { market_type_codes: ['defense'] }
+        it 'returns error about defense market not allowed' do
+          json_response = response.parsed_body
+          expect(json_response['errors']['market_type_codes']).to include(
+            I18n.t('api.errors.defense_market_not_allowed')
           )
-        end
-
-        before do
-          post '/api/v1/public_markets',
-            params: defense_alone_params.to_json,
-            headers: {
-              'Authorization' => "Bearer #{access_token}",
-              'Content-Type' => 'application/json'
-            }
-        end
-
-        it 'returns validation error' do
-          expect(response).to have_http_status(:unprocessable_content)
-          json_response = response.parsed_body
-          expect(json_response['errors']['market_type_codes']).to include('Market type codes ne peut pas être seul')
         end
       end
 

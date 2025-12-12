@@ -41,6 +41,11 @@
           <%= form.label :active, "Actif", class: "fr-label" %>
         </div>
 
+        <div class="fr-checkbox-group">
+          <%= form.check_box :can_create_defense_markets, class: "fr-checkbox" %>
+          <%= form.label :can_create_defense_markets, "Peut créer des marchés de défense et sécurité (MDS)", class: "fr-label" %>
+        </div>
+
         <div class="fr-mt-3w">
           <%= form.submit "Créer", class: "fr-btn" %>
           <%= link_to "Annuler", admin_editors_path, class: "fr-btn fr-btn--secondary" %>

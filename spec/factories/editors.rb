@@ -21,8 +21,13 @@ FactoryBot.define do
       active { true }
     end
 
+    trait :can_create_defense_markets do
+      can_create_defense_markets { true }
+    end
+
     factory :authorized_editor, traits: [:authorized]
     factory :inactive_editor, traits: [:inactive]
     factory :authorized_and_active_editor, traits: [:authorized_and_active]
+    factory :editor_with_defense_capability, traits: %i[authorized_and_active can_create_defense_markets]
   end
 end

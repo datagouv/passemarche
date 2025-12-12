@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::PublicMarketsController < Api::V1::BaseController
+  before_action :validate_defense_market_permission, only: [:create]
+
   def create
     service = PublicMarketCreationService.new(current_editor, public_market_params).perform
 
@@ -12,6 +14,17 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   end
 
   private
+
+  def validate_defense_market_permission
+    return unless public_market_params[:market_type_codes]&.include?('defense')
+    return if current_editor.can_create_defense_markets?
+
+    render json: {
+      errors: {
+        market_type_codes: [I18n.t('api.errors.defense_market_not_allowed')]
+      }
+    }, status: :forbidden
+  end
 
   def public_market_params
     params.expect(public_market: [:name, :lot_name, :deadline, :siret, { market_type_codes: [] }])
