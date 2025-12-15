@@ -1,0 +1,61 @@
+<div class="fr-upload-group fr-card fr-p-2w"
+     data-controller="direct-upload"
+     data-direct-upload-market-application-identifier-value="<%= market_application_identifier %>"
+     data-direct-upload-deletable-value="<%= deletable %>"
+     data-direct-upload-delete-confirm-message-value="<%= delete_confirm_message %>"
+     data-direct-upload-delete-error-message-value="<%= delete_error_message %>"
+     data-direct-upload-network-error-message-value="<%= network_error_message %>">
+
+  <%= form.label :files, label_text, class: "fr-label fr-mb-2w fr-text--md", for: field_id %>
+
+  <span class="fr-hint-text fr-mb-2w fr-text--sm">
+    <%= hint_text %>
+  </span>
+
+  <%= form.file_field :files,
+      class: "fr-upload",
+      multiple: multiple,
+      direct_upload: true,
+      accept: accepted_formats,
+      id: field_id,
+      aria: { describedby: messages_id } %>
+
+  <%= render MarketAttributeResponse::Shared::ProgressBarComponent.new %>
+
+  <div data-direct-upload-target="filesList" class="files-list">
+    <% if documents_attached? %>
+      <div class="fr-mt-2w fr-text--sm fr-mb-0">
+        <strong>Fichiers actuels :</strong>
+        <% documents.each do |document| %>
+          <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil, data: { signed_id: document.signed_id }) %>
+          <div class="file-item" data-signed-id="<%= document.signed_id %>">
+            <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener", class: "file-link" %>
+            <% if deletable %>
+              <span class="file-delete-wrapper">
+                <button type="button"
+                        class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-delete-line"
+                        data-controller="file-delete"
+                        data-file-delete-signed-id-value="<%= document.signed_id %>"
+                        data-file-delete-url-value="<%= delete_attachment_path(document) %>"
+                        data-file-delete-filename-value="<%= document.filename %>"
+                        data-file-delete-confirm-message-value="<%= delete_confirm_message %>"
+                        data-file-delete-error-message-value="<%= delete_error_message %>"
+                        data-file-delete-network-error-message-value="<%= network_error_message %>"
+                        data-action="click->file-delete#delete"
+                        title="Supprimer <%= document.filename %>">
+                  Supprimer
+                </button>
+              </span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if base_errors? %>
+    <p class="fr-error-text">
+      <%= base_error_message %>
+    </p>
+  <% end %>
+</div>

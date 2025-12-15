@@ -1,0 +1,12 @@
+<div class="<%= input_group_css_class %>">
+  <%= form.text_area :text,
+      rows: rows,
+      value: text_value,
+      class: input_css_class,
+      readonly: readonly %>
+  <% if errors? %>
+    <p class="fr-error-text">
+      <%= error_message %>
+    </p>
+  <% end %>
+</div>
