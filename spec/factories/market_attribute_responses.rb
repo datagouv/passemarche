@@ -35,6 +35,14 @@ FactoryBot.define do
       association :market_attribute, :email
     end
 
+    factory :market_attribute_response_inline_file_upload, class: 'MarketAttributeResponse::InlineFileUpload' do
+      association :market_attribute, :inline_file_upload
+    end
+
+    factory :market_attribute_response_inline_url_input, class: 'MarketAttributeResponse::InlineUrlInput' do
+      association :market_attribute, :inline_url_input
+    end
+
     factory :market_attribute_response_radio_with_file_and_text, class: 'MarketAttributeResponse::RadioWithFileAndText' do
       association :market_attribute, :radio_with_file_and_text
     end

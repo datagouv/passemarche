@@ -1,0 +1,122 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+    <%= response_form.hidden_field :text, value: component.text_value %>
+  <% end %>
+
+  <% if component.opqibi_metadata? %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= component.field_label %>
+        </h6>
+        <% if component.field_description.present? %>
+          <span class="fr-mb-2w fr-text--sm">
+            <%= component.field_description %>
+          </span>
+        <% end %>
+      </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+        </div>
+        <%= render MarketAttributeResponse::ApiDisplay::OpqibiComponent.new(
+          market_attribute_response: component.market_attribute_response,
+          context: :web
+        ) %>
+      </div>
+    </div>
+  <% elsif component.france_competence_metadata? %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= component.field_label %>
+        </h6>
+        <% if component.field_description.present? %>
+          <span class="fr-mb-2w fr-text--sm">
+            <%= component.field_description %>
+          </span>
+        <% end %>
+      </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+        </div>
+        <%= render MarketAttributeResponse::ApiDisplay::FranceCompetencesComponent.new(
+          market_attribute_response: component.market_attribute_response,
+          context: :web
+        ) %>
+      </div>
+    </div>
+  <% else %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= component.field_label %>
+        </h6>
+      </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+        </div>
+        <p class="fr-text--sm fr-text--mention-grey">
+          <%= component.auto_filled_message %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <div class="certificate-row">
+    <div class="certificate-col certificate-col--left">
+      <h6 class="fr-mb-2w fr-text--md">
+        <%= component.field_label %>
+        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+      </h6>
+      <% if component.field_description.present? %>
+        <span class="fr-hint-text fr-mb-2w fr-text--sm">
+          <%= component.field_description %>
+        </span>
+      <% end %>
+    </div>
+    <div class="certificate-col certificate-col--right">
+      <div class="fr-input-group">
+        <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                      child_index: component.market_attribute_response.id do |response_form| %>
+          <%= response_form.hidden_field :id %>
+          <%= response_form.hidden_field :market_attribute_id %>
+          <%= response_form.hidden_field :type %>
+
+          <%= response_form.label :text, "URL", class: "fr-hint-text fr-text--md fr-mb-1w", for: component.input_id %>
+          <%= response_form.text_field :text,
+              value: component.text_value,
+              id: component.input_id,
+              class: component.input_css_class %>
+
+          <% if component.errors? %>
+            <p class="fr-error-text">
+              <%= component.error_messages.first %>
+            </p>
+          <% end %>
+        <% end %>
+
+        <% if component.opqibi_field? %>
+          <span class="fr-text--xs fr-text--blue-france" style="display: flex; align-items: center; gap: 0.25em; margin-top: 16px;">
+            <i class="fr-icon--sm fr-icon-info-fill" aria-hidden="true"></i>
+            Vous pouvez trouver ce certificat via
+            <%= link_to "ce lien", component.opqibi_help_url, target: "_blank", rel: "noopener" %>
+          </span>
+        <% elsif component.france_competences_field? %>
+          <span class="fr-text--xs fr-text--blue-france" style="display: flex; align-items: center; gap: 0.25em; margin-top: 16px;">
+            <i class="fr-icon--sm fr-icon-info-fill" aria-hidden="true"></i>
+            Vous pouvez trouver ce certificat via
+            <%= link_to "ce lien", component.france_competences_help_url, target: "_blank", rel: "noopener" %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<hr class="fr-hr">

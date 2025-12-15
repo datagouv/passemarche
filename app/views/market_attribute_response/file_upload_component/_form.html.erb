@@ -1,0 +1,44 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+    </label>
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= component.auto_filled_message %>
+    </p>
+  </div>
+<% else %>
+  <div class="fr-upload-group">
+    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                  child_index: component.market_attribute_response.id do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+
+      <h6 class="fr-mb-2w fr-text--md">
+        <%= component.field_label %>
+      </h6>
+
+      <% if component.field_description.present? %>
+        <span class="fr-hint-text fr-mb-2w fr-text--sm">
+          <%= component.field_description %>
+        </span>
+      <% end %>
+
+      <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
+        form: response_form,
+        attribute_response: component.market_attribute_response,
+        deletable: true,
+        multiple: true
+      ) %>
+    <% end %>
+  </div>
+<% end %>
