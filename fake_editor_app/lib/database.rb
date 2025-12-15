@@ -185,7 +185,7 @@ class Market < Sequel::Model(DB[:markets])
 
   def configuration_url
     return nil unless ENV['FAST_TRACK_URL']
-    "#{ENV['FAST_TRACK_URL']}/buyer/markets/#{identifier}/configuration"
+    "#{ENV['FAST_TRACK_URL']}/buyer/public_markets/#{identifier}/setup"
   end
 
   # User-friendly display methods

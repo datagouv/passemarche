@@ -1,6 +1,25 @@
 /* Custom styles for Fake Editor App - DSFR Compatible */
 /* Only includes styles that complement DSFR, not duplicate it */
 
+/* Page layout - ensure footer stays at bottom */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main[role="main"] {
+  flex: 1 0 auto;
+}
+
+.fr-footer {
+  flex-shrink: 0;
+}
+
 /* Custom enhancements for specific components */
 
 /* Required field asterisks styling */
