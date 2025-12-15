@@ -53,6 +53,10 @@ FactoryBot.define do
       input_type { :phone_input }
     end
 
+    trait :email do
+      input_type { :email_input }
+    end
+
     trait :radio_with_file_and_text do
       input_type { :radio_with_file_and_text }
     end
