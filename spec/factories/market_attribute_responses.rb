@@ -46,5 +46,15 @@ FactoryBot.define do
     factory :market_attribute_response_radio_with_file_and_text, class: 'MarketAttributeResponse::RadioWithFileAndText' do
       association :market_attribute, :radio_with_file_and_text
     end
+
+    factory :market_attribute_response_chiffre_affaires,
+            class: 'MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel' do
+      association :market_attribute, :chiffre_affaires
+    end
+
+    factory :market_attribute_response_effectifs_moyens_annuels,
+            class: 'MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels' do
+      association :market_attribute, :effectifs_moyens_annuels
+    end
   end
 end

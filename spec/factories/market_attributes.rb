@@ -60,5 +60,13 @@ FactoryBot.define do
     trait :radio_with_file_and_text do
       input_type { :radio_with_file_and_text }
     end
+
+    trait :chiffre_affaires do
+      input_type { :capacite_economique_financiere_chiffre_affaires_global_annuel }
+    end
+
+    trait :effectifs_moyens_annuels do
+      input_type { :capacite_economique_financiere_effectifs_moyens_annuels }
+    end
   end
 end
