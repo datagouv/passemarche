@@ -1,0 +1,5 @@
+<% if form_mode? %>
+  <%= render partial: "market_attribute_response/file_or_textarea_component/form", locals: { component: self } %>
+<% else %>
+  <%= render partial: "market_attribute_response/file_or_textarea_component/display", locals: { component: self } %>
+<% end %>

@@ -1,0 +1,36 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.show_value? %>
+      <br>
+      <% if component.checked? %>
+        <%= render CheckIconComponent.new(context: component.context) %>
+        <span class="fr-text-md">
+          <%= component.checkbox_label %>
+        </span>
+
+        <% if component.documents_attached? %>
+          <span class="fr-text-md fr-text--mention-grey">
+            <% component.documents.each do |document| %>
+              <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                document: document,
+                market_application: component.market_attribute_response.market_application,
+                context: component.context,
+                naming_service: component.naming_service,
+                show_size: false
+              ) %>
+            <% end %>
+          </span>
+        <% end %>
+      <% else %>
+        <span class="fr-text-md fr-text--mention-grey"><%= component.unchecked_message %></span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>
