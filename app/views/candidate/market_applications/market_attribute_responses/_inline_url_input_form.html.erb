@@ -34,20 +34,10 @@
         <div class="fr-mb-1w">
           <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response, inline: true %>
         </div>
-        <div class="fr-text--sm fr-text--mention-grey">
-          <% if market_attribute_response.formatted_date_delivrance.present? %>
-            <p class="fr-mb-1v">
-              <strong>Date de délivrance :</strong>
-              <%= l(market_attribute_response.formatted_date_delivrance, format: :long) %>
-            </p>
-          <% end %>
-          <% if market_attribute_response.duree_validite_certificat.present? %>
-            <p class="fr-mb-0">
-              <strong>Durée de validité :</strong>
-              <%= market_attribute_response.duree_validite_certificat %>
-            </p>
-          <% end %>
-        </div>
+        <%= render MarketAttributeResponse::ApiDisplay::OpqibiComponent.new(
+          market_attribute_response: market_attribute_response,
+          context: :web
+        ) %>
       </div>
     </div>
   <% elsif market_attribute_response.respond_to?(:france_competence_metadata?) && market_attribute_response.france_competence_metadata? %>
@@ -67,41 +57,10 @@
         <div class="fr-mb-1w">
           <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response, inline: true %>
         </div>
-        <div class="fr-text--sm fr-text--mention-grey">
-          <% market_attribute_response.habilitations.each_with_index do |habilitation, index| %>
-            <% if index > 0 %><hr class="fr-hr fr-my-2v"><% end %>
-            <p class="fr-mb-1v">
-              <strong><%= t('form_fields.candidate.carif_oref.france_competence.actif') %> :</strong>
-              <%= habilitation['actif'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
-            </p>
-            <% if habilitation['date_actif'].present? %>
-              <p class="fr-mb-1v">
-                <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_actif') %> :</strong>
-                <%= Date.parse(habilitation['date_actif']).strftime('%d/%m/%Y') rescue habilitation['date_actif'] %>
-              </p>
-            <% end %>
-            <% if habilitation['date_fin_enregistrement'].present? %>
-              <p class="fr-mb-1v">
-                <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_fin_enregistrement') %> :</strong>
-                <%= Date.parse(habilitation['date_fin_enregistrement']).strftime('%d/%m/%Y') rescue habilitation['date_fin_enregistrement'] %>
-              </p>
-            <% end %>
-            <p class="fr-mb-1v">
-              <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_former') %> :</strong>
-              <%= habilitation['habilitation_pour_former'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
-            </p>
-            <p class="fr-mb-1v">
-              <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_organiser_evaluation') %> :</strong>
-              <%= habilitation['habilitation_pour_organiser_l_evaluation'] ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
-            </p>
-            <% if habilitation['sirets_organismes_certificateurs'].present? %>
-              <p class="fr-mb-0">
-                <strong><%= t('form_fields.candidate.carif_oref.france_competence.siret_organisme_certificateur') %> :</strong>
-                <%= habilitation['sirets_organismes_certificateurs'].join(', ') %>
-              </p>
-            <% end %>
-          <% end %>
-        </div>
+        <%= render MarketAttributeResponse::ApiDisplay::FranceCompetencesComponent.new(
+          market_attribute_response: market_attribute_response,
+          context: :web
+        ) %>
       </div>
     </div>
   <% else %>

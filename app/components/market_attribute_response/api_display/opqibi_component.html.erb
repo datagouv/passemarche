@@ -1,0 +1,14 @@
+<div class="fr-text--sm fr-text--mention-grey">
+  <% if date_delivrance? %>
+    <p class="fr-mb-1v">
+      <strong>Date de d&eacute;livrance :</strong>
+      <%= formatted_date_delivrance_long %>
+    </p>
+  <% end %>
+  <% if duree_validite? %>
+    <p class="fr-mb-0">
+      <strong>Dur&eacute;e de validit&eacute; :</strong>
+      <%= duree_validite_certificat %>
+    </p>
+  <% end %>
+</div>

@@ -21,39 +21,10 @@
         <div class="fr-mb-1w">
           <%= render 'candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response: market_attribute_response, inline: true %>
         </div>
-        <div class="fr-text--sm fr-text--mention-grey">
-          <p class="fr-mb-1v">
-            <strong><%= t('form_fields.candidate.carif_oref.qualiopi.action_formation') %> :</strong>
-            <%= market_attribute_response.action_formation? ? t('form_fields.candidate.carif_oref.qualiopi.certified') : t('form_fields.candidate.carif_oref.qualiopi.not_certified') %>
-          </p>
-          <p class="fr-mb-1v">
-            <strong><%= t('form_fields.candidate.carif_oref.qualiopi.bilan_competences') %> :</strong>
-            <%= market_attribute_response.bilan_competences? ? t('form_fields.candidate.carif_oref.qualiopi.certified') : t('form_fields.candidate.carif_oref.qualiopi.not_certified') %>
-          </p>
-          <p class="fr-mb-1v">
-            <strong><%= t('form_fields.candidate.carif_oref.qualiopi.validation_acquis_experience') %> :</strong>
-            <%= market_attribute_response.validation_acquis_experience? ? t('form_fields.candidate.carif_oref.qualiopi.certified') : t('form_fields.candidate.carif_oref.qualiopi.not_certified') %>
-          </p>
-          <p class="fr-mb-1v">
-            <strong><%= t('form_fields.candidate.carif_oref.qualiopi.apprentissage') %> :</strong>
-            <%= market_attribute_response.apprentissage? ? t('form_fields.candidate.carif_oref.qualiopi.certified') : t('form_fields.candidate.carif_oref.qualiopi.not_certified') %>
-          </p>
-          <p class="fr-mb-1v">
-            <strong><%= t('form_fields.candidate.carif_oref.qualiopi.obtention_via_unite_legale') %> :</strong>
-            <%= market_attribute_response.obtention_via_unite_legale? ? t('form_fields.candidate.shared.yes') : t('form_fields.candidate.shared.no') %>
-          </p>
-
-          <% if market_attribute_response.specialites.present? %>
-            <p class="fr-mb-1v fr-mt-2v">
-              <strong><%= t('form_fields.candidate.carif_oref.qualiopi.specialites') %> :</strong>
-            </p>
-            <ul class="fr-mb-0" style="margin-left: 1.5em;">
-              <% market_attribute_response.specialites.each do |specialite| %>
-                <li><%= specialite['libelle'] %></li>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
+        <%= render MarketAttributeResponse::ApiDisplay::QualiopiComponent.new(
+          market_attribute_response: market_attribute_response,
+          context: :web
+        ) %>
       </div>
     </div>
   <% else %>

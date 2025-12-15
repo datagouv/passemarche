@@ -1,0 +1,33 @@
+<div class="fr-text--sm fr-text--mention-grey">
+  <p class="fr-mb-1v">
+    <strong><%= t('form_fields.candidate.carif_oref.qualiopi.action_formation') %> :</strong>
+    <%= certified_text(action_formation?) %>
+  </p>
+  <p class="fr-mb-1v">
+    <strong><%= t('form_fields.candidate.carif_oref.qualiopi.bilan_competences') %> :</strong>
+    <%= certified_text(bilan_competences?) %>
+  </p>
+  <p class="fr-mb-1v">
+    <strong><%= t('form_fields.candidate.carif_oref.qualiopi.validation_acquis_experience') %> :</strong>
+    <%= certified_text(validation_acquis_experience?) %>
+  </p>
+  <p class="fr-mb-1v">
+    <strong><%= t('form_fields.candidate.carif_oref.qualiopi.apprentissage') %> :</strong>
+    <%= certified_text(apprentissage?) %>
+  </p>
+  <p class="fr-mb-1v">
+    <strong><%= t('form_fields.candidate.carif_oref.qualiopi.obtention_via_unite_legale') %> :</strong>
+    <%= yes_no(obtention_via_unite_legale?) %>
+  </p>
+
+  <% if specialites? %>
+    <p class="fr-mb-1v fr-mt-2v">
+      <strong><%= t('form_fields.candidate.carif_oref.qualiopi.specialites') %> :</strong>
+    </p>
+    <ul class="fr-mb-0" style="margin-left: 1.5em;">
+      <% specialites.each do |specialite| %>
+        <li><%= specialite['libelle'] %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
