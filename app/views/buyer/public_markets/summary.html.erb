@@ -83,7 +83,7 @@
                   <%# Mandatory attestation section %>
                   <div class="fr-p-3w" style="background-color: var(--background-alt-grey);">
                     <h4 class="fr-h6 fr-mb-2w"><%= t('buyer.public_markets.generic_step.steps.motifs_exclusion.box_title') %></h4>
-                    <p class="fr-mb-0 fr-text--sm"><%= t('buyer.public_markets.generic_step.steps.motifs_exclusion.box_content') %></p>
+                    <p class="fr-mb-0 fr-text--sm"><%= t('buyer.public_markets.generic_step.steps.motifs_exclusion.box_content_html') %></p>
                   </div>
 
                   <% optional_subcategories = subcategories.transform_values { |fields| fields.select { |key| !@presenter.field_by_key(key)&.mandatory } }.reject { |_, fields| fields.empty? } %>
