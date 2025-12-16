@@ -39,12 +39,12 @@ class PublicMarketPresenter
 
   def mandatory_fields_for_category(category_key)
     attrs = available_attributes_array.select { |a| a.mandatory && a.category_key == category_key.to_s }
-    organize_attrs_by_subcategory(attrs)
+    group_by_subcategory(attrs)
   end
 
   def optional_fields_for_category(category_key)
     attrs = available_attributes_array.select { |a| !a.mandatory && a.category_key == category_key.to_s }
-    organize_attrs_by_subcategory(attrs)
+    group_by_subcategory(attrs)
   end
 
   def optional_fields_for_category?(category_key)
@@ -156,18 +156,6 @@ class PublicMarketPresenter
     market_attributes
       .group_by(&:category_key)
       .transform_values { |category_attrs| group_by_subcategory(category_attrs) }
-  end
-
-  def organize_fields_by_subcategory(market_attributes)
-    market_attributes
-      .group_by(&:subcategory_key)
-      .transform_values { |subcategory_attrs| subcategory_attrs.map(&:key) }
-  end
-
-  def organize_attrs_by_subcategory(attrs_array)
-    attrs_array
-      .group_by(&:subcategory_key)
-      .transform_values { |subcategory_attrs| subcategory_attrs.map(&:key) }
   end
 
   def group_by_subcategory(market_attributes)
