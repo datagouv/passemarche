@@ -16,12 +16,6 @@ module Buyer
 
     private
 
-    def set_no_cache_headers
-      response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-      response.headers['Pragma'] = 'no-cache'
-      response.headers['Expires'] = '0'
-    end
-
     def sync_status_response
       { sync_status: @public_market.sync_status }
     end
