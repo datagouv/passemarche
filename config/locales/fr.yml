@@ -364,7 +364,7 @@ fr:
 
   api:
     errors:
-      defense_market_not_allowed: "Le type de marché 'defense' n'est pas autorisé pour cet éditeur"
+      defense_market_not_allowed: "La création de marchés de défense nécessite une autorisation préalable. Veuillez contacter l'administrateur pour activer cette fonctionnalité."
 
   admin:
     editors:

@@ -59,12 +59,8 @@ class FastTrackClient
 
     unless response.success?
       error_details = response.parsed_response
-      error_msg = if error_details.is_a?(Hash) && error_details['errors']
-                    "#{response.code} - #{error_details['errors'].join(', ')}"
-                  else
-                    "#{response.code} - #{response.message}"
-                  end
-      raise "Public market creation failed: #{error_msg}"
+      error_msg = extract_error_message(error_details, response)
+      raise error_msg
     end
 
     response.parsed_response
@@ -135,5 +131,22 @@ class FastTrackClient
     end
 
     response.body
+  end
+
+  private
+
+  def extract_error_message(error_details, response)
+    return response.message unless error_details.is_a?(Hash)
+
+    errors = error_details['errors']
+    return error_details['error'] || response.message unless errors
+
+    if errors.is_a?(Hash)
+      errors.values.flatten.join(', ')
+    elsif errors.is_a?(Array)
+      errors.join(', ')
+    else
+      errors.to_s
+    end
   end
 end
