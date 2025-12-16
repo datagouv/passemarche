@@ -17,7 +17,8 @@
   </div>
 <% else %>
   <div class="fr-input-group">
-    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response do |response_form| %>
+    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                  child_index: component.market_attribute_response.id do |response_form| %>
       <%= response_form.hidden_field :id %>
       <%= response_form.hidden_field :market_attribute_id %>
       <%= response_form.hidden_field :type %>
@@ -94,12 +95,12 @@
           ) %>
         </div>
 
-        <% if component.value_error_messages.any? %>
-          <p class="fr-error-text fr-mt-2w">
-            <%= component.value_error_messages.first %>
-          </p>
-        <% end %>
       </div>
+      <% if component.value_error_messages.any? %>
+        <p class="fr-error-text fr-mt-2w">
+          <%= component.value_error_messages.first %>
+        </p>
+      <% end %>
     <% end %>
   </div>
 <% end %>
