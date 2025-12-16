@@ -3,16 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= @title || "Fake Editor App - Passe Marché Demo" %></title>
+  <title><%= @title || "🎄 Fake Editor App - Édition Noël 🎅" %></title>
 
   <!-- DSFR CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/dsfr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/utility/utility.min.css">
 
-  <!-- Custom styles -->
+  <!-- Custom Christmas styles -->
   <link rel="stylesheet" href="/style.css">
+
+  <!-- Festive favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎄</text></svg>">
 </head>
 <body>
+  <!-- ❄️ MAGICAL SNOWFALL ❄️ -->
+  <div class="snowflakes" aria-hidden="true">
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+  </div>
+
   <!-- DSFR Header -->
   <%= erb :'shared/_nav' %>
 
@@ -21,7 +38,7 @@
     <%= yield %>
   </main>
 
-  <!-- DSFR Footer -->
+  <!-- 🎄 DSFR Christmas Footer 🎄 -->
   <footer class="fr-footer" role="contentinfo">
     <div class="fr-container">
       <div class="fr-footer__body">
@@ -31,10 +48,16 @@
           </p>
         </div>
         <div class="fr-footer__content">
-          <p class="fr-footer__content-desc">Application de démonstration pour l'intégration OAuth2 avec Passe Marché</p>
+          <p class="fr-footer__content-desc">
+            🎄 Application de démonstration pour l'intégration OAuth2 avec Passe Marché 🎄
+            <br>
+            <span style="font-size: 0.9rem;">Que la magie de Noël guide vos marchés publics !</span>
+          </p>
           <ul class="fr-footer__content-list">
             <li class="fr-footer__content-item">
-              <a title="Passe Marché - nouvelle fenêtre" href="<%= ENV['FAST_TRACK_URL'] || 'http://localhost:3000' %>" target="_blank" rel="noopener external" class="fr-footer__content-link">Passe Marché</a>
+              <a title="Passe Marché - nouvelle fenêtre" href="<%= ENV['FAST_TRACK_URL'] || 'http://localhost:3000' %>" target="_blank" rel="noopener external" class="fr-footer__content-link">
+                🎁 Passe Marché
+              </a>
             </li>
           </ul>
         </div>
@@ -43,10 +66,13 @@
         <ul class="fr-footer__bottom-list">
           <li class="fr-footer__bottom-item">
             <span class="fr-footer__bottom-link">
-              Application de démonstration - Environnement de test
+              🎅 Application de démonstration - Environnement de test - Édition Noël 2024 ⛄
             </span>
           </li>
         </ul>
+        <div style="text-align: center; padding: 10px; font-size: 1.5rem;">
+          🦌🦌🦌🦌🦌🦌🦌🦌🛷🎅
+        </div>
       </div>
     </div>
   </footer>
@@ -57,5 +83,12 @@
 
   <!-- Custom JavaScript -->
   <script src="/app.js"></script>
+
+  <!-- 🎵 Christmas Cheer Script 🎵 -->
+  <script>
+    // Add extra sparkle to the page
+    console.log('%c🎄 Joyeux Noël ! 🎅', 'font-size: 24px; color: #c41e3a; text-shadow: 2px 2px #228b22;');
+    console.log('%c❄️ Ho Ho Ho! Bienvenue dans l\'édition Noël ! ❄️', 'font-size: 16px; color: #ffd700;');
+  </script>
 </body>
 </html>

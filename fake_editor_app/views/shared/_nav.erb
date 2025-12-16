@@ -1,31 +1,75 @@
-<header role="banner" class="fr-header">
+<!-- 🎄✨ CHRISTMAS LIGHTS GARLAND ✨🎄 -->
+<div class="christmas-lights-garland">
+  <span class="light red"></span>
+  <span class="light gold"></span>
+  <span class="light green"></span>
+  <span class="light blue"></span>
+  <span class="light red"></span>
+  <span class="light gold"></span>
+  <span class="light green"></span>
+  <span class="light blue"></span>
+  <span class="light red"></span>
+  <span class="light gold"></span>
+  <span class="light green"></span>
+  <span class="light blue"></span>
+  <span class="light red"></span>
+  <span class="light gold"></span>
+  <span class="light green"></span>
+  <span class="light blue"></span>
+  <span class="light red"></span>
+  <span class="light gold"></span>
+  <span class="light green"></span>
+  <span class="light blue"></span>
+</div>
+
+<header role="banner" class="fr-header christmas-header">
+  <!-- 🎄 LEFT CHRISTMAS TREE -->
+  <div class="header-tree header-tree-left">🎄</div>
+
+  <!-- 🎅 SANTA FLYING -->
+  <div class="flying-santa">🛷🎅</div>
+
+  <!-- 🎄 RIGHT CHRISTMAS TREE -->
+  <div class="header-tree header-tree-right">🎄</div>
+
   <div class="fr-header__body">
     <div class="fr-container">
       <div class="fr-header__body-row">
         <div class="fr-header__brand fr-enlarge-link">
           <div class="fr-header__brand-top">
             <div class="fr-header__logo">
-              <a href="/" title="Accueil - Éditeur de marchés publics">
-                <p class="fr-logo">
-                  République
-                  <br>Française
-                </p>
+              <a href="/" title="Accueil - Éditeur de marchés publics - Édition Noël">
+                <div class="christmas-logo-wrapper">
+                  <span class="santa-hat-on-logo">🎅</span>
+                  <p class="fr-logo christmas-logo">
+                    République
+                    <br>Française
+                  </p>
+                </div>
               </a>
             </div>
             <div class="fr-header__navbar">
-              <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="modal-menu" aria-haspopup="menu" id="button-menu" title="Menu">
-                Menu
+              <button class="fr-btn--menu fr-btn christmas-menu-btn" data-fr-opened="false" aria-controls="modal-menu" aria-haspopup="menu" id="button-menu" title="Menu">
+                🎄 Menu 🎄
               </button>
             </div>
           </div>
           <div class="fr-header__service">
-            <a href="/" title="Accueil - Éditeur de marchés publics">
-              <p class="fr-header__service-title">
+            <a href="/" title="Accueil - Éditeur de marchés publics - Édition Noël">
+              <p class="fr-header__service-title christmas-title-animated">
+                <span class="gift-icon">🎁</span>
                 Éditeur de marchés publics
-                <span class="fr-badge fr-badge--sm fr-badge--info fr-ml-1w">Demo</span>
+                <span class="gift-icon">🎁</span>
               </p>
+              <span class="christmas-badge">
+                <span class="badge-star">⭐</span> Édition Noël 2024 <span class="badge-star">⭐</span>
+              </span>
             </a>
-            <p class="fr-header__service-tagline">Plateforme de démonstration - Intégration Passe Marché</p>
+            <p class="fr-header__service-tagline christmas-tagline">
+              <span class="snowflake-small">❄️</span>
+              Plateforme de démonstration - Intégration Passe Marché
+              <span class="snowflake-small">❄️</span>
+            </p>
           </div>
         </div>
         <div class="fr-header__tools">
@@ -33,15 +77,16 @@
             <ul class="fr-btns-group">
               <% if @current_token&.valid? %>
                 <li>
-                  <span class="fr-badge fr-badge--success">
-                    <span class="fr-icon-lock-line fr-icon--sm" aria-hidden="true"></span>
-                    Authentifié
+                  <span class="christmas-auth-badge authenticated">
+                    <span class="auth-icon">🎅</span>
+                    Sur la liste des gentils !
+                    <span class="auth-icon">✨</span>
                   </span>
                 </li>
               <% else %>
                 <li>
-                  <a class="fr-btn fr-btn--sm fr-btn--tertiary" href="/technical">
-                    <span class="fr-icon-lock-unlock-line fr-icon--sm" aria-hidden="true"></span>
+                  <a class="christmas-auth-btn" href="/technical">
+                    <span class="key-icon">🔑</span>
                     S'authentifier
                   </a>
                 </li>
@@ -53,40 +98,79 @@
     </div>
   </div>
 
+  <!-- 🎄 CHRISTMAS NAVIGATION 🎄 -->
+  <nav class="christmas-nav" id="navigation-main" role="navigation" aria-label="Menu principal">
+    <div class="fr-container">
+      <ul class="christmas-nav-list">
+        <li class="christmas-nav-item">
+          <a class="christmas-nav-link <%= 'active' if current_page?('/') && request.path_info == '/' %>" href="/">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">Accueil</span>
+            <span class="nav-decoration">🎄</span>
+          </a>
+        </li>
+        <li class="christmas-nav-item">
+          <a class="christmas-nav-link <%= 'active' if current_page?('/buyer') %>" href="/buyer">
+            <span class="nav-icon">🏛️</span>
+            <span class="nav-text">Acheteur</span>
+            <span class="nav-decoration">🎁</span>
+          </a>
+        </li>
+        <li class="christmas-nav-item">
+          <a class="christmas-nav-link <%= 'active' if current_page?('/candidate') %>" href="/candidate">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">Candidat</span>
+            <span class="nav-decoration">⭐</span>
+          </a>
+        </li>
+        <li class="christmas-nav-item">
+          <a class="christmas-nav-link <%= 'active' if current_page?('/technical') %>" href="/technical">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Technique</span>
+            <span class="nav-decoration">🔔</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu (keeping DSFR structure) -->
   <div class="fr-header__menu fr-modal" id="modal-menu" aria-labelledby="button-menu">
     <div class="fr-container">
       <button class="fr-btn--close fr-btn" aria-controls="modal-menu" title="Fermer">
-        Fermer
+        ❌ Fermer
       </button>
       <div class="fr-header__menu-links"></div>
-      <nav class="fr-nav" id="navigation-main" role="navigation" aria-label="Menu principal">
+      <nav class="fr-nav" role="navigation" aria-label="Menu principal mobile">
         <ul class="fr-nav__list">
           <li class="fr-nav__item">
-            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/') && request.path_info == '/' %>" href="/" target="_self">
-              <span class="fr-icon-home-4-line fr-icon--sm" aria-hidden="true"></span>
-              Accueil
-            </a>
+            <a class="fr-nav__link" href="/">🏠 Accueil</a>
           </li>
           <li class="fr-nav__item">
-            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/buyer') %>" href="/buyer" target="_self">
-              <span class="fr-icon-building-line fr-icon--sm" aria-hidden="true"></span>
-              Acheteur
-            </a>
+            <a class="fr-nav__link" href="/buyer">🏛️ Acheteur</a>
           </li>
           <li class="fr-nav__item">
-            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/candidate') %>" href="/candidate" target="_self">
-              <span class="fr-icon-user-line fr-icon--sm" aria-hidden="true"></span>
-              Candidat
-            </a>
+            <a class="fr-nav__link" href="/candidate">👤 Candidat</a>
           </li>
           <li class="fr-nav__item">
-            <a class="fr-nav__link <%= 'fr-nav__link--active' if current_page?('/technical') %>" href="/technical" target="_self">
-              <span class="fr-icon-settings-5-line fr-icon--sm" aria-hidden="true"></span>
-              Technique
-            </a>
+            <a class="fr-nav__link" href="/technical">⚙️ Technique</a>
           </li>
         </ul>
       </nav>
     </div>
   </div>
 </header>
+
+<!-- 🎄 HOLLY GARLAND UNDER HEADER 🎄 -->
+<div class="holly-garland">
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+  <span>🍃</span><span class="holly-berry">🔴</span>
+</div>

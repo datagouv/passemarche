@@ -1,7 +1,94 @@
-/* Custom styles for Fake Editor App - DSFR Compatible */
-/* Only includes styles that complement DSFR, not duplicate it */
+/* 🎄 CHRISTMAS EDITION - Fake Editor App 🎅 */
+/* Full Christmas Power Activated! */
 
-/* Page layout - ensure footer stays at bottom */
+/* ============================================
+   🎨 CHRISTMAS COLOR PALETTE
+   ============================================ */
+:root {
+  --christmas-red: #c41e3a;
+  --christmas-red-dark: #8b0000;
+  --christmas-green: #228b22;
+  --christmas-green-dark: #006400;
+  --christmas-gold: #ffd700;
+  --christmas-gold-light: #fff4cc;
+  --snow-white: #fffafa;
+  --ice-blue: #e0f7fa;
+  --pine-green: #0b3d0b;
+  --candy-red: #ff6b6b;
+  --holly-red: #d42426;
+  --silver: #c0c0c0;
+}
+
+/* ============================================
+   ❄️ SNOWFALL ANIMATION
+   ============================================ */
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) translateX(100px) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes jingle {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px var(--christmas-gold), 0 0 10px var(--christmas-gold); }
+  50% { box-shadow: 0 0 20px var(--christmas-gold), 0 0 30px var(--christmas-gold); }
+}
+
+/* Snowflakes container */
+.snowflakes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  top: -50px;
+  color: white;
+  font-size: 1.5rem;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  animation: snowfall linear infinite;
+  user-select: none;
+}
+
+.snowflake:nth-child(1) { left: 5%; animation-duration: 15s; animation-delay: 0s; font-size: 1.2rem; }
+.snowflake:nth-child(2) { left: 15%; animation-duration: 12s; animation-delay: 2s; font-size: 1.8rem; }
+.snowflake:nth-child(3) { left: 25%; animation-duration: 18s; animation-delay: 4s; font-size: 1rem; }
+.snowflake:nth-child(4) { left: 35%; animation-duration: 14s; animation-delay: 1s; font-size: 1.5rem; }
+.snowflake:nth-child(5) { left: 45%; animation-duration: 16s; animation-delay: 3s; font-size: 2rem; }
+.snowflake:nth-child(6) { left: 55%; animation-duration: 13s; animation-delay: 5s; font-size: 1.3rem; }
+.snowflake:nth-child(7) { left: 65%; animation-duration: 17s; animation-delay: 0.5s; font-size: 1.6rem; }
+.snowflake:nth-child(8) { left: 75%; animation-duration: 11s; animation-delay: 2.5s; font-size: 1.4rem; }
+.snowflake:nth-child(9) { left: 85%; animation-duration: 19s; animation-delay: 4.5s; font-size: 1.1rem; }
+.snowflake:nth-child(10) { left: 95%; animation-duration: 14s; animation-delay: 1.5s; font-size: 1.7rem; }
+
+/* ============================================
+   🎄 BASE CHRISTMAS STYLING
+   ============================================ */
 html, body {
   height: 100%;
 }
@@ -10,143 +97,968 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: linear-gradient(180deg,
+    #1a3a5c 0%,
+    #2d5a7b 30%,
+    #4a7c9b 60%,
+    var(--snow-white) 100%
+  );
+  background-attachment: fixed;
+  padding-top: 38px; /* Space for fixed Christmas lights */
 }
 
 main[role="main"] {
   flex: 1 0 auto;
+  position: relative;
 }
 
+/* ============================================
+   🎅 EPIC CHRISTMAS HEADER
+   ============================================ */
+
+/* Flying Santa Animation */
+@keyframes fly-santa {
+  0% { transform: translateX(-100px) translateY(0); }
+  25% { transform: translateX(25vw) translateY(-10px); }
+  50% { transform: translateX(50vw) translateY(5px); }
+  75% { transform: translateX(75vw) translateY(-5px); }
+  100% { transform: translateX(calc(100vw + 100px)) translateY(0); }
+}
+
+@keyframes pulse-light {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+@keyframes swing {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+@keyframes color-shift {
+  0% { color: var(--christmas-red); }
+  33% { color: var(--christmas-gold); }
+  66% { color: var(--christmas-green); }
+  100% { color: var(--christmas-red); }
+}
+
+/* Christmas Lights Garland */
+.christmas-lights-garland {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+  padding: 8px 0;
+  border-bottom: 2px solid #444;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.christmas-lights-garland::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #333 0px, #333 20px, #222 20px, #222 40px);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.christmas-lights-garland .light {
+  width: 15px;
+  height: 20px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+}
+
+.christmas-lights-garland .light::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 8px;
+  background: #666;
+  border-radius: 2px 2px 0 0;
+}
+
+.christmas-lights-garland .light.red {
+  background: radial-gradient(circle at 30% 30%, #ff6b6b, #c41e3a);
+  color: #ff6b6b;
+  animation: pulse-light 1.5s ease-in-out infinite;
+}
+
+.christmas-lights-garland .light.gold {
+  background: radial-gradient(circle at 30% 30%, #ffed4a, #ffd700);
+  color: #ffd700;
+  animation: pulse-light 1.5s ease-in-out infinite 0.3s;
+}
+
+.christmas-lights-garland .light.green {
+  background: radial-gradient(circle at 30% 30%, #68d391, #228b22);
+  color: #68d391;
+  animation: pulse-light 1.5s ease-in-out infinite 0.6s;
+}
+
+.christmas-lights-garland .light.blue {
+  background: radial-gradient(circle at 30% 30%, #63b3ed, #3182ce);
+  color: #63b3ed;
+  animation: pulse-light 1.5s ease-in-out infinite 0.9s;
+}
+
+/* Main Christmas Header */
+.christmas-header {
+  background: linear-gradient(135deg,
+    var(--christmas-red-dark) 0%,
+    var(--christmas-red) 30%,
+    #a01830 50%,
+    var(--christmas-red) 70%,
+    var(--christmas-red-dark) 100%
+  ) !important;
+  border-bottom: none !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 -5px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+/* Header Trees */
+.header-tree {
+  position: absolute;
+  font-size: 3rem;
+  z-index: 10;
+  animation: swing 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.5));
+}
+
+.header-tree-left {
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.header-tree-right {
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation-delay: 0.5s;
+}
+
+/* Flying Santa */
+.flying-santa {
+  position: absolute;
+  top: 10px;
+  left: -100px;
+  font-size: 2rem;
+  z-index: 100;
+  animation: fly-santa 15s linear infinite;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+/* Christmas Logo Wrapper */
+.christmas-logo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.santa-hat-on-logo {
+  position: absolute;
+  top: -15px;
+  right: -10px;
+  font-size: 1.5rem;
+  animation: jingle 2s ease-in-out infinite;
+  z-index: 10;
+}
+
+.christmas-logo {
+  color: var(--snow-white) !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+  position: relative;
+}
+
+/* Christmas Title */
+.christmas-title-animated {
+  color: var(--snow-white) !important;
+  font-size: 1.4rem !important;
+  font-weight: bold !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gift-icon {
+  animation: float 2s ease-in-out infinite;
+  font-size: 1.5rem;
+}
+
+.gift-icon:last-child {
+  animation-delay: 0.5s;
+}
+
+/* Christmas Badge */
+.christmas-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--christmas-gold) 0%, #ffed4a 50%, var(--christmas-gold) 100%);
+  color: var(--christmas-red-dark) !important;
+  padding: 4px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 10px;
+  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  animation: glow 2s ease-in-out infinite;
+}
+
+.badge-star {
+  animation: sparkle 1s ease-in-out infinite;
+}
+
+.badge-star:last-child {
+  animation-delay: 0.5s;
+}
+
+/* Christmas Tagline */
+.christmas-tagline {
+  color: var(--christmas-gold-light) !important;
+  font-style: italic;
+}
+
+.snowflake-small {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Christmas Auth Badge */
+.christmas-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.christmas-auth-badge.authenticated {
+  background: linear-gradient(135deg, var(--christmas-green) 0%, var(--christmas-green-dark) 100%);
+  color: white;
+  box-shadow: 0 2px 15px rgba(34, 139, 34, 0.5), 0 0 20px rgba(34, 139, 34, 0.3);
+  animation: glow 3s ease-in-out infinite;
+}
+
+.auth-icon {
+  animation: jingle 2s ease-in-out infinite;
+}
+
+/* Christmas Auth Button */
+.christmas-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--christmas-gold) 0%, #ffed4a 100%);
+  color: var(--christmas-red-dark) !important;
+  border-radius: 25px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.christmas-auth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.7);
+}
+
+.key-icon {
+  animation: jingle 1s ease-in-out infinite;
+}
+
+/* Christmas Menu Button */
+.christmas-menu-btn {
+  background: linear-gradient(135deg, var(--christmas-green) 0%, var(--christmas-green-dark) 100%) !important;
+  color: white !important;
+  border: 2px solid var(--christmas-gold) !important;
+  border-radius: 10px !important;
+}
+
+/* ============================================
+   🎄 CHRISTMAS NAVIGATION BAR
+   ============================================ */
+.christmas-nav {
+  background: linear-gradient(180deg,
+    var(--pine-green) 0%,
+    var(--christmas-green-dark) 50%,
+    var(--pine-green) 100%
+  );
+  padding: 0;
+  border-top: 3px solid var(--christmas-gold);
+  border-bottom: 3px solid var(--christmas-gold);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.christmas-nav-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 5px;
+}
+
+.christmas-nav-item {
+  position: relative;
+}
+
+.christmas-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 25px;
+  color: var(--snow-white);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  border-radius: 0;
+}
+
+.christmas-nav-link::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 4px;
+  background: var(--christmas-gold);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  border-radius: 2px 2px 0 0;
+}
+
+.christmas-nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--christmas-gold);
+}
+
+.christmas-nav-link:hover::before {
+  width: 80%;
+}
+
+.christmas-nav-link.active {
+  background: rgba(255, 215, 0, 0.2);
+  color: var(--christmas-gold);
+}
+
+.christmas-nav-link.active::before {
+  width: 100%;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+}
+
+.nav-text {
+  font-size: 1rem;
+}
+
+.nav-decoration {
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+}
+
+.christmas-nav-link:hover .nav-decoration,
+.christmas-nav-link.active .nav-decoration {
+  opacity: 1;
+  transform: translateY(0);
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Holly Garland */
+.holly-garland {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, var(--christmas-green-dark) 0%, var(--pine-green) 100%);
+  padding: 5px 0;
+  font-size: 1rem;
+  border-bottom: 2px solid var(--christmas-red);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.holly-garland span {
+  margin: 0 2px;
+}
+
+.holly-berry {
+  font-size: 0.6rem;
+  animation: twinkle 1.5s ease-in-out infinite;
+}
+
+.holly-berry:nth-child(4n) { animation-delay: 0.2s; }
+.holly-berry:nth-child(4n+1) { animation-delay: 0.4s; }
+.holly-berry:nth-child(4n+2) { animation-delay: 0.6s; }
+.holly-berry:nth-child(4n+3) { animation-delay: 0.8s; }
+
+/* Legacy DSFR overrides */
+.fr-header {
+  background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-red-dark) 100%) !important;
+  border-bottom: 4px solid var(--christmas-gold) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.fr-header__body {
+  position: relative;
+}
+
+.fr-header__body::before,
+.fr-header__body::after {
+  display: none;
+}
+
+.fr-logo {
+  color: var(--snow-white) !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.fr-header__service-title {
+  color: var(--snow-white) !important;
+  font-weight: bold;
+}
+
+.fr-header__service-tagline {
+  color: var(--christmas-gold-light) !important;
+}
+
+.fr-nav__link {
+  color: var(--snow-white) !important;
+  transition: all 0.3s ease;
+}
+
+.fr-nav__link:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--christmas-gold) !important;
+}
+
+.fr-nav__link--active {
+  background-color: rgba(255, 215, 0, 0.3) !important;
+  border-bottom: 3px solid var(--christmas-gold) !important;
+}
+
+/* Responsive Header */
+@media (max-width: 992px) {
+  .christmas-nav {
+    display: none;
+  }
+
+  .header-tree {
+    font-size: 2rem;
+  }
+
+  .flying-santa {
+    font-size: 1.5rem;
+  }
+
+  .christmas-title-animated {
+    font-size: 1.1rem !important;
+  }
+
+  .christmas-badge {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-tree {
+    display: none;
+  }
+
+  .christmas-lights-garland .light {
+    width: 10px;
+    height: 14px;
+  }
+
+  .holly-garland {
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================
+   🎁 CHRISTMAS CARDS
+   ============================================ */
+.fr-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px !important;
+  overflow: hidden;
+  background: linear-gradient(145deg, var(--snow-white) 0%, #f8f8f8 100%);
+  border: 2px solid transparent !important;
+}
+
+.fr-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* Buyer card - Christmas Red */
+.fr-card--blue-ecume,
+.christmas-card-buyer {
+  background: linear-gradient(145deg, #fff5f5 0%, #ffe8e8 100%) !important;
+  border: 3px solid var(--christmas-red) !important;
+  position: relative;
+}
+
+.fr-card--blue-ecume::before,
+.christmas-card-buyer::before {
+  content: "🎁";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Candidate card - Christmas Green */
+.fr-card--green-emeraude,
+.christmas-card-candidate {
+  background: linear-gradient(145deg, #f0fff0 0%, #e8ffe8 100%) !important;
+  border: 3px solid var(--christmas-green) !important;
+  position: relative;
+}
+
+.fr-card--green-emeraude::before,
+.christmas-card-candidate::before {
+  content: "🎄";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+  animation: float 2.5s ease-in-out infinite;
+}
+
+/* Technical card - Gold/Silver */
+.fr-card--grey,
+.christmas-card-technical {
+  background: linear-gradient(145deg, #fffef5 0%, var(--christmas-gold-light) 100%) !important;
+  border: 3px solid var(--christmas-gold) !important;
+  position: relative;
+}
+
+.fr-card--grey::before,
+.christmas-card-technical::before {
+  content: "⭐";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+  animation: twinkle 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   🔔 CHRISTMAS BUTTONS
+   ============================================ */
+.fr-btn--primary {
+  background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-red-dark) 100%) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
+  transition: all 0.3s ease;
+}
+
+.fr-btn--primary:hover {
+  background: linear-gradient(135deg, var(--holly-red) 0%, var(--christmas-red) 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(196, 30, 58, 0.6);
+}
+
+.fr-btn--secondary {
+  background: linear-gradient(135deg, var(--christmas-green) 0%, var(--christmas-green-dark) 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(34, 139, 34, 0.4);
+}
+
+.fr-btn--secondary:hover {
+  background: linear-gradient(135deg, #2ea82e 0%, var(--christmas-green) 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 139, 34, 0.6);
+}
+
+.fr-btn--tertiary {
+  color: var(--christmas-gold) !important;
+  border: 2px solid var(--christmas-gold) !important;
+}
+
+.fr-btn--tertiary:hover {
+  background-color: rgba(255, 215, 0, 0.2) !important;
+}
+
+/* ============================================
+   🌟 CHRISTMAS ALERTS & NOTICES
+   ============================================ */
+.fr-alert--success {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
+  border-left: 5px solid var(--christmas-green) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.fr-alert--success::after {
+  content: "🎉";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+}
+
+.fr-notice--info {
+  background: linear-gradient(135deg, var(--ice-blue) 0%, #b2ebf2 100%) !important;
+  border-left: 5px solid #0288d1 !important;
+}
+
+.fr-notice--warning {
+  background: linear-gradient(135deg, var(--christmas-gold-light) 0%, #fff3e0 100%) !important;
+  border-left: 5px solid var(--christmas-gold) !important;
+}
+
+/* ============================================
+   ❄️ CHRISTMAS BADGES
+   ============================================ */
+.fr-badge--success {
+  background: linear-gradient(135deg, var(--christmas-green) 0%, var(--christmas-green-dark) 100%) !important;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.fr-badge--info {
+  background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-red-dark) 100%) !important;
+}
+
+/* ============================================
+   🎄 CHRISTMAS FOOTER
+   ============================================ */
 .fr-footer {
   flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pine-green) 0%, #0a2f0a 100%) !important;
+  border-top: 4px solid var(--christmas-gold) !important;
+  color: var(--snow-white) !important;
+  position: relative;
 }
 
-/* Custom enhancements for specific components */
-
-/* Required field asterisks styling */
-.fr-label span[aria-hidden="true"] {
-  color: #ce0500;
+.fr-footer::before {
+  content: "🎅 Ho Ho Ho! Joyeuses Fêtes! 🎅";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--christmas-red);
+  color: white;
+  padding: 5px 20px;
+  border-radius: 20px;
   font-weight: bold;
-  margin-left: 0.25rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  animation: float 3s ease-in-out infinite;
 }
 
-/* Token display code styling */
+.fr-footer .fr-logo {
+  color: var(--snow-white) !important;
+}
+
+.fr-footer__content-desc,
+.fr-footer__bottom-link {
+  color: var(--christmas-gold-light) !important;
+}
+
+.fr-footer__content-link {
+  color: var(--christmas-gold) !important;
+}
+
+/* ============================================
+   🍬 CHRISTMAS CALLOUTS
+   ============================================ */
+.fr-callout {
+  background: linear-gradient(145deg, var(--snow-white) 0%, #f5f5f5 100%) !important;
+  border-left: 5px solid var(--christmas-red) !important;
+  border-radius: 8px !important;
+  position: relative;
+}
+
+.fr-callout::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, transparent 50%, var(--christmas-red) 50%);
+  border-radius: 0 8px 0 0;
+}
+
+/* ============================================
+   🌟 CHRISTMAS TYPOGRAPHY
+   ============================================ */
+h1, h2, h3 {
+  position: relative;
+}
+
+.christmas-title {
+  background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   🎁 CHRISTMAS TABLE
+   ============================================ */
+.fr-table table thead {
+  background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-red-dark) 100%) !important;
+}
+
+.fr-table table thead th {
+  color: var(--snow-white) !important;
+}
+
+.fr-table table tbody tr:hover {
+  background-color: rgba(255, 215, 0, 0.1) !important;
+}
+
+.market-row {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.market-row:hover {
+  background-color: rgba(255, 215, 0, 0.2) !important;
+  transform: scale(1.01);
+}
+
+/* ============================================
+   🎄 CHRISTMAS LIGHTS BORDER
+   ============================================ */
+.christmas-lights {
+  position: relative;
+  padding: 20px;
+}
+
+.christmas-lights::before {
+  content: "💡🔴💡🟢💡🔴💡🟢💡🔴💡🟢💡🔴💡🟢💡";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 1rem;
+  animation: twinkle 1s ease-in-out infinite;
+}
+
+/* ============================================
+   ❄️ CODE STYLING
+   ============================================ */
 code {
-  background-color: #f6f6f6;
+  background: linear-gradient(145deg, #f6f6f6 0%, #e8e8e8 100%);
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
   font-size: 0.875rem;
-  color: #161616;
-  border: 1px solid #e3e3e3;
+  color: var(--christmas-red-dark);
+  border: 1px solid var(--christmas-gold);
 }
 
-/* Card enhancements */
-.fr-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.fr-card.fr-enlarge-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* JSON/Pre formatting for webhook debug */
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   max-height: 400px;
   overflow-y: auto;
-  background-color: #f6f6f6;
-  border: 1px solid #e3e3e3;
-  border-radius: 0.25rem;
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+  border: 2px solid var(--christmas-gold);
+  border-radius: 8px;
   padding: 1rem;
   margin: 0;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
   font-size: 0.75rem;
   line-height: 1.4;
+  color: #00ff00;
 }
 
-/* Table hover effects for better UX */
-.fr-table table tbody tr:hover {
-  background-color: #f6f6f6;
+/* ============================================
+   🎅 CHRISTMAS BANNER
+   ============================================ */
+.christmas-banner {
+  background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-green) 100%);
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
 }
 
-/* Market row specific styling */
-.market-row {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.christmas-banner::before {
+  content: "⛄";
+  position: absolute;
+  left: 20px;
+  animation: jingle 1s ease-in-out infinite;
 }
 
-/* Form enhancements */
-.fr-input:focus,
-.fr-select:focus {
-  box-shadow: inset 0 -2px 0 0 #000091;
+.christmas-banner::after {
+  content: "⛄";
+  position: absolute;
+  right: 20px;
+  animation: jingle 1s ease-in-out infinite 0.5s;
 }
 
-/* Button size variants to match old design */
-.fr-btn--sm {
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  line-height: 1.25rem;
+/* ============================================
+   🎁 GIFT BOX ANIMATION
+   ============================================ */
+.gift-box {
+  display: inline-block;
+  animation: float 2s ease-in-out infinite;
 }
 
-/* Callout enhancements for webhook sections */
-.fr-callout pre {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-/* Badge customizations */
-.fr-badge {
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
-/* Responsive table improvements */
+/* ============================================
+   📱 RESPONSIVE CHRISTMAS
+   ============================================ */
 @media (max-width: 768px) {
-  .fr-table {
-    overflow-x: auto;
+  .fr-header__body::before,
+  .fr-header__body::after {
+    display: none;
   }
-  
-  .fr-table table {
-    min-width: 600px;
+
+  .christmas-banner {
+    font-size: 1rem;
+    padding: 10px;
   }
-  
-  .fr-btn--sm {
-    font-size: 0.75rem;
-    padding: 0.375rem 0.75rem;
+
+  .snowflake {
+    font-size: 1rem;
+  }
+
+  .fr-footer::before {
+    font-size: 0.8rem;
+    padding: 3px 10px;
   }
 }
 
-/* Accessibility improvements */
-.fr-btn:focus-visible,
-.fr-link:focus-visible {
-  outline: 2px solid #000091;
-  outline-offset: 2px;
+/* ============================================
+   ✨ SMOOTH SCROLLING
+   ============================================ */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Custom utilities that complement DSFR */
-.text-monospace {
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace !important;
-}
-
-/* Print styles */
+/* ============================================
+   🖨️ PRINT STYLES (No Christmas in print!)
+   ============================================ */
 @media print {
-  .fr-header,
-  .fr-footer,
-  .fr-btn {
+  .snowflakes,
+  .christmas-banner,
+  .fr-header::before,
+  .fr-header::after,
+  .fr-footer::before {
     display: none !important;
   }
-  
+
+  body {
+    background: white !important;
+  }
+
   .fr-card {
     border: 1px solid #000 !important;
     box-shadow: none !important;
   }
+}
+
+/* ============================================
+   🎄 EXTRA CHRISTMAS MAGIC
+   ============================================ */
+.fr-container {
+  position: relative;
+}
+
+/* Candy cane divider */
+.candy-cane-divider {
+  height: 10px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--christmas-red),
+    var(--christmas-red) 10px,
+    white 10px,
+    white 20px
+  );
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+/* Holly decoration */
+.holly {
+  display: inline-block;
+}
+
+.holly::before {
+  content: "🍃";
+}
+
+.holly::after {
+  content: "🔴🔴";
+  font-size: 0.5em;
+  position: relative;
+  top: -5px;
+}
+
+/* Festive link styling */
+.fr-link {
+  color: var(--christmas-green) !important;
+  text-decoration: none;
+  position: relative;
+}
+
+.fr-link:hover {
+  color: var(--christmas-red) !important;
+}
+
+.fr-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--christmas-gold);
+  transition: width 0.3s ease;
+}
+
+.fr-link:hover::after {
+  width: 100%;
+}
+
+/* Santa hat on icons */
+.santa-hat {
+  position: relative;
+}
+
+.santa-hat::before {
+  content: "🎅";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 1rem;
 }

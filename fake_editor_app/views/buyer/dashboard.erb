@@ -5,10 +5,10 @@
       <div class="fr-collapse" id="breadcrumb-buyer">
         <ol class="fr-breadcrumb__list">
           <li>
-            <a class="fr-breadcrumb__link" href="/">Accueil</a>
+            <a class="fr-breadcrumb__link" href="/">🏠 Accueil</a>
           </li>
           <li>
-            <a class="fr-breadcrumb__link" aria-current="page">Tableau de bord Acheteur</a>
+            <a class="fr-breadcrumb__link" aria-current="page">🎁 Tableau de bord Acheteur</a>
           </li>
         </ol>
       </div>
@@ -17,39 +17,41 @@
     <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
       <div class="fr-col">
         <h1>
-          <span class="fr-icon-building-line fr-icon--lg" aria-hidden="true"></span>
-          Tableau de bord Acheteur
+          🏛️ Tableau de bord Acheteur 🎄
         </h1>
-        <p class="fr-text--lead">Gérez vos marchés publics et consultez les candidatures</p>
+        <p class="fr-text--lead">🎁 Gérez vos marchés publics et consultez les candidatures - Édition Noël !</p>
       </div>
       <div class="fr-col-auto">
         <% if @current_token&.valid? %>
           <a href="/buyer/markets/new" class="fr-btn fr-btn--primary">
-            <span class="fr-icon-add-line fr-icon--sm" aria-hidden="true"></span>
-            Créer un marché
+            🎁 Créer un marché
           </a>
         <% else %>
           <div class="fr-tooltip fr-placement-bottom" id="tooltip-auth">
             <button class="fr-btn fr-btn--primary" disabled aria-describedby="tooltip-auth-text">
-              <span class="fr-icon-add-line fr-icon--sm" aria-hidden="true"></span>
-              Créer un marché
+              🎁 Créer un marché
             </button>
           </div>
           <span class="fr-tooltip__text" id="tooltip-auth-text" role="tooltip">
-            Authentification requise
+            🎅 Authentification requise
           </span>
         <% end %>
       </div>
     </div>
   </div>
 
+  <!-- 🍬 CANDY CANE DIVIDER 🍬 -->
+  <div class="candy-cane-divider"></div>
+
   <!-- Authentication Warning -->
   <% unless @current_token&.valid? %>
     <div class="fr-alert fr-alert--warning fr-mb-4w">
-      <h3 class="fr-alert__title">⚠️ Authentification requise</h3>
+      <h3 class="fr-alert__title">🎅 Authentification requise</h3>
       <p>
         Vous devez être authentifié pour créer des marchés.
-        <a href="/technical" class="fr-link">Aller au tableau de bord technique</a> pour vous authentifier.
+        <a href="/technical" class="fr-link">🔑 Aller au tableau de bord technique</a> pour vous authentifier.
+        <br>
+        <span style="font-style: italic;">Le Père Noël vérifie qui est sage !</span>
       </p>
     </div>
   <% end %>
@@ -57,7 +59,7 @@
   <!-- Markets List -->
   <div class="fr-mb-4w">
     <h2 class="fr-mb-3w">
-      Mes marchés
+      🎄 Mes marchés
       <span class="fr-badge fr-badge--sm fr-ml-1w"><%= @markets.count %></span>
     </h2>
 
@@ -70,18 +72,18 @@
                 <div class="fr-card__content">
                   <h3 class="fr-card__title">
                     <a href="/buyer/markets/<%= market.identifier %>" class="fr-card__link">
-                      <%= market.name %>
+                      🎁 <%= market.name %>
                     </a>
                   </h3>
                   <p class="fr-card__desc">
                     <% if market.lot_name && !market.lot_name.empty? %>
-                      <strong>Lot:</strong> <%= market.lot_name %><br>
+                      <strong>📦 Lot:</strong> <%= market.lot_name %><br>
                     <% end %>
-                    <strong>Identifiant:</strong> <code class="fr-text--xs"><%= market.identifier %></code><br>
-                    <strong>Créé:</strong> <%= relative_time(market.created_at) %><br>
-                    <strong>Candidatures:</strong> <%= market.applications_count %><br>
+                    <strong>🏷️ Identifiant:</strong> <code class="fr-text--xs"><%= market.identifier %></code><br>
+                    <strong>📅 Créé:</strong> <%= relative_time(market.created_at) %><br>
+                    <strong>👥 Candidatures:</strong> <%= market.applications_count %><br>
                     <% if market.status == 'completed' && market.completed_applications_count > 0 %>
-                      <strong>Terminées:</strong> <%= market.completed_applications_count %>
+                      <strong>✅ Terminées:</strong> <%= market.completed_applications_count %>
                     <% end %>
                   </p>
                   <div class="fr-card__end">
@@ -97,29 +99,41 @@
       </div>
     <% else %>
       <div class="fr-callout">
-        <h3 class="fr-callout__title">Aucun marché</h3>
+        <h3 class="fr-callout__title">🎄 Aucun marché</h3>
         <p class="fr-callout__text">
           Vous n'avez pas encore créé de marché.
           <% if @current_token&.valid? %>
-            <a href="/buyer/markets/new" class="fr-link">Créez votre premier marché</a>
+            <a href="/buyer/markets/new" class="fr-link">🎁 Créez votre premier marché</a> - C'est Noël, offrez-vous ce cadeau !
           <% else %>
-            Authentifiez-vous d'abord pour créer un marché.
+            🔑 Authentifiez-vous d'abord pour créer un marché.
           <% end %>
         </p>
       </div>
     <% end %>
   </div>
 
+  <!-- 🍬 CANDY CANE DIVIDER 🍬 -->
+  <div class="candy-cane-divider"></div>
+
   <!-- Help Section -->
   <div class="fr-mt-6w">
     <div class="fr-callout fr-callout--blue-ecume">
-      <h3 class="fr-callout__title">💡 Comment ça marche ?</h3>
+      <h3 class="fr-callout__title">🎅 Comment ça marche ? - Guide de Noël</h3>
       <ol>
-        <li>Créez un marché public avec les informations essentielles</li>
-        <li>Configurez-le dans Passe Marché (vous serez redirigé automatiquement)</li>
-        <li>Passe Marché vous notifiera via webhook une fois la configuration terminée</li>
-        <li>Les candidats pourront alors postuler à votre marché</li>
+        <li>🎁 Créez un marché public avec les informations essentielles</li>
+        <li>⚙️ Configurez-le dans Passe Marché (vous serez redirigé automatiquement)</li>
+        <li>🔔 Passe Marché vous notifiera via webhook une fois la configuration terminée</li>
+        <li>🎄 Les candidats pourront alors postuler à votre marché</li>
       </ol>
+      <p style="margin-top: 1rem; font-style: italic; color: #c41e3a;">
+        ✨ Que vos marchés soient remplis de belles candidatures en cette période festive ! ✨
+      </p>
     </div>
+  </div>
+
+  <!-- Christmas message -->
+  <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: rgba(196,30,58,0.1); border-radius: 8px;">
+    <span style="font-size: 2rem;">🎄🏛️🎁</span>
+    <p style="color: #228b22; font-weight: bold; margin: 0.5rem 0;">Joyeuses Fêtes de la part de l'espace Acheteur !</p>
   </div>
 </div>
