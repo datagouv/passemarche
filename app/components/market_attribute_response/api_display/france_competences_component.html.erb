@@ -1,0 +1,35 @@
+<div class="fr-text--sm fr-text--mention-grey">
+  <% habilitations.each_with_index do |habilitation, index| %>
+    <% if index > 0 %><hr class="fr-hr fr-my-2v"><% end %>
+    <p class="fr-mb-1v">
+      <strong><%= t('form_fields.candidate.carif_oref.france_competence.actif') %> :</strong>
+      <%= habilitation_actif(habilitation) %>
+    </p>
+    <% if habilitation['date_actif'].present? %>
+      <p class="fr-mb-1v">
+        <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_actif') %> :</strong>
+        <%= habilitation_date_actif(habilitation) %>
+      </p>
+    <% end %>
+    <% if habilitation['date_fin_enregistrement'].present? %>
+      <p class="fr-mb-1v">
+        <strong><%= t('form_fields.candidate.carif_oref.france_competence.date_fin_enregistrement') %> :</strong>
+        <%= habilitation_date_fin_enregistrement(habilitation) %>
+      </p>
+    <% end %>
+    <p class="fr-mb-1v">
+      <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_former') %> :</strong>
+      <%= habilitation_pour_former(habilitation) %>
+    </p>
+    <p class="fr-mb-1v">
+      <strong><%= t('form_fields.candidate.carif_oref.france_competence.habilitation_pour_organiser_evaluation') %> :</strong>
+      <%= habilitation_pour_organiser_evaluation(habilitation) %>
+    </p>
+    <% if habilitation_sirets(habilitation).present? %>
+      <p class="fr-mb-0">
+        <strong><%= t('form_fields.candidate.carif_oref.france_competence.siret_organisme_certificateur') %> :</strong>
+        <%= habilitation_sirets(habilitation) %>
+      </p>
+    <% end %>
+  <% end %>
+</div>
