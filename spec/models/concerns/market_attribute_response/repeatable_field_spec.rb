@@ -13,18 +13,6 @@ class TestRepeatableField < MarketAttributeResponse
       'count' => { type: 'integer', required: false }
     }
   end
-
-  def self.json_schema_properties
-    %w[items]
-  end
-
-  def self.json_schema_required
-    []
-  end
-
-  def self.json_schema_error_field
-    :value
-  end
 end
 
 RSpec.describe MarketAttributeResponse::RepeatableField, type: :model do

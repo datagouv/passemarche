@@ -14,18 +14,6 @@ class MarketAttributeResponse::PresentationIntervenants < MarketAttributeRespons
     }
   end
 
-  def self.json_schema_properties
-    %w[items]
-  end
-
-  def self.json_schema_required
-    []
-  end
-
-  def self.json_schema_error_field
-    :value
-  end
-
   alias persons items
   alias persons= items=
   alias persons_ordered items_ordered
