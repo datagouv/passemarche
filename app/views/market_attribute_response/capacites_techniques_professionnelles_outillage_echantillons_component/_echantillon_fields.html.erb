@@ -5,16 +5,16 @@
         <div class="fr-col-8" style="display: flex; align-items: center;">
           <h6 class="fr-text--sm fr-mb-0" style="margin-bottom: 0;">
             <% if display_number %>
-              Échantillon <%= display_number %>
+              Echantillon <%= display_number %>
             <% else %>
-              Nouvel échantillon
+              Nouvel echantillon
             <% end %>
           </h6>
         </div>
         <div class="fr-col-4" style="display: flex; align-items: center; justify-content: flex-end;">
           <%= response_form.hidden_field "echantillon_#{index}__destroy", value: '0' %>
           <div class="fr-mt-0">
-            <%= nested_form_delete_button("cet échantillon") %>
+            <%= nested_form_delete_button("cet echantillon") %>
           </div>
         </div>
       </div>
@@ -22,12 +22,12 @@
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
           <div class="fr-input-group">
-            <%= response_form.label "echantillon_#{index}_description", "Description de l'échantillon", class: "fr-label" %>
-            <span class="fr-hint-text">Décrivez l'échantillon, la photographie ou la fourniture que vous souhaitez présenter</span>
+            <%= response_form.label "echantillon_#{index}_description", "Description de l'echantillon", class: "fr-label" %>
+            <span class="fr-hint-text">Decrivez l'echantillon, la photographie ou la fourniture que vous souhaitez presenter</span>
             <%= response_form.text_area "echantillon_#{index}_description",
-              value: index == 'NEW_RECORD' ? '' : market_attribute_response.get_item_field(index, 'description'),
+              value: index == 'NEW_RECORD' ? '' : component.get_item_field(index, 'description'),
               class: "fr-input",
-              placeholder: "ex: Échantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, matériau acier inoxydable",
+              placeholder: "ex: Echantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, materiau acier inoxydable",
               rows: 3 %>
           </div>
         </div>
@@ -35,14 +35,14 @@
 
       <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div class="fr-col-8">
-          <% files = index == 'NEW_RECORD' ? nil : market_attribute_response.echantillon_fichiers(index) %>
+          <% files = index == 'NEW_RECORD' ? nil : component.echantillon_fichiers(index) %>
           <%= direct_upload_field documents: files,
-                                  market_application_identifier: market_attribute_response.market_application.identifier,
+                                  market_application_identifier: component.market_attribute_response.market_application.identifier,
                                   deletable: true,
                                   form: response_form,
                                   field_name: "echantillon_#{index}_fichiers" do %>
             <%= response_form.label "echantillon_#{index}_fichiers", "Fichiers (photos, documents)", class: "fr-label" %>
-            <span class="fr-hint-text">Format accepté : PDF, JPG, PNG. Taille maximale : 10 Mo par fichier. Vous pouvez joindre plusieurs fichiers.</span>
+            <span class="fr-hint-text">Format accepte : PDF, JPG, PNG. Taille maximale : 10 Mo par fichier. Vous pouvez joindre plusieurs fichiers.</span>
             <%= response_form.file_field "echantillon_#{index}_fichiers",
                   class: "fr-upload",
                   direct_upload: true,

@@ -56,5 +56,20 @@ FactoryBot.define do
             class: 'MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels' do
       association :market_attribute, :effectifs_moyens_annuels
     end
+
+    factory :market_attribute_response_outillage_echantillons,
+            class: 'MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchantillons' do
+      association :market_attribute, :outillage_echantillons
+    end
+
+    factory :market_attribute_response_presentation_intervenants,
+            class: 'MarketAttributeResponse::PresentationIntervenants' do
+      association :market_attribute, :presentation_intervenants
+    end
+
+    factory :market_attribute_response_realisations_livraisons,
+            class: 'MarketAttributeResponse::RealisationsLivraisons' do
+      association :market_attribute, :realisations_livraisons
+    end
   end
 end

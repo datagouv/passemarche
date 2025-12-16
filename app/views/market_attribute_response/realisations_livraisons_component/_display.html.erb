@@ -1,0 +1,83 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.show_value? %>
+      <br>
+
+      <% if component.data? %>
+        <div class="fr-mt-2w">
+          <% component.realisations_with_data.each_with_index do |(timestamp, realisation), index| %>
+            <div class="fr-card fr-card--sm fr-mb-2w">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <h6 class="fr-text--sm fr-mb-1w">
+                    <span class="fr-icon-building-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                    Realisation <%= index + 1 %>
+                  </h6>
+
+                  <% if realisation['resume'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Resume :</strong> <%= realisation['resume'] %>
+                    </div>
+                  <% end %>
+
+                  <% if realisation['date_debut'].present? || realisation['date_fin'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Periode :</strong>
+                      <% if realisation['date_debut'].present? %>
+                        Du <%= component.formatted_date(realisation['date_debut']) %>
+                      <% end %>
+                      <% if realisation['date_fin'].present? %>
+                        au <%= component.formatted_date(realisation['date_fin']) %>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <% if realisation['montant'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Montant :</strong> <%= component.formatted_montant(realisation['montant']) %> EUR
+                    </div>
+                  <% end %>
+
+                  <% if realisation['description'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Description :</strong><br>
+                      <%= simple_format(realisation['description'], class: 'fr-text--sm') %>
+                    </div>
+                  <% end %>
+
+                  <% attestations = component.realisation_attestations(timestamp) %>
+                  <% if attestations.any? %>
+                    <div class="fr-mb-1v">
+                      <strong><%= attestations.size == 1 ? 'Attestation' : 'Attestations' %> :</strong>
+                      <ul class="fr-text--sm fr-mt-1v">
+                        <% attestations.each do |attestation| %>
+                          <li>
+                            <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                              document: attestation,
+                              market_application: component.market_attribute_response.market_application,
+                              context: component.context,
+                              naming_service: component.naming_service
+                            ) %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <span class="fr-text--md fr-text--mention-grey"><%= component.no_data_message %></span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>

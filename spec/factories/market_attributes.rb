@@ -68,5 +68,17 @@ FactoryBot.define do
     trait :effectifs_moyens_annuels do
       input_type { :capacite_economique_financiere_effectifs_moyens_annuels }
     end
+
+    trait :outillage_echantillons do
+      input_type { :capacites_techniques_professionnelles_outillage_echantillons }
+    end
+
+    trait :presentation_intervenants do
+      input_type { :presentation_intervenants }
+    end
+
+    trait :realisations_livraisons do
+      input_type { :realisations_livraisons }
+    end
   end
 end
