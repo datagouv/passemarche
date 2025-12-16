@@ -188,7 +188,7 @@ RSpec.describe MarketAttributeResponse::PresentationIntervenantsComponent, type:
 
         render_inline(component)
 
-        expect(page).to have_text('Aucune personne renseignee')
+        expect(page).to have_text('Aucune personne renseignée')
       end
     end
 

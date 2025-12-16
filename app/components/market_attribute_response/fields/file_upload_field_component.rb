@@ -66,4 +66,8 @@ class MarketAttributeResponse::Fields::FileUploadFieldComponent < ViewComponent:
   def base_error_message
     form.object.errors[:base].first
   end
+
+  def empty_state_message
+    'Aucun fichier téléchargé'
+  end
 end

@@ -31,7 +31,7 @@
         </div>
         <div class="fr-col-6">
           <div class="fr-input-group">
-            <%= response_form.label "person_#{index}_prenoms", "Prenoms", class: "fr-label" %>
+            <%= response_form.label "person_#{index}_prenoms", "Prénoms", class: "fr-label" %>
             <%= response_form.text_field "person_#{index}_prenoms",
                   value: index == 'NEW_RECORD' ? '' : component.get_item_field(index, 'prenoms'),
                   class: "fr-input",
@@ -43,12 +43,12 @@
       <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div class="fr-col-12">
           <div class="fr-input-group">
-            <%= response_form.label "person_#{index}_titres", "Titres d'etudes et professionnels", class: "fr-label" %>
-            <span class="fr-hint-text">Diplomes, certifications, experiences professionnelles</span>
+            <%= response_form.label "person_#{index}_titres", "Titres d'études et professionnels", class: "fr-label" %>
+            <span class="fr-hint-text">Diplômes, certifications, expériences professionnelles</span>
             <%= response_form.text_area "person_#{index}_titres",
                   value: index == 'NEW_RECORD' ? '' : component.get_item_field(index, 'titres'),
                   class: "fr-input",
-                  placeholder: "ex: Ingenieur informatique, Master en gestion de projet",
+                  placeholder: "ex: Ingénieur informatique, Master en gestion de projet",
                   rows: 3 %>
           </div>
         </div>
@@ -63,7 +63,7 @@
                                   form: response_form,
                                   field_name: "person_#{index}_cv_attachment_id" do %>
             <%= response_form.label "person_#{index}_cv_attachment_id", "Ajouter un CV", class: "fr-label" %>
-            <span class="fr-hint-text">Format accepte : PDF, DOC, DOCX. Taille maximale : 10 Mo.</span>
+            <span class="fr-hint-text">Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo.</span>
             <%= response_form.file_field "person_#{index}_cv_attachment_id",
                   class: "fr-upload",
                   direct_upload: true,

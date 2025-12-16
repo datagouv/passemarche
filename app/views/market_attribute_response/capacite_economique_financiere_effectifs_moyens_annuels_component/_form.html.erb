@@ -43,7 +43,7 @@
                       class="fr-label fr-text--md"
                       for="market_attribute_response_<%= year_key %>_year"
                     >
-                      Annee <%= component.year_label(year_key) %>
+                      Année <%= component.year_label(year_key) %>
                     </label>
                     <%= response_form.text_field(
                           "#{year_key}_year",
@@ -94,7 +94,7 @@
         <% if component.year_error_messages(year_key).any? %>
           <div class="fr-messages-group fr-mt-1w" aria-live="polite">
             <p class="fr-message fr-message--error">
-              Annee <%= component.year_label(year_key) %> :
+              Année <%= component.year_label(year_key) %> :
               <%= component.year_error_messages(year_key).first %>
             </p>
           </div>

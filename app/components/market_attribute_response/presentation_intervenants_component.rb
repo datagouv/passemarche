@@ -36,7 +36,7 @@ class MarketAttributeResponse::PresentationIntervenantsComponent < MarketAttribu
   end
 
   def no_data_message
-    'Aucune personne renseignee'
+    'Aucune personne renseignée'
   end
 
   def documents_attached?

@@ -32,10 +32,10 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchan
   end
 
   def add_button_text
-    'Ajouter un echantillon'
+    'Ajouter un échantillon'
   end
 
   def no_data_message
-    'Aucun echantillon renseigne'
+    'Aucun échantillon renseigné'
   end
 end

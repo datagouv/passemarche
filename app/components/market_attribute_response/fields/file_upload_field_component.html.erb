@@ -26,7 +26,7 @@
     <% if documents_attached? %>
       <div class="fr-mt-2w fr-text--sm fr-mb-0">
         <strong>Fichiers actuels :</strong>
-        <% documents.each do |document| %>
+        <% documents.select(&:persisted?).each do |document| %>
           <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil, data: { signed_id: document.signed_id }) %>
           <div class="file-item" data-signed-id="<%= document.signed_id %>">
             <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener", class: "file-link" %>
@@ -49,6 +49,10 @@
             <% end %>
           </div>
         <% end %>
+      </div>
+    <% else %>
+      <div class="fr-mt-2w fr-text--sm fr-mb-0">
+        <span class="fr-text--mention-grey"><%= empty_state_message %></span>
       </div>
     <% end %>
   </div>

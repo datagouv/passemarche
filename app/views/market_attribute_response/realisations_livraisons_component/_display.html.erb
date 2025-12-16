@@ -15,18 +15,18 @@
                 <div class="fr-card__content">
                   <h6 class="fr-text--sm fr-mb-1w">
                     <span class="fr-icon-building-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                    Realisation <%= index + 1 %>
+                    Réalisation <%= index + 1 %>
                   </h6>
 
                   <% if realisation['resume'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Resume :</strong> <%= realisation['resume'] %>
+                      <strong>Résumé :</strong> <%= realisation['resume'] %>
                     </div>
                   <% end %>
 
                   <% if realisation['date_debut'].present? || realisation['date_fin'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Periode :</strong>
+                      <strong>Période :</strong>
                       <% if realisation['date_debut'].present? %>
                         Du <%= component.formatted_date(realisation['date_debut']) %>
                       <% end %>
@@ -38,7 +38,7 @@
 
                   <% if realisation['montant'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Montant :</strong> <%= component.formatted_montant(realisation['montant']) %> EUR
+                      <strong>Montant :</strong> <%= component.formatted_montant(realisation['montant']) %> €
                     </div>
                   <% end %>
 

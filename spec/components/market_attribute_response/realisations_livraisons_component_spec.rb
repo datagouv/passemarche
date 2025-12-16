@@ -196,7 +196,7 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisonsComponent, type: :
         render_inline(component)
 
         expect(page).to have_css('[data-controller="nested-form"]')
-        expect(page).to have_button('Ajouter une realisation')
+        expect(page).to have_button('Ajouter une réalisation')
       end
     end
 
@@ -231,8 +231,8 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisonsComponent, type: :
 
         expect(page).to have_css('div.field-layout-container')
         expect(page).to have_css('div.fr-card', count: 2)
-        expect(page).to have_text('Realisation 1')
-        expect(page).to have_text('Realisation 2')
+        expect(page).to have_text('Réalisation 1')
+        expect(page).to have_text('Réalisation 2')
         expect(page).to have_text('Construction batiment')
       end
     end
@@ -247,7 +247,7 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisonsComponent, type: :
 
         render_inline(component)
 
-        expect(page).to have_text('EUR')
+        expect(page).to have_text('€')
       end
     end
 
@@ -261,7 +261,7 @@ RSpec.describe MarketAttributeResponse::RealisationsLivraisonsComponent, type: :
 
         render_inline(component)
 
-        expect(page).to have_text('Aucune realisation renseignee')
+        expect(page).to have_text('Aucune réalisation renseignée')
       end
     end
 

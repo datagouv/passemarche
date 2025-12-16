@@ -26,7 +26,7 @@
 
                   <% if person['prenoms'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Prenoms :</strong> <%= person['prenoms'] %>
+                      <strong>Prénoms :</strong> <%= person['prenoms'] %>
                     </div>
                   <% end %>
 
@@ -61,7 +61,7 @@
 
       <% if component.documents_attached? %>
         <div class="fr-mt-3w">
-          <h6 class="fr-text--sm fr-mb-1w">Documents associes</h6>
+          <h6 class="fr-text--sm fr-mb-1w">Documents associés</h6>
           <div class="fr-text--sm fr-text--mention-grey">
             <% component.documents.each do |doc| %>
               <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(

@@ -34,11 +34,11 @@ class MarketAttributeResponse::RealisationsLivraisonsComponent < MarketAttribute
   end
 
   def add_button_text
-    'Ajouter une realisation'
+    'Ajouter une réalisation'
   end
 
   def no_data_message
-    'Aucune realisation renseignee'
+    'Aucune réalisation renseignée'
   end
 
   def formatted_date(date_str)

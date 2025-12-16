@@ -11,7 +11,7 @@
         <% year_data = component.year_data(year_key) %>
         <% if year_data['year'].present? || year_data['average_staff'].present? %>
           <div class="fr-mb-2w">
-            <span class="fr-text--md"><strong>Annee <%= component.year_label(year_key) %> :</strong></span>
+            <span class="fr-text--md"><strong>Année <%= component.year_label(year_key) %> :</strong></span>
             <span class="fr-text--md fr-ml-1w">
               <% if year_data['year'].present? %>
                 <%= year_data['year'] %>

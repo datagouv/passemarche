@@ -146,7 +146,7 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
         render_inline(component)
 
         expect(page).to have_css('div.fr-input-group')
-        expect(page).to have_text('Annee n-1')
+        expect(page).to have_text('Année n-1')
         expect(page).to have_text('Effectif moyen')
       end
     end
@@ -177,7 +177,7 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
         render_inline(component)
 
         expect(page).to have_css('div.field-layout-container')
-        expect(page).to have_text('Annee n-1')
+        expect(page).to have_text('Année n-1')
         expect(page).to have_text('2024')
         expect(page).to have_text('30')
       end

@@ -135,7 +135,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutil
         render_inline(component)
 
         expect(page).to have_css('[data-controller="nested-form"]')
-        expect(page).to have_button('Ajouter un echantillon')
+        expect(page).to have_button('Ajouter un échantillon')
       end
     end
 
@@ -170,8 +170,8 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutil
 
         expect(page).to have_css('div.field-layout-container')
         expect(page).to have_css('div.fr-card', count: 2)
-        expect(page).to have_text('Echantillon 1')
-        expect(page).to have_text('Echantillon 2')
+        expect(page).to have_text('Échantillon 1')
+        expect(page).to have_text('Échantillon 2')
         expect(page).to have_text('Sample 1 description')
       end
     end
@@ -186,7 +186,7 @@ RSpec.describe MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutil
 
         render_inline(component)
 
-        expect(page).to have_text('Aucun echantillon renseigne')
+        expect(page).to have_text('Aucun échantillon renseigné')
       end
     end
 
