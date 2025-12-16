@@ -142,7 +142,7 @@ fr:
         capacites_techniques_professionnelles: Sélections des renseignements complémentaires (partie 2)
         summary: "Synthèse"
       generic_step:
-        optional_question: Souhaitez-vous demander des informations complémentaires aux candidats ?
+        optional_question: Souhaitez-vous demander des renseignements complémentaires ?
         yes_option: Oui
         no_option: Non
         steps:
