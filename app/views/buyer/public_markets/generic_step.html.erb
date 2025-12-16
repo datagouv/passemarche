@@ -20,7 +20,7 @@
 
       <% if (box_title = t("buyer.public_markets.generic_step.steps.#{step}.box_title", default: nil)) %>
         <div class="fr-p-3w" style="background-color: var(--background-alt-grey);">
-          <h4 class="fr-h6 fr-mb-2w"><%= box_title %></h4>
+          <h4 class="fr-mb-2w fr-text--lg fr-text--bold"><%= box_title %></h4>
           <p class="fr-mb-0"><%= t("buyer.public_markets.generic_step.steps.#{step}.box_content") %></p>
         </div>
       <% end %>
@@ -50,7 +50,7 @@
       <div data-controller="additional-fields" data-additional-fields-category-value="<%= @current_category %>">
         <div class="fr-mb-4w fr-border-default--grey">
           <div class="fr-p-4w">
-            <h3 class="fr-h6 fr-mb-3w"><%= t('buyer.public_markets.generic_step.optional_question') %></h3>
+            <h3 class="fr-mb-3w fr-text--lg fr-text--bold"><%= t('buyer.public_markets.generic_step.optional_question') %></h3>
             <div class="fr-radio-group fr-mb-1w">
               <input type="radio" id="additional-yes-<%= @current_category %>" name="additional_fields_choice" value="yes" class="fr-radio" data-action="change->additional-fields#showAdditionalFieldsAndEnableSubmit" data-additional-fields-target="yesOption">
               <label class="fr-label" for="additional-yes-<%= @current_category %>">
@@ -69,10 +69,9 @@
         <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
           <div class="fr-mb-4w" data-additional-fields-target="accordion">
             <div class="fr-mb-4w">
-              <h3 class="fr-h5 fr-mb-2w"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_title") %></h3>
-              <p class="fr-text--lg fr-mb-0"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_description") %></p>
+              <h3 class="fr-mb-2w fr-text--lg fr-text--bold"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_title") %></h3>
+              <p class="fr-mb-0"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_description") %></p>
             </div>
-
             <% @optional_fields.each_with_index do |(subcategory, fields), subcat_index| %>
               <%= render 'subcategory_section',
                     subcategory: subcategory,
