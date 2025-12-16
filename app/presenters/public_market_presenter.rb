@@ -2,6 +2,7 @@
 
 class PublicMarketPresenter
   include SidemenuHelper
+  include MarketAttributeGrouping
 
   INITIAL_WIZARD_STEP = :setup
   FINAL_WIZARD_STEP = :summary
@@ -156,12 +157,6 @@ class PublicMarketPresenter
     market_attributes
       .group_by(&:category_key)
       .transform_values { |category_attrs| group_by_subcategory(category_attrs) }
-  end
-
-  def group_by_subcategory(market_attributes)
-    market_attributes
-      .group_by(&:subcategory_key)
-      .transform_values { |subcategory_attrs| subcategory_attrs.map(&:key) }
   end
 
   def available_attributes

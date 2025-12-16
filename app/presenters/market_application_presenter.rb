@@ -2,6 +2,7 @@
 
 class MarketApplicationPresenter
   include SidemenuHelper
+  include MarketAttributeGrouping
 
   INITIAL_WIZARD_STEPS = %i[company_identification api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
@@ -121,12 +122,6 @@ class MarketApplicationPresenter
       category_attrs = market_attributes.select { |attr| attr.category_key == category_key }
       result[category_key] = group_by_subcategory(category_attrs) if category_attrs.any?
     end
-  end
-
-  def group_by_subcategory(market_attributes)
-    market_attributes
-      .group_by(&:subcategory_key)
-      .transform_values { |subcategory_attrs| subcategory_attrs.map(&:key) }
   end
 
   def category_keys
