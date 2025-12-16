@@ -66,7 +66,7 @@ module MarketAttributeResponsesHelper
     content_tag :div, class: direct_upload_wrapper_class(options),
       data: direct_upload_data_attributes(options) do
       concat capture(&)
-      concat render('candidate/market_applications/market_attribute_responses/shared/progress_bar')
+      concat render(MarketAttributeResponse::Shared::ProgressBarComponent.new)
       concat content_tag(:div, direct_upload_files_content(options), class: 'files-list', data: { direct_upload_target: 'filesList' })
     end
   end
@@ -89,7 +89,7 @@ module MarketAttributeResponsesHelper
       end
 
       right_col = content_tag(:div, style: 'margin-left:auto; flex:0 0 auto;') do
-        render('candidate/market_applications/market_attribute_responses/source_badge', market_attribute_response:)
+        render(SourceBadgeComponent.new(market_attribute_response:))
       end
 
       concat left_col
