@@ -26,18 +26,8 @@ class MarketApplicationPresenter
     inject_attestation_motifs_exclusion_step(category_keys)
   end
 
-  def find_parent_category(subcategory_key)
-    return nil if subcategory_key.blank?
-    return MARKET_INFO_PARENT_CATEGORY if subcategory_key == 'market_information'
-
-    all_market_attributes
-      .where(subcategory_key:)
-      .pluck(:category_key)
-      .compact
-      .first
-  end
-
   def parent_category_for(subcategory_key)
+    return nil if subcategory_key.blank?
     return MARKET_INFO_PARENT_CATEGORY if subcategory_key.to_s == 'market_information'
 
     all_market_attributes
