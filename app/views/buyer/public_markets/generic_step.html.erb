@@ -69,24 +69,34 @@
 
         <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
           <div class="fr-mb-4w" data-additional-fields-target="accordion">
-            <div class="fr-mb-4w">
-              <h3 class="fr-mb-2w fr-text--lg fr-text--bold"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_title") %></h3>
-              <p class="fr-mb-0"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_description") %></p>
-            </div>
-            <% @optional_fields.each_with_index do |(subcategory, fields), subcat_index| %>
-              <%= render 'subcategory_section',
-                    subcategory: subcategory,
-                    subcategories: @optional_fields,
-                    table_mode: true,
-                    is_last: (subcat_index == @optional_fields.size - 1) do %>
-                <div class="fr-fieldset__content">
-                  <% fields.each do |field_key| %>
-                    <% field = @presenter.field_by_key(field_key) %>
-                    <%= render 'field_checkbox', field_key: field_key, field: field %>
-                  <% end %>
-                </div>
-              <% end %>
-            <% end %>
+            <table class="fr-table fr-mb-4w" style="border-collapse: collapse; width: 100%;">
+              <thead>
+                <tr>
+                  <th colspan="2" class="fr-background-alt--grey fr-p-3w fr-border-x fr-border-top fr-border-default--grey" style="border-bottom: none; text-align: left;">
+                    <h4 class="fr-mb-2w fr-text--lg fr-text--bold fr-text--left"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_title") %></h4>
+                    <div class="fr-mb-0 fr-text--regular fr-text--left"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_fields_description") %></div>
+                </tr>
+              </thead>
+              <tbody>
+                <% @optional_fields.each_with_index do |(subcategory, fields), subcat_index| %>
+                  <tr>
+                    <td colspan="2" class="fr-background--white fr-p-3w fr-border fr-border-default--grey" style="text-align:left; border-top: none;">
+                      <%= render 'subcategory_section',
+                        subcategory: subcategory,
+                        subcategories: @optional_fields,
+                        is_last: (subcat_index == @optional_fields.size - 1),
+                        table_mode: false %>
+                      <div class="fr-fieldset__content">
+                        <% fields.each do |field_key| %>
+                          <% field = @presenter.field_by_key(field_key) %>
+                          <%= render 'field_checkbox', field_key: field_key, field: field %>
+                        <% end %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           </div>
 
           <div class="fr-mb-4w">
