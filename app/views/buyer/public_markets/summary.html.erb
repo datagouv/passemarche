@@ -93,6 +93,7 @@
                       <%= render 'subcategory_section',
                             subcategory: subcategory,
                             subcategories: optional_subcategories,
+                            table_mode: true,
                             is_last: (subcat_index == optional_subcategories.size - 1) do %>
                         <ul class="fr-list <%= 'fr-mb-3w' if @presenter.display_sidemenu?(optional_subcategories) %>">
                           <% fields.each do |field_key| %>
@@ -112,6 +113,7 @@
                     <%= render 'subcategory_section',
                           subcategory: subcategory,
                           subcategories: subcategories,
+                          table_mode: true,
                           is_last: (subcat_index == subcategories.size - 1) do %>
                       <ul class="fr-list <%= 'fr-mb-3w' if @presenter.display_sidemenu?(subcategories) %>">
                         <% fields.each do |field_key| %>
