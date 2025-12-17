@@ -120,7 +120,7 @@ Feature: Buyer Configuration Flow
 
   Scenario: Sélection de documents supplémentaires avec question oui/non
     When I visit a category page with optional fields for my public market
-    Then I should see "Souhaitez-vous demander des informations complémentaires aux candidats"
+    Then I should see "Souhaitez-vous demander des renseignements complémentaires ?"
     And I should see "Oui"
     And I should see "Non"
 
