@@ -194,6 +194,11 @@ fr:
         candidate_attestation_confirmed: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun motif d’exclusion."
         candidate_attestation_not_confirmed_notice:  "Le candidat pourrait être concerné par un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
         candidate_attestation_not_confirmed: "L'attestation sur l'honneur est manquante."
+      certification_notice:
+        title: "Certification :"
+        p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
+        p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
+        p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
 
   candidate:
     attachments:
@@ -203,6 +208,12 @@ fr:
       network_error: "Erreur réseau lors de la suppression"
       not_found: "Fichier introuvable ou non autorisé"
       application_not_found: "Candidature introuvable"
+    attestations:
+      certification_notice:
+        title: "Certification :"
+        p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
+        p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
+        p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
     market_applications:
       form_fields:
         capacite_economique_financiere_assurance_risques_professionnels:
