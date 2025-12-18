@@ -1,6 +1,7 @@
-<div class="attestation-certification">
-  <p><strong><%= t('certification_notice.title') %></strong></p>
-  <p><%= t('certification_notice.p1') %></p>
-  <p><%= t('certification_notice.p2') %></p>
-  <p><%= t('certification_notice.p3') %></p>
+<% s = local_assigns[:scope] || 'certification_notice' %>
+<div class="attestation-certification page-break-inside-avoid">
+  <p><strong><%= t("#{s}.title") %></strong></p>
+  <p><%= t("#{s}.p1") %></p>
+  <p><%= t("#{s}.p2") %></p>
+  <p><%= t("#{s}.p3") %></p>
 </div>
