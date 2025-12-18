@@ -38,20 +38,7 @@
              context: :buyer %>
 
   <!-- Official Certification -->
-  <div class="attestation-certification">
-    <p>
-      <strong>Certification :</strong>
-    </p>
-    <p>
-      Cette attestation certifie que la candidature référencée ci-dessus a été
-      soumise avec succès dans le système Passe Marché à la date
-      et heure indiquées.
-    </p>
-    <p>
-      Ce document constitue une preuve officielle de dépôt de candidature et
-      peut être présenté aux autorités compétentes si nécessaire.
-    </p>
-  </div>
+  <%= render 'shared/certification_notice', scope: 'buyer.attestations.certification_notice' %>
 
   <!-- Official Footer -->
   <div class="attestation-footer">
