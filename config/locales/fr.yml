@@ -157,15 +157,13 @@ fr:
           capacite_economique_financiere:
             title: Les renseignements complémentaires relatifs aux capacités économiques et financières des candidats
             subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
-            box_title: Précision concernant les informations complémentaires
-            box_content: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique). <br /> Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
+            box_content_html: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique). <br /> Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
             optional_fields_title: Capacités économiques et financières facultatives des candidats
             optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations qui seront demandées aux candidats
           capacites_techniques_professionnelles:
             title: Les renseignements complémentaires relatifs aux capacités techniques et professionnelles des candidats
             subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
-            box_title: Précision concernant les informations complémentaires
-            box_content: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique). <br /> Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
+            box_content_html: "Afin de favoriser la candidature des PME, l'acheteur est invité à limiter les renseignements complémentaires aux informations strictement pertinentes en considération de l'objet du marché ou à ses conditions d'exécution (article L. 2142-1 du Code de la commande publique). <br /> Certains justificatifs (assurance, bilans ou extraits de bilans, etc.) ne s'appliquent pas à toutes les entreprises au stade de la candidature. Il appartient à l'acheteur d'en tenir compte."
             optional_fields_title: Capacités techniques et professionnelles facultatives des candidats
             optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations qui seront demandées aux candidats
       navigation:

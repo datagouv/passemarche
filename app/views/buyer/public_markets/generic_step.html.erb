@@ -18,10 +18,9 @@
         <p class="fr-text--lg fr-mb-3w"><%= subtitle %></p>
       <% end %>
 
-      <% if (box_title = t("buyer.public_markets.generic_step.steps.#{step}.box_title", default: nil)) %>
+      <% if (box_content = t("buyer.public_markets.generic_step.steps.#{step}.box_content_html", default: nil)) %>
         <div class="fr-p-3w" style="background-color: var(--background-alt-grey);">
-          <h4 class="fr-mb-2w fr-text--lg fr-text--bold"><%= box_title %></h4>
-          <p class="fr-mb-0"><%= t("buyer.public_markets.generic_step.steps.#{step}.box_content") %></p>
+          <p class="fr-mb-0"><%= box_content %></p>
         </div>
       <% end %>
 
