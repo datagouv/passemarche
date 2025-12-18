@@ -152,7 +152,7 @@ fr:
             title: "Les motifs d'exclusion"
             box_title: "Motifs d'exclusion obligatoire"
             box_content: "Le candidat attestera sur son honneur ne pas entrer dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique et informera l'acheteur de tout changement de situation sans délai. Sauf pour les marchés de défense et de sécurité, l'acheteur ne pourra exiger que du seul candidat attributaire les justificatifs prouvant leur conformité aux exigences posées par les L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
-            optional_fields_title: Les motifs d'exclusion faculative
+            optional_fields_title: Les motifs d'exclusion facultative
             optional_fields_description: Vous pouvez sélectionner un ou plusieurs motifs d'exclusion facultative en considération de l'objet du marché ou à ses conditions d'éxécution.
           capacite_economique_financiere:
             title: Les renseignements complémentaires relatifs aux capacités économiques et financières des candidats
