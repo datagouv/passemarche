@@ -178,6 +178,52 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
     end
   end
 
+  describe '#optional_market_attributes?' do
+    context 'when there are optional market attributes' do
+      before do
+        create(:market_attribute,
+          key: 'optional_field',
+          mandatory: false,
+          category_key: 'identite_entreprise',
+          subcategory_key: 'identification',
+          public_markets: [public_market])
+      end
+
+      it 'returns true' do
+        expect(presenter.optional_market_attributes?).to be true
+      end
+    end
+
+    context 'when all market attributes are mandatory' do
+      let(:mandatory_market) { create(:public_market, :completed, editor:) }
+      let(:mandatory_application) { create(:market_application, public_market: mandatory_market) }
+      let(:mandatory_presenter) { described_class.new(mandatory_application) }
+
+      before do
+        create(:market_attribute,
+          key: 'mandatory_field',
+          mandatory: true,
+          category_key: 'identite_entreprise',
+          subcategory_key: 'identification',
+          public_markets: [mandatory_market])
+      end
+
+      it 'returns false' do
+        expect(mandatory_presenter.optional_market_attributes?).to be false
+      end
+    end
+
+    context 'when there are no market attributes' do
+      let(:empty_market) { create(:public_market, :completed, editor:) }
+      let(:empty_application) { create(:market_application, public_market: empty_market) }
+      let(:empty_presenter) { described_class.new(empty_application) }
+
+      it 'returns false' do
+        expect(empty_presenter.optional_market_attributes?).to be false
+      end
+    end
+  end
+
   describe 'with soft-deleted market attributes' do
     let(:active_attribute) do
       create(:market_attribute,

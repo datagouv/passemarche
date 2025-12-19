@@ -105,6 +105,10 @@ class MarketApplicationPresenter
     inject_attestation_motifs_exclusion_step(all_steps)
   end
 
+  def optional_market_attributes?
+    @market_application.public_market.market_attributes.exists?(mandatory: false)
+  end
+
   private
 
   def all_market_attributes
