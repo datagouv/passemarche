@@ -2,6 +2,7 @@
 
 class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuels < MarketAttributeResponse
   include MarketAttributeResponse::JsonValidatable
+  include MarketAttributeResponse::YearlyDataValidatable
 
   YEAR_KEYS = %w[year_1 year_2 year_3].freeze
   STAFF_FIELD = 'average_staff'
@@ -94,14 +95,6 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
     return if year.blank? || valid_year?(year)
 
     errors.add(:value, "#{year_key}.year must be a valid year")
-  end
-
-  def year_has_any_data?(year_data)
-    year_data.is_a?(Hash) && year_data.values.any?(&:present?)
-  end
-
-  def valid_positive_integer?(value)
-    value.is_a?(Integer) && !value.negative?
   end
 
   def valid_year?(value)

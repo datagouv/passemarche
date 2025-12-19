@@ -2,6 +2,7 @@
 
 class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuel < MarketAttributeResponse
   include MarketAttributeResponse::JsonValidatable
+  include MarketAttributeResponse::YearlyDataValidatable
 
   YEAR_KEYS = %w[year_1 year_2 year_3].freeze
   FIELD_NAMES = %w[turnover market_percentage fiscal_year_end].freeze
@@ -112,12 +113,6 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
       market_application&.validation_context.to_s == 'summary'
   end
 
-  def year_has_any_data?(year_data)
-    return false unless year_data.is_a?(Hash)
-
-    year_data.values.any?(&:present?)
-  end
-
   def validate_numeric_fields
     return if value.blank?
 
@@ -161,10 +156,6 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     Date.iso8601(date_str)
   rescue ArgumentError
     errors.add(:value, "#{year_key}.fiscal_year_end must be in YYYY-MM-DD format")
-  end
-
-  def valid_positive_integer?(value)
-    value.is_a?(Integer) && !value.negative?
   end
 
   def valid_percentage?(value)

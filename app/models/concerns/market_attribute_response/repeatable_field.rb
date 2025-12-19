@@ -11,6 +11,11 @@ module MarketAttributeResponse::RepeatableField
     include MarketAttributeResponse::JsonValidatable
 
     before_validation :remove_empty_items
+
+    # Override JsonValidatable defaults for RepeatableField types
+    define_singleton_method(:json_schema_properties) { %w[items] }
+    define_singleton_method(:json_schema_required) { [] }
+    define_singleton_method(:json_schema_error_field) { :value }
   end
 
   def item_data_fields

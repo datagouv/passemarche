@@ -132,12 +132,6 @@ module Candidate
       root_path
     end
 
-    def set_no_cache_headers
-      response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-      response.headers['Pragma'] = 'no-cache'
-      response.headers['Expires'] = '0'
-    end
-
     def api_fetch_status_response
       { api_fetch_status: @market_application.api_fetch_status }
     end

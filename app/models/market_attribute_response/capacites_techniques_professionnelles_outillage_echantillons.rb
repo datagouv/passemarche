@@ -12,18 +12,6 @@ class MarketAttributeResponse::CapacitesTechniquesProfessionnellesOutillageEchan
     }
   end
 
-  def self.json_schema_properties
-    %w[items]
-  end
-
-  def self.json_schema_required
-    []
-  end
-
-  def self.json_schema_error_field
-    :value
-  end
-
   def item_prefix
     'echantillon'
   end
