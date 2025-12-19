@@ -144,3 +144,9 @@ Then('I should not see the missing mandatory motifs exclusion banner') do
     I18n.t('candidate.market_applications.summary.missing_mandatory_motifs_exclusion_banner')
   )
 end
+
+Then('I should see the submission disclaimer') do
+  expect(page).to have_content(
+    I18n.t('candidate.market_applications.summary.submission_disclaimer')
+  )
+end

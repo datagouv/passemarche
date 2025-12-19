@@ -53,3 +53,10 @@ Feature: Summary Page Banners (FAS-324)
     And a market application exists for this market
     When I visit the candidate summary page
     Then I should not see the missing mandatory motifs exclusion banner
+
+  # RG6: Footer disclaimer
+  Scenario: Display footer disclaimer on summary page
+    Given a public market with only mandatory market attributes exists
+    And a market application exists for this market
+    When I visit the candidate summary page
+    Then I should see the submission disclaimer
