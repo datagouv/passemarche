@@ -334,6 +334,11 @@ strong {
   page-break-before: always;
 }
 
+.page-break-inside-avoid {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
 /* Header section for attestation */
 .attestation-header {
   text-align: center;
