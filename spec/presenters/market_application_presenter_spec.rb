@@ -224,6 +224,91 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
     end
   end
 
+  describe '#missing_mandatory_motifs_exclusion?' do
+    let(:motifs_market) { create(:public_market, :completed, editor:) }
+    let(:motifs_application) { create(:market_application, public_market: motifs_market) }
+    let(:motifs_presenter) { described_class.new(motifs_application) }
+
+    context 'when mandatory motifs_exclusion attribute has no data' do
+      before do
+        create(:market_attribute,
+          key: 'motifs_exclusion_mandatory_field',
+          mandatory: true,
+          category_key: 'motifs_exclusion',
+          subcategory_key: 'motifs_exclusion_fiscales',
+          input_type: :file_upload,
+          public_markets: [motifs_market])
+      end
+
+      it 'returns true' do
+        expect(motifs_presenter.missing_mandatory_motifs_exclusion?).to be true
+      end
+    end
+
+    context 'when mandatory motifs_exclusion attribute has data' do
+      let!(:motifs_attr) do
+        create(:market_attribute,
+          key: 'motifs_exclusion_mandatory_field_with_data',
+          mandatory: true,
+          category_key: 'motifs_exclusion',
+          subcategory_key: 'motifs_exclusion_fiscales',
+          input_type: :file_upload,
+          public_markets: [motifs_market])
+      end
+
+      before do
+        response = MarketAttributeResponse::FileUpload.create!(
+          market_application: motifs_application,
+          market_attribute: motifs_attr
+        )
+        response.documents.attach(
+          io: StringIO.new('test content'),
+          filename: 'test.pdf',
+          content_type: 'application/pdf'
+        )
+      end
+
+      it 'returns false' do
+        motifs_application.reload
+        expect(motifs_presenter.missing_mandatory_motifs_exclusion?).to be false
+      end
+    end
+
+    context 'when there are no mandatory motifs_exclusion attributes' do
+      before do
+        create(:market_attribute,
+          key: 'optional_motifs_field',
+          mandatory: false,
+          category_key: 'motifs_exclusion',
+          subcategory_key: 'motifs_exclusion_fiscales',
+          public_markets: [motifs_market])
+      end
+
+      it 'returns false' do
+        expect(motifs_presenter.missing_mandatory_motifs_exclusion?).to be false
+      end
+    end
+
+    context 'when there are no motifs_exclusion attributes at all' do
+      let(:no_motifs_market) { create(:public_market, :completed, editor:) }
+      let(:no_motifs_application) { create(:market_application, public_market: no_motifs_market) }
+      let(:no_motifs_presenter) { described_class.new(no_motifs_application) }
+
+      before do
+        create(:market_attribute,
+          key: 'other_category_field',
+          mandatory: true,
+          category_key: 'identite_entreprise',
+          subcategory_key: 'identification',
+          public_markets: [no_motifs_market])
+      end
+
+      it 'returns false' do
+        expect(no_motifs_presenter.missing_mandatory_motifs_exclusion?).to be false
+      end
+    end
+  end
+
   describe 'with soft-deleted market attributes' do
     let(:active_attribute) do
       create(:market_attribute,

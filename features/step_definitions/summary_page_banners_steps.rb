@@ -98,3 +98,49 @@ Then('I should not see the exclusion motifs warning banner') do
     I18n.t('buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed_notice')
   )
 end
+
+Given('a public market with mandatory motifs exclusion attributes exists') do
+  @public_market = create(:public_market, :completed, editor: @editor)
+
+  @motifs_attr = create(:market_attribute,
+    key: 'motifs_exclusion_mandatory_document',
+    mandatory: true,
+    category_key: 'motifs_exclusion',
+    subcategory_key: 'motifs_exclusion_fiscales',
+    input_type: :file_upload,
+    public_markets: [@public_market])
+end
+
+Given('a market application exists without motifs exclusion data') do
+  @market_application = create(:market_application,
+    public_market: @public_market,
+    siret: '73282932000074')
+end
+
+Given('a market application exists with motifs exclusion data filled') do
+  @market_application = create(:market_application,
+    public_market: @public_market,
+    siret: '73282932000074')
+
+  response = MarketAttributeResponse::FileUpload.create!(
+    market_application: @market_application,
+    market_attribute: @motifs_attr
+  )
+  response.documents.attach(
+    io: StringIO.new('test content'),
+    filename: 'attestation.pdf',
+    content_type: 'application/pdf'
+  )
+end
+
+Then('I should see the missing mandatory motifs exclusion banner') do
+  expect(page).to have_content(
+    I18n.t('candidate.market_applications.summary.missing_mandatory_motifs_exclusion_banner')
+  )
+end
+
+Then('I should not see the missing mandatory motifs exclusion banner') do
+  expect(page).not_to have_content(
+    I18n.t('candidate.market_applications.summary.missing_mandatory_motifs_exclusion_banner')
+  )
+end

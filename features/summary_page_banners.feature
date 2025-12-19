@@ -34,3 +34,22 @@ Feature: Summary Page Banners (FAS-324)
     And a market application exists with attestation confirmed
     When I visit the candidate summary page
     Then I should not see the exclusion motifs warning banner
+
+  # RG5: Missing mandatory motifs exclusion data banner
+  Scenario: Display missing documents banner when mandatory motifs exclusion data is missing
+    Given a public market with mandatory motifs exclusion attributes exists
+    And a market application exists without motifs exclusion data
+    When I visit the candidate summary page
+    Then I should see the missing mandatory motifs exclusion banner
+
+  Scenario: No missing documents banner when mandatory motifs exclusion data is present
+    Given a public market with mandatory motifs exclusion attributes exists
+    And a market application exists with motifs exclusion data filled
+    When I visit the candidate summary page
+    Then I should not see the missing mandatory motifs exclusion banner
+
+  Scenario: No missing documents banner when there are no mandatory motifs exclusion attributes
+    Given a public market with optional market attributes exists
+    And a market application exists for this market
+    When I visit the candidate summary page
+    Then I should not see the missing mandatory motifs exclusion banner

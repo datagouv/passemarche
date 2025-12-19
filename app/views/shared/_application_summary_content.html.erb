@@ -22,6 +22,13 @@
           <%= render 'shared/candidate_attestation_motifs_exclusion',
                     market_application: market_application,
                     context: context %>
+          <% if context == :web && presenter.missing_mandatory_motifs_exclusion? %>
+            <div class="fr-mt-2w">
+              <%= render 'shared/notice',
+                         notice_text: t('candidate.market_applications.summary.missing_mandatory_motifs_exclusion_banner'),
+                         color: 'error' %>
+            </div>
+          <% end %>
         </div>
       </div>
     <% end %>
