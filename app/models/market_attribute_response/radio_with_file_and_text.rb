@@ -23,9 +23,23 @@ class MarketAttributeResponse::RadioWithFileAndText < MarketAttributeResponse
   private
 
   def conditional_fields_only_when_yes
-    return unless radio_no?
+    return unless value.is_a?(Hash)
 
-    errors.add(:value, :invalid) if text.present?
-    errors.add(:documents, :not_allowed) if documents.attached?
+    clean_text_field
+    validate_documents_consistency
+    validate_text_consistency
+  end
+
+  def clean_text_field
+    value.delete('text') if radio_no?
+    value['text'] = value['text'].to_s if value['text'] && !value['text'].is_a?(String)
+  end
+
+  def validate_documents_consistency
+    errors.add(:documents, :not_allowed) if radio_no? && documents.attached?
+  end
+
+  def validate_text_consistency
+    errors.add(:value, :invalid) if radio_no? && value['text'].present?
   end
 end

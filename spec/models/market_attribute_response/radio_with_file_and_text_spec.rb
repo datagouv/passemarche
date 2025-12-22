@@ -302,12 +302,12 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndText, type: :model do
     let(:value) { {} }
 
     context 'when radio is no but text is present (inconsistent state)' do
-      it 'is invalid' do
+      it 'fixes the value by removing text' do
         # Create inconsistent state by directly manipulating value hash
         response.value = { 'radio_choice' => 'no', 'text' => 'leftover data' }
 
-        expect(response).to be_invalid
-        expect(response.errors[:value]).to be_present
+        expect(response).to be_valid
+        expect(response.value).to eq({ 'radio_choice' => 'no' })
       end
     end
 
