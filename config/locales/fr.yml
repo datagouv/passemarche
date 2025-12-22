@@ -324,7 +324,7 @@ fr:
           company_information: "Informations de votre entreprise"
           contact_information: "Informations de contact"
       motifs_exclusion:
-        subtitle: "Vous pouvez justifier que votre entreprise est à jour de ses obligations sociales et fiscales, d'autres justificatifs attendus par l'acheteur vous sont demandés (ces derniers ne sont pas obligatoires mais seront exigés si vous êtes attributaire du marché)."
+        subtitle: "En complément de votre attestation sur l'honneur, vous avez la possibilité de communiquer les justificatifs relatifs aux motifs d'exclusion à cette étape. La production de ces justificatifs pourra être exigée si vous êtes attributaire du marché."
       exclusion_criteria:
         title: "Les justificatifs relatifs aux motifs d'exclusion obligatoires"
         subtitle: "Lorem ipsum..."
