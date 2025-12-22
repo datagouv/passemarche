@@ -1,5 +1,11 @@
 <% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.steps.summary')}" %>
 
+<% if @presenter&.optional_market_attributes? %>
+  <%= render 'shared/notice',
+             notice_text: t('candidate.market_applications.summary.buyer_additional_info_banner'),
+             color: 'info' %>
+<% end %>
+
 <%= render "stepper", step: step, wizard_steps: @wizard_steps %>
 
 <div class="fr-grid-row fr-grid-row--center">
@@ -28,6 +34,11 @@
             <%= t('button.submit_summary') %>
           </button>
         <% end %>
+      </div>
+      <div class="fr-mt-2w">
+        <p class="fr-text--sm fr-text--mention-grey">
+          <%= t('candidate.market_applications.summary.submission_disclaimer') %>
+        </p>
       </div>
     </div>
   </div>

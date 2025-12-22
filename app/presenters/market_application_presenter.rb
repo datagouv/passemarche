@@ -105,7 +105,33 @@ class MarketApplicationPresenter
     inject_attestation_motifs_exclusion_step(all_steps)
   end
 
+  def optional_market_attributes?
+    @market_application.public_market.market_attributes.exists?(mandatory: false)
+  end
+
+  def missing_mandatory_motifs_exclusion?
+    mandatory_motifs_exclusion_attributes.any? do |attr|
+      response = market_attribute_response_for(attr)
+      !response_has_data?(response)
+    end
+  end
+
   private
+
+  def mandatory_motifs_exclusion_attributes
+    @market_application.public_market.market_attributes
+      .where(mandatory: true)
+      .where('category_key LIKE ?', 'motifs_exclusion%')
+  end
+
+  def response_has_data?(response)
+    return false if response.nil? || response.new_record?
+
+    has_documents = response.respond_to?(:documents) && response.documents.attached?
+    has_value = response.value.present?
+
+    has_documents || has_value
+  end
 
   def all_market_attributes
     @market_application.public_market.market_attributes.order(:position)
