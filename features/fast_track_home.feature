@@ -41,3 +41,23 @@ Feature: Passe Marché Home Page
   Scenario: Root URL displays buyer homepage content
     Given I am on the home page
     Then I should see the same content as the buyer homepage
+
+  Scenario: Header displays navigation links
+    Given I am on the home page
+    Then I should see a link "Je suis un candidat" in the header
+    And I should see a link "Je suis un acheteur public" in the header
+
+  Scenario: Candidate link has active state on candidate page
+    Given I am on the candidate home page
+    Then the candidate navigation link should be active
+    And the buyer navigation link should not be active
+
+  Scenario: Buyer link has active state on buyer page
+    Given I am on the buyer home page
+    Then the buyer navigation link should be active
+    And the candidate navigation link should not be active
+
+  Scenario: Buyer link has active state on root page
+    Given I am on the home page
+    Then the buyer navigation link should be active
+    And the candidate navigation link should not be active

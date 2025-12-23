@@ -199,3 +199,8 @@
 .renamed-document-text {
   font-size: 14px;
 }
+
+/* Header navigation active state */
+.fr-link--active {
+  background-color: rgba(0, 0, 0, 0.08);
+}
