@@ -27,3 +27,17 @@ Feature: Passe Marché Home Page
     And I should see "1. Identification"
     And I should see "2. Documents"
     And I should see "3. Candidature"
+
+  Scenario: User visits the candidate homepage
+    Given I am on the candidate home page
+    Then I should see "Passe Marché"
+    And I should see "La plateforme de candidature simplifiée aux marchés publics"
+
+  Scenario: User visits the buyer homepage
+    Given I am on the buyer home page
+    Then I should see "Passe Marché"
+    And I should see "La plateforme de candidature simplifiée aux marchés publics"
+
+  Scenario: Root URL displays buyer homepage content
+    Given I am on the home page
+    Then I should see the same content as the buyer homepage
