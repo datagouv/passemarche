@@ -52,3 +52,15 @@ Then('the buyer navigation link should not be active') do
     expect(page).to have_no_css('a.fr-link--active', text: I18n.t('header.navigation.buyer'))
   end
 end
+
+Then('I should not see {string} in the footer') do |text|
+  within('footer.fr-footer') do
+    expect(page).to have_no_content(text)
+  end
+end
+
+Then('I should see {string} in the footer') do |text|
+  within('footer.fr-footer') do
+    expect(page).to have_content(text)
+  end
+end

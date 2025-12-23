@@ -61,3 +61,8 @@ Feature: Passe Marché Home Page
     Given I am on the home page
     Then the buyer navigation link should be active
     And the candidate navigation link should not be active
+
+  Scenario: Footer does not contain lorem ipsum
+    Given I am on the home page
+    Then I should not see "Lorem" in the footer
+    And I should see "Accessibilité" in the footer
