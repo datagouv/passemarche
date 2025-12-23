@@ -56,6 +56,17 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
+        motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
+          name: Attestation sur l'honneur que l'opérateur économique n'est pas en
+            procédure de liquidation judiciaire
+          description: Le candidat doit attester qu'il n'est pas en liquidation judiciaire,
+            ou dans une procédure équivalente s'il est établi hors de France.
+        motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
+          name: Attestation sur l'honneur que le dirigeant de l'opérateur économique
+            n'est pas en faillite ou qu'il ne lui est pas interdit de gérer une entreprise
+          description: Le candidat doit attester que son dirigeant n’est pas en faillite
+            personnelle et ne fait pas l’objet d’une interdiction de gérer, d'administrer
+            ou de diriger une entreprise.
         motifs_exclusion_fiscales_et_sociales_declarations_fiscales:
           name: Défaut de déclarations en matière fiscale
           description: Le candidat doit attester qu'il s'est acquitté de l'ensemble
@@ -324,6 +335,15 @@ fr:
           name: Email
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
+        motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
+          name: Votre entreprise est-elle en procédure de liquidation judiciaire ?
+          description: Si votre entreprise n'est pas établie en France, vous devez
+            avoir un extrait d'inscription au registre professionnel permettant de
+            justifier l'absence de redressement ou liquidation judiciaire ou tout
+            autre procédure équivalente.
+        motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
+          name: Le dirigeant de l'entreprise est-il en faillite personnelle ou lui
+            est-il interdit de gérer une entreprise ?
         motifs_exclusion_fiscales_et_sociales_declarations_fiscales:
           name: Impôts, taxes et contributions sociales
           description: Vous pouvez justifier que votre entreprise est à jour de ses
