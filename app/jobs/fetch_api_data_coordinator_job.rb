@@ -16,7 +16,8 @@ class FetchApiDataCoordinatorJob < ApplicationJob
     FetchCotisationRetraiteDataJob,
     FetchRgeDataJob,
     FetchUrssafDataJob,
-    FetchCarifOrefDataJob
+    FetchCarifOrefDataJob,
+    FetchBodaccDataJob
   ].freeze
 
   def perform(market_application_id)

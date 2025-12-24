@@ -60,15 +60,49 @@ class MapApiData < ApplicationInteractor
   end
 
   def assign_value_to_response(response, value)
-    if value.is_a?(Array) && value.first.is_a?(Hash) && value.first.key?(:io)
-      attach_documents_to_response(response, value)
-    elsif value.is_a?(Hash) && value.key?(:io)
-      attach_document_to_response(response, value)
+    if documents_array?(value)
+      handle_documents_array(response, value)
+    elsif document_hash?(value)
+      handle_document_hash(response, value)
     elsif complex_economic_capacity_response?(response, value)
-      assign_parsed_json_value(response, value)
+      handle_complex_economic_capacity(response, value)
+    elsif radio_with_file_and_text?(response, value)
+      handle_radio_with_file_and_text(response, value)
     else
-      response.text = value
+      handle_default_text(response, value)
     end
+  end
+
+  def documents_array?(value)
+    value.is_a?(Array) && value.first.is_a?(Hash) && value.first.key?(:io)
+  end
+
+  def document_hash?(value)
+    value.is_a?(Hash) && value.key?(:io)
+  end
+
+  def radio_with_file_and_text?(response, value)
+    response.is_a?(MarketAttributeResponse::RadioWithFileAndText) && value.is_a?(Hash)
+  end
+
+  def handle_documents_array(response, value)
+    attach_documents_to_response(response, value)
+  end
+
+  def handle_document_hash(response, value)
+    attach_document_to_response(response, value)
+  end
+
+  def handle_complex_economic_capacity(response, value)
+    assign_parsed_json_value(response, value)
+  end
+
+  def handle_radio_with_file_and_text(response, value)
+    response.value = value
+  end
+
+  def handle_default_text(response, value)
+    response.text = value
   end
 
   def complex_economic_capacity_response?(response, value)
