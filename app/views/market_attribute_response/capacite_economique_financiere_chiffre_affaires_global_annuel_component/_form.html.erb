@@ -1,0 +1,115 @@
+<div class="fr-input-group<%= ' fr-input-group--error' if component.errors? %>">
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= component.field_label %>
+    </h6>
+
+    <% if component.field_description.present? %>
+      <div class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= component.field_description %>
+      </div>
+    <% end %>
+
+    <% if component.api_data? %>
+      <%= render 'shared/notice', notice_text: component.notice_message %>
+    <% end %>
+
+    <div class="fr-table">
+      <div class="fr-table__wrapper">
+        <div class="fr-table__container">
+          <div class="fr-table__content">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col"><%= component.table_header('year') %></th>
+                  <th scope="col"><%= component.table_header('turnover') %></th>
+                  <th scope="col"><%= component.table_header('market_percentage') %></th>
+                  <th scope="col"><%= component.table_header('fiscal_year_end') %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuelComponent::YEAR_KEYS.each_with_index do |year_key, index| %>
+                  <% turnover_from_api = component.field_from_api?(year_key, 'turnover') %>
+                  <% fiscal_year_end_from_api = component.field_from_api?(year_key, 'fiscal_year_end') %>
+                  <tr>
+                    <td>
+                      <strong><%= component.year_label(year_key, index) %></strong>
+                    </td>
+
+                    <%# Turnover %>
+                    <td>
+                      <% if turnover_from_api %>
+                        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+                        <%= response_form.hidden_field "#{year_key}_turnover" %>
+                      <% else %>
+                        <div class="fr-input-group">
+                          <%= response_form.text_field "#{year_key}_turnover",
+                                type: "number",
+                                class: "fr-input fr-input--sm",
+                                placeholder: "ex: 500000",
+                                step: 1,
+                                min: 0 %>
+                        </div>
+                      <% end %>
+                    </td>
+
+                    <%# Market Percentage %>
+                    <td>
+                      <div class="fr-input-group">
+                        <%= response_form.text_field "#{year_key}_market_percentage",
+                              type: "number",
+                              class: "fr-input fr-input--sm",
+                              placeholder: "ex: 75",
+                              step: 1,
+                              min: 0,
+                              max: 100 %>
+                      </div>
+                    </td>
+
+                    <%# Fiscal Year End %>
+                    <td>
+                      <% if fiscal_year_end_from_api %>
+                        <%= render CheckIconComponent.new(context: :web) %>
+                        <%= component.formatted_fiscal_year_end(year_key) %>
+                        <%= response_form.hidden_field "#{year_key}_fiscal_year_end" %>
+                      <% else %>
+                        <div class="fr-input-group">
+                          <%= response_form.text_field "#{year_key}_fiscal_year_end",
+                                type: "date",
+                                class: "fr-input fr-input--sm" %>
+                        </div>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if component.value_error_messages.any? %>
+      <div class="fr-messages-group fr-mt-2w" aria-live="polite">
+        <% component.value_error_messages.each do |error_message| %>
+          <p class="fr-message fr-message--error"><%= error_message %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuelComponent::YEAR_KEYS.each_with_index do |year_key, index| %>
+      <% if component.year_error_messages(year_key).any? %>
+        <div class="fr-messages-group fr-mt-1w" aria-live="polite">
+          <p class="fr-message fr-message--error">
+            <%= component.year_label(year_key, index) %> :
+            <%= component.year_error_messages(year_key).first %>
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

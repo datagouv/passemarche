@@ -1,0 +1,56 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <div class="fr-grid-row fr-mb-2w">
+      <div class="fr-col">
+        <strong>
+          <%= component.field_label %>
+        </strong>
+
+        <% if component.show_value? %>
+          <br>
+
+          <% if component.radio_yes? %>
+            <% if component.text? %>
+              <div class="fr-mb-2w">
+                <strong class="fr-text--sm">Réponse :</strong><br>
+                <%= component.formatted_text %>
+              </div>
+            <% end %>
+
+            <% if component.documents_attached? %>
+              <div>
+                <strong class="fr-text--sm">Documents joints :</strong><br>
+                <% component.documents.each do |document| %>
+                  <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                    document: document,
+                    market_application: component.market_attribute_response.market_application,
+                    context: component.context,
+                    naming_service: component.naming_service
+                  ) %>
+                <% end %>
+              </div>
+            <% end %>
+
+            <% if !component.text? && !component.documents_attached? %>
+              <span class="fr-text--md"><%= component.no_info_message %></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="fr-col-auto" style="display: flex; align-items: flex-start; justify-content: flex-end;">
+        <% if component.show_value? %>
+          <% if component.radio_yes? %>
+            <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>
+          <% else %>
+            <div class="fr-badge fr-badge--sm">Non</div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>
+<hr class="fr-hr">

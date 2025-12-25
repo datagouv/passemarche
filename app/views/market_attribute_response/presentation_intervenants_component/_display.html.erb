@@ -1,0 +1,82 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.show_value? %>
+      <br>
+
+      <% if component.data? %>
+        <div class="fr-mt-2w">
+          <% component.persons_with_data.each_with_index do |(timestamp, person), index| %>
+            <div class="fr-card fr-card--sm fr-mb-2w">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <h6 class="fr-text--sm fr-mb-1w">
+                    <span class="fr-icon-user-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
+                    Personne <%= index + 1 %>
+                  </h6>
+
+                  <% if person['nom'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Nom :</strong> <%= person['nom'] %>
+                    </div>
+                  <% end %>
+
+                  <% if person['prenoms'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Prénoms :</strong> <%= person['prenoms'] %>
+                    </div>
+                  <% end %>
+
+                  <% if person['titres'].present? %>
+                    <div class="fr-mb-1v">
+                      <strong>Titres :</strong> <%= person['titres'] %>
+                    </div>
+                  <% end %>
+
+                  <% cv_attachments = component.person_cv_attachment(timestamp) %>
+                  <% if cv_attachments.any? %>
+                    <div class="fr-mb-1v">
+                      <strong>CV :</strong>
+                      <% cv_attachments.each do |cv| %>
+                        <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                          document: cv,
+                          market_application: component.market_attribute_response.market_application,
+                          context: component.context,
+                          naming_service: component.naming_service
+                        ) %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <span class="fr-text--md fr-text--mention-grey"><%= component.no_data_message %></span>
+      <% end %>
+
+      <% if component.documents_attached? %>
+        <div class="fr-mt-3w">
+          <h6 class="fr-text--sm fr-mb-1w">Documents associés</h6>
+          <div class="fr-text--sm fr-text--mention-grey">
+            <% component.documents.each do |doc| %>
+              <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                document: doc,
+                market_application: component.market_attribute_response.market_application,
+                context: component.context,
+                naming_service: component.naming_service
+              ) %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>

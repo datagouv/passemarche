@@ -1,0 +1,95 @@
+<% if component.context != :web %>
+  <style>
+    table.ca-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5em;
+      font-size: 12px;
+    }
+    table.ca-table th, table.ca-table td {
+      border: 1px solid #333;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    table.ca-table th {
+      background: #f2f2f2;
+      font-weight: bold;
+    }
+    table.ca-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+  </style>
+<% end %>
+
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.data? %>
+      <br>
+      <div class="fr-table__container">
+        <div class="fr-table__content">
+          <table class="<%= component.table_class %>" style="<%= component.table_style %>">
+            <thead>
+              <tr>
+                <th scope="col"><%= component.table_header('year') %></th>
+                <th scope="col"><%= component.table_header('turnover') %></th>
+                <th scope="col"><%= component.table_header('market_percentage') %></th>
+                <th scope="col"><%= component.table_header('fiscal_year_end') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuelComponent::YEAR_KEYS.each_with_index do |year_key, index| %>
+                <% year_data = component.year_data(year_key) %>
+                <% next if year_data.blank? || !year_data.values.any?(&:present?) %>
+                <% turnover_from_api = component.field_from_api?(year_key, 'turnover') %>
+                <% fiscal_year_end_from_api = component.field_from_api?(year_key, 'fiscal_year_end') %>
+                <tr>
+                  <td>
+                    <strong><%= component.year_label(year_key, index) %></strong>
+                  </td>
+                  <td>
+                    <% if turnover_from_api && component.context != :buyer %>
+                      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+                    <% elsif component.turnover_value(year_key).present? %>
+                      <%= component.formatted_turnover(year_key) %>
+                      <% if component.context == :buyer %>
+                        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+                      <% end %>
+                    <% else %>
+                      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if component.market_percentage_value(year_key).present? %>
+                      <%= component.formatted_market_percentage(year_key) %>
+                    <% else %>
+                      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if fiscal_year_end_from_api %>
+                      <%= render CheckIconComponent.new(context: component.context) %>
+                      <%= component.formatted_fiscal_year_end(year_key) %>
+                    <% elsif component.fiscal_year_end_value(year_key).present? %>
+                      <%= component.formatted_fiscal_year_end(year_key) %>
+                    <% else %>
+                      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% else %>
+      <span class="fr-text--sm fr-text--mention-grey"><%= component.not_provided_message %></span>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>

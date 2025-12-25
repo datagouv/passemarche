@@ -1,0 +1,48 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.show_value? %>
+      <br>
+      <span class="fr-text--sm fr-text--mention-grey">
+        <% if component.text_value.present? %>
+          <%= link_to component.text_value, component.text_value, target: "_blank", rel: "noopener" %>
+
+          <% if component.context == :buyer && component.opqibi_metadata? %>
+            <div class="fr-text--xs fr-text--mention-grey fr-mt-1v">
+              <% if component.formatted_date_delivrance.present? %>
+                <strong>Date de délivrance :</strong>
+                <%= l(component.formatted_date_delivrance, format: :long) %>
+                <br>
+              <% end %>
+              <% if component.duree_validite_certificat.present? %>
+                <strong>Durée de validité :</strong>
+                <%= component.duree_validite_certificat %>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <%= component.display_value %>
+        <% end %>
+      </span>
+    <% elsif component.opqibi_metadata? %>
+      <br>
+      <%= render MarketAttributeResponse::ApiDisplay::OpqibiComponent.new(
+        market_attribute_response: component.market_attribute_response,
+        context: component.context
+      ) %>
+    <% elsif component.france_competence_metadata? %>
+      <br>
+      <%= render MarketAttributeResponse::ApiDisplay::FranceCompetencesComponent.new(
+        market_attribute_response: component.market_attribute_response,
+        context: component.context
+      ) %>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>
+<hr class="fr-hr">

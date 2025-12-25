@@ -17,25 +17,60 @@ ViewComponent is a framework for building reusable, testable & encapsulated view
 ```
 app/components/
 ├── market_attribute_response/
-│   ├── base_component.rb              # Shared base class for all MAR components
-│   ├── text_input_component.rb        # TextInput component class
-│   └── text_input_component.html.erb  # TextInput main template
-├── source_badge_component.rb          # Badge showing data source
+│   ├── base_component.rb                                      # Shared base class
+│   ├── fields/                                                # Reusable field components
+│   │   ├── file_upload_field_component.rb
+│   │   └── textarea_field_component.rb
+│   ├── shared/                                                # Shared utility components
+│   │   ├── document_item_component.rb
+│   │   └── progress_bar_component.rb
+│   │
+│   │   # Simple Input Components
+│   ├── text_input_component.rb                                # Text input field
+│   ├── textarea_component.rb                                  # Multi-line text area
+│   ├── email_input_component.rb                               # Email input field
+│   ├── phone_input_component.rb                               # Phone number input
+│   │
+│   │   # File Upload Components
+│   ├── file_upload_component.rb                               # Standard file upload
+│   ├── inline_file_upload_component.rb                        # Inline file upload (auto-fillable)
+│   ├── inline_url_input_component.rb                          # URL input field
+│   │
+│   │   # Composite Input Components
+│   ├── file_or_textarea_component.rb                          # File OR text choice
+│   ├── checkbox_with_document_component.rb                    # Checkbox with document upload
+│   ├── radio_with_file_and_text_component.rb                  # Radio with file/text options
+│   │
+│   │   # Financial/Workforce Components
+│   ├── capacite_economique_financiere_chiffre_affaires_global_annuel_component.rb
+│   ├── capacite_economique_financiere_effectifs_moyens_annuels_component.rb
+│   │
+│   │   # Complex Repeatable Components
+│   ├── capacites_techniques_professionnelles_outillage_echantillons_component.rb
+│   ├── presentation_intervenants_component.rb
+│   └── realisations_livraisons_component.rb
+│
+├── source_badge_component.rb                                  # Badge showing data source
 └── source_badge_component.html.erb
 
-app/views/market_attribute_response/text_input_component/
+app/views/market_attribute_response/{component_name}_component/
 ├── _form.html.erb     # Form mode sub-template
-└── _display.html.erb  # Display mode sub-template
+├── _display.html.erb  # Display mode sub-template
+└── _{nested}.html.erb # Optional nested field templates (for repeatable components)
 
 spec/components/
 ├── market_attribute_response/
 │   ├── base_component_spec.rb
-│   └── text_input_component_spec.rb
+│   ├── fields/
+│   │   └── {field}_component_spec.rb
+│   ├── shared/
+│   │   └── {shared}_component_spec.rb
+│   └── {component}_component_spec.rb
 └── source_badge_component_spec.rb
 
 spec/components/previews/
 └── market_attribute_response/
-    └── text_input_component_preview.rb  # Lookbook preview
+    └── {component}_component_preview.rb  # Lookbook previews
 ```
 
 ## Using Components
@@ -346,14 +381,33 @@ bundle exec cucumber
 bin/rubocop app/components/ spec/components/
 ```
 
+## Migration Status
+
+All market attribute response partials have been migrated to ViewComponents:
+
+| Category | Components | Status |
+|----------|------------|--------|
+| Shared | DocumentItemComponent, ProgressBarComponent | ✅ Complete |
+| Fields | FileUploadFieldComponent, TextareaFieldComponent | ✅ Complete |
+| Simple Inputs | TextInput, Textarea, Email, Phone | ✅ Complete |
+| File Uploads | FileUpload, InlineFileUpload, InlineUrlInput | ✅ Complete |
+| Composite | FileOrTextarea, CheckboxWithDocument, RadioWithFileAndText | ✅ Complete |
+| Financial | ChiffreAffairesGlobalAnnuel, EffectifsMoyensAnnuels | ✅ Complete |
+| Repeatable | OutillageEchantillons, PresentationIntervenants, RealisationsLivraisons | ✅ Complete |
+
+**Legacy partials removed:**
+- All `_*_form.html.erb` partials
+- All `_*_display.html.erb` partials
+- `shared/_progress_bar.html.erb`, `shared/_document_item.html.erb`
+- `fields/_file_upload_field.html.erb`, `fields/_textarea_field.html.erb`
+- `_source_badge.html.erb`
+
 ## Additional Resources
 
 - [ViewComponent Documentation](https://viewcomponent.org/)
 - [Lookbook Documentation](https://lookbook.build/)
 - [DSFR Documentation](https://www.systeme-de-design.gouv.fr/)
-- Migration Guide: `docs/component_migration_guide.md`
-- Benefits Document: `docs/lookbook_advantages.md`
 
 ## Questions?
 
-Check the migration guide (`docs/component_migration_guide.md`) or reach out to the development team.
+Check the component specs or reach out to the development team.

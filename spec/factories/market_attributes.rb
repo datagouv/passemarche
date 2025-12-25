@@ -53,8 +53,32 @@ FactoryBot.define do
       input_type { :phone_input }
     end
 
+    trait :email do
+      input_type { :email_input }
+    end
+
     trait :radio_with_file_and_text do
       input_type { :radio_with_file_and_text }
+    end
+
+    trait :chiffre_affaires do
+      input_type { :capacite_economique_financiere_chiffre_affaires_global_annuel }
+    end
+
+    trait :effectifs_moyens_annuels do
+      input_type { :capacite_economique_financiere_effectifs_moyens_annuels }
+    end
+
+    trait :outillage_echantillons do
+      input_type { :capacites_techniques_professionnelles_outillage_echantillons }
+    end
+
+    trait :presentation_intervenants do
+      input_type { :presentation_intervenants }
+    end
+
+    trait :realisations_livraisons do
+      input_type { :realisations_livraisons }
     end
   end
 end

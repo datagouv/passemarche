@@ -1,0 +1,106 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= component.auto_filled_message %>
+    </p>
+  </div>
+<% else %>
+  <div class="fr-input-group">
+    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                  child_index: component.market_attribute_response.id do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+
+      <div data-controller="conditional-fields">
+        <div class="fr-mb-3w" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem;">
+          <div style="flex: 1;">
+            <h6 class="fr-mb-2w fr-text--md">
+              <%= component.field_label %>
+            </h6>
+            <% if component.field_description.present? %>
+              <div class="fr-hint-text fr-text--sm">
+                <%= component.field_description %>
+              </div>
+            <% end %>
+          </div>
+
+          <div style="flex-shrink: 0;">
+            <div style="display: flex; gap: 1rem;">
+              <div class="fr-radio-group">
+                <%= response_form.radio_button :radio_choice, 'yes',
+                      class: "fr-radio",
+                      data: {
+                        action: "conditional-fields#show",
+                        conditional_fields_target: "trigger"
+                      } %>
+                <%= response_form.label :radio_choice_yes,
+                      component.radio_yes_label,
+                      class: "fr-label" %>
+              </div>
+
+              <div class="fr-radio-group">
+                <%= response_form.radio_button :radio_choice, 'no',
+                      class: "fr-radio",
+                      data: {
+                        action: "conditional-fields#hide",
+                        conditional_fields_target: "trigger"
+                      } %>
+                <%= response_form.label :radio_choice_no,
+                      component.radio_no_label,
+                      class: "fr-label" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-conditional-fields-target="content" class="<%= 'fr-hidden' if component.conditional_content_hidden? %> fr-mt-3w">
+          <div class="fr-input-group fr-mb-3w<%= ' fr-input-group--error' if component.text_errors? %>">
+            <%= response_form.label :text, component.text_field_label, class: "fr-label" %>
+            <% if component.text_field_hint.present? %>
+              <span class="fr-hint-text">
+                <%= component.text_field_hint %>
+              </span>
+            <% end %>
+            <%= response_form.text_area :text,
+                  value: component.text || '',
+                  class: "fr-input",
+                  rows: 4,
+                  aria: { describedby: component.text_aria_describedby } %>
+            <div class="fr-messages-group" id="<%= component.text_aria_describedby %>" aria-live="polite">
+              <% if component.text_errors? %>
+                <p class="fr-message fr-message--error">
+                  <%= component.text_error_messages.first %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+
+          <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
+            form: response_form,
+            attribute_response: component.market_attribute_response,
+            deletable: true,
+            multiple: true
+          ) %>
+        </div>
+
+      </div>
+      <% if component.value_error_messages.any? %>
+        <p class="fr-error-text fr-mt-2w">
+          <%= component.value_error_messages.first %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

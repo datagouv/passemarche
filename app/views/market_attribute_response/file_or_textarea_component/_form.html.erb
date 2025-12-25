@@ -1,0 +1,60 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= component.auto_filled_message %>
+    </p>
+  </div>
+<% else %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id,
+                                multipart: true do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= component.field_label %>
+    </h6>
+
+    <% if component.field_description.present? %>
+      <span class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= component.field_description %>
+      </span>
+    <% else %>
+      <span class="fr-hint-text fr-mb-2w fr-text--sm">
+        Description
+      </span>
+    <% end %>
+
+    <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
+      form: response_form,
+      attribute_response: component.market_attribute_response,
+      deletable: true,
+      multiple: true
+    ) %>
+
+    <div style="margin-bottom: 2em;"></div>
+
+    <div class="fr-separator fr-mb-2w" style="display: flex; align-items: center;">
+      <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
+      <span style="padding: 0 1em; font-weight: bold;">OU</span>
+      <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
+    </div>
+
+    <%= render MarketAttributeResponse::Fields::TextareaFieldComponent.new(
+      form: response_form,
+      attribute_response: component.market_attribute_response
+    ) %>
+  <% end %>
+<% end %>

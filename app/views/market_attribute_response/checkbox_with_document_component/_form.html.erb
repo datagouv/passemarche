@@ -1,0 +1,57 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= component.auto_filled_message %>
+    </p>
+  </div>
+<% else %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+
+    <h6 class="fr-mb-2w fr-text--md">
+      <%= component.field_label %>
+    </h6>
+
+    <% if component.field_description.present? %>
+      <div class="fr-hint-text fr-mb-2w fr-text--sm">
+        <%= component.field_description %>
+      </div>
+    <% end %>
+
+    <div class="fr-checkbox-group<%= ' fr-checkbox-group--error' if component.checkbox_errors? %>">
+      <%= response_form.check_box :checked, { class: "fr-checkbox" }, "1", "0" %>
+      <%= response_form.label :checked, component.checkbox_label, class: "fr-checkbox__label" %>
+
+      <% if component.checkbox_errors? %>
+        <p class="fr-error-text">
+          <%= component.checkbox_error_messages.first %>
+        </p>
+      <% end %>
+    </div>
+
+    <div class="fr-mt-2w">
+      <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
+        form: response_form,
+        attribute_response: component.market_attribute_response,
+        deletable: true,
+        multiple: true
+      ) %>
+    </div>
+    <%# Lookbook fix: ensure fields_for block ends with ERB tag, not HTML tag %>
+    <% if false %><% end %>
+  <% end %>
+<% end %>

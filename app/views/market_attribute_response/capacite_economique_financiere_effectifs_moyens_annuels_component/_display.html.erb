@@ -1,0 +1,44 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong class="fr-text--md">
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.show_value? %>
+      <% displayed = false %>
+      <div class="fr-mb-3w"></div>
+      <% MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuelsComponent::YEAR_KEYS.each do |year_key| %>
+        <% year_data = component.year_data(year_key) %>
+        <% if year_data['year'].present? || year_data['average_staff'].present? %>
+          <div class="fr-mb-2w">
+            <span class="fr-text--md"><strong>Année <%= component.year_label(year_key) %> :</strong></span>
+            <span class="fr-text--md fr-ml-1w">
+              <% if year_data['year'].present? %>
+                <%= year_data['year'] %>
+              <% else %>
+                <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
+              <% end %>
+            </span>
+            <span class="fr-text--md fr-ml-2w"><strong>Effectif moyen :</strong></span>
+            <span class="fr-text--md fr-ml-1w">
+              <% if year_data['average_staff'].present? %>
+                <%= year_data['average_staff'] %>
+              <% else %>
+                <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
+              <% end %>
+            </span>
+          </div>
+          <% displayed = true %>
+        <% end %>
+      <% end %>
+      <% unless displayed %>
+        <span class="fr-text--sm fr-text--mention-grey fr-mt-2w">
+          <%= component.not_provided_message %>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+  </div>
+</div>

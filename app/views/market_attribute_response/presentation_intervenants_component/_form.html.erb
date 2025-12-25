@@ -1,0 +1,90 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= I18n.t('candidate.market_applications.auto_filled_message') %>
+    </p>
+  </div>
+<% else %>
+  <div class="fr-input-group<%= ' fr-input-group--error' if component.errors? %>">
+    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+
+      <h6 class="fr-mb-2w fr-text--md">
+        <%= component.field_label %>
+      </h6>
+
+      <% if component.field_description.present? %>
+        <div class="fr-hint-text fr-mb-3w fr-text--sm">
+          <%= component.field_description %>
+        </div>
+      <% end %>
+
+      <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper">
+        <div class="fr-mt-4w">
+          <h6 class="fr-text--sm fr-mb-2w">Téléchargez une liste des intervenants</h6>
+          <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
+            form: response_form,
+            attribute_response: component.market_attribute_response
+          ) %>
+        </div>
+
+        <div style="margin-bottom: 2em;"></div>
+
+        <div class="fr-separator fr-mb-2w" style="display: flex; align-items: center;">
+          <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
+          <span style="padding: 0 1em; font-weight: bold;">OU</span>
+          <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
+        </div>
+
+        <div data-nested-form-target="target">
+          <% component.persons_with_data.each_with_index do |(timestamp, _person), display_index| %>
+            <%= render partial: 'market_attribute_response/presentation_intervenants_component/person_fields',
+                       locals: {
+                         component: component,
+                         response_form: response_form,
+                         index: timestamp,
+                         display_number: display_index + 1
+                       } %>
+          <% end %>
+        </div>
+
+        <div class="fr-mb-3w">
+          <button type="button"
+                  class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-line fr-btn--icon-left"
+                  data-action="nested-form#add">
+            <%= component.add_button_text %>
+          </button>
+        </div>
+
+        <template data-nested-form-target="template">
+          <%= render partial: 'market_attribute_response/presentation_intervenants_component/person_fields',
+                     locals: {
+                       component: component,
+                       response_form: response_form,
+                       index: 'NEW_RECORD',
+                       display_number: nil
+                     } %>
+        </template>
+      </div>
+
+      <% if component.value_error_messages.any? %>
+        <p class="fr-error-text">
+          <%= component.value_error_messages.first %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

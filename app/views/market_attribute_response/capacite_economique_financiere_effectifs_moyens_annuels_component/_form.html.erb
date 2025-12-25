@@ -1,0 +1,105 @@
+<% if component.auto? %>
+  <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
+                                child_index: component.market_attribute_response.id do |response_form| %>
+    <%= response_form.hidden_field :id %>
+    <%= response_form.hidden_field :market_attribute_id %>
+    <%= response_form.hidden_field :type %>
+  <% end %>
+
+  <div class="fr-mb-2w">
+    <label class="fr-label">
+      <%= component.field_label %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    </label>
+    <p class="fr-text--sm fr-text--mention-grey">
+      <%= I18n.t('candidate.market_applications.auto_filled_message') %>
+    </p>
+  </div>
+<% else %>
+  <div class="fr-input-group<%= ' fr-input-group--error' if component.errors? %>">
+    <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response do |response_form| %>
+      <%= response_form.hidden_field :id %>
+      <%= response_form.hidden_field :market_attribute_id %>
+      <%= response_form.hidden_field :type %>
+
+      <h6 class="fr-mb-2w fr-text--md">
+        <%= component.field_label %>
+      </h6>
+
+      <% if component.field_description.present? %>
+        <div class="fr-hint-text fr-mb-3w fr-text--sm">
+          <%= component.field_description %>
+        </div>
+      <% end %>
+
+      <div class="fr-table">
+        <div class="fr-table__container fr-ml-0 fr-table--layout-fixed">
+          <div class="fr-table__content" style="max-width: 580px; margin-left: 0;">
+            <% MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuelsComponent::YEAR_KEYS.each do |year_key| %>
+              <div class="fr-grid-row">
+                <div class="fr-col-6 fr-pr-2w">
+                  <div class="fr-input-group fr-mb-2w">
+                    <label
+                      class="fr-label fr-text--md"
+                      for="market_attribute_response_<%= year_key %>_year"
+                    >
+                      Année <%= component.year_label(year_key) %>
+                    </label>
+                    <%= response_form.text_field(
+                          "#{year_key}_year",
+                          type: "number",
+                          class: "fr-input fr-input--sm",
+                          id: "market_attribute_response_#{year_key}_year",
+                          step: 1,
+                          min: 2000,
+                          max: component.current_year
+                        )
+                    %>
+                  </div>
+                </div>
+                <div style="flex: 1; min-width: 0;" class="fr-col-6">
+                  <div class="fr-input-group">
+                    <label
+                      class="fr-label fr-text--md"
+                      for="market_attribute_response_<%= year_key %>_average_staff"
+                    >
+                      Effectif moyen
+                    </label>
+                    <%= response_form.text_field(
+                          "#{year_key}_average_staff",
+                          type: "number",
+                          class: "fr-input fr-input--sm",
+                          id: "market_attribute_response_#{year_key}_average_staff",
+                          step: 1,
+                          min: 0
+                        )
+                    %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <% if component.value_error_messages.any? %>
+        <div class="fr-messages-group fr-mt-2w" aria-live="polite">
+          <% component.value_error_messages.each do |error_message| %>
+            <p class="fr-message fr-message--error"><%= error_message %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuelsComponent::YEAR_KEYS.each do |year_key| %>
+        <% if component.year_error_messages(year_key).any? %>
+          <div class="fr-messages-group fr-mt-1w" aria-live="polite">
+            <p class="fr-message fr-message--error">
+              Année <%= component.year_label(year_key) %> :
+              <%= component.year_error_messages(year_key).first %>
+            </p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
