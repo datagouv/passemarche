@@ -55,35 +55,15 @@
 </section>
 
 <%# Section 3: Advantages - Light blue background %>
-<section class="fr-py-8w fr-background-alt--blue-france">
-  <div class="fr-container">
-    <h2 class="fr-h3 fr-mb-4w"><%= t('home.candidate.advantages.title') %></h2>
-    <div class="fr-grid-row fr-grid-row--gutters">
-      <%
-        advantages = [
-          { key: 'simplified_form', icon: 'document/document.svg' },
-          { key: 'automatic_recovery', icon: 'digital/data-visualization.svg' },
-          { key: 'accurate_info', icon: 'system/success.svg' },
-          { key: 'secure_transmission', icon: 'digital/mail-send.svg' }
-        ]
-      %>
-      <% advantages.each do |advantage| %>
-        <div class="fr-col-12 fr-col-md-6 fr-mb-4w">
-          <img src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/artwork/pictograms/<%= advantage[:icon] %>"
-               alt=""
-               class="candidate-pictogram fr-mb-2w"
-               aria-hidden="true">
-          <h3 class="fr-h5 fr-mb-1w">
-            <%= t("home.candidate.advantages.items.#{advantage[:key]}.title") %>
-          </h3>
-          <p class="fr-text--sm">
-            <%= t("home.candidate.advantages.items.#{advantage[:key]}.description") %>
-          </p>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</section>
+<%= render 'home/advantages_section',
+           scope: 'home.candidate',
+           columns: 2,
+           advantages: [
+             { key: 'simplified_form', icon: 'document/document.svg' },
+             { key: 'automatic_recovery', icon: 'digital/data-visualization.svg' },
+             { key: 'accurate_info', icon: 'system/success.svg' },
+             { key: 'secure_transmission', icon: 'digital/mail-send.svg' }
+           ] %>
 
 <%# Section 4: How It Works %>
 <section class="fr-py-8w">
@@ -94,9 +74,9 @@
         <p class="fr-text--lg fr-mb-4w"><%= t('home.candidate.how_it_works.subtitle') %></p>
 
         <% (1..3).each do |step_num| %>
-          <div class="candidate-step">
-            <div class="candidate-step__number"><%= step_num %></div>
-            <p class="candidate-step__text">
+          <div class="homepage-step">
+            <div class="homepage-step__number"><%= step_num %></div>
+            <p class="homepage-step__text" style="padding-top: 0.625rem;">
               <%= t("home.candidate.how_it_works.steps.step_#{step_num}") %>
             </p>
           </div>
@@ -105,31 +85,14 @@
       <div class="fr-col-12 fr-col-md-6 fr-hidden fr-unhidden-md">
         <%= image_tag "candidate_screenshot.png",
                       alt: "Capture d'écran de l'application Passe Marché",
-                      class: "fr-responsive-img candidate-screenshot" %>
+                      class: "fr-responsive-img homepage-screenshot" %>
       </div>
     </div>
   </div>
 </section>
 
 <%# Section 5: Partner Platforms - Light blue background %>
-<section class="fr-py-8w fr-background-alt--blue-france">
-  <div class="fr-container">
-    <div class="fr-grid-row fr-grid-row--center">
-      <div class="fr-col-12 fr-col-md-8" style="text-align: center;">
-        <h2 class="fr-h3 fr-mb-1w"><%= t('home.candidate.partners.title') %></h2>
-        <p class="fr-text--lg fr-mb-4w"><%= t('home.candidate.partners.subtitle') %></p>
-
-        <ul class="fr-btns-group fr-btns-group--center">
-          <% %w[platform_1 platform_2 platform_3].each do |platform| %>
-            <li>
-              <%= link_to t("home.candidate.partners.platforms.#{platform}"),
-                          "#",
-                          class: "fr-btn" %>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+<%= render 'home/partners_section',
+           scope: 'home.candidate',
+           background: 'fr-background-alt--blue-france' %>
 <% end %>

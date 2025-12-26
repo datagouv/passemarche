@@ -1,12 +1,9 @@
 /* Candidate Homepage - Custom styles complementing DSFR
-   Uses DSFR utility classes wherever possible:
-   - fr-py-*w for padding (1w = 0.25rem)
-   - fr-mt-*w for margins
-   - fr-text--* for typography
-   - fr-background-alt--* for backgrounds
+   Uses DSFR utility classes wherever possible.
+   Shared styles are in home_shared.css
 */
 
-/* Hero Section - DSFR doesn't provide a hero component */
+/* Hero Section */
 .candidate-hero {
   background-color: var(--blue-france-sun-113-625);
   padding: 4rem 0;
@@ -24,53 +21,6 @@
   height: 300px;
   filter: brightness(0) invert(1);
   opacity: 0.9;
-}
-
-/* Stepper - Custom design matching Figma */
-.candidate-step {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.candidate-step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 48px;
-  width: 0;
-  height: calc(100% - 10px);
-  border-left: 2px dashed var(--blue-france-sun-113-625);
-}
-
-.candidate-step__number {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--blue-france-sun-113-625);
-  flex-shrink: 0;
-  background-color: var(--blue-france-925-125);
-}
-
-.candidate-step__text {
-  padding-top: 0.625rem;
-}
-
-/* Pictogram sizing */
-.candidate-pictogram {
-  width: 80px;
-  height: 80px;
-}
-
-.candidate-pictogram--sm {
-  width: 24px;
-  height: 24px;
 }
 
 /* Value Proposition Badges - Staggered layout matching Figma */
@@ -109,11 +59,4 @@
 
 .candidate-badges-grid__item--4 {
   margin-left: 2rem;
-}
-
-/* Screenshot styling */
-.candidate-screenshot {
-  max-width: 400px;
-  box-shadow: 0 2px 6px rgba(0, 0, 18, 0.16);
-  border-radius: 4px;
 }
