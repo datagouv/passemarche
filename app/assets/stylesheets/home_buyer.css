@@ -1,0 +1,168 @@
+/* Buyer Homepage - Custom styles complementing DSFR
+   Uses DSFR utility classes wherever possible
+*/
+
+/* Hero Section - Light blue background matching Figma */
+.buyer-hero {
+  background-color: #F5F5FE;
+  padding: 4rem 0;
+}
+
+.buyer-hero__title {
+  color: #000091;
+  font-size: 2.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.buyer-hero__illustration {
+  width: 300px;
+  height: 300px;
+}
+
+/* Two Cards Component - Value Proposition Section */
+.buyer-cards {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.buyer-card {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--grey-1000-50);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid var(--grey-925-125);
+}
+
+.buyer-card__badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.buyer-card__badge--green {
+  background-color: #B8FEC9;
+  color: #18753c;
+}
+
+.buyer-card__badge--blue {
+  background-color: #E3E3FD;
+  color: #000091;
+}
+
+.buyer-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.buyer-card__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.buyer-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.buyer-card__dot--green {
+  background-color: #18753c;
+}
+
+.buyer-card__dot--blue {
+  background-color: #000091;
+}
+
+.buyer-card__line {
+  height: 6px;
+  background-color: var(--grey-925-125);
+  border-radius: 3px;
+  flex-grow: 1;
+}
+
+/* Pictogram sizing */
+.buyer-pictogram {
+  width: 80px;
+  height: 80px;
+}
+
+.buyer-pictogram--sm {
+  width: 48px;
+  height: 48px;
+}
+
+/* Stepper - Custom design matching Figma */
+.buyer-step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.buyer-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 23px;
+  top: 48px;
+  width: 0;
+  height: calc(100% - 10px);
+  border-left: 2px dashed var(--blue-france-sun-113-625);
+}
+
+.buyer-step__number {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--blue-france-sun-113-625);
+  flex-shrink: 0;
+  background-color: var(--blue-france-925-125);
+}
+
+.buyer-step__content {
+  padding-top: 0.25rem;
+}
+
+.buyer-step__text {
+  margin: 0;
+  color: var(--grey-200-850);
+}
+
+/* Screenshot styling */
+.buyer-screenshot {
+  max-width: 400px;
+  box-shadow: 0 2px 6px rgba(0, 0, 18, 0.16);
+  border-radius: 4px;
+}
+
+/* Data columns for examples section */
+.buyer-data-column {
+  background-color: var(--grey-1000-50);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.buyer-data-column .fr-list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.buyer-data-column .fr-list li {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}

@@ -170,6 +170,78 @@ fr:
           platform_2: "Accéder à [Plateforme 2]"
           platform_3: "Accéder à [Plateforme 3]"
 
+    buyer:
+      hero:
+        title: "Votre publication et votre analyse de candidatures, en toute simplicité"
+
+      value_proposition:
+        title: "Gagner du temps dans vos marchés publics n'a jamais été aussi simple !"
+        description_html: "Grâce à notre service, vous diffusez votre consultation sur votre profil acheteur et recevez des candidatures déjà <strong>formatées</strong> et <strong>complètes</strong> grâce aux informations transmises par nos API."
+        details: "Vous paramétrez votre marché pour la candidature en étant accompagné(e), vous aurez accès aux documents et informations attendus par la réglementation et ceux les plus couramment demandés par les acheteurs."
+        legend:
+          authentic: "De source authentique"
+          declared: "Déclaré sur l'honneur"
+          missing: "Manquant"
+
+      advantages:
+        title: "Quels sont les avantages ?"
+        items:
+          standardized:
+            title: "Candidatures normalisées"
+            description: "Toutes les informations sont structurées de manière identique pour chaque candidature, facilitant ainsi la comparaison et accélérant le processus de sélection."
+          time_saving:
+            title: "Gain de temps"
+            description: "Plus d'échanges sans fin de courriels pour des documents manquants, vous recevez des candidatures complètes, conformes aux exigences que vous avez définies."
+          reliability:
+            title: "Fiabilité accrue"
+            description: "Les données candidates sont pré-remplies à partir de sources officielles. Les informations non vérifiables sont clairement identifiées, limitant ainsi les erreurs et les fraudes."
+
+      how_it_works:
+        title: "Comment ça fonctionne ?"
+        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        steps:
+          step_1:
+            title: "Paramétrez votre marché"
+            description: "Définissez librement les éléments demandés dans la candidature, tout en conservant une flexibilité totale."
+          step_2:
+            title: "Bénéficiez d'un accompagnement clair"
+            description: "Visualisez facilement les documents obligatoires et optionnels."
+          step_3:
+            title: "Recevez des candidatures prêtes à être traitées"
+            description: "Des dossiers complets et fiables, directement accessibles via votre profil acheteur."
+
+      data_examples:
+        title: "Quelques exemples de données disponibles"
+        subtitle: "Toutes ces données sont directement récupérées par API auprès des sources officielles : un accès authentique, sécurisé et toujours à jour, qui garantit fiabilité et simplicité pour vos consultations."
+        legal:
+          title: "Les obligations légales et fiscales"
+          items:
+            - "Chiffre d'affaires global annuel"
+            - "Bilans ou extraits de bilans"
+            - "Les effectifs moyens annuels du candidat"
+            - "Attestation de régularité sociale"
+            - "Attestation de vigilance"
+            - "Attestations URSS - GIP - MSA"
+            - "Avis de paiements, liquidations judiciaires"
+        technical:
+          title: "Les capacités techniques et professionnelles"
+          items:
+            - "Certification Qualibat"
+            - "Certification Qualifelec"
+            - "Certification RGE"
+            - "Certification BIO"
+            - "Certification entreprise ESS"
+            - "Certification LCFT"
+            - "Certification OPQIBI"
+
+      partners:
+        title: "Accédez aux marchés publics via nos plateformes partenaires"
+        subtitle: "et laissez Passe Marché adapter votre candidature pour vous"
+        platforms:
+          platform_1: "Accéder à [Plateforme 1]"
+          platform_2: "Accéder à [Plateforme 2]"
+          platform_3: "Accéder à [Plateforme 3]"
+
   market_types:
     supplies: "Fournitures"
     services: "Services"

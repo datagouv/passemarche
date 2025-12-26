@@ -8,22 +8,19 @@ Feature: Passe Marché Home Page
   Scenario: User visits the home page
     Given I am on the home page
     Then I should see "Passe Marché"
-    And I should see "La plateforme de candidature simplifiée aux marchés publics"
+    And I should see "Votre publication et votre analyse de candidatures"
 
   Scenario: User sees DSFR French government design
     Given I am on the home page
     Then I should see "République"
     And I should see "Française"
 
-  Scenario: User sees the application features and workflow
-    Given I am on the home page
-    Then I should see "Fonctionnalités principales"
-    And I should see "Identification SIRET automatique"
-    And I should see "Gestion documentaire intégrée"
-    And I should see "Comment ça marche ?"
-    And I should see "1. Identification"
-    And I should see "2. Documents"
-    And I should see "3. Candidature"
+  Scenario: Buyer homepage displays advantages section
+    Given I am on the buyer home page
+    Then I should see "Quels sont les avantages"
+    And I should see "Candidatures normalisées"
+    And I should see "Gain de temps"
+    And I should see "Fiabilité accrue"
 
   Scenario: Candidate homepage displays hero section
     Given I am on the candidate home page
@@ -66,11 +63,31 @@ Feature: Passe Marché Home Page
   Scenario: User visits the buyer homepage
     Given I am on the buyer home page
     Then I should see "Passe Marché"
-    And I should see "La plateforme de candidature simplifiée aux marchés publics"
+    And I should see "Votre publication et votre analyse de candidatures"
 
   Scenario: Root URL displays buyer homepage content
     Given I am on the home page
-    Then I should see "La plateforme de candidature simplifiée aux marchés publics"
+    Then I should see "Gagner du temps dans vos marchés publics"
+
+  Scenario: Buyer homepage displays how it works section
+    Given I am on the buyer home page
+    Then I should see "Comment ça fonctionne"
+    And I should see "Paramétrez votre marché"
+    And I should see "Bénéficiez d'un accompagnement clair"
+    And I should see "Recevez des candidatures prêtes à être traitées"
+
+  Scenario: Buyer homepage displays data examples section
+    Given I am on the buyer home page
+    Then I should see "Quelques exemples de données disponibles"
+    And I should see "Les obligations légales et fiscales"
+    And I should see "Les capacités techniques et professionnelles"
+
+  Scenario: Buyer homepage displays partner platforms section
+    Given I am on the buyer home page
+    Then I should see "Accédez aux marchés publics via nos plateformes partenaires"
+    And I should see "Plateforme 1"
+    And I should see "Plateforme 2"
+    And I should see "Plateforme 3"
 
   Scenario: Header displays navigation links
     Given I am on the home page

@@ -1,80 +1,191 @@
-<div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center fr-mt-2w">
-  <div class="fr-col-12 fr-col-md-8">
-    <div class="fr-callout">
-      <h1 class="fr-callout__title"><%= t('home.title') %></h1>
-      <p class="fr-callout__text">
-        <%= t('home.subtitle') %>
-      </p>
-      <p class="fr-text--sm">
-        <%= t('home.description') %>
-      </p>
+<% content_for :full_width_content do %>
+<%# Section 1: Hero Banner - Light blue background matching Figma %>
+<section class="buyer-hero">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+      <div class="fr-col-12 fr-col-md-5 fr-hidden fr-unhidden-md">
+        <%= image_tag "passport.svg",
+                      alt: "",
+                      class: "buyer-hero__illustration",
+                      aria_hidden: "true" %>
+      </div>
+      <div class="fr-col-12 fr-col-md-7">
+        <h1 class="buyer-hero__title">
+          <%= t('home.buyer.hero.title') %>
+        </h1>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="fr-highlight">
-      <p>
-        <%= t('home.welcome.text', app_name: content_tag(:strong, t('application.name'))) %>
-      </p>
-    </div>
-
-
-    <div class="fr-mt-4w">
-      <h2><%= t('home.features.title') %></h2>
-      <ul class="fr-badges-group">
-        <li>
-          <p class="fr-badge fr-badge--info"><%= t('home.features.siret') %></p>
-        </li>
-        <li>
-          <p class="fr-badge fr-badge--success"><%= t('home.features.documents') %></p>
-        </li>
-        <li>
-          <p class="fr-badge fr-badge--new"><%= t('home.features.attestations') %></p>
-        </li>
-        <li>
-          <p class="fr-badge fr-badge--warning"><%= t('home.features.integration') %></p>
-        </li>
-      </ul>
-    </div>
-
-    <div class="fr-mt-4w">
-      <h3><%= t('home.workflow.title') %></h3>
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-12 fr-col-md-4">
-          <div class="fr-card fr-card--no-border">
-            <div class="fr-card__body">
-              <div class="fr-card__content">
-                <h4 class="fr-card__title"><%= t('home.workflow.steps.identification.title') %></h4>
-                <p class="fr-card__desc">
-                  <%= t('home.workflow.steps.identification.description') %>
-                </p>
-              </div>
+<%# Section 2: Value Proposition %>
+<section class="fr-py-8w">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12 fr-col-md-6">
+        <h2 class="fr-h3 fr-mb-2w" style="color: var(--blue-france-sun-113-625);">
+          <%= t('home.buyer.value_proposition.title') %>
+        </h2>
+        <p class="fr-text--lg fr-mb-3w">
+          <%= t('home.buyer.value_proposition.description_html').html_safe %>
+        </p>
+        <p class="fr-text--sm">
+          <%= t('home.buyer.value_proposition.details') %>
+        </p>
+      </div>
+      <div class="fr-col-12 fr-col-md-6 fr-hidden fr-unhidden-md">
+        <div class="buyer-cards">
+          <%# Card 1: API-retrieved data %>
+          <div class="buyer-card">
+            <div class="buyer-card__badge buyer-card__badge--green">
+              <%= t('home.buyer.value_proposition.legend.authentic') %>
+            </div>
+            <div class="buyer-card__rows">
+              <% 4.times do %>
+                <div class="buyer-card__row">
+                  <span class="buyer-card__dot buyer-card__dot--green"></span>
+                  <span class="buyer-card__line"></span>
+                </div>
+              <% end %>
             </div>
           </div>
-        </div>
-        <div class="fr-col-12 fr-col-md-4">
-          <div class="fr-card fr-card--no-border">
-            <div class="fr-card__body">
-              <div class="fr-card__content">
-                <h4 class="fr-card__title"><%= t('home.workflow.steps.documents.title') %></h4>
-                <p class="fr-card__desc">
-                  <%= t('home.workflow.steps.documents.description') %>
-                </p>
-              </div>
+          <%# Card 2: Self-declared data %>
+          <div class="buyer-card">
+            <div class="buyer-card__badge buyer-card__badge--blue">
+              <%= t('home.buyer.value_proposition.legend.declared') %>
             </div>
-          </div>
-        </div>
-        <div class="fr-col-12 fr-col-md-4">
-          <div class="fr-card fr-card--no-border">
-            <div class="fr-card__body">
-              <div class="fr-card__content">
-                <h4 class="fr-card__title"><%= t('home.workflow.steps.candidature.title') %></h4>
-                <p class="fr-card__desc">
-                  <%= t('home.workflow.steps.candidature.description') %>
-                </p>
-              </div>
+            <div class="buyer-card__rows">
+              <% 4.times do %>
+                <div class="buyer-card__row">
+                  <span class="buyer-card__dot buyer-card__dot--blue"></span>
+                  <span class="buyer-card__line"></span>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
+
+<%# Section 3: Advantages - Light blue background %>
+<section class="fr-py-8w fr-background-alt--blue-france">
+  <div class="fr-container">
+    <h2 class="fr-h3 fr-mb-4w"><%= t('home.buyer.advantages.title') %></h2>
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <%
+        advantages = [
+          { key: 'standardized', icon: 'document/document.svg' },
+          { key: 'time_saving', icon: 'digital/calendar.svg' },
+          { key: 'reliability', icon: 'system/success.svg' }
+        ]
+      %>
+      <% advantages.each do |advantage| %>
+        <div class="fr-col-12 fr-col-md-4 fr-mb-4w">
+          <img src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/artwork/pictograms/<%= advantage[:icon] %>"
+               alt=""
+               class="buyer-pictogram fr-mb-2w"
+               aria-hidden="true">
+          <h3 class="fr-h5 fr-mb-1w">
+            <%= t("home.buyer.advantages.items.#{advantage[:key]}.title") %>
+          </h3>
+          <p class="fr-text--sm">
+            <%= t("home.buyer.advantages.items.#{advantage[:key]}.description") %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# Section 4: How It Works %>
+<section class="fr-py-8w">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12 fr-col-md-6">
+        <h2 class="fr-h3 fr-mb-1w"><%= t('home.buyer.how_it_works.title') %></h2>
+        <p class="fr-text--lg fr-mb-4w"><%= t('home.buyer.how_it_works.subtitle') %></p>
+
+        <% (1..3).each do |step_num| %>
+          <div class="buyer-step">
+            <div class="buyer-step__number"><%= step_num %></div>
+            <div class="buyer-step__content">
+              <h4 class="fr-h6 fr-mb-1w"><%= t("home.buyer.how_it_works.steps.step_#{step_num}.title") %></h4>
+              <p class="buyer-step__text">
+                <%= t("home.buyer.how_it_works.steps.step_#{step_num}.description") %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="fr-col-12 fr-col-md-6 fr-hidden fr-unhidden-md">
+        <%= image_tag "buyer_screenshot.png",
+                      alt: "Capture d'écran de l'interface acheteur Passe Marché",
+                      class: "fr-responsive-img buyer-screenshot" %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Section 5: Data Examples - Light blue background %>
+<section class="fr-py-8w fr-background-alt--blue-france">
+  <div class="fr-container">
+    <h2 class="fr-h3 fr-mb-2w"><%= t('home.buyer.data_examples.title') %></h2>
+    <p class="fr-text--lg fr-mb-4w"><%= t('home.buyer.data_examples.subtitle') %></p>
+
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12 fr-col-md-6">
+        <div class="buyer-data-column">
+          <img src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/artwork/pictograms/institutions/money.svg"
+               alt=""
+               class="buyer-pictogram--sm fr-mb-2w"
+               aria-hidden="true">
+          <h3 class="fr-h5 fr-mb-2w"><%= t('home.buyer.data_examples.legal.title') %></h3>
+          <ul class="fr-list">
+            <% t('home.buyer.data_examples.legal.items').each do |item| %>
+              <li><%= item %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <div class="fr-col-12 fr-col-md-6">
+        <div class="buyer-data-column">
+          <img src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/artwork/pictograms/buildings/factory.svg"
+               alt=""
+               class="buyer-pictogram--sm fr-mb-2w"
+               aria-hidden="true">
+          <h3 class="fr-h5 fr-mb-2w"><%= t('home.buyer.data_examples.technical.title') %></h3>
+          <ul class="fr-list">
+            <% t('home.buyer.data_examples.technical.items').each do |item| %>
+              <li><%= item %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Section 6: Partner Platforms %>
+<section class="fr-py-8w">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-8" style="text-align: center;">
+        <h2 class="fr-h3 fr-mb-1w"><%= t('home.buyer.partners.title') %></h2>
+        <p class="fr-text--lg fr-mb-4w"><%= t('home.buyer.partners.subtitle') %></p>
+
+        <ul class="fr-btns-group fr-btns-group--center fr-btns-group--inline">
+          <% %w[platform_1 platform_2 platform_3].each do |platform| %>
+            <li>
+              <%= link_to t("home.buyer.partners.platforms.#{platform}"),
+                          "#",
+                          class: "fr-btn" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<% end %>
