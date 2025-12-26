@@ -125,6 +125,51 @@ fr:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
 
+    candidate:
+      hero:
+        title: "Votre candidature, adaptée à chaque marché public, en toute simplicité"
+
+      value_proposition:
+        title: "Candidater aux marchés publics n'a jamais été aussi simple !"
+        description_html: "Avec le Passe Marché, vous déposez une candidature qui s'ajuste <strong>automatiquement</strong> aux exigences du marché : ni trop, ni pas assez. Vous gagnez du temps, vous limitez les erreurs et vous répondez en quelques clics."
+        badges:
+          identity: "Identité de mon entreprise"
+          certificates: "Certificats"
+          turnover: "Chiffre d'affaires"
+          balance_sheets: "Extraits de bilans"
+
+      advantages:
+        title: "Quels sont les avantages ?"
+        items:
+          simplified_form:
+            title: "Un formulaire unique et simplifié"
+            description: "Sans jargon juridique inutile, un parcours clair et accessible à tous."
+          automatic_recovery:
+            title: "Récupération automatique de vos données"
+            description: "Grâce à votre SIRET et aux API publiques, vos informations sont pré-remplies."
+          accurate_info:
+            title: "Des informations justes et à jour"
+            description: "Sans ressaisie manuelle superflue, les données sont vérifiées à la source."
+          secure_transmission:
+            title: "Une transmission sécurisée à l'acheteur"
+            description: "Via un canal officiel et tracé, vos documents sont transmis en toute confiance."
+
+      how_it_works:
+        title: "Comment ça fonctionne ?"
+        subtitle: "Un processus simple en 3 étapes pour déposer votre candidature."
+        steps:
+          step_1: "Vous indiquez votre numéro de SIRET"
+          step_2: "Les informations concernant votre entreprise sont récupérées automatiquement et vous complétez certaines informations si elles sont demandées par l'acheteur"
+          step_3: "Votre attestation est disponible, votre candidature est terminée !"
+
+      partners:
+        title: "Accédez aux marchés publics via nos plateformes partenaires"
+        subtitle: "et laissez Passe Marché adapter votre candidature pour vous"
+        platforms:
+          platform_1: "Accéder à [Plateforme 1]"
+          platform_2: "Accéder à [Plateforme 2]"
+          platform_3: "Accéder à [Plateforme 3]"
+
   market_types:
     supplies: "Fournitures"
     services: "Services"
