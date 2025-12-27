@@ -1,7 +1,7 @@
 class Insee < ApplicationOrganizer
   organize Insee::MakeRequest,
     Insee::BuildResource,
-    MapApiData
+    Insee::MapInseeApiData
 
   def self.call(context = {})
     context[:api_name] ||= 'insee'

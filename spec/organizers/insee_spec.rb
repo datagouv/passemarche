@@ -358,5 +358,125 @@ RSpec.describe Insee, type: :organizer do
         expect(market_application.market_attribute_responses.count).to eq(2)
       end
     end
+
+    context 'with ESS attribute (full integration)' do
+      let(:public_market) { create(:public_market, :completed) }
+      let(:market_application) { create(:market_application, public_market:, siret:) }
+
+      let!(:ess_attribute) do
+        create(:market_attribute, :radio_with_file_and_text, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_ess',
+          api_name: 'insee',
+          api_key: 'ess',
+          public_markets: [public_market])
+      end
+
+      subject { described_class.call(params: { siret: }, market_application:) }
+
+      context 'when API returns ESS true' do
+        before do
+          stub_request(:get, api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => public_market.siret,
+                'object' => "Réponse marché: #{public_market.name}"
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 200,
+              body: insee_response_with_ess_true(siret:),
+              headers: { 'Content-Type' => 'application/json' }
+            )
+        end
+
+        it 'succeeds' do
+          expect(subject).to be_success
+        end
+
+        it 'creates ESS market_attribute_response' do
+          expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+        end
+
+        it 'populates ESS field with yes choice' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.radio_choice).to eq('yes')
+        end
+
+        it 'populates ESS field with correct text message' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.text).to eq(I18n.t('api.insee.ess.is_ess'))
+        end
+      end
+
+      context 'when API returns ESS false' do
+        before do
+          stub_request(:get, api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => public_market.siret,
+                'object' => "Réponse marché: #{public_market.name}"
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 200,
+              body: insee_response_with_ess_false(siret:),
+              headers: { 'Content-Type' => 'application/json' }
+            )
+        end
+
+        it 'succeeds' do
+          expect(subject).to be_success
+        end
+
+        it 'creates ESS market_attribute_response' do
+          expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+        end
+
+        it 'populates ESS field with no choice' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.radio_choice).to eq('no')
+        end
+
+        it 'does not include text for no choice' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.text).to be_nil
+        end
+      end
+
+      context 'when API returns ESS null' do
+        before do
+          stub_request(:get, api_url)
+            .with(
+              query: hash_including(
+                'context' => 'Candidature marché public',
+                'recipient' => public_market.siret,
+                'object' => "Réponse marché: #{public_market.name}"
+              ),
+              headers: { 'Authorization' => "Bearer #{token}" }
+            )
+            .to_return(
+              status: 200,
+              body: insee_response_with_ess_null(siret:),
+              headers: { 'Content-Type' => 'application/json' }
+            )
+        end
+
+        it 'succeeds' do
+          expect(subject).to be_success
+        end
+
+        it 'does not create ESS market_attribute_response' do
+          expect { subject }.not_to(change { market_application.market_attribute_responses.count })
+        end
+      end
+    end
   end
 end

@@ -40,7 +40,7 @@ class Insee::BuildResource < BuildResource
     if ess_value == true
       { 'radio_choice' => 'yes', 'text' => I18n.t('api.insee.ess.is_ess') }
     else
-      { 'radio_choice' => 'no', 'text' => I18n.t('api.insee.ess.is_not_ess') }
+      { 'radio_choice' => 'no' }
     end
   end
 end

@@ -194,9 +194,7 @@ RSpec.describe Insee::BuildResource, type: :interactor do
 
         it 'returns ESS as a radio_with_file_and_text hash with no choice' do
           result = subject
-          expect(result.bundled_data.data.ess).to eq(
-            { 'radio_choice' => 'no', 'text' => I18n.t('api.insee.ess.is_not_ess') }
-          )
+          expect(result.bundled_data.data.ess).to eq({ 'radio_choice' => 'no' })
         end
       end
 
