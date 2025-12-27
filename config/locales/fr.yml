@@ -503,6 +503,12 @@ fr:
       shared:
         "yes": Oui
         "no": Non
+      fields:
+        capacites_techniques_professionnelles_certificats_ess:
+          radio_yes: Oui, mon entreprise est une ESS
+          radio_no: Non, mon entreprise n'est pas une ESS
+          text_label: Justificatif ou précisions
+          text_hint: Si votre statut ESS n'a pas pu être déterminé automatiquement, vous pouvez joindre un justificatif ou préciser votre situation.
 
   api:
     errors:
