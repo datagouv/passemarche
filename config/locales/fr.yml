@@ -507,6 +507,10 @@ fr:
   api:
     errors:
       defense_market_not_allowed: "La création de marchés de défense nécessite une autorisation préalable. Veuillez contacter l'administrateur pour activer cette fonctionnalité."
+    insee:
+      ess:
+        is_ess: "L'entreprise est une ESS - données issues d'une source officielle"
+        is_not_ess: "L'entreprise n'est pas une ESS - données issues d'une source officielle"
 
   admin:
     editors:

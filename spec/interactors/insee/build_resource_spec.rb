@@ -155,6 +155,79 @@ RSpec.describe Insee::BuildResource, type: :interactor do
       end
     end
 
+    context 'with ESS (Economie Sociale et Solidaire) values' do
+      context 'when economie_sociale_solidaire is true' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                unite_legale: {
+                  economie_sociale_solidaire: true
+                }
+              }
+            }
+          )
+        end
+
+        it 'returns ESS as a radio_with_file_and_text hash with yes choice' do
+          result = subject
+          expect(result.bundled_data.data.ess).to eq(
+            { 'radio_choice' => 'yes', 'text' => I18n.t('api.insee.ess.is_ess') }
+          )
+        end
+      end
+
+      context 'when economie_sociale_solidaire is false' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                unite_legale: {
+                  economie_sociale_solidaire: false
+                }
+              }
+            }
+          )
+        end
+
+        it 'returns ESS as a radio_with_file_and_text hash with no choice' do
+          result = subject
+          expect(result.bundled_data.data.ess).to eq(
+            { 'radio_choice' => 'no', 'text' => I18n.t('api.insee.ess.is_not_ess') }
+          )
+        end
+      end
+
+      context 'when economie_sociale_solidaire is null' do
+        let(:response_body) do
+          insee_etablissement_success_response(
+            siret:,
+            overrides: {
+              data: {
+                unite_legale: {
+                  economie_sociale_solidaire: nil
+                }
+              }
+            }
+          )
+        end
+
+        it 'returns nil for ESS to allow manual input' do
+          result = subject
+          expect(result.bundled_data.data.ess).to be_nil
+        end
+      end
+
+      context 'when economie_sociale_solidaire is not present in response' do
+        it 'returns nil for ESS' do
+          result = subject
+          expect(result.bundled_data.data.ess).to be_nil
+        end
+      end
+    end
+
     context 'when the response contains invalid JSON' do
       let(:response) { instance_double(Net::HTTPOK, body: insee_invalid_json_response) }
 

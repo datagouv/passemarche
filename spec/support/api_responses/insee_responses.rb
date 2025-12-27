@@ -139,5 +139,44 @@ module ApiResponses
         }
       }.to_json
     end
+
+    def insee_response_with_ess_true(siret: '41816609600069')
+      insee_etablissement_success_response(
+        siret:,
+        overrides: {
+          data: {
+            unite_legale: {
+              economie_sociale_solidaire: true
+            }
+          }
+        }
+      )
+    end
+
+    def insee_response_with_ess_false(siret: '41816609600069')
+      insee_etablissement_success_response(
+        siret:,
+        overrides: {
+          data: {
+            unite_legale: {
+              economie_sociale_solidaire: false
+            }
+          }
+        }
+      )
+    end
+
+    def insee_response_with_ess_null(siret: '41816609600069')
+      insee_etablissement_success_response(
+        siret:,
+        overrides: {
+          data: {
+            unite_legale: {
+              economie_sociale_solidaire: nil
+            }
+          }
+        }
+      )
+    end
   end
 end
