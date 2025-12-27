@@ -4,6 +4,10 @@
 
 Les webhooks Passe Marché permettent aux éditeurs de recevoir des notifications en temps réel lors d'événements importants (complétion de marchés, finalisation de candidatures). Ce système garantit une synchronisation fiable et automatique entre Passe Marché et les plateformes éditrices.
 
+## Environnements
+
+Les URLs dans les payloads webhook (ex: `attestation_url`) correspondent à l'environnement source. Consultez la [documentation des environnements](08_ENVIRONNEMENTS.md) pour les URLs spécifiques.
+
 ## Architecture des Webhooks
 
 ```
@@ -33,7 +37,7 @@ Les webhooks sont configurés par l'administrateur Passe Marché au niveau de ch
 
 | Paramètre | Description | Exemple |
 |-----------|-------------|---------|
-| `completion_webhook_url` | URL de réception des webhooks | `https://editeur.com/webhooks/voie-rapide` |
+| `completion_webhook_url` | URL de réception des webhooks | `https://editeur.com/webhooks/passemarche` |
 | `redirect_url` | URL de redirection post-complétion | `https://editeur.com/callback` |
 | `webhook_secret` | Secret HMAC généré automatiquement | `a1b2c3d4e5f6...` |
 
@@ -115,8 +119,8 @@ Les paramètres existants dans l'URL sont préservés.
     "siret": "12345678901234",
     "company_name": "ACME Solutions SARL",
     "completed_at": "2024-06-15T16:45:30.456Z",
-    "attestation_url": "https://voie-rapide.gouv.fr/api/v1/market_applications/FT20240615A1B2C3D4/attestation",
-    "documents_package_url": "https://voie-rapide.gouv.fr/api/v1/market_applications/FT20240615A1B2C3D4/documents_package"
+    "attestation_url": "${BASE_URL}/api/v1/market_applications/FT20240615A1B2C3D4/attestation",
+    "documents_package_url": "${BASE_URL}/api/v1/market_applications/FT20240615A1B2C3D4/documents_package"
   }
 }
 ```
@@ -126,11 +130,11 @@ Les paramètres existants dans l'URL sont préservés.
 ### En-têtes HTTP
 
 ```http
-POST /webhooks/voie-rapide HTTP/1.1
+POST /webhooks/passemarche HTTP/1.1
 Host: votre-editeur.com
 Content-Type: application/json
 X-Webhook-Signature-SHA256: sha256=a1b2c3d4e5f6789...
-User-Agent: VoieRapide-Webhook/1.0
+User-Agent: PasseMarche-Webhook/1.0
 Content-Length: 1245
 ```
 

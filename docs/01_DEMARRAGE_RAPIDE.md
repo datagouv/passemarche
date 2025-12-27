@@ -19,15 +19,32 @@ Contactez l'équipe Passe Marché pour obtenir :
 - **Outils requis** : curl, jq (pour les tests)
 - **Données requises** : SIRET de l'organisation publique (14 chiffres) pour créer un marché
 
+### Choix de l'environnement
+Les exemples de ce guide utilisent la variable `$BASE_URL`. Choisissez l'environnement approprié :
+
+| Environnement | URL | Usage |
+|---------------|-----|-------|
+| **Staging** | `https://staging.passemarche.data.gouv.fr` | Tests d'intégration éditeurs (recommandé) |
+| **Sandbox** | `https://sandbox.passemarche.data.gouv.fr` | Réservé équipe interne (instable) |
+| **Preprod** | `https://preprod.passemarche.data.gouv.fr` | Recette données réelles |
+| **Production** | `https://passemarche.data.gouv.fr` | Utilisateurs finaux |
+
+```bash
+# Configuration de l'environnement (staging recommandé pour débuter)
+export BASE_URL="https://staging.passemarche.data.gouv.fr"
+```
+
+**[Documentation complète des environnements](08_ENVIRONNEMENTS.md)**
+
 ---
 
 ## Étape 1 : Authentification OAuth2 (5 min)
 
 ```bash
 # Test d'authentification
-curl -X POST https://voie-rapide.gouv.fr/oauth/token \
+curl -X POST "${BASE_URL}/oauth/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=VOTRE_CLIENT_ID&client_secret=VOTRE_CLIENT_SECRET&scope=api_access"
+  -d "grant_type=client_credentials&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&scope=api_access"
 
 # Réponse attendue
 {
@@ -46,7 +63,7 @@ curl -X POST https://voie-rapide.gouv.fr/oauth/token \
 
 ```bash
 # Création de marché avec token
-curl -X POST https://voie-rapide.gouv.fr/api/v1/public_markets \
+curl -X POST "${BASE_URL}/api/v1/public_markets" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -62,7 +79,7 @@ curl -X POST https://voie-rapide.gouv.fr/api/v1/public_markets \
 # Réponse
 {
   "identifier": "VR-2024-A1B2C3D4E5F6",
-  "configuration_url": "https://voie-rapide.gouv.fr/buyer/public_markets/VR-2024-A1B2C3D4E5F6/setup"
+  "configuration_url": "${BASE_URL}/buyer/public_markets/VR-2024-A1B2C3D4E5F6/setup"
 }
 ```
 
@@ -80,7 +97,7 @@ curl -X POST https://voie-rapide.gouv.fr/api/v1/public_markets \
 
 ```bash
 # Création de candidature
-curl -X POST https://voie-rapide.gouv.fr/api/v1/public_markets/VR-2024-A1B2C3D4E5F6/market_applications \
+curl -X POST "${BASE_URL}/api/v1/public_markets/VR-2024-A1B2C3D4E5F6/market_applications" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -92,7 +109,7 @@ curl -X POST https://voie-rapide.gouv.fr/api/v1/public_markets/VR-2024-A1B2C3D4E
 # Réponse
 {
   "identifier": "FT20240615A1B2C3D4",
-  "application_url": "https://voie-rapide.gouv.fr/candidate/market_applications/FT20240615A1B2C3D4/company_identification"
+  "application_url": "${BASE_URL}/candidate/market_applications/FT20240615A1B2C3D4/company_identification"
 }
 ```
 

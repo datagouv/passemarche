@@ -7,11 +7,19 @@ Cette référence technique détaille tous les endpoints disponibles dans l'API 
 ## Base URL et Versioning
 
 ```
-Base URL: https://voie-rapide.gouv.fr
 Version API: v1
 ```
 
+| Environnement | Base URL |
+|---------------|----------|
+| Sandbox | `https://sandbox.passemarche.data.gouv.fr` |
+| Staging | `https://staging.passemarche.data.gouv.fr` |
+| Preprod | `https://preprod.passemarche.data.gouv.fr` |
+| Production | `https://passemarche.data.gouv.fr` |
+
 Tous les endpoints API sont préfixés par `/api/v1/`.
+
+**[Documentation complète des environnements](08_ENVIRONNEMENTS.md)**
 
 ## Authentification
 
@@ -169,7 +177,7 @@ Content-Type: application/json
 ```json
 {
   "identifier": "VR-2024-A1B2C3D4E5F6",
-  "configuration_url": "https://voie-rapide.gouv.fr/buyer/public_markets/VR-2024-A1B2C3D4E5F6/setup"
+  "configuration_url": "${BASE_URL}/buyer/public_markets/VR-2024-A1B2C3D4E5F6/setup"
 }
 ```
 
@@ -243,7 +251,7 @@ Content-Type: application/json
 ```json
 {
   "identifier": "FT20240615A1B2C3D4",
-  "application_url": "https://voie-rapide.gouv.fr/candidate/market_applications/FT20240615A1B2C3D4/company_identification"
+  "application_url": "${BASE_URL}/candidate/market_applications/FT20240615A1B2C3D4/company_identification"
 }
 ```
 

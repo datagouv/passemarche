@@ -42,6 +42,11 @@
   - *Quand l'utiliser* : Automatisation, tests, intégration CI/CD
   - *Contenu* : Scripts authentification, création marchés, webhooks, monitoring
 
+### 🌍 Environnements
+- **[Environnements](08_ENVIRONNEMENTS.md)** - Configuration des environnements
+  - *Quand l'utiliser* : Choix de l'environnement, migration entre environnements
+  - *Contenu* : URLs, caractéristiques, flux de déploiement, checklist migration
+
 ## 🗂️ Glossaire et Concepts Clés
 
 ### Authentification
@@ -136,9 +141,19 @@
 - **Support technique** : Via channels officiels
 
 ### 🧪 Environnements
-- **Sandbox** : https://sandbox.voie-rapide.services.api.gouv.fr/
-- **Documentation Live** : Tests avec données réelles en sandbox
-- **Fake Editor** : Exemple d'implémentation de référence
+
+Passe Marché dispose de 4 environnements pour les différentes phases d'intégration :
+
+| Environnement | URL | Données API | Accès |
+|---------------|-----|-------------|-------|
+| **Staging** | https://staging.passemarche.data.gouv.fr | Simulées | Éditeurs |
+| **Preprod** | https://preprod.passemarche.data.gouv.fr | Réelles | Sécurisé |
+| **Production** | https://passemarche.data.gouv.fr | Réelles | Sécurisé |
+| **Sandbox** | https://sandbox.passemarche.data.gouv.fr | Simulées | Interne (instable) |
+
+**Fake Editor** (démo d'intégration) : Remplacez `passemarche` par `editeur.passemarche` dans les URLs ci-dessus.
+
+**[Documentation complète des environnements](08_ENVIRONNEMENTS.md)** : URLs, caractéristiques, et flux de déploiement
 
 ### 📚 Ressources Externes
 - **OAuth2 Specification** : [RFC 6749](https://tools.ietf.org/html/rfc6749)
