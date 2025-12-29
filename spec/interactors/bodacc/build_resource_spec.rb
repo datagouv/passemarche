@@ -7,9 +7,8 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
     [
       {
         'id' => 'C202300123456',
-        'familleavis_lib' => 'Procédure collective',
-        'jugement' => '{"nature": "Liquidation judiciaire", "date": "2023-06-15"}',
-        'listepersonnes' => '{"personne": {"denomination": "TEST SARL"}}'
+        'publicationavis' => 'A',
+        'jugement' => '{"nature": "Liquidation judiciaire", "codeNature": "LJ", "date": "2023-06-15"}'
       }
     ]
   end
@@ -18,9 +17,8 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
     [
       {
         'id' => 'C202300789012',
-        'familleavis_lib' => 'Modifications diverses',
-        'jugement' => nil,
-        'listepersonnes' => '{"personne": {"qualification": "faillite personnelle du dirigeant"}}'
+        'publicationavis' => 'A',
+        'jugement' => '{"nature": "Faillite personnelle", "codeNature": "FP"}'
       }
     ]
   end
@@ -29,9 +27,8 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
     [
       {
         'id' => 'C202300345678',
-        'familleavis_lib' => 'Dépôts des comptes',
-        'jugement' => nil,
-        'listepersonnes' => '{"personne": {"denomination": "CLEAN COMPANY"}}'
+        'publicationavis' => 'A',
+        'jugement' => '{"nature": "Clôture", "codeNature": "CL"}'
       }
     ]
   end
@@ -44,31 +41,16 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'detects liquidation from familleavis_lib' do
+      it 'detects liquidation from publicationavis and jugement' do
         result = subject
         expect(result.bundled_data.context[:liquidation_detected]).to be true
-      end
-
-      it 'sets has_exclusions to true' do
-        result = subject
-        expect(result.bundled_data.context[:has_exclusions]).to be true
-      end
-
-      it 'includes liquidation in exclusions_summary' do
-        result = subject
-        expect(result.bundled_data.context[:exclusions_summary]).to include('Liquidation judiciaire détectée')
       end
 
       it 'creates bundled_data with resource attributes' do
         result = subject
         expect(result.bundled_data.data).to be_a(Resource)
-        expect(result.bundled_data.data.liquidation_judiciaire).to eq({
-          'radio_choice' => 'yes',
-          'text' => 'Liquidation détectée par Bodacc'
-        })
-        expect(result.bundled_data.data.faillite_interdiction).to eq({
-          'radio_choice' => 'no'
-        })
+        expect(result.bundled_data.data.liquidation_judiciaire['radio_choice']).to eq('yes')
+        expect(result.bundled_data.data.faillite_interdiction['radio_choice']).to eq('no')
       end
     end
 
@@ -77,9 +59,8 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         [
           {
             'id' => 'C202300999999',
-            'familleavis_lib' => 'Autres avis',
-            'jugement' => '{"nature": "liquidation judiciaire prononcée", "tribunal": "Paris"}',
-            'listepersonnes' => '{}'
+            'publicationavis' => 'A',
+            'jugement' => '{"nature": "liquidation judiciaire prononcée", "tribunal": "Paris"}'
           }
         ]
       end
@@ -99,19 +80,9 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'detects dirigeant à risque from listepersonnes' do
+      it 'detects dirigeant à risque from publicationavis and jugement' do
         result = subject
         expect(result.bundled_data.context[:dirigeant_a_risque]).to be true
-      end
-
-      it 'sets has_exclusions to true' do
-        result = subject
-        expect(result.bundled_data.context[:has_exclusions]).to be true
-      end
-
-      it 'includes dirigeant risque in exclusions_summary' do
-        result = subject
-        expect(result.bundled_data.context[:exclusions_summary]).to include('Dirigeant à risque détecté')
       end
     end
 
@@ -120,29 +91,25 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         [
           {
             'id' => 'C202300111111',
-            'familleavis_lib' => 'Procédure collective',
-            'jugement' => '{"nature": "liquidation"}',
-            'listepersonnes' => '{"dirigeant": "interdiction de gérer prononcée"}'
+            'publicationavis' => 'A',
+            'jugement' => '{"nature": "liquidation", "codeNature": "LJS"}'
+          },
+          {
+            'id' => 'C202300111112',
+            'publicationavis' => 'A',
+            'jugement' => '{"nature": "interdiction de gérer", "codeNature": "IG"}'
           }
         ]
       end
 
       subject { described_class.call(records: records_with_both) }
 
-      it 'detects both exclusions' do
+      it 'detects both liquidation and dirigeant à risque' do
         result = subject
         expect(result.bundled_data.context[:liquidation_detected]).to be true
         expect(result.bundled_data.context[:dirigeant_a_risque]).to be true
-        expect(result.bundled_data.context[:has_exclusions]).to be true
-        expect(result.bundled_data.data.liquidation_judiciaire).to eq({ 'radio_choice' => 'yes', 'text' => 'Liquidation détectée par Bodacc' })
-        expect(result.bundled_data.data.faillite_interdiction).to eq({ 'radio_choice' => 'yes', 'text' => 'Dirigeant à risque détecté par Bodacc' })
-      end
-
-      it 'includes both in exclusions_summary' do
-        result = subject
-        summary = result.bundled_data.context[:exclusions_summary]
-        expect(summary).to include('Liquidation judiciaire détectée')
-        expect(summary).to include('Dirigeant à risque détecté')
+        expect(result.bundled_data.data.liquidation_judiciaire['radio_choice']).to eq('yes')
+        expect(result.bundled_data.data.faillite_interdiction['radio_choice']).to eq('yes')
       end
     end
 
@@ -164,16 +131,6 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         expect(result.bundled_data.context[:dirigeant_a_risque]).to be false
         expect(result.bundled_data.data.faillite_interdiction).to eq({ 'radio_choice' => 'no' })
       end
-
-      it 'sets has_exclusions to false' do
-        result = subject
-        expect(result.bundled_data.context[:has_exclusions]).to be false
-      end
-
-      it 'has empty exclusions_summary' do
-        result = subject
-        expect(result.bundled_data.context[:exclusions_summary]).to be_empty
-      end
     end
 
     context 'when jugement contains invalid JSON' do
@@ -181,9 +138,8 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         [
           {
             'id' => 'C202300222222',
-            'familleavis_lib' => 'Autres avis',
-            'jugement' => 'invalid json{{{',
-            'listepersonnes' => '{}'
+            'publicationavis' => 'A',
+            'jugement' => 'invalid json{{{'
           }
         ]
       end
@@ -194,26 +150,6 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
         expect { subject }.not_to raise_error
         result = subject
         expect(result.bundled_data.context[:liquidation_detected]).to be false
-      end
-    end
-
-    context 'when listepersonnes contains invalid JSON' do
-      let(:records_with_invalid_personnes_json) do
-        [
-          {
-            'id' => 'C202300333333',
-            'familleavis_lib' => 'Autres avis',
-            'jugement' => nil,
-            'listepersonnes' => 'invalid json}}}'
-          }
-        ]
-      end
-
-      subject { described_class.call(records: records_with_invalid_personnes_json) }
-
-      it 'handles invalid JSON gracefully' do
-        expect { subject }.not_to raise_error
-        result = subject
         expect(result.bundled_data.context[:dirigeant_a_risque]).to be false
       end
     end
@@ -224,10 +160,10 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
       it 'succeeds with no exclusions' do
         result = subject
         expect(result).to be_success
-        expect(result.bundled_data.context[:has_exclusions]).to be false
         expect(result.bundled_data.context[:liquidation_detected]).to be false
         expect(result.bundled_data.context[:dirigeant_a_risque]).to be false
-        expect(result.bundled_data.context[:exclusions_summary]).to be_empty
+        expect(result.bundled_data.data.liquidation_judiciaire['radio_choice']).to eq('no')
+        expect(result.bundled_data.data.faillite_interdiction['radio_choice']).to eq('no')
       end
     end
   end
