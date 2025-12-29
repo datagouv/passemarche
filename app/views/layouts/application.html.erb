@@ -27,8 +27,8 @@
     <%= render 'shared/header' %>
 
     <main role="main" id="content">
-      <div class="fr-container fr-pt-4w fr-pb-4w">
-        <% if flash.any? %>
+      <% if flash.any? %>
+        <div class="fr-container fr-pt-4w">
           <% flash.each do |type, message| %>
             <% alert_type = case type.to_sym
                             when :notice then "success"
@@ -40,9 +40,15 @@
               <p><%= message %></p>
             </div>
           <% end %>
-        <% end %>
-        <%= yield %>
-      </div>
+        </div>
+      <% end %>
+      <% if content_for?(:full_width_content) %>
+        <%= yield :full_width_content %>
+      <% else %>
+        <div class="fr-container fr-pt-4w fr-pb-4w">
+          <%= yield %>
+        </div>
+      <% end %>
     </main>
     <%= render 'shared/footer' %>
 

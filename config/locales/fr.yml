@@ -125,6 +125,123 @@ fr:
           title: "3. Candidature"
           description: "Recevez votre attestation de candidature"
 
+    candidate:
+      hero:
+        title: "Votre candidature, adaptée à chaque marché public, en toute simplicité"
+
+      value_proposition:
+        title: "Candidater aux marchés publics n'a jamais été aussi simple !"
+        description_html: "Avec le Passe Marché, vous déposez une candidature qui s'ajuste <strong>automatiquement</strong> aux exigences du marché : ni trop, ni pas assez. Vous gagnez du temps, vous limitez les erreurs et vous répondez en quelques clics."
+        badges:
+          identity: "Identité de mon entreprise"
+          certificates: "Certificats"
+          turnover: "Chiffre d'affaires"
+          balance_sheets: "Extraits de bilans"
+
+      advantages:
+        title: "Quels sont les avantages ?"
+        items:
+          simplified_form:
+            title: "Un formulaire unique et simplifié"
+            description: "Sans jargon juridique inutile, un parcours clair et accessible à tous."
+          automatic_recovery:
+            title: "Récupération automatique de vos données"
+            description: "Grâce à votre SIRET et aux API publiques, vos informations sont pré-remplies."
+          accurate_info:
+            title: "Des informations justes et à jour"
+            description: "Sans ressaisie manuelle superflue, les données sont vérifiées à la source."
+          secure_transmission:
+            title: "Une transmission sécurisée à l'acheteur"
+            description: "Via un canal officiel et tracé, vos documents sont transmis en toute confiance."
+
+      how_it_works:
+        title: "Comment ça fonctionne ?"
+        subtitle: "Un processus simple en 3 étapes pour déposer votre candidature."
+        steps:
+          step_1: "Vous indiquez votre numéro de SIRET"
+          step_2: "Les informations concernant votre entreprise sont récupérées automatiquement et vous complétez certaines informations si elles sont demandées par l'acheteur"
+          step_3: "Votre attestation est disponible, votre candidature est terminée !"
+
+      partners:
+        title: "Accédez aux marchés publics via nos plateformes partenaires"
+        subtitle: "et laissez Passe Marché adapter votre candidature pour vous"
+        platforms:
+          platform_1: "Accéder à [Plateforme 1]"
+          platform_2: "Accéder à [Plateforme 2]"
+          platform_3: "Accéder à [Plateforme 3]"
+
+    buyer:
+      hero:
+        title: "Votre publication et votre analyse de candidatures, en toute simplicité"
+
+      value_proposition:
+        title: "Gagner du temps dans vos marchés publics n'a jamais été aussi simple !"
+        description_html: "Grâce à notre service, vous diffusez votre consultation sur votre profil acheteur et recevez des candidatures déjà <strong>formatées</strong> et <strong>complètes</strong> grâce aux informations transmises par nos API."
+        details: "Vous paramétrez votre marché pour la candidature en étant accompagné(e), vous aurez accès aux documents et informations attendus par la réglementation et ceux les plus couramment demandés par les acheteurs."
+        legend:
+          authentic: "De source authentique"
+          declared: "Déclaré sur l'honneur"
+          missing: "Manquant"
+
+      advantages:
+        title: "Quels sont les avantages ?"
+        items:
+          standardized:
+            title: "Candidatures normalisées"
+            description: "Toutes les informations sont structurées de manière identique pour chaque candidature, facilitant ainsi la comparaison et accélérant le processus de sélection."
+          time_saving:
+            title: "Gain de temps"
+            description: "Plus d'échanges sans fin de courriels pour des documents manquants, vous recevez des candidatures complètes, conformes aux exigences que vous avez définies."
+          reliability:
+            title: "Fiabilité accrue"
+            description: "Les données candidates sont pré-remplies à partir de sources officielles. Les informations non vérifiables sont clairement identifiées, limitant ainsi les erreurs et les fraudes."
+
+      how_it_works:
+        title: "Comment ça fonctionne ?"
+        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        steps:
+          step_1:
+            title: "Paramétrez votre marché"
+            description: "Définissez librement les éléments demandés dans la candidature, tout en conservant une flexibilité totale."
+          step_2:
+            title: "Bénéficiez d'un accompagnement clair"
+            description: "Visualisez facilement les documents obligatoires et optionnels."
+          step_3:
+            title: "Recevez des candidatures prêtes à être traitées"
+            description: "Des dossiers complets et fiables, directement accessibles via votre profil acheteur."
+
+      data_examples:
+        title: "Quelques exemples de données disponibles"
+        subtitle: "Toutes ces données sont directement récupérées par API auprès des sources officielles : un accès authentique, sécurisé et toujours à jour, qui garantit fiabilité et simplicité pour vos consultations."
+        legal:
+          title: "Les obligations légales et fiscales"
+          items:
+            - "Chiffre d'affaires global annuel"
+            - "Bilans ou extraits de bilans"
+            - "Les effectifs moyens annuels du candidat"
+            - "Attestation de régularité sociale"
+            - "Attestation de vigilance"
+            - "Attestations URSS - GIP - MSA"
+            - "Avis de paiements, liquidations judiciaires"
+        technical:
+          title: "Les capacités techniques et professionnelles"
+          items:
+            - "Certification Qualibat"
+            - "Certification Qualifelec"
+            - "Certification RGE"
+            - "Certification BIO"
+            - "Certification entreprise ESS"
+            - "Certification LCFT"
+            - "Certification OPQIBI"
+
+      partners:
+        title: "Accédez aux marchés publics via nos plateformes partenaires"
+        subtitle: "et laissez Passe Marché adapter votre candidature pour vous"
+        platforms:
+          platform_1: "Accéder à [Plateforme 1]"
+          platform_2: "Accéder à [Plateforme 2]"
+          platform_3: "Accéder à [Plateforme 3]"
+
   market_types:
     supplies: "Fournitures"
     services: "Services"
