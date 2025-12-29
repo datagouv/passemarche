@@ -4,6 +4,10 @@
 
 Ce document présente les schémas techniques détaillés de l'architecture d'intégration Passe Marché, incluant les flux de données, les interactions entre composants et les séquences d'appels API.
 
+## Environnements
+
+Les schémas utilisent `${BASE_URL}` comme placeholder. Consultez la [documentation des environnements](08_ENVIRONNEMENTS.md) pour les URLs spécifiques à chaque environnement.
+
 ---
 
 ## 1. Architecture Globale
@@ -168,8 +172,8 @@ SÉQUENCE COMPLÈTE FLUX ACHETEUR
        │  4. HTTP 201 Created            │                │                │
        │     {                           │                │                │
        │       "identifier": "VR-2024-A1B2C3", │         │                │
-       │       "configuration_url": "https://voie-rapide.│              │
-       │         .../buyer/.../setup"    │                │                │
+       │       "configuration_url": "${BASE_URL}/buyer/  │              │
+       │         .../setup"              │                │                │
        │     }                           │                │                │
        │◄───────────────┤                │                │                │
        │                │                │                │                │
@@ -273,8 +277,8 @@ SÉQUENCE COMPLÈTE FLUX CANDIDAT
        │  4. HTTP 201 Created            │                │                │
        │     {                           │                │                │
        │       "identifier": "FT20240615A1B2",          │                │
-       │       "application_url": "https://voie-rapide.│                │
-       │         .../candidate/.../company_identification"│              │
+       │       "application_url": "${BASE_URL}/candidate/│                │
+       │         .../company_identification"             │              │
        │     }                           │                │                │
        │◄───────────────┤                │                │                │
        │                │                │                │                │
@@ -682,7 +686,7 @@ CHECKLIST TECHNIQUE D'INTÉGRATION
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                WEBHOOKS                                     │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ ☐ Endpoint réception webhook (POST /webhooks/voie-rapide)                 │
+│ ☐ Endpoint réception webhook (POST /webhooks/passemarche)                 │
 │ ☐ Vérification signature HMAC-SHA256 obligatoire                          │
 │ ☐ Parsing JSON payload avec gestion erreurs                               │
 │ ☐ Gestion idempotence (détection doublons)                                │

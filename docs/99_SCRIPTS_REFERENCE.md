@@ -4,6 +4,20 @@
 
 Cette section regroupe tous les scripts bash, exemples curl et utilitaires pratiques pour l'intégration avec l'API Passe Marché. Ces scripts sont des outils complémentaires à la documentation technique principale.
 
+## Configuration des environnements
+
+Tous les scripts utilisent la variable `BASE_URL`. Définissez-la selon votre environnement :
+
+```bash
+# Staging (recommandé pour le développement)
+export BASE_URL="https://staging.passemarche.data.gouv.fr"
+
+# Production
+export BASE_URL="https://passemarche.data.gouv.fr"
+```
+
+Consultez la [documentation des environnements](08_ENVIRONNEMENTS.md) pour plus de détails.
+
 ---
 
 ## Authentification OAuth2
@@ -16,7 +30,7 @@ Cette section regroupe tous les scripts bash, exemples curl et utilitaires prati
 
 CLIENT_ID="${CLIENT_ID:?CLIENT_ID requis}"
 CLIENT_SECRET="${CLIENT_SECRET:?CLIENT_SECRET requis}"
-BASE_URL="${BASE_URL:-https://voie-rapide.gouv.fr}"
+BASE_URL="${BASE_URL:-https://staging.passemarche.data.gouv.fr}"
 
 get_access_token() {
   curl -s -X POST "$BASE_URL/oauth/token" \
@@ -44,7 +58,7 @@ authenticate_with_retry() {
     echo "Tentative d'authentification $attempt/$max_attempts"
 
     response=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST \
-      https://voie-rapide.gouv.fr/oauth/token \
+      ${BASE_URL}/oauth/token \
       -H "Content-Type: application/x-www-form-urlencoded" \
       -d "grant_type=client_credentials&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&scope=api_access")
 
@@ -120,7 +134,7 @@ fi
 # Configuration
 CLIENT_ID="${CLIENT_ID:-your_client_id}"
 CLIENT_SECRET="${CLIENT_SECRET:-your_client_secret}"
-BASE_URL="${BASE_URL:-https://voie-rapide.gouv.fr}"
+BASE_URL="${BASE_URL:-https://staging.passemarche.data.gouv.fr}"
 TOKEN_FILE="./oauth_token.json"
 
 # Fonction d'obtention du token d'accès
@@ -223,7 +237,7 @@ create_market() {
   # Configuration
   local CLIENT_ID="${CLIENT_ID:?CLIENT_ID requis}"
   local CLIENT_SECRET="${CLIENT_SECRET:?CLIENT_SECRET requis}"
-  local BASE_URL="${BASE_URL:-https://voie-rapide.gouv.fr}"
+  local BASE_URL="${BASE_URL:-https://staging.passemarche.data.gouv.fr}"
 
   echo "🚀 Création d'un marché de test..."
 
@@ -351,7 +365,7 @@ function verifySignature(payload, signature, secret) {
   );
 }
 
-app.post('/webhooks/voie-rapide', (req, res) => {
+app.post('/webhooks/passemarche', (req, res) => {
   const payload = req.body.toString('utf8');
   const signature = req.headers['x-webhook-signature-sha256'];
 
@@ -409,7 +423,7 @@ function handleApplicationCompleted(event) {
 
 app.listen(3001, () => {
   console.log('🚀 Serveur webhook démarré sur le port 3001');
-  console.log('🔗 URL webhook: http://localhost:3001/webhooks/voie-rapide');
+  console.log('🔗 URL webhook: http://localhost:3001/webhooks/passemarche');
 });
 ```
 
@@ -473,7 +487,7 @@ set -e  # Arrêt en cas d'erreur
 # Configuration
 CLIENT_ID="${CLIENT_ID:?CLIENT_ID requis}"
 CLIENT_SECRET="${CLIENT_SECRET:?CLIENT_SECRET requis}"
-BASE_URL="${BASE_URL:-https://voie-rapide.gouv.fr}"
+BASE_URL="${BASE_URL:-https://staging.passemarche.data.gouv.fr}"
 
 echo "=== Test d'authentification OAuth ==="
 echo "Client ID: $CLIENT_ID"
@@ -531,7 +545,7 @@ echo "=== Test terminé ==="
 # Fonctions de logging pour OAuth
 
 # Configuration du logging
-LOG_FILE="/var/log/voie-rapide-oauth.log"
+LOG_FILE="/var/log/passemarche-oauth.log"
 
 log_message() {
   local level="$1"
@@ -594,7 +608,7 @@ create_env_file() {
 # Configuration Passe Marché
 CLIENT_ID=votre_client_id
 CLIENT_SECRET=votre_client_secret
-BASE_URL=https://voie-rapide.gouv.fr
+BASE_URL=https://staging.passemarche.data.gouv.fr
 
 # Configuration webhook
 WEBHOOK_SECRET=votre_webhook_secret
@@ -629,7 +643,7 @@ load_env() {
 # Test rapide en une ligne
 
 quick_auth_test() {
-  curl -s -X POST https://voie-rapide.gouv.fr/oauth/token \
+  curl -s -X POST ${BASE_URL}/oauth/token \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -d "grant_type=client_credentials&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&scope=api_access" \
     | jq -r '.access_token // "ERREUR"'
@@ -639,7 +653,7 @@ quick_api_test() {
   local token="$1"
   curl -s -H "Authorization: Bearer $token" \
     -H "Accept: application/json" \
-    https://voie-rapide.gouv.fr/api/v1/status \
+    ${BASE_URL}/api/v1/status \
     | jq .
 }
 
@@ -656,12 +670,17 @@ quick_api_test() {
 #!/bin/bash
 # Tests de connectivité et diagnostics
 
+# Configuration
+BASE_URL="${BASE_URL:-https://staging.passemarche.data.gouv.fr}"
+# Extraire le hostname de BASE_URL
+HOSTNAME=$(echo "$BASE_URL" | sed -e 's|https://||' -e 's|/.*||')
+
 test_connectivity() {
-  echo "=== Tests de connectivité ==="
+  echo "=== Tests de connectivité pour $HOSTNAME ==="
 
   # Test DNS
   echo "1. Test DNS..."
-  if nslookup voie-rapide.gouv.fr > /dev/null 2>&1; then
+  if nslookup "$HOSTNAME" > /dev/null 2>&1; then
     echo "✅ DNS OK"
   else
     echo "❌ Problème DNS"
@@ -669,7 +688,7 @@ test_connectivity() {
 
   # Test HTTPS
   echo "2. Test HTTPS..."
-  if curl -s -I https://voie-rapide.gouv.fr | head -n 1 | grep -q "200\|301\|302"; then
+  if curl -s -I "$BASE_URL" | head -n 1 | grep -q "200\|301\|302"; then
     echo "✅ HTTPS accessible"
   else
     echo "❌ HTTPS inaccessible"
@@ -677,7 +696,7 @@ test_connectivity() {
 
   # Test certificat SSL
   echo "3. Test certificat SSL..."
-  if echo | openssl s_client -connect voie-rapide.gouv.fr:443 -servername voie-rapide.gouv.fr 2>/dev/null | grep -q "Verify return code: 0"; then
+  if echo | openssl s_client -connect "$HOSTNAME:443" -servername "$HOSTNAME" 2>/dev/null | grep -q "Verify return code: 0"; then
     echo "✅ Certificat SSL valide"
   else
     echo "⚠️ Problème certificat SSL"

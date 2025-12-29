@@ -4,6 +4,15 @@
 
 Passe Marché utilise le protocole OAuth2 avec le flux **Client Credentials** pour l'authentification des éditeurs de plateformes de marchés publics. Cette méthode garantit une communication sécurisée et standardisée entre votre plateforme et l'API Passe Marché.
 
+## Environnements
+
+Les exemples de ce document utilisent la variable `$BASE_URL`. Consultez la [documentation des environnements](08_ENVIRONNEMENTS.md) pour les URLs spécifiques :
+
+| Environnement | Base URL |
+|---------------|----------|
+| Staging | `https://staging.passemarche.data.gouv.fr` |
+| Production | `https://passemarche.data.gouv.fr` |
+
 ## Prérequis d'Intégration
 
 ### Enregistrement Éditeur
@@ -60,9 +69,9 @@ scope=api_access
 
 **Exemple cURL** :
 ```bash
-curl -X POST https://voie-rapide.gouv.fr/oauth/token \
+curl -X POST "${BASE_URL}/oauth/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=votre_client&client_secret=votre_secret&scope=api_access"
+  -d "grant_type=client_credentials&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&scope=api_access"
 ```
 
 #### Réponse de Succès
@@ -171,13 +180,13 @@ Authorization: Bearer {votre_access_token}
 
 ```bash
 # Obtenir le token et l'utiliser dans une requête API
-TOKEN=$(curl -s -X POST https://voie-rapide.gouv.fr/oauth/token \
+TOKEN=$(curl -s -X POST "${BASE_URL}/oauth/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=client_credentials&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&scope=api_access" \
   | jq -r '.access_token')
 
 # Utiliser le token pour une requête API
-curl -X GET https://voie-rapide.gouv.fr/api/v1/public_markets \
+curl -X GET "${BASE_URL}/api/v1/public_markets" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Accept: application/json"
 ```

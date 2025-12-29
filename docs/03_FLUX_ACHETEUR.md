@@ -4,6 +4,10 @@
 
 Le flux acheteur dans Passe Marché permet aux éditeurs de créer et configurer des marchés publics via API, puis de rediriger les acheteurs vers une interface dédiée pour finaliser la configuration. Ce processus garantit une expérience utilisateur optimale tout en maintenant le contrôle technique via API.
 
+## Environnements
+
+Les exemples de ce document utilisent `${BASE_URL}` comme placeholder. Consultez la [documentation des environnements](08_ENVIRONNEMENTS.md) pour les URLs spécifiques à chaque environnement.
+
 ## Architecture du Flux
 
 ```
@@ -44,7 +48,7 @@ Consultez la [Documentation OAuth](AUTHENTIFICATION_OAUTH.md) pour les détails 
 #### Requête
 ```http
 POST /api/v1/public_markets HTTP/1.1
-Host: voie-rapide.gouv.fr
+Host: ${BASE_URL}
 Authorization: Bearer {access_token}
 Content-Type: application/json
 
@@ -85,7 +89,7 @@ Content-Type: application/json
 ```json
 {
   "identifier": "VR-2024-A1B2C3D4E5F6",
-  "configuration_url": "https://voie-rapide.gouv.fr/buyer/public_markets/VR-2024-A1B2C3D4E5F6/setup"
+  "configuration_url": "${BASE_URL}/buyer/public_markets/VR-2024-A1B2C3D4E5F6/setup"
 }
 ```
 

@@ -4,6 +4,10 @@
 
 Le flux candidat dans Passe Marché permet aux éditeurs de créer des candidatures pour leurs entreprises utilisatrices, puis de les rediriger vers une interface dédiée pour compléter leur dossier de candidature. Ce processus garantit la conformité réglementaire tout en simplifiant l'expérience utilisateur.
 
+## Environnements
+
+Les exemples de ce document utilisent `${BASE_URL}` comme placeholder. Consultez la [documentation des environnements](08_ENVIRONNEMENTS.md) pour les URLs spécifiques à chaque environnement.
+
 ## Architecture du Flux
 
 ```
@@ -49,7 +53,7 @@ Consultez la [Documentation OAuth](AUTHENTIFICATION_OAUTH.md) pour l'implémenta
 #### Requête
 ```http
 POST /api/v1/public_markets/VR-2024-A1B2C3D4E5F6/market_applications HTTP/1.1
-Host: voie-rapide.gouv.fr
+Host: ${BASE_URL}
 Authorization: Bearer {access_token}
 Content-Type: application/json
 
@@ -74,7 +78,7 @@ Content-Type: application/json
 ```json
 {
   "identifier": "FT20240615A1B2C3D4",
-  "application_url": "https://voie-rapide.gouv.fr/candidate/market_applications/FT20240615A1B2C3D4/company_identification"
+  "application_url": "${BASE_URL}/candidate/market_applications/FT20240615A1B2C3D4/company_identification"
 }
 ```
 
@@ -228,8 +232,8 @@ Le webhook est envoyé automatiquement lors de la finalisation de la candidature
     "siret": "12345678901234",
     "company_name": "ACME Solutions SARL",
     "completed_at": "2024-06-15T16:45:30Z",
-    "attestation_url": "https://voie-rapide.gouv.fr/api/v1/market_applications/FT20240615A1B2C3D4/attestation",
-    "documents_package_url": "https://voie-rapide.gouv.fr/api/v1/market_applications/FT20240615A1B2C3D4/documents_package"
+    "attestation_url": "${BASE_URL}/api/v1/market_applications/FT20240615A1B2C3D4/attestation",
+    "documents_package_url": "${BASE_URL}/api/v1/market_applications/FT20240615A1B2C3D4/documents_package"
   }
 }
 ```
@@ -255,7 +259,7 @@ Une fois la candidature finalisée, l'éditeur peut télécharger les documents 
 
 ```http
 GET /api/v1/market_applications/FT20240615A1B2C3D4/attestation HTTP/1.1
-Host: voie-rapide.gouv.fr
+Host: ${BASE_URL}
 Authorization: Bearer {access_token}
 ```
 
@@ -275,7 +279,7 @@ Content-Length: 245760
 
 ```http
 GET /api/v1/market_applications/FT20240615A1B2C3D4/documents_package HTTP/1.1
-Host: voie-rapide.gouv.fr
+Host: ${BASE_URL}
 Authorization: Bearer {access_token}
 ```
 
