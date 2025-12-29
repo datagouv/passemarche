@@ -258,6 +258,15 @@ fr:
         title: "Attestation sur l'honneur - Motifs d'exclusion"
         checkbox_label: "J’atteste que mon entreprise n’est concernée par aucun motif d’exclusion"
         info_banner: "L'entreprise ne doit pas faire l'objet d'un motif d'exclusion tel que prévu aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique."
+      motifs_exclusion:
+        motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
+          title: "Procédure de liquidation judiciaire"
+          desc: "Si votre entreprise n'est pas établie en France, vous devez avoir un extrait d'inscription au registre professionnel permettant de justifier l'absence de redressement ou liquidation judiciaire ou tout autre procédure équivalente."
+          info: "Un document concernant votre entreprise nous a été transmis par l’administration"
+        motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
+          title: "Dirigeant à risque"
+          desc: "Un risque concernant le dirigeant (faillite personnelle, interdiction de gérer, etc.) a été détecté."
+          info: "Un document concernant votre entreprise nous a été transmis par l’administration"
       api_data_recovery_status:
         title: "Nous pré-remplissons votre dossier de candidature"
         description: "Nos systèmes vérifient l'intégrité et la validité de chaque document et information récupérés. Ils sont ensuite formatés pour répondre aux exigences du marché."
@@ -325,8 +334,6 @@ fr:
           market_information: "Informations du marché"
           company_information: "Informations de votre entreprise"
           contact_information: "Informations de contact"
-      motifs_exclusion:
-        subtitle: "En complément de votre attestation sur l'honneur, vous avez la possibilité de communiquer les justificatifs relatifs aux motifs d'exclusion à cette étape. La production de ces justificatifs pourra être exigée si vous êtes attributaire du marché."
       exclusion_criteria:
         title: "Les justificatifs relatifs aux motifs d'exclusion obligatoires"
         subtitle: "Lorem ipsum..."

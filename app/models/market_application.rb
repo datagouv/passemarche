@@ -70,6 +70,12 @@ class MarketApplication < ApplicationRecord
       .map(&:id)
   end
 
+  def bodacc_exclusion_motifs
+    market_attribute_responses.select do |r|
+      r.source == 'auto' && r.market_attribute.api_name == 'bodacc' && r.value['radio_choice'] == 'yes'
+    end
+  end
+
   private
 
   def generate_identifier
