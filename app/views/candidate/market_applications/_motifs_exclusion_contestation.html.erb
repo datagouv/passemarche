@@ -1,0 +1,14 @@
+
+<div class="fr-notice fr-p-4w fr-mb-4w">
+  <h6 class="fr-card__title"><%= title %></h6>
+  <p class="fr-card__desc fr-mb-2w fr-text--md"><%= desc %></p>
+  <span class="fr-badge" style="background-color: var(--background-contrast-yellow-moutarde); text-transform: none; font-weight: normal; padding: 8px; display: flex; align-items: center; gap: 8px;">
+    <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
+    <span><%= info %></span>
+  </span>
+
+  <%= button_tag "Je souhaite fournir des informations complémentaires",
+        type: "button",
+        class: "fr-btn fr-btn--secondary fr-btn--sm fr-mt-2w",
+        data: { action: "motif-complement#toggle" } %>
+</div>
