@@ -1,14 +1,48 @@
 
 <div class="fr-notice fr-p-4w fr-mb-4w">
-  <h6 class="fr-card__title"><%= title %></h6>
+  <h3 class="fr-card__title"><%= title %></h3>
   <p class="fr-card__desc fr-mb-2w fr-text--md"><%= desc %></p>
-  <span class="fr-badge" style="background-color: var(--background-contrast-yellow-moutarde); text-transform: none; font-weight: normal; padding: 8px; display: flex; align-items: center; gap: 8px;">
+  <span class="fr-badge fr-badge--info-custom">
     <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
     <span><%= info %></span>
   </span>
 
-  <%= button_tag "Je souhaite fournir des informations complémentaires",
-        type: "button",
-        class: "fr-btn fr-btn--secondary fr-btn--sm fr-mt-2w",
-        data: { action: "motif-complement#toggle" } %>
+  <div data-controller="conditional-fields">
+    <%= button_tag t("candidate.market_applications.motifs_exclusion.provide_additional_info_button"),
+          type: "button",
+          class: "fr-btn fr-btn--secondary fr-btn--sm fr-mt-2w",
+          data: {
+            action: "conditional-fields#show",
+            conditional_fields_target: "trigger"
+          } %>
+    <div data-conditional-fields-target="content" class="fr-hidden fr-mt-3w">
+        <%= form.fields_for :market_attribute_responses, market_attribute_response do |response_form| %>
+        <%= response_form.hidden_field :id %>
+        <%= response_form.hidden_field :market_attribute_id %>
+        <%= response_form.hidden_field :type %>
+
+        <div class="fr-input-group fr-mb-3w<%= ' fr-input-group--error' if response_form.object.errors[:text].any? %>">
+          <%= response_form.label :text, "Décrivez les motifs de votre contestation", class: "fr-label" %>
+          <%= response_form.text_area :text,
+              class: "fr-input",
+              rows: 4,
+              style: "background-color: var(--background-alt-grey);" %>
+          <div class="fr-messages-group" aria-live="polite">
+            <% if response_form.object.errors[:text].any? %>
+              <p class="fr-message fr-message--error">
+                <%= response_form.object.errors[:text].first %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+
+        <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
+          form: response_form,
+          attribute_response: market_attribute_response,
+          deletable: true,
+          multiple: true
+        ) %>
+      <% end %>
+    </div>
+  </div>
 </div>

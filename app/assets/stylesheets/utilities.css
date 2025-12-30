@@ -204,3 +204,13 @@
 .fr-link--active {
   background-color: rgba(0, 0, 0, 0.08);
 }
+
+.fr-badge.fr-badge--info-custom {
+  background-color: var(--artwork-decorative-yellow-tournesol) !important;
+  text-transform: none;
+  font-weight: normal;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

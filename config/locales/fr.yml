@@ -378,6 +378,7 @@ fr:
         checkbox_label: "J’atteste que mon entreprise n’est concernée par aucun motif d’exclusion"
         info_banner: "L'entreprise ne doit pas faire l'objet d'un motif d'exclusion tel que prévu aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique."
       motifs_exclusion:
+        provide_additional_info_button: "Je souhaite fournir des informations complémentaires"
         motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
           title: "Procédure de liquidation judiciaire"
           desc: "Si votre entreprise n'est pas établie en France, vous devez avoir un extrait d'inscription au registre professionnel permettant de justifier l'absence de redressement ou liquidation judiciaire ou tout autre procédure équivalente."
