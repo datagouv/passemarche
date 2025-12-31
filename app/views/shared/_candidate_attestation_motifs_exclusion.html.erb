@@ -21,4 +21,22 @@
             'buyer.attestations.motifs_exclusion.candidate_attestation_not_confirmed'
         ) %>
   </span>
+
+  <%# Display contestation result if present %>
+  <% bodacc_motifs = market_application.bodacc_exclusion_motifs %>
+  <% if bodacc_motifs.any? %>
+    <% motifs_with_contestation = bodacc_motifs.select do |motif|
+       motif.value['text'].present? ||
+       (motif.respond_to?(:documents) && motif.documents.attached?)
+       end
+    %>
+    <% if motifs_with_contestation.any? %>
+      <div class="fr-mt-4w">
+        <h3 class="fr-text--md fr-text--mention-grey fr-mb-2w">Les motifs de contestation du candidat :</h3>
+        <% motifs_with_contestation.each do |motif| %>
+          <%= render partial: 'shared/motif_exclusion_contestation_content', locals: { motif: motif, market_application: market_application, context: (defined?(context) ? context : nil), naming_service: (defined?(naming_service) ? naming_service : nil) } %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
 </div>

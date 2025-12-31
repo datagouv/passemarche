@@ -1,0 +1,24 @@
+<div class="fr-mb-3w">
+  <span class="fr-text--md fr-mt-1w fr-mb-1w fr-text--subtitle">
+    <strong class="fr-text--md">
+      <%= t("candidate.market_applications.motifs_exclusion.#{motif.market_attribute.key}.title") %>
+    </strong><br>
+  </span>
+  <% if motif.value['text'].present? %>
+    <div class="fr-mb-1w fr-text--md">
+      <span style="white-space: pre-line;"> <%= motif.value['text'] %></span>
+    </div>
+  <% end %>
+  <% if motif.respond_to?(:documents) && motif.documents.attached? %>
+      <div>
+        <strong class="fr-text--sm">Documents joints :</strong><br>
+        <% motif.documents.each do |doc| %>
+          <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                     document: doc,
+                     market_application: (defined?(market_application) ? market_application : nil),
+                     context: (defined?(context) ? context : :web),
+                     naming_service: (defined?(naming_service) ? naming_service : nil)) %>
+        <% end %>
+      </div>
+  <% end %>
+</div>
