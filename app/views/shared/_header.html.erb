@@ -24,6 +24,20 @@
             <p class="fr-header__service-tagline"><%= t('header.service_tagline') %></p>
           </div>
         </div>
+        <div class="fr-header__tools">
+          <div class="fr-header__tools-links">
+            <ul class="fr-links-group">
+              <li>
+                <%= link_to t('header.navigation.candidate'), candidate_home_path,
+                    class: class_names("fr-link", "fr-link--active": current_page?(candidate_home_path)) %>
+              </li>
+              <li>
+                <%= link_to t('header.navigation.buyer'), buyer_home_path,
+                    class: class_names("fr-link", "fr-link--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>

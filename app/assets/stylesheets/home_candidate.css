@@ -1,0 +1,62 @@
+/* Candidate Homepage - Custom styles complementing DSFR
+   Uses DSFR utility classes wherever possible.
+   Shared styles are in home_shared.css
+*/
+
+/* Hero Section */
+.candidate-hero {
+  background-color: var(--blue-france-sun-113-625);
+  padding: 4rem 0;
+}
+
+.candidate-hero__title {
+  color: var(--grey-1000-50);
+  font-size: 2.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.candidate-hero__illustration {
+  width: 300px;
+  height: 300px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+/* Value Proposition Badges - Staggered layout matching Figma */
+.candidate-badges-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-left: 1rem;
+}
+
+.candidate-badges-grid__item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  background-color: #f6f6f6;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.candidate-badge-icon {
+  color: #18753c !important;
+}
+
+.candidate-badges-grid__item--1 {
+  margin-left: 4rem;
+}
+
+.candidate-badges-grid__item--2 {
+  margin-left: 0;
+}
+
+.candidate-badges-grid__item--3 {
+  margin-left: 6rem;
+}
+
+.candidate-badges-grid__item--4 {
+  margin-left: 2rem;
+}

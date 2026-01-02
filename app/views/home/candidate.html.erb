@@ -1,0 +1,98 @@
+<% content_for :full_width_content do %>
+<%# Section 1: Hero Banner - Full width blue background %>
+<section class="candidate-hero">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+      <div class="fr-col-12 fr-col-md-7">
+        <h1 class="candidate-hero__title">
+          <%= t('home.candidate.hero.title') %>
+        </h1>
+      </div>
+      <div class="fr-col-12 fr-col-md-5 fr-hidden fr-unhidden-md">
+        <img src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/artwork/pictograms/document/passport.svg"
+             alt=""
+             class="candidate-hero__illustration"
+             aria-hidden="true">
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Section 2: Value Proposition %>
+<section class="fr-py-8w">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12 fr-col-md-7">
+        <h2 class="fr-h3 fr-mb-2w" style="color: var(--blue-france-sun-113-625);">
+          <%= t('home.candidate.value_proposition.title') %>
+        </h2>
+        <p class="fr-text--lg">
+          <%= t('home.candidate.value_proposition.description_html').html_safe %>
+        </p>
+      </div>
+      <div class="fr-col-12 fr-col-md-5 fr-hidden fr-unhidden-md">
+        <div class="candidate-badges-grid">
+          <div class="candidate-badges-grid__item candidate-badges-grid__item--1">
+            <span class="fr-icon-checkbox-circle-fill fr-mr-1w candidate-badge-icon" aria-hidden="true"></span>
+            <%= t("home.candidate.value_proposition.badges.identity") %>
+          </div>
+          <div class="candidate-badges-grid__item candidate-badges-grid__item--2">
+            <span class="fr-icon-checkbox-circle-fill fr-mr-1w candidate-badge-icon" aria-hidden="true"></span>
+            <%= t("home.candidate.value_proposition.badges.certificates") %>
+          </div>
+          <div class="candidate-badges-grid__item candidate-badges-grid__item--3">
+            <span class="fr-icon-checkbox-circle-fill fr-mr-1w candidate-badge-icon" aria-hidden="true"></span>
+            <%= t("home.candidate.value_proposition.badges.turnover") %>
+          </div>
+          <div class="candidate-badges-grid__item candidate-badges-grid__item--4">
+            <span class="fr-icon-checkbox-circle-fill fr-mr-1w candidate-badge-icon" aria-hidden="true"></span>
+            <%= t("home.candidate.value_proposition.badges.balance_sheets") %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Section 3: Advantages - Light blue background %>
+<%= render 'home/advantages_section',
+           scope: 'home.candidate',
+           columns: 2,
+           advantages: [
+             { key: 'simplified_form', icon: 'document/document.svg' },
+             { key: 'automatic_recovery', icon: 'digital/data-visualization.svg' },
+             { key: 'accurate_info', icon: 'system/success.svg' },
+             { key: 'secure_transmission', icon: 'digital/mail-send.svg' }
+           ] %>
+
+<%# Section 4: How It Works %>
+<section class="fr-py-8w">
+  <div class="fr-container">
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12 fr-col-md-6">
+        <h2 class="fr-h3 fr-mb-1w"><%= t('home.candidate.how_it_works.title') %></h2>
+        <p class="fr-text--lg fr-mb-4w"><%= t('home.candidate.how_it_works.subtitle') %></p>
+
+        <% (1..3).each do |step_num| %>
+          <div class="homepage-step">
+            <div class="homepage-step__number"><%= step_num %></div>
+            <p class="homepage-step__text" style="padding-top: 0.625rem;">
+              <%= t("home.candidate.how_it_works.steps.step_#{step_num}") %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+      <div class="fr-col-12 fr-col-md-6 fr-hidden fr-unhidden-md">
+        <%= image_tag "candidate_screenshot.png",
+                      alt: "Capture d'écran de l'application Passe Marché",
+                      class: "fr-responsive-img homepage-screenshot" %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Section 5: Partner Platforms - Light blue background %>
+<%= render 'home/partners_section',
+           scope: 'home.candidate',
+           background: 'fr-background-alt--blue-france' %>
+<% end %>

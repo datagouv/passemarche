@@ -60,6 +60,9 @@ Rails.application.routes.draw do
 
   get 'up' => 'rails/health#show', as: :rails_health_check
 
+  get 'candidat', to: 'home#candidate', as: :candidate_home
+  get 'acheteur', to: 'home#buyer', as: :buyer_home
+
   root 'home#index'
 end
 # rubocop:enable Metrics/BlockLength

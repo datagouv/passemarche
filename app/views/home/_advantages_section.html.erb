@@ -1,0 +1,27 @@
+<%# Advantages Section - Shared between candidate and buyer pages
+    Parameters:
+    - scope: translation scope (e.g., 'home.candidate' or 'home.buyer')
+    - advantages: array of hashes with :key and :icon
+    - columns: number of columns on desktop (e.g., 4 for candidate, 3 for buyer)
+%>
+<section class="fr-py-8w fr-background-alt--blue-france">
+  <div class="fr-container">
+    <h2 class="fr-h3 fr-mb-4w"><%= t("#{scope}.advantages.title") %></h2>
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <% advantages.each do |advantage| %>
+        <div class="fr-col-12 fr-col-md-<%= 12 / columns %> fr-mb-4w">
+          <img src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.0/dist/artwork/pictograms/<%= advantage[:icon] %>"
+               alt=""
+               class="homepage-pictogram fr-mb-2w"
+               aria-hidden="true">
+          <h3 class="fr-h5 fr-mb-1w">
+            <%= t("#{scope}.advantages.items.#{advantage[:key]}.title") %>
+          </h3>
+          <p class="fr-text--sm">
+            <%= t("#{scope}.advantages.items.#{advantage[:key]}.description") %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
