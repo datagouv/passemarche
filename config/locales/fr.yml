@@ -179,7 +179,7 @@ fr:
         description_html: "Grâce à notre service, vous diffusez votre consultation sur votre profil acheteur et recevez des candidatures déjà <strong>formatées</strong> et <strong>complètes</strong> grâce aux informations transmises par nos API."
         details: "Vous paramétrez votre marché pour la candidature en étant accompagné(e), vous aurez accès aux documents et informations attendus par la réglementation et ceux les plus couramment demandés par les acheteurs."
         legend:
-          authentic: "De source authentique"
+          authentic: "Récupéré par API"
           declared: "Déclaré sur l'honneur"
           missing: "Manquant"
 
