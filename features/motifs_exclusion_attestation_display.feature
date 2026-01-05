@@ -20,3 +20,10 @@ Feature: Motifs d'exclusion attestation display
     When I visit the summary page for my application
     Then I should see "Les motifs d'exclusion"
     And I should see "attestation sur l'honneur est manquante"
+
+  Scenario: Display the contestation block when a Bodacc liquidation is detected
+    Given a public market with motifs_exclusion fields exists
+    And a candidate application with attests_no_exclusion_motifs checked
+    And a Bodacc exclusion motif exists for the candidate
+    When I visit the attestation motifs exclusion page for my application
+    Then I should see "Je souhaite fournir des informations complémentaires"

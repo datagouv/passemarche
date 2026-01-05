@@ -28,11 +28,13 @@
       <% if bodacc_motifs.any? %>
         <% bodacc_motifs.each do |motif| %>
           <% key = motif.market_attribute.key %>
-          <%= render partial: "candidate/market_applications/motifs_exclusion_contestation", locals: {
-            title: t("candidate.market_applications.motifs_exclusion.#{key}.title"),
-            desc: t("candidate.market_applications.motifs_exclusion.#{key}.desc"),
-            info: t("candidate.market_applications.motifs_exclusion.#{key}.info")
-          } %>
+            <%= render partial: "candidate/market_applications/motifs_exclusion_contestation", locals: {
+              title: t("candidate.market_applications.motifs_exclusion.#{key}.title"),
+              desc: t("candidate.market_applications.motifs_exclusion.#{key}.desc"),
+              info: t("candidate.market_applications.motifs_exclusion.#{key}.info"),
+              form: form,
+              market_attribute_response: motif
+            } %>
         <% end %>
       <% end %>
     </div>
