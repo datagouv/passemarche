@@ -147,6 +147,46 @@ RSpec.describe MapApiData, type: :interactor do
       end
     end
 
+    context 'when resource contains radio_with_file_and_text data' do
+      let(:ess_value) { { 'radio_choice' => 'yes', 'text' => 'ESS certified company' } }
+      let(:resource) { Resource.new(ess: ess_value) }
+      let(:bundled_data) { BundledData.new(data: resource) }
+
+      let!(:ess_attribute) do
+        create(:market_attribute, :radio_with_file_and_text, :from_api,
+          key: 'capacites_techniques_professionnelles_certificats_ess',
+          api_name:,
+          api_key: 'ess',
+          public_markets: [public_market])
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates market_attribute_response' do
+        expect { subject }.to change { market_application.market_attribute_responses.count }.by(1)
+      end
+
+      it 'stores radio_choice in value field' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+        expect(response.radio_choice).to eq('yes')
+      end
+
+      it 'stores text in value field' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+        expect(response.text).to eq('ESS certified company')
+      end
+
+      it 'sets source to auto' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+        expect(response.source).to eq('auto')
+      end
+    end
+
     context 'when market_application is not provided' do
       subject do
         described_class.call(

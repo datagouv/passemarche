@@ -6,7 +6,8 @@ class Insee::BuildResource < BuildResource
       siret:,
       category:,
       main_activity:,
-      social_reason:
+      social_reason:,
+      ess:
     }
   end
 
@@ -26,5 +27,20 @@ class Insee::BuildResource < BuildResource
 
   def social_reason
     json_body.dig('unite_legale', 'personne_morale_attributs', 'raison_sociale')
+  end
+
+  def ess
+    ess_value = json_body.dig('unite_legale', 'economie_sociale_et_solidaire')
+    return nil if ess_value.nil?
+
+    build_ess_radio_response(ess_value)
+  end
+
+  def build_ess_radio_response(ess_value)
+    if ess_value == true
+      { 'radio_choice' => 'yes', 'text' => I18n.t('api.insee.ess.is_ess') }
+    else
+      { 'radio_choice' => 'no' }
+    end
   end
 end
