@@ -95,9 +95,7 @@
 
 /* Data columns for examples section */
 .buyer-data-column {
-  background-color: var(--grey-1000-50);
   padding: 1.5rem;
-  border-radius: 8px;
 }
 
 .buyer-data-column .fr-list {
