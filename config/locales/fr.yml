@@ -511,6 +511,7 @@ fr:
           radio_no: Non, mon entreprise n'est pas une ESS
           text_label: Justificatif ou précisions
           text_hint: Si votre statut ESS n'a pas pu être déterminé automatiquement, vous pouvez joindre un justificatif ou préciser votre situation.
+          display_label: "L'entreprise est une ESS :"
 
   api:
     errors:

@@ -47,6 +47,21 @@ class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeRe
     'Aucune information complémentaire fournie'
   end
 
+  def display_label
+    I18n.t(
+      "form_fields.candidate.fields.#{market_attribute.key}.display_label",
+      default: nil
+    )
+  end
+
+  def display_value
+    radio_yes? ? I18n.t('form_fields.candidate.shared.yes') : I18n.t('form_fields.candidate.shared.no')
+  end
+
+  def display_value?
+    display_label.present?
+  end
+
   def conditional_content_hidden?
     radio_no?
   end
