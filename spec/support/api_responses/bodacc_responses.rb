@@ -20,12 +20,11 @@ module ApiResponses
             fields: {
               registre: 'SIREN',
               numero_immatriculation: '123456789',
-              familleavis_lib: 'Ventes et cessions',
+              publicationavis: 'A',
               date_parution: '2024-01-15',
               cp: '75001',
               ville: 'PARIS',
-              jugement: '{}',
-              listepersonnes: '[]'
+              jugement: '{"nature": "clôture", "codeNature": "CL"}'
             },
             geometry: {
               type: 'Point',
@@ -58,12 +57,11 @@ module ApiResponses
             fields: {
               registre: 'SIREN',
               numero_immatriculation: siren,
-              familleavis_lib: 'Procédure collective',
+              publicationavis: 'A',
               date_parution: '2024-01-15',
               cp: '75001',
               ville: 'PARIS',
-              jugement: '{"type":"liquidation","date":"2024-01-10","tribunal":"Tribunal de Commerce de Paris"}',
-              listepersonnes: '[{"fonction":"Dirigeant","nom":"DUPONT","prenom":"Jeanne"}]'
+              jugement: '{"nature": "liquidation judiciaire", "codeNature": "LJ", "date": "2024-01-10", "tribunal": "Tribunal de Commerce de Paris"}'
             },
             geometry: {
               type: 'Point',
@@ -96,12 +94,11 @@ module ApiResponses
             fields: {
               registre: 'SIREN',
               numero_immatriculation: siren,
-              familleavis_lib: 'Modifications diverses',
+              publicationavis: 'A',
               date_parution: '2024-01-15',
               cp: '75001',
               ville: 'PARIS',
-              jugement: '{}',
-              listepersonnes: '[{"fonction":"Dirigeant","nom":"MARTIN","prenom":"Jeannine","situation":"Condamnation"}]'
+              jugement: '{"nature": "faillite personnelle", "codeNature": "FP"}'
             },
             geometry: {
               type: 'Point',

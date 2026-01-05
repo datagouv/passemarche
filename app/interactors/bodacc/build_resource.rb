@@ -1,6 +1,33 @@
 # frozen_string_literal: true
 
+# Example of expected structure for the "jugement" field in a record:
+# {
+#   "date": "2024-09-12",
+#   "tribunal": "Tribunal de commerce de Paris",
+#   "nature": "Liquidation judiciaire",
+#   "codeNature": "LJ",
+#   "dateCessationPaiements": "2024-08-01"
+# }
+
 class Bodacc::BuildResource < ApplicationInteractor
+  # Codes nature pour liquidation judiciaire
+  # lj  = Liquidation judiciaire
+  # ljs = Liquidation judiciaire simplifiée
+  # ljp = Liquidation judiciaire particulière / prononcée
+  LIQUIDATION_CODES = %w[lj ljs ljp].freeze
+
+  # Codes nature pour dirigeant à risque
+  # fp = Faillite personnelle
+  # ig = Interdiction de gérer
+  # bq = Banqueroute
+  DIRIGEANT_RISK_CODES = %w[fp ig bq].freeze
+
+  # Keywords detecting a risky manager in the judgment nature
+  # "faillite personnelle", "interdiction de gérer", "banqueroute"
+  DIRIGEANT_RISK_KEYWORDS = /faillite personnelle|interdiction de gérer|banqueroute/i
+
+  private_constant :LIQUIDATION_CODES, :DIRIGEANT_RISK_CODES
+
   def call
     analyze_records
     build_bundled_data
@@ -18,25 +45,32 @@ class Bodacc::BuildResource < ApplicationInteractor
   end
 
   def build_bundled_data
-    has_exclusions = context.liquidation_detected || context.dirigeant_a_risque
     resource = Resource.new(resource_attributes)
-
     context.bundled_data = BundledData.new(
       data: resource,
       context: {
         liquidation_detected: context.liquidation_detected,
-        dirigeant_a_risque: context.dirigeant_a_risque,
-        has_exclusions:,
-        exclusions_summary: build_exclusions_summary
+        dirigeant_a_risque: context.dirigeant_a_risque
       }
     )
+  end
+
+  private
+
+  def analyze_legal_situations
+    context.liquidation_detected = context.records.any? { |record| liquidation_judiciaire?(normalize_record(record)) }
+    context.dirigeant_a_risque = context.records.any? { |record| dirigeant_a_risque?(normalize_record(record)) }
+  end
+
+  def normalize_record(record)
+    record.is_a?(Hash) && record.key?('fields') ? record['fields'] : record
   end
 
   def resource_attributes
     {
       liquidation_judiciaire: build_radio_with_file_and_text(
         context.liquidation_detected,
-        'Liquidation détectée par Bodacc'
+        'Procédure de liquidation judicière'
       ),
       faillite_interdiction: build_radio_with_file_and_text(
         context.dirigeant_a_risque,
@@ -46,60 +80,57 @@ class Bodacc::BuildResource < ApplicationInteractor
   end
 
   def build_radio_with_file_and_text(detected, text)
-    if detected
-      { 'radio_choice' => 'yes', 'text' => text }
-    else
-      { 'radio_choice' => 'no' }
-    end
+    detected ? { 'radio_choice' => 'yes', 'text' => text } : { 'radio_choice' => 'no' }
   end
 
-  private
+  def liquidation_judiciaire?(record)
+    return false unless actes_et_procedures_collectives?(record)
 
-  def analyze_legal_situations
-    context.liquidation_detected = liquidation?(context.records)
-    context.dirigeant_a_risque = dirigeant_a_risque?(context.records)
+    jugement = jugement_hash(record['jugement'])
+    return false if jugement.blank?
+
+    code = normalized_code(jugement['codeNature'])
+    nature = normalized_nature(jugement['nature'])
+
+    LIQUIDATION_CODES.include?(code) || nature.match?(/liquidation/i)
   end
 
-  def liquidation?(records)
-    records.any? do |record|
-      famille_avis = record['familleavis_lib'].to_s.downcase
-      return true if famille_avis.include?('procédure collective')
+  def dirigeant_a_risque?(record)
+    return false unless actes_et_procedures_collectives?(record)
 
-      if record['jugement'].present?
-        jugement_data = begin
-          JSON.parse(record['jugement'])
-        rescue StandardError
-          {}
-        end
-        nature_jugement = jugement_data['nature'].to_s.downcase
-        return true if nature_jugement.include?('liquidation')
-      end
+    jugement = jugement_hash(record['jugement'])
+    return false if jugement.blank?
 
-      false
-    end
+    code = normalized_code(jugement['codeNature'])
+    nature = normalized_nature(jugement['nature'])
+
+    DIRIGEANT_RISK_CODES.include?(code) || nature.match?(DIRIGEANT_RISK_KEYWORDS)
   end
 
-  def dirigeant_a_risque?(records)
-    records.any? do |record|
-      if record['listepersonnes'].present?
-        personnes_data = begin
-          JSON.parse(record['listepersonnes'])
-        rescue StandardError
-          {}
-        end
-        contenu = personnes_data.to_s.downcase
-        mots_cles_risque = ['faillite personnelle', 'interdiction de gérer', 'banqueroute']
-        return true if mots_cles_risque.any? { |mot| contenu.include?(mot) }
-      end
-
-      false
-    end
+  def actes_et_procedures_collectives?(record)
+    # 'A' = Actes et procédures collectives
+    record['publicationavis'] == 'A'
   end
 
-  def build_exclusions_summary
-    exclusions = []
-    exclusions << 'Liquidation judiciaire détectée' if context.liquidation_detected
-    exclusions << 'Dirigeant à risque détecté' if context.dirigeant_a_risque
-    exclusions
+  def jugement_hash(jugement_field)
+    return jugement_field if jugement_field.is_a?(Hash)
+
+    safe_json_parse(jugement_field)
+  end
+
+  def normalized_code(code)
+    code.to_s.strip.downcase
+  end
+
+  def normalized_nature(nature)
+    nature.to_s.strip.downcase
+  end
+
+  def safe_json_parse(value)
+    return {} if value.blank?
+
+    JSON.parse(value)
+  rescue StandardError
+    {}
   end
 end
