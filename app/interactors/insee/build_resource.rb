@@ -30,7 +30,7 @@ class Insee::BuildResource < BuildResource
   end
 
   def ess
-    ess_value = json_body.dig('unite_legale', 'economie_sociale_solidaire')
+    ess_value = json_body.dig('unite_legale', 'economie_sociale_et_solidaire')
     return nil if ess_value.nil?
 
     build_ess_radio_response(ess_value)

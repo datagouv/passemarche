@@ -146,7 +146,7 @@ module ApiResponses
         overrides: {
           data: {
             unite_legale: {
-              economie_sociale_solidaire: true
+              economie_sociale_et_solidaire: true
             }
           }
         }
@@ -159,7 +159,7 @@ module ApiResponses
         overrides: {
           data: {
             unite_legale: {
-              economie_sociale_solidaire: false
+              economie_sociale_et_solidaire: false
             }
           }
         }
@@ -172,7 +172,7 @@ module ApiResponses
         overrides: {
           data: {
             unite_legale: {
-              economie_sociale_solidaire: nil
+              economie_sociale_et_solidaire: nil
             }
           }
         }

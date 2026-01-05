@@ -170,7 +170,7 @@ def build_insee_response_with_ess(ess_value)
           sigle: 'OCTO'
         },
         categorie_entreprise: 'PME',
-        economie_sociale_solidaire: ess_value
+        economie_sociale_et_solidaire: ess_value
       }
     },
     meta: { date_derniere_mise_a_jour: 1_704_067_200 },

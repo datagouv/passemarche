@@ -156,14 +156,14 @@ RSpec.describe Insee::BuildResource, type: :interactor do
     end
 
     context 'with ESS (Economie Sociale et Solidaire) values' do
-      context 'when economie_sociale_solidaire is true' do
+      context 'when economie_sociale_et_solidaire is true' do
         let(:response_body) do
           insee_etablissement_success_response(
             siret:,
             overrides: {
               data: {
                 unite_legale: {
-                  economie_sociale_solidaire: true
+                  economie_sociale_et_solidaire: true
                 }
               }
             }
@@ -178,14 +178,14 @@ RSpec.describe Insee::BuildResource, type: :interactor do
         end
       end
 
-      context 'when economie_sociale_solidaire is false' do
+      context 'when economie_sociale_et_solidaire is false' do
         let(:response_body) do
           insee_etablissement_success_response(
             siret:,
             overrides: {
               data: {
                 unite_legale: {
-                  economie_sociale_solidaire: false
+                  economie_sociale_et_solidaire: false
                 }
               }
             }
@@ -198,14 +198,14 @@ RSpec.describe Insee::BuildResource, type: :interactor do
         end
       end
 
-      context 'when economie_sociale_solidaire is null' do
+      context 'when economie_sociale_et_solidaire is null' do
         let(:response_body) do
           insee_etablissement_success_response(
             siret:,
             overrides: {
               data: {
                 unite_legale: {
-                  economie_sociale_solidaire: nil
+                  economie_sociale_et_solidaire: nil
                 }
               }
             }
@@ -218,7 +218,7 @@ RSpec.describe Insee::BuildResource, type: :interactor do
         end
       end
 
-      context 'when economie_sociale_solidaire is not present in response' do
+      context 'when economie_sociale_et_solidaire is not present in response' do
         it 'returns nil for ESS' do
           result = subject
           expect(result.bundled_data.data.ess).to be_nil
