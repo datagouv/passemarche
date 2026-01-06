@@ -477,7 +477,7 @@ fr:
         title: "Synthèse de votre candidature"
         subtitle: "Lorem ipsum"
         buyer_additional_info_banner: "Selon le document de consultation des entreprises, l'acheteur peut exiger que le candidat communique des informations relatives à ses capacités économiques, financières, techniques et professionnelles pour répondre au marché. L'acheteur peut lui demander de fournir les preuves relatives à ses déclarations à tout moment de la procédure. En cas de défaut ou de réponse incomplète, l'acheteur peut écarter la candidature."
-        missing_mandatory_motifs_exclusion_banner: "Des informations sont manquantes. Veuillez les compléter afin de finaliser votre candidature."
+        missing_mandatory_motifs_exclusion_banner: "Le candidat est informé que sa candidature peut être écartée par l'acheteur sur le fondement d'un de ces motifs d'exclusion. L'acheteur pourra demander à l'attributaire du marché de produire des justificatifs afin de prouver qu'il ne relève pas d'un de ces motifs d'exclusion."
         submission_disclaimer: "En soumettant votre candidature, vous attestez sur l'honneur de l'exactitude des informations saisies manuellement et confirmez répondre à l'ensemble des exigences établies dans le document de consultation des entreprises."
 
   form_fields:
