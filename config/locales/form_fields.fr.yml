@@ -312,7 +312,7 @@ fr:
         identite_entreprise_identification: Informations de votre entreprise
         identite_entreprise_contact: Informations de contact
         motifs_exclusion_fiscales_et_sociales: Justificatifs concernant les obligations
-          fiscales et sociales
+          fiscales, sociales, et la situation de l’entreprise
         motifs_exclusion_appreciation_acheteur_discretionnaire: Autres justificatifs
         capacite_economique_financiere_chiffre_affaires: Chiffre d'affaires
         capacite_economique_financiere_bilans: Bilans
@@ -404,8 +404,11 @@ fr:
         capacite_economique_financiere_chiffre_affaires_global_annuel:
           name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
             années
-          description: Indiquez le chiffre d'affaires de votre entreprise au cours
-            des trois années précédentes, en euros.
+          description: Indiquez le(s) chiffre(s) d'affaires de votre entreprise, en
+            euros, correspondant(s) aux exercices mentionnés dans les documents de
+            la consultation, ainsi que le pourcentage du chiffre d'affaires réalisé
+            dans le domaine d'activité concerné par le contrat, si cela est demandé
+            dans les documents de la consultation.
         capacite_economique_financiere_chiffre_affaires_domaine_marche:
           name: Le pourcentage du chiffre d'affaires concerné par le type de marché
             public
