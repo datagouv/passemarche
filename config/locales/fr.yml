@@ -343,7 +343,7 @@ fr:
           table_headers:
             year: "Année"
             turnover: "Chiffre d'affaires"
-            market_percentage: "Pourcentage du marché"
+            market_percentage: "Pourcentage"
             fiscal_year_end: "Fin de l'exercice"
           year_labels:
             year_1: "Exercice N-1"

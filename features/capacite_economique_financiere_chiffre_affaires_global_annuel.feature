@@ -13,7 +13,7 @@ Feature: Capacité économique et financière - Chiffre d'affaires global annuel
   Scenario: Display of 3x3 grid form
     When I visit the economic capacities step
     Then I should see a table with headers:
-      | Année | Chiffre d'affaires | Pourcentage du marché | Fin de l'exercice |
+      | Année | Chiffre d'affaires | Pourcentage | Fin de l'exercice |
     And I should see 3 rows with labels:
       | Exercice N-1 |
       | Exercice N-2 |
