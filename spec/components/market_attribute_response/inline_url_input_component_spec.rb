@@ -96,7 +96,6 @@ RSpec.describe MarketAttributeResponse::InlineUrlInputComponent, type: :componen
         render_inline(component)
 
         expect(page).to have_css('.certificate-row')
-        expect(page).to have_css('hr.fr-hr')
       end
     end
 

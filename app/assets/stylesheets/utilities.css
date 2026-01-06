@@ -214,3 +214,10 @@
   align-items: center;
   gap: 8px;
 }
+
+/* Field separator */
+.fr-fieldset__element--with-separator {
+  border-bottom: 1px solid var(--border-default-grey, #ddd);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
