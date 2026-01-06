@@ -312,7 +312,7 @@ fr:
         candidate_attestation_title: "Attestation du candidat"
         candidate_attestation_confirmed_notice: "J'atteste sur l'honneur que mon entreprise ne rentre pas dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique et m'engage à informer l'acheteur de tout changement de situation sans délai."
         candidate_attestation_confirmed: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun motif d’exclusion."
-        candidate_attestation_not_confirmed_notice: "Le candidat pourrait être concerné par un des cas d'exclusion prévus par le code de la commande publique."
+        candidate_attestation_not_confirmed_notice: "Le candidat pourrait être concerné par un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
         candidate_attestation_not_confirmed: "L'attestation sur l'honneur est manquante."
       certification_notice:
         title: "Certification :"
