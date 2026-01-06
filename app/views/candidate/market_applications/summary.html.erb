@@ -1,12 +1,12 @@
 <% content_for :title, "#{@market_application.siret} - #{t('candidate.market_applications.steps.summary')}" %>
 
+<%= render "stepper", step: step, wizard_steps: @wizard_steps %>
+
 <% if @presenter&.optional_market_attributes? %>
   <%= render 'shared/notice',
              notice_text: t('candidate.market_applications.summary.buyer_additional_info_banner'),
-             color: 'info' %>
+             color: 'error' %>
 <% end %>
-
-<%= render "stepper", step: step, wizard_steps: @wizard_steps %>
 
 <div class="fr-grid-row fr-grid-row--center">
   <div class="fr-col-12">

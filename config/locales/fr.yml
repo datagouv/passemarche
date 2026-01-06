@@ -476,7 +476,7 @@ fr:
       summary:
         title: "Synthèse de votre candidature"
         subtitle: "Lorem ipsum"
-        buyer_additional_info_banner: "L'acheteur vous demande des informations complémentaires pour ce marché. Nous vous invitons à les renseigner avec attention."
+        buyer_additional_info_banner: "Selon le document de consultation des entreprises, l'acheteur peut exiger que le candidat communique des informations relatives à ses capacités économiques, financières, techniques et professionnelles pour répondre au marché. L'acheteur peut lui demander de fournir les preuves relatives à ses déclarations à tout moment de la procédure. En cas de défaut ou de réponse incomplète, l'acheteur peut écarter la candidature."
         missing_mandatory_motifs_exclusion_banner: "Des informations sont manquantes. Veuillez les compléter afin de finaliser votre candidature."
         submission_disclaimer: "En soumettant votre candidature, vous attestez sur l'honneur de l'exactitude des informations saisies manuellement et confirmez répondre à l'ensemble des exigences établies dans le document de consultation des entreprises."
 
