@@ -111,9 +111,12 @@ fr:
             l'année précédant l'appel à concurrence (uniquement pour les entreprises
             soumises à l'article L.225-102-1 du code de commerce).
         capacite_economique_financiere_chiffre_affaires_global_annuel:
-          name: Chiffre d'affaires global annuel
-          description: Le candidat devra déclarer le chiffre d'affaires de son entreprise
-            des trois (3) années précédentes, en euros.
+          name: Chiffre d'affaires et pourcentage réalisé dans le domaine d'activité
+            concerné par le contrat
+          description: Le candidat devra déclarer le(s) chiffre(s) de son entreprise,
+            ainsi que le pourcentage du chiffre d'affaires réalisé dans le domaine
+            d'activité concerné par le contrat, conformément aux exigences des documents
+            de la consultation
         capacite_economique_financiere_chiffre_affaires_domaine_marche:
           name: Pourcentage du chiffre d'affaires dans le domaine concerné par le
             marché public
@@ -121,15 +124,18 @@ fr:
             lié au secteur d'activité concerné par le contrat, rapportée à son chiffre
             d'affaires global, sur les trois dernières années, en euros.
         capacite_economique_financiere_bilans_trois_exercices:
-          name: Bilans ou extraits de bilans des 3 derniers exercices comptables clôturés
+          name: Bilans ou extraits de bilans du ou des dernier(s) exercice(s) comptable(s)
+            clôturé(s) selon les exigences des documents de la consultation.
           description: Le candidat devra fournir les bilans ou extraits de bilan,
-            concernant les trois dernières années comptables clôturées (uniquement
-            pour les opérateurs économiques pour lesquels l'établissement de bilans
-            est obligatoire).
+            concernant les années comptables clôturées conformément aux exigences
+            des documents de la consultation (uniquement pour les opérateurs économiques
+            pour lesquels l'établissement de bilans est obligatoire).
         capacite_economique_financiere_assurance_risques_professionnels:
           name: Assurance des risques professionnels pertinents
-          description: Le candidat devra fournir la preuve qu'il a souscrit un contrat
-            d'assurance et/ou fournir une déclaration appropriée de banque.
+          description: "Le candidat devra fournir la preuve qu'il a souscrit un contrat
+            d'assurance et/ou fournir une déclaration appropriée de banque. \r A noter
+            que certaines attestations d'assurance ne pourront être fournies qu'à
+            l'issue de l'attribution du contrat."
         capacites_techniques_professionnelles_effectifs_moyens_annuels:
           name: Les effectifs moyens annuels du candidat au cours des trois dernières
             années
@@ -137,16 +143,18 @@ fr:
             moyens annuels au cours des trois dernières années et l'importance du
             personnel d'encadrement
         capacites_techniques_professionnelles_effectifs_cv_intervenants:
-          name: Les titres d'études et professionnels des cadres de l'entreprise
-          description: Le candidat devra indiquer les titres d'études et titres professionnels
-            des cadres de l'entreprise (responsables de prestation, responsable de
-            conduite de travaux ...).
+          name: La présentation de l'équipe et des personnels susceptibles d'être
+            affectés à la réalisation/exécution du contrat
+          description: Le candidat devra préciser les titres d'études et titres professionnels
+            des personnels susceptibles d'être affectés à la réalisation/exécution
+            du contrat (responsables de prestation, responsable de conduite de travaux
+            ...).
         capacites_techniques_professionnelles_effectifs_techniciens_organismes:
           name: Les techniciens ou organismes responsables du contrôle de la qualité
           description: Le candidat devra présenter les techniciens ou les organismes
-            techniques, qu'ils soient ou non intégrés au candidat, en particulier
-            ceux qui sont responsables du contrôle de la qualité et auquel le candidat
-            pourra faire appel pour l'exécution de l'ouvrage.
+            techniques, qu'ils soient ou non intégrés à l'entreprise candidate, en
+            particulier ceux qui sont responsables du contrôle de la qualité et auxquels
+            le candidat pourra faire appel pour l'exécution de l'ouvrage.
         capacites_techniques_professionnelles_certificats_inscription_registre:
           name: Les certificats d’inscription sur un registre de profession règlementée
           description: Le candidat devra transmettre les certificats d’inscription
@@ -336,14 +344,16 @@ fr:
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
         motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
-          name: Votre entreprise est-elle en procédure de liquidation judiciaire ?
+          name: Redressement ou liquiditation judiciaire
           description: Si votre entreprise n'est pas établie en France, vous devez
             avoir un extrait d'inscription au registre professionnel permettant de
             justifier l'absence de redressement ou liquidation judiciaire ou tout
             autre procédure équivalente.
         motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
-          name: Le dirigeant de l'entreprise est-il en faillite personnelle ou lui
-            est-il interdit de gérer une entreprise ?
+          name: Situation du dirigeant de l'entreprise
+          description: Vous pouvez justifier que le dirigeant de votre entreprise
+            n'est pas en faillite personnelle ou qu'il ne lui est pas interdit de
+            gérer une entreprise.
         motifs_exclusion_fiscales_et_sociales_declarations_fiscales:
           name: Impôts, taxes et contributions sociales
           description: Vous pouvez justifier que votre entreprise est à jour de ses
@@ -403,10 +413,11 @@ fr:
             d'activité concerné par le contrat par rapport au chiffre d'affaires global
             de votre entreprise, en euros et sur les trois (3) dernières années.
         capacite_economique_financiere_bilans_trois_exercices:
-          name: Les bilans ou extraits de bilans de votre entreprise au cours des
-            trois derniers exercices comptables clôturés
+          name: Les bilans ou extraits de bilans de votre entreprise demandés par
+            l'acheteur dans les documents de la consultation
           description: Vous devez fournir les bilans ou extraits de bilans de votre
-            entreprise qui concernent les trois derniers exercices comptables clôturés.
+            entreprise qui concernent les exercices comptables clôturés demandés par
+            l'acheteur dans les documents de la consultation.
         capacite_economique_financiere_assurance_risques_professionnels:
           name: Les déclarations appropriées de banques ou preuve d'une assurance
             des risques professionnels pertinents de votre entreprise
@@ -419,15 +430,15 @@ fr:
           description: Indiquez les effectifs moyens annuels au cours des trois (3)
             dernières années en préciant l'importance du personnel d'encadrement
         capacites_techniques_professionnelles_effectifs_cv_intervenants:
-          name: Présentation de l'équipe qui participera au contrat
+          name: Présentation de l'équipe qui est susceptible d'être affectée à la
+            réalisation/exécution du contrat
           description: 'Téléchargez la liste des intervenants qui participeront au
             projet. Si vous ne disposez pas de cette liste, décrivez manuellement
             l''équipe mobilisée pour le marché : rôles, compétences et expériences.
             Vous pouvez également joindre les CV des intervenants afin de mettre en
             valeur leurs qualifications.'
         capacites_techniques_professionnelles_effectifs_techniciens_organismes:
-          name: Présentation des techniciens, organismes techniques qui participeront
-            au contrat
+          name: Présentation des techniciens, organismes techniques de contrôle qualité
           description: Téléchargez la liste des techniciens ou organismes techniques
             (internes ou externes, chargés notamment du contrôle qualité) qui participeront
             au projet. Si vous ne disposez pas de cette liste, décrivez manuellement
