@@ -39,7 +39,7 @@
         <% if subcategory_responses.any? %>
           <div class="fr-fieldset">
             <% subcategory_responses.each do |response| %>
-              <div class="fr-fieldset__element">
+              <div class="fr-fieldset__element <%= 'fr-fieldset__element--with-separator'%>">
 
                 <% component_class = "MarketAttributeResponse::#{response.type}Component".safe_constantize %>
 
@@ -53,7 +53,6 @@
                              market_attribute_response: response,
                              form: form %>
                 <% end %>
-
               </div>
             <% end %>
           </div>
