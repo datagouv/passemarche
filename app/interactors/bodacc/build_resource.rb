@@ -1,32 +1,19 @@
 # frozen_string_literal: true
 
-# Example of expected structure for the "jugement" field in a record:
-# {
-#   "date": "2024-09-12",
-#   "tribunal": "Tribunal de commerce de Paris",
-#   "nature": "Liquidation judiciaire",
-#   "codeNature": "LJ",
-#   "dateCessationPaiements": "2024-08-01"
+# Example of expected structure for the "jugement" field in a record from BODACC API v2.1:
+# jugement: {
+#   "type": "initial",
+#   "famille": "Extrait de jugement",
+#   "nature": "Jugement prononçant la résolution du plan de redressement et la liquidation judiciaire",
+#   "date": "2022-03-09",
+#   "complementJugement": "Jugement prononçant la résolution du plan de redressement et la liquidation judiciaire..."
 # }
+#
 
 class Bodacc::BuildResource < ApplicationInteractor
-  # Codes nature pour liquidation judiciaire
-  # lj  = Liquidation judiciaire
-  # ljs = Liquidation judiciaire simplifiée
-  # ljp = Liquidation judiciaire particulière / prononcée
-  LIQUIDATION_CODES = %w[lj ljs ljp].freeze
-
-  # Codes nature pour dirigeant à risque
-  # fp = Faillite personnelle
-  # ig = Interdiction de gérer
-  # bq = Banqueroute
-  DIRIGEANT_RISK_CODES = %w[fp ig bq].freeze
-
-  # Keywords detecting a risky manager in the judgment nature
+  # Keywords for detecting a risky manager in the judgment nature or complement
   # "faillite personnelle", "interdiction de gérer", "banqueroute"
   DIRIGEANT_RISK_KEYWORDS = /faillite personnelle|interdiction de gérer|banqueroute/i
-
-  private_constant :LIQUIDATION_CODES, :DIRIGEANT_RISK_CODES
 
   def call
     analyze_records
@@ -70,7 +57,7 @@ class Bodacc::BuildResource < ApplicationInteractor
     {
       liquidation_judiciaire: build_radio_with_file_and_text(
         context.liquidation_detected,
-        'Procédure de liquidation judicière'
+        'Procédure de liquidation judiciaire'
       ),
       faillite_interdiction: build_radio_with_file_and_text(
         context.dirigeant_a_risque,
@@ -89,10 +76,11 @@ class Bodacc::BuildResource < ApplicationInteractor
     jugement = jugement_hash(record['jugement'])
     return false if jugement.blank?
 
-    code = normalized_code(jugement['codeNature'])
-    nature = normalized_nature(jugement['nature'])
+    # Parse text from nature and complementJugement fields
+    nature = normalized_text(jugement['nature'])
+    complement = normalized_text(jugement['complementJugement'])
 
-    LIQUIDATION_CODES.include?(code) || nature.match?(/liquidation/i)
+    nature.match?(/liquidation/i) || complement.match?(/liquidation judiciaire/i)
   end
 
   def dirigeant_a_risque?(record)
@@ -101,10 +89,11 @@ class Bodacc::BuildResource < ApplicationInteractor
     jugement = jugement_hash(record['jugement'])
     return false if jugement.blank?
 
-    code = normalized_code(jugement['codeNature'])
-    nature = normalized_nature(jugement['nature'])
+    # Parse text from nature and complementJugement fields
+    nature = normalized_text(jugement['nature'])
+    complement = normalized_text(jugement['complementJugement'])
 
-    DIRIGEANT_RISK_CODES.include?(code) || nature.match?(DIRIGEANT_RISK_KEYWORDS)
+    nature.match?(DIRIGEANT_RISK_KEYWORDS) || complement.match?(DIRIGEANT_RISK_KEYWORDS)
   end
 
   def actes_et_procedures_collectives?(record)
@@ -118,12 +107,8 @@ class Bodacc::BuildResource < ApplicationInteractor
     safe_json_parse(jugement_field)
   end
 
-  def normalized_code(code)
-    code.to_s.strip.downcase
-  end
-
-  def normalized_nature(nature)
-    nature.to_s.strip.downcase
+  def normalized_text(text)
+    text.to_s.strip.downcase
   end
 
   def safe_json_parse(value)

@@ -8,7 +8,7 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
       {
         'id' => 'C202300123456',
         'publicationavis' => 'A',
-        'jugement' => '{"nature": "Liquidation judiciaire", "codeNature": "LJ", "date": "2023-06-15"}'
+        'jugement' => '{"type": "initial", "famille": "Extrait de jugement", "nature": "Jugement prononçant la liquidation judiciaire", "date": "2023-06-15", "complementJugement": "Jugement prononçant la liquidation judiciaire"}'
       }
     ]
   end
@@ -18,7 +18,7 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
       {
         'id' => 'C202300789012',
         'publicationavis' => 'A',
-        'jugement' => '{"nature": "Faillite personnelle", "codeNature": "FP"}'
+        'jugement' => '{"type": "initial", "famille": "Extrait de jugement", "nature": "Jugement prononçant la faillite personnelle", "complementJugement": "Faillite personnelle du dirigeant"}'
       }
     ]
   end
@@ -28,7 +28,7 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
       {
         'id' => 'C202300345678',
         'publicationavis' => 'A',
-        'jugement' => '{"nature": "Clôture", "codeNature": "CL"}'
+        'jugement' => '{"type": "initial", "famille": "Extrait de jugement", "nature": "Clôture pour extinction du passif", "date": "2023-06-15"}'
       }
     ]
   end
@@ -92,12 +92,12 @@ RSpec.describe Bodacc::BuildResource, type: :interactor do
           {
             'id' => 'C202300111111',
             'publicationavis' => 'A',
-            'jugement' => '{"nature": "liquidation", "codeNature": "LJS"}'
+            'jugement' => '{"type": "initial", "famille": "Extrait de jugement", "nature": "Jugement prononçant la liquidation judiciaire simplifiée", "complementJugement": "liquidation judiciaire simplifiée"}'
           },
           {
             'id' => 'C202300111112',
             'publicationavis' => 'A',
-            'jugement' => '{"nature": "interdiction de gérer", "codeNature": "IG"}'
+            'jugement' => '{"type": "initial", "famille": "Extrait de jugement", "nature": "Jugement prononçant l interdiction de gérer", "complementJugement": "interdiction de gérer pour une durée de 5 ans"}'
           }
         ]
       end
