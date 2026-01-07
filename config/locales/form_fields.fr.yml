@@ -344,13 +344,15 @@ fr:
         identite_entreprise_contact_telephone:
           name: Numéro de téléphone
         motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
-          name: Redressement ou liquiditation judiciaire
+          name: Votre entreprise est-elle en procédure de liquidation ou de redressement
+            judiciaire ?
           description: Si votre entreprise n'est pas établie en France, vous devez
             avoir un extrait d'inscription au registre professionnel permettant de
             justifier l'absence de redressement ou liquidation judiciaire ou tout
             autre procédure équivalente.
         motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
-          name: Situation du dirigeant de l'entreprise
+          name: Le dirigeant de l'entreprise est-il en faillite personnelle ou lui
+            est-il interdit de gérer une entreprise ?
           description: Vous pouvez justifier que le dirigeant de votre entreprise
             n'est pas en faillite personnelle ou qu'il ne lui est pas interdit de
             gérer une entreprise.

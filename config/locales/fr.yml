@@ -312,7 +312,7 @@ fr:
         candidate_attestation_title: "Attestation du candidat"
         candidate_attestation_confirmed_notice: "J'atteste sur l'honneur que mon entreprise ne rentre pas dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique et m'engage à informer l'acheteur de tout changement de situation sans délai."
         candidate_attestation_confirmed: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun motif d’exclusion."
-        candidate_attestation_not_confirmed_notice: "Le candidat pourrait être concerné par un des cas d'exclusion prévus par le code de la commande publique."
+        candidate_attestation_not_confirmed_notice: "Le candidat pourrait être concerné par un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
         candidate_attestation_not_confirmed: "L'attestation sur l'honneur est manquante."
       certification_notice:
         title: "Certification :"
@@ -476,8 +476,8 @@ fr:
       summary:
         title: "Synthèse de votre candidature"
         subtitle: "Lorem ipsum"
-        buyer_additional_info_banner: "L'acheteur vous demande des informations complémentaires pour ce marché. Nous vous invitons à les renseigner avec attention."
-        missing_mandatory_motifs_exclusion_banner: "Des informations sont manquantes. Veuillez les compléter afin de finaliser votre candidature."
+        buyer_additional_info_banner: "Selon le document de consultation des entreprises, l'acheteur peut exiger que le candidat communique des informations relatives à ses capacités économiques, financières, techniques et professionnelles pour répondre au marché. L'acheteur peut lui demander de fournir les preuves relatives à ses déclarations à tout moment de la procédure. En cas de défaut ou de réponse incomplète, l'acheteur peut écarter la candidature."
+        missing_mandatory_motifs_exclusion_banner: "Le candidat est informé que sa candidature peut être écartée par l'acheteur sur le fondement d'un de ces motifs d'exclusion. L'acheteur pourra demander à l'attributaire du marché de produire des justificatifs afin de prouver qu'il ne relève pas d'un de ces motifs d'exclusion."
         submission_disclaimer: "En soumettant votre candidature, vous attestez sur l'honneur de l'exactitude des informations saisies manuellement et confirmez répondre à l'ensemble des exigences établies dans le document de consultation des entreprises."
 
   form_fields:
