@@ -370,7 +370,7 @@ fr:
       urssaf_api_error: "Impossible de récupérer l'attestation de vigilance URSSAF : %{error}"
       badges:
         data_from_api: "Récupéré automatiquement"
-        data_filled_after_api_failure: "Rempli manuellement suite à un échec API"
+        declared_on_honor: "Déclaré sur l'honneur"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       attestation_motifs_exclusion:
         header_title: "Les motifs d'exclusion"
