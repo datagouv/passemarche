@@ -221,3 +221,9 @@
   padding-bottom: 1rem;
   margin-bottom: 1rem;
 }
+
+.field-badge-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}

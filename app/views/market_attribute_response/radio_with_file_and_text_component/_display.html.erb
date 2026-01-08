@@ -2,43 +2,47 @@
   <div class="field-layout-content">
     <div class="fr-grid-row fr-mb-2w">
       <div class="fr-col">
-        <strong>
-          <%= component.field_label %>
-        </strong>
+        <strong><%= component.field_label %></strong>
 
         <% if component.show_value? %>
           <br>
 
           <% if component.radio_yes? %>
-            <% if component.text? %>
-              <div class="fr-mb-2w">
-                <strong class="fr-text--sm">Réponse :</strong><br>
-                <%= component.formatted_text %>
-              </div>
-            <% end %>
+            <% # Display details except for BODACC auto (motif exclusion contestations) %>
+            <% is_bodacc = component.market_attribute_response.market_attribute.api_name == 'bodacc' %>
+            <% show_details = !is_bodacc || !component.market_attribute_response.auto? %>
 
-            <% if component.documents_attached? %>
-              <div>
-                <strong class="fr-text--sm">Documents joints :</strong><br>
-                <% component.documents.each do |document| %>
-                  <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
-                    document: document,
-                    market_application: component.market_attribute_response.market_application,
-                    context: component.context,
-                    naming_service: component.naming_service
-                  ) %>
-                <% end %>
-              </div>
-            <% end %>
+            <% if show_details %>
+              <% if component.text? %>
+                <div class="fr-mb-2w">
+                  <strong class="fr-text--sm"><%= component.response_label %></strong><br>
+                  <%= component.formatted_text %>
+                </div>
+              <% end %>
 
-            <% if !component.text? && !component.documents_attached? %>
-              <span class="fr-text--md"><%= component.no_info_message %></span>
+              <% if component.documents_attached? %>
+                <div>
+                  <strong class="fr-text--sm"><%= component.attached_documents_label %></strong><br>
+                  <% component.documents.each do |document| %>
+                    <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
+                      document: document,
+                      market_application: component.market_attribute_response.market_application,
+                      context: component.context,
+                      naming_service: component.naming_service
+                    ) %>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <% if !component.text? && !component.documents_attached? %>
+                <span class="fr-text--md"><%= component.no_info_message %></span>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
       </div>
 
-      <div class="fr-col-auto" style="display: flex; align-items: flex-start; justify-content: flex-end;">
+      <div class="fr-col-auto field-badge-container">
         <% if component.show_value? %>
           <% if component.radio_yes? %>
             <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>

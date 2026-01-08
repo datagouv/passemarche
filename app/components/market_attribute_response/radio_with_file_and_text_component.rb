@@ -78,6 +78,20 @@ class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeRe
     "text-#{market_attribute_response.id}"
   end
 
+  def response_label
+    I18n.t(
+      'market_attribute_response.radio_with_file_and_text.response_label',
+      default: 'Réponse :'
+    )
+  end
+
+  def attached_documents_label
+    I18n.t(
+      'market_attribute_response.radio_with_file_and_text.attached_documents_label',
+      default: 'Documents joints :'
+    )
+  end
+
   def text_aria_describedby
     "#{text_field_id}-messages"
   end

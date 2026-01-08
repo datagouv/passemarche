@@ -587,6 +587,9 @@ fr:
           attributes:
             documents:
               document_not_allowed_unless_checked: "Vous ne pouvez joindre un document que si la case correspondante est cochée"
+          radio_with_file_and_text:
+            response_label: "Réponse :"
+            attached_documents_label: "Documents joints :"
         market_attribute_response/email_input:
           attributes:
             text:
