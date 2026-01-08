@@ -116,7 +116,8 @@ class CsvRowData
       api_name: api_name.presence,
       api_key: api_key.presence,
       position:,
-      deleted_at: nil
+      deleted_at: nil,
+      mandatory: oui_to_boolean(obligatoire)
     }
   end
 
