@@ -4,36 +4,18 @@ module ApiResponses
   module BodaccResponses
     def bodacc_success_response(overrides: {})
       default_response = {
-        nhits: 50,
-        parameters: {
-          dataset: 'annonces-commerciales',
-          rows: 10,
-          start: 0,
-          facet: [],
-          format: 'json',
-          timezone: 'UTC'
-        },
-        records: [
+        total_count: 1,
+        results: [
           {
-            datasetid: 'annonces-commerciales',
-            recordid: 'c8f4d5e6b2a1c9d8e7f0a3b4c5d6e7f8',
-            fields: {
-              registre: 'SIREN',
-              numero_immatriculation: '123456789',
-              publicationavis: 'A',
-              date_parution: '2024-01-15',
-              cp: '75001',
-              ville: 'PARIS',
-              jugement: '{"nature": "clôture", "codeNature": "CL"}'
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: [2.3522, 48.8566]
-            },
-            record_timestamp: '2024-01-15T10:30:00.000Z'
+            id: 'C202400123456',
+            registre: ['123456789', '123 456 789'],
+            publicationavis: 'A',
+            dateparution: '2024-01-15',
+            cp: '75001',
+            ville: 'PARIS',
+            jugement: '{"type": "initial", "famille": "Extrait de jugement", "nature": "Clôture pour extinction du passif", "date": "2024-01-10"}'
           }
-        ],
-        facet_groups: []
+        ]
       }
 
       default_response.deep_merge(overrides).to_json
@@ -41,36 +23,18 @@ module ApiResponses
 
     def bodacc_liquidation_response(siren: '123456789', overrides: {})
       default_response = {
-        nhits: 1,
-        parameters: {
-          dataset: 'annonces-commerciales',
-          rows: 10,
-          start: 0,
-          facet: [],
-          format: 'json',
-          timezone: 'UTC'
-        },
-        records: [
+        total_count: 1,
+        results: [
           {
-            datasetid: 'annonces-commerciales',
-            recordid: 'liquidation-record-id',
-            fields: {
-              registre: 'SIREN',
-              numero_immatriculation: siren,
-              publicationavis: 'A',
-              date_parution: '2024-01-15',
-              cp: '75001',
-              ville: 'PARIS',
-              jugement: '{"nature": "liquidation judiciaire", "codeNature": "LJ", "date": "2024-01-10", "tribunal": "Tribunal de Commerce de Paris"}'
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: [2.3522, 48.8566]
-            },
-            record_timestamp: '2024-01-15T10:30:00.000Z'
+            id: 'A202400123456',
+            registre: [siren, siren.scan(/\d{3}/).join(' ')],
+            publicationavis: 'A',
+            dateparution: '2024-01-15',
+            cp: '75001',
+            ville: 'PARIS',
+            jugement: '{"type": "initial", "famille": "Extrait de jugement", "nature": "Jugement prononçant la résolution du plan de redressement et la liquidation judiciaire", "date": "2024-01-10", "complementJugement": "Jugement prononçant la résolution du plan de redressement et la liquidation judiciaire - Tribunal de Commerce de Paris"}'
           }
-        ],
-        facet_groups: []
+        ]
       }
 
       default_response.deep_merge(overrides).to_json
@@ -78,36 +42,18 @@ module ApiResponses
 
     def bodacc_dirigeant_response(siren: '123456789', overrides: {})
       default_response = {
-        nhits: 1,
-        parameters: {
-          dataset: 'annonces-commerciales',
-          rows: 10,
-          start: 0,
-          facet: [],
-          format: 'json',
-          timezone: 'UTC'
-        },
-        records: [
+        total_count: 1,
+        results: [
           {
-            datasetid: 'annonces-commerciales',
-            recordid: 'dirigeant-record-id',
-            fields: {
-              registre: 'SIREN',
-              numero_immatriculation: siren,
-              publicationavis: 'A',
-              date_parution: '2024-01-15',
-              cp: '75001',
-              ville: 'PARIS',
-              jugement: '{"nature": "faillite personnelle", "codeNature": "FP"}'
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: [2.3522, 48.8566]
-            },
-            record_timestamp: '2024-01-15T10:30:00.000Z'
+            id: 'A202400567890',
+            registre: [siren, siren.scan(/\d{3}/).join(' ')],
+            publicationavis: 'A',
+            dateparution: '2024-01-15',
+            cp: '75001',
+            ville: 'PARIS',
+            jugement: '{"type": "initial", "famille": "Extrait de jugement", "nature": "Jugement prononçant la faillite personnelle du dirigeant", "complementJugement": "Faillite personnelle du dirigeant avec interdiction de gérer toute entreprise commerciale"}'
           }
-        ],
-        facet_groups: []
+        ]
       }
 
       default_response.deep_merge(overrides).to_json
@@ -115,17 +61,8 @@ module ApiResponses
 
     def bodacc_empty_response(overrides: {})
       default_response = {
-        nhits: 0,
-        parameters: {
-          dataset: 'annonces-commerciales',
-          rows: 10,
-          start: 0,
-          facet: [],
-          format: 'json',
-          timezone: 'UTC'
-        },
-        records: [],
-        facet_groups: []
+        total_count: 0,
+        results: []
       }
 
       default_response.deep_merge(overrides).to_json

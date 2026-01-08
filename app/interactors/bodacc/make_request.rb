@@ -54,7 +54,7 @@ class Bodacc::MakeRequest < ApplicationInteractor
 
   def parse_response
     parsed = JSON.parse(context.response.body)
-    context.records = parsed['records']
+    context.records = parsed['results']
   end
 
   def request_params
