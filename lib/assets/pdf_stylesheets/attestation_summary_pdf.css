@@ -225,6 +225,7 @@ h6 {
 /* Field Layout - Table-based for PDF compatibility */
 .field-layout-container {
   display: table;
+  table-layout: fixed;
   width: 100%;
   margin-bottom: 16px;
   page-break-inside: avoid;
@@ -236,12 +237,15 @@ h6 {
 
 .field-layout-content {
   display: table-cell;
-  width: 100%;
+  width: 65%;
   vertical-align: top;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .field-layout-badge {
   display: table-cell;
+  width: 35%;
   vertical-align: top;
   white-space: nowrap;
   padding-left: 16px;

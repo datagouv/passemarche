@@ -6,15 +6,38 @@
     <%= response_form.hidden_field :type %>
   <% end %>
 
-  <div class="fr-mb-2w">
-    <label class="fr-label">
-      <%= component.field_label %>
-    </label>
-    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
-    <p class="fr-text--sm fr-text--mention-grey">
-      <%= component.auto_filled_message %>
-    </p>
-  </div>
+  <% if component.display_value? %>
+    <div class="certificate-row">
+      <div class="certificate-col certificate-col--left">
+        <h6 class="fr-mb-2w fr-text--md">
+          <%= component.field_label %>
+        </h6>
+        <% if component.field_description.present? %>
+          <span class="fr-mb-2w fr-text--sm">
+            <%= component.field_description %>
+          </span>
+        <% end %>
+      </div>
+      <div class="certificate-col certificate-col--right">
+        <div class="fr-mb-1w">
+          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+        </div>
+        <p class="fr-text--md fr-mb-0">
+          <strong><%= component.display_label %></strong> <%= component.display_value %>
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <div class="fr-mb-2w">
+      <label class="fr-label">
+        <%= component.field_label %>
+      </label>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+      <p class="fr-text--sm fr-text--mention-grey">
+        <%= component.auto_filled_message %>
+      </p>
+    </div>
+  <% end %>
 <% else %>
   <div class="fr-input-group">
     <%= component.form.fields_for :market_attribute_responses, component.market_attribute_response,
