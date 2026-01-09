@@ -15,8 +15,7 @@ class SourceBadgeComponent < ViewComponent::Base
     if market_attribute_response.auto?
       I18n.t('candidate.market_applications.badges.data_from_api')
     elsif market_attribute_response.manual_after_api_failure?
-      I18n.t('candidate.market_applications.badges.manual_after_api_failure',
-        default: 'Renseigné après échec API')
+      I18n.t('candidate.market_applications.badges.declared_on_honor')
     end
   end
 
@@ -24,7 +23,7 @@ class SourceBadgeComponent < ViewComponent::Base
     if market_attribute_response.auto?
       'fr-badge fr-badge--success fr-badge--sm'
     elsif market_attribute_response.manual_after_api_failure?
-      'fr-badge fr-badge--warning fr-badge--sm'
+      'fr-badge fr-badge--info fr-badge--sm'
     end
   end
 end
