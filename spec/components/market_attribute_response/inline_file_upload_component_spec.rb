@@ -138,6 +138,7 @@ RSpec.describe MarketAttributeResponse::InlineFileUploadComponent, type: :compon
 
       it 'renders source badge' do
         response = create(:market_attribute_response_inline_file_upload, market_attribute:, source: :auto)
+        response.documents.attach(io: StringIO.new('test'), filename: 'auto-badge.pdf', content_type: 'application/pdf')
         component = described_class.new(market_attribute_response: response, context: :web)
 
         render_inline(component)
@@ -155,6 +156,16 @@ RSpec.describe MarketAttributeResponse::InlineFileUploadComponent, type: :compon
         render_inline(component)
 
         expect(page).to have_text('buyer-inline.pdf')
+      end
+
+      it 'shows no documents message when no files' do
+        response = create(:market_attribute_response_inline_file_upload, market_attribute:, source: :manual)
+        component = described_class.new(market_attribute_response: response, context: :buyer)
+
+        render_inline(component)
+
+        expect(page).to have_text('Aucun fichier téléchargé')
+        expect(page).to have_text('Non renseigné')
       end
     end
 
