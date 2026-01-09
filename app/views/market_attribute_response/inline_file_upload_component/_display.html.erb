@@ -17,7 +17,7 @@
             ) %>
           <% end %>
         <% else %>
-          <span class="fr-text-md fr-text--mention-grey"><%= component.no_documents_message %></span>
+          <span class="fr-text--md fr-text--mention-grey"><%= component.no_documents_message %></span>
         <% end %>
       </span>
     <% elsif component.qualiopi_metadata? %>
@@ -29,7 +29,11 @@
     <% end %>
   </div>
   <div class="field-layout-badge">
-    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    <% if component.documents_attached? || component.qualiopi_metadata? %>
+      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    <% else %>
+      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
+    <% end %>
   </div>
 </div>
 <hr class="fr-hr">

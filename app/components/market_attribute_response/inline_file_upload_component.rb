@@ -24,4 +24,8 @@ class MarketAttributeResponse::InlineFileUploadComponent < MarketAttributeRespon
   def error_messages
     market_attribute_response.errors[:documents]
   end
+
+  def not_provided_message
+    'Non renseigné'
+  end
 end
