@@ -201,8 +201,10 @@
 }
 
 /* Header navigation active state */
-.fr-link--active {
-  background-color: rgba(0, 0, 0, 0.08);
+.fr-header .fr-links-group .fr-link.fr-link--active {
+  background-color: #eee !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 4px !important;
 }
 
 .fr-badge.fr-badge--info-custom {

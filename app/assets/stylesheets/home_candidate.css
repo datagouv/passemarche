@@ -36,9 +36,10 @@
   display: inline-flex;
   align-items: center;
   font-size: 0.875rem;
+  font-weight: 700;
   background-color: #f6f6f6;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .candidate-badge-icon {

@@ -39,7 +39,9 @@
 }
 
 .buyer-card__badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -93,9 +95,7 @@
 
 /* Data columns for examples section */
 .buyer-data-column {
-  background-color: var(--grey-1000-50);
   padding: 1.5rem;
-  border-radius: 8px;
 }
 
 .buyer-data-column .fr-list {

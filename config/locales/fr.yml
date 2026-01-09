@@ -179,7 +179,7 @@ fr:
         description_html: "Grâce à notre service, vous diffusez votre consultation sur votre profil acheteur et recevez des candidatures déjà <strong>formatées</strong> et <strong>complètes</strong> grâce aux informations transmises par nos API."
         details: "Vous paramétrez votre marché pour la candidature en étant accompagné(e), vous aurez accès aux documents et informations attendus par la réglementation et ceux les plus couramment demandés par les acheteurs."
         legend:
-          authentic: "De source authentique"
+          authentic: "Récupéré par API"
           declared: "Déclaré sur l'honneur"
           missing: "Manquant"
 
@@ -212,27 +212,28 @@ fr:
 
       data_examples:
         title: "Quelques exemples de données disponibles"
-        subtitle: "Toutes ces données sont directement récupérées par API auprès des sources officielles : un accès authentique, sécurisé et toujours à jour, qui garantit fiabilité et simplicité pour vos consultations."
+        subtitle: "Toutes ces données sont directement récupérées par API auprès des sources officielles : un accès automatique, sécurisé et toujours à jour, qui garantit fiabilité et simplicité pour vos consultations."
         legal:
           title: "Les obligations légales et fiscales"
           items:
-            - "Chiffre d'affaires global annuel"
-            - "Bilans ou extraits de bilans"
-            - "Les effectifs moyens annuels du candidat"
+            - "Chiffre d’affaires global annuel"
             - "Attestation de régularité sociale"
             - "Attestation de vigilance"
-            - "Attestations URSS - GIP - MSA"
-            - "Avis de paiements, liquidations judiciaires"
+            - "Attestations OETH - GIP - MDS"
+            - "Avis de jugements, liquidations judiciaires"
+            - "Attestation ProBtp"
+            - "Certificat cotisations Cibtp, Cnetp"
         technical:
           title: "Les capacités techniques et professionnelles"
           items:
-            - "Certification Qualibat"
-            - "Certification Qualifelec"
-            - "Certification RGE"
-            - "Certification BIO"
+            - "Certificat Qualibat"
+            - "Certificat Qualifelec"
+            - "Certificat RGE"
             - "Certification entreprise ESS"
-            - "Certification LCFT"
+            - "Certificat CQP TP"
             - "Certification OPQIBI"
+            - "Carte professionnelle travaux publics"
+            - "Certifications Qualiopi et habilitations France compétences"
 
       partners:
         title: "Accédez aux marchés publics via nos plateformes partenaires"
