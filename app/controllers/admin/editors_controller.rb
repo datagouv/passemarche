@@ -5,13 +5,7 @@ class Admin::EditorsController < Admin::ApplicationController
     @editors = Editor.order(:name)
   end
 
-  def show
-    @statistics = {
-      total_markets: @editor.public_markets.count,
-      completed_markets: @editor.public_markets.where.not(completed_at: nil).count,
-      active_markets: @editor.public_markets.where(completed_at: nil).count
-    }
-  end
+  def show; end
 
   def new
     @editor = Editor.new

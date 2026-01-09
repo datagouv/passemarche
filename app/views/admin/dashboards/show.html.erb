@@ -1,0 +1,57 @@
+<%= content_for :page_title, @presenter.page_title %>
+
+<div class="fr-container fr-my-4w">
+  <%= render 'admin/shared/navigation' %>
+
+  <h1 class="fr-h2 fr-mt-4w"><%= @presenter.page_title %></h1>
+
+  <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--bottom fr-mb-3w fr-mt-3w">
+    <div class="fr-col-12 fr-col-md-6">
+      <%= form_with url: admin_dashboard_path, method: :get, local: true do %>
+        <div class="fr-select-group fr-mb-0">
+          <%= label_tag :editor_id, t('admin.dashboard.filter.label'), class: "fr-label" %>
+          <%= select_tag :editor_id,
+                         options_from_collection_for_select(@editors, :id, :name, @presenter.editor&.id),
+                         include_blank: t('admin.dashboard.filter.all_editors'),
+                         class: "fr-select",
+                         onchange: "this.form.submit()" %>
+        </div>
+      <% end %>
+    </div>
+    <div class="fr-col-12 fr-col-md-6 fr-text--right">
+      <%= link_to t('admin.dashboard.export_button'),
+                  export_admin_dashboard_path(editor_id: @presenter.editor&.id),
+                  class: "fr-btn fr-btn--secondary fr-icon-download-line fr-btn--icon-left" %>
+    </div>
+  </div>
+
+  <div class="fr-grid-row fr-grid-row--gutters">
+    <% @presenter.statistics_cards.each do |card| %>
+      <div class="fr-col-12 fr-col-md-6 fr-col-lg-4 fr-mb-2w">
+        <div class="fr-card fr-card--no-arrow" style="height: 100%;">
+          <div class="fr-card__body">
+            <div class="fr-card__content">
+              <h3 class="fr-card__title fr-text--md fr-mb-1w">
+                <%= t("admin.dashboard.cards.#{card[:key]}.title") %>
+                <button type="button"
+                        class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-information-line"
+                        id="tooltip-btn-<%= card[:key] %>"
+                        aria-describedby="tooltip-<%= card[:key] %>"
+                        title="<%= t('admin.dashboard.info_button_title') %>">
+                  <span class="fr-sr-only"><%= t('admin.dashboard.info_button_title') %></span>
+                </button>
+                <span class="fr-tooltip fr-placement--top"
+                      id="tooltip-<%= card[:key] %>"
+                      role="tooltip"
+                      aria-hidden="true">
+                  <%= t("admin.dashboard.cards.#{card[:key]}.tooltip") %>
+                </span>
+              </h3>
+              <p class="fr-display--sm fr-mb-0"><%= card[:value] %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

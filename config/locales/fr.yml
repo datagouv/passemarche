@@ -531,6 +531,7 @@ fr:
         label: "Filtrer par éditeur"
         all_editors: "Tous les éditeurs"
       export_button: "Exporter (CSV)"
+      info_button_title: "Plus d'informations"
       cards:
         editors_total:
           title: "Éditeurs configurés"
@@ -582,7 +583,9 @@ fr:
       webhook_secret_generated: "Nouveau secret webhook généré avec succès"
       webhook_secret_error: "Erreur lors de la génération du secret"
       show:
-        view_statistics: "Voir les statistiques de cet éditeur"
+        statistics_title: "Statistiques"
+        statistics_description: "Consultez les statistiques détaillées de cet éditeur sur le tableau de bord."
+        view_statistics: "Voir les statistiques"
     webhook_events:
       retry_queued: "Webhook mis en file d'attente pour réessai."
       retry_not_available: "Ce webhook ne peut pas être réessayé."

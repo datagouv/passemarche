@@ -1,0 +1,16 @@
+<nav class="fr-nav fr-mb-3w" aria-label="Navigation admin">
+  <ul class="fr-nav__list">
+    <li class="fr-nav__item">
+      <%= link_to t('admin.navigation.editors'), admin_editors_path,
+                  class: "fr-nav__link #{'fr-nav__link--active' if controller_name == 'editors'}" %>
+    </li>
+    <li class="fr-nav__item">
+      <%= link_to t('admin.navigation.dashboard'), admin_dashboard_path,
+                  class: "fr-nav__link #{'fr-nav__link--active' if controller_name == 'dashboards'}" %>
+    </li>
+    <li class="fr-nav__item">
+      <%= link_to t('admin.navigation.background_jobs'), "/admin/jobs",
+                  class: "fr-nav__link", target: "_blank" %>
+    </li>
+  </ul>
+</nav>
