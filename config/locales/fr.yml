@@ -520,11 +520,69 @@ fr:
         is_not_ess: "L'entreprise n'est pas une ESS - données issues d'une source officielle"
 
   admin:
+    navigation:
+      editors: "Éditeurs"
+      dashboard: "Tableau de bord"
+      background_jobs: "Tâches en arrière-plan"
+    dashboard:
+      title: "Suivi d'activité"
+      title_with_editor: "Suivi d'activité - %{editor_name}"
+      filter:
+        label: "Filtrer par éditeur"
+        all_editors: "Tous les éditeurs"
+      export_button: "Exporter (CSV)"
+      cards:
+        editors_total:
+          title: "Éditeurs configurés"
+          tooltip: "Nombre total d'éditeurs enregistrés sur la plateforme"
+        editors_active:
+          title: "Éditeurs actifs et autorisés"
+          tooltip: "Éditeurs pouvant créer des marchés"
+        markets_total:
+          title: "Marchés créés"
+          tooltip: "Nombre total de marchés publics créés"
+        markets_completed:
+          title: "Marchés complétés"
+          tooltip: "Marchés dont la configuration est finalisée"
+        markets_active:
+          title: "Marchés actifs"
+          tooltip: "Marchés en cours de configuration"
+        applications_total:
+          title: "Candidatures totales"
+          tooltip: "Nombre total de candidatures déposées"
+        applications_completed:
+          title: "Candidatures complétées"
+          tooltip: "Candidatures finalisées par les entreprises"
+        documents_transmitted:
+          title: "Documents transmis"
+          tooltip: "Nombre total de fichiers déposés par les candidats"
+        unique_companies:
+          title: "Entreprises utilisant le service"
+          tooltip: "Nombre d'entreprises uniques (SIRET distincts)"
+        unique_buyers:
+          title: "Acheteurs publics"
+          tooltip: "Nombre d'acheteurs uniques (SIRET distincts)"
+        avg_completion_time:
+          title: "Temps moyen de remplissage"
+          tooltip: "Durée moyenne entre la création et la finalisation d'une candidature"
+        auto_fill_rate:
+          title: "Taux de remplissage automatique"
+          tooltip: "Pourcentage de champs remplis automatiquement via les APIs"
+      export:
+        filename: "statistiques-passe-marche"
+        headers:
+          metric: "Métrique"
+          value: "Valeur"
+          export_date: "Date d'export"
+          editor: "Éditeur"
+        all_editors: "Tous"
     editors:
       created: "Éditeur créé avec succès."
       updated: "Éditeur mis à jour avec succès."
       webhook_secret_generated: "Nouveau secret webhook généré avec succès"
       webhook_secret_error: "Erreur lors de la génération du secret"
+      show:
+        view_statistics: "Voir les statistiques de cet éditeur"
     webhook_events:
       retry_queued: "Webhook mis en file d'attente pour réessai."
       retry_not_available: "Ce webhook ne peut pas être réessayé."
