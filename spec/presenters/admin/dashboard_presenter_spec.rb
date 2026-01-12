@@ -75,24 +75,24 @@ RSpec.describe Admin::DashboardPresenter do
     context 'with seconds only' do
       let(:statistics) { { avg_completion_time_seconds: 45.0 } }
 
-      it 'returns formatted seconds' do
-        expect(presenter.formatted_completion_time).to eq('45s')
+      it 'returns formatted duration' do
+        expect(presenter.formatted_completion_time).to eq('0h0min')
       end
     end
 
     context 'with minutes and seconds' do
       let(:statistics) { { avg_completion_time_seconds: 185.0 } }
 
-      it 'returns formatted minutes and seconds' do
-        expect(presenter.formatted_completion_time).to eq('3min 5s')
+      it 'returns formatted duration' do
+        expect(presenter.formatted_completion_time).to eq('0h3min')
       end
     end
 
     context 'with exactly one minute' do
       let(:statistics) { { avg_completion_time_seconds: 60.0 } }
 
-      it 'returns formatted minutes' do
-        expect(presenter.formatted_completion_time).to eq('1min 0s')
+      it 'returns formatted duration' do
+        expect(presenter.formatted_completion_time).to eq('0h1min')
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe Admin::DashboardPresenter do
       let(:statistics) { { avg_completion_time_seconds: 7320.0 } }
 
       it 'returns formatted hours and minutes' do
-        expect(presenter.formatted_completion_time).to eq('2h 2min')
+        expect(presenter.formatted_completion_time).to eq('2h2min')
       end
     end
   end
@@ -157,7 +157,7 @@ RSpec.describe Admin::DashboardPresenter do
 
     it 'returns formatted value for completion time' do
       cards = presenter.statistics_cards
-      expect(cards.find { |c| c[:key] == :avg_completion_time }[:value]).to eq('15min 0s')
+      expect(cards.find { |c| c[:key] == :avg_completion_time }[:value]).to eq('0h15min')
     end
 
     it 'returns formatted value for auto fill rate' do

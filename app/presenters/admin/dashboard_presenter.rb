@@ -36,17 +36,14 @@ class Admin::DashboardPresenter
   end
 
   def formatted_completion_time
-    seconds = statistics[:avg_completion_time_seconds]
-    return 'N/A' if seconds.nil? || seconds.zero?
-
-    format_duration(seconds)
+    format_duration(statistics[:avg_completion_time_seconds])
   end
 
   def auto_fill_percentage
     rate = statistics[:auto_fill_rate]
     return 'N/A' if rate.nil?
 
-    "#{(rate * 100).round(1)}%"
+    ActionController::Base.helpers.number_to_percentage(rate * 100, precision: 1)
   end
 
   def statistics_cards
@@ -69,18 +66,11 @@ class Admin::DashboardPresenter
   end
 
   def format_duration(seconds)
-    minutes = (seconds / 60).to_i
-    remaining_seconds = (seconds % 60).to_i
+    return 'N/A' if seconds.nil? || seconds.zero?
 
-    return format_hours_and_minutes(minutes) if minutes > 60
-    return "#{minutes}min #{remaining_seconds}s" if minutes.positive?
+    total_hours = (seconds / 3600).to_i
+    total_minutes = ((seconds % 3600) / 60).to_i
 
-    "#{remaining_seconds}s"
-  end
-
-  def format_hours_and_minutes(minutes)
-    hours = minutes / 60
-    remaining_minutes = minutes % 60
-    "#{hours}h #{remaining_minutes}min"
+    "#{total_hours}h#{total_minutes}min"
   end
 end

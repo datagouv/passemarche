@@ -89,7 +89,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
         csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
         time_row = csv.find { |row| row['Métrique'] == 'Temps moyen de remplissage' }
 
-        expect(time_row['Valeur']).to eq('15min 0s')
+        expect(time_row['Valeur']).to eq('0h15min')
       end
 
       it 'formats auto-fill rate as percentage' do
@@ -155,7 +155,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
           time_row = csv.find { |row| row['Métrique'] == 'Temps moyen de remplissage' }
 
-          expect(time_row['Valeur']).to eq('2h 2min')
+          expect(time_row['Valeur']).to eq('2h2min')
         end
       end
     end
