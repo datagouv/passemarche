@@ -69,14 +69,14 @@ class Admin::CalculateDashboardStatistics < ApplicationInteractor
   end
 
   def calculate_avg_completion_time
-    completed_applications = applications_scope.where.not(market_applications: { completed_at: nil })
-    return nil if completed_applications.empty?
+    timestamps = applications_scope
+      .where.not(completed_at: nil)
+      .pluck(:created_at, :completed_at)
 
-    avg_interval = completed_applications
-      .select('AVG(EXTRACT(EPOCH FROM (market_applications.completed_at - market_applications.created_at))) as avg_seconds')
-      .take
+    return nil if timestamps.empty?
 
-    avg_interval&.avg_seconds&.to_f
+    total_seconds = timestamps.sum { |created, completed| completed - created }
+    total_seconds / timestamps.size
   end
 
   def calculate_auto_fill_rate
