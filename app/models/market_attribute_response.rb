@@ -105,6 +105,10 @@ class MarketAttributeResponse < ApplicationRecord
     name.demodulize
   end
 
+  def hidden?
+    hidden == true
+  end
+
   private
 
   def set_type_from_market_attribute
