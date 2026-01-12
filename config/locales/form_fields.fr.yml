@@ -404,8 +404,8 @@ fr:
             sont considérées comme ayant rempli leurs obligations (Article L.225-102-1
             du code de commerce).
         capacite_economique_financiere_chiffre_affaires_global_annuel:
-          name: Le chiffre d'affaires de votre entreprise au cours des trois dernières
-            années
+          name: Le chiffre d'affaires de votre entreprise et le pourcentage de chiffre
+            d'affaires réalisé dans le domaine d'activité concerné par le contrat
           description: Indiquez le(s) chiffre(s) d'affaires de votre entreprise, en
             euros, correspondant(s) aux exercices mentionnés dans les documents de
             la consultation, ainsi que le pourcentage du chiffre d'affaires réalisé
