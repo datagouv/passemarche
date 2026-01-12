@@ -57,17 +57,25 @@ class Bodacc::BuildResource < ApplicationInteractor
     {
       liquidation_judiciaire: build_radio_with_file_and_text(
         context.liquidation_detected,
-        'Procédure de liquidation judiciaire'
+        'Procédure de liquidation judiciaire détectée'
       ),
       faillite_interdiction: build_radio_with_file_and_text(
         context.dirigeant_a_risque,
-        'Dirigeant à risque détecté par Bodacc'
+        'Dirigeant à risque détecté'
       )
     }
   end
 
   def build_radio_with_file_and_text(detected, text)
-    detected ? { 'radio_choice' => 'yes', 'text' => text } : { 'radio_choice' => 'no' }
+    if detected
+      {
+        'radio_choice' => 'yes',
+        'text' => text,
+        'hidden' => true # field is hidden in the form when auto-detected
+      }
+    else
+      { 'radio_choice' => 'no' }
+    end
   end
 
   def liquidation_judiciaire?(record)
