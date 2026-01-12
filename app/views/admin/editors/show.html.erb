@@ -1,6 +1,8 @@
 <div class="fr-container">
   <div class="fr-grid-row">
     <div class="fr-col-12">
+      <%= render 'admin/shared/navigation' %>
+
       <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
         <ol class="fr-breadcrumb__list">
           <li>
@@ -80,11 +82,12 @@
         <div class="fr-col-12 fr-col-md-6">
           <div class="fr-card">
             <div class="fr-card__body">
-              <h2 class="fr-card__title">Statistiques</h2>
+              <h2 class="fr-card__title"><%= t('admin.editors.show.statistics_title') %></h2>
               <div class="fr-card__content">
-                <p><strong>Total des marchés :</strong> <%= @statistics[:total_markets] %></p>
-                <p><strong>Marchés complétés :</strong> <%= @statistics[:completed_markets] %></p>
-                <p><strong>Marchés actifs :</strong> <%= @statistics[:active_markets] %></p>
+                <p class="fr-mb-2w"><%= t('admin.editors.show.statistics_description') %></p>
+                <%= link_to t('admin.editors.show.view_statistics'),
+                            admin_dashboard_path(editor_id: @editor.id),
+                            class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-bar-chart-box-line fr-btn--icon-left" %>
               </div>
             </div>
           </div>

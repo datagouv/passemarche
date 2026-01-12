@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     resources :editors do
       resources :webhook_secrets, only: [:create]
     end
+    resource :dashboard, only: [:show] do
+      get :export, on: :member
+    end
     mount MissionControl::Jobs::Engine, at: '/jobs'
     root 'editors#index'
   end
