@@ -72,7 +72,10 @@ class MarketApplication < ApplicationRecord
 
   def bodacc_exclusion_motifs
     market_attribute_responses.select do |r|
-      r.source == 'auto' && r.market_attribute.api_name == 'bodacc' && r.value['radio_choice'] == 'yes'
+      r.source == 'auto' &&
+      r.market_attribute.api_name == 'bodacc' &&
+      r.value['radio_choice'] == 'yes' &&
+      r.hidden?
     end
   end
 
@@ -127,5 +130,16 @@ class MarketApplication < ApplicationRecord
 
     # Return only responses for this step's attributes
     market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
+  end
+
+  def visible_subcategory_keys
+    # exclude hidden attributes from the subcategory keys
+    all_market_attributes
+      .joins('LEFT JOIN market_attribute_responses ON market_attributes.id = market_attribute_responses.market_attribute_id')
+      .where('market_attribute_responses.id IS NULL OR (market_attribute_responses.data->>\'hidden\')::boolean IS NOT TRUE')
+      .order(:position)
+      .pluck(:subcategory_key)
+      .compact
+      .uniq
   end
 end
