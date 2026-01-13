@@ -104,7 +104,14 @@ module ApiFetchable
       next if response.manual_after_api_failure?
 
       response.source = :manual_after_api_failure
+      clear_default_radio_choice(response)
       response.save! if response.persisted? || response.changed?
     end
+  end
+
+  def clear_default_radio_choice(response)
+    return unless response.respond_to?(:radio_choice=)
+
+    response.radio_choice = nil
   end
 end

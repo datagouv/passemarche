@@ -116,8 +116,10 @@ Then('the market application should have a manual fallback response for ESS') do
   ess_response = find_ess_response
 
   # When API fails, a response is created with manual_after_api_failure source
+  # and radio_choice is nil (not the default 'no') so it displays as "Non renseigné"
   expect(ess_response).not_to be_nil
   expect(ess_response.source).to eq('manual_after_api_failure')
+  expect(ess_response.radio_choice).to be_nil
 end
 
 Then('the ESS field should allow manual input') do

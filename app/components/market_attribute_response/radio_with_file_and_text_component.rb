@@ -55,6 +55,8 @@ class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeRe
   end
 
   def display_value
+    return I18n.t('form_fields.candidate.shared.not_provided', default: 'Non renseigné') if radio_choice.nil?
+
     radio_yes? ? I18n.t('form_fields.candidate.shared.yes') : I18n.t('form_fields.candidate.shared.no')
   end
 
