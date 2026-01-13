@@ -1,2 +1,2 @@
-web: bin/rails server -p 3000
-queue: bin/rails solid_queue:start
+web: ENABLE_CLAMAV=true bin/rails server -p 3000
+queue: ENABLE_CLAMAV=true bin/rails solid_queue:start

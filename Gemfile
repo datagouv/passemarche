@@ -6,6 +6,7 @@ ruby '3.4.5'
 
 gem 'bootsnap', require: false
 gem 'csv'
+gem 'clamby', '~> 1.6'
 gem 'devise'
 gem 'doorkeeper', '~> 5.7'
 gem 'faraday', '~> 2.14'
