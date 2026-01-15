@@ -202,6 +202,15 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
 
         expect(page).to have_text('Aucune information complémentaire fournie')
       end
+
+      it 'shows Non renseigné badge when radio_choice is nil' do
+        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute:, source: :manual_after_api_failure, value: {})
+        component = described_class.new(market_attribute_response: response, context: :web)
+
+        render_inline(component)
+
+        expect(page).to have_css('div.fr-badge.fr-badge--warning', text: 'Non renseigné')
+      end
     end
 
     context 'with auto source and web context' do
@@ -265,6 +274,13 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
         expect(component.display_value).to eq('Non')
       end
 
+      it 'returns Non renseigné for display_value when radio_choice is nil' do
+        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: {})
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.display_value).to eq('Non renseigné')
+      end
+
       it 'display_value? returns true' do
         response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: { 'radio_choice' => 'yes' })
         component = described_class.new(market_attribute_response: response)
@@ -325,6 +341,18 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
 
         expect(page).to have_text("L'entreprise est une ESS :")
         expect(page).to have_text('Oui')
+      end
+    end
+
+    context 'with manual_after_api_failure source and nil radio_choice' do
+      it 'shows Non renseigné for ESS' do
+        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, source: :manual_after_api_failure, value: {})
+        component = described_class.new(market_attribute_response: response, context: :web)
+
+        render_inline(component)
+
+        expect(page).to have_text("L'entreprise est une ESS :")
+        expect(page).to have_text('Non renseigné')
       end
     end
   end
