@@ -90,6 +90,18 @@ fr:
     submit_summary: "Transmettre ma candidature"
     continue: "Continuer"
 
+  malware_scan:
+    label:
+      safe: "Fichier vérifié"
+      unsafe: "Malware détecté"
+      scanning: "Scan en cours..."
+      not_scanned: "Non vérifié"
+    badge_class:
+      safe: "success"
+      unsafe: "error"
+      scanning: "info"
+      not_scanned: "info"
+
   shared:
     application_summary:
       market_info_title: "Informations du marché"

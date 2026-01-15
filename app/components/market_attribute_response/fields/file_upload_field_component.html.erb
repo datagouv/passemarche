@@ -28,25 +28,30 @@
         <strong>Fichiers actuels :</strong>
         <% documents.select(&:persisted?).each do |document| %>
           <%= form.hidden_field(:files, multiple: true, value: document.signed_id, id: nil, data: { signed_id: document.signed_id }) %>
-          <div class="file-item" data-signed-id="<%= document.signed_id %>">
-            <%= link_to document.filename.to_s, url_for(document), target: "_blank", rel: "noopener", class: "file-link" %>
-            <% if deletable %>
-              <span class="file-delete-wrapper">
-                <button type="button"
-                        class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-delete-line"
-                        data-controller="file-delete"
-                        data-file-delete-signed-id-value="<%= document.signed_id %>"
-                        data-file-delete-url-value="<%= delete_attachment_path(document) %>"
-                        data-file-delete-filename-value="<%= document.filename %>"
-                        data-file-delete-confirm-message-value="<%= delete_confirm_message %>"
-                        data-file-delete-error-message-value="<%= delete_error_message %>"
-                        data-file-delete-network-error-message-value="<%= network_error_message %>"
-                        data-action="click->file-delete#delete"
-                        title="Supprimer <%= document.filename %>">
-                  Supprimer
-                </button>
-              </span>
-            <% end %>
+
+          <div class="file-item">
+            <div class="file-info">
+              <%= helpers.dsfr_file_link(document) %>
+              <%= helpers.dsfr_malware_badge(document, class: 'fr-ml-1w') if show_security_badge %>
+
+              <% if deletable %>
+                <span class="file-delete-wrapper">
+                  <button type="button"
+                          class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-delete-line"
+                          data-controller="file-delete"
+                          data-file-delete-signed-id-value="<%= document.signed_id %>"
+                          data-file-delete-url-value="<%= delete_attachment_path(document) %>"
+                          data-file-delete-filename-value="<%= document.filename %>"
+                          data-file-delete-confirm-message-value="<%= delete_confirm_message %>"
+                          data-file-delete-error-message-value="<%= delete_error_message %>"
+                          data-file-delete-network-error-message-value="<%= network_error_message %>"
+                          data-action="click->file-delete#delete"
+                          title="Supprimer <%= document.filename %>">
+                    Supprimer
+                  </button>
+                </span>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>
