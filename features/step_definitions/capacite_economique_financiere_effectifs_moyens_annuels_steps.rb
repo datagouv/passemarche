@@ -30,6 +30,7 @@ When('I fill in average staff data:') do |table|
     year_key = row['year']
     find("input[name*='#{year_key}_year']").set(row['year_value'])
     find("input[name*='#{year_key}_average_staff']").set(row['average_staff'])
+    find("input[name*='#{year_key}_management_staff']").set(row['management_staff']) if row['management_staff'].present?
   end
 end
 
@@ -44,6 +45,12 @@ end
 Then('I should see effectifs form with labels:') do |table|
   table.raw.each do |row|
     expect(page).to have_content(row.first)
+  end
+end
+
+Then('I should see effectifs form with table headers:') do |table|
+  table.raw.first.each do |header|
+    expect(page).to have_css('th', text: header)
   end
 end
 
@@ -68,6 +75,7 @@ When('I fill in partial average staff data:') do |table|
     year_key = row['year']
     find("input[name*='#{year_key}_year']").set(row['year_value']) if row['year_value'].present?
     find("input[name*='#{year_key}_average_staff']").set(row['average_staff']) if row['average_staff'].present?
+    find("input[name*='#{year_key}_management_staff']").set(row['management_staff']) if row['management_staff'].present?
   end
 end
 
@@ -76,6 +84,7 @@ When('I fill in invalid average staff data:') do |table|
     year_key = row['year']
     find("input[name*='#{year_key}_year']").set(row['year_value'])
     find("input[name*='#{year_key}_average_staff']").set(row['average_staff'])
+    find("input[name*='#{year_key}_management_staff']").set(row['management_staff']) if row['management_staff'].present?
   end
 end
 
@@ -84,16 +93,20 @@ Then('I should see the average staff data displayed:') do |table|
     expect(page.text).to match(/#{Regexp.escape(row['year'])}/i)
     expect(page).to have_content(row['year_value'])
     expect(page).to have_content(row['average_staff'])
+    expect(page).to have_content(row['management_staff']) if row['management_staff'].present?
   end
 end
 
 When('I fill in valid average staff data and submit') do
   find("input[name*='year_1_year']").set('2024')
   find("input[name*='year_1_average_staff']").set('30')
+  find("input[name*='year_1_management_staff']").set('5')
   find("input[name*='year_2_year']").set('2023')
   find("input[name*='year_2_average_staff']").set('32')
+  find("input[name*='year_2_management_staff']").set('7')
   find("input[name*='year_3_year']").set('2022')
   find("input[name*='year_3_average_staff']").set('35')
+  find("input[name*='year_3_management_staff']").set('8')
 
   click_button 'Suivant'
 end
@@ -109,6 +122,7 @@ Then('the year data should be saved with correct structure') do
   expect(response.value).to have_key('year_1')
   expect(response.value['year_1']).to have_key('year')
   expect(response.value['year_1']).to have_key('average_staff')
+  expect(response.value['year_1']).to have_key('management_staff')
 end
 
 Then('the effectifs response should be created with class {string}') do |class_name|
@@ -126,6 +140,7 @@ Then('the effectifs response should have the correct JSON structure') do
     expect(response.value).to have_key(year)
     expect(response.value[year]).to have_key('year')
     expect(response.value[year]).to have_key('average_staff')
+    expect(response.value[year]).to have_key('management_staff')
   end
 end
 
@@ -139,6 +154,12 @@ end
 Then('the year field for year_{int} should contain {string}') do |year_num, value|
   year_key = "year_#{year_num}"
   field_element = page.find("input[name*='#{year_key}_year']")
+  expect(field_element.value).to eq(value)
+end
+
+Then('the management_staff field for year_{int} should contain {string}') do |year_num, value|
+  year_key = "year_#{year_num}"
+  field_element = page.find("input[name*='#{year_key}_management_staff']")
   expect(field_element.value).to eq(value)
 end
 
@@ -173,8 +194,9 @@ Given('I have submitted valid average staff data:') do |table|
   table.hashes.each do |row|
     year_key = row['year']
     value_hash[year_key] = {
-      'year' => row['year_value'].to_i, # Ensure year is an integer
-      'average_staff' => row['average_staff'].to_i
+      'year' => row['year_value'].to_i,
+      'average_staff' => row['average_staff'].to_i,
+      'management_staff' => row['management_staff'].to_i
     }
   end
 

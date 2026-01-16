@@ -33,51 +33,56 @@
       <% end %>
 
       <div class="fr-table">
-        <div class="fr-table__container fr-ml-0 fr-table--layout-fixed">
-          <div class="fr-table__content" style="max-width: 580px; margin-left: 0;">
-            <% MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuelsComponent::YEAR_KEYS.each do |year_key| %>
-              <div class="fr-grid-row">
-                <div class="fr-col-6 fr-pr-2w">
-                  <div class="fr-input-group fr-mb-2w">
-                    <label
-                      class="fr-label fr-text--md"
-                      for="market_attribute_response_<%= year_key %>_year"
-                    >
-                      Année <%= component.year_label(year_key) %>
-                    </label>
-                    <%= response_form.text_field(
-                          "#{year_key}_year",
-                          type: "number",
-                          class: "fr-input fr-input--sm",
-                          id: "market_attribute_response_#{year_key}_year",
-                          step: 1,
-                          min: 2000,
-                          max: component.current_year
-                        )
-                    %>
-                  </div>
-                </div>
-                <div style="flex: 1; min-width: 0;" class="fr-col-6">
-                  <div class="fr-input-group">
-                    <label
-                      class="fr-label fr-text--md"
-                      for="market_attribute_response_<%= year_key %>_average_staff"
-                    >
-                      Effectif moyen
-                    </label>
-                    <%= response_form.text_field(
-                          "#{year_key}_average_staff",
-                          type: "number",
-                          class: "fr-input fr-input--sm",
-                          id: "market_attribute_response_#{year_key}_average_staff",
-                          step: 1,
-                          min: 0
-                        )
-                    %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+        <div class="fr-table__wrapper">
+          <div class="fr-table__container">
+            <div class="fr-table__content">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col"><%= component.table_header('year') %></th>
+                    <th scope="col"><%= component.table_header('average_staff') %></th>
+                    <th scope="col"><%= component.table_header('management_staff') %></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuelsComponent::YEAR_KEYS.each do |year_key| %>
+                    <tr>
+                      <td>
+                        <div class="fr-input-group">
+                          <%= response_form.text_field "#{year_key}_year",
+                                type: "number",
+                                class: "fr-input fr-input--sm",
+                                placeholder: component.year_label(year_key),
+                                step: 1,
+                                min: 2000,
+                                max: component.current_year %>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="fr-input-group">
+                          <%= response_form.text_field "#{year_key}_average_staff",
+                                type: "number",
+                                class: "fr-input fr-input--sm",
+                                placeholder: "ex: 25",
+                                step: 1,
+                                min: 0 %>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="fr-input-group">
+                          <%= response_form.text_field "#{year_key}_management_staff",
+                                type: "number",
+                                class: "fr-input fr-input--sm",
+                                placeholder: "ex: 5",
+                                step: 1,
+                                min: 0 %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

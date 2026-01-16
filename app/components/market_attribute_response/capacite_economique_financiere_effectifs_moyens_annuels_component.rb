@@ -28,6 +28,14 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
     year_data(year_key)['average_staff']
   end
 
+  def management_staff_value(year_key)
+    year_data(year_key)['management_staff']
+  end
+
+  def table_header(key)
+    I18n.t("candidate.market_applications.form_fields.capacite_economique_financiere_effectifs_moyens_annuels.table_headers.#{key}")
+  end
+
   def year_label(year_key)
     YEAR_LABELS[year_key] || year_key
   end

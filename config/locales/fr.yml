@@ -350,6 +350,11 @@ fr:
             year_1: "Exercice N-1"
             year_2: "Exercice N-2"
             year_3: "Exercice N-3"
+        capacite_economique_financiere_effectifs_moyens_annuels:
+          table_headers:
+            year: "Année"
+            average_staff: "Effectif moyen"
+            management_staff: "Personnel d'encadrement"
         realisations_livraisons:
           labels:
             resume: "Résumé du travail effectué"

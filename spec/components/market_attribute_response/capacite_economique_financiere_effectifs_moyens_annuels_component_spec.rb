@@ -7,15 +7,15 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
 
   let(:complete_value) do
     {
-      'year_1' => { 'year' => 2024, 'average_staff' => 30 },
-      'year_2' => { 'year' => 2023, 'average_staff' => 32 },
-      'year_3' => { 'year' => 2022, 'average_staff' => 35 }
+      'year_1' => { 'year' => 2024, 'average_staff' => 30, 'management_staff' => 5 },
+      'year_2' => { 'year' => 2023, 'average_staff' => 32, 'management_staff' => 7 },
+      'year_3' => { 'year' => 2022, 'average_staff' => 35, 'management_staff' => 8 }
     }
   end
 
   let(:partial_value) do
     {
-      'year_1' => { 'year' => 2024, 'average_staff' => 30 }
+      'year_1' => { 'year' => 2024, 'average_staff' => 30, 'management_staff' => 5 }
     }
   end
 
@@ -62,7 +62,7 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
       response = create(:market_attribute_response_effectifs_moyens_annuels, market_attribute:, value: complete_value)
       component = described_class.new(market_attribute_response: response)
 
-      expect(component.year_data('year_1')).to eq({ 'year' => 2024, 'average_staff' => 30 })
+      expect(component.year_data('year_1')).to eq({ 'year' => 2024, 'average_staff' => 30, 'management_staff' => 5 })
     end
 
     it 'returns empty hash for missing year' do
@@ -105,6 +105,31 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
     end
   end
 
+  describe '#management_staff_value' do
+    it 'returns the management staff value' do
+      response = create(:market_attribute_response_effectifs_moyens_annuels, market_attribute:, value: complete_value)
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.management_staff_value('year_1')).to eq(5)
+    end
+
+    it 'returns nil for missing management_staff' do
+      response = create(:market_attribute_response_effectifs_moyens_annuels, market_attribute:, value: {})
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.management_staff_value('year_1')).to be_nil
+    end
+  end
+
+  describe '#table_header' do
+    it 'returns the I18n translation for the header key' do
+      response = create(:market_attribute_response_effectifs_moyens_annuels, market_attribute:, value: complete_value)
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.table_header('year')).to eq(I18n.t('candidate.market_applications.form_fields.capacite_economique_financiere_effectifs_moyens_annuels.table_headers.year'))
+    end
+  end
+
   describe '#year_label' do
     it 'returns the correct label for year_1' do
       response = create(:market_attribute_response_effectifs_moyens_annuels, market_attribute:, value: complete_value)
@@ -133,7 +158,7 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
     let(:response_form) { double('ResponseFormBuilder') }
 
     context 'with manual source' do
-      it 'renders form with input fields' do
+      it 'renders form with table and input fields' do
         response = create(:market_attribute_response_effectifs_moyens_annuels, market_attribute:, source: :manual,
           value: complete_value)
         component = described_class.new(market_attribute_response: response, form:)
@@ -145,9 +170,11 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoy
 
         render_inline(component)
 
+        expect(page).to have_css('div.fr-table')
+        expect(page).to have_css('table')
+        expect(page).to have_css('thead th', count: 3)
+        expect(page).to have_css('tbody tr', count: 3)
         expect(page).to have_css('div.fr-input-group')
-        expect(page).to have_text('Année n-1')
-        expect(page).to have_text('Effectif moyen')
       end
     end
 
