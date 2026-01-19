@@ -112,4 +112,26 @@ class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeRe
   def text_aria_describedby
     "#{text_field_id}-messages"
   end
+
+  def motifs_exclusion_category?
+    market_attribute.category_key == 'motifs_exclusion'
+  end
+
+  def badge_class
+    base_classes = 'fr-badge fr-badge--sm'
+
+    return 'fr-badge fr-badge--warning fr-badge--sm' if radio_choice.nil?
+
+    if motifs_exclusion_category?
+      radio_yes? ? 'fr-badge fr-badge--error fr-badge--sm' : 'fr-badge fr-badge--success fr-badge--sm'
+    else
+      radio_yes? ? 'fr-badge fr-badge--success fr-badge--sm' : base_classes
+    end
+  end
+
+  def badge_label
+    return 'Non renseigné' if radio_choice.nil?
+
+    radio_yes? ? 'Oui' : 'Non'
+  end
 end

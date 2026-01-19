@@ -381,4 +381,116 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
       expect(component.errors?).to be false
     end
   end
+
+  describe '#badge_class' do
+    context 'with motifs_exclusion category' do
+      let(:motifs_exclusion_attribute) do
+        create(:market_attribute, :radio_with_file_and_text, :mandatory,
+          key: 'motifs_exclusion_test', category_key: 'motifs_exclusion')
+      end
+
+      it 'returns error badge when radio_yes' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: motifs_exclusion_attribute, value: { 'radio_choice' => 'yes' })
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.badge_class).to eq('fr-badge fr-badge--error fr-badge--sm')
+      end
+
+      it 'returns success badge when radio_no' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: motifs_exclusion_attribute, value: { 'radio_choice' => 'no' })
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.badge_class).to eq('fr-badge fr-badge--success fr-badge--sm')
+      end
+
+      it 'returns warning badge when radio_choice is nil' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: motifs_exclusion_attribute, source: :manual_after_api_failure, value: {})
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.badge_class).to eq('fr-badge fr-badge--warning fr-badge--sm')
+      end
+    end
+
+    context 'with non-motifs_exclusion category' do
+      it 'returns success badge when radio_yes' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute:, value: { 'radio_choice' => 'yes' })
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.badge_class).to eq('fr-badge fr-badge--success fr-badge--sm')
+      end
+
+      it 'returns neutral badge when radio_no' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute:, value: { 'radio_choice' => 'no' })
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.badge_class).to eq('fr-badge fr-badge--sm')
+      end
+
+      it 'returns warning badge when radio_choice is nil' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute:, source: :manual_after_api_failure, value: {})
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.badge_class).to eq('fr-badge fr-badge--warning fr-badge--sm')
+      end
+    end
+  end
+
+  describe '#motifs_exclusion_category?' do
+    context 'with motifs_exclusion category' do
+      let(:motifs_exclusion_attribute) do
+        create(:market_attribute, :radio_with_file_and_text, :mandatory,
+          key: 'motifs_exclusion_test', category_key: 'motifs_exclusion')
+      end
+
+      it 'returns true' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: motifs_exclusion_attribute, value: { 'radio_choice' => 'yes' })
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.motifs_exclusion_category?).to be true
+      end
+    end
+
+    context 'with other category' do
+      it 'returns false' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute:, value: { 'radio_choice' => 'yes' })
+        component = described_class.new(market_attribute_response: response)
+
+        expect(component.motifs_exclusion_category?).to be false
+      end
+    end
+  end
+
+  describe '#badge_label' do
+    it 'returns Oui when radio_yes' do
+      response = create(:market_attribute_response_radio_with_file_and_text,
+        market_attribute:, value: { 'radio_choice' => 'yes' })
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.badge_label).to eq('Oui')
+    end
+
+    it 'returns Non when radio_no' do
+      response = create(:market_attribute_response_radio_with_file_and_text,
+        market_attribute:, value: { 'radio_choice' => 'no' })
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.badge_label).to eq('Non')
+    end
+
+    it 'returns Non renseigné when radio_choice is nil' do
+      response = create(:market_attribute_response_radio_with_file_and_text,
+        market_attribute:, source: :manual_after_api_failure, value: {})
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.badge_label).to eq('Non renseigné')
+    end
+  end
 end
