@@ -151,6 +151,11 @@ h6 {
   color: #18753c;
 }
 
+.fr-badge--info {
+  background-color: #e8edff;
+  color: #0063cb;
+}
+
 /* Spacing Utilities */
 .fr-mb-0 {
   margin-bottom: 0;
