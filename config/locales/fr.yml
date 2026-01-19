@@ -162,14 +162,6 @@ fr:
           step_2: "Les informations concernant votre entreprise sont récupérées automatiquement et vous complétez certaines informations si elles sont demandées par l'acheteur"
           step_3: "Votre attestation est disponible, votre candidature est terminée !"
 
-      partners:
-        title: "Accédez aux marchés publics via nos plateformes partenaires"
-        subtitle: "et laissez Passe Marché adapter votre candidature pour vous"
-        platforms:
-          platform_1: "Accéder à [Plateforme 1]"
-          platform_2: "Accéder à [Plateforme 2]"
-          platform_3: "Accéder à [Plateforme 3]"
-
     buyer:
       hero:
         title: "Votre publication et votre analyse de candidatures, en toute simplicité"
@@ -234,14 +226,6 @@ fr:
             - "Certification OPQIBI"
             - "Carte professionnelle travaux publics"
             - "Certifications Qualiopi et habilitations France compétences"
-
-      partners:
-        title: "Accédez aux marchés publics via nos plateformes partenaires"
-        subtitle: "et laissez Passe Marché adapter votre candidature pour vous"
-        platforms:
-          platform_1: "Accéder à [Plateforme 1]"
-          platform_2: "Accéder à [Plateforme 2]"
-          platform_3: "Accéder à [Plateforme 3]"
 
   market_types:
     supplies: "Fournitures"

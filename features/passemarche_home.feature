@@ -7,7 +7,7 @@ Feature: Passe Marché Home Page
 
   Scenario: User visits the home page
     Given I am on the home page
-    Then I should see "Passe Marché"
+    Then I should see "Passe marché"
     And I should see "Votre publication et votre analyse de candidatures"
 
   Scenario: User sees DSFR French government design
@@ -48,21 +48,14 @@ Feature: Passe Marché Home Page
     And I should see "Les informations concernant votre entreprise"
     And I should see "Votre attestation est disponible"
 
-  Scenario: Candidate homepage displays partner platforms section
-    Given I am on the candidate home page
-    Then I should see "Accédez aux marchés publics via nos plateformes partenaires"
-    And I should see "Plateforme 1"
-    And I should see "Plateforme 2"
-    And I should see "Plateforme 3"
-
   Scenario: User visits the candidate homepage
     Given I am on the candidate home page
-    Then I should see "Passe Marché"
+    Then I should see "Passe marché"
     And I should see "Votre candidature, adaptée à chaque marché public"
 
   Scenario: User visits the buyer homepage
     Given I am on the buyer home page
-    Then I should see "Passe Marché"
+    Then I should see "Passe marché"
     And I should see "Votre publication et votre analyse de candidatures"
 
   Scenario: Root URL displays buyer homepage content
@@ -81,13 +74,6 @@ Feature: Passe Marché Home Page
     Then I should see "Quelques exemples de données disponibles"
     And I should see "Les obligations légales et fiscales"
     And I should see "Les capacités techniques et professionnelles"
-
-  Scenario: Buyer homepage displays partner platforms section
-    Given I am on the buyer home page
-    Then I should see "Accédez aux marchés publics via nos plateformes partenaires"
-    And I should see "Plateforme 1"
-    And I should see "Plateforme 2"
-    And I should see "Plateforme 3"
 
   Scenario: Header displays navigation links
     Given I am on the home page
