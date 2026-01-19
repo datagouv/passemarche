@@ -194,7 +194,7 @@ Feature: Comprehensive Candidate Application Flow
 
   Scenario: File upload validation errors
     When I visit the "documents" step
-    And I attempt to upload an invalid file "document.txt"
+    And I attempt to upload an invalid file "document.exe"
     And I click "Suivant"
     Then I should see a file format validation error
     And I should remain on the "documents" step
