@@ -51,12 +51,13 @@
                     <strong><%= component.year_label(year_key, index) %></strong>
                   </td>
                   <td>
-                    <% if turnover_from_api && component.context != :buyer %>
-                      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+                    <% if turnover_from_api %>
+                      <%= component.formatted_turnover(year_key) %>
+                      <%= render SourceBadgeComponent.new(source: :auto) %>
                     <% elsif component.turnover_value(year_key).present? %>
                       <%= component.formatted_turnover(year_key) %>
-                      <% if component.context == :buyer %>
-                        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+                      <% if component.auto? %>
+                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure) %>
                       <% end %>
                     <% else %>
                       <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
@@ -71,10 +72,13 @@
                   </td>
                   <td>
                     <% if fiscal_year_end_from_api %>
-                      <%= render CheckIconComponent.new(context: component.context) %>
                       <%= component.formatted_fiscal_year_end(year_key) %>
+                      <%= render SourceBadgeComponent.new(source: :auto) %>
                     <% elsif component.fiscal_year_end_value(year_key).present? %>
                       <%= component.formatted_fiscal_year_end(year_key) %>
+                      <% if component.auto? %>
+                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure) %>
+                      <% end %>
                     <% else %>
                       <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
                     <% end %>
@@ -90,6 +94,5 @@
     <% end %>
   </div>
   <div class="field-layout-badge">
-    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
   </div>
 </div>
