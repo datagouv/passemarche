@@ -6,14 +6,8 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
 
   YEAR_KEYS = %w[year_1 year_2 year_3].freeze
   STAFF_FIELD = 'average_staff'
+  MANAGEMENT_FIELD = 'management_staff'
   YEAR_FIELD = 'year'
-
-  # Expected JSON structure:
-  # {
-  #   "year_1": { "year": 2023, "average_staff": 25 },
-  #   "year_2": { "year": 2022, "average_staff": 30 },
-  #   "year_3": { "year": 2021, "average_staff": 28 }
-  # }
 
   def self.json_schema_properties
     YEAR_KEYS
@@ -39,6 +33,16 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
       self.value ||= {}
       value[year_key] ||= {}
       value[year_key][STAFF_FIELD] = coerce_field_value(val)
+    end
+
+    define_method "#{year_key}_#{MANAGEMENT_FIELD}" do
+      value&.dig(year_key, MANAGEMENT_FIELD)
+    end
+
+    define_method "#{year_key}_#{MANAGEMENT_FIELD}=" do |val|
+      self.value ||= {}
+      value[year_key] ||= {}
+      value[year_key][MANAGEMENT_FIELD] = coerce_field_value(val)
     end
 
     define_method "#{year_key}_#{YEAR_FIELD}" do
@@ -81,6 +85,7 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
       next if year_data.blank? || !year_has_any_data?(year_data)
 
       validate_staff_value(year_key, year_data[STAFF_FIELD])
+      validate_management_staff_value(year_key, year_data[MANAGEMENT_FIELD])
       validate_year_value(year_key, year_data[YEAR_FIELD])
     end
   end
@@ -89,6 +94,12 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereEffectifsMoyensAnnuel
     return if staff.blank? || valid_positive_integer?(staff)
 
     errors.add(:value, "#{year_key}.average_staff must be a positive integer")
+  end
+
+  def validate_management_staff_value(year_key, management_staff)
+    return if management_staff.blank? || valid_positive_integer?(management_staff)
+
+    errors.add(:value, "#{year_key}.management_staff must be a positive integer")
   end
 
   def validate_year_value(year_key, year)
