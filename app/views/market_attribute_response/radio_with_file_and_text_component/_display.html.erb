@@ -49,13 +49,7 @@
       <div class="fr-col-auto field-badge-container">
         <% unless component.display_value? %>
           <% if component.show_value? %>
-            <% if component.radio_yes? %>
-              <div class="fr-badge fr-badge--success fr-badge--sm fr-mb-1w">Oui</div>
-            <% elsif component.radio_no? %>
-              <div class="fr-badge fr-badge--sm">Non</div>
-            <% else %>
-              <div class="fr-badge fr-badge--warning fr-badge--sm">Non renseigné</div>
-            <% end %>
+            <div class="<%= component.badge_class %>"><%= component.badge_label %></div>
           <% end %>
         <% end %>
       </div>
