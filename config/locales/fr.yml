@@ -380,8 +380,9 @@ fr:
       api_data_recovery_status:
         title: "Nous pré-remplissons votre dossier de candidature"
         description: "Nos systèmes vérifient l'intégrité et la validité de chaque document et information récupérés. Ils sont ensuite formatés pour répondre aux exigences du marché."
-        benefit_accuracy: "Gagner du temps, éviter les erreurs de saisie et garantir l'exactitude des données !"
-        benefit_locked: "Ces champs seront grisés et non modifiables."
+        benefit_info:  "Certaines informations demandées par l’acheteur devront être complétées manuellement."
+        benefit_locked: "Les documents et informations récupérées automatiquement ne seront pas modifiables."
+        benefit_accuracy: "Passe Marché a pour objectif de : faire gagner du temps, éviter les erreurs de saisie et garantir l'exactitude des données !"
         apis_list_title: "APIs qui seront interrogées :"
         blocks_list_title: "Nous récupérons vos documents et informations"
         messages:
