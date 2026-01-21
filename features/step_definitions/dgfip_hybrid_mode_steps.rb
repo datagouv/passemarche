@@ -46,10 +46,8 @@ end
 
 Then('I should see DGFIP data with badges and icons correctly displayed') do
   within '.fr-table' do
-    expect(page).to have_css('.fr-badge', text: 'Récupéré automatiquement', count: 3)
-    expect(page).to have_css('.fr-icon-checkbox-circle-fill', count: 3)
+    expect(page).to have_css('.fr-badge', text: 'Récupéré automatiquement', count: 6)
 
-    # Verify that percentage fields are empty and editable
     %w[year_1 year_2 year_3].each do |year|
       field = find("input[name*='#{year}_market_percentage']")
       expect(field).not_to be_readonly

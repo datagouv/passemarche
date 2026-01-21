@@ -43,7 +43,8 @@
                     <%# Turnover %>
                     <td>
                       <% if turnover_from_api %>
-                        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+                        <%= component.formatted_turnover(year_key) %>
+                        <%= render SourceBadgeComponent.new(source: :auto) %>
                         <%= response_form.hidden_field "#{year_key}_turnover" %>
                       <% else %>
                         <div class="fr-input-group">
@@ -73,8 +74,8 @@
                     <%# Fiscal Year End %>
                     <td>
                       <% if fiscal_year_end_from_api %>
-                        <%= render CheckIconComponent.new(context: :web) %>
                         <%= component.formatted_fiscal_year_end(year_key) %>
+                        <%= render SourceBadgeComponent.new(source: :auto) %>
                         <%= response_form.hidden_field "#{year_key}_fiscal_year_end" %>
                       <% else %>
                         <div class="fr-input-group">
