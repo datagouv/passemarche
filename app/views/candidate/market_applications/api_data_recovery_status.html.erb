@@ -14,13 +14,17 @@
       </p>
 
       <div class="fr-mb-4w">
-        <p class="fr-text--lg fr-p-3w fr-mb-2w fr-background-alt--grey" style="display: flex; align-items: center; gap: 0.75rem;">
-          <%= image_tag "icon-target.svg", width: 30, height: 30, aria: { hidden: true }, style: "flex-shrink: 0;" %>
-          <span><%= t('candidate.market_applications.api_data_recovery_status.benefit_accuracy') %></span>
+        <p class="fr-text--lg fr-p-3w fr-mb-2w fr-background-alt--blue-france fr-text-title--blue-france" style="display: flex; align-items: center; gap: 0.75rem;">
+          <%= image_tag "icon-warning-triangle.svg", width: 32, height: 32, aria: { hidden: true }, style: "flex-shrink: 0;" %>
+          <span><%= t('candidate.market_applications.api_data_recovery_status.benefit_info') %></span>
         </p>
-        <p class="fr-text--lg fr-p-3w fr-mb-0 fr-background-alt--grey" style="display: flex; align-items: center; gap: 0.75rem;">
+        <p class="fr-text--lg fr-p-3w fr-mb-2w fr-background-alt--grey" style="display: flex; align-items: center; gap: 0.75rem;">
           <%= image_tag "icon-info.svg", width: 32, height: 32, aria: { hidden: true }, style: "flex-shrink: 0;" %>
           <span><%= t('candidate.market_applications.api_data_recovery_status.benefit_locked') %></span>
+        </p>
+        <p class="fr-text--lg fr-p-3w fr-mb-0 fr-background-alt--grey" style="display: flex; align-items: center; gap: 0.75rem;">
+          <%= image_tag "icon-target.svg", width: 30, height: 30, aria: { hidden: true }, style: "flex-shrink: 0;" %>
+          <span><%= t('candidate.market_applications.api_data_recovery_status.benefit_accuracy') %></span>
         </p>
       </div>
 
