@@ -70,6 +70,17 @@ class MarketApplication < ApplicationRecord
     end
   end
 
+  def all_security_scans_complete?
+    file_responses = market_attribute_responses
+      .select { |r| r.respond_to?(:documents) && r.documents.attached? }
+
+    return true if file_responses.empty?
+
+    file_responses.all? do |response|
+      response.documents.all? { |doc| document_scan_complete?(doc) }
+    end
+  end
+
   private
 
   def generate_identifier
@@ -92,21 +103,30 @@ class MarketApplication < ApplicationRecord
   end
 
   def nested_attributes_valid
-    # Use validation context to determine which responses to validate
-    # validation_context is the current wizard step (e.g., :market_information)
-    # If nil, validate all responses (e.g., at summary step)
-    responses_to_validate = if validation_context.blank?
-                              # No context = validate everything (summary step)
-                              market_attribute_responses
-                            else
-                              # Get only responses for this step's form fields
-                              responses_for_step(validation_context)
-                            end
-
+    context = validation_context
+    responses_to_validate = responses_for_context(context)
     responses_to_validate.each do |response|
-      next if response.valid?
+      response.errors.clear
+      is_valid = response.valid?(context)
+      next if is_valid
 
-      response.errors.each do |error|
+      copy_response_errors_to_self(response)
+    end
+  end
+
+  def responses_for_context(context)
+    if context.blank? || context.to_s == 'summary'
+      market_attribute_responses.to_a
+    else
+      responses_for_step(context)
+    end
+  end
+
+  def copy_response_errors_to_self(response)
+    response.errors.each do |error|
+      if error.attribute == :base
+        errors.add(:base, error.message)
+      else
         errors.add("market_attribute_responses.#{error.attribute}", error.message)
       end
     end
@@ -122,5 +142,12 @@ class MarketApplication < ApplicationRecord
       .pluck(:id)
 
     market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
+  end
+
+  def document_scan_complete?(document)
+    metadata = document.blob.metadata
+
+    metadata.key?('scan_safe') ||
+      (metadata['scanner'] == 'none' && metadata.key?('scanned_at'))
   end
 end
