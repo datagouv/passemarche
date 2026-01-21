@@ -74,11 +74,14 @@ class MarketApplicationPresenter
       )
   end
 
+  # === RESPONSE METHODS (with hidden filtering) ===
+
   def responses_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
     market_attributes = market_attributes_for_subcategory(category_key, subcategory_key)
     market_attributes.map { |attr| market_attribute_response_for(attr) }
+      .reject(&:hidden?)
   end
 
   def responses_for_category(category_key)
@@ -88,11 +91,14 @@ class MarketApplicationPresenter
       .where(category_key:)
       .order(:position)
       .map { |attr| market_attribute_response_for(attr) }
+      .reject(&:hidden?)
   end
 
   def responses_grouped_by_subcategory(category_key)
     responses_for_category(category_key).group_by { |r| r.market_attribute.subcategory_key }
   end
+
+  # === WIZARD AND NAVIGATION ===
 
   def stepper_steps
     steps = category_keys.map(&:to_sym)
@@ -101,9 +107,31 @@ class MarketApplicationPresenter
   end
 
   def wizard_steps
-    all_steps = (INITIAL_WIZARD_STEPS + subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
+    all_steps = (INITIAL_WIZARD_STEPS + visible_subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
     inject_attestation_motifs_exclusion_step(all_steps)
   end
+
+  def visible_subcategory_keys
+    @visible_subcategory_keys ||= begin
+      responses_with_attrs = @market_application.market_attribute_responses
+        .includes(:market_attribute)
+        .where(hidden: [false, nil])
+
+      visible_subcategories = responses_with_attrs.map do |response|
+        response.market_attribute.subcategory_key
+      end
+
+      attrs_without_response = all_market_attributes
+        .where.not(id: @market_application.market_attribute_responses.select(:market_attribute_id))
+        .pluck(:subcategory_key)
+
+      (visible_subcategories + attrs_without_response)
+        .compact
+        .uniq
+    end
+  end
+
+  # === VALIDATION METHODS ===
 
   def optional_market_attributes?
     @market_application.public_market.market_attributes.exists?(mandatory: false)
