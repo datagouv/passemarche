@@ -65,7 +65,7 @@ class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeRe
   end
 
   def conditional_content_hidden?
-    radio_no?
+    !radio_yes?
   end
 
   def naming_service
