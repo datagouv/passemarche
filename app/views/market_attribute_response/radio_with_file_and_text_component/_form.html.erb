@@ -6,7 +6,7 @@
     <%= response_form.hidden_field :type %>
   <% end %>
 
-  <% if component.display_value? %>
+  <% if component.ess_api_data? %>
     <div class="certificate-row">
       <div class="certificate-col certificate-col--left">
         <h6 class="fr-mb-2w fr-text--md">
@@ -22,9 +22,10 @@
         <div class="fr-mb-1w">
           <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
         </div>
-        <p class="fr-text--md fr-mb-0">
-          <strong><%= component.display_label %></strong> <%= component.display_value %>
-        </p>
+        <%= render MarketAttributeResponse::ApiDisplay::EssComponent.new(
+          market_attribute_response: component.market_attribute_response,
+          context: :web
+        ) %>
       </div>
     </div>
   <% else %>

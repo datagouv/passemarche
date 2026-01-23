@@ -123,9 +123,14 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
       end
 
       context 'with ESS market attribute' do
-        let(:ess_attribute) { create(:market_attribute, :radio_with_file_and_text, :mandatory, key: 'capacites_techniques_professionnelles_certificats_ess') }
+        let(:ess_attribute) do
+          create(:market_attribute, :radio_with_file_and_text, :mandatory,
+            key: 'capacites_techniques_professionnelles_certificats_ess',
+            api_name: 'insee',
+            api_key: 'ess')
+        end
 
-        it 'renders display_value instead of auto-filled message' do
+        it 'renders EssComponent instead of auto-filled message' do
           response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, source: :auto, value: { 'radio_choice' => 'yes' })
           component = described_class.new(market_attribute_response: response, form:)
 
@@ -249,69 +254,67 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
     end
   end
 
-  describe '#display_label and #display_value' do
-    context 'with ESS market attribute' do
-      let(:ess_attribute) { create(:market_attribute, :radio_with_file_and_text, :mandatory, key: 'capacites_techniques_professionnelles_certificats_ess') }
+  describe '#ess_api_data?' do
+    let(:ess_attribute) do
+      create(:market_attribute, :radio_with_file_and_text, :mandatory,
+        key: 'capacites_techniques_professionnelles_certificats_ess',
+        api_name: 'insee',
+        api_key: 'ess')
+    end
 
-      it 'returns display label' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: { 'radio_choice' => 'yes' })
+    context 'with ESS market attribute and auto source' do
+      it 'returns true' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :auto, value: { 'radio_choice' => 'yes' })
         component = described_class.new(market_attribute_response: response)
 
-        expect(component.display_label).to eq("L'entreprise est une ESS :")
+        expect(component.ess_api_data?).to be true
       end
+    end
 
-      it 'returns Oui for display_value when radio_yes' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: { 'radio_choice' => 'yes' })
+    context 'with ESS market attribute and manual source' do
+      it 'returns false' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :manual, value: { 'radio_choice' => 'yes' })
         component = described_class.new(market_attribute_response: response)
 
-        expect(component.display_value).to eq('Oui')
+        expect(component.ess_api_data?).to be false
       end
+    end
 
-      it 'returns Non for display_value when radio_no' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: { 'radio_choice' => 'no' })
+    context 'with ESS market attribute and manual_after_api_failure source' do
+      it 'returns false' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :manual_after_api_failure, value: {})
         component = described_class.new(market_attribute_response: response)
 
-        expect(component.display_value).to eq('Non')
-      end
-
-      it 'returns Non renseigné for display_value when radio_choice is nil' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: {})
-        component = described_class.new(market_attribute_response: response)
-
-        expect(component.display_value).to eq('Non renseigné')
-      end
-
-      it 'display_value? returns true' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, value: { 'radio_choice' => 'yes' })
-        component = described_class.new(market_attribute_response: response)
-
-        expect(component.display_value?).to be true
+        expect(component.ess_api_data?).to be false
       end
     end
 
     context 'with non-ESS market attribute' do
-      it 'returns nil for display_label' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute:, value: { 'radio_choice' => 'yes' })
+      it 'returns false' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute:, source: :auto, value: { 'radio_choice' => 'yes' })
         component = described_class.new(market_attribute_response: response)
 
-        expect(component.display_label).to be_nil
-      end
-
-      it 'display_value? returns false' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute:, value: { 'radio_choice' => 'yes' })
-        component = described_class.new(market_attribute_response: response)
-
-        expect(component.display_value?).to be false
+        expect(component.ess_api_data?).to be false
       end
     end
   end
 
-  describe 'display mode with ESS display_value' do
-    let(:ess_attribute) { create(:market_attribute, :radio_with_file_and_text, :mandatory, key: 'capacites_techniques_professionnelles_certificats_ess') }
+  describe 'display mode with ESS API data' do
+    let(:ess_attribute) do
+      create(:market_attribute, :radio_with_file_and_text, :mandatory,
+        key: 'capacites_techniques_professionnelles_certificats_ess',
+        api_name: 'insee',
+        api_key: 'ess')
+    end
 
-    context 'with auto source' do
-      it 'shows simplified display_value for ESS' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, source: :auto, value: { 'radio_choice' => 'yes' })
+    context 'with auto source (API data)' do
+      it 'shows simplified EssComponent display' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :auto, value: { 'radio_choice' => 'yes' })
         component = described_class.new(market_attribute_response: response, context: :web)
 
         render_inline(component)
@@ -321,8 +324,9 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
         expect(page).not_to have_css('div.fr-badge', text: 'Oui')
       end
 
-      it 'shows display_value for buyer context too' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, source: :auto, value: { 'radio_choice' => 'no' })
+      it 'shows EssComponent for buyer context too' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :auto, value: { 'radio_choice' => 'no' })
         component = described_class.new(market_attribute_response: response, context: :buyer)
 
         render_inline(component)
@@ -332,27 +336,43 @@ RSpec.describe MarketAttributeResponse::RadioWithFileAndTextComponent, type: :co
       end
     end
 
-    context 'with manual source' do
-      it 'shows simplified display_value for ESS even when manual' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, source: :manual, value: { 'radio_choice' => 'yes' })
+    context 'with manual source (not API data)' do
+      it 'shows standard display with badge for ESS manual entry' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :manual, value: { 'radio_choice' => 'yes' })
         component = described_class.new(market_attribute_response: response, context: :web)
 
         render_inline(component)
 
-        expect(page).to have_text("L'entreprise est une ESS :")
-        expect(page).to have_text('Oui')
+        expect(page).to have_css('div.fr-badge.fr-badge--success', text: 'Oui')
+        expect(page).not_to have_text("L'entreprise est une ESS :")
       end
     end
 
-    context 'with manual_after_api_failure source and nil radio_choice' do
-      it 'shows Non renseigné for ESS' do
-        response = create(:market_attribute_response_radio_with_file_and_text, market_attribute: ess_attribute, source: :manual_after_api_failure, value: {})
+    context 'with manual_after_api_failure source' do
+      it 'shows standard display with text and files when provided' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute,
+          source: :manual_after_api_failure,
+          value: { 'radio_choice' => 'yes', 'text' => 'Mon justificatif ESS' })
+        response.documents.attach(io: StringIO.new('test'), filename: 'justificatif.pdf', content_type: 'application/pdf')
         component = described_class.new(market_attribute_response: response, context: :web)
 
         render_inline(component)
 
-        expect(page).to have_text("L'entreprise est une ESS :")
-        expect(page).to have_text('Non renseigné')
+        expect(page).to have_text('Mon justificatif ESS')
+        expect(page).to have_text('justificatif.pdf')
+        expect(page).to have_css('div.fr-badge.fr-badge--success', text: 'Oui')
+      end
+
+      it 'shows Non renseigné badge when radio_choice is nil' do
+        response = create(:market_attribute_response_radio_with_file_and_text,
+          market_attribute: ess_attribute, source: :manual_after_api_failure, value: {})
+        component = described_class.new(market_attribute_response: response, context: :web)
+
+        render_inline(component)
+
+        expect(page).to have_css('div.fr-badge.fr-badge--warning', text: 'Non renseigné')
       end
     end
   end
