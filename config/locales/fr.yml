@@ -86,6 +86,17 @@ fr:
     submit_summary: "Transmettre ma candidature"
     continue: "Continuer"
 
+  malware_scan:
+    label:
+      safe: "Fichier vérifié"
+      unsafe: "Malware détecté"
+      scanning: "Scan en cours..."
+    badge_class:
+      safe: "success"
+      unsafe: "error"
+      scanning: "info"
+      not_scanned: "info"
+
   shared:
     renamed_documents:
       title: "Vos documents"
