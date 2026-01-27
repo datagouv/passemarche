@@ -9,6 +9,10 @@
                   class: "fr-nav__link #{'fr-nav__link--active' if controller_name == 'dashboards'}" %>
     </li>
     <li class="fr-nav__item">
+      <%= link_to t('admin.navigation.socle_de_base'), admin_socle_de_base_index_path,
+                  class: "fr-nav__link #{'fr-nav__link--active' if controller_name == 'socle_de_base'}" %>
+    </li>
+    <li class="fr-nav__item">
       <%= link_to t('admin.navigation.background_jobs'), "/admin/jobs",
                   class: "fr-nav__link", target: "_blank" %>
     </li>

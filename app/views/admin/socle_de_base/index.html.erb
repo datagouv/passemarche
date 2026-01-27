@@ -3,14 +3,23 @@
 <div class="fr-container fr-my-4w">
   <%= render 'admin/shared/navigation' %>
 
-  <h1 class="fr-h2 fr-mt-4w"><%= t('admin.socle_de_base.title') %></h1>
-
-  <div class="fr-grid-row fr-grid-row--gutters">
-    <% @market_attributes.each do |market_attribute| %>
-      <div class="fr-col-12" data-testid="market-attribute-<%= market_attribute.key %>">
-        <% presenter = SocleDeBasePresenter.new(market_attribute) %>
-        <p><%= presenter.buyer_name %></p>
-      </div>
-    <% end %>
+  <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle fr-mt-4w fr-mb-3w">
+    <div class="fr-col">
+      <h1 class="fr-h2 fr-mb-0"><%= t('admin.socle_de_base.title') %></h1>
+    </div>
+    <div class="fr-col-auto">
+      <%= link_to t('admin.socle_de_base.export_button'), '#',
+                  class: "fr-btn fr-icon-download-line fr-btn--icon-left" %>
+      <%= link_to t('admin.socle_de_base.new_field_button'), '#',
+                  class: "fr-btn fr-btn--secondary fr-icon-add-line fr-btn--icon-left fr-ml-2w" %>
+    </div>
   </div>
+
+  <%= render 'stats_cards' %>
+
+  <%= render 'filters' %>
+
+  <%= render 'tabs' %>
+
+  <%= render 'accordions' %>
 </div>
