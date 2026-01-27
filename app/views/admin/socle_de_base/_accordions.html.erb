@@ -1,10 +1,12 @@
 <div class="fr-accordions-group">
   <% @market_attributes.each do |market_attribute| %>
     <% presenter = SocleDeBasePresenter.new(market_attribute) %>
-    <section class="fr-accordion">
+    <section class="fr-accordion" data-controller="accordion">
       <h3 class="fr-accordion__title">
         <button class="fr-accordion__btn"
-                aria-expanded="true"
+                data-accordion-target="button"
+                data-action="click->accordion#toggle"
+                aria-expanded="false"
                 aria-controls="accordion-<%= market_attribute.id %>">
           <span class="fr-mr-2w"><%= presenter.buyer_name %></span>
           <span class="fr-badge fr-badge--sm <%= presenter.mandatory_badge_class %> fr-mr-1w">
@@ -15,7 +17,7 @@
           </span>
         </button>
       </h3>
-      <div class="fr-collapse" id="accordion-<%= market_attribute.id %>" data-testid="market-attribute-<%= market_attribute.key %>">
+      <div class="fr-collapse" id="accordion-<%= market_attribute.id %>" data-testid="market-attribute-<%= market_attribute.key %>" data-accordion-target="content">
         <div class="fr-grid-row fr-grid-row--gutters">
           <div class="fr-col-12 fr-col-md-6">
             <div class="fr-card fr-card--no-border">
