@@ -3,6 +3,13 @@
 class MarketAttribute < ApplicationRecord
   include UniqueAssociationValidator
 
+  CATEGORY_TABS = %w[
+    identite_entreprise
+    motifs_exclusion
+    capacite_economique_financiere
+    capacites_techniques_professionnelles
+  ].freeze
+
   has_and_belongs_to_many :market_types
   has_and_belongs_to_many :public_markets
   has_many :market_attribute_responses, dependent: :destroy
@@ -36,12 +43,19 @@ class MarketAttribute < ApplicationRecord
   scope :mandatory, -> { where(mandatory: true) }
   scope :optional, -> { where(mandatory: false) }
   scope :from_api, -> { where.not(api_name: nil) }
+  scope :manual, -> { where(api_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
-
   scope :ordered, -> { order(:position) }
+  scope :by_category, ->(category_key) { where(category_key:) }
+  scope :by_subcategory, ->(subcategory_key) { where(subcategory_key:) }
+  scope :by_source, ->(source) { source.to_sym == :api ? from_api : manual }
+  scope :by_market_type, ->(market_type_id) { joins(:market_types).where(market_types: { id: market_type_id }) }
 
-  # Check if this attribute's data comes from an API
   def from_api?
     api_name.present?
+  end
+
+  def manual?
+    !from_api?
   end
 end
