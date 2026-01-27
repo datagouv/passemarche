@@ -1,0 +1,53 @@
+<div class="fr-grid-row fr-grid-row--gutters fr-mb-3w">
+  <div class="fr-col-12 fr-col-md-6 fr-col-lg-3">
+    <div class="fr-card fr-card--no-arrow" style="height: 100%;">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h3 class="fr-card__title fr-text--md fr-mb-1w">
+            <%= t('admin.socle_de_base.cards.total.title') %>
+          </h3>
+          <p class="fr-display--sm fr-mb-0"><%= @stats.total_count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-6 fr-col-lg-3">
+    <div class="fr-card fr-card--no-arrow" style="height: 100%;">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h3 class="fr-card__title fr-text--md fr-mb-1w">
+            <%= t('admin.socle_de_base.cards.api.title') %>
+          </h3>
+          <p class="fr-display--sm fr-mb-0"><%= @stats.api_count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-6 fr-col-lg-3">
+    <div class="fr-card fr-card--no-arrow" style="height: 100%;">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h3 class="fr-card__title fr-text--md fr-mb-1w">
+            <%= t('admin.socle_de_base.cards.manual.title') %>
+          </h3>
+          <p class="fr-display--sm fr-mb-0"><%= @stats.manual_count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-6 fr-col-lg-3">
+    <div class="fr-card fr-card--no-arrow" style="height: 100%;">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h3 class="fr-card__title fr-text--md fr-mb-1w">
+            <%= t('admin.socle_de_base.cards.mandatory.title') %>
+          </h3>
+          <p class="fr-display--sm fr-mb-0"><%= @stats.mandatory_count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

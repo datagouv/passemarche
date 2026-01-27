@@ -5,6 +5,7 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     @current_tab = current_tab
     @market_attributes = filtered_market_attributes
     @market_types = MarketType.active.order(:code)
+    @stats = SocleDeBaseStatsService.call
   end
 
   private
