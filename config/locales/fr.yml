@@ -584,6 +584,7 @@ fr:
       retry_not_available: "Ce webhook ne peut pas être réessayé."
       deleted: "Éditeur supprimé avec succès."
     socle_de_base:
+      title: "Socle de base"
       badges:
         mandatory: "Obligatoire"
         optional: "Complémentaire"

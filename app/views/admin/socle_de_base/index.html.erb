@@ -1,0 +1,16 @@
+<%= content_for :page_title, t('admin.socle_de_base.title') %>
+
+<div class="fr-container fr-my-4w">
+  <%= render 'admin/shared/navigation' %>
+
+  <h1 class="fr-h2 fr-mt-4w"><%= t('admin.socle_de_base.title') %></h1>
+
+  <div class="fr-grid-row fr-grid-row--gutters">
+    <% @market_attributes.each do |market_attribute| %>
+      <div class="fr-col-12" data-testid="market-attribute-<%= market_attribute.key %>">
+        <% presenter = SocleDeBasePresenter.new(market_attribute) %>
+        <p><%= presenter.buyer_name %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
