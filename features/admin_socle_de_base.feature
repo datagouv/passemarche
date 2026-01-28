@@ -21,10 +21,13 @@ Feature: Admin Socle de Base
     And I should see the attribute "identite_siret"
     And I should not see the attribute "motifs_liquidation"
 
-  Scenario: CA-2 - Export and New field buttons are visible
+  Scenario: CA-2 - Manage dropdown button with actions is visible
     When I visit the socle de base page
-    Then I should see the button "Exporter"
-    And I should see the button "Nouveau champ"
+    Then I should see the manage dropdown button "Gérer le socle de base"
+    When I click on the manage dropdown button
+    Then I should see the dropdown action "Exporter"
+    And I should see the dropdown action "Créer un champ"
+    And I should see the dropdown action "Consulter l'historique"
 
   Scenario: CA-3 - Search and filters are present
     When I visit the socle de base page
