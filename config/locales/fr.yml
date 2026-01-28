@@ -586,9 +586,14 @@ fr:
       deleted: "Éditeur supprimé avec succès."
     socle_de_base:
       title: "Socle de base"
+      manage_button: "Gérer le socle de base"
       export_button: "Exporter"
       new_field_button: "Nouveau champ"
       edit_button: "Modifier"
+      actions:
+        export: "Exporter"
+        new_field: "Créer un champ"
+        history: "Consulter l'historique"
       cards:
         total:
           title: "Champs total"

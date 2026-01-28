@@ -8,10 +8,36 @@
       <h1 class="fr-h2 fr-mb-0"><%= t('admin.socle_de_base.title') %></h1>
     </div>
     <div class="fr-col-auto">
-      <%= link_to t('admin.socle_de_base.export_button'), '#',
-                  class: "fr-btn fr-icon-download-line fr-btn--icon-left" %>
-      <%= link_to t('admin.socle_de_base.new_field_button'), '#',
-                  class: "fr-btn fr-btn--secondary fr-icon-add-line fr-btn--icon-left fr-ml-2w" %>
+      <div class="fr-dropdown" data-controller="dropdown">
+        <button class="fr-btn fr-btn--icon-right fr-icon-arrow-down-s-line"
+                data-dropdown-target="button"
+                data-action="click->dropdown#toggle"
+                aria-expanded="false"
+                aria-controls="dropdown-socle-de-base-actions">
+          <%= t('admin.socle_de_base.manage_button') %>
+        </button>
+        <div class="fr-collapse fr-dropdown__menu"
+             data-dropdown-target="content"
+             id="dropdown-socle-de-base-actions">
+          <ul class="fr-dropdown__list">
+            <li>
+              <%= link_to '#', class: "fr-dropdown__link" do %>
+                <%= t('admin.socle_de_base.actions.export') %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to '#', class: "fr-dropdown__link" do %>
+                <%= t('admin.socle_de_base.actions.new_field') %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to '#', class: "fr-dropdown__link" do %>
+                <%= t('admin.socle_de_base.actions.history') %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 

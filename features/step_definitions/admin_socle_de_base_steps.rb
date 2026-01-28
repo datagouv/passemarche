@@ -42,6 +42,20 @@ Then('I should see the button {string}') do |button_text|
   expect(page).to have_link(button_text)
 end
 
+Then('I should see the manage dropdown button {string}') do |button_text|
+  expect(page).to have_css('.fr-dropdown button', text: button_text)
+end
+
+When('I click on the manage dropdown button') do
+  find('.fr-dropdown button').click
+end
+
+Then('I should see the dropdown action {string}') do |action_text|
+  within('.fr-dropdown .fr-dropdown__menu') do
+    expect(page).to have_content(action_text)
+  end
+end
+
 Then('I should see a search field') do
   expect(page).to have_css('input[name="q"]')
 end
