@@ -1,16 +1,19 @@
 <%= form_with url: admin_socle_de_base_index_path, method: :get, local: true, class: "fr-mb-3w" do %>
   <%= hidden_field_tag :tab, @current_tab %>
 
-  <div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--bottom">
     <div class="fr-col-12 fr-col-md-4">
-      <div class="fr-search-bar" role="search">
-        <%= text_field_tag :q, params[:q],
-                           class: "fr-input",
-                           placeholder: t('admin.socle_de_base.filters.search_placeholder'),
-                           "aria-label": t('admin.socle_de_base.filters.search_placeholder') %>
-        <button class="fr-btn" type="submit">
-          <span class="fr-sr-only">Rechercher</span>
-        </button>
+      <div class="fr-input-group fr-mb-0">
+        <%= label_tag :q, t('admin.socle_de_base.filters.search_label'), class: "fr-label" %>
+        <div class="fr-search-bar" role="search">
+          <%= text_field_tag :q, params[:q],
+                             class: "fr-input",
+                             placeholder: t('admin.socle_de_base.filters.search_placeholder'),
+                             "aria-label": t('admin.socle_de_base.filters.search_placeholder') %>
+          <button class="fr-btn" type="submit">
+            <span class="fr-sr-only">Rechercher</span>
+          </button>
+        </div>
       </div>
     </div>
 
