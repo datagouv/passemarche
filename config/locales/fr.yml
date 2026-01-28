@@ -603,6 +603,7 @@ fr:
           title: "Champs obligatoires"
           tooltip: "Champs requis pour toute candidature"
       filters:
+        search_label: "Recherche"
         search_placeholder: "Rechercher un champ..."
         market_type_label: "Type de marché"
         market_type_all: "Tous les types"
