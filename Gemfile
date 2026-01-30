@@ -58,5 +58,6 @@ group :test do
   gem 'database_cleaner-active_record', '~> 2.2'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 7.0'
+  gem 'simplecov', require: false
   gem 'webmock', '~> 3.26'
 end
