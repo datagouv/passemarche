@@ -3,21 +3,21 @@
     <div class="fr-col-12">
       <%= render 'admin/shared/navigation' %>
 
-      <h1>Gestion des éditeurs</h1>
-      
+      <h1><%= t('admin.editors.index.title') %></h1>
+
       <div class="fr-mb-3w">
-        <%= link_to "Ajouter un éditeur", new_admin_editor_path, class: "fr-btn" %>
+        <%= link_to t('admin.editors.index.add'), new_admin_editor_path, class: "fr-btn" %>
       </div>
 
       <div class="fr-table">
         <table>
           <thead>
             <tr>
-              <th scope="col">Nom</th>
-              <th scope="col">Client ID</th>
-              <th scope="col">Autorisé</th>
-              <th scope="col">Actif</th>
-              <th scope="col">Actions</th>
+              <th scope="col"><%= t('admin.shared.name') %></th>
+              <th scope="col"><%= t('admin.editors.index.client_id') %></th>
+              <th scope="col"><%= t('admin.shared.authorized') %></th>
+              <th scope="col"><%= t('admin.shared.active') %></th>
+              <th scope="col"><%= t('admin.shared.actions') %></th>
             </tr>
           </thead>
           <tbody>
@@ -27,23 +27,23 @@
                 <td><%= editor.client_id %></td>
                 <td>
                   <% if editor.authorized %>
-                    <span class="fr-badge fr-badge--success">Oui</span>
+                    <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
                   <% else %>
-                    <span class="fr-badge fr-badge--error">Non</span>
+                    <span class="fr-badge fr-badge--error"><%= t('admin.shared.no') %></span>
                   <% end %>
                 </td>
                 <td>
                   <% if editor.active %>
-                    <span class="fr-badge fr-badge--success">Oui</span>
+                    <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
                   <% else %>
-                    <span class="fr-badge fr-badge--error">Non</span>
+                    <span class="fr-badge fr-badge--error"><%= t('admin.shared.no') %></span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to "Voir", admin_editor_path(editor), class: "fr-btn fr-btn--sm" %>
-                  <%= link_to "Modifier", edit_admin_editor_path(editor), class: "fr-btn fr-btn--sm fr-btn--secondary" %>
-                  <%= link_to "Supprimer", admin_editor_path(editor), method: :delete, 
-                              data: { confirm: "Êtes-vous sûr ?" }, 
+                  <%= link_to t('admin.shared.view'), admin_editor_path(editor), class: "fr-btn fr-btn--sm" %>
+                  <%= link_to t('admin.shared.edit'), edit_admin_editor_path(editor), class: "fr-btn fr-btn--sm fr-btn--secondary" %>
+                  <%= link_to t('admin.shared.delete'), admin_editor_path(editor), method: :delete,
+                              data: { confirm: t('admin.editors.index.confirm_delete') },
                               class: "fr-btn fr-btn--sm fr-btn--tertiary" %>
                 </td>
               </tr>
