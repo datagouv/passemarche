@@ -1,4 +1,4 @@
-<% content_for :title, "#{@public_market.editor.name} - Synthèse de ma candidature" %>
+<% content_for :title, "#{@public_market.editor.name} - #{t('buyer.summary.title_suffix')}" %>
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12">
@@ -16,26 +16,26 @@
       <div class="fr-card fr-mb-4w">
         <div class="fr-card__header">
           <h2 class="fr-card__title fr-mb-0 fr-py-3w fr-px-4w fr-background-alt--grey">
-            Informations du marché
+            <%= t('buyer.summary.market_info_title') %>
           </h2>
         </div>
         <div class="fr-card__body fr-pt-4w fr-pb-4w">
           <div class="fr-mb-3w">
-            <div class="fr-text--bold fr-mb-1w">Nom du marché</div>
+            <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.market_name') %></div>
             <div><%= @public_market.name %></div>
           </div>
           <% if @public_market.lot_name.present? %>
             <div class="fr-mb-3w">
-              <div class="fr-text--bold fr-mb-1w">Nom du lot</div>
+              <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.lot_name') %></div>
               <div><%= @public_market.lot_name %></div>
             </div>
           <% end %>
           <div class="fr-mb-3w">
-            <div class="fr-text--bold fr-mb-1w">Date limite</div>
+            <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.deadline_short') %></div>
             <div><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</div>
           </div>
           <div class="fr-mb-3w">
-            <div class="fr-text--bold fr-mb-1w">Type de marché</div>
+            <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.market_type_short') %></div>
             <div>
             <% if @public_market.market_type_codes.any? %>
               <% @public_market.market_type_codes.each do |market_type_code| %>
@@ -44,12 +44,12 @@
                 </span>
               <% end %>
             <% else %>
-              <p class="fr-text--sm fr-mb-0">Aucun type de marché défini</p>
+              <p class="fr-text--sm fr-mb-0"><%= t('buyer.shared.no_market_type') %></p>
             <% end %>
             </div>
           </div>
           <div>
-            <div class="fr-text--bold fr-mb-1w">Identifiant</div>
+            <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.identifier') %></div>
             <div><code><%= @public_market.identifier %></code></div>
           </div>
         </div>
@@ -132,7 +132,7 @@
             </div>
           <% end %>
         <% else %>
-          <p class="fr-text--sm fr-text--mention-grey">Aucun champ configuré.</p>
+          <p class="fr-text--sm fr-text--mention-grey"><%= t('buyer.summary.no_fields_configured') %></p>
         <% end %>
       </div>
     </div>
@@ -141,9 +141,9 @@
       <%= form_with model: @public_market, url: wizard_path, local: true, data: { turbo: false } do |form| %>
         <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
           <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
-            Précédent
+            <%= t('buyer.shared.previous') %>
           <% end %>
-          <%= form.submit "Finaliser la configuration", class: "fr-btn fr-btn--lg fr-btn--success" %>
+          <%= form.submit t('buyer.summary.finalize'), class: "fr-btn fr-btn--lg fr-btn--success" %>
         </div>
       <% end %>
     </div>
