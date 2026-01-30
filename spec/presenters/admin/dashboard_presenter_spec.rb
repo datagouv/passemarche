@@ -145,7 +145,7 @@ RSpec.describe Admin::DashboardPresenter do
     end
 
     it 'returns cards with correct keys' do
-      keys = presenter.statistics_cards.map { |c| c[:key] }
+      keys = presenter.statistics_cards.pluck(:key)
       expect(keys).to eq(Admin::DashboardPresenter::CARD_KEYS)
     end
 
