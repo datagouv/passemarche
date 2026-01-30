@@ -53,6 +53,8 @@ group :development do
 end
 
 group :test do
+  gem 'axe-core-capybara'
+  gem 'axe-core-rspec'
   gem 'capybara'
   gem 'cucumber-rails', '~> 4.0', require: false
   gem 'database_cleaner-active_record', '~> 2.2'
