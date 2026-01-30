@@ -20,7 +20,11 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
       filename:,
       content_type: 'application/pdf'
     )
-  rescue StandardError => e
+  rescue ActionView::Template::Error,
+         ActionView::MissingTemplate,
+         ActiveStorage::Error,
+         Errno::ENOENT, Errno::EACCES,
+         RuntimeError => e
     handle_error(e)
   end
 
