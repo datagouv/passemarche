@@ -611,8 +611,8 @@ fr:
 
   admin:
     shared:
-      yes: "Oui"
-      no: "Non"
+      "yes": "Oui"
+      "no": "Non"
       authorized: "Autorisé"
       not_authorized: "Non autorisé"
       actions: "Actions"
