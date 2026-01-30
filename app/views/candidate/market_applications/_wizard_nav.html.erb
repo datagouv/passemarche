@@ -4,10 +4,10 @@
       <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
         <%= link_to previous_wizard_path, class: "fr-btn fr-btn--secondary" do %>
           <span class="fr-icon-arrow-left-line" aria-hidden="true"></span>
-          <span class="fr-ml-1w">Précédent</span>
+          <span class="fr-ml-1w"><%= t('candidate.shared.previous') %></span>
         <% end %>
         <button type="submit" class="fr-btn fr-btn--icon-right">
-          <%= local_assigns[:submit_label] || "Suivant" %>
+          <%= local_assigns[:submit_label] || t('candidate.shared.next') %>
         </button>
       </div>
     </div>
