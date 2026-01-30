@@ -140,7 +140,7 @@ RSpec.describe FetchDgfipDataJob, type: :job do
       let(:error_message) { 'API timeout error' }
 
       before do
-        allow(Dgfip).to receive(:call).and_raise(StandardError, error_message)
+        allow(Dgfip).to receive(:call).and_raise(Faraday::Error, error_message)
       end
 
       it 'logs the error' do
@@ -148,7 +148,7 @@ RSpec.describe FetchDgfipDataJob, type: :job do
 
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError, error_message)
+        end.to raise_error(Faraday::Error, error_message)
 
         expect(Rails.logger).to have_received(:error)
           .with(/Error fetching attestations_fiscales data for #{market_application.id}/)
@@ -159,7 +159,7 @@ RSpec.describe FetchDgfipDataJob, type: :job do
 
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError)
+        end.to raise_error(Faraday::Error)
 
         market_application.reload
         expect(market_application.api_fetch_status['attestations_fiscales']['status']).to eq('failed')
@@ -170,7 +170,7 @@ RSpec.describe FetchDgfipDataJob, type: :job do
 
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError, error_message)
+        end.to raise_error(Faraday::Error, error_message)
       end
     end
 

@@ -90,7 +90,6 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
 
     context 'when an error occurs spawning jobs' do
       before do
-        # Ensure market has insee attribute so the job would be spawned
         insee_attr = create(:market_attribute, api_name: 'insee')
         public_market.market_attributes << [insee_attr]
 
@@ -98,15 +97,10 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
           .to receive(:perform_later).and_raise(StandardError, 'Queue error')
       end
 
-      it 'logs the error and re-raises' do
-        allow(Rails.logger).to receive(:error)
-
+      it 're-raises the error without catching it' do
         expect do
           described_class.perform_now(market_application.id)
         end.to raise_error(StandardError, 'Queue error')
-
-        expect(Rails.logger).to have_received(:error)
-          .with(/Error in coordinator for market application #{market_application.id}: Queue error/)
       end
     end
 

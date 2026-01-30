@@ -29,7 +29,9 @@ module ApiFetchable
     return if market_application.siret.blank?
 
     fetch_and_process_data(market_application)
-  rescue StandardError => e
+  rescue ActiveRecord::RecordNotFound,
+         ActiveRecord::RecordInvalid,
+         Faraday::Error => e
     handle_error(market_application, market_application_id, e)
   end
 

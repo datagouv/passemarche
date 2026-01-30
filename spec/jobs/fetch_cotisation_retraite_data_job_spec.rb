@@ -89,14 +89,14 @@ RSpec.describe FetchCotisationRetraiteDataJob, type: :job do
 
     context 'when an exception occurs' do
       before do
-        allow(CotisationRetraite).to receive(:call).and_raise(StandardError, 'Network error')
+        allow(CotisationRetraite).to receive(:call).and_raise(Faraday::Error, 'Network error')
         allow(Rails.logger).to receive(:error)
       end
 
       it 'logs the error, updates status to failed, and re-raises' do
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError, 'Network error')
+        end.to raise_error(Faraday::Error, 'Network error')
 
         expect(Rails.logger).to have_received(:error)
           .with(/Error fetching cotisation_retraite data/)
