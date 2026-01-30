@@ -28,8 +28,11 @@ class FieldTranslationImport::UpdateTranslationFile < ApplicationInteractor
 
     begin
       YAML.safe_load_file(translation_file_path) || default_translation_structure
-    rescue StandardError => e
-      Rails.logger.warn "Failed to load existing translations: #{e.message}"
+    rescue Errno::ENOENT, Errno::EACCES => e
+      Rails.logger.warn "Failed to load existing translations (file access): #{e.message}"
+      default_translation_structure
+    rescue Psych::SyntaxError, Psych::BadAlias => e
+      Rails.logger.warn "Failed to load existing translations (YAML parse): #{e.message}"
       default_translation_structure
     end
   end
