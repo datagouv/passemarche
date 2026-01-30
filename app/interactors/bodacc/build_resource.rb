@@ -115,7 +115,8 @@ class Bodacc::BuildResource < ApplicationInteractor
     return {} if value.blank?
 
     JSON.parse(value)
-  rescue StandardError
+  rescue JSON::ParserError, TypeError => e
+    Rails.logger.debug { "[Bodacc::BuildResource] Failed to parse JSON: #{e.message}" }
     {}
   end
 end
