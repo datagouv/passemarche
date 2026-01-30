@@ -18,9 +18,11 @@ class CotisationRetraite < ApplicationOrganizer
 
   def self.call_organizer_safely(organizer_class, context)
     organizer_class.call(context.dup)
-  rescue StandardError => e
+  rescue Interactor::Failure,
+         ActiveRecord::RecordNotFound,
+         ActiveRecord::RecordInvalid,
+         Faraday::Error => e
     Rails.logger.warn "[CotisationRetraite] #{organizer_class.name} failed: #{e.message}"
-    # Return a failed context-like object
     Interactor::Context.build(failure?: true, error: e.message)
   end
 
