@@ -45,3 +45,6 @@ fake_editor_app/fake_editor.db
 /config/credentials/staging.key
 
 /config/credentials/preprod.key
+
+# Ignore SimpleCov coverage reports
+/coverage
