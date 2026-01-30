@@ -51,7 +51,12 @@ class DownloadDocument < ApplicationInteractor
   def download_and_store_document
     downloaded_file = download_document
     store_document(downloaded_file)
-  rescue StandardError => e
+  rescue URI::InvalidURIError,
+         Net::OpenTimeout, Net::ReadTimeout, Net::HTTPError,
+         SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET,
+         OpenSSL::SSL::SSLError,
+         IOError,
+         DocumentDownloadError => e
     context.fail!(error: "Failed to download document: #{e.message}")
   end
 
@@ -89,7 +94,7 @@ class DownloadDocument < ApplicationInteractor
       http.request(request)
     end
 
-    raise "HTTP #{response.code}: #{response.message}" unless response.is_a?(Net::HTTPSuccess)
+    raise DocumentDownloadError.new("HTTP #{response.code}: #{response.message}", http_status: response.code.to_i) unless response.is_a?(Net::HTTPSuccess)
 
     response
   end
@@ -124,12 +129,12 @@ class DownloadDocument < ApplicationInteractor
   end
 
   def validate_pdf_content!(body)
-    raise "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
+    raise DocumentDownloadError, "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
 
     return if valid_pdf?(body)
     return if valid_image?(body)
 
-    raise 'Downloaded file is not a valid PDF or image (missing valid file header)'
+    raise DocumentDownloadError, 'Downloaded file is not a valid PDF or image (missing valid file header)'
   end
 
   def valid_pdf?(body)

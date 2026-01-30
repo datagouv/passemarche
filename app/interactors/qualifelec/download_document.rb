@@ -55,7 +55,12 @@ class Qualifelec::DownloadDocument < DownloadDocument
     response = perform_http_request(uri)
     validate_pdf_content!(response.body)
     build_document_hash(response, uri, index)
-  rescue StandardError => e
+  rescue URI::InvalidURIError,
+         Net::OpenTimeout, Net::ReadTimeout, Net::HTTPError,
+         SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET,
+         OpenSSL::SSL::SSLError,
+         IOError,
+         DocumentDownloadError => e
     Rails.logger.warn("Failed to download document from #{url}: #{e.message}")
     nil
   end

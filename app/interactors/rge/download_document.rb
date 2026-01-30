@@ -53,7 +53,12 @@ class Rge::DownloadDocument < ApplicationInteractor
     response = perform_http_request(uri)
     validate_pdf_content!(response.body)
     build_document_hash(response, cert, index)
-  rescue StandardError => e
+  rescue URI::InvalidURIError,
+         Net::OpenTimeout, Net::ReadTimeout, Net::HTTPError,
+         SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET,
+         OpenSSL::SSL::SSLError,
+         IOError,
+         DocumentDownloadError => e
     Rails.logger.warn "Failed to download RGE certificate #{index + 1}: #{e.message}"
     nil
   end
@@ -70,7 +75,7 @@ class Rge::DownloadDocument < ApplicationInteractor
       http.request(request)
     end
 
-    raise "HTTP #{response.code}: #{response.message}" unless response.is_a?(Net::HTTPSuccess)
+    raise DocumentDownloadError.new("HTTP #{response.code}: #{response.message}", http_status: response.code.to_i) unless response.is_a?(Net::HTTPSuccess)
 
     response
   end
@@ -100,8 +105,11 @@ class Rge::DownloadDocument < ApplicationInteractor
   end
 
   def validate_pdf_content!(body)
-    raise "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
-    raise 'Downloaded file is not a valid PDF (missing PDF header)' unless body.start_with?('%PDF-')
+    raise DocumentDownloadError, "Downloaded file is too small (#{body.bytesize} bytes)" if body.blank? || body.bytesize < 100
+
+    return if body.start_with?('%PDF-')
+
+    raise DocumentDownloadError, 'Downloaded file is not a valid PDF (missing PDF header)'
   end
 
   def document_metadata(cert)
