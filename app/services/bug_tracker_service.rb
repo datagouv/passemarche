@@ -3,7 +3,7 @@
 class BugTrackerService
   class << self
     def capture_exception(exception, context = {})
-      # TODO: Integrate with real bug tracking service
+      Sentry.capture_exception(exception, extra: context)
       log_exception_details(exception, context)
       log_exception_metadata(exception)
     end
@@ -28,7 +28,7 @@ class BugTrackerService
     public
 
     def capture_message(message, level: :error, context: {})
-      # TODO: Integrate with real bug tracking service
+      Sentry.capture_message(message, level:, extra: context)
       Rails.logger.public_send(level, "[BUG_TRACKER] #{message}")
       Rails.logger.public_send(level, "[BUG_TRACKER] Context: #{context.to_json}") if context.any?
     end
