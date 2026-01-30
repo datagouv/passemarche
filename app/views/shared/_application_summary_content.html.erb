@@ -41,10 +41,10 @@
 
         <% if category == 'identite_entreprise' %>
           <div class="fr-card fr-mb-1w fr-card--no-border fr-mt-2w">
-          <%= render 'shared/card_sub_header', title: 'Informations du marché', background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
+          <%= render 'shared/card_sub_header', title: t('shared.application_summary.market_info_title'), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
             <div class="field-layout-container">
               <div class="field-layout-content">
-                <strong>Nom du marché</strong>
+                <strong><%= t('shared.application_summary.market_name') %></strong>
                 <br>
                 <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.name %></span>
               </div>
@@ -52,8 +52,7 @@
             <% if market_application.public_market.lot_name.present? %>
               <div class="field-layout-container">
                 <div class="field-layout-content">
-
-                  <strong>Nom du lot</strong>
+                  <strong><%= t('shared.application_summary.lot_name') %></strong>
                   <br>
                   <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.lot_name %></span>
                 </div>
@@ -61,16 +60,14 @@
             <% end %>
               <div class="field-layout-container">
                 <div class="field-layout-content">
-
-                  <strong>Date et heure limite de remise des plis</strong>
+                  <strong><%= t('shared.application_summary.deadline') %></strong>
                   <br>
                   <span class="fr-text--md fr-text--mention-grey"><%= l(market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
                 </div>
               </div>
               <div class="field-layout-container">
                 <div class="field-layout-content">
-
-                  <strong>Typologie de marché</strong>
+                  <strong><%= t('shared.application_summary.market_type') %></strong>
                   <br>
                   <span class="fr-text--md fr-text--mention-grey">
                     <% if market_application.public_market.market_type_codes.any? %>
@@ -80,7 +77,7 @@
                         </span>
                       <% end %>
                     <% else %>
-                      Aucun type de marché défini
+                      <%= t('shared.application_summary.no_market_type') %>
                     <% end %>
                   </span>
                 </div>
@@ -120,7 +117,7 @@
     </div>
   <% end %>
 <% else %>
-  <p class="fr-text--md fr-text--mention-grey">Aucun document requis configuré pour ce marché.</p>
+  <p class="fr-text--md fr-text--mention-grey"><%= t('shared.application_summary.no_documents_configured') %></p>
 <% end %>
 
 <%= render 'shared/renamed_documents_section',

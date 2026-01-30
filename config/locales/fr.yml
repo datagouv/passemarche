@@ -80,6 +80,10 @@ fr:
       legal: "Mentions légales"
       privacy: "Données personnelles"
       cookies: "Gestion des cookies"
+      sitemap: "Plan du site"
+      display_settings: "Paramètres d'affichage"
+      license: "licence etalab-2.0"
+      license_notice: "Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous"
 
   button:
     next_step: "Passer à l'étape suivante"
@@ -87,6 +91,14 @@ fr:
     continue: "Continuer"
 
   shared:
+    application_summary:
+      market_info_title: "Informations du marché"
+      market_name: "Nom du marché"
+      lot_name: "Nom du lot"
+      deadline: "Date et heure limite de remise des plis"
+      market_type: "Typologie de marché"
+      no_market_type: "Aucun type de marché défini"
+      no_documents_configured: "Aucun document requis configuré pour ce marché."
     renamed_documents:
       title: "Vos documents"
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
