@@ -38,7 +38,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
         it 'includes editor statistics' do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-          metrics = csv.map { |row| row['Métrique'] }
+          metrics = csv.pluck('Métrique')
 
           expect(metrics).to include('Éditeurs configurés')
           expect(metrics).to include('Éditeurs actifs et autorisés')
@@ -55,7 +55,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
         it 'does not include global editor statistics' do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-          metrics = csv.map { |row| row['Métrique'] }
+          metrics = csv.pluck('Métrique')
 
           expect(metrics).not_to include('Éditeurs configurés')
           expect(metrics).not_to include('Éditeurs actifs et autorisés')
@@ -63,7 +63,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
         it 'still includes market statistics' do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-          metrics = csv.map { |row| row['Métrique'] }
+          metrics = csv.pluck('Métrique')
 
           expect(metrics).to include('Marchés créés')
           expect(metrics).to include('Candidatures complétées')
@@ -72,7 +72,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
       it 'includes correct metric labels' do
         csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-        metrics = csv.map { |row| row['Métrique'] }
+        metrics = csv.pluck('Métrique')
 
         expect(metrics).to include('Marchés créés')
         expect(metrics).to include('Candidatures complétées')
@@ -101,7 +101,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
       it 'includes export date in each row' do
         csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-        dates = csv.map { |row| row["Date d'export"] }.uniq
+        dates = csv.pluck("Date d'export").uniq
 
         expect(dates).to eq([I18n.l(Date.current, format: :default)])
       end
@@ -109,7 +109,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
       context 'without editor filter' do
         it 'includes "Tous" as editor name' do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-          editors = csv.map { |row| row['Éditeur'] }.uniq
+          editors = csv.pluck('Éditeur').uniq
 
           expect(editors).to eq(['Tous'])
         end
@@ -120,7 +120,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
         it 'includes editor name in each row' do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-          editors = csv.map { |row| row['Éditeur'] }.uniq
+          editors = csv.pluck('Éditeur').uniq
 
           expect(editors).to eq(['Mon Éditeur Test'])
         end
