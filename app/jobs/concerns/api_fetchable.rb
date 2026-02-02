@@ -5,8 +5,31 @@
 module ApiFetchable
   extend ActiveSupport::Concern
 
+  # Transient network errors that may succeed on retry
+  RETRYABLE_ERRORS = [
+    Net::OpenTimeout,
+    Net::ReadTimeout,
+    Errno::ECONNREFUSED,
+    Errno::ECONNRESET,
+    Errno::EHOSTUNREACH,
+    Errno::ENETUNREACH,
+    SocketError,
+    EOFError
+  ].freeze
+
   included do
     queue_as :default
+
+    # Retry transient errors with exponential backoff
+    # 5 attempts: ~3s, ~18s, ~83s, ~258s, ~627s (total ~16 min)
+    retry_on(*RETRYABLE_ERRORS, wait: :polynomially_longer, attempts: 5) do |job, error|
+      job.send(:handle_retries_exhausted, error)
+    end
+
+    # SSL errors are configuration issues - don't retry
+    discard_on OpenSSL::SSL::SSLError do |job, error|
+      job.send(:handle_retries_exhausted, error)
+    end
   end
 
   class_methods do
@@ -77,12 +100,36 @@ module ApiFetchable
   def handle_error(market_application, market_application_id, error)
     Rails.logger.error "Error fetching #{self.class.api_name} data for #{market_application_id}: #{error.message}"
 
-    if market_application
-      clear_api_response_data(market_application)
-      market_application.update_api_status(self.class.api_name, status: 'failed', fields_filled: 0)
-    end
+    # For retryable errors, don't mark as failed yet - let retry mechanism handle it
+    raise error if retryable_error?(error)
 
-    raise
+    # For non-retryable errors, mark as failed immediately
+    mark_as_failed(market_application) if market_application
+    raise error
+  end
+
+  def handle_retries_exhausted(error)
+    Rails.logger.error "[#{self.class.api_name}] All retries exhausted: #{error.message}"
+
+    market_application = MarketApplication.find_by(id: arguments.first)
+    mark_as_failed(market_application) if market_application
+
+    BugTrackerService.capture_exception(error, {
+      job: self.class.name,
+      api_name: self.class.api_name,
+      market_application_id: arguments.first,
+      message: 'API call failed after all retries'
+    })
+  end
+
+  def mark_as_failed(market_application)
+    clear_api_response_data(market_application)
+    mark_api_attributes_as_manual_after_failure(market_application)
+    market_application.update_api_status(self.class.api_name, status: 'failed', fields_filled: 0)
+  end
+
+  def retryable_error?(error)
+    RETRYABLE_ERRORS.any? { |klass| error.is_a?(klass) }
   end
 
   def count_filled_fields(market_application)
