@@ -62,6 +62,13 @@ RSpec.describe MarketAttribute, type: :model do
       end
     end
 
+    describe '.manual' do
+      it 'returns only attributes without api_name' do
+        expect(MarketAttribute.manual).to include(mandatory_attribute)
+        expect(MarketAttribute.manual).not_to include(api_attribute)
+      end
+    end
+
     describe '.active' do
       it 'returns only active attributes' do
         expect(MarketAttribute.active).to include(mandatory_attribute)
@@ -81,6 +88,54 @@ RSpec.describe MarketAttribute, type: :model do
         expect(ordered.second).to eq(company_attr)
       end
     end
+
+    describe '.by_category' do
+      let!(:identity_attribute) { create(:market_attribute, category_key: 'identite_entreprise') }
+      let!(:exclusion_attribute) { create(:market_attribute, category_key: 'motifs_exclusion') }
+
+      it 'returns only attributes with the specified category' do
+        expect(MarketAttribute.by_category('identite_entreprise')).to include(identity_attribute)
+        expect(MarketAttribute.by_category('identite_entreprise')).not_to include(exclusion_attribute)
+      end
+    end
+
+    describe '.by_subcategory' do
+      let!(:identification_attribute) { create(:market_attribute, subcategory_key: 'identite_entreprise_identification') }
+      let!(:contact_attribute) { create(:market_attribute, subcategory_key: 'identite_entreprise_contact') }
+
+      it 'returns only attributes with the specified subcategory' do
+        expect(MarketAttribute.by_subcategory('identite_entreprise_identification')).to include(identification_attribute)
+        expect(MarketAttribute.by_subcategory('identite_entreprise_identification')).not_to include(contact_attribute)
+      end
+    end
+
+    describe '.by_source' do
+      it 'returns api attributes when source is :api' do
+        expect(MarketAttribute.by_source(:api)).to include(api_attribute)
+        expect(MarketAttribute.by_source(:api)).not_to include(mandatory_attribute)
+      end
+
+      it 'returns manual attributes when source is :manual' do
+        expect(MarketAttribute.by_source(:manual)).to include(mandatory_attribute)
+        expect(MarketAttribute.by_source(:manual)).not_to include(api_attribute)
+      end
+
+      it 'accepts string arguments' do
+        expect(MarketAttribute.by_source('api')).to include(api_attribute)
+        expect(MarketAttribute.by_source('manual')).to include(mandatory_attribute)
+      end
+    end
+
+    describe '.by_market_type' do
+      let(:market_type) { create(:market_type) }
+      let!(:attribute_with_type) { create(:market_attribute, market_types: [market_type]) }
+      let!(:attribute_without_type) { create(:market_attribute) }
+
+      it 'returns only attributes associated with the specified market type' do
+        expect(MarketAttribute.by_market_type(market_type.id)).to include(attribute_with_type)
+        expect(MarketAttribute.by_market_type(market_type.id)).not_to include(attribute_without_type)
+      end
+    end
   end
 
   describe '#from_api?' do
@@ -97,6 +152,39 @@ RSpec.describe MarketAttribute, type: :model do
     it 'returns false when api_name is blank' do
       attribute = build(:market_attribute, api_name: '')
       expect(attribute).not_to be_from_api
+    end
+  end
+
+  describe '#manual?' do
+    it 'returns true when api_name is nil' do
+      attribute = build(:market_attribute, api_name: nil)
+      expect(attribute).to be_manual
+    end
+
+    it 'returns true when api_name is blank' do
+      attribute = build(:market_attribute, api_name: '')
+      expect(attribute).to be_manual
+    end
+
+    it 'returns false when api_name is present' do
+      attribute = build(:market_attribute, api_name: 'Insee', api_key: 'siret')
+      expect(attribute).not_to be_manual
+    end
+  end
+
+  describe 'CATEGORY_TABS' do
+    it 'contains the expected category keys' do
+      expected_tabs = %w[
+        identite_entreprise
+        motifs_exclusion
+        capacite_economique_financiere
+        capacites_techniques_professionnelles
+      ]
+      expect(MarketAttribute::CATEGORY_TABS).to eq(expected_tabs)
+    end
+
+    it 'is frozen' do
+      expect(MarketAttribute::CATEGORY_TABS).to be_frozen
     end
   end
 end

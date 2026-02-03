@@ -516,6 +516,7 @@ fr:
     navigation:
       editors: "Éditeurs"
       dashboard: "Tableau de bord"
+      socle_de_base: "Socle de base"
       background_jobs: "Tâches en arrière-plan"
     dashboard:
       title: "Suivi d'activité"
@@ -583,6 +584,54 @@ fr:
       retry_queued: "Webhook mis en file d'attente pour réessai."
       retry_not_available: "Ce webhook ne peut pas être réessayé."
       deleted: "Éditeur supprimé avec succès."
+    socle_de_base:
+      title: "Socle de base"
+      manage_button: "Gérer le socle de base"
+      export_button: "Exporter"
+      new_field_button: "Nouveau champ"
+      edit_button: "Modifier"
+      actions:
+        export: "Exporter"
+        new_field: "Créer un champ"
+        history: "Consulter l'historique"
+      cards:
+        total:
+          title: "Champs total"
+          tooltip: "Nombre total de champs dans le socle de base"
+        api:
+          title: "Champs API"
+          tooltip: "Champs alimentés automatiquement via API"
+        manual:
+          title: "Champs manuels"
+          tooltip: "Champs à renseigner manuellement"
+        mandatory:
+          title: "Champs obligatoires"
+          tooltip: "Champs requis pour toute candidature"
+      filters:
+        search_label: "Recherche"
+        search_placeholder: "Rechercher un champ..."
+        market_type_label: "Type de marché"
+        market_type_all: "Tous les types"
+        source_label: "Source"
+        source_all: "Toutes les sources"
+        source_api: "API"
+        source_manual: "Manuel"
+        mandatory_label: "Obligatoire"
+        mandatory_all: "Tous"
+        mandatory_yes: "Oui"
+        mandatory_no: "Non"
+      badges:
+        mandatory: "Obligatoire"
+        optional: "Complémentaire"
+        api: "API %{api_name}"
+        manual: "Manuel"
+      accordion:
+        buyer_title: "Acheteur"
+        candidate_title: "Candidat"
+        category_label: "Catégorie"
+        subcategory_label: "Sous-catégorie"
+        name_label: "Nom"
+        description_label: "Description"
 
   activerecord:
     errors:

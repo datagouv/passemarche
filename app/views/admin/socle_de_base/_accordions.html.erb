@@ -1,0 +1,46 @@
+<div class="fr-accordions-group">
+  <% @market_attributes.each do |market_attribute| %>
+    <% presenter = SocleDeBasePresenter.new(market_attribute) %>
+    <section class="fr-accordion" data-controller="accordion">
+      <h3 class="fr-accordion__title">
+        <button class="fr-accordion__btn"
+                data-accordion-target="button"
+                data-action="click->accordion#toggle"
+                aria-expanded="false"
+                aria-controls="accordion-<%= market_attribute.id %>">
+          <span class="fr-mr-2w"><%= presenter.buyer_name %></span>
+          <span class="fr-badge fr-badge--sm <%= presenter.mandatory_badge_class %> fr-mr-1w">
+            <%= presenter.mandatory_badge %>
+          </span>
+          <span class="fr-badge fr-badge--sm <%= presenter.source_badge_class %>">
+            <%= presenter.source_badge %>
+          </span>
+        </button>
+      </h3>
+      <div class="fr-collapse" id="accordion-<%= market_attribute.id %>" data-testid="market-attribute-<%= market_attribute.key %>" data-accordion-target="content">
+        <div class="fr-grid-row fr-grid-row--gutters">
+          <div class="fr-col-12 fr-col-md-6">
+            <%= render 'admin/socle_de_base/attribute_card',
+                       title: t('admin.socle_de_base.accordion.buyer_title'),
+                       category_label: presenter.buyer_category_label,
+                       subcategory_label: presenter.buyer_subcategory_label,
+                       name: presenter.buyer_name,
+                       description: presenter.buyer_description %>
+          </div>
+          <div class="fr-col-12 fr-col-md-6">
+            <%= render 'admin/socle_de_base/attribute_card',
+                       title: t('admin.socle_de_base.accordion.candidate_title'),
+                       category_label: presenter.candidate_category_label,
+                       subcategory_label: presenter.candidate_subcategory_label,
+                       name: presenter.candidate_name,
+                       description: presenter.candidate_description %>
+          </div>
+        </div>
+        <div class="fr-mt-2w fr-text--right">
+          <%= link_to t('admin.socle_de_base.edit_button'), '#',
+                      class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-edit-line fr-btn--icon-left" %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+</div>
