@@ -8,6 +8,12 @@ class MarketAttributeResponse::RadioWithFileAndText < MarketAttributeResponse
 
   validate :conditional_fields_only_when_yes
 
+  def ess_api_data?
+    market_attribute&.api_name == 'insee' &&
+      market_attribute&.api_key == 'ess' &&
+      auto?
+  end
+
   def self.json_schema_properties
     %w[radio_choice text]
   end

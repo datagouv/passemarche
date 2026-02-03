@@ -4,10 +4,13 @@
       <div class="fr-col">
         <strong><%= component.field_label %></strong>
 
-        <% if component.display_value? %>
-          <%# Simplified display for API-fetched data with display_value (like ESS) %>
+        <% if component.ess_api_data? %>
+          <%# API-fetched ESS data - use dedicated component %>
           <br>
-          <span class="fr-text--md"><strong><%= component.display_label %></strong> <%= component.display_value %></span>
+          <%= render MarketAttributeResponse::ApiDisplay::EssComponent.new(
+            market_attribute_response: component.market_attribute_response,
+            context: component.context
+          ) %>
         <% elsif component.show_value? %>
           <br>
 
@@ -47,7 +50,7 @@
       </div>
 
       <div class="fr-col-auto field-badge-container">
-        <% unless component.display_value? %>
+        <% unless component.ess_api_data? %>
           <% if component.show_value? %>
             <div class="<%= component.badge_class %>"><%= component.badge_label %></div>
           <% end %>

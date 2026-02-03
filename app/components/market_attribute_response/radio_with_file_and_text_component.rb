@@ -3,7 +3,7 @@
 class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeResponse::BaseComponent
   delegate :documents, to: :market_attribute_response
   delegate :attached?, to: :documents, prefix: :documents
-  delegate :radio_choice, :radio_yes?, :radio_no?, :text, to: :market_attribute_response
+  delegate :radio_choice, :radio_yes?, :radio_no?, :text, :ess_api_data?, to: :market_attribute_response
 
   def text?
     text.present?
@@ -45,23 +45,6 @@ class MarketAttributeResponse::RadioWithFileAndTextComponent < MarketAttributeRe
 
   def no_info_message
     'Aucune information complémentaire fournie'
-  end
-
-  def display_label
-    I18n.t(
-      "form_fields.candidate.fields.#{market_attribute.key}.display_label",
-      default: nil
-    )
-  end
-
-  def display_value
-    return I18n.t('form_fields.candidate.shared.not_provided', default: 'Non renseigné') if radio_choice.nil?
-
-    radio_yes? ? I18n.t('form_fields.candidate.shared.yes') : I18n.t('form_fields.candidate.shared.no')
-  end
-
-  def display_value?
-    display_label.present?
   end
 
   def conditional_content_hidden?
