@@ -414,6 +414,7 @@ fr:
               - attestations_fiscales
               - probtp
               - dgfip_chiffres_affaires
+              - actes_bilans
           capacites_techniques_professionnelles:
             name: "Capacités techniques et professionnelles"
             description: "Certifications professionnelles et qualifications techniques de votre entreprise"
