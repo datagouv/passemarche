@@ -23,16 +23,16 @@
       <% if subcategories.any? %>
         <div class="fr-mb-4w">
           <h6 id="<%= step %>" class="fr-text-title--blue-france fr-mb-2w">
-            <%= t("form_fields.candidate.subcategories.#{step}", 
-                  default: t("candidate.market_applications.manual_subcategories.#{step}", 
+            <%= t("form_fields.candidate.subcategories.#{step}",
+                  default: t("candidate.market_applications.manual_subcategories.#{step}",
                             default: step.to_s.humanize)) %>
           </h6>
-          
+
           <ul class="fr-list fr-mb-3w">
             <li class="fr-list__item">
               <div class="field-layout-container">
                 <div class="field-layout-content">
-                  <strong>Nom du marché</strong>
+                  <strong><%= t('candidate.shared.market_name') %></strong>
                   <br>
                   <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.name %></span>
                 </div>
@@ -42,7 +42,7 @@
               <li class="fr-list__item">
                 <div class="field-layout-container">
                   <div class="field-layout-content">
-                    <strong>Nom du lot</strong>
+                    <strong><%= t('candidate.shared.lot_name') %></strong>
                     <br>
                     <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.lot_name %></span>
                   </div>
@@ -52,7 +52,7 @@
             <li class="fr-list__item">
               <div class="field-layout-container">
                 <div class="field-layout-content">
-                  <strong>Date et heure limite de remise des plis</strong>
+                  <strong><%= t('candidate.shared.deadline') %></strong>
                   <br>
                   <span class="fr-text--sm fr-text--mention-grey"><%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
                 </div>
@@ -61,7 +61,7 @@
             <li class="fr-list__item">
               <div class="field-layout-container">
                 <div class="field-layout-content">
-                  <strong>Typologie de marché</strong>
+                  <strong><%= t('candidate.shared.market_type') %></strong>
                   <br>
                   <span class="fr-text--sm fr-text--mention-grey">
                     <% if @market_application.public_market.market_type_codes.any? %>
@@ -71,7 +71,7 @@
                         </span>
                       <% end %>
                     <% else %>
-                      Aucun type de marché défini
+                      <%= t('candidate.shared.no_market_type') %>
                     <% end %>
                   </span>
                 </div>
@@ -80,7 +80,7 @@
           </ul>
         </div>
       <% else %>
-        <p class="fr-text--sm fr-text--mention-grey">Aucun contenu disponible pour cette étape.</p>
+        <p class="fr-text--sm fr-text--mention-grey"><%= t('candidate.shared.no_content') %></p>
       <% end %>
     </div>
   </div>

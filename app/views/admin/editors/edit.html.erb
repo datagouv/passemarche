@@ -6,23 +6,23 @@
       <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
         <ol class="fr-breadcrumb__list">
           <li>
-            <%= link_to "Éditeurs", admin_editors_path, class: "fr-breadcrumb__link" %>
+            <%= link_to t('admin.navigation.editors'), admin_editors_path, class: "fr-breadcrumb__link" %>
           </li>
           <li>
             <%= link_to @editor.name, admin_editor_path(@editor), class: "fr-breadcrumb__link" %>
           </li>
           <li>
-            <a class="fr-breadcrumb__link" aria-current="page">Modifier</a>
+            <a class="fr-breadcrumb__link" aria-current="page"><%= t('admin.editors.edit.breadcrumb') %></a>
           </li>
         </ol>
       </nav>
 
-      <h1>Modifier <%= @editor.name %></h1>
+      <h1><%= t('admin.editors.edit.title', name: @editor.name) %></h1>
 
       <%= form_with model: [:admin, @editor], local: true do |form| %>
         <% if @editor.errors.any? %>
           <div class="fr-alert fr-alert--error">
-            <p>Erreurs :</p>
+            <p><%= t('admin.shared.errors') %></p>
             <ul>
               <% @editor.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
@@ -32,23 +32,23 @@
         <% end %>
 
         <div class="fr-input-group fr-mb-3w">
-          <%= form.label :name, "Nom", class: "fr-label" %>
+          <%= form.label :name, t('admin.shared.name'), class: "fr-label" %>
           <%= form.text_field :name, class: "fr-input" %>
         </div>
 
         <fieldset class="fr-fieldset fr-mb-3w">
-          <legend class="fr-fieldset__legend">Identifiants OAuth</legend>
+          <legend class="fr-fieldset__legend"><%= t('admin.editors.edit.oauth_credentials') %></legend>
 
           <div class="fr-fieldset__element">
             <div class="fr-input-group fr-mb-2w">
-              <label class="fr-label">Client ID</label>
+              <label class="fr-label"><%= t('admin.editors.edit.client_id') %></label>
               <input type="text" class="fr-input" value="<%= @editor.client_id %>" disabled readonly>
             </div>
           </div>
 
           <div class="fr-fieldset__element">
             <div class="fr-input-group" data-controller="webhook-secret-toggle">
-              <label class="fr-label">Client Secret</label>
+              <label class="fr-label"><%= t('admin.editors.edit.client_secret') %></label>
               <div style="position: relative;">
                 <input type="text"
                        class="fr-input"
@@ -63,7 +63,7 @@
                         class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
                         data-action="click->webhook-secret-toggle#toggle"
                         data-webhook-secret-toggle-target="button"
-                        title="Afficher/Masquer le secret"
+                        title="<%= t('admin.shared.show_hide_secret') %>"
                         style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
                   <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
                 </button>
@@ -77,40 +77,40 @@
             <div class="fr-fieldset__element">
               <div class="fr-checkbox-group">
                 <%= form.check_box :authorized, class: "fr-checkbox", id: "editor_authorized" %>
-                <%= form.label :authorized, "Autorisé", class: "fr-label", for: "editor_authorized" %>
+                <%= form.label :authorized, t('admin.shared.authorized'), class: "fr-label", for: "editor_authorized" %>
               </div>
             </div>
             <div class="fr-fieldset__element">
               <div class="fr-checkbox-group">
                 <%= form.check_box :active, class: "fr-checkbox", id: "editor_active" %>
-                <%= form.label :active, "Actif", class: "fr-label", for: "editor_active" %>
+                <%= form.label :active, t('admin.shared.active'), class: "fr-label", for: "editor_active" %>
               </div>
             </div>
             <div class="fr-fieldset__element">
               <div class="fr-checkbox-group">
                 <%= form.check_box :can_create_defense_markets, class: "fr-checkbox", id: "editor_can_create_defense_markets" %>
-                <%= form.label :can_create_defense_markets, "Peut créer des marchés de défense et sécurité (MDS)", class: "fr-label", for: "editor_can_create_defense_markets" %>
+                <%= form.label :can_create_defense_markets, t('admin.editors.edit.can_create_defense_markets'), class: "fr-label", for: "editor_can_create_defense_markets" %>
               </div>
             </div>
           </fieldset>
         </div>
 
         <fieldset class="fr-fieldset fr-mt-4w">
-          <legend class="fr-fieldset__legend">Configuration Webhook</legend>
-          
+          <legend class="fr-fieldset__legend"><%= t('admin.editors.edit.webhook_config') %></legend>
+
           <div class="fr-fieldset__element">
             <div class="fr-input-group fr-mb-4w">
-              <%= form.label :completion_webhook_url, "URL de webhook de complétion", class: "fr-label" %>
-              <span class="fr-hint-text">URL HTTPS où seront envoyées les notifications de complétion de marché</span>
+              <%= form.label :completion_webhook_url, t('admin.editors.edit.completion_webhook_url'), class: "fr-label" %>
+              <span class="fr-hint-text"><%= t('admin.editors.edit.completion_webhook_hint') %></span>
               <%= form.text_field :completion_webhook_url, class: "fr-input", placeholder: "https://example.com/webhook" %>
             </div>
           </div>
 
           <div class="fr-fieldset__element">
             <div class="fr-input-group fr-mb-4w">
-              <%= form.label :redirect_url, "URL de redirection", class: "fr-label" %>
+              <%= form.label :redirect_url, t('admin.editors.edit.redirect_url'), class: "fr-label" %>
               <span class="fr-hint-text">
-                URL de redirection après complétion. Les paramètres <code>market_identifier</code> et <code>application_identifier</code> seront automatiquement ajoutés.
+                <%= t('admin.editors.edit.redirect_url_hint') %>
               </span>
               <%= form.text_field :redirect_url, class: "fr-input", placeholder: "https://example.com/callback" %>
             </div>
@@ -118,42 +118,42 @@
 
           <div class="fr-fieldset__element">
             <div class="fr-input-group fr-mb-4w">
-              <%= form.label :webhook_secret, "Secret webhook", class: "fr-label" %>
-              <span class="fr-hint-text">Secret utilisé pour signer les payloads (HMAC-SHA256)</span>
+              <%= form.label :webhook_secret, t('admin.editors.edit.webhook_secret'), class: "fr-label" %>
+              <span class="fr-hint-text"><%= t('admin.editors.edit.webhook_secret_hint') %></span>
               <% if @editor.webhook_secret.present? %>
                 <div style="position: relative;" data-controller="webhook-secret-toggle">
-                  <%= form.text_field :webhook_secret, 
-                      class: "fr-input", 
+                  <%= form.text_field :webhook_secret,
+                      class: "fr-input",
                       value: "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
                       disabled: true,
                       style: "padding-right: 45px;",
-                      data: { 
+                      data: {
                         "webhook-secret-toggle-target": "field",
                         "webhook-secret-toggle-masked-value": "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
                         "webhook-secret-toggle-real-value": @editor.webhook_secret
                       } %>
-                  <button type="button" 
+                  <button type="button"
                           class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
                           data-action="click->webhook-secret-toggle#toggle"
                           data-webhook-secret-toggle-target="button"
-                          title="Afficher/Masquer le secret"
+                          title="<%= t('admin.shared.show_hide_secret') %>"
                           style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
                     <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
                   </button>
                 </div>
               <% end %>
             </div>
-            
+
             <div class="fr-mb-4w">
               <% if @editor.webhook_secret.present? %>
-                <%= link_to "Générer un nouveau secret", 
-                            admin_editor_webhook_secrets_path(@editor), 
+                <%= link_to t('admin.editors.edit.generate_new_secret'),
+                            admin_editor_webhook_secrets_path(@editor),
                             method: :post,
-                            data: { confirm: "Êtes-vous sûr ? Cela invalidera l'ancien secret.", turbo_method: :post },
+                            data: { confirm: t('admin.editors.edit.confirm_regenerate_secret'), turbo_method: :post },
                             class: "fr-btn fr-btn--secondary fr-btn--sm" %>
               <% else %>
-                <%= link_to "Générer un secret", 
-                            admin_editor_webhook_secrets_path(@editor), 
+                <%= link_to t('admin.editors.edit.generate_secret'),
+                            admin_editor_webhook_secrets_path(@editor),
                             method: :post,
                             data: { turbo_method: :post },
                             class: "fr-btn fr-btn--secondary fr-btn--sm" %>
@@ -164,8 +164,8 @@
         </fieldset>
 
         <div class="fr-mt-3w">
-          <%= form.submit "Mettre à jour", class: "fr-btn" %>
-          <%= link_to "Annuler", admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
+          <%= form.submit t('admin.shared.update'), class: "fr-btn" %>
+          <%= link_to t('admin.shared.cancel'), admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
         </div>
       <% end %>
     </div>

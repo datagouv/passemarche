@@ -1,4 +1,4 @@
-<% content_for :title, "#{@market_application.editor.name} - Synchronisation de la candidature" %>
+<% content_for :title, "#{@market_application.editor.name} - #{t('candidate.sync_status.title_suffix')}" %>
 
 <div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
   <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
@@ -10,9 +10,9 @@
       <div id="sync-status-content">
         <% if @market_application.sync_completed? %>
           <div>
-            <h3 class="fr-h3">Votre candidature a été transmise !</h3>
+            <h3 class="fr-h3"><%= t('candidate.sync_status.success_title') %></h3>
             <p>
-              Nous avons transmis automatiquement toutes les informations nécessaires à l’acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt.
+              <%= t('candidate.sync_status.success_message') %>
             </p>
             <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
               <% if @market_application.attestation.attached? %>
@@ -20,10 +20,10 @@
                         class="fr-btn fr-btn--icon-left"
                         onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
                   <span class="fr-icon-download-line" aria-hidden="true"></span>
-                  <span class="fr-ml-1w">Télécharger mon attestation de candidature</span>
+                  <span class="fr-ml-1w"><%= t('candidate.sync_status.download_attestation') %></span>
                 </button>
               <% end %>
-              <%= link_to "Retourner sur #{@market_application.editor.name}",
+              <%= link_to t('candidate.sync_status.return_to_editor', editor: @market_application.editor.name),
                           @market_application.editor.build_redirect_url(
                             market: @market_application.public_market,
                             application: @market_application
@@ -34,12 +34,12 @@
 
         <% elsif @market_application.sync_failed? %>
           <div>
-            <h3 class="fr-h3">Erreur inattendue</h3>
+            <h3 class="fr-h3"><%= t('candidate.sync_status.error_title') %></h3>
             <p>
-              Désolée, notre système rencontre un problème, nous n’avons pas réussi à transmettre votre candidature à la plateforme de marché.
+              <%= t('candidate.sync_status.error_message') %>
             </p>
             <p class="fr-text--sm">
-              Vous pouvez tenter de transférer à nouveau les informations en cliquant sur le bouton ci-dessous. Si vous avez besoin d'une aide immédiate, merci de nous contacter.
+              <%= t('candidate.sync_status.error_hint') %>
             </p>
               <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left">
                 <%= button_to retry_sync_candidate_market_application_path(@market_application.identifier),
@@ -47,7 +47,7 @@
                               class: "fr-btn fr-btn--icon-left fr-btn--primary",
                               data: { turbo: false } do %>
                   <span class="fr-icon-refresh-line" aria-hidden="true"></span>
-                  <span class="fr-ml-1w">Retenter de transmettre ma candidature</span>
+                  <span class="fr-ml-1w"><%= t('candidate.sync_status.retry_sync') %></span>
                 <% end %>
                 <% if @market_application.attestation.attached? %>
                   <button type="button"
@@ -58,13 +58,13 @@
                           ) %>'">
                     <span class="fr-icon-download-line" aria-hidden="true"></span>
                     <span class="fr-ml-1w">
-                      Télécharger mon attestation de candidature
+                      <%= t('candidate.sync_status.download_attestation') %>
                     </span>
                   </button>
                 <% end %>
                 <div>
                   <%= link_to(
-                    "Contactez-nous",
+                    t('candidate.sync_status.contact_us'),
                     "mailto:support@voie-rapide.gouv.fr?subject=Erreur de synchronisation pour le marché #{@market_application.identifier}",
                     class: @market_application.attestation.attached? ?
                       "fr-btn fr-btn--tertiary" :
@@ -75,10 +75,9 @@
           </div>
         <% else %>
           <div>
-            <h3 class="fr-h3">Synchronisation en cours</h3>
+            <h3 class="fr-h3"><%= t('candidate.sync_status.pending_title') %></h3>
             <p>
-              Votre candidature est en cours de synchronisation avec <%= @market_application.editor.name %>.
-              Cette opération permet de garantir la bonne transmission de votre candidature.
+              <%= t('candidate.sync_status.pending_message', editor: @market_application.editor.name) %>
             </p>
           </div>
         <% end %>
@@ -91,13 +90,13 @@
   <div class="fr-col-12 fr-col-lg-4" style="display: flex; align-items: center; justify-content: center;">
     <div class="center-content">
       <% if @market_application.sync_completed? %>
-        <%= image_tag "sync_status_success.png", alt: "Synchronisation réussie" %>
+        <%= image_tag "sync_status_success.png", alt: t('candidate.sync_status.success_image_alt') %>
       <% elsif @market_application.sync_failed? %>
-        <%= image_tag "sync_status_error.png", alt: "Erreur de synchronisation" %>
+        <%= image_tag "sync_status_error.png", alt: t('candidate.sync_status.error_image_alt') %>
       <% else %>
         <div class="sync-loader"
              role="img"
-             aria-label="Synchronisation en cours..."
+             aria-label="<%= t('candidate.sync_status.loading_aria_label') %>"
              data-sync-status-target="loader">
         </div>
       <% end %>

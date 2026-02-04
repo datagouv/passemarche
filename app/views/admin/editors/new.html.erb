@@ -6,20 +6,20 @@
       <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
         <ol class="fr-breadcrumb__list">
           <li>
-            <%= link_to "Éditeurs", admin_editors_path, class: "fr-breadcrumb__link" %>
+            <%= link_to t('admin.navigation.editors'), admin_editors_path, class: "fr-breadcrumb__link" %>
           </li>
           <li>
-            <a class="fr-breadcrumb__link" aria-current="page">Nouvel éditeur</a>
+            <a class="fr-breadcrumb__link" aria-current="page"><%= t('admin.editors.new.breadcrumb') %></a>
           </li>
         </ol>
       </nav>
 
-      <h1>Nouvel éditeur</h1>
+      <h1><%= t('admin.editors.new.title') %></h1>
 
       <%= form_with model: [:admin, @editor], local: true do |form| %>
         <% if @editor.errors.any? %>
           <div class="fr-alert fr-alert--error">
-            <p>Erreurs :</p>
+            <p><%= t('admin.shared.errors') %></p>
             <ul>
               <% @editor.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
@@ -29,28 +29,28 @@
         <% end %>
 
         <div class="fr-input-group">
-          <%= form.label :name, "Nom", class: "fr-label" %>
+          <%= form.label :name, t('admin.shared.name'), class: "fr-label" %>
           <%= form.text_field :name, class: "fr-input" %>
         </div>
 
         <div class="fr-checkbox-group">
           <%= form.check_box :authorized, class: "fr-checkbox" %>
-          <%= form.label :authorized, "Autorisé", class: "fr-label" %>
+          <%= form.label :authorized, t('admin.shared.authorized'), class: "fr-label" %>
         </div>
 
         <div class="fr-checkbox-group">
           <%= form.check_box :active, class: "fr-checkbox" %>
-          <%= form.label :active, "Actif", class: "fr-label" %>
+          <%= form.label :active, t('admin.shared.active'), class: "fr-label" %>
         </div>
 
         <div class="fr-checkbox-group">
           <%= form.check_box :can_create_defense_markets, class: "fr-checkbox" %>
-          <%= form.label :can_create_defense_markets, "Peut créer des marchés de défense et sécurité (MDS)", class: "fr-label" %>
+          <%= form.label :can_create_defense_markets, t('admin.editors.new.can_create_defense_markets'), class: "fr-label" %>
         </div>
 
         <div class="fr-mt-3w">
-          <%= form.submit "Créer", class: "fr-btn" %>
-          <%= link_to "Annuler", admin_editors_path, class: "fr-btn fr-btn--secondary" %>
+          <%= form.submit t('admin.shared.create'), class: "fr-btn" %>
+          <%= link_to t('admin.shared.cancel'), admin_editors_path, class: "fr-btn fr-btn--secondary" %>
         </div>
       <% end %>
     </div>

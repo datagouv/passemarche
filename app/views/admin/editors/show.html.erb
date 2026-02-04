@@ -6,7 +6,7 @@
       <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
         <ol class="fr-breadcrumb__list">
           <li>
-            <%= link_to "Éditeurs", admin_editors_path, class: "fr-breadcrumb__link" %>
+            <%= link_to t('admin.navigation.editors'), admin_editors_path, class: "fr-breadcrumb__link" %>
           </li>
           <li>
             <a class="fr-breadcrumb__link" aria-current="page"><%= @editor.name %></a>
@@ -20,30 +20,30 @@
         <div class="fr-col-12 fr-col-md-6">
           <div class="fr-card">
             <div class="fr-card__body">
-              <h2 class="fr-card__title">Informations</h2>
+              <h2 class="fr-card__title"><%= t('admin.editors.show.information') %></h2>
               <div class="fr-card__content">
-                <p><strong>Autorisé :</strong>
+                <p><strong><%= t('admin.shared.authorized') %> :</strong>
                   <% if @editor.authorized %>
-                    <span class="fr-badge fr-badge--success">Oui</span>
+                    <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
                   <% else %>
-                    <span class="fr-badge fr-badge--error">Non</span>
+                    <span class="fr-badge fr-badge--error"><%= t('admin.shared.no') %></span>
                   <% end %>
                 </p>
-                <p><strong>Actif :</strong>
+                <p><strong><%= t('admin.shared.active') %> :</strong>
                   <% if @editor.active %>
-                    <span class="fr-badge fr-badge--success">Oui</span>
+                    <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
                   <% else %>
-                    <span class="fr-badge fr-badge--error">Non</span>
+                    <span class="fr-badge fr-badge--error"><%= t('admin.shared.no') %></span>
                   <% end %>
                 </p>
-                <p><strong>Marchés MDS :</strong>
+                <p><strong><%= t('admin.editors.show.mds_markets') %></strong>
                   <% if @editor.can_create_defense_markets %>
-                    <span class="fr-badge fr-badge--success">Autorisé</span>
+                    <span class="fr-badge fr-badge--success"><%= t('admin.shared.authorized') %></span>
                   <% else %>
-                    <span class="fr-badge fr-badge--warning">Non autorisé</span>
+                    <span class="fr-badge fr-badge--warning"><%= t('admin.shared.not_authorized') %></span>
                   <% end %>
                 </p>
-                <p><strong>Créé le :</strong> <%= l(@editor.created_at, format: :long) %></p>
+                <p><strong><%= t('admin.editors.show.created_at') %></strong> <%= l(@editor.created_at, format: :long) %></p>
               </div>
             </div>
           </div>
@@ -52,10 +52,10 @@
         <div class="fr-col-12 fr-col-md-6">
           <div class="fr-card">
             <div class="fr-card__body">
-              <h2 class="fr-card__title">Identifiants OAuth</h2>
+              <h2 class="fr-card__title"><%= t('admin.editors.show.oauth_credentials') %></h2>
               <div class="fr-card__content">
-                <p><strong>Client ID :</strong> <%= @editor.client_id %></p>
-                <p><strong>Client Secret :</strong></p>
+                <p><strong><%= t('admin.editors.show.client_id') %></strong> <%= @editor.client_id %></p>
+                <p><strong><%= t('admin.editors.show.client_secret') %></strong></p>
                 <div data-controller="webhook-secret-toggle">
                   <div class="fr-input-group" style="max-width: 500px;">
                     <input type="text"
@@ -69,7 +69,7 @@
                             class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
                             data-action="click->webhook-secret-toggle#toggle"
                             data-webhook-secret-toggle-target="button"
-                            title="Afficher/Masquer le secret">
+                            title="<%= t('admin.shared.show_hide_secret') %>">
                       <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
                     </button>
                   </div>
@@ -98,38 +98,38 @@
         <div class="fr-col-12">
           <div class="fr-card">
             <div class="fr-card__body">
-              <h2 class="fr-card__title">Configuration Webhook</h2>
+              <h2 class="fr-card__title"><%= t('admin.editors.show.webhook_config') %></h2>
               <div class="fr-card__content">
                 <% if @editor.webhook_configured? %>
-                  <p><strong>URL de webhook :</strong> <%= @editor.completion_webhook_url %></p>
-                  <p><strong>URL de redirection :</strong> <%= @editor.redirect_url || "Non configurée" %></p>
-                  <p><strong>Secret configuré :</strong> 
+                  <p><strong><%= t('admin.editors.show.webhook_url') %></strong> <%= @editor.completion_webhook_url %></p>
+                  <p><strong><%= t('admin.editors.show.redirect_url') %></strong> <%= @editor.redirect_url || t('admin.shared.not_configured') %></p>
+                  <p><strong><%= t('admin.editors.show.secret_configured') %></strong>
                     <% if @editor.webhook_secret.present? %>
-                      <span class="fr-badge fr-badge--success">Oui</span>
+                      <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
                       <div class="fr-mt-2w" data-controller="webhook-secret-toggle">
                         <div class="fr-input-group" style="max-width: 400px;">
-                          <input type="text" 
-                                 class="fr-input fr-text--sm" 
+                          <input type="text"
+                                 class="fr-input fr-text--sm"
                                  value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
                                  readonly
                                  data-webhook-secret-toggle-target="field"
                                  data-webhook-secret-toggle-masked-value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
                                  data-webhook-secret-toggle-real-value="<%= @editor.webhook_secret %>" />
-                          <button type="button" 
+                          <button type="button"
                                   class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-eye-line"
                                   data-action="click->webhook-secret-toggle#toggle"
                                   data-webhook-secret-toggle-target="button"
-                                  title="Afficher le secret">
+                                  title="<%= t('admin.shared.show_secret') %>">
                             <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
                           </button>
                         </div>
                       </div>
                     <% else %>
-                      <span class="fr-badge fr-badge--warning">Non</span>
+                      <span class="fr-badge fr-badge--warning"><%= t('admin.shared.no') %></span>
                     <% end %>
                   </p>
                 <% else %>
-                  <p class="fr-text--sm">Webhook non configuré</p>
+                  <p class="fr-text--sm"><%= t('admin.editors.show.webhook_not_configured') %></p>
                 <% end %>
               </div>
             </div>
@@ -138,11 +138,11 @@
       </div>
 
       <div class="fr-mt-3w">
-        <%= link_to "Modifier", edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
-        <%= link_to "Supprimer", admin_editor_path(@editor), method: :delete,
-                    data: { confirm: "Êtes-vous sûr de vouloir supprimer cet éditeur ?" },
+        <%= link_to t('admin.shared.edit'), edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
+        <%= link_to t('admin.shared.delete'), admin_editor_path(@editor), method: :delete,
+                    data: { confirm: t('admin.editors.show.confirm_delete') },
                     class: "fr-btn fr-btn--tertiary" %>
-        <%= link_to "Retour à la liste", admin_editors_path, class: "fr-btn fr-btn--tertiary-no-outline" %>
+        <%= link_to t('admin.shared.back_to_list'), admin_editors_path, class: "fr-btn fr-btn--tertiary-no-outline" %>
       </div>
     </div>
   </div>

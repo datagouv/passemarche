@@ -1,13 +1,13 @@
-<% content_for :title, "Candidature - Identification" %>
+<% content_for :title, t('candidate.company_identification.title') %>
 
 <div class="fr-grid-row full-height-grid">
   <div class="fr-col-12 fr-col-lg-7">
     <div class="fr-container--fluid">
       <div class="fr-grid-row">
         <div class="fr-mb-5w fr-pt-4w">
-          <h1 class="fr-h1 fr-mb-1w">Bienvenue,</h1>
+          <h1 class="fr-h1 fr-mb-1w"><%= t('candidate.shared.welcome') %></h1>
           <p class="fr-text--lg fr-mb-0">
-            <%= @market_application.public_market.editor.name %> vous permet de candidater rapidement aux marchés publics.
+            <%= t('candidate.company_identification.intro', editor: @market_application.public_market.editor.name) %>
           </p>
         </div>
       </div>
@@ -16,8 +16,8 @@
         <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
           <div class="fr-mb-4w">
             <div class="fr-input-group fr-input-group--disabled">
-              <%= form.label :siret, "Votre numéro de SIRET", class: "fr-label" %>
-              <span class="fr-hint-text">Ce numéro a été fourni par l'éditeur et ne peut pas être modifié</span>
+              <%= form.label :siret, t('candidate.shared.siret_label'), class: "fr-label" %>
+              <span class="fr-hint-text"><%= t('candidate.shared.siret_hint') %></span>
               <%= form.text_field :siret,
                     class: "fr-input",
                     disabled: true,
@@ -26,7 +26,7 @@
           </div>
 
           <div class="fr-mb-4w">
-            <%= form.submit "Continuer", class: "fr-btn fr-btn--lg" %>
+            <%= form.submit t('candidate.shared.continue'), class: "fr-btn fr-btn--lg" %>
           </div>
         <% end %>
       </div>
@@ -37,7 +37,7 @@
 
   <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
     <div class="center-content">
-      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
+      <%= image_tag "form-logo.png", alt: t('candidate.shared.form_logo_alt') %>
     </div>
   </div>
 </div>

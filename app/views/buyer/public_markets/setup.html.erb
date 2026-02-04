@@ -1,41 +1,38 @@
-<% content_for :title, "#{@public_market.editor.name} - Configuration de marché" %>
+<% content_for :title, "#{@public_market.editor.name} - #{t('buyer.setup.title_suffix')}" %>
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12 fr-col-lg-7">
     <div class="fr-mb-5w">
-      <h1 class="fr-h1 fr-mb-1w">Bienvenue,</h1>
+      <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.shared.welcome') %></h1>
       <p class="fr-text--lg fr-mb-0">
-        <%= @public_market.editor.name %> vous permet de mettre en place une 
-        candidature simplifiée pour les entreprises et vous apporte 
-        la garantie de recueillir des informations authentiques et à 
-        jour sur l'entreprise candidate.
+        <%= t('buyer.setup.intro', editor: @public_market.editor.name) %>
       </p>
     </div>
 
     <div class="fr-mb-4w fr-p-3w fr-background-alt--grey">
-      <h2 class="fr-card__title fr-mb-3w">Les informations du marché</h2>
-      
+      <h2 class="fr-card__title fr-mb-3w"><%= t('buyer.shared.market_info_title') %></h2>
+
       <div class="fr-mb-2w">
-        <h3 class="fr-text--md fr-mb-0 fr-text--bold">Nom du marché</h3>
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold"><%= t('buyer.shared.market_name') %></h3>
         <p class="fr-text--sm fr-mb-0"><%= @public_market.name %></p>
       </div>
 
       <% if @public_market.lot_name.present? %>
         <div class="fr-mb-2w">
-          <h3 class="fr-text--md fr-mb-0 fr-text--bold">Nom du lot</h3>
+          <h3 class="fr-text--md fr-mb-0 fr-text--bold"><%= t('buyer.shared.lot_name') %></h3>
           <p class="fr-text--sm fr-mb-0"><%= @public_market.lot_name %></p>
         </div>
       <% end %>
 
       <div class="fr-mb-2w">
-        <h3 class="fr-text--md fr-mb-0 fr-text--bold">Date et heure limite de remise des plis</h3>
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold"><%= t('buyer.shared.deadline') %></h3>
         <p class="fr-text--sm fr-mb-0">
           <%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)
         </p>
       </div>
 
       <div class="fr-mb-2w">
-        <h3 class="fr-text--md fr-mb-1w fr-text--bold">Typologie de marché</h3>
+        <h3 class="fr-text--md fr-mb-1w fr-text--bold"><%= t('buyer.shared.market_type') %></h3>
         <% if @public_market.market_type_codes.any? %>
           <% @public_market.market_type_codes.each do |market_type_code| %>
             <span class="fr-badge fr-badge--sm fr-mr-1w">
@@ -43,38 +40,38 @@
             </span>
           <% end %>
         <% else %>
-          <p class="fr-text--sm fr-mb-0">Aucun type de marché défini</p>
+          <p class="fr-text--sm fr-mb-0"><%= t('buyer.shared.no_market_type') %></p>
         <% end %>
       </div>
 
       <div class="fr-mb-0">
-        <h3 class="fr-text--md fr-mb-0 fr-text--bold">SIRET de l'organisation publique</h3>
+        <h3 class="fr-text--md fr-mb-0 fr-text--bold"><%= t('buyer.shared.public_org_siret') %></h3>
         <p class="fr-text--sm fr-mb-0"><%= @public_market.siret %></p>
       </div>
     </div>
 
-    <%= form_with model: @public_market, url: wizard_path, 
+    <%= form_with model: @public_market, url: wizard_path,
                   local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
-      
+
       <% if @public_market.editor.can_create_defense_markets? %>
         <div class="fr-mb-3w">
           <% if !@public_market.defense_industry? %>
             <div class="fr-checkbox-group">
               <%= form.check_box :add_defense_market_type, { class: "fr-checkbox" }, "true", "" %>
-              <%= form.label :add_defense_market_type, "Cochez cette case uniquement si votre marché concerne la défense ou la sécurité", class: "fr-label" %>
+              <%= form.label :add_defense_market_type, t('buyer.setup.defense_checkbox'), class: "fr-label" %>
             </div>
           <% else %>
             <div class="fr-checkbox-group fr-checkbox-group--disabled">
               <%= check_box_tag :defense_industry, "1", true, disabled: true, class: "fr-checkbox" %>
-              <%= label_tag :defense_industry, "Ce marché concerne la défense ou la sécurité", class: "fr-label" %>
-              <span class="fr-hint-text">Cette désignation a été définie par <%= @public_market.editor.name %></span>
+              <%= label_tag :defense_industry, t('buyer.setup.defense_checked'), class: "fr-label" %>
+              <span class="fr-hint-text"><%= t('buyer.setup.defense_hint', editor: @public_market.editor.name) %></span>
             </div>
           <% end %>
         </div>
       <% end %>
 
       <div class="fr-mb-4w">
-        <%= form.submit "Débuter l'activation de #{@public_market.editor.name}", class: "fr-btn fr-btn--lg" %>
+        <%= form.submit t('buyer.setup.start_activation', editor: @public_market.editor.name), class: "fr-btn fr-btn--lg" %>
       </div>
     <% end %>
   </div>
@@ -83,7 +80,7 @@
 
   <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
     <div class="center-content">
-      <%= image_tag "form-logo.png", alt: "Logo de formulaire" %>
+      <%= image_tag "form-logo.png", alt: t('buyer.shared.form_logo_alt') %>
     </div>
   </div>
 </div>
