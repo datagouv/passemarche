@@ -364,6 +364,22 @@ CUCUMBER_PUBLISH_QUIET=true bundle exec cucumber
 bin/rubocop && bundle exec rspec && bundle exec cucumber
 ```
 
+### Couverture de code (SimpleCov)
+
+Le projet utilise SimpleCov pour mesurer la couverture de code.
+
+```bash
+# Générer un rapport (après exécution des tests)
+bundle exec rspec && bundle exec cucumber
+
+# Consulter le rapport HTML
+xdg-open coverage/index.html  # Linux
+open coverage/index.html       # macOS
+```
+
+Le rapport est généré dans le dossier `coverage/` à la racine du projet.
+Il combine automatiquement la couverture de RSpec et Cucumber.
+
 ## 🚢 Déploiement
 
 ### Configuration de production
