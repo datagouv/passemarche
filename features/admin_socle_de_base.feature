@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 @admin_socle_de_base
-Feature: Admin Socle de Base
-  En tant qu'administrateur Passe Marche
-  Je veux consulter le socle de base des champs de marche
-  Afin de visualiser la structure des formulaires pour acheteurs et candidats
+Feature: Admin Socle de Base - Accordéon multi-niveaux
+  En tant qu'administrateur Passe Marché
+  Je veux consulter les catégories, sous-catégories et champs du socle de base
+  sous forme d'accordéon multi-niveaux, avec les libellés Acheteur et Candidat
+  Afin de visualiser la configuration complète du formulaire et ses traductions
 
   Background:
     Given I am logged in as an admin user
@@ -14,56 +15,42 @@ Feature: Admin Socle de Base
       | identite_email             | identite_entreprise | identite_entreprise_contact        | false     |          |
       | motifs_liquidation         | motifs_exclusion    | motifs_exclusion_fiscales          | true      |          |
 
-  Scenario: CA-1 - Default tab is "Identité de l'entreprise"
+  Scenario: CA-1 - Admin sees 4 categories as accordion panels
     When I visit the socle de base page
     Then I should see the page title "Socle de base"
-    And the tab "Identité de l'entreprise" should be active
-    And I should see the attribute "identite_siret"
-    And I should not see the attribute "motifs_liquidation"
+    And I should see a category accordion for "identite_entreprise"
+    And I should see a category accordion for "motifs_exclusion"
 
-  Scenario: CA-2 - Manage dropdown button with actions is visible
+  Scenario: CA-2 - Category accordion contains buyer/candidate labels and subcategory accordions
     When I visit the socle de base page
-    Then I should see the manage dropdown button "Gérer le socle de base"
-    When I click on the manage dropdown button
-    Then I should see the dropdown action "Exporter"
-    And I should see the dropdown action "Créer un champ"
-    And I should see the dropdown action "Consulter l'historique"
+    Then the category "identite_entreprise" should contain buyer and candidate labels
+    And the category "identite_entreprise" should contain a "Modifier" link
+    And the category "identite_entreprise" should contain a subcategory accordion for "identite_entreprise_identification"
+    And the category "identite_entreprise" should contain a subcategory accordion for "identite_entreprise_contact"
 
-  Scenario: CA-3 - Search and filters are present
+  Scenario: CA-3 - Subcategory accordion contains buyer/candidate labels and field accordions
     When I visit the socle de base page
-    Then I should see a search field
-    And I should see a filter for "Type de marché"
-    And I should see a filter for "Source"
-    And I should see a filter for "Obligatoire"
+    Then the subcategory "identite_entreprise_identification" should contain buyer and candidate labels
+    And the subcategory "identite_entreprise_identification" should contain a "Modifier" link
+    And the subcategory "identite_entreprise_identification" should contain a field accordion for "identite_siret"
 
-  Scenario: CA-4/5 - Tab navigation changes active tab
+  Scenario: CA-4 - Field accordion contains buyer and candidate labels
     When I visit the socle de base page
-    And I click on the tab "Les motifs d'exclusion"
-    Then the tab "Les motifs d'exclusion" should be active
-    And the tab "Identité de l'entreprise" should not be active
-    And I should see the attribute "motifs_liquidation"
-    And I should not see the attribute "identite_siret"
+    Then the field "identite_siret" should contain buyer and candidate labels
+    And the field "identite_siret" should contain a "Modifier" link
 
-  Scenario: CA-8/9/10 - Buyer and Candidate blocks with info
+  Scenario: CA-5 - Edit buttons are placeholder links
     When I visit the socle de base page
-    Then I should see the buyer section for "identite_siret"
-    And I should see the candidate section for "identite_siret"
-    And the buyer section should show category information
-    And the buyer section should show subcategory information
+    Then all "Modifier" links should point to "#"
 
-  Scenario: CA-11/12 - Mandatory and Complementary badges
+  Scenario: CA-6 - Soft-deleted attributes are not displayed
+    Given a soft-deleted market attribute "deleted_attr" exists in "identite_entreprise"
     When I visit the socle de base page
-    Then the attribute "identite_siret" should have badge "Obligatoire"
-    And the attribute "identite_email" should have badge "Complémentaire"
+    Then I should not see a field accordion for "deleted_attr"
 
-  Scenario: CA-13/14 - API and Manual badges
-    When I visit the socle de base page
-    Then the attribute "identite_siret" should have badge "API Insee"
-    And the attribute "identite_email" should have badge "Manuel"
-
-  Scenario: CA-15 - Edit button visible in each accordion
-    When I visit the socle de base page
-    Then I should see an edit button for "identite_siret"
+  Scenario: CA-7 - Acheteur categories page no longer exists
+    When I visit the acheteur categories page
+    Then I should get a routing error
 
   Scenario: Stats cards display correct counts
     When I visit the socle de base page
@@ -72,14 +59,6 @@ Feature: Admin Socle de Base
     And I should see the stat card "Champs manuels" with value "2"
     And I should see the stat card "Champs obligatoires" with value "2"
 
-  Scenario: Filter by source API
+  Scenario: Manage dropdown button with actions is visible
     When I visit the socle de base page
-    And I filter by source "API"
-    Then I should see the attribute "identite_siret"
-    And I should not see the attribute "identite_email"
-
-  Scenario: Filter by mandatory
-    When I visit the socle de base page
-    And I filter by mandatory "Oui"
-    Then I should see the attribute "identite_siret"
-    And I should not see the attribute "identite_email"
+    Then I should see the manage dropdown button "Gérer le socle de base"

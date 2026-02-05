@@ -33,124 +33,44 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       expect(response.body).to include('Socle de base')
     end
 
-    it 'displays attributes from the default tab (identite_entreprise)' do
+    it 'displays all categories as accordion panels' do
       get '/admin/socle_de_base'
-      expect(response.body).to include('test_identity')
-      expect(response.body).not_to include('test_exclusion')
+      expect(response.body).to include('accordion-cat-identite_entreprise')
+      expect(response.body).to include('accordion-cat-motifs_exclusion')
     end
 
-    context 'with tab parameter' do
-      it 'filters by the specified category tab' do
-        get '/admin/socle_de_base?tab=motifs_exclusion'
-        expect(response.body).to include('test_exclusion')
-        expect(response.body).not_to include('test_identity')
-      end
-
-      it 'falls back to default tab with invalid tab parameter' do
-        get '/admin/socle_de_base?tab=invalid_tab'
-        expect(response.body).to include('test_identity')
-      end
+    it 'displays subcategories within categories' do
+      get '/admin/socle_de_base'
+      expect(response.body).to include('accordion-sub-identite_entreprise_identification')
+      expect(response.body).to include('accordion-sub-motifs_exclusion_fiscales_et_sociales')
     end
 
-    context 'with search parameter' do
-      it 'filters by key containing the search term' do
-        get '/admin/socle_de_base?q=identity'
-        expect(response.body).to include('test_identity')
-      end
-
-      it 'returns empty when no match' do
-        get '/admin/socle_de_base?q=nonexistent'
-        expect(response.body).not_to include('test_identity')
-      end
+    it 'displays field-level accordions' do
+      get '/admin/socle_de_base'
+      expect(response.body).to include("accordion-field-#{identity_attribute.id}")
+      expect(response.body).to include("accordion-field-#{exclusion_attribute.id}")
     end
 
-    context 'with market_type_id parameter' do
-      let(:market_type) { create(:market_type) }
-      let!(:attribute_with_type) do
-        create(:market_attribute,
-          key: 'test_with_type',
-          category_key: 'identite_entreprise',
-          subcategory_key: 'identite_entreprise_identification',
-          market_types: [market_type])
-      end
+    it 'does not display soft-deleted attributes' do
+      deleted_attribute = create(:market_attribute,
+        key: 'test_deleted',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification',
+        deleted_at: Time.current)
 
-      it 'filters by market type' do
-        get "/admin/socle_de_base?market_type_id=#{market_type.id}"
-        expect(response.body).to include('test_with_type')
-        expect(response.body).not_to include('test_identity')
-      end
+      get '/admin/socle_de_base'
+      expect(response.body).not_to include("accordion-field-#{deleted_attribute.id}")
     end
 
-    context 'with source parameter' do
-      let!(:api_attribute) do
-        create(:market_attribute,
-          key: 'test_api_source',
-          category_key: 'identite_entreprise',
-          subcategory_key: 'identite_entreprise_identification',
-          api_name: 'Insee',
-          api_key: 'siret')
-      end
-
-      it 'filters by api source' do
-        get '/admin/socle_de_base?source=api'
-        expect(response.body).to include('test_api_source')
-        expect(response.body).not_to include('test_identity')
-      end
-
-      it 'filters by manual source' do
-        get '/admin/socle_de_base?source=manual'
-        expect(response.body).to include('test_identity')
-        expect(response.body).not_to include('test_api_source')
-      end
+    it 'displays buyer and candidate labels at each level' do
+      get '/admin/socle_de_base'
+      expect(response.body).to include('Acheteur')
+      expect(response.body).to include('Candidat')
     end
 
-    context 'with mandatory parameter' do
-      let!(:mandatory_attribute) do
-        create(:market_attribute,
-          key: 'test_mandatory',
-          category_key: 'identite_entreprise',
-          subcategory_key: 'identite_entreprise_identification',
-          mandatory: true)
-      end
-      let!(:optional_attribute) do
-        create(:market_attribute,
-          key: 'test_optional',
-          category_key: 'identite_entreprise',
-          subcategory_key: 'identite_entreprise_identification',
-          mandatory: false)
-      end
-
-      it 'filters mandatory attributes' do
-        get '/admin/socle_de_base?mandatory=true'
-        expect(response.body).to include('test_mandatory')
-        expect(response.body).not_to include('test_optional')
-      end
-
-      it 'filters optional attributes' do
-        get '/admin/socle_de_base?mandatory=false'
-        expect(response.body).to include('test_optional')
-        expect(response.body).not_to include('test_mandatory')
-      end
-    end
-
-    context 'with combined filters' do
-      let(:market_type) { create(:market_type) }
-      let!(:combined_attribute) do
-        create(:market_attribute,
-          key: 'test_combined',
-          category_key: 'identite_entreprise',
-          subcategory_key: 'identite_entreprise_identification',
-          mandatory: true,
-          api_name: 'Insee',
-          api_key: 'siret',
-          market_types: [market_type])
-      end
-
-      it 'applies all filters together' do
-        get "/admin/socle_de_base?tab=identite_entreprise&q=combined&market_type_id=#{market_type.id}&source=api&mandatory=true"
-        expect(response.body).to include('test_combined')
-        expect(response.body).not_to include('test_identity')
-      end
+    it 'displays edit buttons' do
+      get '/admin/socle_de_base'
+      expect(response.body).to include('Modifier')
     end
   end
 
