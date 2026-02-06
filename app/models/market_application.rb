@@ -60,14 +60,7 @@ class MarketApplication < ApplicationRecord
   def response_ids_for_step(step_name)
     return [] if step_name.blank?
 
-    step_attributes = public_market.market_attributes
-      .where(subcategory_key: step_name.to_s)
-
-    attribute_ids = step_attributes.pluck(:id)
-
-    market_attribute_responses
-      .select { |r| attribute_ids.include?(r.market_attribute_id) }
-      .map(&:id)
+    responses_for_subcategory(step_name).map(&:id)
   end
 
   def bodacc_exclusion_motifs
@@ -119,13 +112,14 @@ class MarketApplication < ApplicationRecord
   end
 
   def responses_for_step(step_name)
-    # Query attributes that belong to this step (matched by subcategory_key)
-    step_attributes = public_market.market_attributes
-      .where(subcategory_key: step_name.to_s)
+    responses_for_subcategory(step_name)
+  end
 
-    attribute_ids = step_attributes.pluck(:id)
+  def responses_for_subcategory(subcategory_key)
+    attribute_ids = public_market.market_attributes
+      .where(subcategory_key: subcategory_key.to_s)
+      .pluck(:id)
 
-    # Return only responses for this step's attributes
     market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
   end
 end
