@@ -44,7 +44,7 @@ RSpec.describe FileSecurityScanner do
     context 'when file is too large' do
       before do
         allow_any_instance_of(described_class).to receive(:file_size)
-          .and_return(FileSecurityScanner::MAX_FILE_SIZE + 1)
+          .and_return(described_class.max_file_size + 1)
       end
 
       it 'raises SecurityError' do

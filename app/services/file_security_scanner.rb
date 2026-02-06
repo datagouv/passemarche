@@ -1,8 +1,13 @@
 class FileSecurityScanner
-  MAX_FILE_SIZE = 50.megabytes
-  ALLOWED_EXTENSIONS = %w[pdf doc docx txt xls xlsx csv jpg jpeg png zip].freeze
-
   class SecurityError < StandardError; end
+
+  def self.max_file_size
+    Rails.configuration.file_upload.max_size
+  end
+
+  def self.allowed_extensions
+    Rails.configuration.file_upload.allowed_extensions
+  end
 
   def self.scan!(file_path, filename:)
     new(file_path, filename:).scan!
@@ -18,30 +23,36 @@ class FileSecurityScanner
     validate_extension!
     virus_scan_result = scan_for_virus! || { scanner: 'none' }
 
-    {
+    result = {
       scanned_at: Time.current.iso8601,
-      scan_safe: true,
       scanner: virus_scan_result[:scanner]
     }
+
+    # Only mark as safe if actually scanned
+    result[:scan_safe] = true if virus_scan_result[:scanner] != 'none'
+
+    result
   end
 
   private
 
   def validate_file_size!
     size = file_size
-    return unless size > MAX_FILE_SIZE
+    max_size = self.class.max_file_size
+    return unless size > max_size
 
     size_mb = (size / 1.megabyte.to_f).round(2)
-    max_mb = MAX_FILE_SIZE / 1.megabyte
+    max_mb = max_size / 1.megabyte
     raise SecurityError, "Fichier trop volumineux (#{size_mb}MB). Maximum: #{max_mb}MB"
   end
 
   def validate_extension!
     extension = File.extname(@filename).downcase.delete('.')
+    allowed = self.class.allowed_extensions
 
-    return if ALLOWED_EXTENSIONS.include?(extension)
+    return if allowed.include?(extension)
 
-    raise SecurityError, "Format non autorisé (.#{extension}). Formats acceptés: #{ALLOWED_EXTENSIONS.join(', ')}"
+    raise SecurityError, "Format non autorisé (.#{extension}). Formats acceptés: #{allowed.join(', ')}"
   end
 
   def scan_for_virus!

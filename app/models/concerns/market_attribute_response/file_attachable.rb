@@ -3,22 +3,19 @@
 module MarketAttributeResponse::FileAttachable
   extend ActiveSupport::Concern
 
-  MAX_FILE_SIZE = 100.megabytes
-  ALLOWED_CONTENT_TYPES = %w[
-    application/pdf
-    image/jpeg
-    image/png
-    image/gif
-    application/msword
-    application/vnd.openxmlformats-officedocument.wordprocessingml.document
-    application/vnd.ms-excel
-    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-    text/plain
-  ].freeze
-
   included do
     has_many_attached :documents
     validate :validate_attached_files
+  end
+
+  class_methods do
+    def max_file_size
+      Rails.configuration.file_upload.max_size
+    end
+
+    def allowed_content_types
+      Rails.configuration.file_upload.allowed_content_types
+    end
   end
 
   def files=(uploaded_files)
@@ -30,6 +27,14 @@ module MarketAttributeResponse::FileAttachable
 
     clean_files.each_with_index do |file, _index|
       attach_file(file)
+    end
+  end
+
+  def enqueue_document_scans
+    documents.each do |document|
+      next if document.blob.metadata.key?('scan_safe') || document.blob.metadata.key?('scanned_at')
+
+      ScanDocumentJob.perform_later(document.blob.id)
     end
   end
 
@@ -114,7 +119,8 @@ module MarketAttributeResponse::FileAttachable
   def validate_file_content_type(doc)
     return add_document_error('required') if doc.content_type.blank?
 
-    add_document_error('invalid') if ALLOWED_CONTENT_TYPES.exclude?(doc.content_type)
+    allowed = self.class.allowed_content_types
+    add_document_error('invalid') if allowed.exclude?(doc.content_type)
   end
 
   def validate_file_size(doc)
@@ -122,7 +128,8 @@ module MarketAttributeResponse::FileAttachable
     return add_document_error('required') if size.blank?
     return add_document_error('wrong_type') unless size.is_a?(Numeric)
 
-    add_document_error('invalid') unless size.positive? && size <= MAX_FILE_SIZE
+    max_size = self.class.max_file_size
+    add_document_error('invalid') unless size.positive? && size <= max_size
   end
 
   def validate_file_name(doc)
@@ -134,14 +141,6 @@ module MarketAttributeResponse::FileAttachable
 
   def add_document_error(message_key)
     errors.add(:documents, I18n.t("activerecord.errors.json_schema.#{message_key}"))
-  end
-
-  def enqueue_document_scans
-    documents.each do |document|
-      next if document.blob.metadata.key?('scan_safe') || document.blob.metadata.key?('scanned_at')
-
-      ScanDocumentJob.perform_later(document.id)
-    end
   end
 
   def validate_file_security(doc)
@@ -173,10 +172,10 @@ module MarketAttributeResponse::FileAttachable
     # Only validate at summary
     context.to_s == 'summary'
   end
-end
 
-def resolved_validation_context
-  context = validation_context
-  context ||= market_application&.validation_context if respond_to?(:market_application)
-  context
+  def resolved_validation_context
+    context = validation_context
+    context ||= market_application&.validation_context if respond_to?(:market_application)
+    context
+  end
 end

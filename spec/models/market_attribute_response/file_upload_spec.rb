@@ -5,14 +5,14 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
   let(:market_attribute) { create(:market_attribute, input_type: 'file_upload') }
   let(:file_response) { build(:market_attribute_response_file_upload) }
 
-  describe 'constants' do
-    it 'defines MAX_FILE_SIZE' do
-      expect(described_class::MAX_FILE_SIZE).to eq(100.megabytes)
+  describe 'configuration' do
+    it 'uses centralized max file size' do
+      expect(described_class.max_file_size).to eq(Rails.configuration.file_upload.max_size)
     end
 
-    it 'defines ALLOWED_CONTENT_TYPES' do
-      expect(described_class::ALLOWED_CONTENT_TYPES).to include('application/pdf')
-      expect(described_class::ALLOWED_CONTENT_TYPES).to include('image/jpeg')
+    it 'uses centralized allowed content types' do
+      expect(described_class.allowed_content_types).to include('application/pdf')
+      expect(described_class.allowed_content_types).to include('image/jpeg')
     end
   end
 
