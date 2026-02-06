@@ -32,6 +32,32 @@ RSpec.describe MarketApplicationCreationService, type: :service do
       end
     end
 
+    context 'with provider_user_id' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+      let(:service) { described_class.new(public_market:, siret:, provider_user_id: 'editor-user-99').perform }
+
+      before do
+        allow(SiretValidationService).to receive(:call).and_return(true)
+      end
+
+      it 'stores the provider_user_id' do
+        expect(service.result.provider_user_id).to eq('editor-user-99')
+      end
+    end
+
+    context 'without provider_user_id' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+      let(:service) { described_class.new(public_market:, siret:).perform }
+
+      before do
+        allow(SiretValidationService).to receive(:call).and_return(true)
+      end
+
+      it 'creates application with nil provider_user_id' do
+        expect(service.result.provider_user_id).to be_nil
+      end
+    end
+
     context 'when SIRET is missing' do
       let(:public_market) { create(:public_market, :completed, editor:) }
       let(:service) { described_class.new(public_market:, siret: nil).perform }
