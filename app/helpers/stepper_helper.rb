@@ -119,10 +119,8 @@ module StepperHelper
     if i18n_scope.start_with?('buyer')
       t("buyer.public_markets.steps.#{step}")
     else
-      category_key = "form_fields.#{i18n_scope}.categories.#{step}"
-      fallback_key = "candidate.market_applications.steps.#{step}"
-
-      t(category_key, default: t(fallback_key, default: step.to_s.humanize))
+      fallback = t("candidate.market_applications.steps.#{step}", default: step.to_s.humanize)
+      category_label(step, scope: :candidate, default: fallback)
     end
   end
 

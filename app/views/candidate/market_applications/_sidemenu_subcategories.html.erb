@@ -6,7 +6,7 @@
         <ul class="fr-sidemenu__list">
           <% subcategories.each do |key| %>
             <li class="fr-sidemenu__item">
-              <%= link_to t("form_fields.candidate.subcategories.#{key}",
+              <%= link_to subcategory_label(key, scope: :candidate,
                           default: t("candidate.market_applications.manual_subcategories.#{key}",
                                     default: key.humanize)), "##{key}",
               class: "fr-sidemenu__link",

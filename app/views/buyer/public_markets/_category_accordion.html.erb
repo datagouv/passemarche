@@ -13,7 +13,7 @@
     <button type="button" class="fr-accordion__btn" 
             aria-expanded="<%= is_expanded ? 'true' : 'false' %>" 
             aria-controls="<%= accordion_id %>">
-      <%= t("form_fields.buyer.categories.#{category}") %>
+      <%= category_label(category, scope: :buyer) %>
     </button>
   </h3>
   <div class="fr-collapse <%= 'fr-collapse--expanded' if is_expanded %>" id="<%= accordion_id %>">
