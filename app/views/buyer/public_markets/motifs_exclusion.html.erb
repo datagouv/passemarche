@@ -1,4 +1,4 @@
-<% content_for :title, "#{@public_market.editor.name} - #{t("form_fields.buyer.categories.#{@current_category}", default: @current_category.humanize)}" %>
+<% content_for :title, "#{@public_market.editor.name} - #{category_label(@current_category, scope: :buyer)}" %>
 
 <div class="fr-grid-row">
   <div class="fr-col-12">
