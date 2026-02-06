@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_06_094456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,19 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
     t.index ["email"], name: "index_admins_on_email", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "buyer_label"
+    t.string "candidate_label"
+    t.datetime "created_at", null: false
+    t.datetime "deleted_at"
+    t.string "key", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_categories_on_deleted_at"
+    t.index ["key"], name: "index_categories_on_key", unique: true
+    t.index ["position"], name: "index_categories_on_position"
+  end
+
   create_table "editors", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "authorized", default: false, null: false
@@ -73,11 +86,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.string "identifier", null: false
+    t.string "provider_user_id"
     t.bigint "public_market_id", null: false
     t.string "siret", limit: 14
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
+    t.index ["provider_user_id"], name: "index_market_applications_on_provider_user_id"
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"
     t.index ["sync_status"], name: "index_market_applications_on_sync_status"
@@ -99,6 +114,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
   create_table "market_attributes", force: :cascade do |t|
     t.string "api_key"
     t.string "api_name"
+    t.text "buyer_description"
+    t.string "buyer_name"
+    t.text "candidate_description"
+    t.string "candidate_name"
     t.string "category_key", null: false
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
@@ -106,6 +125,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
     t.string "key", null: false
     t.boolean "mandatory", default: false, null: false
     t.integer "position", default: 0, null: false
+    t.bigint "subcategory_id"
     t.string "subcategory_key", null: false
     t.datetime "updated_at", null: false
     t.index ["api_name", "api_key"], name: "index_market_attributes_on_api_name_and_api_key"
@@ -115,6 +135,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
     t.index ["key"], name: "index_market_attributes_on_key", unique: true
     t.index ["mandatory"], name: "index_market_attributes_on_mandatory"
     t.index ["position"], name: "index_market_attributes_on_position"
+    t.index ["subcategory_id"], name: "index_market_attributes_on_subcategory_id"
   end
 
   create_table "market_attributes_public_markets", id: false, force: :cascade do |t|
@@ -191,11 +212,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
     t.string "lot_name"
     t.text "market_type_codes", default: [], array: true
     t.string "name"
+    t.string "provider_user_id"
     t.string "siret", null: false
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["editor_id"], name: "index_public_markets_on_editor_id"
     t.index ["identifier"], name: "index_public_markets_on_identifier", unique: true
+    t.index ["provider_user_id"], name: "index_public_markets_on_provider_user_id"
     t.index ["siret"], name: "index_public_markets_on_siret"
     t.index ["sync_status"], name: "index_public_markets_on_sync_status"
   end
@@ -321,11 +344,27 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "subcategories", force: :cascade do |t|
+    t.string "buyer_label"
+    t.string "candidate_label"
+    t.bigint "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "deleted_at"
+    t.string "key", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id", "key"], name: "index_subcategories_on_category_id_and_key", unique: true
+    t.index ["category_id"], name: "index_subcategories_on_category_id"
+    t.index ["deleted_at"], name: "index_subcategories_on_deleted_at"
+    t.index ["position"], name: "index_subcategories_on_position"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "market_applications", "public_markets"
   add_foreign_key "market_attribute_responses", "market_applications"
   add_foreign_key "market_attribute_responses", "market_attributes"
+  add_foreign_key "market_attributes", "subcategories"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "public_markets", "editors"
@@ -335,4 +374,5 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_11_085746) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "subcategories", "categories"
 end
