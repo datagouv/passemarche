@@ -59,6 +59,24 @@ RSpec.describe PublicMarket, type: :model do
       end
     end
 
+    describe 'provider_user_id validation' do
+      it 'accepts nil provider_user_id' do
+        public_market = build(:public_market, editor:, provider_user_id: nil)
+        expect(public_market).to be_valid
+      end
+
+      it 'accepts valid provider_user_id' do
+        public_market = build(:public_market, editor:, provider_user_id: 'editor-user-123')
+        expect(public_market).to be_valid
+      end
+
+      it 'rejects provider_user_id longer than 255 characters' do
+        public_market = build(:public_market, editor:, provider_user_id: 'a' * 256)
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:provider_user_id]).to be_present
+      end
+    end
+
     describe 'market_type_codes validation' do
       let(:supplies_market_type) { create(:market_type, code: 'supplies') }
       let(:services_market_type) { create(:market_type, code: 'services') }
