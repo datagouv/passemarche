@@ -76,6 +76,13 @@ Then('the public market should be saved in the database') do
   end
 end
 
+Then('the public market should have provider_user_id {string}') do |expected_provider_user_id|
+  identifier = @response_body['identifier']
+  public_market = PublicMarket.find_by(identifier:)
+
+  expect(public_market.provider_user_id).to eq(expected_provider_user_id)
+end
+
 Then('the public market should have no lot name') do
   identifier = @response_body['identifier']
   public_market = PublicMarket.find_by(identifier:)
