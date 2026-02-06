@@ -753,6 +753,11 @@ fr:
         mandatory:
           title: "Champs obligatoires"
           tooltip: "Champs requis pour toute candidature"
+      badges:
+        mandatory: "Obligatoire"
+        optional: "Complémentaire"
+        api: "API %{api_name}"
+        manual: "Manuel"
       accordion:
         buyer_title: "Acheteur"
         candidate_title: "Candidat"
