@@ -18,13 +18,7 @@ class MarketApplicationPresenter
   end
 
   def category_keys_with_attestation_motifs_exclusion
-    category_keys = @market_application.public_market.market_attributes
-      .order(:id)
-      .pluck(:category_key)
-      .compact
-      .uniq
-
-    inject_attestation_motifs_exclusion_step(category_keys)
+    inject_attestation_motifs_exclusion_step(category_keys.dup)
   end
 
   def parent_category_for(subcategory_key)
@@ -32,10 +26,8 @@ class MarketApplicationPresenter
     return MARKET_INFO_PARENT_CATEGORY if subcategory_key.to_s == 'market_information'
 
     all_market_attributes
-      .where(subcategory_key: subcategory_key.to_s)
-      .pluck(:category_key)
-      .compact
-      .first
+      .find { |attr| attr.subcategory_key == subcategory_key.to_s }
+      &.category_key
   end
 
   def subcategories_for_category(category_key)
@@ -45,10 +37,8 @@ class MarketApplicationPresenter
     subcategories << 'market_information' if category_key == MARKET_INFO_PARENT_CATEGORY
 
     category_subcategories = all_market_attributes
-      .where(category_key: category_key.to_s)
-      .order(:position)
-      .pluck(:subcategory_key)
-      .compact
+      .select { |attr| attr.category_key == category_key.to_s }
+      .filter_map(&:subcategory_key)
       .uniq
 
     subcategories + category_subcategories
@@ -61,9 +51,9 @@ class MarketApplicationPresenter
   def market_attributes_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
-    all_market_attributes
-      .where(category_key:, subcategory_key:)
-      .order(:position)
+    all_market_attributes.select do |attr|
+      attr.category_key == category_key.to_s && attr.subcategory_key == subcategory_key.to_s
+    end
   end
 
   def market_attribute_response_for(market_attribute)
@@ -85,8 +75,7 @@ class MarketApplicationPresenter
     return [] if category_key.blank?
 
     all_market_attributes
-      .where(category_key:)
-      .order(:position)
+      .select { |attr| attr.category_key == category_key.to_s }
       .map { |attr| market_attribute_response_for(attr) }
   end
 
@@ -134,16 +123,10 @@ class MarketApplicationPresenter
   end
 
   def all_market_attributes
-    @market_application.public_market.market_attributes.order(:position)
+    @all_market_attributes ||= @market_application.public_market.market_attributes.order(:position).to_a
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)
-    category_keys = @market_application.public_market.market_attributes
-      .order(:position)
-      .pluck(:category_key)
-      .compact
-      .uniq
-
     category_keys.each_with_object({}) do |category_key, result|
       category_attrs = market_attributes.select { |attr| attr.category_key == category_key }
       result[category_key] = group_by_subcategory(category_attrs) if category_attrs.any?
@@ -151,19 +134,11 @@ class MarketApplicationPresenter
   end
 
   def category_keys
-    @category_keys ||= all_market_attributes
-      .order(:position)
-      .pluck(:category_key)
-      .compact
-      .uniq
+    @category_keys ||= all_market_attributes.filter_map(&:category_key).uniq
   end
 
   def subcategory_keys
-    @subcategory_keys ||= all_market_attributes
-      .order(:position)
-      .pluck(:subcategory_key)
-      .compact
-      .uniq
+    @subcategory_keys ||= all_market_attributes.filter_map(&:subcategory_key).uniq
   end
 
   def inject_attestation_motifs_exclusion_step(steps)
