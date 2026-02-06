@@ -1,0 +1,16 @@
+<section class="fr-accordion" data-controller="accordion">
+  <h5 class="fr-accordion__title">
+    <button class="fr-accordion__btn"
+            data-accordion-target="button"
+            data-action="click->accordion#toggle"
+            aria-expanded="false"
+            aria-controls="accordion-field-<%= market_attribute.id %>">
+      <%= presenter.buyer_name %>
+    </button>
+  </h5>
+  <div class="fr-collapse" id="accordion-field-<%= market_attribute.id %>" data-accordion-target="content">
+    <%= render 'admin/socle_de_base/buyer_candidate_labels',
+               buyer_label: presenter.buyer_name,
+               candidate_label: presenter.candidate_name %>
+  </div>
+</section>

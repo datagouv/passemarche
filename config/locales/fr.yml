@@ -753,31 +753,9 @@ fr:
         mandatory:
           title: "Champs obligatoires"
           tooltip: "Champs requis pour toute candidature"
-      filters:
-        search_label: "Recherche"
-        search_placeholder: "Rechercher un champ..."
-        market_type_label: "Type de marché"
-        market_type_all: "Tous les types"
-        source_label: "Source"
-        source_all: "Toutes les sources"
-        source_api: "API"
-        source_manual: "Manuel"
-        mandatory_label: "Obligatoire"
-        mandatory_all: "Tous"
-        mandatory_yes: "Oui"
-        mandatory_no: "Non"
-      badges:
-        mandatory: "Obligatoire"
-        optional: "Complémentaire"
-        api: "API %{api_name}"
-        manual: "Manuel"
       accordion:
         buyer_title: "Acheteur"
         candidate_title: "Candidat"
-        category_label: "Catégorie"
-        subcategory_label: "Sous-catégorie"
-        name_label: "Nom"
-        description_label: "Description"
 
   activerecord:
     errors:

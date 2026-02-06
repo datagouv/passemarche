@@ -1,0 +1,25 @@
+<section class="fr-accordion" data-controller="accordion">
+  <h4 class="fr-accordion__title">
+    <button class="fr-accordion__btn"
+            data-accordion-target="button"
+            data-action="click->accordion#toggle"
+            aria-expanded="false"
+            aria-controls="accordion-sub-<%= subcategory_key %>">
+      <%= I18n.t("form_fields.buyer.subcategories.#{subcategory_key}", default: subcategory_key.humanize) %>
+    </button>
+  </h4>
+  <div class="fr-collapse" id="accordion-sub-<%= subcategory_key %>" data-accordion-target="content">
+    <%= render 'admin/socle_de_base/buyer_candidate_labels',
+               buyer_label: I18n.t("form_fields.buyer.subcategories.#{subcategory_key}", default: subcategory_key.humanize),
+               candidate_label: I18n.t("form_fields.candidate.subcategories.#{subcategory_key}", default: subcategory_key.humanize) %>
+
+    <div class="fr-accordions-group fr-mt-2w">
+      <% fields.each do |market_attribute| %>
+        <% presenter = SocleDeBasePresenter.new(market_attribute) %>
+        <%= render 'admin/socle_de_base/field_accordion',
+                   market_attribute: market_attribute,
+                   presenter: presenter %>
+      <% end %>
+    </div>
+  </div>
+</section>

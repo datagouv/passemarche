@@ -1,0 +1,18 @@
+<div class="fr-grid-row fr-grid-row--gutters fr-mb-2w">
+  <div class="fr-col-12 fr-col-md-5">
+    <p class="fr-text--sm fr-mb-0">
+      <strong><%= t('admin.socle_de_base.accordion.buyer_title') %> :</strong>
+      <%= buyer_label %>
+    </p>
+  </div>
+  <div class="fr-col-12 fr-col-md-5">
+    <p class="fr-text--sm fr-mb-0">
+      <strong><%= t('admin.socle_de_base.accordion.candidate_title') %> :</strong>
+      <%= candidate_label %>
+    </p>
+  </div>
+  <div class="fr-col-12 fr-col-md-2 fr-text--right">
+    <%= link_to t('admin.socle_de_base.edit_button'), '#',
+                class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-edit-line" %>
+  </div>
+</div>
