@@ -10,7 +10,6 @@ export default class extends Controller {
     const scanningBadges = this.element.querySelectorAll('.fr-badge--security-scanning')
 
     if (scanningBadges.length > 0) {
-      console.log(`${scanningBadges.length} fichier(s) en cours de scan, auto-refresh activé`)
       this.startPolling()
     }
   }
@@ -37,10 +36,8 @@ export default class extends Controller {
     const scanningBadges = this.element.querySelectorAll('.fr-badge--security-scanning')
 
     if (scanningBadges.length > 0) {
-      console.log('Scan toujours en cours, rechargement de la page...')
       window.location.reload()
     } else {
-      console.log('Tous les scans terminés, arrêt du polling')
       this.stopPolling()
     }
   }
