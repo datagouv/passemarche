@@ -15,6 +15,7 @@ class PublicMarket < ApplicationRecord
   validates :deadline, presence: true
   validates :siret, presence: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
+  validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
   validate :must_have_valid_market_type_codes
   validate :siret_must_be_valid
   validates_uniqueness_of_association :market_attributes
