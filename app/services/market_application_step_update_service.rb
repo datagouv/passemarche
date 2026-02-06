@@ -73,7 +73,8 @@ class MarketApplicationStepUpdateService < ApplicationService
       @flash_messages[:alert] = result.message
       build_result(false)
     end
-  rescue StandardError => e
+  rescue ActiveRecord::RecordInvalid,
+         ActiveRecord::RecordNotFound => e
     Rails.logger.error "Error completing market application #{market_application.identifier}: #{e.message}"
     @flash_messages[:alert] = I18n.t('candidate.market_applications.completion_error')
     build_result(false)

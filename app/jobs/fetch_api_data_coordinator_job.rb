@@ -25,7 +25,7 @@ class FetchApiDataCoordinatorJob < ApplicationJob
     market_application = MarketApplication.find(market_application_id)
 
     spawn_relevant_api_jobs(market_application, market_application_id)
-  rescue StandardError => e
+  rescue ActiveRecord::RecordNotFound => e
     log_coordinator_error(market_application_id, e)
     raise
   end

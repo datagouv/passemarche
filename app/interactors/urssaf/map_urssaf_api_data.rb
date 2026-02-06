@@ -10,7 +10,7 @@ class Urssaf::MapUrssafApiData < MapApiData
     value = safe_fetch_api_data(market_attribute.api_key)
     begin
       value.dup
-    rescue StandardError
+    rescue TypeError, FrozenError
       value
     end
   end
@@ -28,7 +28,8 @@ class Urssaf::MapUrssafApiData < MapApiData
 
   def safe_fetch_api_data(key)
     context.bundled_data.data.public_send(key.to_s)
-  rescue StandardError
+  rescue NoMethodError => e
+    Rails.logger.debug { "[Urssaf::MapUrssafApiData] Key '#{key}' not found in bundled data: #{e.message}" }
     nil
   end
 
@@ -77,13 +78,15 @@ class Urssaf::MapUrssafApiData < MapApiData
 
   def safe_pos(io_obj)
     io_obj.pos
-  rescue StandardError
+  rescue IOError, Errno::EINVAL => e
+    Rails.logger.debug { "[Urssaf::MapUrssafApiData] Cannot get IO position: #{e.message}" }
     nil
   end
 
   def restore_pos(io_obj, pos_value)
     io_obj.pos = pos_value if pos_value
-  rescue StandardError
+  rescue IOError, Errno::EINVAL => e
+    Rails.logger.debug { "[Urssaf::MapUrssafApiData] Cannot restore IO position: #{e.message}" }
     nil
   end
 end

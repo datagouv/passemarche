@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe GenerateBuyerAttestationPdf, type: :interactor do
+  # Helper to normalize apostrophes for comparison (HTML entities vs plain text)
+  def normalize_apostrophes(text)
+    text.gsub('&#39;', "'").tr("\u2019", "'")
+  end
+
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
   end

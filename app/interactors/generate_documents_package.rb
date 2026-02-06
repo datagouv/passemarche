@@ -27,7 +27,9 @@ class GenerateDocumentsPackage < ApplicationInteractor
     )
 
     context.documents_package = market_application.documents_package
-  rescue StandardError => e
+  rescue Zip::Error,
+         ActiveStorage::Error,
+         Errno::ENOENT, Errno::ENOSPC => e
     handle_error(e)
   end
 
@@ -103,11 +105,12 @@ class GenerateDocumentsPackage < ApplicationInteractor
     response.documents.each_with_index do |document, doc_index|
       add_single_document_to_zip(zip, document, response, response_index, doc_index)
     end
-  rescue StandardError => e
-    Rails.logger.warn "Failed to add document to ZIP for response #{response.id}: #{e.message}"
+  rescue ActiveStorage::FileNotFoundError,
+         ActiveStorage::Error => e
+    Rails.logger.error "Failed to add document to ZIP for response #{response.id}: #{e.message}"
     Sentry.capture_exception(
       e,
-      level: :warning,
+      level: :error,
       extra: {
         market_application_id: market_application.id,
         market_application_identifier: market_application.identifier,
@@ -119,7 +122,6 @@ class GenerateDocumentsPackage < ApplicationInteractor
         document_type: 'user_uploaded_document'
       }
     )
-    # Continue with other documents even if one fails
   end
   # rubocop:enable Metrics/AbcSize
 
@@ -129,8 +131,10 @@ class GenerateDocumentsPackage < ApplicationInteractor
 
     zip.put_next_entry(zip_filename)
     zip.write(document.download)
-  rescue StandardError => e
+  rescue ActiveStorage::FileNotFoundError,
+         Zip::Error => e
     Rails.logger.error "Failed to add document #{document.filename} to ZIP: #{e.message}"
+    Sentry.capture_exception(e, level: :error, extra: { filename: document.filename.to_s })
   end
 
   def naming_service

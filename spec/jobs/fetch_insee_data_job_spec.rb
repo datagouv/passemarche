@@ -145,7 +145,7 @@ RSpec.describe FetchInseeDataJob, type: :job do
       let(:error_message) { 'API timeout error' }
 
       before do
-        allow(Insee).to receive(:call).and_raise(StandardError, error_message)
+        allow(Insee).to receive(:call).and_raise(Faraday::Error, error_message)
       end
 
       it 'logs the error' do
@@ -153,7 +153,7 @@ RSpec.describe FetchInseeDataJob, type: :job do
 
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError, error_message)
+        end.to raise_error(Faraday::Error, error_message)
 
         expect(Rails.logger).to have_received(:error)
           .with(/Error fetching insee data for #{market_application.id}/)
@@ -164,7 +164,7 @@ RSpec.describe FetchInseeDataJob, type: :job do
 
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError)
+        end.to raise_error(Faraday::Error)
 
         market_application.reload
         expect(market_application.api_fetch_status['insee']['status']).to eq('failed')
@@ -175,7 +175,7 @@ RSpec.describe FetchInseeDataJob, type: :job do
 
         expect do
           described_class.perform_now(market_application.id)
-        end.to raise_error(StandardError, error_message)
+        end.to raise_error(Faraday::Error, error_message)
       end
     end
 

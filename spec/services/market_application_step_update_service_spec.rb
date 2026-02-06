@@ -146,7 +146,7 @@ RSpec.describe MarketApplicationStepUpdateService do
       context 'when an exception occurs' do
         before do
           allow(CompleteMarketApplication).to receive(:call)
-            .and_raise(StandardError, 'Unexpected error')
+            .and_raise(ActiveRecord::RecordInvalid.new(market_application))
         end
 
         it 'returns failure' do
