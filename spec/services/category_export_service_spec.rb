@@ -24,13 +24,13 @@ RSpec.describe CategoryExportService do
 
     it 'exports active categories ordered by position' do
       service.perform
-      keys = service.result['categories'].map { |c| c['key'] }
+      keys = service.result['categories'].pluck('key')
       expect(keys).to eq(%w[cat_a cat_b])
     end
 
     it 'excludes soft-deleted categories' do
       service.perform
-      keys = service.result['categories'].map { |c| c['key'] }
+      keys = service.result['categories'].pluck('key')
       expect(keys).not_to include('cat_deleted')
     end
 
@@ -44,14 +44,14 @@ RSpec.describe CategoryExportService do
     it 'exports subcategories nested under categories' do
       service.perform
       cat_a = service.result['categories'].first
-      sub_keys = cat_a['subcategories'].map { |s| s['key'] }
+      sub_keys = cat_a['subcategories'].pluck('key')
       expect(sub_keys).to eq(%w[sub_a1 sub_a2])
     end
 
     it 'excludes soft-deleted subcategories' do
       service.perform
       cat_a = service.result['categories'].first
-      sub_keys = cat_a['subcategories'].map { |s| s['key'] }
+      sub_keys = cat_a['subcategories'].pluck('key')
       expect(sub_keys).not_to include('sub_deleted')
     end
 
