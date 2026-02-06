@@ -33,12 +33,13 @@ class MarketAttributeResponse::Fields::FileUploadFieldComponent < ViewComponent:
   end
 
   def hint_text
-    max_size_mb = MarketAttributeResponse::FileUpload::MAX_FILE_SIZE / 1.megabyte
-    "Taille maximale : #{max_size_mb} Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles."
+    max_size_mb = Rails.configuration.file_upload.max_size / 1.megabyte
+    extensions = Rails.configuration.file_upload.allowed_extensions.join(', ')
+    "Taille maximale : #{max_size_mb} Mo. Formats supportés : #{extensions}. Plusieurs fichiers possibles."
   end
 
   def accepted_formats
-    '.pdf,.doc,.docx,.jpg,.jpeg,.png'
+    Rails.configuration.file_upload.allowed_extensions.map { |ext| ".#{ext}" }.join(',')
   end
 
   def delete_attachment_path(document)
