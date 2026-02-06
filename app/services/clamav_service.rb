@@ -20,16 +20,10 @@ class ClamavService
   end
 
   def scan!(file_path, filename:)
-    Rails.logger.info("🔍 Scanning with ClamAV: #{file_path}")
     is_safe = ::Clamby.safe?(file_path)
-    Rails.logger.info("🔍 Clamby.safe? returned: #{is_safe}")
 
-    unless is_safe
-      Rails.logger.error('⚠️ VIRUS DETECTED!')
-      raise ScanError, "Malware détecté dans #{filename}"
-    end
+    raise ScanError, "Malware détecté dans #{filename}" unless is_safe
 
-    Rails.logger.info("✓ Scan antivirus OK: #{filename}")
     { scanner: 'clamav' }
   end
 

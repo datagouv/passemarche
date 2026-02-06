@@ -67,14 +67,6 @@ RSpec.describe ClamavService do
 
         expect(result).to eq({ scanner: 'clamav' })
       end
-
-      it 'logs scanning activity' do
-        expect(Rails.logger).to receive(:info).with(/Scanning with ClamAV/)
-        expect(Rails.logger).to receive(:info).with(/Clamby.safe\? returned/)
-        expect(Rails.logger).to receive(:info).with(/Scan antivirus OK/)
-
-        described_class.scan!(file_path.to_s, filename:)
-      end
     end
 
     context 'when malware is detected' do
@@ -89,17 +81,6 @@ RSpec.describe ClamavService do
         expect do
           described_class.scan!(file_path.to_s, filename:)
         end.to raise_error(ClamavService::ScanError, /Malware détecté/)
-      end
-
-      it 'logs virus detection' do
-        allow(Rails.logger).to receive(:info)
-        expect(Rails.logger).to receive(:error).with('⚠️ VIRUS DETECTED!')
-
-        begin
-          described_class.scan!(file_path.to_s, filename:)
-        rescue ClamavService::ScanError
-          # Expected error
-        end
       end
     end
   end
