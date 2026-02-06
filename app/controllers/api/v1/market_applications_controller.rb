@@ -9,7 +9,8 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
 
     service = MarketApplicationCreationService.new(
       public_market: @public_market,
-      siret: market_application_params[:siret]
+      siret: market_application_params[:siret],
+      provider_user_id: market_application_params[:provider_user_id]
     ).perform
 
     if service.success?
@@ -60,7 +61,7 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def market_application_params
-    params.fetch(:market_application, {}).permit(:siret)
+    params.fetch(:market_application, {}).permit(:siret, :provider_user_id)
   end
 
   def success_response(market_application)

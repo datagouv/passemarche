@@ -70,6 +70,49 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
 
+    context 'with provider_user_id' do
+      let(:params_with_provider) do
+        market_params.deep_merge(public_market: { provider_user_id: 'buyer-user-42' })
+      end
+
+      before do
+        post '/api/v1/public_markets',
+          params: params_with_provider.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'creates market and stores provider_user_id' do
+        expect(response).to have_http_status(:created)
+        json_response = response.parsed_body
+        public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+        expect(public_market.provider_user_id).to eq('buyer-user-42')
+      end
+    end
+
+    context 'with provider_user_id exceeding 255 characters' do
+      let(:long_provider_params) do
+        market_params.deep_merge(public_market: { provider_user_id: 'a' * 256 })
+      end
+
+      before do
+        post '/api/v1/public_markets',
+          params: long_provider_params.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns validation error' do
+        expect(response).to have_http_status(:unprocessable_content)
+        json_response = response.parsed_body
+        expect(json_response['errors']).to have_key('provider_user_id')
+      end
+    end
+
     context 'without OAuth token' do
       before do
         post '/api/v1/public_markets'
