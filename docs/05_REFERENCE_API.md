@@ -148,7 +148,8 @@ Content-Type: application/json
     "lot_name": "Lot 1 - Ordinateurs portables",
     "deadline": "2024-12-31T23:59:59Z",
     "siret": "13002526500013",
-    "market_type_codes": ["supplies", "services"]
+    "market_type_codes": ["supplies", "services"],
+    "provider_user_id": "user-acheteur-42"
   }
 }
 ```
@@ -162,6 +163,7 @@ Content-Type: application/json
 | `siret` | string | Oui | SIRET de l'organisation publique (14 chiffres, validation Luhn) | Exactement 14 chiffres numériques |
 | `market_type_codes` | array | Oui | Types de marché | Au moins 1 élément |
 | `lot_name` | string | Non | Nom du lot spécifique | Max 255 caractères |
+| `provider_user_id` | string | Non | Identifiant de l'utilisateur côté éditeur (acheteur) | Max 255 caractères |
 
 #### Types de Marché Valides
 
@@ -232,7 +234,8 @@ Content-Type: application/json
 ```json
 {
   "market_application": {
-    "siret": "12345678901234"
+    "siret": "12345678901234",
+    "provider_user_id": "user-candidat-7"
   }
 }
 ```
@@ -243,6 +246,7 @@ Content-Type: application/json
 |-----------|------|--------|-------------|-------------|
 | `market_identifier` | string | Oui | Identifiant du marché | Format VR-YYYY-XXXXXXXXXXXX |
 | `siret` | string | Non | SIRET de l'entreprise | 14 chiffres exactement |
+| `provider_user_id` | string | Non | Identifiant de l'utilisateur côté éditeur (candidat) | Max 255 caractères |
 
 **Note** : Le SIRET peut être omis à la création et fourni lors de l'étape d'identification.
 

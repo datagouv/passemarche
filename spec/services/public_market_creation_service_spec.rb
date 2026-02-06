@@ -132,6 +132,23 @@ RSpec.describe PublicMarketCreationService do
         end
       end
 
+      context 'with provider_user_id' do
+        let(:params_with_provider) { valid_params.merge(provider_user_id: 'editor-user-42') }
+        let(:service) { described_class.new(editor, params_with_provider).perform }
+
+        it 'stores the provider_user_id' do
+          expect(service.result.provider_user_id).to eq('editor-user-42')
+        end
+      end
+
+      context 'without provider_user_id' do
+        let(:service) { described_class.new(editor, valid_params).perform }
+
+        it 'creates market with nil provider_user_id' do
+          expect(service.result.provider_user_id).to be_nil
+        end
+      end
+
       context 'with valid SIRET' do
         let(:service) { described_class.new(editor, valid_params).perform }
 

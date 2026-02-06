@@ -45,6 +45,24 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'provider_user_id validation' do
+    it 'accepts nil provider_user_id' do
+      application = build(:market_application, public_market:, provider_user_id: nil)
+      expect(application).to be_valid
+    end
+
+    it 'accepts valid provider_user_id' do
+      application = build(:market_application, public_market:, provider_user_id: 'editor-user-456')
+      expect(application).to be_valid
+    end
+
+    it 'rejects provider_user_id longer than 255 characters' do
+      application = build(:market_application, public_market:, provider_user_id: 'a' * 256)
+      expect(application).not_to be_valid
+      expect(application.errors[:provider_user_id]).to be_present
+    end
+  end
+
   describe 'attests_no_exclusion_motifs' do
     it 'accepts true' do
       application = build(:market_application, public_market:, attests_no_exclusion_motifs: true)

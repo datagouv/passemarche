@@ -45,6 +45,42 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(application.siret).to eq(valid_siret)
     end
 
+    it 'creates market application with provider_user_id' do
+      params_with_provider = {
+        market_application: {
+          siret: valid_siret,
+          provider_user_id: 'candidate-user-7'
+        }
+      }
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: params_with_provider,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:created)
+      application = MarketApplication.last
+      expect(application.provider_user_id).to eq('candidate-user-7')
+    end
+
+    it 'returns validation error when provider_user_id exceeds 255 characters' do
+      long_provider_params = {
+        market_application: {
+          siret: valid_siret,
+          provider_user_id: 'a' * 256
+        }
+      }
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: long_provider_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:unprocessable_content)
+      json_response = response.parsed_body
+      expect(json_response['errors']).to have_key('provider_user_id')
+    end
+
     it 'returns error when public market not found' do
       post '/api/v1/public_markets/NONEXISTENT/market_applications',
         params: valid_params,

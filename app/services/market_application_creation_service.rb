@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class MarketApplicationCreationService < ApplicationServiceObject
-  def initialize(public_market:, siret:)
+  def initialize(public_market:, siret:, provider_user_id: nil)
     super()
     @public_market = public_market
     @siret = siret
+    @provider_user_id = provider_user_id
   end
 
   def perform
@@ -14,12 +15,13 @@ class MarketApplicationCreationService < ApplicationServiceObject
 
   private
 
-  attr_reader :public_market, :siret
+  attr_reader :public_market, :siret, :provider_user_id
 
   def create_market_application
     application = MarketApplication.new(
       public_market:,
-      siret:
+      siret:,
+      provider_user_id:
     )
 
     if application.save

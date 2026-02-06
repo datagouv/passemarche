@@ -22,6 +22,18 @@ Feature: API Public Markets Management
     And I should receive a configuration URL
     And the public market should be saved in the database
 
+  Scenario: Créer un marché public avec un identifiant utilisateur éditeur
+    When I create a public market with the following details:
+      | name             | Fourniture de matériel informatique |
+      | lot_name         | Lot 1 - Ordinateurs portables       |
+      | deadline         | 2025-12-31T23:59:59Z                |
+      | siret            | 13002526500013                      |
+      | market_types     | supplies                            |
+      | provider_user_id | buyer-user-42                       |
+    Then the response status should be 201
+    And I should receive a public market identifier
+    And the public market should have provider_user_id "buyer-user-42"
+
   Scenario: Créer un marché public avec tous les champs optionnels
     When I create a public market with the following details:
       | name | Services de maintenance            |
