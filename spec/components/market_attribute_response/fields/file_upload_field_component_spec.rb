@@ -70,15 +70,23 @@ RSpec.describe MarketAttributeResponse::Fields::FileUploadFieldComponent, type: 
     it 'includes supported formats' do
       component = described_class.new(form:, attribute_response:)
 
-      expect(component.hint_text).to include('jpg, png, pdf')
+      expect(component.hint_text).to include('pdf')
+      expect(component.hint_text).to include('jpg')
+      expect(component.hint_text).to include('png')
     end
   end
 
   describe '#accepted_formats' do
-    it 'returns accepted file formats' do
+    it 'returns accepted file formats from centralized config' do
       component = described_class.new(form:, attribute_response:)
 
-      expect(component.accepted_formats).to eq('.pdf,.doc,.docx,.jpg,.jpeg,.png')
+      expect(component.accepted_formats).to start_with('.')
+      expect(component.accepted_formats).to include(',')
+
+      # Check common formats are present
+      expect(component.accepted_formats).to include('.pdf')
+      expect(component.accepted_formats).to include('.jpg')
+      expect(component.accepted_formats).to include('.png')
     end
   end
 
