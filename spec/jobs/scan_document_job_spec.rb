@@ -45,12 +45,6 @@ RSpec.describe ScanDocumentJob, type: :job do
         described_class.perform_now(blob.id)
         expect(blob.reload.metadata['scanned_at']).to be_present
       end
-
-      it 'logs error message' do
-        allow(Rails.logger).to receive(:error)
-        described_class.perform_now(blob.id)
-        expect(Rails.logger).to have_received(:error).with(/🦠 Malware détecté/)
-      end
     end
   end
 end

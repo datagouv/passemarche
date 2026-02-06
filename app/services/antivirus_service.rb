@@ -16,8 +16,6 @@ class AntivirusService
     scanner_services.each do |service|
       result = try_service(service)
       return result if result
-
-      Rails.logger.warn("⚠️ #{service.name} failed, trying fallback...")
     end
 
     handle_all_scanners_failed

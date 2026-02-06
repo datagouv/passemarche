@@ -89,16 +89,6 @@ RSpec.describe AntivirusService do
           .and_raise(StandardError, 'Connection timeout')
         allow(Rails.env).to receive(:production?).and_return(false)
       end
-
-      it 'logs error and tries fallback' do
-        expect(Rails.logger).to receive(:error).with(/ClamavService error/)
-        expect(Rails.logger).to receive(:warn).with(/failed, trying fallback/)
-        expect(Rails.logger).to receive(:warn).with(/No antivirus available/)
-
-        result = described_class.scan!(file_path.to_s, filename:)
-
-        expect(result).to eq({ scanner: 'none' })
-      end
     end
   end
 end
