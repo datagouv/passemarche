@@ -62,6 +62,8 @@ Rails.application.routes.draw do
 
   mount Lookbook::Engine, at: '/lookbook' if Rails.env.development? || Rails.env.sandbox?
 
+  get 'robots.txt', to: 'robots_txt#show', as: :robots_txt
+
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   get 'candidat', to: 'home#candidate', as: :candidate_home
