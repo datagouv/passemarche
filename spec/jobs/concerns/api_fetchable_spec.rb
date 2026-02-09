@@ -92,7 +92,7 @@ RSpec.describe ApiFetchable do
 
   describe 'error handling' do
     let(:job) { dummy_job_class.new }
-    let(:error) { StandardError.new('API Error') }
+    let(:error) { Faraday::Error.new('API Error') }
 
     before do
       allow(dummy_api_service).to receive(:call).and_raise(error)
@@ -100,20 +100,20 @@ RSpec.describe ApiFetchable do
     end
 
     it 'logs the error' do
-      expect { job.perform(market_application.id) }.to raise_error(StandardError)
+      expect { job.perform(market_application.id) }.to raise_error(Faraday::Error)
 
       expect(Rails.logger).to have_received(:error).with(/Error fetching dummy_api data/)
     end
 
     it 'updates the API status to failed' do
-      expect { job.perform(market_application.id) }.to raise_error(StandardError)
+      expect { job.perform(market_application.id) }.to raise_error(Faraday::Error)
 
       api_status = market_application.reload.api_fetch_status['dummy_api']
       expect(api_status['status']).to eq('failed')
     end
 
     it 're-raises the error' do
-      expect { job.perform(market_application.id) }.to raise_error(StandardError, 'API Error')
+      expect { job.perform(market_application.id) }.to raise_error(Faraday::Error, 'API Error')
     end
   end
 
