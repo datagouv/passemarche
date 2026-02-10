@@ -30,13 +30,13 @@
 
 ### 1.1 Présentation de Passe Marché
 
-**Passe Marché** est une plateforme gouvernementale française qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Elle s'intègre avec les plateformes des éditeurs de marchés publics pour offrir une expérience utilisateur fluide et conforme aux exigences réglementaires.
+**Passe Marché** est une plateforme gouvernementale française qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Elle s'intègre avec les plateformes de marchés publics pour offrir une expérience utilisateur fluide et conforme aux exigences réglementaires.
 
 ### 1.2 Objectifs de l'intégration
 
-L'intégration avec Passe Marché permet aux éditeurs de :
+L'intégration avec Passe Marché permet aux plateformes de marché de :
 
-- **Créer des marchés publics** via API pour leurs acheteurs
+- **Lier des consultation à des candidatures** via des webhooks pour leurs acheteurs
 - **Gérer les candidatures** des entreprises sur leurs plateformes
 - **Recevoir des notifications** en temps réel via webhooks
 - **Télécharger les documents** générés (attestations PDF, dossiers ZIP)
@@ -53,7 +53,7 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
 
 ### 1.4 Public cible
 
-- Équipes techniques des éditeurs de plateformes de marchés publics
+- Équipes techniques des plateformes de marchés publics
 - Architectes logiciels
 - Développeurs backend
 
@@ -63,8 +63,8 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
 |-------|------------|
 | **Acheteur** | Agent public responsable de la passation des marchés (buyer) |
 | **Candidat** | Entreprise soumettant une offre à un marché public |
-| **Consultation** | Synonyme de marché public (tender) |
-| **Éditeur** | Plateforme tierce intégrant Passe Marché |
+| **Consultation** | Avant que le marché sois attribué, on parle de consultation |
+| **Plateforme de marché** | Plateforme tierce intégrant Passe Marché |
 | **Lot** | Subdivision d'un marché public |
 | **Marché public** | Appel d'offres lancé par un acheteur public |
 | **SIRET** | Identifiant à 14 chiffres d'un établissement français |
@@ -90,11 +90,12 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    PLATEFORME ÉDITEUR                           │
+│                    PLATEFORME DE MARCHE                         │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
-│  │   Backend       │  │  Intégration    │  │   Réception     │  │
-│  │   Éditeur       │  │  Popup/iFrame   │  │   Webhooks      │  │
+│  │ Backend 
+     Plateforme      │  │  Intégration    │  │   Réception     │  │
+│  │ de marché       │  │  Popup/iFrame   │  │   Webhooks      │  │
 │  │                 │  │                 │  │                 │  │
 │  └────────┬────────┘  └────────┬────────┘  └────────▲────────┘  │
 └───────────┼─────────────────────┼───────────────────┼───────────┘
@@ -102,7 +103,7 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
             │ OAuth2 + REST API   │ Redirect          │ HTTP POST
             ▼                     ▼                   │
 ┌───────────────────────────────────────────────────────┐
-│                    API PASSE MARCHÉ                   │
+│                        PASSE MARCHÉ                   │
 ├───────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
 │  │   OAuth2        │  │  Gestion        │  │   Webhooks      │  │
@@ -121,7 +122,8 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
 
 ```
 ┌──────────┐       ┌──────────┐       ┌──────────┐       ┌──────────┐
-│ Éditeur  │       │  Passe   │       │ Acheteur │       │ Candidat │
+│ Plateforme 
+ de marché │       │  Passe   │       │ Acheteur │       │ Candidat │
 │ Backend  │       │  Marché  │       │  Public  │       │Entreprise│
 └────┬─────┘       └────┬─────┘       └────┬─────┘       └────┬─────┘
      │                  │                  │                  │
@@ -170,14 +172,8 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
 
 ### 2.3 Modes d'intégration
 
-Passe Marché supporte deux modes d'intégration pour l'interface utilisateur :
-
-| Mode | Description | Cas d'usage |
-|------|-------------|-------------|
-| **Popup** | Ouverture dans une nouvelle fenêtre | Intégration légère, UX séparée |
-| **iFrame** | Intégration dans la page existante | Intégration profonde, UX unifiée |
-
-**[À COMPLÉTER]** : Spécifications détaillées pour l'intégration iFrame (dimensions, événements postMessage, CSP headers).
+Passe Marché supporte un mode d'intégration pour l'interface utilisateur :
+**Popup** | Ouverture dans une nouvelle fenêtre | Intégration légère, UX séparée |
 
 ---
 
@@ -185,13 +181,13 @@ Passe Marché supporte deux modes d'intégration pour l'interface utilisateur :
 
 ### 3.1 Vue d'ensemble
 
-Passe Marché utilise le protocole **OAuth 2.0** avec le flux **Client Credentials** pour l'authentification des éditeurs. Ce flux est adapté à la communication machine-à-machine sans intervention utilisateur.
+Passe Marché utilise le protocole **OAuth 2.0** avec le flux **Client Credentials** pour l'authentification des plateforme de marchés publics. Ce flux est adapté à la communication machine-à-machine sans intervention utilisateur.
 
 ### 3.2 Prérequis
 
-#### 3.2.1 Enregistrement de l'éditeur
+#### 3.2.1 Enregistrement de la plateforme de marchés publics
 
-L'enregistrement d'un éditeur est effectué manuellement par un administrateur Passe Marché. L'éditeur reçoit :
+L'enregistrement d'un éditeur est effectué manuellement par un administrateur Passe Marché. La plateforme de marchés publics reçoit :
 
 | Credential | Description | Format |
 |------------|-------------|--------|
@@ -199,11 +195,11 @@ L'enregistrement d'un éditeur est effectué manuellement par un administrateur 
 | `client_secret` | Clé secrète OAuth2 | Chaîne hexadécimale 64 caractères |
 | `webhook_secret` | Secret pour signature HMAC | Chaîne hexadécimale 64 caractères |
 
-#### 3.2.2 Configuration éditeur
+#### 3.2.2 Configuration de la plateforme de marchés publics
 
 | Paramètre | Requis | Description |
 |-----------|--------|-------------|
-| `name` | Oui | Nom de la plateforme éditeur |
+| `name` | Oui | Nom de la plateforme de marchés publics |
 | `completion_webhook_url` | Non | URL de réception des webhooks |
 | `redirect_url` | Non | URL de redirection post-complétion |
 | `authorized` | - | Statut d'autorisation (géré par admin) |
@@ -307,9 +303,9 @@ Authorization: Bearer {access_token}
 
 Le parcours acheteur permet la création et la configuration d'un marché public. Il se décompose en :
 
-1. **Création via API** : L'éditeur crée le marché avec les informations de base
+1. **Création du lien consultation - candidature** : La plateforme de marchés communique à Passe Marché les informations de base de la consultation
 2. **Configuration via interface** : L'acheteur configure les champs requis
-3. **Notification webhook** : L'éditeur est notifié de la complétion
+3. **Notification webhook** : La plateforme de marché est notifié de la complétion
 
 ### 4.2 Création du marché public
 
@@ -354,10 +350,10 @@ Content-Type: application/json
 
 | Code | Description | Combinaison |
 |------|-------------|-------------|
-| `supplies` | Fournitures (biens, consommables) | Peut être seul ou combiné |
-| `services` | Services (prestations, maintenance) | Peut être seul ou combiné |
-| `works` | Travaux (construction, BTP) | Peut être seul ou combiné |
-| `defense` | Défense nationale | **Doit être combiné** avec un autre type |
+| `supplies` | Fournitures (biens, consommables) | Peut être seul ou combiné avec 'defense'|
+| `services` | Services (prestations, maintenance) | Peut être seul ou combiné avec 'defense' |
+| `works` | Travaux (construction, BTP) | Peut être seul ou combiné avec 'defense'|
+| `defense` | Défense et securité | **Doit être combiné** avec un autre type |
 
 **Règle** : Le type `defense` ne peut pas être utilisé seul. Il doit toujours être combiné avec au moins un autre type de marché.
 
@@ -380,7 +376,7 @@ Content-Type: application/json
 | Code | Cas | Exemple |
 |------|-----|---------|
 | 401 | Token invalide | `{"error": "Not authorized"}` |
-| 403 | Éditeur non autorisé | `{"error": "Forbidden"}` |
+| 403 | Plateforme de marchés publics non autorisée | `{"error": "Forbidden"}` |
 | 422 | Validation échouée | `{"errors": ["Name can't be blank"]}` |
 
 ### 4.3 Interface de configuration (Wizard)
@@ -396,28 +392,18 @@ L'acheteur est redirigé vers une interface multi-étapes pour configurer le mar
 - Validation du SIRET de l'organisation publique
 - Option d'ajout du type "défense" (si autorisé)
 
-#### 4.3.2 Étape 2 : Champs obligatoires
+#### 4.3.2 Étape 2 : Sélection des champs
 
-**URL** : `/buyer/public_markets/{identifier}/required_fields`
+**URL** : `/buyer/public_markets/{identifier}/required_fields` //_ je pense que ce n'est pas la bonne URL_
 
 **Objectifs** :
-- Sélection des champs obligatoires pour les candidats
+- Visibilité des champs qui seront récupérés automatiquement ou manuellement
+- Sélection des champs qui seront affichés aux candidats
 - Champs générés automatiquement selon les types de marché
 - Groupement par catégories et sous-catégories
 
-**[À COMPLÉTER]** : Liste exhaustive des champs obligatoires par type de marché.
 
-#### 4.3.3 Étape 3 : Champs optionnels
-
-**URL** : `/buyer/public_markets/{identifier}/additional_fields`
-
-**Objectifs** :
-- Sélection des champs complémentaires facultatifs
-- Filtrage selon la configuration existante
-
-**[À COMPLÉTER]** : Liste exhaustive des champs optionnels disponibles.
-
-#### 4.3.4 Étape 4 : Résumé et validation
+#### 4.3.3 Étape 3 : Résumé et validation
 
 **URL** : `/buyer/public_markets/{identifier}/summary`
 
@@ -437,7 +423,6 @@ L'acheteur est redirigé vers une interface multi-étapes pour configurer le mar
 | `declarations` | Déclarations sur l'honneur |
 | `documents` | Documents complémentaires |
 
-**[À COMPLÉTER]** : Sous-catégories détaillées et champs associés.
 
 ### 4.5 Callback de retour
 
@@ -460,10 +445,10 @@ https://editeur.com/callback?market_identifier=VR-2024-A1B2C3D4E5F6
 
 Le parcours candidat permet aux entreprises de soumettre leur candidature à un marché public. Il comprend :
 
-1. **Création via API** : L'éditeur crée la candidature
-2. **Saisie via interface** : Le candidat complète son dossier
+1. **Création via API** : La plateforme de marchés publics crée la candidature 
+2. **Saisie via interface** : Le candidat complète le formulaire de candidature
 3. **Génération des documents** : Attestation PDF et dossier ZIP
-4. **Notification webhook** : L'éditeur est notifié de la complétion
+4. **Notification webhook** : La plateforme de marchés publics est notifiée de la complétion
 
 ### 5.2 Création de la candidature
 
@@ -539,7 +524,6 @@ Lors de la saisie du SIRET, Passe Marché interroge automatiquement les APIs gou
 | RGE | Qualifications énergétiques |
 | BODACC | Situation vis-à-vis des procédures collectives |
 
-**[À COMPLÉTER]** : Détail des champs récupérés par chaque API.
 
 ### 5.4 Interface de candidature (Wizard dynamique)
 
@@ -615,7 +599,7 @@ Générées selon les catégories de champs configurées par l'acheteur :
 
 Lors de la soumission finale à l'étape `summary` :
 
-1. **Validation complète** : Vérification de tous les champs obligatoires
+1. **Validation complète** : Vérification de tous les champs
 2. **Attestation d'exclusion** : Le candidat atteste ne pas être en situation d'exclusion
 3. **Marquage complété** : `completed_at` est défini
 4. **Génération PDF** : Attestation candidate et attestation acheteur
@@ -1037,23 +1021,13 @@ documents_package_FT{identifier}.zip
 | `webhook_secret` | Variables d'environnement, vault |
 | `access_token` | Mémoire uniquement, ne pas persister |
 
-### 9.3 Conformité RGPD
-
-**[À COMPLÉTER]** :
-- Durée de conservation des données
-- Procédure de suppression
-- Transferts de données
-- Droits des personnes concernées
-
-### 9.4 Données personnelles traitées
+### 9.3 Données personnelles traitées
 
 | Catégorie | Données | Base légale |
 |-----------|---------|-------------|
 | Entreprise | SIRET, dénomination, adresse | Exécution contrat |
 | Contact | Nom, email, téléphone | Exécution contrat |
 | Documents | Fichiers uploadés | Exécution contrat |
-
-**[À COMPLÉTER]** : Liste complète et durées de conservation.
 
 ---
 
@@ -1297,4 +1271,4 @@ R: **[À COMPLÉTER]** : Politique de chiffrement à préciser.
 
 ---
 
-*Document généré pour l'intégration des éditeurs de plateformes de marchés publics avec Passe Marché.*
+*Document généré pour l'intégration des plateformes de marchés publics avec Passe Marché.*
