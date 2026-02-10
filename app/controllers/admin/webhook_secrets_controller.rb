@@ -1,4 +1,5 @@
 class Admin::WebhookSecretsController < Admin::ApplicationController
+  before_action :require_admin_role!
   before_action :set_editor
 
   def create
