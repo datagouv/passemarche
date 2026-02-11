@@ -57,11 +57,10 @@ class MarketApplicationPresenter
   end
 
   def market_attribute_response_for(market_attribute)
-    @market_application.market_attribute_responses.find { |response| response.market_attribute_id == market_attribute.id } ||
-      @market_application.market_attribute_responses.build(
-        market_attribute:,
-        type: MarketAttributeResponse.type_from_input_type(market_attribute.input_type)
-      )
+    responses_by_attribute_id[market_attribute.id] ||= @market_application.market_attribute_responses.build(
+      market_attribute:,
+      type: MarketAttributeResponse.type_from_input_type(market_attribute.input_type)
+    )
   end
 
   def responses_for_subcategory(category_key, subcategory_key)
@@ -120,6 +119,10 @@ class MarketApplicationPresenter
     has_value = response.value.present?
 
     has_documents || has_value
+  end
+
+  def responses_by_attribute_id
+    @responses_by_attribute_id ||= @market_application.market_attribute_responses.index_by(&:market_attribute_id)
   end
 
   def all_market_attributes
