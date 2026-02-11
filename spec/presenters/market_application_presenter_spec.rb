@@ -178,6 +178,25 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
     end
   end
 
+  describe '#all_market_attributes ordering' do
+    let(:ordered_market) { create(:public_market, :completed, editor:) }
+    let(:ordered_application) { create(:market_application, public_market: ordered_market) }
+    let(:ordered_presenter) { described_class.new(ordered_application) }
+
+    it 'returns attributes sorted by position' do
+      attr_last = create(:market_attribute, key: 'last', position: 3,
+        category_key: 'cat', subcategory_key: 'sub', public_markets: [ordered_market])
+      attr_first = create(:market_attribute, key: 'first', position: 1,
+        category_key: 'cat', subcategory_key: 'sub', public_markets: [ordered_market])
+      attr_middle = create(:market_attribute, key: 'middle', position: 2,
+        category_key: 'cat', subcategory_key: 'sub', public_markets: [ordered_market])
+
+      attributes = ordered_presenter.send(:all_market_attributes)
+
+      expect(attributes).to eq([attr_first, attr_middle, attr_last])
+    end
+  end
+
   describe '#optional_market_attributes?' do
     context 'when there are optional market attributes' do
       before do

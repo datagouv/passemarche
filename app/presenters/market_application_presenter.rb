@@ -123,7 +123,7 @@ class MarketApplicationPresenter
   end
 
   def all_market_attributes
-    @all_market_attributes ||= @market_application.public_market.market_attributes.order(:position).to_a
+    @all_market_attributes ||= @market_application.public_market.market_attributes.sort_by(&:position)
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)
