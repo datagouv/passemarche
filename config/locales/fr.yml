@@ -761,6 +761,18 @@ fr:
       accordion:
         buyer_title: "Acheteur"
         candidate_title: "Candidat"
+      table:
+        headers:
+          category: "Catégorie"
+          subcategory: "Sous Catégorie"
+          field: "Champ"
+          market_type: "Type de marché"
+          source: "Source"
+          actions: "Actions"
+      market_type_badges:
+        works: "T"
+        supplies: "F"
+        services: "S"
 
   activerecord:
     errors:
