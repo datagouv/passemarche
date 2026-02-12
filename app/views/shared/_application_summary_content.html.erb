@@ -29,7 +29,7 @@
     <% subcategories = presenter.subcategories_for_category(category) %>
     <% next if subcategories.empty? %>
     <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if [:pdf, :buyer].include?(context) && index > 0 %>">
-      <%= render 'shared/card_header', title: t("form_fields.candidate.categories.#{category}"), background: "fr-background-alt--grey" %>
+      <%= render 'shared/card_header', title: candidate_category_label(category), background: "fr-background-alt--grey" %>
       <div class="fr-card__body fr-mt-1w fr-mb-1w">
         <% if context == :web && category == 'motifs_exclusion' && presenter.missing_mandatory_motifs_exclusion? %>
           <div class="fr-mt-2w">
@@ -91,7 +91,7 @@
           <% next if market_attributes.empty? %>
 
           <div class="fr-card fr-mb-1w fr-card--no-border fr-mt-2w">
-            <%= render 'shared/card_sub_header', title: t("form_fields.candidate.subcategories.#{subcategory}"), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
+            <%= render 'shared/card_sub_header', title: candidate_subcategory_label(subcategory), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
               <% market_attributes.each do |attribute| %>
                 <% response = presenter.market_attribute_response_for(attribute) %>
                 <% if response&.type.present? %>

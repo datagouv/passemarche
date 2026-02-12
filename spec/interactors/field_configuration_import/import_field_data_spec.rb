@@ -22,6 +22,12 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
       let(:company_name_row) do
         instance_double(CsvRowData,
           key: 'company_name',
+          category_key: 'test_identity',
+          subcategory_key: 'test_basic',
+          category_acheteur: 'Buyer Identity',
+          subcategory_acheteur: 'Buyer Basic',
+          category_candidat: 'Candidate Identity',
+          subcategory_candidat: 'Candidate Basic',
           to_market_attribute_params: {
             input_type: 'text_input',
             category_key: 'test_identity',
@@ -43,6 +49,26 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
         expect(market_attribute.market_types).to contain_exactly(supplies_market_type)
         expect(context.statistics[:created]).to eq(1)
       end
+
+      it 'creates category and subcategory records' do
+        expect { interactor }
+          .to change(Category, :count).by(1)
+          .and change(Subcategory, :count).by(1)
+
+        category = Category.find_by(key: 'test_identity')
+        expect(category.buyer_label).to eq('Buyer Identity')
+        expect(category.candidate_label).to eq('Candidate Identity')
+
+        subcategory = Subcategory.find_by(key: 'test_basic')
+        expect(subcategory.buyer_label).to eq('Buyer Basic')
+        expect(subcategory.candidate_label).to eq('Candidate Basic')
+      end
+
+      it 'links market_attribute to subcategory' do
+        interactor
+        market_attribute = MarketAttribute.find_by(key: 'company_name')
+        expect(market_attribute.subcategory).to eq(Subcategory.find_by(key: 'test_basic'))
+      end
     end
 
     context 'when updating existing market attributes' do
@@ -53,6 +79,12 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
       let(:company_name_row) do
         instance_double(CsvRowData,
           key: 'company_name',
+          category_key: 'new_category',
+          subcategory_key: 'test_basic',
+          category_acheteur: 'Buyer New',
+          subcategory_acheteur: 'Buyer Basic',
+          category_candidat: 'Candidate New',
+          subcategory_candidat: 'Candidate Basic',
           to_market_attribute_params: {
             input_type: 'text_input',
             category_key: 'new_category',
@@ -78,6 +110,12 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
       let(:company_name_row) do
         instance_double(CsvRowData,
           key: 'company_name',
+          category_key: 'test_identity',
+          subcategory_key: 'test_basic',
+          category_acheteur: 'Buyer Identity',
+          subcategory_acheteur: 'Buyer Basic',
+          category_candidat: 'Candidate Identity',
+          subcategory_candidat: 'Candidate Basic',
           to_market_attribute_params: {
             input_type: nil,
             category_key: 'test_identity',

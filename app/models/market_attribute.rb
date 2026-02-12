@@ -10,6 +10,8 @@ class MarketAttribute < ApplicationRecord
     capacites_techniques_professionnelles
   ].freeze
 
+  belongs_to :subcategory, optional: true
+
   has_and_belongs_to_many :market_types
   has_and_belongs_to_many :public_markets
   has_many :market_attribute_responses, dependent: :destroy

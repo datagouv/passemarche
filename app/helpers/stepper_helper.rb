@@ -119,9 +119,11 @@ module StepperHelper
     if i18n_scope.start_with?('buyer')
       t("buyer.public_markets.steps.#{step}")
     else
+      category = Category.find_by(key: step.to_s)
+      return category.candidate_label if category&.candidate_label.present?
+
       category_key = "form_fields.#{i18n_scope}.categories.#{step}"
       fallback_key = "candidate.market_applications.steps.#{step}"
-
       t(category_key, default: t(fallback_key, default: step.to_s.humanize))
     end
   end

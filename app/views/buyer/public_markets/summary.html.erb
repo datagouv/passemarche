@@ -75,7 +75,7 @@
         <% if display_categories.any? %>
           <% display_categories.each_with_index do |(category, subcategories), category_index| %>
             <h2 class="fr-h2 fr-mb-3w <%= 'fr-mt-8w' if category_index > 0 %>" style="color: var(--background-action-high-blue-france);">
-              <%= category_index + 1 %>. <%= t("form_fields.buyer.categories.#{category}", default: category.humanize) %>
+              <%= category_index + 1 %>. <%= buyer_category_label(category) %>
             </h2>
             <div class="fr-card fr-mb-4w">
               <div class="fr-card__body fr-mt-3w fr-mb-3w">
