@@ -1,15 +1,29 @@
 # frozen_string_literal: true
 
+Given('the following market types exist:') do |table|
+  table.hashes.each do |row|
+    MarketType.find_or_create_by!(code: row['code'])
+  end
+end
+
 Given('the following market attributes exist:') do |table|
   MarketAttribute.delete_all
   table.hashes.each do |row|
-    create(:market_attribute,
+    attr = create(:market_attribute,
       key: row['key'],
       category_key: row['category_key'],
       subcategory_key: row['subcategory_key'],
       mandatory: row['mandatory'] == 'true',
       api_name: row['api_name'].presence,
       api_key: row['api_name'].present? ? 'test_key' : nil)
+
+    next if row['market_types'].blank?
+
+    codes = row['market_types'].split(',').map(&:strip)
+    codes.each do |code|
+      market_type = MarketType.find_by!(code:)
+      attr.market_types << market_type
+    end
   end
 end
 
@@ -25,93 +39,53 @@ When('I visit the socle de base page') do
   visit admin_socle_de_base_index_path
 end
 
-When('I visit the acheteur categories page') do
-  @routing_error = false
-  begin
-    visit '/admin/acheteur_categories'
-  rescue ActionController::RoutingError
-    @routing_error = true
-  end
-end
-
-Then('I should get a routing error') do
-  expect(@routing_error || page.status_code == 404).to be true
-end
-
 Then('I should see the page title {string}') do |title|
   expect(page).to have_css('h1', text: title)
 end
 
-# Category accordion steps
+# Table structure steps
 
-Then('I should see a category accordion for {string}') do |category_key|
-  expect(page).to have_css("#accordion-cat-#{category_key}")
-end
-
-Then('the category {string} should contain buyer and candidate labels') do |category_key|
-  within("#accordion-cat-#{category_key}") do
-    expect(page).to have_content('Acheteur')
-    expect(page).to have_content('Candidat')
+Then('I should see a table with headers {string}, {string}, {string}, {string}, {string}, {string}') do |*headers|
+  within('table thead') do
+    headers.each do |header|
+      expect(page).to have_css('th', text: header)
+    end
   end
 end
 
-Then('the category {string} should contain a {string} link') do |category_key, link_text|
-  within("#accordion-cat-#{category_key}") do
-    expect(page).to have_link(link_text)
-  end
+Then('I should see {int} rows in the attributes table') do |count|
+  expect(page).to have_css('table tbody tr', count:)
 end
 
-Then('the category {string} should contain a subcategory accordion for {string}') do |category_key, subcategory_key|
-  within("#accordion-cat-#{category_key}") do
-    expect(page).to have_css("#accordion-sub-#{subcategory_key}")
-  end
-end
+# Market type badge steps
 
-# Subcategory accordion steps
-
-Then('the subcategory {string} should contain buyer and candidate labels') do |subcategory_key|
-  within("#accordion-sub-#{subcategory_key}") do
-    expect(page).to have_content('Acheteur')
-    expect(page).to have_content('Candidat')
-  end
-end
-
-Then('the subcategory {string} should contain a {string} link') do |subcategory_key, link_text|
-  within("#accordion-sub-#{subcategory_key}") do
-    expect(page).to have_link(link_text)
-  end
-end
-
-Then('the subcategory {string} should contain a field accordion for {string}') do |subcategory_key, key|
+Then('the row for {string} should have all market type badges active') do |key|
   attribute = MarketAttribute.find_by!(key:)
-  within("#accordion-sub-#{subcategory_key}") do
-    expect(page).to have_css("#accordion-field-#{attribute.id}")
+  within("tr[data-attribute-id='#{attribute.id}']") do
+    expect(page).to have_css('.fr-badge--blue-cumulus', count: 3)
   end
 end
 
-# Field accordion steps
-
-Then('the field {string} should contain buyer and candidate labels') do |key|
+Then('the row for {string} should have only {string} badge active') do |key, badge_letter|
   attribute = MarketAttribute.find_by!(key:)
-  within("#accordion-field-#{attribute.id}") do
-    expect(page).to have_content('Acheteur')
-    expect(page).to have_content('Candidat')
+  within("tr[data-attribute-id='#{attribute.id}']") do
+    expect(page).to have_css('.fr-badge--blue-cumulus', count: 1, text: badge_letter)
   end
 end
 
-Then('the field {string} should contain a {string} link') do |key, link_text|
+Then('the row for {string} should have no market type badges active') do |key|
   attribute = MarketAttribute.find_by!(key:)
-  within("#accordion-field-#{attribute.id}") do
-    expect(page).to have_link(link_text)
+  within("tr[data-attribute-id='#{attribute.id}']") do
+    expect(page).to have_no_css('.fr-badge--blue-cumulus')
   end
 end
 
-Then('I should not see a field accordion for {string}') do |key|
-  attribute = MarketAttribute.find_by(key:)
-  if attribute
-    expect(page).not_to have_css("#accordion-field-#{attribute.id}")
-  else
-    expect(page).not_to have_content(key)
+# Source column steps
+
+Then('the row for {string} should show source {string}') do |key, source_text|
+  attribute = MarketAttribute.find_by!(key:)
+  within("tr[data-attribute-id='#{attribute.id}']") do
+    expect(page).to have_css('.fr-badge', text: source_text)
   end
 end
 
@@ -122,6 +96,27 @@ Then('all {string} links should point to {string}') do |link_text, href|
   expect(links).not_to be_empty
   links.each do |link|
     expect(link[:href]).to end_with(href)
+  end
+end
+
+# Soft delete steps
+
+Then('I should not see a row for {string}') do |key|
+  attribute = MarketAttribute.find_by(key:)
+  if attribute
+    expect(page).to have_no_css("tr[data-attribute-id='#{attribute.id}']")
+  else
+    expect(page).not_to have_content(key)
+  end
+end
+
+# Drag handle steps
+
+Then('each table row should have a drag handle icon') do
+  rows = all('table tbody tr')
+  expect(rows).not_to be_empty
+  rows.each do |row|
+    expect(row).to have_css('svg.drag-handle-icon')
   end
 end
 

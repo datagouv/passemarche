@@ -141,4 +141,73 @@ RSpec.describe SocleDeBasePresenter do
       end
     end
   end
+
+  describe '#category_label' do
+    it 'delegates to buyer_category_label' do
+      expect(presenter.category_label).to eq(presenter.buyer_category_label)
+    end
+  end
+
+  describe '#subcategory_label' do
+    it 'delegates to buyer_subcategory_label' do
+      expect(presenter.subcategory_label).to eq(presenter.buyer_subcategory_label)
+    end
+  end
+
+  describe '#field_name' do
+    it 'delegates to buyer_name' do
+      expect(presenter.field_name).to eq(presenter.buyer_name)
+    end
+  end
+
+  describe '#market_type_badges' do
+    let(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_field_badges',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification')
+    end
+
+    context 'when attribute has works and supplies market types' do
+      before do
+        create(:market_type, :works)
+        create(:market_type)
+        create(:market_type, :services)
+        market_attribute.market_types << MarketType.where(code: %w[works supplies])
+      end
+
+      it 'returns T and F as active, S as inactive' do
+        badges = presenter.market_type_badges
+
+        expect(badges).to eq([
+          { letter: 'T', code: 'works', active: true },
+          { letter: 'F', code: 'supplies', active: true },
+          { letter: 'S', code: 'services', active: false }
+        ])
+      end
+    end
+
+    context 'when attribute has no market types' do
+      it 'returns all badges as inactive' do
+        badges = presenter.market_type_badges
+
+        expect(badges).to all(include(active: false))
+      end
+    end
+
+    context 'when attribute has all three market types' do
+      before do
+        create(:market_type, :works)
+        create(:market_type)
+        create(:market_type, :services)
+        market_attribute.market_types << MarketType.where(code: %w[works supplies services])
+      end
+
+      it 'returns all badges as active' do
+        badges = presenter.market_type_badges
+
+        expect(badges).to all(include(active: true))
+      end
+    end
+  end
 end

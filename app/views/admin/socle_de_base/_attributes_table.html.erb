@@ -1,0 +1,45 @@
+<div class="fr-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"><%= t('admin.socle_de_base.table.headers.category') %></th>
+        <th scope="col"><%= t('admin.socle_de_base.table.headers.subcategory') %></th>
+        <th scope="col"><%= t('admin.socle_de_base.table.headers.field') %></th>
+        <th scope="col"><%= t('admin.socle_de_base.table.headers.market_type') %></th>
+        <th scope="col"><%= t('admin.socle_de_base.table.headers.source') %></th>
+        <th scope="col"><%= t('admin.socle_de_base.table.headers.actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @market_attributes.each do |market_attribute| %>
+        <% presenter = SocleDeBasePresenter.new(market_attribute) %>
+        <tr data-attribute-id="<%= market_attribute.id %>">
+          <td>
+            <%= render 'admin/socle_de_base/drag_handle_icon' %>
+          </td>
+          <td><%= presenter.category_label %></td>
+          <td><%= presenter.subcategory_label %></td>
+          <td><%= presenter.field_name %></td>
+          <td style="white-space: nowrap">
+            <% presenter.market_type_badges.each do |badge| %>
+              <span class="fr-badge fr-badge--sm<%= ' fr-badge--no-icon' unless badge[:active] %><%= ' fr-badge--blue-cumulus' if badge[:active] %>"
+                    <% unless badge[:active] %>style="opacity: 0.4"<% end %>>
+                <%= t("admin.socle_de_base.market_type_badges.#{badge[:code]}") %>
+              </span>
+            <% end %>
+          </td>
+          <td>
+            <span class="fr-badge fr-badge--sm <%= presenter.source_badge_class %>">
+              <%= presenter.source_badge %>
+            </span>
+          </td>
+          <td>
+            <%= link_to t('admin.socle_de_base.edit_button'), '#',
+                        class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
