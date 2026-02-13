@@ -581,6 +581,8 @@ fr:
           habilitation_pour_former: Habilitation pour former
           habilitation_pour_organiser_evaluation: Habilitation pour organiser l'évaluation
           siret_organisme_certificateur: SIRET de l'organisme certificateur
+      subcategories:
+        market_information: "Informations du marché"
       shared:
         "yes": Oui
         "no": Non
