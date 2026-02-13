@@ -1,4 +1,4 @@
-<% content_for :title, "#{@market_application.siret} - #{t("form_fields.candidate.categories.#{step}", default: step.to_s.humanize)}" %>
+<% content_for :title, "#{@market_application.siret} - #{category_label(step.to_s, role: :candidate)}" %>
 
 <% current_category = @presenter.parent_category_for(step.to_s) %>
 <%= stepper current_step: current_category,
@@ -31,9 +31,7 @@
       <div class="fr-mb-4w">
 
         <h6 id="<%= step %>" class="fr-mb-2w">
-          <%= t("form_fields.candidate.subcategories.#{step}",
-                default: t("candidate.market_applications.manual_subcategories.#{step}",
-                           default: step.to_s.humanize)) %>
+          <%= subcategory_label(step.to_s, role: :candidate) %>
         </h6>
 
         <% if subcategory_responses.any? %>
@@ -58,7 +56,7 @@
           </div>
         <% else %>
           <p class="fr-text--sm fr-text--mention-grey">
-            Aucun contenu disponible pour cette étape.
+            <%= t('candidate.shared.no_content') %>
           </p>
         <% end %>
 

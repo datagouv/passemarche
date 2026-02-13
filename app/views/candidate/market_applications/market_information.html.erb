@@ -23,9 +23,7 @@
       <% if subcategories.any? %>
         <div class="fr-mb-4w">
           <h6 id="<%= step %>" class="fr-text-title--blue-france fr-mb-2w">
-            <%= t("form_fields.candidate.subcategories.#{step}",
-                  default: t("candidate.market_applications.manual_subcategories.#{step}",
-                            default: step.to_s.humanize)) %>
+            <%= subcategory_label(step.to_s, role: :candidate) %>
           </h6>
 
           <ul class="fr-list fr-mb-3w">

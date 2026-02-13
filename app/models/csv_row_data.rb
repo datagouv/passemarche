@@ -21,6 +21,12 @@ class CsvRowData
 
   attribute :obligatoire, :string
 
+  # Category/subcategory labels from CSV
+  attribute :category_acheteur, :string
+  attribute :subcategory_acheteur, :string
+  attribute :category_candidat, :string
+  attribute :subcategory_candidat, :string
+
   # API-related attributes (using exact CSV column names)
   attribute :API, :string
   attribute :"Informations récupérées par l'API", :string
