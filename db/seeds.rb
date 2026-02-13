@@ -66,17 +66,14 @@ end
 puts "\n📝 Importing field configuration from CSV..."
 
 begin
-  service = FieldConfigurationImportService.new
-  stats = service.perform
+  result = FieldConfigurationImport.call(csv_file_path: Rails.root.join('config/form_fields/fields.csv'))
 
-  if service.success?
+  if result.success?
     puts '✅ Field configuration imported successfully!'
+    stats = result.statistics
     puts "   • #{stats[:created]} created, #{stats[:updated]} updated, #{stats[:skipped]} skipped"
   else
-    puts '❌ Field configuration import failed:'
-    service.errors.each do |key, messages|
-      messages.each { |msg| puts "   #{key}: #{msg}" }
-    end
+    puts "❌ Field configuration import failed: #{result.message}"
     puts "   You can run 'bin/rails field_configuration:import' manually to retry"
   end
 rescue StandardError => e
