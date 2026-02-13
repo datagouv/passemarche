@@ -131,6 +131,7 @@
 - **Client Secret** ne doit jamais être exposé côté client
 - **Variables d'environnement** pour stocker les secrets
 - **Rotation régulière** des credentials (bonne pratique non mise en place actuellement)
+- **Scan antivirus** des fichiers déposés par les candidats (ClamAV) - [Documentation sécurité fichiers](09_SECURITE_FICHIERS.md)
 - **Logs de sécurité** pour audit
 
 ## 📞 Support et Ressources
