@@ -24,18 +24,15 @@ namespace :field_translations do
   end
 
   def run_translation_import_process
-    service = FieldTranslationImportService.new
-    stats = service.perform
+    result = FieldTranslationImport.call(csv_file_path: Rails.root.join('config/form_fields/fields.csv'))
 
-    handle_translation_import_errors(service) if service.failure?
-    display_translation_import_success(stats)
+    handle_translation_import_errors(result) if result.failure?
+    display_translation_import_success(result.statistics)
   end
 
-  def handle_translation_import_errors(service)
+  def handle_translation_import_errors(result)
     puts "\n❌ Translation import failed with errors:"
-    service.errors.each do |key, messages|
-      messages.each { |msg| puts "   #{key}: #{msg}" }
-    end
+    puts "   #{result.message}"
     exit 1
   end
 
@@ -94,11 +91,10 @@ namespace :field_translations do
   end
 
   def run_custom_file_translation_import(file_path)
-    service = FieldTranslationImportService.new(csv_file_path: file_path)
-    stats = service.perform
+    result = FieldTranslationImport.call(csv_file_path: file_path)
 
-    handle_translation_import_errors(service) if service.failure?
-    display_custom_translation_import_success(stats)
+    handle_translation_import_errors(result) if result.failure?
+    display_custom_translation_import_success(result.statistics)
   end
 
   def display_custom_translation_import_success(stats)

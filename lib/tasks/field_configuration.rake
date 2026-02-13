@@ -32,11 +32,10 @@ namespace :field_configuration do
     puts '🚀 Starting field configuration import...'
 
     begin
-      service = FieldConfigurationImportService.new
-      stats = service.perform
+      result = FieldConfigurationImport.call(csv_file_path: Rails.root.join('config/form_fields/fields.csv'))
 
-      raise_import_errors(service) if service.failure?
-      display_import_success(stats)
+      raise_import_errors(result) if result.failure?
+      display_import_success(result.statistics)
     rescue StandardError => e
       raise_import_failure(e)
     end
@@ -48,11 +47,10 @@ namespace :field_configuration do
     puts "🚀 Starting field configuration import from #{file_path}..."
 
     begin
-      service = FieldConfigurationImportService.new(csv_file_path: file_path)
-      stats = service.perform
+      result = FieldConfigurationImport.call(csv_file_path: file_path)
 
-      raise_import_errors(service) if service.failure?
-      display_import_success(stats)
+      raise_import_errors(result) if result.failure?
+      display_import_success(result.statistics)
     rescue StandardError => e
       raise_import_failure(e)
     end
@@ -89,12 +87,9 @@ namespace :field_configuration do
     raise RakeTaskError, error_message
   end
 
-  def raise_import_errors(service)
-    error_message = "\n❌ Import failed with errors:\n"
-    service.errors.each do |key, messages|
-      messages.each { |msg| error_message += "   #{key}: #{msg}\n" }
-    end
-    raise RakeTaskError, error_message.chomp
+  def raise_import_errors(result)
+    error_message = "\n❌ Import failed with errors:\n   #{result.message}"
+    raise RakeTaskError, error_message
   end
 
   def display_import_success(stats)
