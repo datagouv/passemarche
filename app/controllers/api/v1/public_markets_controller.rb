@@ -4,12 +4,12 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   before_action :validate_defense_market_permission, only: [:create]
 
   def create
-    service = PublicMarketCreationService.new(current_editor, public_market_params).perform
+    result = CreatePublicMarket.call(editor: current_editor, params: public_market_params)
 
-    if service.success?
-      render json: success_response(service.result), status: :created
+    if result.success?
+      render json: success_response(result.public_market), status: :created
     else
-      render json: { errors: service.errors }, status: :unprocessable_content
+      render json: { errors: result.errors }, status: :unprocessable_content
     end
   end
 
