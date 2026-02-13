@@ -5,14 +5,14 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
   let(:market_attribute) { create(:market_attribute, input_type: 'file_upload') }
   let(:file_response) { build(:market_attribute_response_file_upload) }
 
-  describe 'constants' do
-    it 'defines MAX_FILE_SIZE' do
-      expect(described_class::MAX_FILE_SIZE).to eq(100.megabytes)
+  describe 'configuration' do
+    it 'uses centralized max file size' do
+      expect(described_class.max_file_size).to eq(Rails.configuration.file_upload.max_size)
     end
 
-    it 'defines ALLOWED_CONTENT_TYPES' do
-      expect(described_class::ALLOWED_CONTENT_TYPES).to include('application/pdf')
-      expect(described_class::ALLOWED_CONTENT_TYPES).to include('image/jpeg')
+    it 'uses centralized allowed content types' do
+      expect(described_class.allowed_content_types).to include('application/pdf')
+      expect(described_class.allowed_content_types).to include('image/jpeg')
     end
   end
 
@@ -121,16 +121,101 @@ RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
       expect(file_response.errors[:documents]).to include(I18n.t('activerecord.errors.json_schema.invalid'))
     end
 
-    it 'accepts valid files' do
+    it 'accepts valid files that have been scanned' do
       blob = ActiveStorage::Blob.create_and_upload!(
         io: StringIO.new('dummy content'),
         filename: 'valid.pdf',
         content_type: 'application/pdf'
       )
+      blob.metadata['scan_safe'] = true
+      blob.metadata['scanned_at'] = Time.current.iso8601
+      blob.save!
+
       file_response.documents.attach(blob)
 
       expect(file_response.valid?).to be true
       expect(file_response.errors[:documents]).to be_empty
+    end
+
+    context 'security scanning' do
+      it 'blocks submission when files are still being scanned' do
+        file_response = create(:market_attribute_response_file_upload,
+          market_application:,
+          market_attribute:)
+
+        blob = ActiveStorage::Blob.create_and_upload!(
+          io: StringIO.new('dummy content'),
+          filename: 'scanning.pdf',
+          content_type: 'application/pdf'
+        )
+        # No scan_safe in metadata = scanning in progress
+        file_response.documents.attach(blob)
+
+        market_application.market_attribute_responses.reload
+
+        # Validation during upload should pass
+        expect(file_response.valid?).to be true
+
+        # Validation during intermediate form steps should also pass
+        context = file_response.market_attribute.subcategory_key
+        expect(market_application.valid?(context)).to be true
+
+        # Validation at summary should fail if scan not complete
+        is_valid = market_application.valid?(:summary)
+        expect(is_valid).to be false
+        # Errors are propagated to the parent market_application
+        expect(market_application.errors[:base]).to include(match(/scan de sécurité est en cours/))
+      end
+
+      it 'rejects files with malware detected' do
+        file_response = create(:market_attribute_response_file_upload,
+          market_application:,
+          market_attribute:)
+
+        blob = ActiveStorage::Blob.create_and_upload!(
+          io: StringIO.new('dummy content'),
+          filename: 'infected.pdf',
+          content_type: 'application/pdf'
+        )
+        blob.metadata['scan_safe'] = false
+        blob.metadata['scan_error'] = 'Malware détecté: EICAR-Test-File'
+        blob.save!
+
+        file_response.documents.attach(blob)
+
+        # Reload association to ensure file_response is included
+        market_application.market_attribute_responses.reload
+
+        # Validation during upload should pass
+        expect(file_response.valid?).to be true
+
+        # Validation during intermediate form steps should also pass
+        context = file_response.market_attribute.subcategory_key
+        expect(market_application.valid?(context)).to be true
+
+        # Validation at summary should fail if malware detected
+        is_valid = market_application.valid?(:summary)
+        expect(is_valid).to be false
+        # Errors are propagated to the parent market_application
+        expect(market_application.errors[:base]).to include(match(/Malware détecté/))
+        expect(file_response.documents).to be_attached # File remains attached for display
+      end
+
+      it 'accepts files that passed security scan' do
+        blob = ActiveStorage::Blob.create_and_upload!(
+          io: StringIO.new('dummy content'),
+          filename: 'safe.pdf',
+          content_type: 'application/pdf'
+        )
+        blob.metadata['scan_safe'] = true
+        blob.metadata['scanned_at'] = Time.current.iso8601
+        blob.save!
+
+        file_response.documents.attach(blob)
+
+        expect(file_response.valid?).to be true
+        expect(file_response.errors[:documents]).to be_empty
+      end
     end
   end
 

@@ -12,13 +12,14 @@ RSpec.describe MarketAttributeResponse::FileAttachable, type: :model do
     end
   end
 
-  describe 'constants' do
-    it 'defines MAX_FILE_SIZE as 100 megabytes' do
-      expect(described_class::MAX_FILE_SIZE).to eq(100.megabytes)
+  describe 'configuration' do
+    it 'uses centralized max file size' do
+      expect(file_upload_response.class.max_file_size).to eq(Rails.configuration.file_upload.max_size)
     end
 
-    it 'defines ALLOWED_CONTENT_TYPES with expected values' do
-      expect(described_class::ALLOWED_CONTENT_TYPES).to include(
+    it 'uses centralized allowed content types' do
+      allowed_types = file_upload_response.class.allowed_content_types
+      expect(allowed_types).to include(
         'application/pdf',
         'image/jpeg',
         'image/png',
@@ -82,7 +83,7 @@ RSpec.describe MarketAttributeResponse::FileAttachable, type: :model do
       end
 
       it 'rejects disallowed content types' do
-        attach_file_with_content_type(response, 'application/zip')
+        attach_file_with_content_type(response, 'application/x-msdownload') # .exe files
         response.valid?
         expect(response.errors[:documents]).to include(I18n.t('activerecord.errors.json_schema.invalid'))
       end

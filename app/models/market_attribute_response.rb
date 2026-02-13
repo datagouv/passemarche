@@ -59,7 +59,9 @@ class MarketAttributeResponse < ApplicationRecord
 
   def run_validations!
     # Skip all validations if this response is not part of the current validation step
-    return true unless should_validate_for_current_step?
+    should_validate = should_validate_for_current_step?
+
+    return true unless should_validate
 
     super
   end
@@ -67,6 +69,9 @@ class MarketAttributeResponse < ApplicationRecord
   def should_validate_for_current_step?
     # If no market_application or no step specified, validate everything (e.g., summary step)
     return true if market_application.nil? || market_application.current_validation_step.nil?
+
+    # Special case: :summary means validate all responses (final validation before submission)
+    return true if market_application.current_validation_step.to_s == 'summary'
 
     # Get the IDs of responses that should be validated for this step
     valid_response_ids = market_application.response_ids_for_step(market_application.current_validation_step)
