@@ -25,6 +25,14 @@ class ClamavService
     raise ScanError, "Malware détecté dans #{filename}" unless is_safe
 
     { scanner: 'clamav' }
+  rescue Clamby::VirusDetected
+    raise ScanError, "Malware détecté dans #{filename}"
+  rescue ScanError
+    raise
+  rescue StandardError => e
+    raise ScanError, "Erreur ClamAV pour #{filename}: #{e.message}" if Rails.env.production?
+
+    nil
   end
 
   private

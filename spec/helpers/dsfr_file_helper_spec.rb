@@ -6,6 +6,7 @@ RSpec.describe DsfrFileHelper, type: :helper do
 
   before do
     allow(blob).to receive(:metadata).and_return(metadata)
+    allow(helper).to receive(:antivirus_enabled?).and_return(true)
   end
 
   context 'when safe' do
