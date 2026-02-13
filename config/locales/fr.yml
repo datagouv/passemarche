@@ -601,6 +601,8 @@ fr:
         is_not_ess: "L'entreprise n'est pas une ESS - données issues d'une source officielle"
 
   admin:
+    authorization:
+      insufficient_permissions: "Vous n'avez pas les droits nécessaires pour effectuer cette action."
     shared:
       "yes": "Oui"
       "no": "Non"

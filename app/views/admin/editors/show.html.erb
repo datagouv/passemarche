@@ -138,10 +138,12 @@
       </div>
 
       <div class="fr-mt-3w">
-        <%= link_to t('admin.shared.edit'), edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
-        <%= link_to t('admin.shared.delete'), admin_editor_path(@editor), method: :delete,
-                    data: { confirm: t('admin.editors.show.confirm_delete') },
-                    class: "fr-btn fr-btn--tertiary" %>
+        <% if current_user_can_modify? %>
+          <%= link_to t('admin.shared.edit'), edit_admin_editor_path(@editor), class: "fr-btn fr-btn--secondary" %>
+          <%= link_to t('admin.shared.delete'), admin_editor_path(@editor), method: :delete,
+                      data: { confirm: t('admin.editors.show.confirm_delete') },
+                      class: "fr-btn fr-btn--tertiary" %>
+        <% end %>
         <%= link_to t('admin.shared.back_to_list'), admin_editors_path, class: "fr-btn fr-btn--tertiary-no-outline" %>
       </div>
     </div>

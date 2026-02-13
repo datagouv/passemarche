@@ -1,4 +1,5 @@
 class Admin::EditorsController < Admin::ApplicationController
+  before_action :require_admin_role!, only: %i[new create edit update destroy]
   before_action :set_editor, only: %i[show edit update destroy]
 
   def index

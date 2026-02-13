@@ -43,9 +43,22 @@ end
 admin_user = AdminUser.find_or_create_by(email: 'admin@voie-rapide.gouv.fr') do |admin|
   admin.password = 'password123'
   admin.password_confirmation = 'password123'
+  admin.role = :admin
 end
+admin_user.update!(role: :admin) unless admin_user.admin?
 
-puts "✅ Admin user created: #{admin_user.email}"
+puts "✅ Admin user created: #{admin_user.email} (#{admin_user.role})"
+
+# Create lecteur account for dev/staging
+if Rails.env.development? || Rails.env.sandbox? || Rails.env.staging?
+  lecteur_user = AdminUser.find_or_create_by(email: 'lecteur@voie-rapide.gouv.fr') do |user|
+    user.password = 'password123'
+    user.password_confirmation = 'password123'
+    user.role = :lecteur
+  end
+
+  puts "✅ Lecteur user created: #{lecteur_user.email} (#{lecteur_user.role})"
+end
 
 # Create MarketType records
 puts "\n🏗️  Creating MarketType records..."
