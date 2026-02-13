@@ -1,4 +1,4 @@
-<% content_for :title, "#{@market_application.siret} - #{candidate_category_label(step.to_s)}" %>
+<% content_for :title, "#{@market_application.siret} - #{category_label(step.to_s, role: :candidate)}" %>
 
 <% current_category = @presenter.parent_category_for(step.to_s) %>
 <%= stepper current_step: current_category,
@@ -31,7 +31,7 @@
       <div class="fr-mb-4w">
 
         <h6 id="<%= step %>" class="fr-mb-2w">
-          <%= candidate_subcategory_label(step.to_s) %>
+          <%= subcategory_label(step.to_s, role: :candidate) %>
         </h6>
 
         <% if subcategory_responses.any? %>

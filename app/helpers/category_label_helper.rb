@@ -1,23 +1,32 @@
 # frozen_string_literal: true
 
 module CategoryLabelHelper
-  def buyer_category_label(category_key)
-    category = Category.find_by(key: category_key)
-    category&.buyer_label.presence || I18n.t("form_fields.buyer.categories.#{category_key}", default: category_key.humanize)
+  def category_label(key, role:)
+    record_label(Category, key, role, :categories)
   end
 
-  def candidate_category_label(category_key)
-    category = Category.find_by(key: category_key)
-    category&.candidate_label.presence || I18n.t("form_fields.candidate.categories.#{category_key}", default: category_key.humanize)
+  def subcategory_label(key, role:)
+    record_label(Subcategory, key, role, :subcategories)
   end
 
-  def buyer_subcategory_label(subcategory_key)
-    subcategory = Subcategory.find_by(key: subcategory_key)
-    subcategory&.buyer_label.presence || I18n.t("form_fields.buyer.subcategories.#{subcategory_key}", default: subcategory_key.humanize)
+  private
+
+  def record_label(model_class, key, role, i18n_scope)
+    return key.to_s.humanize if key.blank?
+
+    record = active_records_cache(model_class)[key.to_s]
+    label = record&.public_send(:"#{role}_label")
+
+    label.presence || I18n.t("form_fields.#{role}.#{i18n_scope}.#{key}", default: key.to_s.humanize)
   end
 
-  def candidate_subcategory_label(subcategory_key)
-    subcategory = Subcategory.find_by(key: subcategory_key)
-    subcategory&.candidate_label.presence || I18n.t("form_fields.candidate.subcategories.#{subcategory_key}", default: subcategory_key.humanize)
+  def active_records_cache(model_class)
+    cache_var = :"@_#{model_class.name.underscore}_cache"
+
+    if instance_variable_defined?(cache_var)
+      instance_variable_get(cache_var)
+    else
+      instance_variable_set(cache_var, model_class.active.index_by(&:key))
+    end
   end
 end

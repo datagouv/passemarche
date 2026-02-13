@@ -11,7 +11,7 @@
 <% content = capture do %>
   <% if show_header %>
     <h4 class="fr-text--md fr-text--bold fr-mb-3w <%= table_mode ? 'fr-p-3w' : '' %>">
-      <%= buyer_subcategory_label(subcategory) %>
+      <%= subcategory_label(subcategory, role: :buyer) %>
     </h4>
   <% end %>
   <% if table_mode %>

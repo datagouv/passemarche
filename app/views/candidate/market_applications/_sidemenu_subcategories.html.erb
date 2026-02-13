@@ -6,7 +6,7 @@
         <ul class="fr-sidemenu__list">
           <% subcategories.each do |key| %>
             <li class="fr-sidemenu__item">
-              <%= link_to candidate_subcategory_label(key), "##{key}",
+              <%= link_to subcategory_label(key, role: :candidate), "##{key}",
               class: "fr-sidemenu__link",
               **( key.to_s == step.to_s ? { 'aria-current': 'page' } : {} )
               %>
