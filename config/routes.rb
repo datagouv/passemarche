@@ -19,7 +19,7 @@ Rails.application.routes.draw do
         patch :reorder
       end
     end
-    resources :subcategories, only: [] do
+    resources :subcategories, only: %i[edit update] do
       collection do
         patch :reorder
       end
