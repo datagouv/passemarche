@@ -3,5 +3,48 @@
 <div class="fr-container fr-my-4w">
   <%= render 'admin/shared/navigation' %>
 
-  <h1 class="fr-h2 fr-mt-4w"><%= t('admin.categories.title') %></h1>
+  <div class="fr-mb-2w">
+    <%= link_to admin_socle_de_base_index_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line" do %>
+      <%= t('admin.categories.back_link') %>
+    <% end %>
+  </div>
+
+  <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle fr-mb-4w">
+    <div class="fr-col">
+      <h1 class="fr-h2 fr-mb-0"><%= t('admin.categories.title') %></h1>
+    </div>
+    <div class="fr-col-auto">
+      <div class="fr-dropdown" data-controller="dropdown">
+        <button class="fr-btn fr-btn--icon-right fr-icon-add-line"
+                data-dropdown-target="button"
+                data-action="click->dropdown#toggle"
+                aria-expanded="false"
+                aria-controls="dropdown-categories-create">
+          <%= t('admin.categories.actions.create') %>
+        </button>
+        <div class="fr-collapse fr-dropdown__menu"
+             data-dropdown-target="content"
+             id="dropdown-categories-create">
+          <ul class="fr-dropdown__list">
+            <li>
+              <%= link_to '#', class: "fr-dropdown__link" do %>
+                <%= t('admin.categories.actions.create_category') %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to '#', class: "fr-dropdown__link" do %>
+                <%= t('admin.categories.actions.create_subcategory') %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render 'categories_table' %>
+
+  <div class="fr-mt-4w">
+    <%= render 'subcategories_table' %>
+  </div>
 </div>

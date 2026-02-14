@@ -778,18 +778,17 @@ fr:
         supplies: "F"
         services: "S"
     categories:
-      title: "Catégories et sous-catégories"
+      title: "Catégories et sous catégories"
+      back_link: "Retour"
       categories_table:
-        title: "Catégories"
         headers:
-          buyer_label: "Libellé acheteur"
-          candidate_label: "Libellé candidat"
+          buyer_label: "Catégorie Acheteur"
+          candidate_label: "Catégorie Candidat"
           actions: "Actions"
       subcategories_table:
-        title: "Sous-catégories"
         headers:
-          buyer_label: "Libellé acheteur"
-          candidate_label: "Libellé candidat"
+          buyer_label: "Sous catégorie acheteur"
+          candidate_label: "Sous Catégorie candidat"
           actions: "Actions"
       actions:
         create: "Créer"
