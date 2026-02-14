@@ -166,6 +166,29 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
+  describe 'PATCH /admin/socle_de_base/:id/archive' do
+    let!(:attribute) { create(:market_attribute, key: 'test_field') }
+
+    it 'archives the attribute and redirects with notice' do
+      patch "/admin/socle_de_base/#{attribute.id}/archive"
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(flash[:notice]).to include('test_field')
+      expect(attribute.reload.deleted_at).to be_present
+    end
+
+    it 'shows alert when attribute is already archived' do
+      attribute.update!(deleted_at: 1.day.ago)
+      patch "/admin/socle_de_base/#{attribute.id}/archive"
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(flash[:alert]).to be_present
+    end
+
+    it 'displays archive button on index page' do
+      get '/admin/socle_de_base'
+      expect(response.body).to include('Archiver')
+    end
+  end
+
   context 'with lecteur role' do
     let(:admin_user) { create(:admin_user, :lecteur) }
 
@@ -196,6 +219,15 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       it 'redirects to login' do
         patch '/admin/socle_de_base/reorder', params: { ordered_ids: [1, 2] }, as: :json
         expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe 'PATCH /admin/socle_de_base/:id/archive' do
+      it 'redirects to login' do
+        attribute = create(:market_attribute)
+        patch "/admin/socle_de_base/#{attribute.id}/archive"
+        expect(response).to have_http_status(:redirect)
+        expect(attribute.reload.deleted_at).to be_nil
       end
     end
   end

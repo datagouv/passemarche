@@ -13,6 +13,9 @@ Rails.application.routes.draw do
       collection do
         patch :reorder
       end
+      member do
+        patch :archive
+      end
     end
     resources :categories, only: %i[index edit update] do
       collection do

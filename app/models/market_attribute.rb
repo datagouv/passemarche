@@ -60,4 +60,16 @@ class MarketAttribute < ApplicationRecord
   def manual?
     !from_api?
   end
+
+  def soft_delete!
+    update!(deleted_at: Time.current)
+  end
+
+  def active?
+    deleted_at.nil?
+  end
+
+  def archived?
+    deleted_at.present?
+  end
 end

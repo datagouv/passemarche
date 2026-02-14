@@ -743,6 +743,11 @@ fr:
       export_button: "Exporter"
       new_field_button: "Nouveau champ"
       edit_button: "Modifier"
+      archive_button: "Archiver"
+      archive:
+        confirm: "Êtes-vous sûr de vouloir archiver ce champ ? Il ne sera plus visible dans le socle de base."
+        success: "Le champ « %{key} » a été archivé avec succès."
+        already_archived: "Ce champ est déjà archivé."
       actions:
         import: "Importer"
         export: "Exporter"
