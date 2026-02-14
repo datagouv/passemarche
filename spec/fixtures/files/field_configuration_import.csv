@@ -1,0 +1,5 @@
+clé technique,clé technique,clé technique,Titre acheteur,Sous titre acheteur,Titre champ acheteur,Description acheteur,Obligatoire,Titre candidat,Sous titre candidat,Titre champ candidat,Description candidat,Type,,Apifiable,Apifie,Services,Fournitures,Travaux,Defense,Import,API,Lien,Info API,
+,,,,,,,,,,,,,,,,,,,,,,,,
+DEVELOPMENT,,,Acheteur,,,,,Candidat,,,,Paramétrage,,,,Type de marché,,,,a prendre en compte,API technique,,Info,
+category_key,subcategory_key,key,category_acheteur,subcategory_acheteur,titre_acheteur,description_acheteur,obligatoire,category_candidat,subcategory_candidat,titre_candidat,description_candidat,type,type_api,apifiable,apifie,services,fournitures,travaux,défense,import,API,Lien vers le catalogue pour l'API en question ,Informations récupérées par l'API,US
+identite_entreprise,identite_entreprise_identification,test_import_siret,Identité Acheteur,Identification,SIRET,,oui,Identité Candidat,Informations,SIRET,,texte,texte,oui,oui,oui,oui,oui,non,oui,insee,,siret,
