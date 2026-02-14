@@ -86,6 +86,27 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       get '/admin/socle_de_base'
       expect(response.body).to include('Modifier')
     end
+
+    it 'filters by category' do
+      get '/admin/socle_de_base', params: { category: 'identite_entreprise' }
+
+      expect(response.body).to include("data-attribute-id=\"#{identity_attribute.id}\"")
+      expect(response.body).not_to include("data-attribute-id=\"#{exclusion_attribute.id}\"")
+    end
+
+    it 'filters by source' do
+      get '/admin/socle_de_base', params: { source: 'api' }
+
+      expect(response.body).to include("data-attribute-id=\"#{identity_attribute.id}\"")
+      expect(response.body).not_to include("data-attribute-id=\"#{exclusion_attribute.id}\"")
+    end
+
+    it 'returns all with no filters' do
+      get '/admin/socle_de_base'
+
+      expect(response.body).to include("data-attribute-id=\"#{identity_attribute.id}\"")
+      expect(response.body).to include("data-attribute-id=\"#{exclusion_attribute.id}\"")
+    end
   end
 
   context 'without authentication' do
