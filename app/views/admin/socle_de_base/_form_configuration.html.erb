@@ -1,0 +1,60 @@
+<fieldset class="fr-fieldset fr-mb-3w" data-controller="conditional-fields">
+  <legend class="fr-fieldset__legend fr-h4"><%= t('admin.socle_de_base.form.configuration.title') %></legend>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-form-group">
+      <fieldset class="fr-fieldset">
+        <legend class="fr-fieldset__legend fr-text--regular">
+          <%= t('admin.socle_de_base.form.configuration.source') %>
+        </legend>
+
+        <div class="fr-fieldset__element">
+          <div class="fr-radio-group">
+            <%= form.radio_button :source, 'manual',
+                  class: "fr-radio",
+                  checked: true,
+                  data: { conditional_fields_target: "trigger", action: "conditional-fields#hide" } %>
+            <%= form.label :source_manual, class: "fr-label" do %>
+              <%= t('admin.socle_de_base.form.configuration.source_manual') %>
+              <span class="fr-hint-text"><%= t('admin.socle_de_base.form.configuration.source_manual_hint') %></span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="fr-fieldset__element">
+          <div class="fr-radio-group">
+            <%= form.radio_button :source, 'api',
+                  class: "fr-radio",
+                  data: { conditional_fields_target: "trigger", action: "conditional-fields#show" } %>
+            <%= form.label :source_api, class: "fr-label" do %>
+              <%= t('admin.socle_de_base.form.configuration.source_api') %>
+              <span class="fr-hint-text"><%= t('admin.socle_de_base.form.configuration.source_api_hint') %></span>
+            <% end %>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="fr-hidden" data-conditional-fields-target="content">
+    <div class="fr-fieldset__element">
+      <div class="fr-input-group">
+        <%= form.label :api_name, class: "fr-label" do %>
+          <%= t('admin.socle_de_base.form.configuration.api_name') %>
+          <span class="fr-hint-text"><%= t('admin.socle_de_base.form.configuration.api_name_hint') %></span>
+        <% end %>
+        <%= form.text_field :api_name, class: "fr-input" %>
+      </div>
+    </div>
+
+    <div class="fr-fieldset__element">
+      <div class="fr-input-group">
+        <%= form.label :api_key, class: "fr-label" do %>
+          <%= t('admin.socle_de_base.form.configuration.api_key') %>
+          <span class="fr-hint-text"><%= t('admin.socle_de_base.form.configuration.api_key_hint') %></span>
+        <% end %>
+        <%= form.text_field :api_key, class: "fr-input" %>
+      </div>
+    </div>
+  </div>
+</fieldset>
