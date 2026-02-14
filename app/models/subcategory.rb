@@ -6,6 +6,7 @@ class Subcategory < ApplicationRecord
 
   validates :key, presence: true, uniqueness: { scope: :category_id }
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :buyer_label, :candidate_label, presence: true
 
   scope :active, -> { where(deleted_at: nil) }
   scope :ordered, -> { order(:position) }
