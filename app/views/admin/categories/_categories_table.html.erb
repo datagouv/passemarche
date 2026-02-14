@@ -18,8 +18,9 @@
           <td><%= category.buyer_label %></td>
           <td><%= category.candidate_label %></td>
           <td>
-            <%= link_to t('admin.categories.actions.edit'), '#',
-                        class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+            <%= link_to t('admin.categories.actions.edit'), edit_admin_category_path(category),
+                        class: "fr-btn fr-btn--secondary fr-btn--sm",
+                        data: { turbo_frame: "modal" } %>
           </td>
         </tr>
       <% end %>

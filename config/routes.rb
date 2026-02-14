@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       get :export, on: :member
     end
     resources :socle_de_base, only: [:index]
-    resources :categories, only: [:index] do
+    resources :categories, only: %i[index edit update] do
       collection do
         patch :reorder
       end

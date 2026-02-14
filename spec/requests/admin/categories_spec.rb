@@ -69,6 +69,51 @@ RSpec.describe 'Admin::Categories', type: :request do
     end
   end
 
+  describe 'GET /admin/categories/:id/edit' do
+    let!(:category) { create(:category, :with_labels, position: 0) }
+
+    it 'returns http success' do
+      get "/admin/categories/#{category.id}/edit"
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'displays the edit modal title' do
+      get "/admin/categories/#{category.id}/edit"
+      expect(response.body).to include('Modifier une catégorie')
+    end
+  end
+
+  describe 'PATCH /admin/categories/:id' do
+    let!(:category) do
+      create(:category, :with_labels, position: 0,
+        buyer_label: 'Original Buyer',
+        candidate_label: 'Original Candidate')
+    end
+
+    it 'updates and redirects on success' do
+      patch "/admin/categories/#{category.id}", params: {
+        category: { buyer_label: 'New Buyer', candidate_label: 'New Candidate' }
+      }
+      expect(response).to redirect_to(admin_categories_path)
+    end
+
+    it 'updates the category labels' do
+      patch "/admin/categories/#{category.id}", params: {
+        category: { buyer_label: 'New Buyer', candidate_label: 'New Candidate' }
+      }
+      category.reload
+      expect(category.buyer_label).to eq('New Buyer')
+      expect(category.candidate_label).to eq('New Candidate')
+    end
+
+    it 're-renders on blank label' do
+      patch "/admin/categories/#{category.id}", params: {
+        category: { buyer_label: '', candidate_label: 'Candidate' }
+      }
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+  end
+
   context 'without authentication' do
     before do
       sign_out admin_user
