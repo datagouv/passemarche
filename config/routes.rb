@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get :export, on: :member
     end
     resources :socle_de_base, only: [:index]
+    resources :audit_logs, only: %i[index show], path: 'historique'
     mount MissionControl::Jobs::Engine, at: '/jobs'
     root 'editors#index'
   end
