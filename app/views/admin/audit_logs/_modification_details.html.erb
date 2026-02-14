@@ -1,0 +1,21 @@
+<div class="fr-table fr-table--bordered">
+  <table>
+    <thead>
+      <tr>
+        <th><%= t('admin.audit_logs.show.field') %></th>
+        <th><%= t('admin.audit_logs.show.before') %></th>
+        <th><%= t('admin.audit_logs.show.after') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% changes.each do |attr_name, (before_val, after_val)| %>
+        <% next if %w[updated_at created_at id].include?(attr_name) %>
+        <tr>
+          <td class="fr-text--bold"><%= human_attribute_label(attr_name) %></td>
+          <td><%= format_change_value(before_val) %></td>
+          <td><%= format_change_value(after_val) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
