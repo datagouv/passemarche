@@ -1,0 +1,28 @@
+<div class="fr-table" id="subcategories-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"><%= t('admin.categories.subcategories_table.headers.buyer_label') %></th>
+        <th scope="col"><%= t('admin.categories.subcategories_table.headers.candidate_label') %></th>
+        <th scope="col"><%= t('admin.categories.subcategories_table.headers.actions') %></th>
+      </tr>
+    </thead>
+    <tbody data-controller="drag-reorder"
+           data-drag-reorder-url-value="<%= reorder_admin_subcategories_path %>">
+      <% @subcategories.each do |subcategory| %>
+        <tr data-item-id="<%= subcategory.id %>">
+          <td data-drag-handle style="cursor: grab;">
+            <%= render 'admin/socle_de_base/drag_handle_icon' %>
+          </td>
+          <td><%= subcategory.buyer_label %></td>
+          <td><%= subcategory.candidate_label %></td>
+          <td>
+            <%= link_to t('admin.categories.actions.edit'), '#',
+                        class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
