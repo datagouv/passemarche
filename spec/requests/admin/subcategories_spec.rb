@@ -9,8 +9,6 @@ RSpec.describe 'Admin::Subcategories', type: :request do
   let!(:subcategory) do
     create(:subcategory,
       category:,
-      buyer_category: category,
-      candidate_category: category,
       buyer_label: 'Sub Buyer',
       candidate_label: 'Sub Candidate')
   end
@@ -34,22 +32,32 @@ RSpec.describe 'Admin::Subcategories', type: :request do
 
   describe 'PATCH /admin/subcategories/:id' do
     context 'with valid params' do
-      it 'updates and redirects to categories page' do
+      it 'updates labels and redirects to categories page' do
         patch admin_subcategory_path(subcategory), params: {
           subcategory: {
             buyer_label: 'New Buyer',
-            buyer_category_id: other_category.id,
             candidate_label: 'New Candidate',
-            candidate_category_id: category.id
+            category_id: category.id
           }
         }
 
         expect(response).to redirect_to(admin_categories_path)
         subcategory.reload
         expect(subcategory.buyer_label).to eq('New Buyer')
-        expect(subcategory.buyer_category).to eq(other_category)
         expect(subcategory.candidate_label).to eq('New Candidate')
-        expect(subcategory.candidate_category).to eq(category)
+      end
+
+      it 'updates parent category' do
+        patch admin_subcategory_path(subcategory), params: {
+          subcategory: {
+            buyer_label: 'B',
+            candidate_label: 'C',
+            category_id: other_category.id
+          }
+        }
+
+        expect(response).to redirect_to(admin_categories_path)
+        expect(subcategory.reload.category).to eq(other_category)
       end
     end
 
@@ -58,9 +66,8 @@ RSpec.describe 'Admin::Subcategories', type: :request do
         patch admin_subcategory_path(subcategory), params: {
           subcategory: {
             buyer_label: '',
-            buyer_category_id: category.id,
             candidate_label: 'Candidate',
-            candidate_category_id: category.id
+            category_id: category.id
           }
         }
 
@@ -73,9 +80,8 @@ RSpec.describe 'Admin::Subcategories', type: :request do
         patch admin_subcategory_path(subcategory), params: {
           subcategory: {
             buyer_label: 'Buyer',
-            buyer_category_id: category.id,
             candidate_label: '',
-            candidate_category_id: category.id
+            category_id: category.id
           }
         }
 
@@ -94,8 +100,7 @@ RSpec.describe 'Admin::Subcategories', type: :request do
 
     it 'redirects update to login' do
       patch admin_subcategory_path(subcategory), params: {
-        subcategory: { buyer_label: 'X', buyer_category_id: category.id,
-                       candidate_label: 'Y', candidate_category_id: category.id }
+        subcategory: { buyer_label: 'X', candidate_label: 'Y', category_id: category.id }
       }
       expect(response).to have_http_status(:redirect)
     end

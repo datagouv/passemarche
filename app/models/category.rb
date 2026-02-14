@@ -2,10 +2,6 @@
 
 class Category < ApplicationRecord
   has_many :subcategories, dependent: :destroy
-  has_many :buyer_subcategories, class_name: 'Subcategory', foreign_key: :buyer_category_id,
-    dependent: :nullify, inverse_of: :buyer_category
-  has_many :candidate_subcategories, class_name: 'Subcategory', foreign_key: :candidate_category_id,
-    dependent: :nullify, inverse_of: :candidate_category
   has_many :market_attributes, through: :subcategories
 
   validates :key, presence: true, uniqueness: true
