@@ -9,7 +9,11 @@ Rails.application.routes.draw do
     resource :dashboard, only: [:show] do
       get :export, on: :member
     end
-    resources :socle_de_base, only: [:index]
+    resources :socle_de_base, only: %i[index show edit update] do
+      member do
+        patch :archive
+      end
+    end
     resources :categories, only: [:index] do
       collection do
         patch :reorder
