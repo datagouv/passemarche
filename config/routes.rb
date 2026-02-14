@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     resource :dashboard, only: [:show] do
       get :export, on: :member
     end
-    resources :socle_de_base, only: [:index]
+    resources :socle_de_base, only: [:index] do
+      get :export, on: :collection
+    end
     mount MissionControl::Jobs::Engine, at: '/jobs'
     root 'editors#index'
   end
