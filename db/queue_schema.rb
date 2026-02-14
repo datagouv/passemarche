@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_10_111340) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_14_103422) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -347,7 +347,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_111340) do
   end
 
   create_table "subcategories", force: :cascade do |t|
+    t.bigint "buyer_category_id"
     t.string "buyer_label"
+    t.bigint "candidate_category_id"
     t.string "candidate_label"
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
@@ -355,6 +357,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_111340) do
     t.string "key", null: false
     t.integer "position", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.index ["buyer_category_id"], name: "index_subcategories_on_buyer_category_id"
+    t.index ["candidate_category_id"], name: "index_subcategories_on_candidate_category_id"
     t.index ["category_id", "key"], name: "index_subcategories_on_category_id_and_key", unique: true
     t.index ["category_id"], name: "index_subcategories_on_category_id"
     t.index ["deleted_at"], name: "index_subcategories_on_deleted_at"
@@ -377,4 +381,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_111340) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "subcategories", "categories"
+  add_foreign_key "subcategories", "categories", column: "buyer_category_id"
+  add_foreign_key "subcategories", "categories", column: "candidate_category_id"
 end
