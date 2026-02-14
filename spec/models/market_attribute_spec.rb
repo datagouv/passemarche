@@ -172,6 +172,44 @@ RSpec.describe MarketAttribute, type: :model do
     end
   end
 
+  describe '#soft_delete!' do
+    it 'sets deleted_at and persists' do
+      attribute = create(:market_attribute)
+      attribute.soft_delete!
+      expect(attribute.reload.deleted_at).to be_present
+    end
+
+    it 'is idempotent on already-archived record' do
+      attribute = create(:market_attribute, deleted_at: 1.day.ago)
+      expect { attribute.soft_delete! }.not_to raise_error
+      expect(attribute.reload.deleted_at).to be_present
+    end
+  end
+
+  describe '#active?' do
+    it 'returns true when deleted_at is nil' do
+      attribute = build(:market_attribute, deleted_at: nil)
+      expect(attribute).to be_active
+    end
+
+    it 'returns false when deleted_at is present' do
+      attribute = build(:market_attribute, deleted_at: Time.current)
+      expect(attribute).not_to be_active
+    end
+  end
+
+  describe '#archived?' do
+    it 'returns true when deleted_at is present' do
+      attribute = build(:market_attribute, deleted_at: Time.current)
+      expect(attribute).to be_archived
+    end
+
+    it 'returns false when deleted_at is nil' do
+      attribute = build(:market_attribute, deleted_at: nil)
+      expect(attribute).not_to be_archived
+    end
+  end
+
   describe 'CATEGORY_TABS' do
     it 'contains the expected category keys' do
       expected_tabs = %w[
