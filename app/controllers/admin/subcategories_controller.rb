@@ -10,8 +10,7 @@ class Admin::SubcategoriesController < Admin::ApplicationController
     @subcategory = Subcategory.find(params[:id])
     service = SubcategoryUpdateService.new(
       subcategory: @subcategory,
-      buyer_params: subcategory_buyer_params,
-      candidate_params: subcategory_candidate_params
+      params: subcategory_params
     )
     service.perform
 
@@ -37,13 +36,7 @@ class Admin::SubcategoriesController < Admin::ApplicationController
 
   private
 
-  def subcategory_buyer_params
-    params.expect(subcategory: %i[buyer_label buyer_category_id])
-      .then { |p| { label: p[:buyer_label], category_id: p[:buyer_category_id] } }
-  end
-
-  def subcategory_candidate_params
-    params.expect(subcategory: %i[candidate_label candidate_category_id])
-      .then { |p| { label: p[:candidate_label], category_id: p[:candidate_category_id] } }
+  def subcategory_params
+    params.expect(subcategory: %i[buyer_label candidate_label category_id])
   end
 end
