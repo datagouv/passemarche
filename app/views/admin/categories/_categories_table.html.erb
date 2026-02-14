@@ -1,0 +1,28 @@
+<div class="fr-table" id="categories-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"><%= t('admin.categories.categories_table.headers.buyer_label') %></th>
+        <th scope="col"><%= t('admin.categories.categories_table.headers.candidate_label') %></th>
+        <th scope="col"><%= t('admin.categories.categories_table.headers.actions') %></th>
+      </tr>
+    </thead>
+    <tbody data-controller="drag-reorder"
+           data-drag-reorder-url-value="<%= reorder_admin_categories_path %>">
+      <% @categories.each do |category| %>
+        <tr data-item-id="<%= category.id %>">
+          <td data-drag-handle style="cursor: grab;">
+            <%= render 'admin/socle_de_base/drag_handle_icon' %>
+          </td>
+          <td><%= category.buyer_label %></td>
+          <td><%= category.candidate_label %></td>
+          <td>
+            <%= link_to t('admin.categories.actions.edit'), '#',
+                        class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -773,10 +773,79 @@ fr:
           market_type: "Type de marché"
           source: "Source"
           actions: "Actions"
+      filters:
+        search_placeholder: "Rechercher par catégorie, sous-catégorie ou champ..."
+        search_button: "Rechercher"
+        market_type: "Type de marché"
+        category: "Catégorie"
+        source: "Source"
+        source_api: "API"
+        source_manual: "Manuelle"
+        no_results: "Aucun champ ne correspond à votre recherche."
+        reset: "Réinitialiser les filtres"
       market_type_badges:
         works: "T"
         supplies: "F"
         services: "S"
+      show:
+        back: "Retour au socle de base"
+        general_info: "Informations générales"
+        field_type: "Type de champ"
+        mandatory: "Champ obligatoire"
+        market_types: "Types de marché"
+        description: "Description"
+        buyer_view: "Vue acheteur"
+        candidate_view: "Vue candidat"
+        category: "Catégorie"
+        subcategory: "Sous-catégorie"
+        title_field: "Titre"
+        description_field: "Description"
+        configuration: "Configuration"
+        mode: "Mode"
+        mode_api: "API"
+        mode_manual: "Manuelle"
+        api_source: "API source"
+        archive_button: "Archiver ce champ"
+        archive_confirm: "Êtes-vous sûr de vouloir archiver ce champ ?"
+      edit:
+        title: "Modifier le champ"
+        submit: "Modifier"
+        cancel: "Annuler"
+      update:
+        success: "Champ modifié avec succès"
+      archive:
+        success: "Champ archivé avec succès"
+    categories:
+      title: "Catégories et sous catégories"
+      back_link: "Retour"
+      categories_table:
+        headers:
+          buyer_label: "Catégorie Acheteur"
+          candidate_label: "Catégorie Candidat"
+          actions: "Actions"
+      subcategories_table:
+        headers:
+          buyer_label: "Sous catégorie acheteur"
+          candidate_label: "Sous Catégorie candidat"
+          actions: "Actions"
+      actions:
+        create: "Créer"
+        create_category: "Créer une nouvelle catégorie"
+        create_subcategory: "Créer une nouvelle sous-catégorie"
+        edit: "Modifier"
+      navigation_link: "Catégories et sous-catégories"
+    subcategories:
+      edit:
+        title: "Modifier une sous catégorie"
+        buyer_section: "Sous catégorie acheteur"
+        candidate_section: "Sous catégorie candidat"
+        linked_category: "Liée à la catégorie"
+        label_field: "Intitulé de la sous catégorie"
+        submit: "Modifier"
+        cancel: "Annuler"
+        close: "Fermer"
+      update:
+        success: "Sous-catégorie modifiée avec succès"
 
   activerecord:
     errors:
