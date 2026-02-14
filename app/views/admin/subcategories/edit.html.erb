@@ -1,0 +1,62 @@
+<%= content_for :page_title, t('.title') %>
+
+<div class="fr-container fr-my-4w">
+  <h1 class="fr-h2"><%= t('.title') %></h1>
+
+  <%= form_with model: @subcategory, url: admin_subcategory_path(@subcategory), method: :patch do |f| %>
+    <fieldset class="fr-fieldset fr-mb-4w">
+      <legend class="fr-fieldset__legend fr-text--bold">
+        <span class="fr-icon-user-line fr-mr-1w" aria-hidden="true"></span>
+        <%= t('.buyer_section') %>
+      </legend>
+
+      <div class="fr-fieldset__element">
+        <div class="fr-select-group<%= ' fr-select-group--error' if @subcategory.errors[:buyer_category].present? %>">
+          <%= f.label :buyer_category_id, t('.linked_category'), class: 'fr-label' %>
+          <%= f.collection_select :buyer_category_id, @categories, :id, :buyer_label,
+                                 {}, class: 'fr-select' %>
+        </div>
+      </div>
+
+      <div class="fr-fieldset__element">
+        <div class="fr-input-group<%= ' fr-input-group--error' if @subcategory.errors[:buyer_label].present? %>">
+          <%= f.label :buyer_label, t('.label_field'), class: 'fr-label' %>
+          <%= f.text_field :buyer_label, class: 'fr-input' %>
+          <% if @subcategory.errors[:buyer_label].present? %>
+            <p class="fr-error-text"><%= @subcategory.errors.full_messages_for(:buyer_label).join(', ') %></p>
+          <% end %>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="fr-fieldset fr-mb-4w">
+      <legend class="fr-fieldset__legend fr-text--bold">
+        <span class="fr-icon-team-line fr-mr-1w" aria-hidden="true"></span>
+        <%= t('.candidate_section') %>
+      </legend>
+
+      <div class="fr-fieldset__element">
+        <div class="fr-select-group<%= ' fr-select-group--error' if @subcategory.errors[:candidate_category].present? %>">
+          <%= f.label :candidate_category_id, t('.linked_category'), class: 'fr-label' %>
+          <%= f.collection_select :candidate_category_id, @categories, :id, :candidate_label,
+                                 {}, class: 'fr-select' %>
+        </div>
+      </div>
+
+      <div class="fr-fieldset__element">
+        <div class="fr-input-group<%= ' fr-input-group--error' if @subcategory.errors[:candidate_label].present? %>">
+          <%= f.label :candidate_label, t('.label_field'), class: 'fr-label' %>
+          <%= f.text_field :candidate_label, class: 'fr-input' %>
+          <% if @subcategory.errors[:candidate_label].present? %>
+            <p class="fr-error-text"><%= @subcategory.errors.full_messages_for(:candidate_label).join(', ') %></p>
+          <% end %>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="fr-btns-group fr-btns-group--inline">
+      <%= f.submit t('.submit'), class: 'fr-btn' %>
+      <%= link_to t('.cancel'), admin_categories_path, class: 'fr-btn fr-btn--secondary' %>
+    </div>
+  <% end %>
+</div>
