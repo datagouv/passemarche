@@ -2,10 +2,13 @@
 
 class Subcategory < ApplicationRecord
   belongs_to :category
+  belongs_to :buyer_category, class_name: 'Category', optional: true
+  belongs_to :candidate_category, class_name: 'Category', optional: true
   has_many :market_attributes, dependent: :restrict_with_error
 
   validates :key, presence: true, uniqueness: { scope: :category_id }
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :buyer_label, :candidate_label, presence: true
 
   scope :active, -> { where(deleted_at: nil) }
   scope :ordered, -> { order(:position) }
