@@ -1,0 +1,67 @@
+<fieldset class="fr-fieldset fr-mb-3w" data-controller="subcategory-select">
+  <legend class="fr-fieldset__legend fr-h4"><%= t('admin.socle_de_base.form.descriptions.title') %></legend>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-select-group">
+      <%= form.label :category_key, t('admin.socle_de_base.form.descriptions.category'), class: "fr-label" %>
+      <%= form.select :category_key,
+            options_for_select(@categories.map { |c| [c.buyer_label || c.key.humanize, c.key] }),
+            { prompt: t('admin.socle_de_base.form.descriptions.category_prompt') },
+            class: "fr-select",
+            data: { subcategory_select_target: "categorySelect", action: "subcategory-select#filterSubcategories" } %>
+    </div>
+  </div>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-select-group">
+      <%= form.label :subcategory_key, t('admin.socle_de_base.form.descriptions.subcategory'), class: "fr-label" %>
+      <%= form.select :subcategory_key,
+            options_for_select(
+              @subcategories.map { |s| [s.buyer_label || s.key.humanize, s.key, { data: { category_key: s.category.key } }] }
+            ),
+            { prompt: t('admin.socle_de_base.form.descriptions.subcategory_prompt') },
+            class: "fr-select",
+            data: { subcategory_select_target: "subcategorySelect" } %>
+    </div>
+  </div>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-input-group">
+      <%= form.label :buyer_name, class: "fr-label" do %>
+        <%= t('admin.socle_de_base.form.descriptions.buyer_name') %>
+        <span class="fr-hint-text"><%= t('admin.socle_de_base.form.descriptions.buyer_name_hint') %></span>
+      <% end %>
+      <%= form.text_field :buyer_name, class: "fr-input" %>
+    </div>
+  </div>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-input-group">
+      <%= form.label :candidate_name, class: "fr-label" do %>
+        <%= t('admin.socle_de_base.form.descriptions.candidate_name') %>
+        <span class="fr-hint-text"><%= t('admin.socle_de_base.form.descriptions.candidate_name_hint') %></span>
+      <% end %>
+      <%= form.text_field :candidate_name, class: "fr-input" %>
+    </div>
+  </div>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-input-group">
+      <%= form.label :buyer_description, class: "fr-label" do %>
+        <%= t('admin.socle_de_base.form.descriptions.buyer_description') %>
+        <span class="fr-hint-text"><%= t('admin.socle_de_base.form.descriptions.buyer_description_hint') %></span>
+      <% end %>
+      <%= form.text_area :buyer_description, class: "fr-input", rows: 3 %>
+    </div>
+  </div>
+
+  <div class="fr-fieldset__element">
+    <div class="fr-input-group">
+      <%= form.label :candidate_description, class: "fr-label" do %>
+        <%= t('admin.socle_de_base.form.descriptions.candidate_description') %>
+        <span class="fr-hint-text"><%= t('admin.socle_de_base.form.descriptions.candidate_description_hint') %></span>
+      <% end %>
+      <%= form.text_area :candidate_description, class: "fr-input", rows: 3 %>
+    </div>
+  </div>
+</fieldset>

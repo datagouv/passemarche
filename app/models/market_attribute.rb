@@ -18,6 +18,8 @@ class MarketAttribute < ApplicationRecord
 
   validates :key, presence: true, uniqueness: true
   validates :category_key, :subcategory_key, presence: true
+  validates :input_type, presence: true
+  validates :api_name, :api_key, presence: true, if: :from_api?
   validates_uniqueness_of_association :market_types, :public_markets
 
   enum :input_type, {
