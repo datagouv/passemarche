@@ -744,9 +744,22 @@ fr:
       new_field_button: "Nouveau champ"
       edit_button: "Modifier"
       actions:
+        import: "Importer"
         export: "Exporter"
         new_field: "Créer un champ"
         history: "Consulter l'historique"
+      import:
+        title: "Importer une configuration"
+        description: "Sélectionnez un fichier CSV pour importer la configuration des champs du socle de base."
+        file_label: "Fichier CSV"
+        file_hint: "Format CSV uniquement"
+        submit: "Importer"
+        cancel: "Annuler"
+        close: "Fermer"
+      create:
+        success: "Import réussi : %{created} créé(s), %{updated} mis à jour, %{soft_deleted} archivé(s), %{skipped} ignoré(s)"
+        no_file: "Veuillez sélectionner un fichier CSV"
+        error: "Erreur lors de l'import : %{message}"
       cards:
         total:
           title: "Champs total"
