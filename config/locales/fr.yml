@@ -777,6 +777,25 @@ fr:
         works: "T"
         supplies: "F"
         services: "S"
+    categories:
+      title: "Catégories et sous catégories"
+      back_link: "Retour"
+      categories_table:
+        headers:
+          buyer_label: "Catégorie Acheteur"
+          candidate_label: "Catégorie Candidat"
+          actions: "Actions"
+      subcategories_table:
+        headers:
+          buyer_label: "Sous-catégorie Acheteur"
+          candidate_label: "Sous-catégorie Candidat"
+          actions: "Actions"
+      actions:
+        create: "Créer"
+        create_category: "Créer une nouvelle catégorie"
+        create_subcategory: "Créer une nouvelle sous-catégorie"
+        edit: "Modifier"
+      navigation_link: "Catégories et sous-catégories"
 
   activerecord:
     errors:

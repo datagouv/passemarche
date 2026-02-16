@@ -10,6 +10,16 @@ Rails.application.routes.draw do
       get :export, on: :member
     end
     resources :socle_de_base, only: [:index]
+    resources :categories, only: [:index] do
+      collection do
+        patch :reorder
+      end
+    end
+    resources :subcategories, only: [] do
+      collection do
+        patch :reorder
+      end
+    end
     mount MissionControl::Jobs::Engine, at: '/jobs'
     root 'editors#index'
   end
