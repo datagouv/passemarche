@@ -11,7 +11,7 @@ class Admin::CategoriesController < Admin::ApplicationController
 
     Category.transaction do
       ordered_ids.each_with_index do |id, index|
-        Category.where(id:).update_all(position: index) # rubocop:disable Rails/SkipsModelValidations
+        Category.active.where(id:).update_all(position: index) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 

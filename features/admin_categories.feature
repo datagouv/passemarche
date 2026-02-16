@@ -21,7 +21,7 @@ Feature: Admin - Catégories et sous-catégories
     When I visit the categories page
     Then I should see the page title "Catégories et sous catégories"
     And I should see a categories table with headers "Catégorie Acheteur", "Catégorie Candidat", "Actions"
-    And I should see a subcategories table with headers "Sous catégorie acheteur", "Sous Catégorie candidat", "Actions"
+    And I should see a subcategories table with headers "Sous-catégorie Acheteur", "Sous-catégorie Candidat", "Actions"
 
   Scenario: Categories table displays buyer and candidate labels
     When I visit the categories page

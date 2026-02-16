@@ -6,7 +6,7 @@ class Admin::SubcategoriesController < Admin::ApplicationController
 
     Subcategory.transaction do
       ordered_ids.each_with_index do |id, index|
-        Subcategory.where(id:).update_all(position: index) # rubocop:disable Rails/SkipsModelValidations
+        Subcategory.active.where(id:).update_all(position: index) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 

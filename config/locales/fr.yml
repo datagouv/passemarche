@@ -787,8 +787,8 @@ fr:
           actions: "Actions"
       subcategories_table:
         headers:
-          buyer_label: "Sous catégorie acheteur"
-          candidate_label: "Sous Catégorie candidat"
+          buyer_label: "Sous-catégorie Acheteur"
+          candidate_label: "Sous-catégorie Candidat"
           actions: "Actions"
       actions:
         create: "Créer"
