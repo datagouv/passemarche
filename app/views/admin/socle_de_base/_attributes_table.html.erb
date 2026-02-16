@@ -11,11 +11,12 @@
         <th scope="col"><%= t('admin.socle_de_base.table.headers.actions') %></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody data-controller="drag-reorder"
+           data-drag-reorder-url-value="<%= reorder_admin_socle_de_base_index_path %>">
       <% @market_attributes.each do |market_attribute| %>
         <% presenter = SocleDeBasePresenter.new(market_attribute) %>
         <tr data-attribute-id="<%= market_attribute.id %>">
-          <td>
+          <td data-drag-handle style="cursor: grab;">
             <%= render 'admin/socle_de_base/drag_handle_icon' %>
           </td>
           <td><%= presenter.category_label %></td>

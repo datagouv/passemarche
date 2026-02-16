@@ -88,6 +88,53 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
+  describe 'PATCH /admin/socle_de_base/reorder' do
+    let!(:attr_a) { create(:market_attribute, key: 'attr_a', position: 0) }
+    let!(:attr_b) { create(:market_attribute, key: 'attr_b', position: 1) }
+    let!(:attr_c) { create(:market_attribute, key: 'attr_c', position: 2) }
+
+    it 'updates positions according to the new order' do
+      patch '/admin/socle_de_base/reorder',
+        params: { ordered_ids: [attr_c.id, attr_a.id, attr_b.id] },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(attr_c.reload.position).to eq(0)
+      expect(attr_a.reload.position).to eq(1)
+      expect(attr_b.reload.position).to eq(2)
+    end
+
+    it 'assigns sequential positions starting from zero' do
+      patch '/admin/socle_de_base/reorder',
+        params: { ordered_ids: [attr_b.id, attr_c.id, attr_a.id] },
+        as: :json
+
+      expect(attr_b.reload.position).to eq(0)
+      expect(attr_c.reload.position).to eq(1)
+      expect(attr_a.reload.position).to eq(2)
+    end
+
+    it 'returns bad request when ordered_ids is missing' do
+      patch '/admin/socle_de_base/reorder', params: {}, as: :json
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  context 'with lecteur role' do
+    let(:admin_user) { create(:admin_user, :lecteur) }
+
+    describe 'PATCH /admin/socle_de_base/reorder' do
+      it 'redirects to admin root' do
+        patch '/admin/socle_de_base/reorder',
+          params: { ordered_ids: [1, 2] },
+          as: :json
+
+        expect(response).to redirect_to(admin_root_path)
+      end
+    end
+  end
+
   context 'without authentication' do
     before do
       sign_out admin_user
@@ -97,6 +144,13 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       it 'redirects to login' do
         get '/admin/socle_de_base'
         expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe 'PATCH /admin/socle_de_base/reorder' do
+      it 'redirects to login' do
+        patch '/admin/socle_de_base/reorder', params: { ordered_ids: [1, 2] }, as: :json
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
