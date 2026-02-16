@@ -114,6 +114,6 @@ class FileSecurityScanner
   end
 
   def antivirus_enabled?
-    Rails.env.production? || ENV['ENABLE_CLAMAV'] == 'true'
+    ClamavService.available?
   end
 end

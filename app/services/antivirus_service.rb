@@ -41,9 +41,7 @@ class AntivirusService
   end
 
   def handle_all_scanners_failed
-    raise ScanError, 'Service antivirus indisponible' if Rails.env.production?
-
-    Rails.logger.warn("⚠️ No antivirus available in #{Rails.env}, skipping scan")
+    Rails.logger.warn("No antivirus available in #{Rails.env}, skipping scan")
     { scanner: 'none' }
   end
 end

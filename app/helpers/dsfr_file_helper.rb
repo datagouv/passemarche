@@ -1,5 +1,7 @@
 module DsfrFileHelper
   def dsfr_malware_badge(document, **options)
+    return unless antivirus_enabled?
+
     blob = document.respond_to?(:blob) ? document.blob : document
     safety_state = document_safety_state(document)
     label = badge_label_with_icon(safety_state)
@@ -59,12 +61,15 @@ module DsfrFileHelper
     metadata = blob.metadata
 
     return 'scanning' unless metadata.key?('scanner') || metadata.key?('scanned_at')
-
-    return 'not_scanned' if metadata['scanner'] == 'none' && !metadata.key?('scan_safe')
-
+    return 'not_scanned' if metadata['scanner'] == 'none'
+    return 'not_scanned' if metadata['scanner'] == 'error'
     return 'scanning' unless metadata.key?('scan_safe')
 
     metadata['scan_safe'] == true ? 'safe' : 'unsafe'
+  end
+
+  def antivirus_enabled?
+    ClamavService.available?
   end
 
   def badge_title(document, safety_state)

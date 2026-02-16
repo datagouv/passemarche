@@ -31,6 +31,8 @@ module MarketAttributeResponse::FileAttachable
   end
 
   def enqueue_document_scans
+    return unless antivirus_enabled?
+
     documents.each do |document|
       next if document.blob.metadata.key?('scan_safe') || document.blob.metadata.key?('scanned_at')
 
@@ -85,6 +87,8 @@ module MarketAttributeResponse::FileAttachable
   end
 
   def enqueue_scan_for(blob)
+    return unless antivirus_enabled?
+
     attachment = documents.find { |doc| doc.blob_id == blob.id }
     return unless attachment
 
@@ -149,6 +153,9 @@ module MarketAttributeResponse::FileAttachable
     # Allow safe files
     return if metadata['scan_safe'] == true
 
+    # Skip security validation when antivirus is not available
+    return if metadata['scanner'] == 'none'
+
     # Block submission if file not yet scanned (security scan in progress)
     unless metadata.key?('scan_safe')
       errors.add(:base, "#{doc.filename} : Le scan de sécurité est en cours. Veuillez patienter quelques instants avant de soumettre.")
@@ -177,5 +184,9 @@ module MarketAttributeResponse::FileAttachable
     context = validation_context
     context ||= market_application&.validation_context if respond_to?(:market_application)
     context
+  end
+
+  def antivirus_enabled?
+    ClamavService.enabled?
   end
 end

@@ -18,8 +18,7 @@ RSpec.describe ClamavService do
   describe '.available?' do
     context 'when ClamAV is enabled and installed' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:enabled?).and_return(true)
         allow(Clamby).to receive(:scanner_exists?).and_return(true)
       end
 
@@ -30,9 +29,7 @@ RSpec.describe ClamavService do
 
     context 'when ClamAV is disabled' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return(nil)
-        allow(Rails.env).to receive(:production?).and_return(false)
+        allow(ClamavService).to receive(:enabled?).and_return(false)
       end
 
       it 'returns false' do
@@ -42,8 +39,7 @@ RSpec.describe ClamavService do
 
     context 'when scanner_exists? raises error' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:enabled?).and_return(true)
         allow(Clamby).to receive(:scanner_exists?).and_raise(StandardError, 'Connection error')
       end
 
@@ -56,8 +52,7 @@ RSpec.describe ClamavService do
   describe '.scan!' do
     context 'when file is safe' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:enabled?).and_return(true)
         allow(Clamby).to receive(:scanner_exists?).and_return(true)
         allow(Clamby).to receive(:safe?).and_return(true)
       end
@@ -71,8 +66,7 @@ RSpec.describe ClamavService do
 
     context 'when malware is detected' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:enabled?).and_return(true)
         allow(Clamby).to receive(:scanner_exists?).and_return(true)
         allow(Clamby).to receive(:safe?).and_return(false)
       end

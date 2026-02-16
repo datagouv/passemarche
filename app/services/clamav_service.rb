@@ -3,6 +3,10 @@
 class ClamavService
   class ScanError < StandardError; end
 
+  def self.enabled?
+    Rails.application.credentials.dig(:clamav, :enabled) == true
+  end
+
   def self.available?
     new.available?
   end
@@ -25,11 +29,18 @@ class ClamavService
     raise ScanError, "Malware détecté dans #{filename}" unless is_safe
 
     { scanner: 'clamav' }
+  rescue Clamby::VirusDetected
+    raise ScanError, "Malware détecté dans #{filename}"
+  rescue ScanError
+    raise
+  rescue StandardError => e
+    Rails.logger.error("ClamAV error for #{filename}: #{e.message}")
+    nil
   end
 
   private
 
   def enabled?
-    Rails.env.production? || ENV['ENABLE_CLAMAV'] == 'true'
+    self.class.enabled?
   end
 end

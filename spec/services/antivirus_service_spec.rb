@@ -54,31 +54,12 @@ RSpec.describe AntivirusService do
         allow(ClamavService).to receive(:available?).and_return(false)
       end
 
-      context 'in production' do
-        before do
-          allow(Rails.env).to receive(:production?).and_return(true)
-        end
+      it 'returns none scanner and logs warning' do
+        expect(Rails.logger).to receive(:warn).with(/No antivirus available/)
 
-        it 'raises ScanError' do
-          expect do
-            described_class.scan!(file_path.to_s, filename:)
-          end.to raise_error(AntivirusService::ScanError, 'Service antivirus indisponible')
-        end
-      end
+        result = described_class.scan!(file_path.to_s, filename:)
 
-      context 'in development' do
-        before do
-          allow(Rails.env).to receive(:production?).and_return(false)
-        end
-
-        it 'returns none scanner and logs warning' do
-          allow(Rails.logger).to receive(:warn).with(/failed, trying fallback/)
-          expect(Rails.logger).to receive(:warn).with(/No antivirus available/)
-
-          result = described_class.scan!(file_path.to_s, filename:)
-
-          expect(result).to eq({ scanner: 'none' })
-        end
+        expect(result).to eq({ scanner: 'none' })
       end
     end
 

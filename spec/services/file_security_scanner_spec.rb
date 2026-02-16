@@ -19,8 +19,7 @@ RSpec.describe FileSecurityScanner do
   describe '.scan!' do
     context 'with valid file and successful antivirus scan' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:available?).and_return(true)
         allow(AntivirusService).to receive(:scan!).and_return({ scanner: 'clamav' })
       end
 
@@ -66,8 +65,7 @@ RSpec.describe FileSecurityScanner do
 
     context 'when antivirus detects malware' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:available?).and_return(true)
         allow(Clamby).to receive(:scanner_exists?).and_return(true)
         allow(Clamby).to receive(:safe?).and_return(false)
       end
@@ -81,8 +79,7 @@ RSpec.describe FileSecurityScanner do
 
     context 'with IO object instead of path' do
       before do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('ENABLE_CLAMAV').and_return('true')
+        allow(ClamavService).to receive(:available?).and_return(true)
         allow(AntivirusService).to receive(:scan!).and_return({ scanner: 'clamav' })
       end
 

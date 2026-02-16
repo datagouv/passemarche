@@ -1,5 +1,6 @@
 class ScanDocumentJob < ApplicationJob
   queue_as :default
+  discard_on ActiveRecord::RecordNotFound
 
   def perform(blob_id)
     blob = ActiveStorage::Blob.find(blob_id)
@@ -12,7 +13,7 @@ class ScanDocumentJob < ApplicationJob
     blob.open { |file| perform_scan(blob, file) }
     blob.save!
   rescue FileSecurityScanner::SecurityError => e
-    handle_malware_detection(blob, e)
+    handle_scan_error(blob, e)
   end
 
   def perform_scan(blob, file)
@@ -20,17 +21,34 @@ class ScanDocumentJob < ApplicationJob
     blob.metadata.merge!(scan_result)
   end
 
-  def handle_malware_detection(blob, error)
-    Rails.logger.error "🦠 Malware détecté: #{error.message}"
+  def handle_scan_error(blob, error)
+    if malware_error?(error)
+      mark_as_malware(blob, error)
+    else
+      mark_as_scan_failed(blob, error)
+    end
 
-    # Store malware info in metadata
-    # The file remains attached but marked as unsafe for display purposes
+    blob.save!
+  end
+
+  def malware_error?(error)
+    error.message.match?(/malware|virus/i)
+  end
+
+  def mark_as_malware(blob, error)
     blob.metadata.merge!(
       scanned_at: Time.current.iso8601,
       scan_safe: false,
       scanner: 'clamav',
       scan_error: error.message
     )
-    blob.save!
+  end
+
+  def mark_as_scan_failed(blob, error)
+    blob.metadata.merge!(
+      scanned_at: Time.current.iso8601,
+      scanner: 'error',
+      scan_error: error.message
+    )
   end
 end
