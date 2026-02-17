@@ -8,6 +8,7 @@ export default class extends Controller {
     this.sortable = Sortable.create(this.element, {
       handle: '[data-drag-handle]',
       animation: 150,
+      dataIdAttr: 'data-item-id',
       onEnd: this.reorder.bind(this)
     })
   }
@@ -17,17 +18,19 @@ export default class extends Controller {
   }
 
   async reorder () {
-    const rows = this.element.querySelectorAll('tr[data-item-id]')
-    const orderedIds = Array.from(rows).map((row) => row.dataset.itemId)
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
+    const orderedIds = this.sortable.toArray()
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 
-    await fetch(this.urlValue, {
+    const response = await fetch(this.urlValue, {
       method: 'PATCH',
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json',
         'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({ ordered_ids: orderedIds })
     })
+
+    if (!response.ok) window.location.reload()
   }
 }
