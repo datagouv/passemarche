@@ -61,21 +61,21 @@ end
 
 Then('the row for {string} should have all market type badges active') do |key|
   attribute = MarketAttribute.find_by!(key:)
-  within("tr[data-attribute-id='#{attribute.id}']") do
+  within("tr[data-item-id='#{attribute.id}']") do
     expect(page).to have_css('.fr-badge--blue-cumulus', count: 3)
   end
 end
 
 Then('the row for {string} should have only {string} badge active') do |key, badge_letter|
   attribute = MarketAttribute.find_by!(key:)
-  within("tr[data-attribute-id='#{attribute.id}']") do
+  within("tr[data-item-id='#{attribute.id}']") do
     expect(page).to have_css('.fr-badge--blue-cumulus', count: 1, text: badge_letter)
   end
 end
 
 Then('the row for {string} should have no market type badges active') do |key|
   attribute = MarketAttribute.find_by!(key:)
-  within("tr[data-attribute-id='#{attribute.id}']") do
+  within("tr[data-item-id='#{attribute.id}']") do
     expect(page).to have_no_css('.fr-badge--blue-cumulus')
   end
 end
@@ -84,7 +84,7 @@ end
 
 Then('the row for {string} should show source {string}') do |key, source_text|
   attribute = MarketAttribute.find_by!(key:)
-  within("tr[data-attribute-id='#{attribute.id}']") do
+  within("tr[data-item-id='#{attribute.id}']") do
     expect(page).to have_css('.fr-badge', text: source_text)
   end
 end
@@ -104,7 +104,7 @@ end
 Then('I should not see a row for {string}') do |key|
   attribute = MarketAttribute.find_by(key:)
   if attribute
-    expect(page).to have_no_css("tr[data-attribute-id='#{attribute.id}']")
+    expect(page).to have_no_css("tr[data-item-id='#{attribute.id}']")
   else
     expect(page).not_to have_content(key)
   end

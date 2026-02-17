@@ -15,7 +15,7 @@
            data-drag-reorder-url-value="<%= reorder_admin_socle_de_base_index_path %>">
       <% @market_attributes.each do |market_attribute| %>
         <% presenter = SocleDeBasePresenter.new(market_attribute) %>
-        <tr data-attribute-id="<%= market_attribute.id %>">
+        <tr data-item-id="<%= market_attribute.id %>">
           <td data-drag-handle style="cursor: grab;">
             <%= render 'admin/socle_de_base/drag_handle_icon' %>
           </td>

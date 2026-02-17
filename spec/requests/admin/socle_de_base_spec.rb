@@ -56,8 +56,8 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
 
     it 'displays market attributes as table rows' do
       get '/admin/socle_de_base'
-      expect(response.body).to include("data-attribute-id=\"#{identity_attribute.id}\"")
-      expect(response.body).to include("data-attribute-id=\"#{exclusion_attribute.id}\"")
+      expect(response.body).to include("data-item-id=\"#{identity_attribute.id}\"")
+      expect(response.body).to include("data-item-id=\"#{exclusion_attribute.id}\"")
     end
 
     it 'displays market type badges with active styling' do
@@ -79,7 +79,7 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
         deleted_at: Time.current)
 
       get '/admin/socle_de_base'
-      expect(response.body).not_to include("data-attribute-id=\"#{deleted_attribute.id}\"")
+      expect(response.body).not_to include("data-item-id=\"#{deleted_attribute.id}\"")
     end
 
     it 'displays edit buttons' do

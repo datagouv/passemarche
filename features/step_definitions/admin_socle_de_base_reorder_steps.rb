@@ -49,17 +49,17 @@ end
 Then('the first attribute row should be {string}') do |key|
   attribute = MarketAttribute.find_by!(key:)
   first_row = find('table tbody tr:first-child')
-  expect(first_row['data-attribute-id']).to eq(attribute.id.to_s)
+  expect(first_row['data-item-id']).to eq(attribute.id.to_s)
 end
 
 Then('the second attribute row should be {string}') do |key|
   attribute = MarketAttribute.find_by!(key:)
   second_row = all('table tbody tr')[1]
-  expect(second_row['data-attribute-id']).to eq(attribute.id.to_s)
+  expect(second_row['data-item-id']).to eq(attribute.id.to_s)
 end
 
 Then('the third attribute row should be {string}') do |key|
   attribute = MarketAttribute.find_by!(key:)
   third_row = all('table tbody tr')[2]
-  expect(third_row['data-attribute-id']).to eq(attribute.id.to_s)
+  expect(third_row['data-item-id']).to eq(attribute.id.to_s)
 end
