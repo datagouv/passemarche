@@ -33,14 +33,7 @@ module Candidate
     def retry_sync
       @market_application.update!(sync_status: :sync_pending)
 
-      MarketApplicationWebhookJob.perform_later(
-        @market_application.id,
-        request_host: request.host_with_port,
-        request_protocol: request.protocol
-      )
-
-      redirect_to candidate_sync_status_path(@market_application.identifier),
-        notice: t('candidate.market_application.sync_retry_initiated')
+      queue_webhook_and_redirect(notice: t('candidate.market_application.sync_retry_initiated'))
     end
 
     private
@@ -78,13 +71,13 @@ module Candidate
       self.steps = @presenter.wizard_steps
     end
 
-    def queue_webhook_and_redirect
+    def queue_webhook_and_redirect(flash_options = {})
       MarketApplicationWebhookJob.perform_later(
         @market_application.id,
         request_host: request.host_with_port,
         request_protocol: request.protocol
       )
-      redirect_to candidate_sync_status_path(@market_application.identifier)
+      redirect_to candidate_sync_status_path(@market_application.identifier), flash_options
     end
 
     def find_market_application
