@@ -45,4 +45,8 @@ class MarketAttributeResponse::BaseComponent < ViewComponent::Base
   def auto_filled_message
     I18n.t('candidate.market_applications.auto_filled_message')
   end
+
+  def source_badge_component
+    SourceBadgeComponent.new(market_attribute_response:, context:)
+  end
 end

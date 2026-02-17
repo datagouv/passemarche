@@ -104,6 +104,34 @@ RSpec.describe SourceBadgeComponent, type: :component do
         expect(component.badge_text).to eq('Déclaré sur l\'honneur')
       end
     end
+
+    context 'with buyer context' do
+      it 'returns buyer translation for data_from_api when source is :auto' do
+        component = described_class.new(source: :auto, context: :buyer)
+
+        expect(component.badge_text).to eq('De source authentique')
+      end
+
+      it 'returns buyer translation for declared_on_honor when source is :manual_after_api_failure' do
+        component = described_class.new(source: :manual_after_api_failure, context: :buyer)
+
+        expect(component.badge_text).to eq('Déclarée sur l\'honneur')
+      end
+    end
+
+    context 'with candidate context (default)' do
+      it 'returns candidate translation for data_from_api when source is :auto' do
+        component = described_class.new(source: :auto)
+
+        expect(component.badge_text).to eq('Récupéré automatiquement')
+      end
+
+      it 'returns candidate translation for declared_on_honor when source is :manual_after_api_failure' do
+        component = described_class.new(source: :manual_after_api_failure)
+
+        expect(component.badge_text).to eq('Déclaré sur l\'honneur')
+      end
+    end
   end
 
   describe '#badge_css_class' do
