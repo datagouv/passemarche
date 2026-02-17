@@ -755,7 +755,7 @@ fr:
           title: "Champs manuels"
           tooltip: "Champs à renseigner manuellement"
         mandatory:
-          title: "Champs obligatoires"
+          title: "Champs par défaut"
           tooltip: "Champs requis pour toute candidature"
       badges:
         mandatory: "Obligatoire"
