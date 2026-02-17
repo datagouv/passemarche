@@ -54,7 +54,7 @@ Feature: Admin Socle de Base - Tableau des champs
     Then I should see the stat card "Champs total" with value "3"
     And I should see the stat card "Champs API" with value "1"
     And I should see the stat card "Champs manuels" with value "2"
-    And I should see the stat card "Champs obligatoires" with value "2"
+    And I should see the stat card "Champs par défaut" with value "2"
 
   Scenario: Manage dropdown button with actions is visible
     When I visit the socle de base page
