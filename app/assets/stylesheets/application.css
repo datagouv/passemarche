@@ -79,6 +79,11 @@
    Utility Classes
    ============================================= */
 
+/* Height utility */
+.h-100 {
+  height: 100%;
+}
+
 /* Full height grid layout - for split-screen layouts */
 .full-height-grid {
   min-height: 60vh; /* Minimum 60% of viewport height for better visual balance */
