@@ -7,16 +7,16 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   def create
     return unless @public_market
 
-    service = MarketApplicationCreationService.new(
+    result = CreateMarketApplication.call(
       public_market: @public_market,
       siret: market_application_params[:siret],
       provider_user_id: market_application_params[:provider_user_id]
-    ).perform
+    )
 
-    if service.success?
-      render json: success_response(service.result), status: :created
+    if result.success?
+      render json: success_response(result.market_application), status: :created
     else
-      render json: { errors: service.errors }, status: :unprocessable_content
+      render json: { errors: result.errors }, status: :unprocessable_content
     end
   end
 
