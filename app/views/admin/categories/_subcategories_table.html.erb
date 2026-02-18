@@ -12,13 +12,15 @@
            data-drag-reorder-url-value="<%= reorder_admin_subcategories_path %>">
       <% @subcategories.each do |subcategory| %>
         <tr data-item-id="<%= subcategory.id %>">
-          <td data-drag-handle style="cursor: grab;">
+          <td data-drag-handle>
             <%= render 'admin/socle_de_base/drag_handle_icon' %>
           </td>
           <td><%= subcategory.buyer_label %></td>
           <td><%= subcategory.candidate_label %></td>
           <td>
-            <%= link_to t('admin.categories.actions.edit'), '#',
+            <%= link_to t('admin.categories.actions.edit'),
+                        edit_admin_subcategory_path(subcategory),
+                        data: { turbo_frame: "modal" },
                         class: "fr-btn fr-btn--secondary fr-btn--sm" %>
           </td>
         </tr>

@@ -799,6 +799,18 @@ fr:
         create_subcategory: "Créer une nouvelle sous-catégorie"
         edit: "Modifier"
       navigation_link: "Catégories et sous-catégories"
+    subcategories:
+      edit:
+        title: "Modifier une sous catégorie"
+        buyer_section: "Sous catégorie acheteur"
+        candidate_section: "Sous catégorie candidat"
+        linked_category: "Liée à la catégorie"
+        label_field: "Intitulé de la sous catégorie"
+        submit: "Modifier"
+        cancel: "Annuler"
+        close: "Fermer"
+      update:
+        success: "Sous-catégorie modifiée avec succès"
 
   activerecord:
     errors:

@@ -4,6 +4,8 @@ FactoryBot.define do
   factory :subcategory do
     association :category
     sequence(:key) { |n| "subcategory_#{n}" }
+    buyer_label { "Buyer #{key.humanize}" }
+    candidate_label { "Candidate #{key.humanize}" }
     position { 0 }
 
     trait :with_labels do

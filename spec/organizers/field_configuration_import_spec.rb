@@ -21,12 +21,12 @@ RSpec.describe FieldConfigurationImport, type: :organizer do
     context 'with valid CSV file and data' do
       before do
         csv_content = <<~CSV
-          ,,,,,,
-          ,,,,,,
-          ,,,,,,
-          key,category_key,subcategory_key,type,import,apifiable,obligatoire,services,fournitures,travaux,défense
-          company_name,identity,basic,texte,oui,non,oui,oui,oui,oui,non
-          business_turnover,financial,performance,texte,oui,non,non,non,oui,non,non
+          ,,,,,,,,,,,,,,,
+          ,,,,,,,,,,,,,,,
+          ,,,,,,,,,,,,,,,
+          key,category_key,subcategory_key,category_acheteur,subcategory_acheteur,category_candidat,subcategory_candidat,type,import,apifiable,obligatoire,services,fournitures,travaux,défense
+          company_name,identity,basic,Identity,Basic Info,Identité,Info de base,texte,oui,non,oui,oui,oui,oui,non
+          business_turnover,financial,performance,Financial,Performance,Financier,Performances,texte,oui,non,non,non,oui,non,non
         CSV
 
         FileUtils.mkdir_p(File.dirname(csv_file_path))
