@@ -17,14 +17,16 @@
             params[:market_type_id]&.to_i
           ),
           include_blank: t('admin.socle_de_base.filters.market_type'),
-          class: "fr-select" %>
+          class: "fr-select",
+          onchange: "this.form.requestSubmit()" %>
   </div>
 
   <div class="fr-col-12 fr-col-md-3">
     <%= select_tag :category,
           options_from_collection_for_select(@categories, :key, :buyer_label, params[:category]),
           include_blank: t('admin.socle_de_base.filters.category'),
-          class: "fr-select" %>
+          class: "fr-select",
+          onchange: "this.form.requestSubmit()" %>
   </div>
 
   <div class="fr-col-12 fr-col-md-2">
@@ -35,6 +37,7 @@
             params[:source]
           ),
           include_blank: t('admin.socle_de_base.filters.source'),
-          class: "fr-select" %>
+          class: "fr-select",
+          onchange: "this.form.requestSubmit()" %>
   </div>
 <% end %>
