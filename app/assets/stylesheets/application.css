@@ -353,6 +353,31 @@
   background-color: var(--background-default-grey-hover, #f6f6f6);
 }
 
+/* Modal dialog */
+.fr-modal-dialog {
+  border: none;
+  border-radius: 4px;
+  padding: 0;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.fr-modal-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.fr-modal-dialog__content {
+  padding: 2rem;
+}
+
+.fr-modal-dialog__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
 /* =============================================
    Shared Homepage Styles
    Common components: stepper, pictograms, screenshots

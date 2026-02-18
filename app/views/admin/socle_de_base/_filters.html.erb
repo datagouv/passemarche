@@ -1,0 +1,40 @@
+<%= form_with url: admin_socle_de_base_index_path, method: :get, class: "fr-grid-row fr-grid-row--gutters fr-mb-3w" do %>
+  <div class="fr-col-12 fr-col-md-4">
+    <div class="fr-search-bar">
+      <%= text_field_tag :query, params[:query],
+            class: "fr-input", type: "search",
+            placeholder: t('admin.socle_de_base.filters.search_placeholder') %>
+      <button class="fr-btn" type="submit">
+        <%= t('admin.socle_de_base.filters.search_button') %>
+      </button>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-2">
+    <%= select_tag :market_type_id,
+          options_for_select(
+            @market_types.map { |mt| [t("market_types.#{mt.code}"), mt.id] },
+            params[:market_type_id]&.to_i
+          ),
+          include_blank: t('admin.socle_de_base.filters.market_type'),
+          class: "fr-select" %>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-3">
+    <%= select_tag :category,
+          options_from_collection_for_select(@categories, :key, :buyer_label, params[:category]),
+          include_blank: t('admin.socle_de_base.filters.category'),
+          class: "fr-select" %>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-2">
+    <%= select_tag :source,
+          options_for_select(
+            [[t('admin.socle_de_base.filters.source_api'), 'api'],
+             [t('admin.socle_de_base.filters.source_manual'), 'manual']],
+            params[:source]
+          ),
+          include_blank: t('admin.socle_de_base.filters.source'),
+          class: "fr-select" %>
+  </div>
+<% end %>

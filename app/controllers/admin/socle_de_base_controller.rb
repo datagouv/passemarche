@@ -5,8 +5,10 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
   before_action :require_admin_role!, only: [:reorder]
 
   def index
-    @market_attributes = MarketAttribute.active.ordered.includes(:market_types)
+    @market_attributes = MarketAttributeQueryService.call(filters: filter_params)
     @stats = SocleDeBaseStatsService.call
+    @categories = Category.active.ordered
+    @market_types = MarketType.active
   end
 
   def reorder
@@ -19,5 +21,11 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     end
 
     head :ok
+  end
+
+  private
+
+  def filter_params
+    params.permit(:query, :category, :source, :market_type_id).to_h.symbolize_keys
   end
 end
