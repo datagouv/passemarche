@@ -21,6 +21,11 @@
              id="dropdown-socle-de-base-actions">
           <ul class="fr-dropdown__list">
             <li>
+              <button class="fr-dropdown__link" aria-controls="import-modal" data-fr-opened="false">
+                <%= t('admin.socle_de_base.actions.import') %>
+              </button>
+            </li>
+            <li>
               <%= link_to '#', class: "fr-dropdown__link" do %>
                 <%= t('admin.socle_de_base.actions.export') %>
               <% end %>
@@ -52,3 +57,5 @@
 
   <%= render 'attributes_table' %>
 </div>
+
+<%= render 'import_modal' %>

@@ -142,6 +142,30 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
+  describe 'POST /admin/socle_de_base' do
+    let(:csv_content) { file_fixture('field_configuration_import.csv') }
+
+    context 'with a valid CSV file' do
+      it 'imports and redirects with success flash' do
+        post '/admin/socle_de_base', params: {
+          socle_de_base: { csv_file: fixture_file_upload('field_configuration_import.csv', 'text/csv') }
+        }
+        expect(response).to redirect_to(admin_socle_de_base_index_path)
+        follow_redirect!
+        expect(response.body).to include('Import réussi')
+      end
+    end
+
+    context 'without a file' do
+      it 'redirects with error flash' do
+        post '/admin/socle_de_base', params: { socle_de_base: {} }
+        expect(response).to redirect_to(admin_socle_de_base_index_path)
+        follow_redirect!
+        expect(response.body).to include('Veuillez sélectionner un fichier CSV')
+      end
+    end
+  end
+
   context 'with lecteur role' do
     let(:admin_user) { create(:admin_user, :lecteur) }
 

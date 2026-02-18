@@ -23,9 +23,35 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     head :ok
   end
 
+  def create
+    csv_file = params.dig(:socle_de_base, :csv_file)
+
+    return redirect_to admin_socle_de_base_index_path, alert: t('.no_file') unless csv_file
+
+    import_csv(csv_file)
+  end
+
   private
 
   def filter_params
     params.permit(:query, :category, :source, :market_type_id).to_h.symbolize_keys
+  end
+
+  def import_csv(csv_file)
+    result = FieldConfigurationImport.call(csv_file_path: csv_file.tempfile.path)
+
+    if result.success?
+      redirect_to admin_socle_de_base_index_path, notice: format_statistics(result.statistics)
+    else
+      redirect_to admin_socle_de_base_index_path, alert: t('.error', message: result.message)
+    end
+  end
+
+  def format_statistics(stats)
+    t('.success',
+      created: stats[:created],
+      updated: stats[:updated],
+      soft_deleted: stats[:soft_deleted],
+      skipped: stats[:skipped])
   end
 end
