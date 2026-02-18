@@ -8,13 +8,8 @@ class Admin::SubcategoriesController < Admin::ApplicationController
 
   def update
     @subcategory = Subcategory.find(params[:id])
-    service = SubcategoryUpdateService.new(
-      subcategory: @subcategory,
-      params: subcategory_params
-    )
-    service.perform
 
-    if service.success?
+    if @subcategory.update(subcategory_params)
       redirect_to admin_categories_path, notice: t('.success')
     else
       @categories = Category.active.ordered

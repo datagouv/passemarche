@@ -590,6 +590,11 @@
   font-size: 0.875rem;
 }
 
+/* Drag handle */
+[data-drag-handle] {
+  cursor: grab;
+}
+
 /* Modal dialog */
 .fr-modal-dialog {
   border: none;
