@@ -15,7 +15,7 @@
         </button>
       </div>
 
-      <%= form_with model: @subcategory, url: admin_subcategory_path(@subcategory), method: :patch do |f| %>
+      <%= form_with model: @subcategory, url: admin_subcategory_path(@subcategory), method: :patch, data: { turbo_frame: "_top" } do |f| %>
         <div class="fr-select-group fr-mb-3w">
           <%= f.label :category_id, t('.linked_category'), class: 'fr-label' %>
           <%= f.collection_select :category_id, @categories, :id, :buyer_label,
