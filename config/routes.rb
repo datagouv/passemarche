@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :socle_de_base, only: [:index] do
       collection do
         patch :reorder
+        get :export
       end
     end
     resources :categories, only: [:index] do
