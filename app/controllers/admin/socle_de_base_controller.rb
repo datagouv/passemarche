@@ -31,6 +31,18 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     import_csv(csv_file)
   end
 
+  def archive
+    attribute = MarketAttribute.find(params[:id])
+
+    if MarketAttributeArchiveService.call(market_attribute: attribute)
+      redirect_to admin_socle_de_base_index_path,
+        notice: t('.success', key: attribute.key)
+    else
+      redirect_to admin_socle_de_base_index_path,
+        alert: t('.already_archived')
+    end
+  end
+
   private
 
   def filter_params
