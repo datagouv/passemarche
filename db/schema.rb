@@ -116,10 +116,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
   create_table "market_attributes", force: :cascade do |t|
     t.string "api_key"
     t.string "api_name"
-    t.text "buyer_description"
-    t.string "buyer_name"
-    t.text "candidate_description"
-    t.string "candidate_name"
     t.string "category_key", null: false
     t.datetime "created_at", null: false
     t.datetime "deleted_at"

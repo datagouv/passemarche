@@ -18,19 +18,19 @@ class SocleDeBasePresenter
   end
 
   def buyer_category_label
-    I18n.t("form_fields.buyer.categories.#{category_key}", default: category_key.humanize)
+    subcategory&.category&.buyer_label || category_key.humanize
   end
 
   def buyer_subcategory_label
-    I18n.t("form_fields.buyer.subcategories.#{subcategory_key}", default: subcategory_key.humanize)
+    subcategory&.buyer_label || subcategory_key.humanize
   end
 
   def candidate_category_label
-    I18n.t("form_fields.candidate.categories.#{category_key}", default: category_key.humanize)
+    subcategory&.category&.candidate_label || category_key.humanize
   end
 
   def candidate_subcategory_label
-    I18n.t("form_fields.candidate.subcategories.#{subcategory_key}", default: subcategory_key.humanize)
+    subcategory&.candidate_label || subcategory_key.humanize
   end
 
   def mandatory_badge
@@ -67,5 +67,5 @@ class SocleDeBasePresenter
     end
   end
 
-  delegate :key, :category_key, :subcategory_key, :mandatory?, :from_api?, :api_name, to: :@market_attribute
+  delegate :key, :category_key, :subcategory_key, :subcategory, :mandatory?, :from_api?, :api_name, to: :@market_attribute
 end

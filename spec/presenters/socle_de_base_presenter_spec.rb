@@ -3,11 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe SocleDeBasePresenter do
+  let(:category) do
+    create(:category, key: 'identite_entreprise',
+      buyer_label: "Identité de l'entreprise",
+      candidate_label: 'Les informations du marché et de votre entreprise')
+  end
+  let(:subcategory) do
+    create(:subcategory, category:, key: 'identite_entreprise_identification',
+      buyer_label: "Identification de l'entreprise",
+      candidate_label: 'Informations de votre entreprise')
+  end
   let(:market_attribute) do
     build(:market_attribute,
       key: 'identite_entreprise_identification_siret',
       category_key: 'identite_entreprise',
       subcategory_key: 'identite_entreprise_identification',
+      subcategory:,
       mandatory: true,
       api_name: 'Insee')
   end
@@ -55,25 +66,41 @@ RSpec.describe SocleDeBasePresenter do
   end
 
   describe '#buyer_category_label' do
-    it 'returns the buyer category label from i18n' do
+    it 'returns the buyer label from the category record' do
       expect(presenter.buyer_category_label).to eq("Identité de l'entreprise")
+    end
+
+    context 'when subcategory is nil' do
+      let(:market_attribute) { build(:market_attribute, subcategory: nil, category_key: 'identite_entreprise') }
+
+      it 'falls back to humanized category_key' do
+        expect(presenter.buyer_category_label).to eq('Identite entreprise')
+      end
     end
   end
 
   describe '#buyer_subcategory_label' do
-    it 'returns the buyer subcategory label from i18n' do
+    it 'returns the buyer label from the subcategory record' do
       expect(presenter.buyer_subcategory_label).to eq("Identification de l'entreprise")
+    end
+
+    context 'when subcategory is nil' do
+      let(:market_attribute) { build(:market_attribute, subcategory: nil, subcategory_key: 'some_key') }
+
+      it 'falls back to humanized subcategory_key' do
+        expect(presenter.buyer_subcategory_label).to eq('Some key')
+      end
     end
   end
 
   describe '#candidate_category_label' do
-    it 'returns the candidate category label from i18n' do
+    it 'returns the candidate label from the category record' do
       expect(presenter.candidate_category_label).to eq('Les informations du marché et de votre entreprise')
     end
   end
 
   describe '#candidate_subcategory_label' do
-    it 'returns the candidate subcategory label from i18n' do
+    it 'returns the candidate label from the subcategory record' do
       expect(presenter.candidate_subcategory_label).to eq('Informations de votre entreprise')
     end
   end
