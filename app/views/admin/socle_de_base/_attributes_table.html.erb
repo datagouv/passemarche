@@ -1,3 +1,9 @@
+<% if @market_attributes.empty? %>
+  <div class="fr-callout">
+    <p class="fr-callout__text"><%= t('admin.socle_de_base.filters.no_results') %></p>
+    <%= link_to t('admin.socle_de_base.filters.reset'), admin_socle_de_base_index_path, class: "fr-btn fr-btn--secondary" %>
+  </div>
+<% else %>
 <div class="fr-table">
   <table>
     <thead>
@@ -44,3 +50,4 @@
     </tbody>
   </table>
 </div>
+<% end %>
