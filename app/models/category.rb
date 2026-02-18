@@ -5,6 +5,7 @@ class Category < ApplicationRecord
   has_many :market_attributes, through: :subcategories
 
   validates :key, presence: true, uniqueness: true
+  validates :buyer_label, :candidate_label, presence: true
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   scope :active, -> { where(deleted_at: nil) }

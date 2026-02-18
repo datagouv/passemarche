@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         patch :reorder
       end
     end
-    resources :categories, only: [:index] do
+    resources :categories, only: %i[index edit update] do
       collection do
         patch :reorder
       end

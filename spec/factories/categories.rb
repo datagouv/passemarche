@@ -3,6 +3,8 @@
 FactoryBot.define do
   factory :category do
     sequence(:key) { |n| "category_#{n}" }
+    buyer_label { "Buyer #{key.humanize}" }
+    candidate_label { "Candidate #{key.humanize}" }
     position { 0 }
 
     trait :with_labels do
