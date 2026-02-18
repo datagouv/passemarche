@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-class CategoryExportService < ApplicationServiceObject
-  def perform
-    @result = build_export_data
+class CategoryExportService
+  include Interactor
+
+  def call
+    context.result = build_export_data
   end
 
   private
