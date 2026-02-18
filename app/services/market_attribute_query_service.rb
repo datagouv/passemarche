@@ -26,7 +26,7 @@ class MarketAttributeQueryService < ApplicationService
     scope.joins(subcategory: :category)
       .where(
         'categories.buyer_label ILIKE :q OR subcategories.buyer_label ILIKE :q ' \
-        'OR market_attributes.key ILIKE :q OR market_attributes.buyer_name ILIKE :q',
+        'OR market_attributes.key ILIKE :q',
         q: query
       )
   end

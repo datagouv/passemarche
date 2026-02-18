@@ -21,12 +21,12 @@ RSpec.describe MarketAttributeQueryService do
   let!(:attr_manual) do
     create(:market_attribute,
       key: 'company_name', category_key: 'identity', subcategory_key: 'basic',
-      subcategory:, buyer_name: 'Nom entreprise').tap { |a| a.market_types << supplies }
+      subcategory:).tap { |a| a.market_types << supplies }
   end
   let!(:attr_api) do
     create(:market_attribute, :from_api,
       key: 'turnover', category_key: 'financial', subcategory_key: 'perf',
-      subcategory: other_subcategory, buyer_name: 'Chiffre affaires').tap { |a| a.market_types << services }
+      subcategory: other_subcategory).tap { |a| a.market_types << services }
   end
   let!(:attr_deleted) do
     create(:market_attribute, :inactive,
@@ -87,12 +87,6 @@ RSpec.describe MarketAttributeQueryService do
       result = described_class.call(filters: { query: 'company_name' })
 
       expect(result).to contain_exactly(attr_manual)
-    end
-
-    it 'searches across market_attribute buyer_name' do
-      result = described_class.call(filters: { query: 'Chiffre' })
-
-      expect(result).to contain_exactly(attr_api)
     end
 
     it 'combines multiple filters' do
