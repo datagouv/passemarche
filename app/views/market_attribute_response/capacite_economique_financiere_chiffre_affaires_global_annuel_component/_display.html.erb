@@ -53,11 +53,11 @@
                   <td>
                     <% if turnover_from_api %>
                       <%= component.formatted_turnover(year_key) %>
-                      <%= render SourceBadgeComponent.new(source: :auto) %>
+                      <%= render SourceBadgeComponent.new(source: :auto, context: component.context) %>
                     <% elsif component.turnover_value(year_key).present? %>
                       <%= component.formatted_turnover(year_key) %>
                       <% if component.auto? %>
-                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure) %>
+                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure, context: component.context) %>
                       <% end %>
                     <% else %>
                       <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
@@ -73,11 +73,11 @@
                   <td>
                     <% if fiscal_year_end_from_api %>
                       <%= component.formatted_fiscal_year_end(year_key) %>
-                      <%= render SourceBadgeComponent.new(source: :auto) %>
+                      <%= render SourceBadgeComponent.new(source: :auto, context: component.context) %>
                     <% elsif component.fiscal_year_end_value(year_key).present? %>
                       <%= component.formatted_fiscal_year_end(year_key) %>
                       <% if component.auto? %>
-                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure) %>
+                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure, context: component.context) %>
                       <% end %>
                     <% else %>
                       <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
