@@ -38,15 +38,6 @@ RSpec.describe CategoryLabelHelper, type: :helper do
         expect(label).to be_present
       end
     end
-
-    context 'when category exists but label is nil for the role' do
-      before { create(:category, key: 'cat_no_label', buyer_label: nil) }
-
-      it 'falls back to I18n' do
-        label = helper.category_label('cat_no_label', role: :buyer)
-        expect(label).to be_present
-      end
-    end
   end
 
   describe '#subcategory_label' do

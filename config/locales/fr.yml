@@ -799,6 +799,16 @@ fr:
         create_subcategory: "Créer une nouvelle sous-catégorie"
         edit: "Modifier"
       navigation_link: "Catégories et sous-catégories"
+      edit:
+        title: "Modifier une catégorie"
+        buyer_section: "Catégorie acheteur"
+        candidate_section: "Catégorie candidat"
+        label_field: "Intitulé de la catégorie"
+        submit: "Modifier"
+        cancel: "Annuler"
+        close: "Fermer"
+      update:
+        success: "Catégorie modifiée avec succès"
     subcategories:
       edit:
         title: "Modifier une sous catégorie"
