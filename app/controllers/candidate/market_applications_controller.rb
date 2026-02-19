@@ -12,8 +12,6 @@ module Candidate
     def show
       @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application) if step == :api_data_recovery_status
 
-      enqueue_missing_scans if step == :summary
-
       respond_to do |format|
         format.html { render_html_step }
         format.json { render_json_step }
@@ -121,10 +119,6 @@ module Candidate
       root_path
     end
 
-    def api_fetch_status_response
-      { api_fetch_status: @market_application.api_fetch_status }
-    end
-
     def render_html_step
       if custom_view_exists?
         render_wizard
@@ -136,43 +130,14 @@ module Candidate
     def render_json_step
       if step == :api_data_recovery_status
         set_no_cache_headers
-        render json: api_fetch_status_response
+        render json: { api_fetch_status: @market_application.api_fetch_status }
       elsif step == :summary
         set_no_cache_headers
-        render json: scan_status_response
+        result = Candidate::PrepareDocumentScanStatus.call(market_application: @market_application, view_context:)
+        render json: result.scan_status
       else
         head :not_found
       end
-    end
-
-    def scan_status_response
-      scans_complete = @market_application.all_security_scans_complete?
-      blob_states = collect_blob_scan_states
-
-      {
-        scans_complete:,
-        blob_states:
-      }
-    end
-
-    def collect_blob_scan_states
-      file_attribute_responses.select { |r| r.documents.attached? }.flat_map do |response|
-        response.documents.map do |document|
-          {
-            blob_id: document.blob.id,
-            badge_html: helpers.dsfr_malware_badge(document, class: 'fr-ml-1w')
-          }
-        end
-      end
-    end
-
-    def enqueue_missing_scans
-      file_attribute_responses.each(&:enqueue_document_scans)
-    end
-
-    def file_attribute_responses
-      @market_application.market_attribute_responses
-        .select { |r| r.respond_to?(:documents) }
     end
   end
 end
