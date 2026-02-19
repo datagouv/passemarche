@@ -413,22 +413,22 @@ Il combine automatiquement la couverture de RSpec et Cucumber.
 ## 📚 Documentation
 
 ### 🚀 Pour les Équipes Techniques
-- [**📖 Guide de Démarrage**](docs/GUIDE_DE_DEMARRAGE.md) - Navigation et glossaire de toute la documentation
-- [**🏃‍♂️ Démarrage Rapide**](docs/DEMARRAGE_RAPIDE.md) - Intégration complète en 30 minutes
+- [**📖 Guide de Démarrage**](docs/00_GUIDE_DE_DEMARRAGE.md) - Navigation et glossaire de toute la documentation
+- [**🏃‍♂️ Démarrage Rapide**](docs/01_DEMARRAGE_RAPIDE.md) - Intégration complète en 30 minutes
 
 ### 📋 Documentation Technique Détaillée
 
 #### Authentification et Sécurité
-- [**🔐 Authentification OAuth2**](docs/AUTHENTIFICATION_OAUTH.md) - Flux Client Credentials, gestion tokens, sécurité
-- [**🔔 Webhooks**](docs/WEBHOOKS.md) - Notifications temps réel, signatures HMAC, retry intelligent
+- [**🔐 Authentification OAuth2**](docs/02_AUTHENTIFICATION_OAUTH.md) - Flux Client Credentials, gestion tokens, sécurité
+- [**🔔 Webhooks**](docs/07_WEBHOOKS.md) - Notifications temps réel, signatures HMAC, retry intelligent
 
 #### Flux Métier
-- [**🏢 Flux Acheteur**](docs/FLUX_ACHETEUR.md) - Création et configuration des marchés publics
-- [**👥 Flux Candidat**](docs/FLUX_CANDIDAT.md) - Soumission et finalisation des candidatures
+- [**🏢 Flux Acheteur**](docs/03_FLUX_ACHETEUR.md) - Création et configuration des marchés publics
+- [**👥 Flux Candidat**](docs/04_FLUX_CANDIDAT.md) - Soumission et finalisation des candidatures
 
 #### Références Techniques
-- [**⚙️ Référence API**](docs/REFERENCE_API.md) - Spécifications complètes des endpoints
-- [**🏗️ Schémas d'Intégration**](docs/SCHEMAS_INTEGRATION.md) - Architecture et diagrammes techniques
+- [**⚙️ Référence API**](docs/05_REFERENCE_API.md) - Spécifications complètes des endpoints
+- [**🏗️ Schémas d'Intégration**](docs/06_SCHEMAS_INTEGRATION.md) - Architecture et diagrammes techniques
 
 ### 💡 Application de Démonstration
 - [**🎭 Fake Editor App**](fake_editor_app/README.md) - Exemple d'implémentation OAuth2
