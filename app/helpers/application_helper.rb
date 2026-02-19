@@ -7,4 +7,8 @@ module ApplicationHelper
     # Convert to Paris timezone - Rails will handle this automatically with Time.zone
     datetime.in_time_zone('Europe/Paris').strftime(format)
   end
+
+  def page_break_class(context, index)
+    'page-break-before' if index.positive? && context.in?(%i[pdf buyer])
+  end
 end
