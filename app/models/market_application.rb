@@ -66,7 +66,10 @@ class MarketApplication < ApplicationRecord
 
   def bodacc_exclusion_motifs
     market_attribute_responses.select do |r|
-      r.source == 'auto' && r.market_attribute.api_name == 'bodacc' && r.value['radio_choice'] == 'yes'
+      r.source == 'auto' &&
+        r.market_attribute.api_name == 'bodacc' &&
+        r.value['radio_choice'] == 'yes' &&
+        r.hidden?
     end
   end
 

@@ -25,6 +25,7 @@ Given('a Bodacc exclusion motif exists for the candidate') do
     market_application: @market_application,
     market_attribute:,
     source: :auto,
+    hidden: true,
     value: { 'radio_choice' => 'yes' })
 end
 
