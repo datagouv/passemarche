@@ -33,7 +33,7 @@
               <%= f.label :buyer_label, t('.label_field'), class: 'fr-label' %>
               <%= f.text_field :buyer_label, class: 'fr-input' %>
               <% if @subcategory.errors[:buyer_label].present? %>
-                <p class="fr-error-text"><%= @subcategory.errors.full_messages_for(:buyer_label).join(', ') %></p>
+                <p class="fr-error-text"><%= "#{t('.label_field')} #{@subcategory.errors[:buyer_label].join(', ')}" %></p>
               <% end %>
             </div>
           </div>
@@ -50,7 +50,7 @@
               <%= f.label :candidate_label, t('.label_field'), class: 'fr-label' %>
               <%= f.text_field :candidate_label, class: 'fr-input' %>
               <% if @subcategory.errors[:candidate_label].present? %>
-                <p class="fr-error-text"><%= @subcategory.errors.full_messages_for(:candidate_label).join(', ') %></p>
+                <p class="fr-error-text"><%= "#{t('.label_field')} #{@subcategory.errors[:candidate_label].join(', ')}" %></p>
               <% end %>
             </div>
           </div>
