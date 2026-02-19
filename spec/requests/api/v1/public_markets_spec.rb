@@ -347,7 +347,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           it 'returns validation error' do
             expect(response).to have_http_status(:unprocessable_content)
             json_response = response.parsed_body
-            expect(json_response['errors']['market_type_codes']).to include('Market type codes ne peut pas être seul')
+            expect(json_response['errors']['market_type_codes']).to include('ne peut pas être seul')
           end
         end
       end
