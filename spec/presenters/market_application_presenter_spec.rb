@@ -328,6 +328,35 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
     end
   end
 
+  describe '#response_component_class' do
+    it 'returns the component class when it exists' do
+      response = presenter.market_attribute_response_for(identity_attr)
+      allow(response).to receive(:type).and_return('FileUpload')
+
+      expect(presenter.response_component_class(response)).to eq(MarketAttributeResponse::FileUploadComponent)
+    end
+
+    it 'returns nil when the component class does not exist' do
+      response = presenter.market_attribute_response_for(identity_attr)
+      allow(response).to receive(:type).and_return('NonExistent')
+
+      result = presenter.response_component_class(response)
+
+      expect(result).to be_nil
+    end
+
+    it 'returns nil when response is nil' do
+      expect(presenter.response_component_class(nil)).to be_nil
+    end
+
+    it 'returns nil when response type is blank' do
+      response = presenter.market_attribute_response_for(identity_attr)
+      allow(response).to receive(:type).and_return('')
+
+      expect(presenter.response_component_class(response)).to be_nil
+    end
+  end
+
   describe 'with soft-deleted market attributes' do
     let(:active_attribute) do
       create(:market_attribute,
