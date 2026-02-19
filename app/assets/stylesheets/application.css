@@ -649,3 +649,26 @@
   align-items: center;
   margin-bottom: 1.5rem;
 }
+
+/* Security badges - remove DSFR default icons */
+.fr-badge--no-icon::before,
+.fr-badge--no-icon::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Security badge colors and layout */
+.fr-badge--security-safe {
+  background-color: #B8FEC9 !important;
+  color: #18753C !important;
+}
+
+.fr-badge--security-unsafe {
+  background-color: #FFE9E9 !important;
+  color: #CE0500 !important;
+}
+
+.fr-badge--security-scanning {
+  background-color: #E8EDFF !important;
+  color: #0063CB !important;
+}

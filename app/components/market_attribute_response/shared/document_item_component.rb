@@ -21,6 +21,10 @@ class MarketAttributeResponse::Shared::DocumentItemComponent < ViewComponent::Ba
     helpers.number_to_human_size(document.byte_size)
   end
 
+  def malware_badge
+    helpers.dsfr_malware_badge(document, class: 'fr-ml-1w')
+  end
+
   private
 
   def naming_service
