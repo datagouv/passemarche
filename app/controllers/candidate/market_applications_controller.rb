@@ -5,11 +5,11 @@ module Candidate
     include Wicked::Wizard
 
     prepend_before_action :set_steps
+    prepend_before_action :find_market_application
     before_action :check_application_not_completed, except: [:retry_sync]
     before_action :set_wizard_steps
 
     def show
-      @presenter = MarketApplicationPresenter.new(@market_application)
       @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application) if step == :api_data_recovery_status
 
       enqueue_missing_scans if step == :summary
@@ -21,8 +21,6 @@ module Candidate
     end
 
     def update
-      @presenter = MarketApplicationPresenter.new(@market_application)
-
       result = MarketApplicationStepUpdateService.call(
         @market_application,
         step.to_sym,
@@ -58,19 +56,11 @@ module Candidate
     end
 
     def set_wizard_steps
-      find_market_application
-      return unless @market_application
-
-      @presenter = MarketApplicationPresenter.new(@market_application)
-      @wizard_steps = @presenter.stepper_steps
+      @wizard_steps = presenter.stepper_steps
     end
 
     def set_steps
-      find_market_application
-      return unless @market_application
-
-      @presenter ||= MarketApplicationPresenter.new(@market_application)
-      self.steps = @presenter.wizard_steps
+      self.steps = presenter.wizard_steps
     end
 
     def queue_webhook_and_redirect(flash_options = {})
@@ -92,6 +82,10 @@ module Candidate
     rescue ActiveRecord::RecordNotFound
       @market_application = nil
       render plain: 'La candidature recherchée n\'a pas été trouvée', status: :not_found
+    end
+
+    def presenter
+      @presenter ||= MarketApplicationPresenter.new(@market_application)
     end
 
     def check_application_not_completed
@@ -162,10 +156,7 @@ module Candidate
     end
 
     def collect_blob_scan_states
-      file_responses = @market_application.market_attribute_responses
-        .select { |r| r.respond_to?(:documents) && r.documents.attached? }
-
-      file_responses.flat_map do |response|
+      file_attribute_responses.select { |r| r.documents.attached? }.flat_map do |response|
         response.documents.map do |document|
           {
             blob_id: document.blob.id,
@@ -176,9 +167,12 @@ module Candidate
     end
 
     def enqueue_missing_scans
-      file_responses = @market_application.market_attribute_responses
+      file_attribute_responses.each(&:enqueue_document_scans)
+    end
+
+    def file_attribute_responses
+      @market_application.market_attribute_responses
         .select { |r| r.respond_to?(:documents) }
-      file_responses.each(&:enqueue_document_scans)
     end
   end
 end
