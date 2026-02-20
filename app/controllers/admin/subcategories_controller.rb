@@ -13,7 +13,8 @@ class Admin::SubcategoriesController < Admin::ApplicationController
       redirect_to admin_categories_path, notice: t('.success')
     else
       @categories = Category.active.ordered
-      render :edit, status: :unprocessable_content
+      render turbo_stream: turbo_stream.replace('modal', template: 'admin/subcategories/edit', layout: false),
+        status: :unprocessable_content
     end
   end
 
