@@ -38,12 +38,12 @@ RSpec.describe MarketAttributeUpdateService do
       expect(market_attribute.reload.market_types).to contain_exactly(services)
     end
 
-    it 'clears api fields when api_name is blank' do
+    it 'clears api fields when configuration_mode is manual' do
       market_attribute.update!(api_name: 'TestAPI', api_key: 'key')
 
       service = described_class.new(
         market_attribute:,
-        params: { api_name: '' }
+        params: { configuration_mode: 'manual' }
       )
       service.perform
 
@@ -53,10 +53,10 @@ RSpec.describe MarketAttributeUpdateService do
       expect(market_attribute.api_key).to be_nil
     end
 
-    it 'sets api fields when api_name is present' do
+    it 'sets api fields when configuration_mode is api' do
       service = described_class.new(
         market_attribute:,
-        params: { api_name: 'NewAPI', api_key: 'new_key' }
+        params: { configuration_mode: 'api', api_name: 'NewAPI', api_key: 'new_key' }
       )
       service.perform
 
@@ -64,6 +64,17 @@ RSpec.describe MarketAttributeUpdateService do
       market_attribute.reload
       expect(market_attribute.api_name).to eq('NewAPI')
       expect(market_attribute.api_key).to eq('new_key')
+    end
+
+    it 'requires api_name when configuration_mode is api' do
+      service = described_class.new(
+        market_attribute:,
+        params: { configuration_mode: 'api', api_name: '' }
+      )
+      service.perform
+
+      expect(service).to be_failure
+      expect(service.errors).to have_key(:api_name)
     end
 
     it 'returns failure on validation error' do
@@ -85,6 +96,26 @@ RSpec.describe MarketAttributeUpdateService do
       service.perform
 
       expect(market_attribute.reload.market_types).to contain_exactly(supplies)
+    end
+
+    it 'updates buyer and candidate fields' do
+      service = described_class.new(
+        market_attribute:,
+        params: {
+          buyer_name: 'Nom acheteur',
+          buyer_description: 'Description acheteur',
+          candidate_name: 'Nom candidat',
+          candidate_description: 'Description candidat'
+        }
+      )
+      service.perform
+
+      expect(service).to be_success
+      market_attribute.reload
+      expect(market_attribute.buyer_name).to eq('Nom acheteur')
+      expect(market_attribute.buyer_description).to eq('Description acheteur')
+      expect(market_attribute.candidate_name).to eq('Nom candidat')
+      expect(market_attribute.candidate_description).to eq('Description candidat')
     end
   end
 end

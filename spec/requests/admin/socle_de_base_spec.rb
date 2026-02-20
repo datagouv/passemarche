@@ -266,6 +266,20 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       expect(market_attribute.input_type).to eq('text_input')
       expect(market_attribute).to be_mandatory
     end
+
+    it 'updates buyer and candidate fields' do
+      patch "/admin/socle_de_base/#{market_attribute.id}", params: {
+        market_attribute: {
+          buyer_name: 'Titre acheteur',
+          buyer_description: 'Desc acheteur',
+          candidate_name: 'Titre candidat',
+          candidate_description: 'Desc candidat'
+        }
+      }
+      market_attribute.reload
+      expect(market_attribute.buyer_name).to eq('Titre acheteur')
+      expect(market_attribute.candidate_name).to eq('Titre candidat')
+    end
   end
 
   describe 'PATCH /admin/socle_de_base/:id/archive' do

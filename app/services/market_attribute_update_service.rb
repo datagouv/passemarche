@@ -11,8 +11,9 @@ class MarketAttributeUpdateService
 
   def perform
     ActiveRecord::Base.transaction do
-      update_attribute
-      sync_market_types
+      validate_params
+      update_attribute if success?
+      sync_market_types if success?
       raise ActiveRecord::Rollback if failure?
     end
 
@@ -33,6 +34,10 @@ class MarketAttributeUpdateService
     @errors[key] = message
   end
 
+  def validate_params
+    add_error(:api_name, I18n.t('errors.messages.blank')) if api_mode? && @params[:api_name].blank?
+  end
+
   def update_attribute
     @market_attribute.assign_attributes(attribute_params)
     clear_api_fields if manual_mode?
@@ -45,18 +50,21 @@ class MarketAttributeUpdateService
   end
 
   def sync_market_types
-    return if failure?
     return unless @params.key?(:market_type_ids)
 
     @market_attribute.market_type_ids = @params[:market_type_ids].compact_blank.map(&:to_i)
   end
 
   def attribute_params
-    @params.except(:market_type_ids)
+    @params.except(:market_type_ids, :configuration_mode)
+  end
+
+  def api_mode?
+    @params[:configuration_mode] == 'api'
   end
 
   def manual_mode?
-    @params[:api_name].blank?
+    @params[:configuration_mode] == 'manual'
   end
 
   def clear_api_fields

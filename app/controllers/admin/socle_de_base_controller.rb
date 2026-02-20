@@ -19,6 +19,8 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
   def edit
     load_market_attribute
     load_form_data
+    @presenter = SocleDeBasePresenter.new(@market_attribute)
+    prefill_from_presenter
   end
 
   def create
@@ -40,6 +42,7 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     if service.success?
       redirect_to admin_socle_de_base_path(@market_attribute), notice: t('.success')
     else
+      @presenter = SocleDeBasePresenter.new(@market_attribute)
       load_form_data
       render :edit, status: :unprocessable_content
     end
@@ -82,6 +85,13 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     @input_types = MarketAttribute.input_types.keys
   end
 
+  def prefill_from_presenter
+    @market_attribute.buyer_name ||= @presenter.buyer_name
+    @market_attribute.buyer_description ||= @presenter.buyer_description
+    @market_attribute.candidate_name ||= @presenter.candidate_name
+    @market_attribute.candidate_description ||= @presenter.candidate_description
+  end
+
   def filter_params
     params.permit(:query, :category, :source, :market_type_id).to_h.symbolize_keys
   end
@@ -107,7 +117,8 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
   def market_attribute_params
     params.expect(market_attribute: [
       :input_type, :mandatory, :subcategory_id, :category_key, :subcategory_key,
-      :api_name, :api_key,
+      :api_name, :api_key, :configuration_mode,
+      :buyer_name, :buyer_description, :candidate_name, :candidate_description,
       { market_type_ids: [] }
     ])
   end
