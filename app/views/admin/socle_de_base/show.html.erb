@@ -31,7 +31,7 @@
     </div>
   </div>
 
-  <div class="fr-card fr-card--no-border fr-mb-4w">
+  <div class="fr-card fr-mb-4w">
     <div class="fr-card__body">
       <div class="fr-card__content">
         <h2 class="fr-h4"><%= t('admin.socle_de_base.show.general_info') %></h2>
@@ -57,45 +57,63 @@
     </div>
   </div>
 
-  <div class="fr-card fr-card--no-border fr-mb-4w">
+  <div class="fr-card fr-mb-4w">
     <div class="fr-card__body">
       <div class="fr-card__content">
         <h2 class="fr-h4"><%= t('admin.socle_de_base.show.description') %></h2>
         <div class="fr-grid-row fr-grid-row--gutters">
           <div class="fr-col-6">
-            <h3 class="fr-h6"><%= t('admin.socle_de_base.show.buyer_view') %></h3>
-            <dl>
-              <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.category') %></dt>
-              <dd><%= @presenter.buyer_category_label %></dd>
-              <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.subcategory') %></dt>
-              <dd><%= @presenter.buyer_subcategory_label %></dd>
-              <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.title_field') %></dt>
-              <dd><%= @presenter.buyer_name %></dd>
-            </dl>
+            <div class="fr-card fr-card--sm fr-mb-2w">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <h3 class="fr-h6"><%= t('admin.socle_de_base.show.buyer_view') %></h3>
+                  <dl>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.category') %></dt>
+                    <dd><%= @presenter.buyer_category_label %></dd>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.subcategory') %></dt>
+                    <dd><%= @presenter.buyer_subcategory_label %></dd>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.title_field') %></dt>
+                    <dd><%= @presenter.buyer_name %></dd>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.description_field') %></dt>
+                    <dd><%= @presenter.buyer_description || '—' %></dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="fr-col-6">
-            <h3 class="fr-h6"><%= t('admin.socle_de_base.show.candidate_view') %></h3>
-            <dl>
-              <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.category') %></dt>
-              <dd><%= @presenter.candidate_category_label %></dd>
-              <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.subcategory') %></dt>
-              <dd><%= @presenter.candidate_subcategory_label %></dd>
-              <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.title_field') %></dt>
-              <dd><%= @presenter.candidate_name %></dd>
-            </dl>
+            <div class="fr-card fr-card--sm fr-mb-2w">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <h3 class="fr-h6"><%= t('admin.socle_de_base.show.candidate_view') %></h3>
+                  <dl>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.category') %></dt>
+                    <dd><%= @presenter.candidate_category_label %></dd>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.subcategory') %></dt>
+                    <dd><%= @presenter.candidate_subcategory_label %></dd>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.title_field') %></dt>
+                    <dd><%= @presenter.candidate_name %></dd>
+                    <dt class="fr-text--bold"><%= t('admin.socle_de_base.show.description_field') %></dt>
+                    <dd><%= @presenter.candidate_description || '—' %></dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="fr-card fr-card--no-border fr-mb-4w">
+  <div class="fr-card fr-mb-4w">
     <div class="fr-card__body">
       <div class="fr-card__content">
         <h2 class="fr-h4"><%= t('admin.socle_de_base.show.configuration') %></h2>
         <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.mode') %></p>
         <% if @market_attribute.from_api? %>
           <p><%= t('admin.socle_de_base.show.mode_api') %> — <%= @market_attribute.api_name %></p>
+          <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.api_key') %></p>
+          <p><%= @market_attribute.api_key %></p>
         <% else %>
           <p><%= t('admin.socle_de_base.show.mode_manual') %></p>
         <% end %>

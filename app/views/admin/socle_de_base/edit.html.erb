@@ -1,5 +1,16 @@
 <%= content_for :page_title, t('admin.socle_de_base.edit.title') %>
 
+<%
+  subcategories_json = @subcategories.map { |s|
+    { id: s.id, categoryId: s.category_id, buyerLabel: s.buyer_label, candidateLabel: s.candidate_label }
+  }
+
+  api_keys_by_name = MarketAttribute.where.not(api_name: nil)
+    .distinct.pluck(:api_name, :api_key)
+    .group_by(&:first)
+    .transform_values { |pairs| pairs.map(&:last).uniq.sort }
+%>
+
 <div class="fr-container fr-my-4w">
   <div class="fr-mb-3w">
     <%= link_to admin_socle_de_base_path(@market_attribute), class: "fr-link fr-link--icon-left fr-icon-arrow-left-line" do %>
@@ -31,11 +42,13 @@
           <fieldset class="fr-fieldset fr-mb-3w">
             <legend class="fr-fieldset__legend fr-text--bold"><%= t('admin.socle_de_base.show.market_types') %></legend>
             <% @market_types.each do |mt| %>
-              <div class="fr-checkbox-group fr-checkbox-group--inline">
-                <%= check_box_tag 'market_attribute[market_type_ids][]', mt.id,
-                      @market_attribute.market_type_ids.include?(mt.id),
-                      id: "market_type_#{mt.id}" %>
-                <%= label_tag "market_type_#{mt.id}", mt.code.humanize, class: 'fr-label' %>
+              <div class="fr-fieldset__element">
+                <div class="fr-checkbox-group">
+                  <%= check_box_tag 'market_attribute[market_type_ids][]', mt.id,
+                        @market_attribute.market_type_ids.include?(mt.id),
+                        id: "market_type_#{mt.id}" %>
+                  <%= label_tag "market_type_#{mt.id}", mt.code.humanize, class: 'fr-label' %>
+                </div>
               </div>
             <% end %>
             <%= hidden_field_tag 'market_attribute[market_type_ids][]', '' %>
@@ -44,32 +57,139 @@
       </div>
     </div>
 
-    <div class="fr-card fr-card--no-border fr-mb-4w" data-controller="configuration-toggle">
+    <div class="fr-card fr-card--no-border fr-mb-4w" data-controller="subcategory-filter"
+         data-subcategory-filter-subcategories-value="<%= subcategories_json.to_json %>">
+      <div class="fr-card__body">
+        <div class="fr-card__content">
+          <h2 class="fr-h4"><%= t('admin.socle_de_base.show.description') %></h2>
+
+          <%= f.hidden_field :subcategory_id, data: { subcategory_filter_target: 'subcategoryId' } %>
+
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <div class="fr-col-6">
+              <div class="fr-card fr-card--sm fr-mb-2w">
+                <div class="fr-card__body">
+                  <div class="fr-card__content">
+                    <h3 class="fr-h6"><%= t('admin.socle_de_base.show.buyer_view') %></h3>
+
+                    <div class="fr-select-group fr-mb-3w">
+                      <%= label_tag :buyer_category, t('admin.socle_de_base.show.category'), class: 'fr-label' %>
+                      <%= select_tag :buyer_category,
+                            options_from_collection_for_select(@categories, :id, :buyer_label),
+                            class: 'fr-select',
+                            data: { subcategory_filter_target: 'buyerCategory', action: 'subcategory-filter#categoryChanged' } %>
+                    </div>
+
+                    <div class="fr-select-group fr-mb-3w">
+                      <%= label_tag :buyer_subcategory, t('admin.socle_de_base.show.subcategory'), class: 'fr-label' %>
+                      <%= select_tag :buyer_subcategory,
+                            options_for_select([]),
+                            class: 'fr-select',
+                            data: { subcategory_filter_target: 'buyerSubcategory', action: 'subcategory-filter#subcategoryChanged' } %>
+                    </div>
+
+                    <div class="fr-input-group fr-mb-3w">
+                      <%= f.label :buyer_name, t('admin.socle_de_base.show.title_field'), class: 'fr-label' %>
+                      <%= f.text_field :buyer_name, class: 'fr-input' %>
+                    </div>
+
+                    <div class="fr-input-group fr-mb-3w">
+                      <%= f.label :buyer_description, t('admin.socle_de_base.show.description_field'), class: 'fr-label' %>
+                      <%= f.text_area :buyer_description, class: 'fr-input', rows: 3 %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fr-col-6">
+              <div class="fr-card fr-card--sm fr-mb-2w">
+                <div class="fr-card__body">
+                  <div class="fr-card__content">
+                    <h3 class="fr-h6"><%= t('admin.socle_de_base.show.candidate_view') %></h3>
+
+                    <div class="fr-select-group fr-mb-3w">
+                      <%= label_tag :candidate_category, t('admin.socle_de_base.show.category'), class: 'fr-label' %>
+                      <%= select_tag :candidate_category,
+                            options_from_collection_for_select(@categories, :id, :candidate_label),
+                            class: 'fr-select',
+                            disabled: true,
+                            data: { subcategory_filter_target: 'candidateCategory' } %>
+                    </div>
+
+                    <div class="fr-select-group fr-mb-3w">
+                      <%= label_tag :candidate_subcategory, t('admin.socle_de_base.show.subcategory'), class: 'fr-label' %>
+                      <%= select_tag :candidate_subcategory,
+                            options_for_select([]),
+                            class: 'fr-select',
+                            disabled: true,
+                            data: { subcategory_filter_target: 'candidateSubcategory' } %>
+                    </div>
+
+                    <div class="fr-input-group fr-mb-3w">
+                      <%= f.label :candidate_name, t('admin.socle_de_base.show.title_field'), class: 'fr-label' %>
+                      <%= f.text_field :candidate_name, class: 'fr-input' %>
+                    </div>
+
+                    <div class="fr-input-group fr-mb-3w">
+                      <%= f.label :candidate_description, t('admin.socle_de_base.show.description_field'), class: 'fr-label' %>
+                      <%= f.text_area :candidate_description, class: 'fr-input', rows: 3 %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-card fr-card--no-border fr-mb-4w" data-controller="configuration-toggle"
+         data-configuration-toggle-api-keys-value="<%= api_keys_by_name.to_json %>"
+         data-configuration-toggle-current-api-key-value="<%= @market_attribute.api_key %>">
       <div class="fr-card__body">
         <div class="fr-card__content">
           <h2 class="fr-h4"><%= t('admin.socle_de_base.show.configuration') %></h2>
 
           <div class="fr-fieldset fr-mb-3w">
             <div class="fr-radio-group">
-              <%= radio_button_tag 'market_attribute[api_name]', @market_attribute.api_name.presence || '',
+              <%= radio_button_tag 'market_attribute[configuration_mode]', 'api',
                     @market_attribute.from_api?,
                     id: 'config_api',
-                    data: { action: 'configuration-toggle#toggle', configuration_toggle_target: 'radio' } %>
+                    data: { action: 'configuration-toggle#toggle' } %>
               <%= label_tag 'config_api', t('admin.socle_de_base.show.mode_api'), class: 'fr-label' %>
             </div>
             <div class="fr-radio-group">
-              <%= radio_button_tag 'market_attribute[api_name]', '',
+              <%= radio_button_tag 'market_attribute[configuration_mode]', 'manual',
                     !@market_attribute.from_api?,
                     id: 'config_manual',
-                    data: { action: 'configuration-toggle#toggle', configuration_toggle_target: 'radio' } %>
+                    data: { action: 'configuration-toggle#toggle' } %>
               <%= label_tag 'config_manual', t('admin.socle_de_base.show.mode_manual'), class: 'fr-label' %>
             </div>
           </div>
 
-          <div class="fr-input-group fr-mb-3w" data-configuration-toggle-target="apiFields"
+          <div data-configuration-toggle-target="apiFields"
                <% unless @market_attribute.from_api? %>style="display: none"<% end %>>
-            <%= f.label :api_name, t('admin.socle_de_base.show.api_source'), class: 'fr-label' %>
-            <%= f.text_field :api_name, class: 'fr-input' %>
+            <div class="fr-select-group fr-mb-3w">
+              <%= f.label :api_name, t('admin.socle_de_base.show.api_source'), class: 'fr-label' %>
+              <%= f.select :api_name,
+                    options_for_select(api_keys_by_name.keys.sort, @market_attribute.api_name),
+                    { include_blank: t('admin.socle_de_base.edit.select_option') },
+                    class: 'fr-select',
+                    data: { configuration_toggle_target: 'apiSelect', action: 'configuration-toggle#apiChanged' } %>
+            </div>
+
+            <div class="fr-select-group fr-mb-3w">
+              <%= f.label :api_key, t('admin.socle_de_base.show.api_key'), class: 'fr-label' %>
+              <%
+                current_keys = api_keys_by_name[@market_attribute.api_name] || []
+              %>
+              <%= f.select :api_key,
+                    options_for_select(current_keys, @market_attribute.api_key),
+                    { include_blank: current_keys.empty? ? '—' : nil },
+                    class: 'fr-select',
+                    data: { configuration_toggle_target: 'apiKeySelect' } %>
+            </div>
           </div>
         </div>
       </div>

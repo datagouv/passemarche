@@ -820,6 +820,7 @@ fr:
         works: "T"
         supplies: "F"
         services: "S"
+        defense: "D"
       show:
         back: "Retour au socle de base"
         general_info: "Informations générales"
@@ -838,12 +839,14 @@ fr:
         mode_api: "API"
         mode_manual: "Manuelle"
         api_source: "API source"
+        api_key: "Clé API"
         archive_button: "Archiver ce champ"
         archive_confirm: "Êtes-vous sûr de vouloir archiver ce champ ?"
       edit:
         title: "Modifier le champ"
         submit: "Modifier"
         cancel: "Annuler"
+        select_option: "Sélectionner..."
       update:
         success: "Champ modifié avec succès"
     categories:
