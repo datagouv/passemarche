@@ -91,6 +91,8 @@ class MarketApplicationPresenter
   end
 
   def responses_grouped_by_subcategory(category_key)
+    return {} if category_key.blank?
+
     responses_for_category(category_key).group_by { |r| r.market_attribute.subcategory_key }
   end
 

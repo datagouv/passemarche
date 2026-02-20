@@ -20,6 +20,8 @@ class PublicMarketPresenter
   end
 
   def parent_category_for(step_key)
+    return nil if step_key.blank?
+
     step_str = step_key.to_s
     return step_str if available_category_keys.include?(step_str)
 
@@ -39,16 +41,22 @@ class PublicMarketPresenter
   end
 
   def mandatory_fields_for_category(category_key)
+    return {} if category_key.blank?
+
     attrs = available_attributes_array.select { |a| a.mandatory && a.category_key == category_key.to_s }
     group_by_subcategory(attrs)
   end
 
   def optional_fields_for_category(category_key)
+    return {} if category_key.blank?
+
     attrs = available_attributes_array.select { |a| !a.mandatory && a.category_key == category_key.to_s }
     group_by_subcategory(attrs)
   end
 
   def optional_fields_for_category?(category_key)
+    return false if category_key.blank?
+
     available_attributes_array.any? { |a| !a.mandatory && a.category_key == category_key.to_s }
   end
 
@@ -83,10 +91,6 @@ class PublicMarketPresenter
     @selected_category_keys ||= selected_market_attributes_ordered
       .filter_map(&:category_key)
       .uniq
-  end
-
-  def should_display_subcategory?(subcategories)
-    subcategories.keys.size > 1
   end
 
   def source_types

@@ -151,6 +151,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     it 'returns the parent category when given a subcategory key' do
       expect(presenter.parent_category_for('test_basic_information')).to eq('test_company_identity')
     end
+
+    it 'returns nil for blank input' do
+      expect(presenter.parent_category_for(nil)).to be_nil
+      expect(presenter.parent_category_for('')).to be_nil
+    end
   end
 
   describe '#subcategories_for_category' do
@@ -176,6 +181,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       result = presenter.mandatory_fields_for_category('test_economic_capacity')
       expect(result).to be_empty
     end
+
+    it 'returns empty hash for blank category' do
+      expect(presenter.mandatory_fields_for_category(nil)).to eq({})
+      expect(presenter.mandatory_fields_for_category('')).to eq({})
+    end
   end
 
   describe '#optional_fields_for_category' do
@@ -189,6 +199,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       result = presenter.optional_fields_for_category('test_company_identity')
       expect(result).to be_empty
     end
+
+    it 'returns empty hash for blank category' do
+      expect(presenter.optional_fields_for_category(nil)).to eq({})
+      expect(presenter.optional_fields_for_category('')).to eq({})
+    end
   end
 
   describe '#optional_fields_for_category?' do
@@ -198,6 +213,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
 
     it 'returns false when category has no optional fields' do
       expect(presenter.optional_fields_for_category?('test_company_identity')).to be false
+    end
+
+    it 'returns false for blank category' do
+      expect(presenter.optional_fields_for_category?(nil)).to be false
+      expect(presenter.optional_fields_for_category?('')).to be false
     end
   end
 
