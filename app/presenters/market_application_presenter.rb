@@ -63,6 +63,14 @@ class MarketApplicationPresenter
     )
   end
 
+  def response_component_class(response)
+    return nil if response&.type.blank?
+
+    "MarketAttributeResponse::#{response.type}Component".constantize
+  rescue NameError
+    nil
+  end
+
   # === RESPONSE METHODS (with hidden filtering) ===
 
   def responses_for_subcategory(category_key, subcategory_key)

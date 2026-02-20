@@ -1,0 +1,44 @@
+<div class="fr-card fr-mb-1w fr-card--no-border fr-mt-2w">
+  <%= render 'shared/card_sub_header', title: t('shared.application_summary.market_info_title'), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
+    <div class="field-layout-container">
+      <div class="field-layout-content">
+        <strong><%= t('shared.application_summary.market_name') %></strong>
+        <br>
+        <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.name %></span>
+      </div>
+    </div>
+    <% if market_application.public_market.lot_name.present? %>
+      <div class="field-layout-container">
+        <div class="field-layout-content">
+          <strong><%= t('shared.application_summary.lot_name') %></strong>
+          <br>
+          <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.lot_name %></span>
+        </div>
+      </div>
+    <% end %>
+    <div class="field-layout-container">
+      <div class="field-layout-content">
+        <strong><%= t('shared.application_summary.deadline') %></strong>
+        <br>
+        <span class="fr-text--md fr-text--mention-grey"><%= l(market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
+      </div>
+    </div>
+    <div class="field-layout-container">
+      <div class="field-layout-content">
+        <strong><%= t('shared.application_summary.market_type') %></strong>
+        <br>
+        <span class="fr-text--md fr-text--mention-grey">
+          <% if market_application.public_market.market_type_codes.any? %>
+            <% market_application.public_market.market_type_codes.each do |market_type_code| %>
+              <span class="fr-badge fr-badge--md fr-mr-1w">
+                <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+              </span>
+            <% end %>
+          <% else %>
+            <%= t('shared.application_summary.no_market_type') %>
+          <% end %>
+        </span>
+      </div>
+    </div>
+  <% end %>
+</div>

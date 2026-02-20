@@ -1,0 +1,14 @@
+<div class="fr-card fr-mb-1w fr-card--no-border fr-mt-2w">
+  <%= render 'shared/card_sub_header', title: subcategory_label(subcategory, role: :candidate), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
+    <% market_attributes.each do |attribute| %>
+      <% response = presenter.market_attribute_response_for(attribute) %>
+      <% component_class = presenter.response_component_class(response) %>
+      <% if component_class %>
+        <%= render component_class.new(market_attribute_response: response, context: context) %>
+      <% elsif response&.type.present? %>
+        <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display",
+                   market_attribute_response: response, context: context %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
