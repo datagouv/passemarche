@@ -203,13 +203,14 @@ RSpec.describe SocleDeBasePresenter do
         market_attribute.market_types << MarketType.where(code: %w[works supplies])
       end
 
-      it 'returns T and F as active, S as inactive' do
+      it 'returns T and F as active, S and D as inactive' do
         badges = presenter.market_type_badges
 
         expect(badges).to eq([
           { letter: 'T', code: 'works', active: true },
           { letter: 'F', code: 'supplies', active: true },
-          { letter: 'S', code: 'services', active: false }
+          { letter: 'S', code: 'services', active: false },
+          { letter: 'D', code: 'defense', active: false }
         ])
       end
     end
@@ -222,12 +223,13 @@ RSpec.describe SocleDeBasePresenter do
       end
     end
 
-    context 'when attribute has all three market types' do
+    context 'when attribute has all four market types' do
       before do
         create(:market_type, :works)
         create(:market_type)
         create(:market_type, :services)
-        market_attribute.market_types << MarketType.where(code: %w[works supplies services])
+        create(:market_type, :defense)
+        market_attribute.market_types << MarketType.where(code: %w[works supplies services defense])
       end
 
       it 'returns all badges as active' do

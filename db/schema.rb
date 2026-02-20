@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_154222) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_20_144046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -117,6 +117,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_154222) do
   create_table "market_attributes", force: :cascade do |t|
     t.string "api_key"
     t.string "api_name"
+    t.text "buyer_description"
+    t.string "buyer_name"
+    t.text "candidate_description"
+    t.string "candidate_name"
     t.string "category_key", null: false
     t.datetime "created_at", null: false
     t.datetime "deleted_at"

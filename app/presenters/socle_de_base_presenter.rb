@@ -6,15 +6,19 @@ class SocleDeBasePresenter
   end
 
   def buyer_name
-    I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
+    @market_attribute.buyer_name.presence || I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
+  end
+
+  def buyer_description
+    @market_attribute.buyer_description.presence || I18n.t("form_fields.buyer.fields.#{key}.description", default: nil)
   end
 
   def candidate_name
-    I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
+    @market_attribute.candidate_name.presence || I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
   end
 
   def candidate_description
-    I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
+    @market_attribute.candidate_description.presence || I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
   end
 
   def buyer_category_label
@@ -56,7 +60,8 @@ class SocleDeBasePresenter
   MARKET_TYPE_BADGES = [
     { letter: 'T', code: 'works' },
     { letter: 'F', code: 'supplies' },
-    { letter: 'S', code: 'services' }
+    { letter: 'S', code: 'services' },
+    { letter: 'D', code: 'defense' }
   ].freeze
 
   def market_type_badges
