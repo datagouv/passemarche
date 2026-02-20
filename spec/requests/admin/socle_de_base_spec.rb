@@ -203,6 +203,86 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
+  describe 'GET /admin/socle_de_base/:id' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_show',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification',
+        api_name: 'Insee',
+        api_key: 'siret')
+    end
+
+    it 'returns http success' do
+      get "/admin/socle_de_base/#{market_attribute.id}"
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'displays the configuration section' do
+      get "/admin/socle_de_base/#{market_attribute.id}"
+      expect(response.body).to include('Configuration')
+    end
+  end
+
+  describe 'GET /admin/socle_de_base/:id/edit' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_edit',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification')
+    end
+
+    it 'returns http success' do
+      get "/admin/socle_de_base/#{market_attribute.id}/edit"
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'displays the form' do
+      get "/admin/socle_de_base/#{market_attribute.id}/edit"
+      expect(response.body).to include('Modifier le champ')
+    end
+  end
+
+  describe 'PATCH /admin/socle_de_base/:id' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_update',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification')
+    end
+
+    it 'updates and redirects on success' do
+      patch "/admin/socle_de_base/#{market_attribute.id}", params: {
+        market_attribute: { input_type: 'text_input', mandatory: true }
+      }
+      expect(response).to redirect_to(admin_socle_de_base_path(market_attribute))
+    end
+
+    it 'updates the attribute values' do
+      patch "/admin/socle_de_base/#{market_attribute.id}", params: {
+        market_attribute: { input_type: 'text_input', mandatory: true }
+      }
+      market_attribute.reload
+      expect(market_attribute.input_type).to eq('text_input')
+      expect(market_attribute).to be_mandatory
+    end
+  end
+
+  describe 'PATCH /admin/socle_de_base/:id/archive' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_archive',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification')
+    end
+
+    it 'soft-deletes and redirects to index' do
+      patch "/admin/socle_de_base/#{market_attribute.id}/archive"
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(market_attribute.reload.deleted_at).not_to be_nil
+    end
+  end
+
   context 'without authentication' do
     before do
       sign_out admin_user
