@@ -26,8 +26,8 @@
             <%= subcategory_label(step.to_s, role: :candidate) %>
           </h6>
 
-          <ul class="fr-list fr-mb-3w">
-            <li class="fr-list__item">
+          <div class="fr-mb-3w">
+            <div class="fr-mb-2w">
               <div class="field-layout-container">
                 <div class="field-layout-content">
                   <strong><%= t('candidate.shared.market_name') %></strong>
@@ -35,9 +35,9 @@
                   <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.name %></span>
                 </div>
               </div>
-            </li>
+            </div>
             <% if @market_application.public_market.lot_name.present? %>
-              <li class="fr-list__item">
+              <div class="fr-mb-2w">
                 <div class="field-layout-container">
                   <div class="field-layout-content">
                     <strong><%= t('candidate.shared.lot_name') %></strong>
@@ -45,9 +45,9 @@
                     <span class="fr-text--sm fr-text--mention-grey"><%= @market_application.public_market.lot_name %></span>
                   </div>
                 </div>
-              </li>
+              </div>
             <% end %>
-            <li class="fr-list__item">
+            <div class="fr-mb-2w">
               <div class="field-layout-container">
                 <div class="field-layout-content">
                   <strong><%= t('candidate.shared.deadline') %></strong>
@@ -55,8 +55,8 @@
                   <span class="fr-text--sm fr-text--mention-grey"><%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
                 </div>
               </div>
-            </li>
-            <li class="fr-list__item">
+            </div>
+            <div>
               <div class="field-layout-container">
                 <div class="field-layout-content">
                   <strong><%= t('candidate.shared.market_type') %></strong>
@@ -74,8 +74,8 @@
                   </span>
                 </div>
               </div>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       <% else %>
         <p class="fr-text--sm fr-text--mention-grey"><%= t('candidate.shared.no_content') %></p>
