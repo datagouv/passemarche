@@ -44,21 +44,15 @@
               <% MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobalAnnuelComponent::YEAR_KEYS.each_with_index do |year_key, index| %>
                 <% year_data = component.year_data(year_key) %>
                 <% next if year_data.blank? || !year_data.values.any?(&:present?) %>
-                <% turnover_from_api = component.field_from_api?(year_key, 'turnover') %>
-                <% fiscal_year_end_from_api = component.field_from_api?(year_key, 'fiscal_year_end') %>
                 <tr>
                   <td>
                     <strong><%= component.year_label(year_key, index) %></strong>
                   </td>
                   <td>
-                    <% if turnover_from_api %>
-                      <%= component.formatted_turnover(year_key) %>
-                      <%= render SourceBadgeComponent.new(source: :auto, context: component.context) %>
-                    <% elsif component.turnover_value(year_key).present? %>
-                      <%= component.formatted_turnover(year_key) %>
-                      <% if component.auto? %>
-                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure, context: component.context) %>
-                      <% end %>
+                    <% turnover = component.display_turnover(year_key) %>
+                    <% if turnover %>
+                      <%= turnover[:value] %>
+                      <%= render SourceBadgeComponent.new(source: turnover[:source], context: component.context) if turnover[:source] %>
                     <% else %>
                       <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
                     <% end %>
@@ -71,14 +65,10 @@
                     <% end %>
                   </td>
                   <td>
-                    <% if fiscal_year_end_from_api %>
-                      <%= component.formatted_fiscal_year_end(year_key) %>
-                      <%= render SourceBadgeComponent.new(source: :auto, context: component.context) %>
-                    <% elsif component.fiscal_year_end_value(year_key).present? %>
-                      <%= component.formatted_fiscal_year_end(year_key) %>
-                      <% if component.auto? %>
-                        <%= render SourceBadgeComponent.new(source: :manual_after_api_failure, context: component.context) %>
-                      <% end %>
+                    <% fiscal = component.display_fiscal_year_end(year_key) %>
+                    <% if fiscal %>
+                      <%= fiscal[:value] %>
+                      <%= render SourceBadgeComponent.new(source: fiscal[:source], context: component.context) if fiscal[:source] %>
                     <% else %>
                       <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
                     <% end %>
