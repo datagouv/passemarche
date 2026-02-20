@@ -43,7 +43,6 @@
                     <%# Turnover %>
                     <td>
                       <% if turnover_from_api %>
-                        <%= component.formatted_turnover(year_key) %>
                         <%= render SourceBadgeComponent.new(source: :auto) %>
                         <%= response_form.hidden_field "#{year_key}_turnover" %>
                       <% else %>
