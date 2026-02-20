@@ -88,6 +88,22 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     I18n.t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.notice')
   end
 
+  def display_turnover(year_key)
+    if field_from_api?(year_key, 'turnover')
+      { value: (formatted_turnover(year_key) if context == :buyer), source: :auto }
+    elsif turnover_value(year_key).present?
+      { value: formatted_turnover(year_key), source: (auto? ? :manual_after_api_failure : nil) }
+    end
+  end
+
+  def display_fiscal_year_end(year_key)
+    if field_from_api?(year_key, 'fiscal_year_end')
+      { value: formatted_fiscal_year_end(year_key), source: :auto }
+    elsif fiscal_year_end_value(year_key).present?
+      { value: formatted_fiscal_year_end(year_key), source: (auto? ? :manual_after_api_failure : nil) }
+    end
+  end
+
   def not_provided_message
     'Non renseigné'
   end
