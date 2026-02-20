@@ -16,7 +16,8 @@ class Admin::CategoriesController < Admin::ApplicationController
     if @category.update(category_params)
       redirect_to admin_categories_path, notice: t('.success')
     else
-      render :edit, status: :unprocessable_content
+      render turbo_stream: turbo_stream.replace('modal', template: 'admin/categories/edit', layout: false),
+        status: :unprocessable_content
     end
   end
 
