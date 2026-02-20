@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Api::V1::MarketApplicationsController < Api::V1::BaseController
-  before_action :find_public_market, only: [:create]
+  before_action :find_public_market, only: %i[create]
   before_action :find_market_application, only: %i[attestation documents_package]
+  before_action :validate_application_completed, only: %i[attestation documents_package]
+  before_action :validate_attestation_available, only: %i[attestation]
+  before_action :validate_documents_package_available, only: %i[documents_package]
 
   def create
-    return unless @public_market
-
     result = CreateMarketApplication.call(
       public_market: @public_market,
       siret: market_application_params[:siret],
@@ -21,9 +22,6 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def attestation
-    return unless validate_application_completed
-    return unless validate_attestation_available
-
     send_data @market_application.attestation.download,
       filename: "attestation_FT#{@market_application.identifier}.pdf",
       type: 'application/pdf',
@@ -31,9 +29,6 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def documents_package
-    return unless validate_application_completed
-    return unless validate_documents_package_available
-
     send_data @market_application.documents_package.download,
       filename: "documents_package_FT#{@market_application.identifier}.zip",
       type: 'application/zip',
@@ -80,23 +75,20 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def validate_application_completed
-    return true if @market_application.completed?
+    return if @market_application.completed?
 
     render json: { error: 'Application not completed' }, status: :unprocessable_content
-    false
   end
 
   def validate_attestation_available
-    return true if @market_application.attestation.attached?
+    return if @market_application.attestation.attached?
 
     render json: { error: 'Attestation not available' }, status: :not_found
-    false
   end
 
   def validate_documents_package_available
-    return true if @market_application.documents_package.attached?
+    return if @market_application.documents_package.attached?
 
     render json: { error: 'Documents package not available' }, status: :not_found
-    false
   end
 end
