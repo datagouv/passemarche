@@ -9,6 +9,8 @@
     .distinct.pluck(:api_name, :api_key)
     .group_by(&:first)
     .transform_values { |pairs| pairs.map(&:last).uniq.sort }
+
+  input_type_hints = @input_types.index_with { |t| I18n.t("admin.socle_de_base.input_type_hints.#{t}", default: nil) }.compact
 %>
 
 <div class="fr-container fr-my-4w">
@@ -27,11 +29,16 @@
         <div class="fr-card__content">
           <h2 class="fr-h4"><%= t('admin.socle_de_base.show.general_info') %></h2>
 
-          <div class="fr-select-group fr-mb-3w">
+          <div class="fr-select-group fr-mb-3w" data-controller="input-type-hint"
+               data-input-type-hint-descriptions-value="<%= input_type_hints.to_json %>">
             <%= f.label :input_type, t('admin.socle_de_base.show.field_type'), class: 'fr-label' %>
             <%= f.select :input_type,
                   @input_types.map { |t| [t.humanize, t] },
-                  {}, class: 'fr-select' %>
+                  {}, class: 'fr-select',
+                  data: { input_type_hint_target: 'select', action: 'input-type-hint#changed' } %>
+            <p class="fr-hint-text" data-input-type-hint-target="hint">
+              <%= input_type_hints[@market_attribute.input_type] %>
+            </p>
           </div>
 
           <div class="fr-checkbox-group fr-mb-3w">
