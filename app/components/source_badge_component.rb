@@ -3,7 +3,7 @@
 class SourceBadgeComponent < ViewComponent::Base
   attr_reader :market_attribute_response
 
-  def initialize(market_attribute_response: nil, source: nil, context: :candidate)
+  def initialize(market_attribute_response: nil, source: nil, context: nil)
     @market_attribute_response = market_attribute_response
     @explicit_source = source
     @context = context
@@ -14,12 +14,11 @@ class SourceBadgeComponent < ViewComponent::Base
   end
 
   def badge_text
-    scope = badge_i18n_scope
     case effective_source
     when :auto
-      I18n.t("#{scope}.data_from_api")
+      I18n.t('shared.source_badge.data_from_api')
     when :manual_after_api_failure
-      I18n.t("#{scope}.declared_on_honor")
+      I18n.t('shared.source_badge.declared_by_candidate')
     end
   end
 
@@ -33,14 +32,6 @@ class SourceBadgeComponent < ViewComponent::Base
   end
 
   private
-
-  def badge_i18n_scope
-    if @context == :buyer
-      'buyer.attestations.badges'
-    else
-      'candidate.market_applications.badges'
-    end
-  end
 
   def effective_source
     @explicit_source || infer_source_from_response
