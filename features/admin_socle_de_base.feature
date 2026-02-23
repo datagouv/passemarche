@@ -36,9 +36,9 @@ Feature: Admin Socle de Base - Tableau des champs
     Then the row for "identite_siret" should show source "API Insee"
     And the row for "identite_email" should show source "Manuel"
 
-  Scenario: CA-4 - Edit buttons are placeholder links
+  Scenario: CA-4 - Edit buttons link to field detail page
     When I visit the socle de base page
-    Then all "Modifier" links should point to "#"
+    Then all "Modifier" links should point to field detail pages
 
   Scenario: CA-5 - Soft-deleted attributes are not displayed
     Given a soft-deleted market attribute "deleted_attr" exists in "identite_entreprise"
