@@ -72,5 +72,10 @@ class SocleDeBasePresenter
     end
   end
 
-  delegate :key, :category_key, :subcategory_key, :subcategory, :mandatory?, :from_api?, :api_name, to: :@market_attribute
+  def input_type_label
+    @market_attribute.input_type.humanize
+  end
+
+  delegate :key, :category_key, :subcategory_key, :subcategory, :mandatory?, :from_api?, :api_name, :api_key,
+    :market_types, to: :@market_attribute
 end

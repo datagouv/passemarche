@@ -1,18 +1,5 @@
 <%= content_for :page_title, t('admin.socle_de_base.edit.title') %>
 
-<%
-  subcategories_json = @subcategories.map { |s|
-    { id: s.id, categoryId: s.category_id, buyerLabel: s.buyer_label, candidateLabel: s.candidate_label }
-  }
-
-  api_keys_by_name = MarketAttribute.where.not(api_name: nil)
-    .distinct.pluck(:api_name, :api_key)
-    .group_by(&:first)
-    .transform_values { |pairs| pairs.map(&:last).uniq.sort }
-
-  input_type_hints = @input_types.index_with { |t| I18n.t("admin.socle_de_base.input_type_hints.#{t}", default: nil) }.compact
-%>
-
 <div class="fr-container fr-my-4w">
   <div class="fr-mb-3w">
     <%= link_to admin_socle_de_base_path(@market_attribute), class: "fr-link fr-link--icon-left fr-icon-arrow-left-line" do %>
@@ -30,14 +17,14 @@
           <h2 class="fr-h4"><%= t('admin.socle_de_base.show.general_info') %></h2>
 
           <div class="fr-select-group fr-mb-3w" data-controller="input-type-hint"
-               data-input-type-hint-descriptions-value="<%= input_type_hints.to_json %>">
+               data-input-type-hint-descriptions-value="<%= @input_type_hints.to_json %>">
             <%= f.label :input_type, t('admin.socle_de_base.show.field_type'), class: 'fr-label' %>
             <%= f.select :input_type,
                   @input_types.map { |t| [t.humanize, t] },
                   {}, class: 'fr-select',
                   data: { input_type_hint_target: 'select', action: 'input-type-hint#changed' } %>
             <p class="fr-hint-text" data-input-type-hint-target="hint">
-              <%= input_type_hints[@market_attribute.input_type] %>
+              <%= @input_type_hints[@market_attribute.input_type] %>
             </p>
           </div>
 
@@ -65,7 +52,7 @@
     </div>
 
     <div class="fr-card fr-card--no-border fr-mb-4w" data-controller="subcategory-filter"
-         data-subcategory-filter-subcategories-value="<%= subcategories_json.to_json %>">
+         data-subcategory-filter-subcategories-value="<%= @subcategories_json.to_json %>">
       <div class="fr-card__body">
         <div class="fr-card__content">
           <h2 class="fr-h4"><%= t('admin.socle_de_base.show.description') %></h2>
@@ -152,7 +139,7 @@
     </div>
 
     <div class="fr-card fr-card--no-border fr-mb-4w" data-controller="configuration-toggle"
-         data-configuration-toggle-api-keys-value="<%= api_keys_by_name.to_json %>"
+         data-configuration-toggle-api-keys-value="<%= @api_keys_by_name.to_json %>"
          data-configuration-toggle-current-api-key-value="<%= @market_attribute.api_key %>">
       <div class="fr-card__body">
         <div class="fr-card__content">
@@ -180,7 +167,7 @@
             <div class="fr-select-group fr-mb-3w">
               <%= f.label :api_name, t('admin.socle_de_base.show.api_source'), class: 'fr-label' %>
               <%= f.select :api_name,
-                    options_for_select(api_keys_by_name.keys.sort, @market_attribute.api_name),
+                    options_for_select(@api_keys_by_name.keys.sort, @market_attribute.api_name),
                     { include_blank: t('admin.socle_de_base.edit.select_option') },
                     class: 'fr-select',
                     data: { configuration_toggle_target: 'apiSelect', action: 'configuration-toggle#apiChanged' } %>
@@ -189,7 +176,7 @@
             <div class="fr-select-group fr-mb-3w">
               <%= f.label :api_key, t('admin.socle_de_base.show.api_key'), class: 'fr-label' %>
               <%
-                current_keys = api_keys_by_name[@market_attribute.api_name] || []
+                current_keys = @api_keys_by_name[@market_attribute.api_name] || []
               %>
               <%= f.select :api_key,
                     options_for_select(current_keys, @market_attribute.api_key),

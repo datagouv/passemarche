@@ -19,6 +19,7 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
   def edit
     load_market_attribute
     load_form_data
+    load_edit_view_data
     @presenter = SocleDeBasePresenter.new(@market_attribute)
     prefill_from_presenter
   end
@@ -44,6 +45,7 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     else
       @presenter = SocleDeBasePresenter.new(@market_attribute)
       load_form_data
+      load_edit_view_data
       render :edit, status: :unprocessable_content
     end
   end
@@ -83,6 +85,27 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     @subcategories = Subcategory.active.ordered.includes(:category)
     @market_types = MarketType.active
     @input_types = MarketAttribute.input_types.keys
+  end
+
+  def load_edit_view_data
+    @subcategories_json = build_subcategories_json
+    @api_keys_by_name = build_api_keys_by_name
+    @input_type_hints = @input_types.index_with do |t|
+      I18n.t("admin.socle_de_base.input_type_hints.#{t}", default: nil)
+    end.compact
+  end
+
+  def build_subcategories_json
+    @subcategories.map do |s|
+      { id: s.id, categoryId: s.category_id, buyerLabel: s.buyer_label, candidateLabel: s.candidate_label }
+    end
+  end
+
+  def build_api_keys_by_name
+    MarketAttribute.where.not(api_name: nil)
+      .distinct.pluck(:api_name, :api_key)
+      .group_by(&:first)
+      .transform_values { |pairs| pairs.map(&:last).uniq.sort }
   end
 
   def prefill_from_presenter

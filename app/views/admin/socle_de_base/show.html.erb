@@ -38,7 +38,7 @@
         <div class="fr-grid-row fr-grid-row--gutters">
           <div class="fr-col-4">
             <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.field_type') %></p>
-            <p><%= @market_attribute.input_type.humanize %></p>
+            <p><%= @presenter.input_type_label %></p>
           </div>
           <div class="fr-col-4">
             <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.mandatory') %></p>
@@ -48,7 +48,7 @@
           </div>
           <div class="fr-col-4">
             <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.market_types') %></p>
-            <% @market_attribute.market_types.each do |mt| %>
+            <% @presenter.market_types.each do |mt| %>
               <span class="fr-badge fr-badge--sm fr-badge--blue-cumulus"><%= mt.code.humanize %></span>
             <% end %>
           </div>
@@ -110,10 +110,10 @@
       <div class="fr-card__content">
         <h2 class="fr-h4"><%= t('admin.socle_de_base.show.configuration') %></h2>
         <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.mode') %></p>
-        <% if @market_attribute.from_api? %>
-          <p><%= t('admin.socle_de_base.show.mode_api') %> — <%= @market_attribute.api_name %></p>
+        <% if @presenter.from_api? %>
+          <p><%= t('admin.socle_de_base.show.mode_api') %> — <%= @presenter.api_name %></p>
           <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.api_key') %></p>
-          <p><%= @market_attribute.api_key %></p>
+          <p><%= @presenter.api_key %></p>
         <% else %>
           <p><%= t('admin.socle_de_base.show.mode_manual') %></p>
         <% end %>
