@@ -6,13 +6,13 @@ end
 
 When('I import the test CSV file') do
   csv_path = Rails.root.join('spec/fixtures/files/field_configuration_import.csv')
-  page.driver.submit :post, admin_socle_de_base_index_path,
+  page.driver.submit :post, import_admin_socle_de_base_index_path,
     'socle_de_base[csv_file]' => Rack::Test::UploadedFile.new(csv_path, 'text/csv')
   page.driver.follow_redirect! while page.driver.response.redirect?
 end
 
 When('I submit the import form without a file') do
-  page.driver.submit :post, admin_socle_de_base_index_path, {}
+  page.driver.submit :post, import_admin_socle_de_base_index_path, {}
   page.driver.follow_redirect! while page.driver.response.redirect?
 end
 
@@ -21,5 +21,5 @@ Then('I should see the import success message') do
 end
 
 Then('I should see the missing file error') do
-  expect(page).to have_content(I18n.t('admin.socle_de_base.create.no_file'))
+  expect(page).to have_content(I18n.t('admin.socle_de_base.import.no_file'))
 end

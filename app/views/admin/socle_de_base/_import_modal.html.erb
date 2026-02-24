@@ -15,7 +15,7 @@
             </h1>
             <p><%= t('admin.socle_de_base.import.description') %></p>
 
-            <%= form_with url: admin_socle_de_base_index_path, method: :post, multipart: true do |f| %>
+            <%= form_with url: import_admin_socle_de_base_index_path, method: :post, multipart: true do |f| %>
               <div class="fr-upload-group fr-mb-3w">
                 <%= f.label 'socle_de_base[csv_file]', t('admin.socle_de_base.import.file_label'), class: 'fr-label' %>
                 <span class="fr-hint-text"><%= t('admin.socle_de_base.import.file_hint') %></span>

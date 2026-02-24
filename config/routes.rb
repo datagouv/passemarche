@@ -9,9 +9,10 @@ Rails.application.routes.draw do
     resource :dashboard, only: [:show] do
       get :export, on: :member
     end
-    resources :socle_de_base, only: %i[index create show edit update] do
+    resources :socle_de_base, only: %i[index new create show edit update] do
       collection do
         patch :reorder
+        post :import
       end
       member do
         patch :archive
