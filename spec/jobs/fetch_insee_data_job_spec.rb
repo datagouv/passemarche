@@ -9,12 +9,12 @@ RSpec.describe FetchInseeDataJob, type: :job do
 
   # Create market attributes that will be filled by the API
   let!(:insee_attribute_1) do
-    create(:market_attribute, api_name: 'insee').tap do |attr|
+    create(:market_attribute, api_name: 'insee', api_key: 'siret').tap do |attr|
       attr.public_markets << public_market
     end
   end
   let!(:insee_attribute_2) do
-    create(:market_attribute, api_name: 'insee').tap do |attr|
+    create(:market_attribute, api_name: 'insee', api_key: 'siret').tap do |attr|
       attr.public_markets << public_market
     end
   end
