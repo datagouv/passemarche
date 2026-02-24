@@ -3,6 +3,8 @@
 class MarketAttribute < ApplicationRecord
   include UniqueAssociationValidator
 
+  attr_accessor :configuration_mode
+
   CATEGORY_TABS = %w[
     identite_entreprise
     motifs_exclusion

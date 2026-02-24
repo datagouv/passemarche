@@ -116,6 +116,8 @@ fr:
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
 
   errors:
+    messages:
+      blank: "doit être rempli(e)"
     market_application:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
@@ -773,7 +775,6 @@ fr:
         submit: "Importer"
         cancel: "Annuler"
         close: "Fermer"
-      create:
         success: "Import réussi : %{created} créé(s), %{updated} mis à jour, %{soft_deleted} archivé(s), %{skipped} ignoré(s)"
         no_file: "Veuillez sélectionner un fichier CSV"
         error: "Erreur lors de l'import : %{message}"
@@ -862,13 +863,58 @@ fr:
         api_key: "Clé API"
         archive_button: "Archiver ce champ"
         archive_confirm: "Êtes-vous sûr de vouloir archiver ce champ ?"
+      new:
+        title: "Créer un nouveau champ"
+        breadcrumb: "Nouveau champ"
       edit:
         title: "Modifier le champ"
         submit: "Modifier"
         cancel: "Annuler"
         select_option: "Sélectionner..."
+      create:
+        success: "Le champ a été créé avec succès."
       update:
         success: "Champ modifié avec succès"
+      form:
+        general_info:
+          title: "Informations générales"
+          input_type: "Type de saisie"
+          input_type_hint: "Sélectionnez le type de champ qui sera affiché au candidat"
+          input_type_prompt: "Sélectionnez un type de saisie"
+          mandatory: "Champ obligatoire"
+          mandatory_hint: "Si coché, ce champ sera requis pour toute candidature"
+        configuration:
+          title: "Configuration de la source"
+          source: "Source des données"
+          source_manual: "Manuel"
+          source_manual_hint: "Le candidat renseigne cette information manuellement"
+          source_api: "API"
+          source_api_hint: "Cette information est récupérée automatiquement via une API"
+          api_name: "Nom de l'API"
+          api_name_hint: "Nom du fournisseur de données (ex : Insee, Urssaf)"
+          api_key: "Clé API"
+          api_key_hint: "Identifiant technique du champ dans l'API (ex : siret, denomination)"
+        descriptions:
+          title: "Descriptions acheteur / candidat"
+          category: "Catégorie"
+          category_prompt: "Sélectionnez une catégorie"
+          subcategory: "Sous-catégorie"
+          subcategory_prompt: "Sélectionnez une sous-catégorie"
+          buyer_name: "Intitulé acheteur"
+          buyer_name_hint: "Nom du champ tel qu'affiché à l'acheteur"
+          candidate_name: "Intitulé candidat"
+          candidate_name_hint: "Nom du champ tel qu'affiché au candidat"
+          buyer_description: "Description acheteur"
+          buyer_description_hint: "Texte d'aide affiché à l'acheteur"
+          candidate_description: "Description candidat"
+          candidate_description_hint: "Texte d'aide affiché au candidat"
+        market_types:
+          title: "Types de marché"
+          hint: "Sélectionnez au moins un type de marché"
+        submit: "Créer le champ"
+        cancel: "Annuler"
+      errors:
+        title: "Erreurs dans le formulaire"
     categories:
       title: "Catégories et sous catégories"
       back_link: "Retour"
@@ -912,6 +958,13 @@ fr:
         success: "Sous-catégorie modifiée avec succès"
 
   activerecord:
+    attributes:
+      market_attribute:
+        buyer_name: "Intitulé acheteur"
+        candidate_name: "Intitulé candidat"
+        market_types: "Types de marché"
+        api_name: "Nom de l'API"
+        api_key: "Clé API"
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"

@@ -15,6 +15,7 @@ export default class extends Controller {
 
   connect () {
     this.syncFromCurrentSubcategory()
+    this.syncFromCurrentCategory()
   }
 
   categoryChanged () {
@@ -33,14 +34,25 @@ export default class extends Controller {
 
   // private
 
+  syncFromCurrentCategory () {
+    if (this.subcategoryIdTarget.value) return
+
+    const categoryId = parseInt(this.buyerCategoryTarget.value)
+    if (!categoryId) return
+
+    this.filterSubcategories(categoryId)
+    this.syncCandidateCategory()
+  }
+
   syncFromCurrentSubcategory () {
-    const currentSubcategoryId = parseInt(this.subcategoryIdTarget.value)
+    const currentSubcategoryId = this.subcategoryIdTarget.value
     if (!currentSubcategoryId) return
 
-    const subcategory = this.subcategoriesValue.find(s => s.id === currentSubcategoryId)
+    const numericId = parseInt(currentSubcategoryId)
+    const subcategory = this.subcategoriesValue.find(s => s.id === numericId)
     if (!subcategory) return
 
-    this.buyerCategoryTarget.value = subcategory.categoryId
+    this.buyerCategoryTarget.value = String(subcategory.categoryId)
     this.filterSubcategories(subcategory.categoryId)
     this.buyerSubcategoryTarget.value = currentSubcategoryId
     this.syncCandidateCategory()
@@ -54,8 +66,9 @@ export default class extends Controller {
     this.clearSelect(this.candidateSubcategoryTarget)
 
     filtered.forEach(sub => {
-      this.buyerSubcategoryTarget.add(new Option(sub.buyerLabel, sub.id))
-      this.candidateSubcategoryTarget.add(new Option(sub.candidateLabel, sub.id))
+      const id = String(sub.id)
+      this.buyerSubcategoryTarget.add(new Option(sub.buyerLabel, id))
+      this.candidateSubcategoryTarget.add(new Option(sub.candidateLabel, id))
     })
   }
 
