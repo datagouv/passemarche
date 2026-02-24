@@ -76,4 +76,20 @@ class MarketAttribute < ApplicationRecord
   def archived?
     deleted_at.present?
   end
+
+  def resolved_buyer_name
+    buyer_name.presence || I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
+  end
+
+  def resolved_buyer_description
+    buyer_description.presence || I18n.t("form_fields.buyer.fields.#{key}.description", default: nil)
+  end
+
+  def resolved_candidate_name
+    candidate_name.presence || I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
+  end
+
+  def resolved_candidate_description
+    candidate_description.presence || I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
+  end
 end

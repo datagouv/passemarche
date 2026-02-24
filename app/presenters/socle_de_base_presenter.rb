@@ -5,21 +5,14 @@ class SocleDeBasePresenter
     @market_attribute = market_attribute
   end
 
-  def buyer_name
-    @market_attribute.buyer_name.presence || I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
-  end
+  delegate :resolved_buyer_name, :resolved_buyer_description,
+    :resolved_candidate_name, :resolved_candidate_description,
+    to: :@market_attribute
 
-  def buyer_description
-    @market_attribute.buyer_description.presence || I18n.t("form_fields.buyer.fields.#{key}.description", default: nil)
-  end
-
-  def candidate_name
-    @market_attribute.candidate_name.presence || I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
-  end
-
-  def candidate_description
-    @market_attribute.candidate_description.presence || I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
-  end
+  alias buyer_name resolved_buyer_name
+  alias buyer_description resolved_buyer_description
+  alias candidate_name resolved_candidate_name
+  alias candidate_description resolved_candidate_description
 
   def buyer_category_label
     subcategory&.category&.buyer_label || category_key.humanize
