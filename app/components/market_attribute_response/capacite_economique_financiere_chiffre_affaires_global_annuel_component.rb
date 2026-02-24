@@ -92,7 +92,7 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     if field_from_api?(year_key, 'turnover')
       { value: (formatted_turnover(year_key) if context == :buyer), source: :auto }
     elsif turnover_value(year_key).present?
-      { value: formatted_turnover(year_key), source: (auto? ? :manual_after_api_failure : nil) }
+      { value: formatted_turnover(year_key), source: :manual_after_api_failure }
     end
   end
 
@@ -100,7 +100,7 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     if field_from_api?(year_key, 'fiscal_year_end')
       { value: formatted_fiscal_year_end(year_key), source: :auto }
     elsif fiscal_year_end_value(year_key).present?
-      { value: formatted_fiscal_year_end(year_key), source: (auto? ? :manual_after_api_failure : nil) }
+      { value: formatted_fiscal_year_end(year_key), source: :manual_after_api_failure }
     end
   end
 

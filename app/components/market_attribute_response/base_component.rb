@@ -47,6 +47,6 @@ class MarketAttributeResponse::BaseComponent < ViewComponent::Base
   end
 
   def source_badge_component
-    SourceBadgeComponent.new(market_attribute_response:)
+    SourceBadgeComponent.new(market_attribute_response:, context:)
   end
 end
