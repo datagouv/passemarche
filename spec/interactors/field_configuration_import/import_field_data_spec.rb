@@ -33,7 +33,11 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
             category_key: 'test_identity',
             subcategory_key: 'test_basic',
             mandatory: true,
-            deleted_at: nil
+            deleted_at: nil,
+            buyer_name: 'Company Name (buyer)',
+            buyer_description: 'Enter your company name',
+            candidate_name: 'Company Name (candidate)',
+            candidate_description: 'Your company legal name'
           },
           applicable_market_types: ['supplies'])
       end
@@ -48,6 +52,15 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
         expect(market_attribute.mandatory).to be(true)
         expect(market_attribute.market_types).to contain_exactly(supplies_market_type)
         expect(context.statistics[:created]).to eq(1)
+      end
+
+      it 'persists translation fields from CSV' do
+        interactor
+        market_attribute = MarketAttribute.find_by(key: 'company_name')
+        expect(market_attribute.buyer_name).to eq('Company Name (buyer)')
+        expect(market_attribute.buyer_description).to eq('Enter your company name')
+        expect(market_attribute.candidate_name).to eq('Company Name (candidate)')
+        expect(market_attribute.candidate_description).to eq('Your company legal name')
       end
 
       it 'creates category and subcategory records' do
