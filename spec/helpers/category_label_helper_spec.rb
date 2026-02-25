@@ -26,14 +26,14 @@ RSpec.describe CategoryLabelHelper, type: :helper do
     context 'when the category is soft-deleted' do
       before { create(:category, key: 'deleted_cat', buyer_label: 'Should Not Appear', deleted_at: Time.current) }
 
-      it 'falls back to I18n' do
+      it 'falls back to humanized key' do
         label = helper.category_label('deleted_cat', role: :buyer)
         expect(label).not_to eq('Should Not Appear')
       end
     end
 
     context 'when category does not exist' do
-      it 'falls back to I18n' do
+      it 'falls back to humanized key' do
         label = helper.category_label('identite_entreprise', role: :buyer)
         expect(label).to be_present
       end
@@ -63,7 +63,7 @@ RSpec.describe CategoryLabelHelper, type: :helper do
     context 'when the subcategory is soft-deleted' do
       before { create(:subcategory, key: 'deleted_sub', buyer_label: 'Hidden', deleted_at: Time.current) }
 
-      it 'falls back to I18n' do
+      it 'falls back to humanized key' do
         label = helper.subcategory_label('deleted_sub', role: :buyer)
         expect(label).not_to eq('Hidden')
       end

@@ -2,16 +2,16 @@
 
 module CategoryLabelHelper
   def category_label(key, role:)
-    record_label(Category, key, role, :categories)
+    record_label(Category, key, role)
   end
 
   def subcategory_label(key, role:)
-    record_label(Subcategory, key, role, :subcategories)
+    record_label(Subcategory, key, role)
   end
 
   private
 
-  def record_label(model_class, key, role, _i18n_scope)
+  def record_label(model_class, key, role)
     return key.to_s.humanize if key.blank?
 
     record = active_records_cache(model_class)[key.to_s]
