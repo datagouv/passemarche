@@ -15,17 +15,11 @@ class MarketAttributeResponse::TextInput::ManualFormComponent < ViewComponent::B
   delegate :manual_after_api_failure?, to: :market_attribute_response
 
   def field_label
-    I18n.t(
-      "form_fields.candidate.fields.#{market_attribute.key}.name",
-      default: market_attribute.key.humanize
-    )
+    market_attribute.resolved_candidate_name
   end
 
   def field_description
-    I18n.t(
-      "form_fields.candidate.fields.#{market_attribute.key}.description",
-      default: nil
-    )
+    market_attribute.resolved_candidate_description
   end
 
   def text_value

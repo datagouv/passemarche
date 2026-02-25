@@ -8,12 +8,12 @@ RSpec.describe FetchOpqibiDataJob, type: :job do
   let(:market_application) { create(:market_application, public_market:, siret:, api_fetch_status: {}) }
 
   let!(:opqibi_attribute_1) do
-    create(:market_attribute, api_name: 'opqibi').tap do |attr|
+    create(:market_attribute, api_name: 'opqibi', api_key: 'opqibi').tap do |attr|
       attr.public_markets << public_market
     end
   end
   let!(:opqibi_attribute_2) do
-    create(:market_attribute, api_name: 'opqibi').tap do |attr|
+    create(:market_attribute, api_name: 'opqibi', api_key: 'opqibi').tap do |attr|
       attr.public_markets << public_market
     end
   end

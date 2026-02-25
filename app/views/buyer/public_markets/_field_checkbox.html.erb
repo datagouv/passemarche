@@ -20,11 +20,10 @@
     <%= label_tag "field_#{field_key}", class: "fr-checkbox__label fr-ml-2w" do %>
       <div class="field-layout-container">
         <div class="field-layout-content">
-          <%= t("form_fields.buyer.fields.#{field_key}.name") %>
-          <% description_key = "form_fields.buyer.fields.#{field_key}.description" %>
-          <% if I18n.exists?(description_key) %>
+          <%= field.resolved_buyer_name %>
+          <% if (description = field.resolved_buyer_description) %>
             <br>
-            <span class="fr-hint-text"><%= t(description_key) %></span>
+            <span class="fr-hint-text"><%= description %></span>
           <% end %>
         </div>
         <div class="field-layout-badge">

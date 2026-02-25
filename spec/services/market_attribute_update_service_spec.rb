@@ -13,11 +13,15 @@ RSpec.describe MarketAttributeUpdateService do
       input_type: :text_input, mandatory: false).tap { |a| a.market_types << supplies }
   end
 
+  let(:valid_params) do
+    { buyer_name: 'Buyer field', candidate_name: 'Candidate field', market_type_ids: [supplies.id.to_s] }
+  end
+
   describe '#perform' do
     it 'updates basic fields' do
       service = described_class.new(
         market_attribute:,
-        params: { input_type: 'textarea', mandatory: true }
+        params: valid_params.merge(input_type: 'textarea', mandatory: true)
       )
       service.perform
 
@@ -30,7 +34,7 @@ RSpec.describe MarketAttributeUpdateService do
     it 'syncs market type associations' do
       service = described_class.new(
         market_attribute:,
-        params: { market_type_ids: [services.id.to_s] }
+        params: valid_params.merge(market_type_ids: [services.id.to_s])
       )
       service.perform
 
@@ -43,7 +47,7 @@ RSpec.describe MarketAttributeUpdateService do
 
       service = described_class.new(
         market_attribute:,
-        params: { configuration_mode: 'manual' }
+        params: valid_params.merge(configuration_mode: 'manual')
       )
       service.perform
 
@@ -56,7 +60,7 @@ RSpec.describe MarketAttributeUpdateService do
     it 'sets api fields when configuration_mode is api' do
       service = described_class.new(
         market_attribute:,
-        params: { configuration_mode: 'api', api_name: 'NewAPI', api_key: 'new_key' }
+        params: valid_params.merge(configuration_mode: 'api', api_name: 'NewAPI', api_key: 'new_key')
       )
       service.perform
 
@@ -69,18 +73,42 @@ RSpec.describe MarketAttributeUpdateService do
     it 'requires api_name when configuration_mode is api' do
       service = described_class.new(
         market_attribute:,
-        params: { configuration_mode: 'api', api_name: '' }
+        params: valid_params.merge(configuration_mode: 'api', api_name: '', api_key: '')
       )
       service.perform
 
       expect(service).to be_failure
       expect(service.errors).to have_key(:api_name)
+      expect(service.errors).to have_key(:api_key)
+    end
+
+    it 'requires buyer_name and candidate_name' do
+      service = described_class.new(
+        market_attribute:,
+        params: valid_params.merge(buyer_name: '', candidate_name: '')
+      )
+      service.perform
+
+      expect(service).to be_failure
+      expect(service.errors).to have_key(:buyer_name)
+      expect(service.errors).to have_key(:candidate_name)
+    end
+
+    it 'requires at least one market type' do
+      service = described_class.new(
+        market_attribute:,
+        params: valid_params.merge(market_type_ids: [''])
+      )
+      service.perform
+
+      expect(service).to be_failure
+      expect(service.errors).to have_key(:market_types)
     end
 
     it 'returns failure on validation error' do
       service = described_class.new(
         market_attribute:,
-        params: { key: '' }
+        params: valid_params.merge(key: '')
       )
       service.perform
 
@@ -91,7 +119,7 @@ RSpec.describe MarketAttributeUpdateService do
     it 'rolls back market types on validation failure' do
       service = described_class.new(
         market_attribute:,
-        params: { key: '', market_type_ids: [services.id.to_s] }
+        params: valid_params.merge(key: '', market_type_ids: [services.id.to_s])
       )
       service.perform
 
@@ -101,12 +129,12 @@ RSpec.describe MarketAttributeUpdateService do
     it 'updates buyer and candidate fields' do
       service = described_class.new(
         market_attribute:,
-        params: {
+        params: valid_params.merge(
           buyer_name: 'Nom acheteur',
           buyer_description: 'Description acheteur',
           candidate_name: 'Nom candidat',
           candidate_description: 'Description candidat'
-        }
+        )
       )
       service.perform
 

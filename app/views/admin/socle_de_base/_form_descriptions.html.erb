@@ -1,0 +1,88 @@
+<div class="fr-card fr-card--no-border fr-mb-4w" data-controller="subcategory-filter"
+     data-subcategory-filter-subcategories-value="<%= @subcategories_json.to_json %>">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <h2 class="fr-h4"><%= t('admin.socle_de_base.show.description') %></h2>
+
+      <%= f.hidden_field :subcategory_id, data: { subcategory_filter_target: 'subcategoryId' } %>
+
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-6">
+          <div class="fr-card fr-card--sm fr-mb-2w">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <h3 class="fr-h6"><%= t('admin.socle_de_base.show.buyer_view') %></h3>
+
+                <div class="fr-select-group fr-mb-3w">
+                  <%= label_tag :buyer_category, t('admin.socle_de_base.show.category'), class: 'fr-label' %>
+                  <%= select_tag :buyer_category,
+                        content_tag(:option, t('admin.socle_de_base.edit.select_option'), value: '') +
+                        options_from_collection_for_select(@categories, :id, :buyer_label),
+                        class: 'fr-select',
+                        data: { subcategory_filter_target: 'buyerCategory', action: 'subcategory-filter#categoryChanged' } %>
+                </div>
+
+                <div class="fr-select-group fr-mb-3w">
+                  <%= label_tag :buyer_subcategory, t('admin.socle_de_base.show.subcategory'), class: 'fr-label' %>
+                  <%= select_tag :buyer_subcategory,
+                        options_for_select([]),
+                        class: 'fr-select',
+                        data: { subcategory_filter_target: 'buyerSubcategory', action: 'subcategory-filter#subcategoryChanged' } %>
+                </div>
+
+                <div class="fr-input-group fr-mb-3w">
+                  <%= f.label :buyer_name, t('admin.socle_de_base.show.title_field'), class: 'fr-label' %>
+                  <%= f.text_field :buyer_name, class: 'fr-input' %>
+                </div>
+
+                <div class="fr-input-group fr-mb-3w">
+                  <%= f.label :buyer_description, t('admin.socle_de_base.show.description_field'), class: 'fr-label' %>
+                  <%= f.text_area :buyer_description, class: 'fr-input', rows: 3 %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fr-col-6">
+          <div class="fr-card fr-card--sm fr-mb-2w">
+            <div class="fr-card__body">
+              <div class="fr-card__content">
+                <h3 class="fr-h6"><%= t('admin.socle_de_base.show.candidate_view') %></h3>
+
+                <div class="fr-select-group fr-mb-3w">
+                  <%= label_tag :candidate_category, t('admin.socle_de_base.show.category'), class: 'fr-label' %>
+                  <%= select_tag :candidate_category,
+                        content_tag(:option, t('admin.socle_de_base.edit.select_option'), value: '') +
+                        options_from_collection_for_select(@categories, :id, :candidate_label),
+                        class: 'fr-select',
+                        disabled: true,
+                        data: { subcategory_filter_target: 'candidateCategory' } %>
+                </div>
+
+                <div class="fr-select-group fr-mb-3w">
+                  <%= label_tag :candidate_subcategory, t('admin.socle_de_base.show.subcategory'), class: 'fr-label' %>
+                  <%= select_tag :candidate_subcategory,
+                        options_for_select([]),
+                        class: 'fr-select',
+                        disabled: true,
+                        data: { subcategory_filter_target: 'candidateSubcategory' } %>
+                </div>
+
+                <div class="fr-input-group fr-mb-3w">
+                  <%= f.label :candidate_name, t('admin.socle_de_base.show.title_field'), class: 'fr-label' %>
+                  <%= f.text_field :candidate_name, class: 'fr-input' %>
+                </div>
+
+                <div class="fr-input-group fr-mb-3w">
+                  <%= f.label :candidate_description, t('admin.socle_de_base.show.description_field'), class: 'fr-label' %>
+                  <%= f.text_area :candidate_description, class: 'fr-input', rows: 3 %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

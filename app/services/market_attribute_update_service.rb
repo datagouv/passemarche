@@ -35,7 +35,22 @@ class MarketAttributeUpdateService
   end
 
   def validate_params
-    add_error(:api_name, I18n.t('errors.messages.blank')) if api_mode? && @params[:api_name].blank?
+    add_error(:buyer_name, I18n.t('errors.messages.blank')) if @params[:buyer_name].blank?
+    add_error(:candidate_name, I18n.t('errors.messages.blank')) if @params[:candidate_name].blank?
+    validate_market_types
+    validate_api_params
+  end
+
+  def validate_market_types
+    ids = @params[:market_type_ids]&.compact_blank
+    add_error(:market_types, I18n.t('errors.messages.blank')) if ids.blank?
+  end
+
+  def validate_api_params
+    return unless api_mode?
+
+    add_error(:api_name, I18n.t('errors.messages.blank')) if @params[:api_name].blank?
+    add_error(:api_key, I18n.t('errors.messages.blank')) if @params[:api_key].blank?
   end
 
   def update_attribute

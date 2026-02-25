@@ -19,6 +19,7 @@ Given('a Bodacc exclusion motif exists for the candidate') do
     category_key: 'motifs_exclusion',
     subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
     api_name: 'bodacc',
+    api_key: 'liquidation_judiciaire',
     input_type: MarketAttribute.input_types[:radio_with_file_and_text]
   )
   create(:market_attribute_response_file_or_textarea,

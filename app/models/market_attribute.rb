@@ -3,6 +3,8 @@
 class MarketAttribute < ApplicationRecord
   include UniqueAssociationValidator
 
+  attr_accessor :configuration_mode
+
   CATEGORY_TABS = %w[
     identite_entreprise
     motifs_exclusion
@@ -18,6 +20,8 @@ class MarketAttribute < ApplicationRecord
 
   validates :key, presence: true, uniqueness: true
   validates :category_key, :subcategory_key, presence: true
+  validates :input_type, presence: true
+  validates :api_name, :api_key, presence: true, if: :from_api?
   validates_uniqueness_of_association :market_types, :public_markets
 
   enum :input_type, {
@@ -71,5 +75,21 @@ class MarketAttribute < ApplicationRecord
 
   def archived?
     deleted_at.present?
+  end
+
+  def resolved_buyer_name
+    buyer_name.presence || I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
+  end
+
+  def resolved_buyer_description
+    buyer_description.presence || I18n.t("form_fields.buyer.fields.#{key}.description", default: nil)
+  end
+
+  def resolved_candidate_name
+    candidate_name.presence || I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
+  end
+
+  def resolved_candidate_description
+    candidate_description.presence || I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
   end
 end

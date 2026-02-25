@@ -91,7 +91,7 @@ RSpec.describe MarketAttributeResponse::InlineUrlInput, type: :model do
 
   describe 'OPQIBI metadata accessors' do
     let(:market_attribute) do
-      create(:market_attribute, input_type: 'inline_url_input', api_name: 'opqibi')
+      create(:market_attribute, input_type: 'inline_url_input', api_name: 'opqibi', api_key: 'opqibi')
     end
 
     describe '#date_delivrance_certificat' do
@@ -175,7 +175,7 @@ RSpec.describe MarketAttributeResponse::InlineUrlInput, type: :model do
       end
 
       it 'returns false when not OPQIBI' do
-        non_opqibi_attribute = create(:market_attribute, input_type: 'inline_url_input', api_name: 'other')
+        non_opqibi_attribute = create(:market_attribute, input_type: 'inline_url_input', api_name: 'other', api_key: 'other')
         non_opqibi_input = MarketAttributeResponse::InlineUrlInput.new(
           market_application:,
           market_attribute: non_opqibi_attribute

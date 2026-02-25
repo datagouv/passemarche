@@ -129,7 +129,7 @@ RSpec.describe FieldConfigurationImport::ImportFieldData, type: :interactor do
       let(:importable_rows) { [company_name_row] }
 
       it 'fails and rolls back transaction' do
-        expect { interactor }.to raise_error(ActiveRecord::StatementInvalid)
+        expect { interactor }.to raise_error(ActiveRecord::RecordInvalid)
         expect do
           interactor
         rescue StandardError
