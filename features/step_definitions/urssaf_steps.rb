@@ -10,12 +10,14 @@ Given('a market attribute exists for URSSAF attestation vigilance') do
     {
       key: 'motifs_exclusion_fiscales_et_sociales_declarations_cotisations_sociales',
       category_key: 'motifs_exclusion_fiscales_et_sociales',
-      subcategory_key: 'motifs_exclusion_fiscales_et_sociales'
+      subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
+      candidate_name: 'Cotisations sociales'
     },
     {
       key: 'motifs_exclusion_fiscales_et_sociales_travailleurs_handicapes',
       category_key: 'motifs_exclusion_fiscales_et_sociales',
-      subcategory_key: 'motifs_exclusion_fiscales_et_sociales'
+      subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
+      candidate_name: 'Emploi de travailleurs handicapés'
     }
   ].each do |attrs|
     create(
@@ -26,6 +28,7 @@ Given('a market attribute exists for URSSAF attestation vigilance') do
       api_key: 'document',
       category_key: attrs[:category_key],
       subcategory_key: attrs[:subcategory_key],
+      candidate_name: attrs[:candidate_name],
       public_markets: [@public_market]
     )
   end

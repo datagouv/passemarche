@@ -19,18 +19,20 @@ RSpec.describe SocleDeBasePresenter do
       category_key: 'identite_entreprise',
       subcategory_key: 'identite_entreprise_identification',
       subcategory:,
+      buyer_name: 'SIRET',
+      candidate_name: 'SIRET',
       mandatory: true,
       api_name: 'Insee')
   end
   let(:presenter) { described_class.new(market_attribute) }
 
   describe '#buyer_name' do
-    it 'returns the buyer field name from i18n' do
+    it 'returns the buyer field name from DB' do
       expect(presenter.buyer_name).to eq('SIRET')
     end
 
-    context 'when key has no translation' do
-      let(:market_attribute) { build(:market_attribute, key: 'unknown_key') }
+    context 'when buyer_name is nil' do
+      let(:market_attribute) { build(:market_attribute, key: 'unknown_key', buyer_name: nil) }
 
       it 'returns humanized key as fallback' do
         expect(presenter.buyer_name).to eq('Unknown key')
@@ -39,21 +41,22 @@ RSpec.describe SocleDeBasePresenter do
   end
 
   describe '#candidate_name' do
-    it 'returns the candidate field name from i18n' do
+    it 'returns the candidate field name from DB' do
       expect(presenter.candidate_name).to eq('SIRET')
     end
   end
 
   describe '#candidate_description' do
-    context 'when description exists' do
+    context 'when description exists in DB' do
       let(:market_attribute) do
         build(:market_attribute,
           key: 'motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire',
           category_key: 'motifs_exclusion',
-          subcategory_key: 'motifs_exclusion_fiscales_et_sociales')
+          subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
+          candidate_description: 'attestation de liquidation judiciaire')
       end
 
-      it 'returns the candidate field description from i18n' do
+      it 'returns the candidate field description from DB' do
         expect(presenter.candidate_description).to include('liquidation')
       end
     end

@@ -12,6 +12,8 @@ Given('a public market with presentation_intervenants field exists') do
     attr.category_key = 'capacites_techniques_professionnelles'
     attr.subcategory_key = 'capacites_techniques_professionnelles_effectifs'
     attr.mandatory = true
+    attr.candidate_name = "Présentation de l'équipe qui est susceptible d'être affectée à la réalisation/exécution du contrat"
+    attr.candidate_description = "Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
   end
   @cv_intervenants_attr.public_markets << @public_market unless @cv_intervenants_attr.public_markets.include?(@public_market)
 end

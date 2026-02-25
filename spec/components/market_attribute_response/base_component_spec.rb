@@ -165,16 +165,11 @@ RSpec.describe MarketAttributeResponse::BaseComponent, type: :component do
       expect(component.field_label).to eq('DB Label')
     end
 
-    it 'falls back to I18n when candidate_name is blank' do
+    it 'falls back to humanized key when candidate_name is blank' do
       response = create(:market_attribute_response_text_input, market_attribute:, value: { 'text' => 'Test' })
       component = described_class.new(market_attribute_response: response)
 
-      allow(I18n).to receive(:t).with(
-        'form_fields.candidate.fields.test_field.name',
-        default: 'Test field'
-      ).and_return('I18n Label')
-
-      expect(component.field_label).to eq('I18n Label')
+      expect(component.field_label).to eq('Test field')
     end
   end
 
@@ -187,16 +182,11 @@ RSpec.describe MarketAttributeResponse::BaseComponent, type: :component do
       expect(component.field_description).to eq('DB Description')
     end
 
-    it 'falls back to I18n when candidate_description is blank' do
+    it 'returns nil when candidate_description is blank' do
       response = create(:market_attribute_response_text_input, market_attribute:, value: { 'text' => 'Test' })
       component = described_class.new(market_attribute_response: response)
 
-      allow(I18n).to receive(:t).with(
-        'form_fields.candidate.fields.test_field.description',
-        default: nil
-      ).and_return('I18n Description')
-
-      expect(component.field_description).to eq('I18n Description')
+      expect(component.field_description).to be_nil
     end
   end
 

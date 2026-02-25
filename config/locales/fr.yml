@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 fr:
+  source_types:
+    authentic_source:
+      label: Récupéré automatiquement
+      badge_class: fr-badge--success
+    honor_declaration:
+      label: Déclaré par le candidat
+      badge_class: fr-badge--info
+
   time:
     am: "am"
     pm: "pm"

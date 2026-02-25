@@ -78,18 +78,18 @@ class MarketAttribute < ApplicationRecord
   end
 
   def resolved_buyer_name
-    buyer_name.presence || I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
+    buyer_name.presence || key.humanize
   end
 
   def resolved_buyer_description
-    buyer_description.presence || I18n.t("form_fields.buyer.fields.#{key}.description", default: nil)
+    buyer_description.presence
   end
 
   def resolved_candidate_name
-    candidate_name.presence || I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
+    candidate_name.presence || key.humanize
   end
 
   def resolved_candidate_description
-    candidate_description.presence || I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
+    candidate_description.presence
   end
 end

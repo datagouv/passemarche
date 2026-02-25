@@ -4,23 +4,9 @@ require 'rails_helper'
 
 RSpec.describe FieldTranslationImport, type: :organizer do
   let(:csv_file_path) { Rails.root.join('spec/fixtures/translation_test.csv') }
-  let(:temp_translation_file) { Rails.root.join('tmp/test_form_fields.fr.yml') }
-  let(:mock_file_writer) { double('FileWriter') }
-  let(:context) do
-    {
-      csv_file_path:,
-      translation_file_path: temp_translation_file,
-      file_writer: mock_file_writer
-    }
-  end
-
-  before do
-    allow(mock_file_writer).to receive(:write)
-  end
 
   after do
     FileUtils.rm_f(csv_file_path)
-    FileUtils.rm_f(temp_translation_file)
   end
 
   describe '.call' do
@@ -39,12 +25,13 @@ RSpec.describe FieldTranslationImport, type: :organizer do
       end
 
       it 'successfully processes the complete translation workflow' do
-        result = described_class.call(context)
+        result = described_class.call(csv_file_path:)
 
         expect(result).to be_success
         expect(result.translations).to include(:buyer, :candidate)
         expect(result.statistics).to include(:fields_processed, :total_categories, :total_subcategories)
         expect(result.statistics[:fields_processed]).to eq(1)
+        expect(result.statistics[:translation_file_updated]).to be false
       end
     end
 
@@ -52,7 +39,7 @@ RSpec.describe FieldTranslationImport, type: :organizer do
       let(:csv_file_path) { '/nonexistent/translation_file.csv' }
 
       it 'fails at validation step' do
-        result = described_class.call(context)
+        result = described_class.call(csv_file_path:)
 
         expect(result).to be_failure
         expect(result.message).to include('CSV file not found')
@@ -67,7 +54,7 @@ RSpec.describe FieldTranslationImport, type: :organizer do
       end
 
       it 'fails at parsing step' do
-        result = described_class.call(context)
+        result = described_class.call(csv_file_path:)
 
         expect(result).to be_failure
         expect(result.message).to include('Invalid CSV')
