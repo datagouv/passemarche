@@ -1,0 +1,7 @@
+<% badge = local_assigns[:badge] %>
+<% if value.present? || badge %>
+  <%= value %>
+  <%= render badge if badge %>
+<% else %>
+  <span class="fr-text--mention-grey">Non renseigné</span>
+<% end %>

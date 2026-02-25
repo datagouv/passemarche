@@ -49,29 +49,18 @@
                     <strong><%= component.year_label(year_key, index) %></strong>
                   </td>
                   <td>
-                    <% turnover = component.display_turnover(year_key) %>
-                    <% if turnover %>
-                      <%= turnover[:value] %>
-                      <%= render SourceBadgeComponent.new(source: turnover[:source], context: component.context) if turnover[:source] %>
-                    <% else %>
-                      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
-                    <% end %>
+                    <%= render 'shared/value_with_badge',
+                          value: component.formatted_turnover_for_display(year_key),
+                          badge: component.turnover_badge_component(year_key) %>
                   </td>
                   <td>
-                    <% if component.market_percentage_value(year_key).present? %>
-                      <%= component.formatted_market_percentage(year_key) %>
-                    <% else %>
-                      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
-                    <% end %>
+                    <%= render 'shared/value_with_badge',
+                          value: component.formatted_market_percentage(year_key) %>
                   </td>
                   <td>
-                    <% fiscal = component.display_fiscal_year_end(year_key) %>
-                    <% if fiscal %>
-                      <%= fiscal[:value] %>
-                      <%= render SourceBadgeComponent.new(source: fiscal[:source], context: component.context) if fiscal[:source] %>
-                    <% else %>
-                      <span class="fr-text--mention-grey"><%= component.not_provided_message %></span>
-                    <% end %>
+                    <%= render 'shared/value_with_badge',
+                          value: component.formatted_fiscal_year_end(year_key),
+                          badge: component.fiscal_year_end_badge_component(year_key) %>
                   </td>
                 </tr>
               <% end %>
