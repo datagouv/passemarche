@@ -103,6 +103,9 @@ fr:
       not_scanned: "info"
 
   shared:
+    source_badge:
+      data_from_api: "Récupéré automatiquement"
+      declared_by_candidate: "Déclaré par le candidat"
     application_summary:
       market_info_title: "Informations du marché"
       market_name: "Nom du marché"
@@ -362,9 +365,6 @@ fr:
         continue: "Continuer"
         contact_support: "Contacter le support"
     attestations:
-      badges:
-        data_from_api: "De source authentique"
-        declared_on_honor: "Déclarée sur l'honneur"
       motifs_exclusion:
         candidate_attestation_title: "Attestation du candidat"
         candidate_attestation_confirmed_notice: "J'atteste sur l'honneur que mon entreprise ne rentre pas dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique et m'engage à informer l'acheteur de tout changement de situation sans délai."
@@ -463,9 +463,6 @@ fr:
       rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       qualibat_api_error: "Impossible de récupérer la certification Qualibat de votre entreprise : %{error}"
       urssaf_api_error: "Impossible de récupérer l'attestation de vigilance URSSAF : %{error}"
-      badges:
-        data_from_api: "Récupéré automatiquement"
-        declared_on_honor: "Déclaré sur l'honneur"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       attestation_motifs_exclusion:
         header_title: "Les motifs d'exclusion"

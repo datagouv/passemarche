@@ -6,7 +6,7 @@
 
   <label class="fr-label">
     <%= component.field_label %>
-    <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+    <%= render component.source_badge_component %>
   </label>
   <p class="fr-text--sm fr-text--mention-grey fr-mb-2w">
     <%= component.auto_filled_message %>
@@ -15,7 +15,7 @@
   <div class="<%= component.input_group_css_class %>">
     <%= component.form.label :text, class: "fr-label" do %>
       <%= component.field_label %>
-      <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+      <%= render component.source_badge_component %>
     <% end %>
 
     <% if component.field_description.present? %>

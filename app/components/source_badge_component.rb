@@ -1,45 +1,39 @@
 # frozen_string_literal: true
 
 class SourceBadgeComponent < ViewComponent::Base
-  attr_reader :market_attribute_response
-
-  def initialize(market_attribute_response: nil, source: nil, context: :candidate)
+  def initialize(market_attribute_response: nil, source: nil, context: nil)
     @market_attribute_response = market_attribute_response
     @explicit_source = source
     @context = context
   end
 
   def render?
-    effective_source.present?
+    return false if effective_source.blank?
+    return true if auto?
+
+    manual? && @context == :buyer
   end
 
   def badge_text
-    scope = badge_i18n_scope
-    case effective_source
-    when :auto
-      I18n.t("#{scope}.data_from_api")
-    when :manual_after_api_failure
-      I18n.t("#{scope}.declared_on_honor")
-    end
+    return I18n.t('shared.source_badge.data_from_api') if auto?
+
+    I18n.t('shared.source_badge.declared_by_candidate') if manual?
   end
 
   def badge_css_class
-    case effective_source
-    when :auto
-      'fr-badge fr-badge--success fr-badge--sm'
-    when :manual_after_api_failure
-      'fr-badge fr-badge--info fr-badge--sm'
-    end
+    return 'fr-badge fr-badge--success fr-badge--sm' if auto?
+
+    'fr-badge fr-badge--info fr-badge--sm' if manual?
   end
 
   private
 
-  def badge_i18n_scope
-    if @context == :buyer
-      'buyer.attestations.badges'
-    else
-      'candidate.market_applications.badges'
-    end
+  def auto?
+    effective_source == :auto
+  end
+
+  def manual?
+    %i[manual manual_after_api_failure].include?(effective_source)
   end
 
   def effective_source
@@ -47,11 +41,9 @@ class SourceBadgeComponent < ViewComponent::Base
   end
 
   def infer_source_from_response
-    return nil unless @market_attribute_response
-
+    return unless @market_attribute_response
     return :auto if @market_attribute_response.auto?
-    return :manual_after_api_failure if @market_attribute_response.manual_after_api_failure?
 
-    nil
+    :manual if @market_attribute_response.manual? || @market_attribute_response.manual_after_api_failure?
   end
 end
