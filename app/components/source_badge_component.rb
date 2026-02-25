@@ -10,9 +10,8 @@ class SourceBadgeComponent < ViewComponent::Base
   def render?
     return false if effective_source.blank?
     return true if auto?
-    return @context == :buyer if manual?
 
-    false
+    manual? && @context == :buyer
   end
 
   def badge_text
