@@ -4,7 +4,6 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
   wrap_parameters false
   before_action :require_admin_role!, only: [:reorder]
   before_action :load_form_data, only: %i[new create edit update]
-  before_action :load_form_extras, only: %i[new create edit update]
 
   def index
     @market_attributes = MarketAttributeQueryService.call(filters: filter_params)
@@ -35,7 +34,7 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     if service.success?
       redirect_to admin_socle_de_base_index_path, notice: t('.success')
     else
-      prepare_creation_failure(service)
+      assign_creation_failure_state(service)
       render :new, status: :unprocessable_content
     end
   end
@@ -51,9 +50,7 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     if service.success?
       redirect_to admin_socle_de_base_path(@market_attribute), notice: t('.success')
     else
-      @market_attribute.configuration_mode = market_attribute_params[:configuration_mode]
-      @presenter = SocleDeBasePresenter.new(@market_attribute)
-      @errors = service.errors
+      assign_update_failure_state(service)
       render :edit, status: :unprocessable_content
     end
   end
@@ -92,10 +89,20 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
 
   private
 
-  def prepare_creation_failure(service)
+  def assign_creation_failure_state(service)
     @market_attribute = service.result || MarketAttribute.new
-    @submitted_market_type_ids = creation_params[:market_type_ids]&.reject(&:blank?)&.map(&:to_i) || []
+    @submitted_market_type_ids = sanitized_market_type_ids(creation_params)
     @errors = service.errors
+  end
+
+  def assign_update_failure_state(service)
+    @market_attribute.configuration_mode = market_attribute_params[:configuration_mode]
+    @presenter = SocleDeBasePresenter.new(@market_attribute)
+    @errors = service.errors
+  end
+
+  def sanitized_market_type_ids(permitted_params)
+    permitted_params[:market_type_ids]&.compact_blank&.map(&:to_i) || []
   end
 
   def load_market_attribute
@@ -107,9 +114,6 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     @subcategories = Subcategory.active.ordered.includes(:category)
     @market_types = MarketType.active
     @input_types = MarketAttribute.input_types.keys
-  end
-
-  def load_form_extras
     @subcategories_json = build_subcategories_json
     @api_keys_by_name = build_api_keys_by_name
     @input_type_hints = @input_types.index_with do |t|
