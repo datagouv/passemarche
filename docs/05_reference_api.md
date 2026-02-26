@@ -31,7 +31,7 @@ Tous les endpoints API (sauf OAuth) requièrent un token d'accès valide dans l'
 Authorization: Bearer {access_token}
 ```
 
-Consultez la [Documentation OAuth](AUTHENTIFICATION_OAUTH.md) pour l'obtention du token.
+Consultez la [Documentation OAuth](https://github.com/datagouv/passemarche/blob/main/docs/AUTHENTIFICATION_OAUTH.md) pour l'obtention du token.
 
 ### Format des Réponses
 

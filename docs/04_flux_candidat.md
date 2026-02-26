@@ -43,7 +43,7 @@ Les exemples de ce document utilisent `${BASE_URL}` comme placeholder. Consultez
 
 **Token OAuth requis** : Token d'accès valide obtenu via le flux Client Credentials.
 
-Consultez la [Documentation OAuth](AUTHENTIFICATION_OAUTH.md) pour l'implémentation.
+Consultez la [Documentation OAuth](https://github.com/datagouv/passemarche/blob/main/docs/AUTHENTIFICATION_OAUTH.md) pour l'implémentation.
 
 ### 2. Création de la Candidature
 
@@ -180,29 +180,17 @@ Chaque catégorie configurée par l'acheteur génère une étape :
   * Vérification de cohérence
   * Confirmation de soumission
 
-### 4. Sécurité des fichiers déposés
-
-Tous les fichiers déposés par les candidats sont automatiquement analysés par un antivirus avant d'être inclus dans le dossier de candidature.
-
-* **Moteur** : ClamAV (open-source, maintenu par Cisco Talos, standard de référence pour le scan serveur)
-* **Scan automatique** : chaque fichier est analysé en arrière-plan dès son upload
-* **Statuts visibles** : un badge indique l'état du scan (vérifié, en cours, non vérifié, malware détecté)
-* **Blocage des menaces** : un fichier identifié comme malveillant est bloqué et ne sera pas inclus dans le dossier final
-
-Ce mécanisme garantit que les documents transmis aux acheteurs publics sont exempts de virus et de malware.
-
-### 5. Processus de Complétion
+### 4. Processus de Complétion
 
 #### Validation et Génération
 
 Lors de la soumission finale :
 
 1. **Validation des Données** : Vérification de la cohérence et complétude
-2. **Vérification de sécurité** : Contrôle que tous les fichiers ont été scannés et sont sains
-3. **Marquage Complété** : Passage en statut `completed`
-4. **Génération de l'Attestation** : PDF officiel avec horodatage
-5. **Création du Dossier** : Archive ZIP avec tous les éléments
-6. **Déclenchement Webhook** : Notification vers l'éditeur
+2. **Marquage Complété** : Passage en statut `completed`
+3. **Génération de l'Attestation** : PDF officiel avec horodatage
+4. **Création du Dossier** : Archive ZIP avec tous les éléments
+5. **Déclenchement Webhook** : Notification vers l'éditeur
 
 #### Types de Documents Générés
 
@@ -230,7 +218,7 @@ Lors de la soumission finale :
 * Nom de fichiers structuré : `{index_réponse}_{index_document}_{clé_champ}_{nom_original}`
 * Exemple : `01_01_kbis_Kbis_Entreprise.pdf`
 
-### 6. Statuts de la Candidature
+### 5. Statuts de la Candidature
 
 | Statut            | Description          | Actions Disponibles          |
 | ----------------- | -------------------- | ---------------------------- |
@@ -241,7 +229,7 @@ Lors de la soumission finale :
 | `sync_completed`  | Notification réussie | -                            |
 | `sync_failed`     | Échec notification   | Retry disponible             |
 
-### 7. Webhook de Complétion
+### 6. Webhook de Complétion
 
 #### Déclenchement Automatique
 
@@ -276,7 +264,7 @@ Le webhook est envoyé automatiquement lors de la finalisation de la candidature
 | `market_application.attestation_url`       | URL de téléchargement de l'attestation            |
 | `market_application.documents_package_url` | URL de téléchargement du dossier                  |
 
-### 8. Téléchargement des Documents
+### 7. Téléchargement des Documents
 
 Une fois la candidature finalisée, l'éditeur peut télécharger les documents générés.
 
