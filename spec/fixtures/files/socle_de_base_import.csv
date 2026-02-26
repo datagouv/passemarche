@@ -1,0 +1,3 @@
+Clé;Catégorie (clé);Sous-catégorie (clé);Catégorie acheteur;Sous-catégorie acheteur;Nom acheteur;Description acheteur;Catégorie candidat;Sous-catégorie candidat;Nom candidat;Description candidat;Obligatoire;Source (api_name);Clé API;Type de saisie;Position;Types de marché
+test_siret;identite_entreprise;identite_identification;Identité entreprise;Identification;Numéro SIRET;Le numéro SIRET de l'entreprise;Identity;Identification;Your SIRET;Your company SIRET number;Oui;Insee;siret;text_input;0;works, services
+test_attestation;motifs_exclusion;motifs_fiscales;Motifs d'exclusion;Fiscales et sociales;Attestation fiscale;Attestation de régularité fiscale;Exclusion grounds;Tax and social;Tax certificate;Your tax regularity certificate;Non;;;file_upload;1;works
