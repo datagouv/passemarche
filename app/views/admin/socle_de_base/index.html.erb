@@ -1,6 +1,6 @@
 <%= content_for :page_title, t('admin.socle_de_base.title') %>
 
-<div class="fr-container fr-my-4w">
+<div class="fr-container fr-my-4w" data-controller="dialog-trigger">
   <%= render 'admin/shared/navigation' %>
 
   <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle fr-mt-4w fr-mb-3w">
@@ -21,7 +21,8 @@
              id="dropdown-socle-de-base-actions">
           <ul class="fr-dropdown__list">
             <li>
-              <button class="fr-dropdown__link" aria-controls="import-modal" data-fr-opened="false"
+              <button class="fr-dropdown__link"
+                      data-action="dialog-trigger#open"
                       <%= 'disabled' unless current_user_can_modify? %>>
                 <%= t('admin.socle_de_base.actions.import') %>
               </button>
@@ -58,6 +59,6 @@
   <%= render 'filters' %>
 
   <%= render 'attributes_table' %>
-</div>
 
-<%= render 'import_modal' %>
+  <%= render 'import_modal' %>
+</div>
