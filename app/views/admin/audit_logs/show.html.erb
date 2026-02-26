@@ -1,0 +1,53 @@
+<%= content_for :page_title, t('admin.audit_logs.show.title') %>
+
+<div class="fr-container fr-my-4w">
+  <%= render 'admin/shared/navigation' %>
+
+  <div class="fr-mt-4w fr-mb-3w">
+    <%= link_to t('admin.audit_logs.show.back'), admin_audit_logs_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line" %>
+  </div>
+
+  <h1 class="fr-h2 fr-mb-3w"><%= t('admin.audit_logs.show.title') %></h1>
+
+  <div class="fr-card fr-card--no-arrow fr-mb-3w">
+    <div class="fr-card__body">
+      <div class="fr-card__content">
+        <dl class="fr-grid-row fr-grid-row--gutters">
+          <div class="fr-col-12 fr-col-md-4">
+            <dt class="fr-text--bold"><%= t('admin.audit_logs.show.trackable') %></dt>
+            <dd><%= @version.item_type %> #<%= @version.item_id %></dd>
+          </div>
+          <div class="fr-col-12 fr-col-md-4">
+            <dt class="fr-text--bold"><%= t('admin.audit_logs.show.event') %></dt>
+            <dd><%= version_event_badge(@version.event) %></dd>
+          </div>
+          <div class="fr-col-12 fr-col-md-4">
+            <dt class="fr-text--bold"><%= t('admin.audit_logs.show.performed_by') %></dt>
+            <dd><%= version_admin_user(@version) %></dd>
+          </div>
+          <div class="fr-col-12 fr-col-md-4">
+            <dt class="fr-text--bold"><%= t('admin.audit_logs.show.performed_at') %></dt>
+            <dd><%= format_paris_time(@version.created_at) %></dd>
+          </div>
+          <% if @version.item %>
+            <div class="fr-col-12 fr-col-md-4">
+              <dt class="fr-text--bold"><%= t('admin.audit_logs.show.field') %></dt>
+              <dd><%= @version.item.key %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <% changes = version_changes(@version) %>
+  <% if changes.present? %>
+    <h2 class="fr-h4"><%= t('admin.audit_logs.show.changed_attributes') %></h2>
+
+    <% if @version.event == 'create' %>
+      <%= render 'creation_details', changes: changes %>
+    <% else %>
+      <%= render 'modification_details', changes: changes %>
+    <% end %>
+  <% end %>
+</div>
