@@ -13,7 +13,7 @@
 <div class="fr-grid-row">
   <div class="fr-col-12">
     <div class="fr-mb-4w">
-      <h3 class="fr-h5 fr-mb-2w"><%= t("buyer.public_markets.generic_step.steps.#{step}.title") %></h3>
+      <h3 class="fr-h5 fr-mb-2w"><%= category_label(@current_category, role: :buyer) %></h3>
       <% if (subtitle = t("buyer.public_markets.generic_step.steps.#{step}.subtitle", default: nil)) %>
         <p class="fr-text--lg fr-mb-3w"><%= subtitle %></p>
       <% end %>
