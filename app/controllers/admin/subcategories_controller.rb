@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::SubcategoriesController < Admin::ApplicationController
+  before_action :require_admin_role!, only: %i[edit update reorder]
+
   def edit
     @subcategory = Subcategory.find(params[:id])
     @categories = Category.active.ordered

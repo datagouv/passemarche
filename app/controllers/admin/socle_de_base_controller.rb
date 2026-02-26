@@ -2,7 +2,7 @@
 
 class Admin::SocleDeBaseController < Admin::ApplicationController
   wrap_parameters false
-  before_action :require_admin_role!, only: [:reorder]
+  before_action :require_admin_role!, only: %i[new create edit update reorder archive import]
   before_action :load_form_data, only: %i[new create edit update]
 
   def index

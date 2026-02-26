@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::CategoriesController < Admin::ApplicationController
+  before_action :require_admin_role!, only: %i[edit update reorder]
+
   def index
     @categories = Category.active.ordered
     @subcategories = Subcategory.active.ordered.includes(:category)

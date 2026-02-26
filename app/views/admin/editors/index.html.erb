@@ -5,11 +5,9 @@
 
       <h1><%= t('admin.editors.index.title') %></h1>
 
-      <% if current_user_can_modify? %>
-        <div class="fr-mb-3w">
-          <%= link_to t('admin.editors.index.add'), new_admin_editor_path, class: "fr-btn" %>
-        </div>
-      <% end %>
+      <div class="fr-mb-3w">
+        <%= admin_action_link_to t('admin.editors.index.add'), new_admin_editor_path, class: "fr-btn" %>
+      </div>
 
       <div class="fr-table">
         <table>
@@ -43,12 +41,11 @@
                 </td>
                 <td>
                   <%= link_to t('admin.shared.view'), admin_editor_path(editor), class: "fr-btn fr-btn--sm" %>
-                  <% if current_user_can_modify? %>
-                    <%= link_to t('admin.shared.edit'), edit_admin_editor_path(editor), class: "fr-btn fr-btn--sm fr-btn--secondary" %>
-                    <%= link_to t('admin.shared.delete'), admin_editor_path(editor), method: :delete,
-                                data: { confirm: t('admin.editors.index.confirm_delete') },
-                                class: "fr-btn fr-btn--sm fr-btn--tertiary" %>
-                  <% end %>
+                  <%= admin_action_link_to t('admin.shared.edit'), edit_admin_editor_path(editor), class: "fr-btn fr-btn--sm fr-btn--secondary" %>
+                  <%= admin_action_link_to t('admin.shared.delete'), admin_editor_path(editor),
+                              method: :delete,
+                              data: { confirm: t('admin.editors.index.confirm_delete') },
+                              class: "fr-btn fr-btn--sm fr-btn--tertiary" %>
                 </td>
               </tr>
             <% end %>

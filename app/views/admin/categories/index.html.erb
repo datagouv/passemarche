@@ -19,7 +19,8 @@
                 data-dropdown-target="button"
                 data-action="click->dropdown#toggle"
                 aria-expanded="false"
-                aria-controls="dropdown-categories-create">
+                aria-controls="dropdown-categories-create"
+                <%= 'disabled' unless current_user_can_modify? %>>
           <%= t('admin.categories.actions.create') %>
         </button>
         <div class="fr-collapse fr-dropdown__menu"

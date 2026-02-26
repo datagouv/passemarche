@@ -21,7 +21,8 @@
              id="dropdown-socle-de-base-actions">
           <ul class="fr-dropdown__list">
             <li>
-              <button class="fr-dropdown__link" aria-controls="import-modal" data-fr-opened="false">
+              <button class="fr-dropdown__link" aria-controls="import-modal" data-fr-opened="false"
+                      <%= 'disabled' unless current_user_can_modify? %>>
                 <%= t('admin.socle_de_base.actions.import') %>
               </button>
             </li>
@@ -31,9 +32,9 @@
               <% end %>
             </li>
             <li>
-              <%= link_to new_admin_socle_de_base_path, class: "fr-dropdown__link" do %>
-                <%= t('admin.socle_de_base.actions.new_field') %>
-              <% end %>
+              <%= admin_action_link_to t('admin.socle_de_base.actions.new_field'),
+                                       new_admin_socle_de_base_path,
+                                       class: "fr-dropdown__link" %>
             </li>
             <li>
               <%= link_to '#', class: "fr-dropdown__link" do %>

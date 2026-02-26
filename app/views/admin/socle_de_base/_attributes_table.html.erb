@@ -17,13 +17,17 @@
         <th scope="col"><%= t('admin.socle_de_base.table.headers.actions') %></th>
       </tr>
     </thead>
-    <tbody data-controller="drag-reorder"
-           data-drag-reorder-url-value="<%= reorder_admin_socle_de_base_index_path %>">
+    <tbody <% if current_user_can_modify? %>
+             data-controller="drag-reorder"
+             data-drag-reorder-url-value="<%= reorder_admin_socle_de_base_index_path %>"
+           <% end %>>
       <% @market_attributes.each do |market_attribute| %>
         <% presenter = SocleDeBasePresenter.new(market_attribute) %>
         <tr data-item-id="<%= market_attribute.id %>">
-          <td data-drag-handle style="cursor: grab;">
-            <%= render 'admin/socle_de_base/drag_handle_icon' %>
+          <td <% if current_user_can_modify? %>data-drag-handle style="cursor: grab;"<% end %>>
+            <% if current_user_can_modify? %>
+              <%= render 'admin/socle_de_base/drag_handle_icon' %>
+            <% end %>
           </td>
           <td><%= presenter.category_label %></td>
           <td><%= presenter.subcategory_label %></td>
@@ -42,12 +46,14 @@
             </span>
           </td>
           <td style="white-space: nowrap">
-            <%= link_to t('admin.socle_de_base.edit_button'), admin_socle_de_base_path(market_attribute),
-                        class: "fr-btn fr-btn--secondary fr-btn--sm fr-mr-1w" %>
+            <%= admin_action_link_to t('admin.socle_de_base.edit_button'),
+                                     admin_socle_de_base_path(market_attribute),
+                                     class: "fr-btn fr-btn--secondary fr-btn--sm fr-mr-1w" %>
             <%= button_to t('admin.socle_de_base.archive_button'),
                           archive_admin_socle_de_base_path(market_attribute),
                           method: :patch,
                           class: "fr-btn fr-btn--tertiary fr-btn--sm",
+                          disabled: !current_user_can_modify?,
                           form: { data: { turbo_confirm: t('admin.socle_de_base.archive.confirm') } } %>
           </td>
         </tr>

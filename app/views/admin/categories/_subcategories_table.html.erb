@@ -8,20 +8,24 @@
         <th scope="col"><%= t('admin.categories.subcategories_table.headers.actions') %></th>
       </tr>
     </thead>
-    <tbody data-controller="drag-reorder"
-           data-drag-reorder-url-value="<%= reorder_admin_subcategories_path %>">
+    <tbody <% if current_user_can_modify? %>
+             data-controller="drag-reorder"
+             data-drag-reorder-url-value="<%= reorder_admin_subcategories_path %>"
+           <% end %>>
       <% @subcategories.each do |subcategory| %>
         <tr data-item-id="<%= subcategory.id %>">
-          <td data-drag-handle>
-            <%= render 'admin/socle_de_base/drag_handle_icon' %>
+          <td <% if current_user_can_modify? %>data-drag-handle<% end %>>
+            <% if current_user_can_modify? %>
+              <%= render 'admin/socle_de_base/drag_handle_icon' %>
+            <% end %>
           </td>
           <td><%= subcategory.buyer_label %></td>
           <td><%= subcategory.candidate_label %></td>
           <td>
-            <%= link_to t('admin.categories.actions.edit'),
-                        edit_admin_subcategory_path(subcategory),
-                        data: { turbo_frame: "modal" },
-                        class: "fr-btn fr-btn--secondary fr-btn--sm" %>
+            <%= admin_action_link_to t('admin.categories.actions.edit'),
+                                     edit_admin_subcategory_path(subcategory),
+                                     class: "fr-btn fr-btn--secondary fr-btn--sm",
+                                     data: { turbo_frame: "modal" } %>
           </td>
         </tr>
       <% end %>
