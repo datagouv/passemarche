@@ -27,7 +27,8 @@
               </button>
             </li>
             <li>
-              <%= link_to '#', class: "fr-dropdown__link" do %>
+              <%= link_to export_admin_socle_de_base_index_path(request.query_parameters),
+                          class: "fr-dropdown__link" do %>
                 <%= t('admin.socle_de_base.actions.export') %>
               <% end %>
             </li>

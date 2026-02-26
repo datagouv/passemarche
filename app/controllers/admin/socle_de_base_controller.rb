@@ -87,6 +87,16 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     end
   end
 
+  def export
+    attributes = MarketAttributeQueryService.call(filters: filter_params)
+    service = ExportSocleDeBaseCsvService.new(market_attributes: attributes)
+    service.perform
+
+    send_data service.result[:csv_data],
+      filename: service.result[:filename],
+      type: 'text/csv; charset=utf-8'
+  end
+
   private
 
   def assign_creation_failure_state(service)

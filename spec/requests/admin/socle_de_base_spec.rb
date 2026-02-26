@@ -371,6 +371,70 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
+  describe 'GET /admin/socle_de_base/export' do
+    let!(:works_type) { create(:market_type, :works) }
+    let!(:services_type) { create(:market_type, :services) }
+
+    let!(:identity_attribute) do
+      create(:market_attribute,
+        key: 'test_identity',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification',
+        api_name: 'Insee',
+        api_key: 'siret',
+        market_types: [works_type, services_type])
+    end
+
+    let!(:exclusion_attribute) do
+      create(:market_attribute,
+        key: 'test_exclusion',
+        category_key: 'motifs_exclusion',
+        subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
+        market_types: [works_type])
+    end
+
+    it 'returns a CSV file' do
+      get '/admin/socle_de_base/export'
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include('text/csv')
+    end
+
+    it 'includes correct headers in CSV' do
+      get '/admin/socle_de_base/export'
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      expect(csv.headers).to include('Clé', 'Catégorie (clé)', 'Catégorie acheteur', 'Obligatoire',
+        'Source (api_name)', 'Types de marché')
+    end
+
+    it 'includes all active attributes without filters' do
+      get '/admin/socle_de_base/export'
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      keys = csv.map { |row| row['Clé'] } # rubocop:disable Rails/Pluck
+      expect(keys).to include('test_identity', 'test_exclusion')
+    end
+
+    it 'filters by category' do
+      get '/admin/socle_de_base/export', params: { category: 'identite_entreprise' }
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      keys = csv.map { |row| row['Clé'] } # rubocop:disable Rails/Pluck
+      expect(keys).to include('test_identity')
+      expect(keys).not_to include('test_exclusion')
+    end
+
+    it 'filters by source' do
+      get '/admin/socle_de_base/export', params: { source: 'api' }
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      keys = csv.map { |row| row['Clé'] } # rubocop:disable Rails/Pluck
+      expect(keys).to include('test_identity')
+      expect(keys).not_to include('test_exclusion')
+    end
+
+    it 'sets Content-Disposition with correct filename' do
+      get '/admin/socle_de_base/export'
+      expect(response.headers['Content-Disposition']).to include("socle-de-base-#{Date.current}.csv")
+    end
+  end
+
   context 'without authentication' do
     before do
       sign_out admin_user
@@ -410,6 +474,13 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
         patch "/admin/socle_de_base/#{attribute.id}/archive"
         expect(response).to have_http_status(:redirect)
         expect(attribute.reload.deleted_at).to be_nil
+      end
+    end
+
+    describe 'GET /admin/socle_de_base/export' do
+      it 'redirects to login' do
+        get '/admin/socle_de_base/export'
+        expect(response).to have_http_status(:redirect)
       end
     end
   end
