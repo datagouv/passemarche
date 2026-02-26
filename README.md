@@ -214,11 +214,6 @@ bin/rails field_configuration:import_from_file[/chemin/vers/fichier.csv]
 # Validation de la structure CSV sans import
 bin/rails field_configuration:validate[/chemin/vers/fichier.csv]
 
-# Import des traductions des champs depuis CSV
-bin/rails field_translations:import
-
-# Import des traductions depuis un fichier CSV personnalisé
-bin/rails field_translations:import_from_file[/chemin/vers/fichier.csv]
 ```
 
 #### Configuration des champs (`field_configuration`)
@@ -231,16 +226,6 @@ Ces tâches permettent de configurer les champs de formulaire à partir d'un fic
   * Affiche des statistiques détaillées de l'import
 * **`field_configuration:import_from_file`** : Même fonctionnalité mais avec un fichier CSV personnalisé
 * **`field_configuration:validate`** : Valide la structure et le contenu du fichier CSV sans effectuer d'import
-
-#### Traductions des champs (`field_translations`)
-
-Ces tâches permettent d'extraire et de mettre à jour les traductions françaises depuis le même fichier CSV :
-
-* **`field_translations:import`** : Extrait les traductions des colonnes CSV et met à jour `config/locales/form_fields.fr.yml`
-  * Extrait les titres et descriptions côté acheteur (`category_acheteur`, `titre_acheteur`, etc.)
-  * Met à jour les sections `categories`, `subcategories` et `fields` du fichier de traduction
-  * Compatible avec les vues existantes sans modification de code
-* **`field_translations:import_from_file`** : Même fonctionnalité mais avec un fichier CSV personnalisé
 
 #### Structure du fichier CSV attendu
 
@@ -448,25 +433,25 @@ Le rapport est généré dans le dossier `coverage/` à la racine du projet. Il 
 
 ### 🚀 Pour les Équipes Techniques
 
-* [**📖 Guide de Démarrage**](https://github.com/datagouv/passemarche/blob/main/docs/GUIDE_DE_DEMARRAGE.md) - Navigation et glossaire de toute la documentation
-* [**🏃‍♂️ Démarrage Rapide**](https://github.com/datagouv/passemarche/blob/main/docs/DEMARRAGE_RAPIDE.md) - Intégration complète en 30 minutes
+* [**📖 Guide de Démarrage**](docs/00_guide_de_demarrage.md) - Navigation et glossaire de toute la documentation
+* [**🏃‍♂️ Démarrage Rapide**](docs/01_demarrage_rapide.md) - Intégration complète en 30 minutes
 
 ### 📋 Documentation Technique Détaillée
 
 #### Authentification et Sécurité
 
-* [**🔐 Authentification OAuth2**](https://github.com/datagouv/passemarche/blob/main/docs/AUTHENTIFICATION_OAUTH.md) - Flux Client Credentials, gestion tokens, sécurité
-* [**🔔 Webhooks**](https://github.com/datagouv/passemarche/blob/main/docs/WEBHOOKS.md) - Notifications temps réel, signatures HMAC, retry intelligent
+* [**🔐 Authentification OAuth2**](docs/02_authentification_oauth.md) - Flux Client Credentials, gestion tokens, sécurité
+* [**🔔 Webhooks**](docs/07_webhooks.md) - Notifications temps réel, signatures HMAC, retry intelligent
 
 #### Flux Métier
 
-* [**🏢 Flux Acheteur**](https://github.com/datagouv/passemarche/blob/main/docs/FLUX_ACHETEUR.md) - Création et configuration des marchés publics
-* [**👥 Flux Candidat**](https://github.com/datagouv/passemarche/blob/main/docs/FLUX_CANDIDAT.md) - Soumission et finalisation des candidatures
+* [**🏢 Flux Acheteur**](docs/03_flux_acheteur.md) - Création et configuration des marchés publics
+* [**👥 Flux Candidat**](docs/04_flux_candidat.md) - Soumission et finalisation des candidatures
 
 #### Références Techniques
 
-* [**⚙️ Référence API**](https://github.com/datagouv/passemarche/blob/main/docs/REFERENCE_API.md) - Spécifications complètes des endpoints
-* [**🏗️ Schémas d'Intégration**](https://github.com/datagouv/passemarche/blob/main/docs/SCHEMAS_INTEGRATION.md) - Architecture et diagrammes techniques
+* [**⚙️ Référence API**](docs/05_reference_api.md) - Spécifications complètes des endpoints
+* [**🏗️ Schémas d'Intégration**](docs/06_schemas_integration.md) - Architecture et diagrammes techniques
 
 ### 💡 Application de Démonstration
 
