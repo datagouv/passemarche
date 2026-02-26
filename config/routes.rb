@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         patch :reorder
       end
     end
+    resources :audit_logs, only: %i[index show], path: 'historique'
     mount MissionControl::Jobs::Engine, at: '/jobs'
     root 'editors#index'
   end

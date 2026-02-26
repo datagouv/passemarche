@@ -961,6 +961,58 @@ fr:
         close: "Fermer"
       update:
         success: "Sous-catégorie modifiée avec succès"
+    audit_logs:
+      title: "Historique des modifications"
+      filters:
+        search_placeholder: "Rechercher par catégorie ou contenu..."
+        date_from: "Date de début"
+        date_to: "Date de fin"
+        user: "Utilisateur"
+        all_users: "Tous les utilisateurs"
+        submit: "Filtrer"
+      table:
+        category: "Catégorie"
+        scope: "Périmètre"
+        action_type: "Type de modification"
+        user: "Utilisateur"
+        date: "Date"
+        detail: "Voir le détail"
+      events:
+        create: "Création"
+        update: "Modification"
+        destroy: "Suppression"
+      scopes:
+        buyer: "Acheteur"
+        candidate: "Candidat"
+        both: "Acheteur / Candidat"
+      show:
+        title: "Détail de la modification"
+        back: "Retour à l'historique"
+        field: "Champ"
+        before: "Avant"
+        after: "Après"
+        trackable: "Élément concerné"
+        performed_by: "Effectué par"
+        performed_at: "Le"
+        buyer_content: "Contenu acheteur"
+        candidate_content: "Contenu candidat"
+        event: "Action"
+        changed_attributes: "Attributs modifiés"
+        value: "Valeur"
+      empty: "Aucune modification enregistrée"
+      attribute_labels:
+        buyer_name: "Titre acheteur"
+        buyer_description: "Description acheteur"
+        candidate_name: "Titre candidat"
+        candidate_description: "Description candidat"
+        mandatory: "Obligatoire"
+        input_type: "Type de champ"
+        api_name: "Nom API"
+        api_key: "Clé API"
+        category_key: "Catégorie"
+        subcategory_key: "Sous-catégorie"
+        deleted_at: "Archivé"
+        key: "Clé technique"
 
   activerecord:
     attributes:

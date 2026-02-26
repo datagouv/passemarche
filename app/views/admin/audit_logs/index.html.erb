@@ -1,0 +1,48 @@
+<%= content_for :page_title, t('admin.audit_logs.title') %>
+
+<div class="fr-container fr-my-4w">
+  <%= render 'admin/shared/navigation' %>
+
+  <h1 class="fr-h2 fr-mt-4w fr-mb-3w"><%= t('admin.audit_logs.title') %></h1>
+
+  <%= render 'filters' %>
+
+  <% if @versions.any? %>
+    <div class="fr-table fr-table--bordered">
+      <table>
+        <thead>
+          <tr>
+            <th><%= t('admin.audit_logs.table.category') %></th>
+            <th><%= t('admin.audit_logs.table.scope') %></th>
+            <th><%= t('admin.audit_logs.table.action_type') %></th>
+            <th><%= t('admin.audit_logs.table.user') %></th>
+            <th><%= t('admin.audit_logs.table.date') %></th>
+            <th><%= t('admin.shared.actions') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @versions.each do |version| %>
+            <tr>
+              <td><%= version_category_label(version) %></td>
+              <td><%= version_scope_badge(version) %></td>
+              <td><%= version_event_badge(version.event) %></td>
+              <td><%= version_admin_user(version) %></td>
+              <td><%= format_paris_time(version.created_at, '%d/%m/%Y %H:%M') %></td>
+              <td>
+                <%= link_to t('admin.audit_logs.table.detail'),
+                            admin_audit_log_path(version),
+                            class: "fr-link fr-link--sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%== pagy_nav(@pagy) %>
+  <% else %>
+    <div class="fr-callout">
+      <p class="fr-callout__text"><%= t('admin.audit_logs.empty') %></p>
+    </div>
+  <% end %>
+</div>
