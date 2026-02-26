@@ -28,6 +28,8 @@ gem 'stimulus-rails'
 gem 'thruster', require: false
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
+gem 'pagy', '~> 9.0'
+gem 'paper_trail', '~> 17.0'
 gem 'view_component'
 gem 'wicked'
 gem 'wicked_pdf'

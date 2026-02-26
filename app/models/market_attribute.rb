@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class MarketAttribute < ApplicationRecord
+  has_paper_trail on: %i[create update],
+    ignore: %i[position updated_at created_at]
+
   include UniqueAssociationValidator
 
   attr_accessor :configuration_mode
