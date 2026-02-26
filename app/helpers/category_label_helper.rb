@@ -2,22 +2,22 @@
 
 module CategoryLabelHelper
   def category_label(key, role:)
-    record_label(Category, key, role, :categories)
+    record_label(Category, key, role)
   end
 
   def subcategory_label(key, role:)
-    record_label(Subcategory, key, role, :subcategories)
+    record_label(Subcategory, key, role)
   end
 
   private
 
-  def record_label(model_class, key, role, i18n_scope)
+  def record_label(model_class, key, role)
     return key.to_s.humanize if key.blank?
 
     record = active_records_cache(model_class)[key.to_s]
     label = record&.public_send(:"#{role}_label")
 
-    label.presence || I18n.t("form_fields.#{role}.#{i18n_scope}.#{key}", default: key.to_s.humanize)
+    label.presence || key.to_s.humanize
   end
 
   def active_records_cache(model_class)

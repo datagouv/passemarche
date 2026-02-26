@@ -27,6 +27,12 @@ class CsvRowData
   attribute :category_candidat, :string
   attribute :subcategory_candidat, :string
 
+  # Field translation labels from CSV
+  attribute :titre_acheteur, :string
+  attribute :description_acheteur, :string
+  attribute :titre_candidat, :string
+  attribute :description_candidat, :string
+
   # API-related attributes (using exact CSV column names)
   attribute :API, :string
   attribute :"Informations récupérées par l'API", :string
@@ -124,7 +130,7 @@ class CsvRowData
       position:,
       deleted_at: nil,
       mandatory: oui_to_boolean(obligatoire)
-    }
+    }.merge(translation_params)
   end
 
   def validation_summary
@@ -139,6 +145,15 @@ class CsvRowData
   end
 
   private
+
+  def translation_params
+    {
+      buyer_name: titre_acheteur&.strip.presence,
+      buyer_description: description_acheteur&.strip.presence,
+      candidate_name: titre_candidat&.strip.presence,
+      candidate_description: description_candidat&.strip.presence
+    }
+  end
 
   def extract_known_attributes(raw_data)
     known_keys = self.class.attribute_names

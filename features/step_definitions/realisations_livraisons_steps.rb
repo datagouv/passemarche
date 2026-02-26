@@ -14,6 +14,8 @@ Given('a public market with realisations_livraisons field exists') do
     attr.category_key = 'test_capacites_techniques_professionnelles'
     attr.subcategory_key = 'test_capacites_techniques_professionnelles_realisations'
     attr.mandatory = true
+    attr.candidate_name = 'Les principaux travaux effectués par votre entreprise au cours des dernières années (3 ou 5 ans)'
+    attr.candidate_description = 'Décrivez les principaux travaux effectués, en précisant leur date, leur montant et leurs destinataires.'
   end
   @realisations_attr.public_markets << @public_market unless @realisations_attr.public_markets.include?(@public_market)
 end

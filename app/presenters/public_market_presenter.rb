@@ -94,7 +94,7 @@ class PublicMarketPresenter
   end
 
   def source_types
-    I18n.t('form_fields.source_types')
+    I18n.t('source_types')
   end
 
   def field_by_key(key)
