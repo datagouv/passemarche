@@ -56,24 +56,30 @@
               <div class="fr-card__content">
                 <p><strong><%= t('admin.editors.show.client_id') %></strong> <%= @editor.client_id %></p>
                 <p><strong><%= t('admin.editors.show.client_secret') %></strong></p>
-                <div data-controller="webhook-secret-toggle">
-                  <div class="fr-input-group" style="max-width: 500px;">
-                    <input type="text"
-                           class="fr-input fr-text--sm"
-                           value="<%= '•' * 64 %>"
-                           readonly
-                           data-webhook-secret-toggle-target="field"
-                           data-webhook-secret-toggle-masked-value="<%= '•' * 64 %>"
-                           data-webhook-secret-toggle-real-value="<%= @editor.client_secret %>">
-                    <button type="button"
-                            class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
-                            data-action="click->webhook-secret-toggle#toggle"
-                            data-webhook-secret-toggle-target="button"
-                            title="<%= t('admin.shared.show_hide_secret') %>">
-                      <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
-                    </button>
+                <% if current_user_can_modify? %>
+                  <div data-controller="webhook-secret-toggle">
+                    <div class="fr-input-group" style="max-width: 500px;">
+                      <input type="text"
+                             class="fr-input fr-text--sm"
+                             value="<%= '•' * 64 %>"
+                             readonly
+                             data-webhook-secret-toggle-target="field"
+                             data-webhook-secret-toggle-masked-value="<%= '•' * 64 %>"
+                             data-webhook-secret-toggle-real-value="<%= @editor.client_secret %>">
+                      <button type="button"
+                              class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                              data-action="click->webhook-secret-toggle#toggle"
+                              data-webhook-secret-toggle-target="button"
+                              title="<%= t('admin.shared.show_hide_secret') %>">
+                        <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                <% else %>
+                  <div class="fr-input-group" style="max-width: 500px;">
+                    <input type="text" class="fr-input fr-text--sm" value="<%= '•' * 64 %>" readonly>
+                  </div>
+                <% end %>
               </div>
             </div>
           </div>
@@ -106,24 +112,33 @@
                   <p><strong><%= t('admin.editors.show.secret_configured') %></strong>
                     <% if @editor.webhook_secret.present? %>
                       <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
-                      <div class="fr-mt-2w" data-controller="webhook-secret-toggle">
-                        <div class="fr-input-group" style="max-width: 400px;">
-                          <input type="text"
-                                 class="fr-input fr-text--sm"
-                                 value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
-                                 readonly
-                                 data-webhook-secret-toggle-target="field"
-                                 data-webhook-secret-toggle-masked-value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
-                                 data-webhook-secret-toggle-real-value="<%= @editor.webhook_secret %>" />
-                          <button type="button"
-                                  class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-eye-line"
-                                  data-action="click->webhook-secret-toggle#toggle"
-                                  data-webhook-secret-toggle-target="button"
-                                  title="<%= t('admin.shared.show_secret') %>">
-                            <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
-                          </button>
+                      <% if current_user_can_modify? %>
+                        <div class="fr-mt-2w" data-controller="webhook-secret-toggle">
+                          <div class="fr-input-group" style="max-width: 400px;">
+                            <input type="text"
+                                   class="fr-input fr-text--sm"
+                                   value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                                   readonly
+                                   data-webhook-secret-toggle-target="field"
+                                   data-webhook-secret-toggle-masked-value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                                   data-webhook-secret-toggle-real-value="<%= @editor.webhook_secret %>" />
+                            <button type="button"
+                                    class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-eye-line"
+                                    data-action="click->webhook-secret-toggle#toggle"
+                                    data-webhook-secret-toggle-target="button"
+                                    title="<%= t('admin.shared.show_secret') %>">
+                              <span data-webhook-secret-toggle-target="icon" class="fr-icon-eye-line" aria-hidden="true"></span>
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      <% else %>
+                        <div class="fr-mt-2w">
+                          <div class="fr-input-group" style="max-width: 400px;">
+                            <input type="text" class="fr-input fr-text--sm"
+                                   value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••" readonly />
+                          </div>
+                        </div>
+                      <% end %>
                     <% else %>
                       <span class="fr-badge fr-badge--warning"><%= t('admin.shared.no') %></span>
                     <% end %>

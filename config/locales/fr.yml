@@ -652,6 +652,7 @@ fr:
       dashboard: "Tableau de bord"
       socle_de_base: "Socle de base"
       background_jobs: "Tâches en arrière-plan"
+      logout: "Déconnexion"
     dashboard:
       title: "Suivi d'activité"
       title_with_editor: "Suivi d'activité - %{editor_name}"
