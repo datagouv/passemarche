@@ -1,6 +1,6 @@
 # Démarrage Rapide - Intégration Passe Marché
 
-## Vue d'ensemble
+## Vue d'ensemble :&#x20;
 
 Ce guide vous permet de réaliser votre première intégration avec l'API Passe Marché en moins de 30 minutes. Il couvre les étapes essentielles depuis l'authentification jusqu'au test complet des flux acheteur et candidat.
 
