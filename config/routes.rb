@@ -29,7 +29,9 @@ Rails.application.routes.draw do
       end
     end
     resources :audit_logs, only: %i[index show], path: 'historique'
-    mount MissionControl::Jobs::Engine, at: '/jobs'
+    constraints(->(request) { request.env['warden'].user(:admin_user)&.admin? }) do
+      mount MissionControl::Jobs::Engine, at: '/jobs'
+    end
     root 'editors#index'
   end
   devise_for :admin_users, skip: %i[registrations passwords confirmations unlocks]
