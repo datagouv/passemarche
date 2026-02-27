@@ -38,7 +38,7 @@ Les exemples de ce document utilisent `${BASE_URL}` comme placeholder. Consultez
 
 **Prérequis** : Token d'accès valide obtenu via le flux OAuth2 Client Credentials.
 
-Consultez la [Documentation OAuth](https://github.com/datagouv/passemarche/blob/main/docs/AUTHENTIFICATION_OAUTH.md) pour les détails d'implémentation.
+Consultez la [Documentation OAuth](AUTHENTIFICATION_OAUTH.md) pour les détails d'implémentation.
 
 ### 2. Création du Marché Public
 
@@ -239,7 +239,7 @@ Le webhook est automatiquement déclenché lors de la finalisation du marché et
 
 Chaque webhook inclut une signature HMAC-SHA256 dans l'en-tête `X-Webhook-Signature-SHA256`.
 
-Consultez la [Documentation Webhooks](https://github.com/datagouv/passemarche/blob/main/docs/WEBHOOKS.md) pour les détails de vérification.
+Consultez la [Documentation Webhooks](WEBHOOKS.md) pour les détails de vérification.
 
 ## Gestion des Erreurs et Edge Cases
 

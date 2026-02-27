@@ -5,25 +5,24 @@ Cette application Sinatra démontre comment intégrer une plateforme d'éditeur 
 ## 🎯 Objectif
 
 Fournir un exemple concret d'intégration OAuth2 avec Passe Marché, incluant :
-
-* Authentification via Client Credentials flow
-* Stockage et gestion des tokens
-* Interface utilisateur pour visualiser les tokens
-* Mécanisme de rafraîchissement des tokens
+- Authentification via Client Credentials flow
+- Stockage et gestion des tokens
+- Interface utilisateur pour visualiser les tokens
+- Mécanisme de rafraîchissement des tokens
 
 ## 🛠 Technologies
 
-* **Sinatra** : Framework web léger
-* **SQLite** : Base de données locale pour le stockage des tokens
-* **Sequel** : ORM pour la gestion de la base de données
-* **HTTParty** : Client HTTP pour les appels API
-* **dotenv** : Gestion des variables d'environnement
+- **Sinatra** : Framework web léger
+- **SQLite** : Base de données locale pour le stockage des tokens
+- **Sequel** : ORM pour la gestion de la base de données
+- **HTTParty** : Client HTTP pour les appels API
+- **dotenv** : Gestion des variables d'environnement
 
 ## 📋 Prérequis
 
-* Ruby 3.4.5
-* Passe Marché en cours d'exécution sur http://localhost:3000
-* Éditeur demo configuré dans Passe Marché
+- Ruby 3.4.5
+- Passe Marché en cours d'exécution sur http://localhost:3000
+- Éditeur demo configuré dans Passe Marché
 
 ## 🚀 Installation
 
@@ -116,81 +115,71 @@ fake_editor_app/
 ## 🔧 Fonctionnalités
 
 ### Authentification OAuth2
-
-* Client Credentials flow
-* Gestion automatique des tokens
-* Stockage sécurisé en base SQLite
+- Client Credentials flow
+- Gestion automatique des tokens
+- Stockage sécurisé en base SQLite
 
 ### Création de marchés publics
-
-* Formulaire de création avec validation
-* Intégration avec l'API Passe Marché
-* Stockage local des marchés créés
+- Formulaire de création avec validation
+- Intégration avec l'API Passe Marché
+- Stockage local des marchés créés
 
 ### Réception de webhooks
-
-* Endpoint `/webhooks/voie-rapide` pour les notifications
-* Traitement automatique des événements de completion
-* Mise à jour du statut des marchés en temps réel
+- Endpoint `/webhooks/voie-rapide` pour les notifications
+- Traitement automatique des événements de completion
+- Mise à jour du statut des marchés en temps réel
 
 ### Interface utilisateur
-
-* Dashboard avec statut d'authentification
-* Affichage des détails du token
-* Liste des marchés publics avec leur statut
-* Boutons pour authentification/rafraîchissement
-* Countdown en temps réel pour l'expiration
+- Dashboard avec statut d'authentification
+- Affichage des détails du token
+- Liste des marchés publics avec leur statut
+- Boutons pour authentification/rafraîchissement
+- Countdown en temps réel pour l'expiration
 
 ### Stockage des données
-
-* Base de données SQLite locale
-* Modèle Token avec validation d'expiration
-* Modèle Market pour les marchés publics
-* Nettoyage automatique des anciens tokens
+- Base de données SQLite locale
+- Modèle Token avec validation d'expiration
+- Modèle Market pour les marchés publics
+- Nettoyage automatique des anciens tokens
 
 ## 🛡 Sécurité
 
-* Variables d'environnement pour les secrets
-* Tokens stockés localement uniquement
-* Validation d'expiration des tokens
-* Interface sécurisée sans exposition des secrets
+- Variables d'environnement pour les secrets
+- Tokens stockés localement uniquement
+- Validation d'expiration des tokens
+- Interface sécurisée sans exposition des secrets
 
 ## 🐛 Dépannage
 
 ### Erreur d'authentification
-
-* Vérifiez que Passe Marché est lancé
-* Vérifiez les variables d'environnement
-* Assurez-vous que l'éditeur demo est créé et autorisé
+- Vérifiez que Passe Marché est lancé
+- Vérifiez les variables d'environnement
+- Assurez-vous que l'éditeur demo est créé et autorisé
 
 ### Erreur de base de données
-
-* Le fichier SQLite sera créé automatiquement
-* Supprimez `fake_editor.db` pour réinitialiser
+- Le fichier SQLite sera créé automatiquement
+- Supprimez `fake_editor.db` pour réinitialiser
 
 ### Erreur de port
-
-* Changez le port dans `.env` si 4567 est occupé
-* Utilisez `bundle exec rackup -p AUTRE_PORT`
+- Changez le port dans `.env` si 4567 est occupé
+- Utilisez `bundle exec rackup -p AUTRE_PORT`
 
 ## 📚 Documentation
 
 Cette application sert d'exemple pour :
-
-* [Guide d'Intégration API](https://github.com/datagouv/passemarche/blob/main/docs/API_INTEGRATION.md)
-* Implémentation OAuth2 Client Credentials
-* Gestion des tokens et erreurs
-* Interface utilisateur pour l'authentification
+- [Guide d'Intégration API](../docs/API_INTEGRATION.md)
+- Implémentation OAuth2 Client Credentials
+- Gestion des tokens et erreurs
+- Interface utilisateur pour l'authentification
 
 ## 🤝 Contribution
 
 Cette application est un exemple de démonstration. Pour des améliorations :
-
 1. Créez une branche feature
 2. Testez vos modifications
 3. Assurez-vous que l'intégration fonctionne
 4. Créez une pull request
 
-***
+---
 
-_Application de démonstration pour l'intégration OAuth2 avec Passe Marché_
+*Application de démonstration pour l'intégration OAuth2 avec Passe Marché*
