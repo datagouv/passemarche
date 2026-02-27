@@ -87,6 +87,16 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     end
   end
 
+  def export
+    attributes = MarketAttributeQueryService.call(filters: filter_params)
+    service = ExportSocleDeBaseCsvService.new(market_attributes: attributes)
+    service.perform
+
+    send_data service.result[:csv_data],
+      filename: service.result[:filename],
+      type: 'text/csv; charset=utf-8'
+  end
+
   private
 
   def assign_creation_failure_state(service)
@@ -151,12 +161,12 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
   end
 
   def import_csv(csv_file)
-    result = FieldConfigurationImport.call(csv_file_path: csv_file.tempfile.path)
+    result = ImportSocleDeBaseCsvService.call(csv_file: csv_file.tempfile)
 
     if result.success?
       redirect_to admin_socle_de_base_index_path, notice: format_statistics(result.statistics)
     else
-      redirect_to admin_socle_de_base_index_path, alert: t('.error', message: result.message)
+      redirect_to admin_socle_de_base_index_path, alert: t('.error', message: result.errors.join(', '))
     end
   end
 

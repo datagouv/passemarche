@@ -1,36 +1,36 @@
-<div class="fr-modal" id="import-modal" aria-labelledby="import-modal-title">
-  <div class="fr-container fr-container--fluid fr-container-md">
-    <div class="fr-grid-row fr-grid-row--center">
-      <div class="fr-col-12 fr-col-md-8">
-        <div class="fr-modal__body">
-          <div class="fr-modal__header">
-            <button class="fr-link--close fr-link" aria-controls="import-modal">
-              <%= t('admin.socle_de_base.import.close') %>
-            </button>
-          </div>
-          <div class="fr-modal__content">
-            <h1 id="import-modal-title" class="fr-modal__title">
-              <span class="fr-icon-upload-line fr-mr-1w" aria-hidden="true"></span>
-              <%= t('admin.socle_de_base.import.title') %>
-            </h1>
-            <p><%= t('admin.socle_de_base.import.description') %></p>
-
-            <%= form_with url: import_admin_socle_de_base_index_path, method: :post, multipart: true do |f| %>
-              <div class="fr-upload-group fr-mb-3w">
-                <%= f.label 'socle_de_base[csv_file]', t('admin.socle_de_base.import.file_label'), class: 'fr-label' %>
-                <span class="fr-hint-text"><%= t('admin.socle_de_base.import.file_hint') %></span>
-                <%= f.file_field 'socle_de_base[csv_file]', class: 'fr-upload', accept: '.csv' %>
-              </div>
-              <div class="fr-btns-group fr-btns-group--inline fr-btns-group--right">
-                <button type="button" class="fr-btn fr-btn--secondary" aria-controls="import-modal">
-                  <%= t('admin.socle_de_base.import.cancel') %>
-                </button>
-                <%= f.submit t('admin.socle_de_base.import.submit'), class: 'fr-btn' %>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
+<dialog data-action="click->dialog-trigger#clickBackdrop"
+        class="fr-modal-dialog"
+        id="import-modal"
+        data-dialog-trigger-target="dialog">
+  <div class="fr-modal-dialog__content">
+    <div class="fr-modal-dialog__header">
+      <h1 class="fr-h5 fr-mb-0">
+        <span class="fr-icon-upload-line fr-mr-1w" aria-hidden="true"></span>
+        <%= t('admin.socle_de_base.import.title') %>
+      </h1>
+      <button type="button"
+              class="fr-link fr-link--close"
+              data-action="dialog-trigger#close">
+        <%= t('admin.socle_de_base.import.close') %>
+      </button>
     </div>
+
+    <p><%= t('admin.socle_de_base.import.description') %></p>
+
+    <%= form_with url: import_admin_socle_de_base_index_path, method: :post, multipart: true do |f| %>
+      <div class="fr-upload-group fr-mb-3w">
+        <%= f.label 'socle_de_base[csv_file]', t('admin.socle_de_base.import.file_label'), class: 'fr-label' %>
+        <span class="fr-hint-text"><%= t('admin.socle_de_base.import.file_hint') %></span>
+        <%= f.file_field 'socle_de_base[csv_file]', class: 'fr-upload', accept: '.csv' %>
+      </div>
+      <div class="fr-btns-group fr-btns-group--inline fr-btns-group--right">
+        <button type="button"
+                class="fr-btn fr-btn--secondary"
+                data-action="dialog-trigger#close">
+          <%= t('admin.socle_de_base.import.cancel') %>
+        </button>
+        <%= f.submit t('admin.socle_de_base.import.submit'), class: 'fr-btn' %>
+      </div>
+    <% end %>
   </div>
-</div>
+</dialog>

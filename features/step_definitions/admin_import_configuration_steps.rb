@@ -5,7 +5,7 @@ Then('I should see the import action in the dropdown') do
 end
 
 When('I import the test CSV file') do
-  csv_path = Rails.root.join('spec/fixtures/files/field_configuration_import.csv')
+  csv_path = Rails.root.join('spec/fixtures/files/socle_de_base_import.csv')
   page.driver.submit :post, import_admin_socle_de_base_index_path,
     'socle_de_base[csv_file]' => Rack::Test::UploadedFile.new(csv_path, 'text/csv')
   page.driver.follow_redirect! while page.driver.response.redirect?

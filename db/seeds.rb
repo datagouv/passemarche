@@ -75,27 +75,6 @@ market_types_data.each do |data|
   puts "✅ MarketType created: #{market_type.code}"
 end
 
-# Import field configuration from CSV
-puts "\n📝 Importing field configuration from CSV..."
-
-begin
-  result = FieldConfigurationImport.call(csv_file_path: Rails.root.join('config/form_fields/fields.csv'))
-
-  if result.success?
-    puts '✅ Field configuration imported successfully!'
-    stats = result.statistics
-    puts "   • #{stats[:created]} created, #{stats[:updated]} updated, #{stats[:skipped]} skipped"
-  else
-    puts "❌ Field configuration import failed: #{result.message}"
-    puts "   You can run 'bin/rails field_configuration:import' manually to retry"
-  end
-rescue StandardError => e
-  puts "❌ Field configuration import failed: #{e.message}"
-  puts "   You can run 'bin/rails field_configuration:import' manually to retry"
-end
-
 puts "\n🎉 Seed data creation completed successfully!"
 puts '📊 Summary:'
 puts "   - MarketTypes: #{MarketType.count}"
-puts "   - MarketAttributes: #{MarketAttribute.count}"
-puts "   - Total relationships: #{MarketType.joins(:market_attributes).count}"
