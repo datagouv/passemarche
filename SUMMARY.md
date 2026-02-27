@@ -19,3 +19,5 @@
 * [Fake Editor App - Démonstration d'Intégration Passe Marché](fake_editor_app.md)
 * [app](app/README.md)
   * [ViewComponents - Passe Marché](app/components.md)
+* [PARCOURS ACHETEUR](parcours-acheteur/README.md)
+  * [1. Présentation générale de Passe Marché](parcours-acheteur/1.-presentation-generale-de-passe-marche.md)
