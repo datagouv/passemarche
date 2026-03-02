@@ -12,9 +12,17 @@
       <%= link_to t('admin.navigation.socle_de_base'), admin_socle_de_base_index_path,
                   class: "fr-nav__link #{'fr-nav__link--active' if controller_name == 'socle_de_base'}" %>
     </li>
-    <li class="fr-nav__item">
-      <%= link_to t('admin.navigation.background_jobs'), "/admin/jobs",
-                  class: "fr-nav__link", target: "_blank" %>
+    <% if current_user_can_modify? %>
+      <li class="fr-nav__item">
+        <%= link_to t('admin.navigation.background_jobs'), "/admin/jobs",
+                    class: "fr-nav__link", target: "_blank" %>
+      </li>
+    <% end %>
+    <li class="fr-nav__item" style="margin-left: auto;">
+      <span class="fr-text--sm fr-mr-2w"><%= current_admin_user.email %></span>
+      <%= link_to t('admin.navigation.logout'), destroy_admin_user_session_path,
+                  data: { turbo_method: :delete },
+                  class: "fr-nav__link" %>
     </li>
   </ul>
 </nav>
