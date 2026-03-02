@@ -82,9 +82,9 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       expect(response.body).not_to include("data-item-id=\"#{deleted_attribute.id}\"")
     end
 
-    it 'displays edit buttons' do
+    it 'displays consulter buttons' do
       get '/admin/socle_de_base'
-      expect(response.body).to include('Modifier')
+      expect(response.body).to include('Consulter')
     end
 
     it 'filters by category' do
