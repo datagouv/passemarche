@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  include Pagy::Frontend
-
   def format_paris_time(datetime, format = '%d/%m/%Y à %H:%M')
     return '-' if datetime.nil?
 
