@@ -74,7 +74,7 @@ Feature: Admin role-based access control
     Then I should be redirected to the admin root
     And I should see a permission denied message
 
-  Scenario: Lecteur sees disabled buttons on socle de base show page
+  Scenario: Lecteur does not see edit and archive buttons on socle de base show page
     Given I am logged in as a lecteur user
     And the following market types exist:
       | code  |
@@ -83,8 +83,8 @@ Feature: Admin role-based access control
       | key        | category_key        | subcategory_key                    | mandatory | api_name | market_types |
       | test_field | identite_entreprise | identite_entreprise_identification | true      | Insee    | works        |
     When I visit the socle de base detail page for "test_field"
-    Then I should see a disabled archive button
-    And I should see a disabled edit button
+    Then I should not see the archive button
+    And I should not see the edit button
 
   # --- Categories ---
 
