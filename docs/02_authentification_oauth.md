@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Passe Marché utilise le protocole OAuth2 avec le flux **Client Credentials** pour l'authentification des éditeurs de plateformes de marchés publics. Cette méthode garantit une communication sécurisée et standardisée entre votre plateforme et l'API Passe Marché.
+Passe Marché utilise le protocole OAuth2 avec le flux **Client Credentials** pour l'authentification des plateformes de marchés publics. Cette méthode garantit une communication sécurisée et standardisée entre votre plateforme et l'API Passe Marché.
 
 ## Environnements
 
@@ -15,9 +15,9 @@ Les exemples de ce document utilisent la variable `$BASE_URL`. Consultez la [doc
 
 ## Prérequis d'Intégration
 
-### Enregistrement Éditeur
+### Enregistrement plateforme de marchés publics
 
-**Important** : L'enregistrement d'un éditeur doit être effectué manuellement par un administrateur Passe Marché pour des raisons de sécurité et de contrôle d'accès.
+**Important** : L'enregistrement d'une plateforme de marchés publics doit être effectué manuellement par un administrateur Passe Marché pour des raisons de sécurité et de contrôle d'accès.
 
 #### Processus d'Enregistrement
 

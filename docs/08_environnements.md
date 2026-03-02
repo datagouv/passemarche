@@ -17,7 +17,7 @@ Ce document décrit les différents environnements disponibles pour l'intégrati
 
 **Cas d'usage** : Tests d'intégration internes de l'équipe Passe Marché
 
-> **Attention** : Cet environnement est réservé aux tests internes de l'équipe Passe Marché. Il n'est **pas stable** et peut être réinitialisé, modifié ou indisponible à tout moment. **Les éditeurs externes ne doivent pas utiliser cet environnement.**
+> **Attention** : Cet environnement est réservé aux tests internes de l'équipe Passe Marché. Il n'est **pas stable** et peut être réinitialisé, modifié ou indisponible à tout moment. **Les plateformes de marchés publics externes ne doivent pas utiliser cet environnement.**
 
 ### URLs
 
@@ -47,7 +47,7 @@ curl -X POST https://sandbox.passemarche.data.gouv.fr/oauth/token \
 
 ## Staging
 
-**Cas d'usage** : Intégration des éditeurs partenaires
+**Cas d'usage** : Intégration des plateformes de marchés publics partenaires
 
 ### URLs
 
@@ -61,11 +61,11 @@ curl -X POST https://sandbox.passemarche.data.gouv.fr/oauth/token \
 ### Caractéristiques
 
 - **Données API** : Toutes les données provenant des APIs externes sont **simulées**
-- **Accès** : Public, destiné aux éditeurs pour leurs tests d'intégration
-- **Utilisation** : Tests d'intégration éditeurs, validation des flux OAuth
+- **Accès** : Public, destiné aux plateformes de marchés publics pour leurs tests d'intégration
+- **Utilisation** : Tests d'intégration plateformes de marchés publics, validation des flux OAuth
 - **Stabilité** : Plus stable que sandbox, versionné avec les releases
 
-### Recommandations pour les éditeurs
+### Recommandations pour les plateformes de marchés publics
 
 1. Utilisez cet environnement pour développer votre intégration
 2. Testez tous les flux (création marché, candidature, webhooks)
@@ -90,7 +90,7 @@ curl -X POST https://sandbox.passemarche.data.gouv.fr/oauth/token \
 ### Caractéristiques
 
 - **Données API** : Données **réelles** provenant des APIs gouvernementales
-- **Accès** : **Sécurisé** - accès restreint aux éditeurs autorisés
+- **Accès** : **Sécurisé** - accès restreint aux plateformes de marchés publics autorisées
 - **Utilisation** : Tests de recette finaux avant mise en production
 - **Stabilité** : Environnement iso-production
 
@@ -99,7 +99,7 @@ curl -X POST https://sandbox.passemarche.data.gouv.fr/oauth/token \
 - Les données récupérées sont des données réelles d'entreprises
 - Les credentials OAuth sont spécifiques à cet environnement
 - La configuration webhook doit pointer vers un endpoint sécurisé
-- Environnement utilisé pour la formation des éditeurs
+- Environnement utilisé pour la formation des plateformes de marchés publics
 
 ---
 
@@ -119,7 +119,7 @@ curl -X POST https://sandbox.passemarche.data.gouv.fr/oauth/token \
 ### Caractéristiques
 
 - **Données API** : Données **réelles** provenant des APIs gouvernementales
-- **Accès** : **Sécurisé** - réservé aux éditeurs validés en production
+- **Accès** : **Sécurisé** - réservé aux plateformes de marchés publics validées en production
 - **Utilisation** : Utilisation réelle par les acheteurs publics et candidats
 - **Stabilité** : Haute disponibilité, SLA garanti
 
@@ -207,7 +207,7 @@ echo "Token obtenu pour $ENV: ${TOKEN:0:20}..."
 │   Sandbox   │ ──► │   Staging   │ ──► │   Preprod   │ ──► │ Production  │
 │             │     │             │     │             │     │             │
 │ Tests       │     │ Intégration │     │ Recette     │     │ Utilisateurs│
-│ internes    │     │ éditeurs    │     │ données     │     │ finaux      │
+│ internes    │     │ plateformes de marchés publics    │     │ données     │     │ finaux      │
 │             │     │             │     │ réelles     │     │             │
 │ Données     │     │ Données     │     │ Données     │     │ Données     │
 │ simulées    │     │ simulées    │     │ réelles     │     │ réelles     │

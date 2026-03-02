@@ -4,7 +4,7 @@
 
 ### Vue d'ensemble
 
-Cette référence technique détaille tous les endpoints disponibles dans l'API Passe Marché pour l'intégration des éditeurs de plateformes de marchés publics. L'API suit les standards REST avec authentification OAuth2.
+Cette référence technique détaille tous les endpoints disponibles dans l'API Passe Marché pour l'intégration des plateformes de marchés publics. L'API suit les standards REST avec authentification OAuth2.
 
 ### Base URL et Versioning
 
@@ -139,7 +139,7 @@ scope=api_access
 
 #### Créer un Marché Public
 
-Création d'un nouveau marché public par un éditeur autorisé.
+Création d'un nouveau marché public par une plateforme de marchés publics autorisée.
 
 **`POST /api/v1/public_markets`**
 
@@ -540,7 +540,7 @@ Content-Length: 1048576
 
 ### Limitation de Taux (Rate Limiting)
 
-#### Limites par Éditeur
+#### Limites par Platforme de marchés publics
 
 * **Authentification** : 60 requêtes/heure
 * **API générale** : 1000 requêtes/heure
