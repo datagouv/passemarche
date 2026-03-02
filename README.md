@@ -431,6 +431,9 @@ Le rapport est généré dans le dossier `coverage/` à la racine du projet. Il 
 
 ## 📚 Documentation
 
+La documentation technique est publiée sur GitBook. Tout nouveau fichier doit être référencé dans [`SUMMARY.md`](SUMMARY.md) pour y apparaître.
+
+
 ### 🚀 Pour les Équipes Techniques
 
 * [**📖 Guide de Démarrage**](docs/00_guide_de_demarrage.md) - Navigation et glossaire de toute la documentation
