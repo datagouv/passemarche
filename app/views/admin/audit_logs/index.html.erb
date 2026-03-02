@@ -39,7 +39,7 @@
       </table>
     </div>
 
-    <%== pagy_nav(@pagy) %>
+    <%== @pagy.series_nav %>
   <% else %>
     <div class="fr-callout">
       <p class="fr-callout__text"><%= t('admin.audit_logs.empty') %></p>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::AuditLogsController < Admin::ApplicationController
-  include Pagy::Backend
+  include Pagy::Method
 
   def index
     @filter_params = filter_params

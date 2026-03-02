@@ -1,3 +1,4 @@
 # frozen_string_literal: true
 
-Pagy::DEFAULT[:limit] = 25
+Pagy::OPTIONS[:limit] = 25
+Pagy::OPTIONS.freeze
