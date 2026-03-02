@@ -40,8 +40,8 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
           metrics = csv.pluck('Métrique')
 
-          expect(metrics).to include('Éditeurs configurés')
-          expect(metrics).to include('Éditeurs actifs et autorisés')
+          expect(metrics).to include('plateformes de marchés publics configurées')
+          expect(metrics).to include('plateformes de marchés publics actives et autorisées')
         end
       end
 
@@ -57,8 +57,8 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
           csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
           metrics = csv.pluck('Métrique')
 
-          expect(metrics).not_to include('Éditeurs configurés')
-          expect(metrics).not_to include('Éditeurs actifs et autorisés')
+          expect(metrics).not_to include('plateformes de marchés publics configurées')
+          expect(metrics).not_to include('plateformes de marchés publics actifs et autorisées')
         end
 
         it 'still includes market statistics' do
@@ -80,7 +80,7 @@ RSpec.describe Admin::ExportDashboardStatistics, type: :interactor do
 
       it 'includes correct values for numeric statistics' do
         csv = CSV.parse(result.csv_data, col_sep: ';', headers: true)
-        editors_row = csv.find { |row| row['Métrique'] == 'Éditeurs configurés' }
+        editors_row = csv.find { |row| row['Métrique'] == 'plateformes de marchés publics configurées' }
 
         expect(editors_row['Valeur']).to eq('5')
       end

@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Les webhooks Passe Marché permettent aux éditeurs de recevoir des notifications en temps réel lors d'événements importants (complétion de marchés, finalisation de candidatures). Ce système garantit une synchronisation fiable et automatique entre Passe Marché et les plateformes éditrices.
+Les webhooks Passe Marché permettent aux plateformes de marchés publics de recevoir des notifications en temps réel lors d'événements importants (complétion de marchés, finalisation de candidatures). Ce système garantit une synchronisation fiable et automatique entre Passe Marché et les plateformes éditrices.
 
 ## Environnements
 
@@ -29,9 +29,9 @@ Les URLs dans les payloads webhook (ex: `attestation_url`) correspondent à l'en
 
 ## Configuration des Webhooks
 
-### Configuration Éditeur
+### Configuration Plateforme de Marchés Publics
 
-Les webhooks sont configurés par l'administrateur Passe Marché au niveau de chaque éditeur.
+Les webhooks sont configurés par l'administrateur Passe Marché au niveau de chaque plateforme de marchés publics.
 
 ### Paramètres de Configuration
 

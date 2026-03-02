@@ -104,7 +104,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    VOTRE PLATEFORME ÉDITEUR                │
+│                    VOTRE PLATEFORME                         │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
 │  │   Création      │  │  Intégration    │  │   Réception     │ │
@@ -152,7 +152,7 @@
 
 ### 🏛️ Administration
 
-* **Enregistrement éditeurs** : Contact requis avec l'administration
+* **Enregistrement des plateformes de marchés publics** : Contact requis avec l'administration
 * **Credentials OAuth** : Fournis manuellement après validation
 * **Support technique** : Via channels officiels
 
@@ -162,7 +162,7 @@ Passe Marché dispose de 4 environnements pour les différentes phases d'intégr
 
 | Environnement  | URL                                      | Données API | Accès              |
 | -------------- | ---------------------------------------- | ----------- | ------------------ |
-| **Staging**    | https://staging.passemarche.data.gouv.fr | Simulées    | Éditeurs           |
+| **Staging**    | https://staging.passemarche.data.gouv.fr | Simulées    | plateformes de marchés publics           |
 | **Preprod**    | https://preprod.passemarche.data.gouv.fr | Réelles     | Sécurisé           |
 | **Production** | https://passemarche.data.gouv.fr         | Réelles     | Sécurisé           |
 | **Sandbox**    | https://sandbox.passemarche.data.gouv.fr | Simulées    | Interne (instable) |

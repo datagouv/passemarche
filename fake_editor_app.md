@@ -1,6 +1,6 @@
 # Fake Editor App - Démonstration d'Intégration Passe Marché
 
-Cette application Sinatra démontre comment intégrer une plateforme d'éditeur avec l'API OAuth2 de Passe Marché.
+Cette application Sinatra démontre comment intégrer une plateforme de marchés publics  avec l'API OAuth2 de Passe Marché.
 
 ## 🎯 Objectif
 

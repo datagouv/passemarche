@@ -730,4 +730,4 @@ CHECKLIST TECHNIQUE D'INTÉGRATION
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Ces schémas techniques fournissent une vision complète de l'architecture d'intégration Passe Marché et servent de référence pour l'implémentation et le debugging des intégrations éditeurs.
+Ces schémas techniques fournissent une vision complète de l'architecture d'intégration Passe Marché et servent de référence pour l'implémentation et le debugging des intégrations des plateformes de marchés publics.

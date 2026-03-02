@@ -6,11 +6,11 @@ Ce guide vous permet de réaliser votre première intégration avec l'API Passe 
 
 ## Prérequis
 
-### Enregistrement Éditeur
+### Enregistrement plateforme de marchés publics
 
 Contactez l'équipe Passe Marché pour obtenir :
 
-* `client_id` : Identifiant unique de votre éditeur
+* `client_id` : Identifiant unique de votre plateforme
 * `client_secret` : Clé secrète OAuth2
 * `webhook_secret` : Secret pour vérification signatures HMAC
 * URLs configurées (webhook et redirection)
@@ -28,7 +28,7 @@ Les exemples de ce guide utilisent la variable `$BASE_URL`. Choisissez l'environ
 
 | Environnement  | URL                                        | Usage                                     |
 | -------------- | ------------------------------------------ | ----------------------------------------- |
-| **Staging**    | `https://staging.passemarche.data.gouv.fr` | Tests d'intégration éditeurs (recommandé) |
+| **Staging**    | `https://staging.passemarche.data.gouv.fr` | Tests d'intégration des plateformes de marchés publics (recommandé) |
 | **Sandbox**    | `https://sandbox.passemarche.data.gouv.fr` | Réservé équipe interne (instable)         |
 | **Preprod**    | `https://preprod.passemarche.data.gouv.fr` | Recette données réelles                   |
 | **Production** | `https://passemarche.data.gouv.fr`         | Utilisateurs finaux                       |

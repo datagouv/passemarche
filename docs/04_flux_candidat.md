@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Le flux candidat dans Passe Marché permet aux éditeurs de créer des candidatures pour leurs entreprises utilisatrices, puis de les rediriger vers une interface dédiée pour compléter leur dossier de candidature. Ce processus garantit la conformité réglementaire tout en simplifiant l'expérience utilisateur.
+Le flux candidat dans Passe Marché permet aux plateformes de marchés publics de créer des candidatures pour leurs entreprises utilisatrices, puis de les rediriger vers une interface dédiée pour compléter leur dossier de candidature. Ce processus garantit la conformité réglementaire tout en simplifiant l'expérience utilisateur.
 
 ## Environnements
 
@@ -119,7 +119,7 @@ Content-Type: application/json
 
 ### 3. Interface de Candidature
 
-L'éditeur redirige l'entreprise vers l'URL fournie. L'interface s'adapte dynamiquement selon la configuration du marché public.
+La plateforme de marchés publics redirige l'entreprise vers l'URL fournie. L'interface s'adapte dynamiquement selon la configuration du marché public.
 
 #### Génération Dynamique des Étapes
 
@@ -202,7 +202,7 @@ Lors de la soumission finale :
 3. **Marquage Complété** : Passage en statut `completed`
 4. **Génération de l'Attestation** : PDF officiel avec horodatage
 5. **Création du Dossier** : Archive ZIP avec tous les éléments
-6. **Déclenchement Webhook** : Notification vers l'éditeur
+6. **Déclenchement Webhook** : Notification vers la plateforme de marchés publics
 
 #### Types de Documents Générés
 
@@ -278,7 +278,7 @@ Le webhook est envoyé automatiquement lors de la finalisation de la candidature
 
 ### 8. Téléchargement des Documents
 
-Une fois la candidature finalisée, l'éditeur peut télécharger les documents générés.
+Une fois la candidature finalisée, la plateforme de marchés publics peut télécharger les documents générés.
 
 #### Téléchargement de l'Attestation
 
@@ -454,7 +454,7 @@ Content-Length: 1048576
 
 ## Bonnes Pratiques d'Intégration
 
-### Côté Éditeur
+### Côté Plateforme de Marchés Publics
 
 1. **Validation Préalable** : Vérifier la validité du marché avant création
 2. **Gestion du SIRET** : Permettre saisie ultérieure si non disponible

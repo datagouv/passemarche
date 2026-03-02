@@ -17,13 +17,13 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ### 🔐 Authentification OAuth
 
-* Intégration avec les plateformes d'éditeurs
+* Intégration avec les plateformes de marchés publics
 * Flux d'autorisation sécurisé
 * Gestion des tokens et des scopes
 
 ### 🔗 Système de Webhooks
 
-* Notifications en temps réel vers les éditeurs
+* Notifications en temps réel vers les plateformes de marchés publics
 * Signatures HMAC pour la sécurité
 * Système de retry intelligent avec circuit breaker
 * Gestion centralisée des événements webhook
@@ -174,17 +174,17 @@ bin/rubocop -a
 bin/rubocop && bundle exec rspec && bundle exec cucumber
 ```
 
-### Administration des éditeurs et webhooks
+### Administration des plateformes de marchés publics et webhooks
 
 ```bash
 # Interface d'administration (après avoir créé un admin)
 # URL: http://localhost:3000/admin
 
-# Gestion des éditeurs
-# - Créer/modifier des éditeurs
+# Gestion des plateformes de marchés publics
+# - Créer/modifier des plateformes de marchés publics
 # - Configurer les URLs de webhook et redirection
 # - Générer les secrets webhook
-# - Activer/désactiver les éditeurs
+# - Activer/désactiver les plateformes de marchés publics
 
 # Surveillance des webhooks
 # - Consulter les événements webhook
@@ -244,8 +244,8 @@ Le fichier CSV doit contenir les colonnes suivantes (ligne 4 = en-têtes) :
 ```
 app/
 ├── controllers/     # Gestion des requêtes HTTP
-│   ├── admin/       # Interface d'administration (éditeurs, webhooks)
-│   ├── api/v1/      # API RESTful pour les éditeurs
+│   ├── admin/       # Interface d'administration (plateformes de marchés publics, webhooks)
+│   ├── api/v1/      # API RESTful pour les plateformes de marchés publics
 │   └── buyer/       # Interface candidat
 ├── models/         # Logique métier et données
 │   ├── editor.rb    # Modèle éditeur avec config webhook

@@ -2,7 +2,7 @@
 
 @api_public_markets
 Feature: API Public Markets Management
-  En tant qu'éditeur de plateforme de marchés publics
+  En tant que plateforme de marchés publics
   Je veux pouvoir créer des marchés publics via l'API
   Afin de permettre aux acheteurs de configurer leurs consultations
 

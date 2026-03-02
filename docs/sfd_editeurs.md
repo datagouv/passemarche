@@ -1,5 +1,5 @@
 # Spécification Fonctionnelle Détaillée (SFD)
-# Intégration Passe Marché pour Éditeurs
+# Intégration Passe Marché pour les plateformes de marchés publics
 
 ---
 
@@ -30,11 +30,11 @@
 
 ### 1.1 Présentation de Passe Marché
 
-**Passe Marché** est une plateforme gouvernementale française qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Elle s'intègre avec les plateformes des éditeurs de marchés publics pour offrir une expérience utilisateur fluide et conforme aux exigences réglementaires.
+**Passe Marché** est une plateforme gouvernementale française qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Elle s'intègre avec les plateformes de marchés publics pour offrir une expérience utilisateur fluide et conforme aux exigences réglementaires.
 
 ### 1.2 Objectifs de l'intégration
 
-L'intégration avec Passe Marché permet aux éditeurs de :
+L'intégration avec Passe Marché permet aux plateformes de marchés publics de :
 
 - **Créer des marchés publics** via API pour leurs acheteurs
 - **Gérer les candidatures** des entreprises sur leurs plateformes
@@ -43,7 +43,7 @@ L'intégration avec Passe Marché permet aux éditeurs de :
 
 ### 1.3 Périmètre du document
 
-Ce document décrit les spécifications fonctionnelles et techniques nécessaires pour intégrer Passe Marché dans une plateforme éditeur, incluant :
+Ce document décrit les spécifications fonctionnelles et techniques nécessaires pour intégrer Passe Marché dans une plateforme de marchés publics, incluant :
 
 - Architecture et flux d'intégration
 - Authentification OAuth2
@@ -53,7 +53,7 @@ Ce document décrit les spécifications fonctionnelles et techniques nécessaire
 
 ### 1.4 Public cible
 
-- Équipes techniques des éditeurs de plateformes de marchés publics
+- Équipes techniques des plateformes de marchés publics
 - Architectes logiciels
 - Développeurs backend
 
@@ -185,13 +185,13 @@ Passe Marché supporte deux modes d'intégration pour l'interface utilisateur :
 
 ### 3.1 Vue d'ensemble
 
-Passe Marché utilise le protocole **OAuth 2.0** avec le flux **Client Credentials** pour l'authentification des éditeurs. Ce flux est adapté à la communication machine-à-machine sans intervention utilisateur.
+Passe Marché utilise le protocole **OAuth 2.0** avec le flux **Client Credentials** pour l'authentification des plateformes de marchés publics. Ce flux est adapté à la communication machine-à-machine sans intervention utilisateur.
 
 ### 3.2 Prérequis
 
-#### 3.2.1 Enregistrement de l'éditeur
+#### 3.2.1 Enregistrement d'une plateforme de marchés publics
 
-L'enregistrement d'un éditeur est effectué manuellement par un administrateur Passe Marché. L'éditeur reçoit :
+L'enregistrement d'une plateforme de marchés publics est effectué manuellement par un administrateur Passe Marché. La plateforme reçoit :
 
 | Credential | Description | Format |
 |------------|-------------|--------|
@@ -199,11 +199,11 @@ L'enregistrement d'un éditeur est effectué manuellement par un administrateur 
 | `client_secret` | Clé secrète OAuth2 | Chaîne hexadécimale 64 caractères |
 | `webhook_secret` | Secret pour signature HMAC | Chaîne hexadécimale 64 caractères |
 
-#### 3.2.2 Configuration éditeur
+#### 3.2.2 Configuration plateforme de marchés publics
 
 | Paramètre | Requis | Description |
 |-----------|--------|-------------|
-| `name` | Oui | Nom de la plateforme éditeur |
+| `name` | Oui | Nom de la plateforme de marchés publics |
 | `completion_webhook_url` | Non | URL de réception des webhooks |
 | `redirect_url` | Non | URL de redirection post-complétion |
 | `authorized` | - | Statut d'autorisation (géré par admin) |
@@ -807,11 +807,11 @@ X-RateLimit-Reset: 1640995200
 
 ### 7.1 Vue d'ensemble
 
-Les webhooks permettent à Passe Marché de notifier l'éditeur en temps réel lors d'événements importants.
+Les webhooks permettent à Passe Marché de notifier la plateforme de marchés publics en temps réel lors d'événements importants.
 
 ### 7.2 Configuration
 
-Les webhooks sont configurés au niveau de l'éditeur par l'administrateur :
+Les webhooks sont configurés au niveau de la plateforme de marchés publics par l'administrateur :
 
 | Paramètre | Description |
 |-----------|-------------|
@@ -931,7 +931,7 @@ if not hmac.compare_digest(expected, received):
 
 ### 7.8 Idempotence
 
-Les webhooks peuvent être reçus plusieurs fois. L'éditeur doit implémenter une logique d'idempotence basée sur :
+Les webhooks peuvent être reçus plusieurs fois. La plateforme de marchés publics doit implémenter une logique d'idempotence basée sur :
 
 - `event` + `timestamp` + `identifier` de l'objet
 
@@ -1064,9 +1064,9 @@ documents_package_FT{identifier}.zip
 | Environnement | URL | Données | Usage | Accès |
 |---------------|-----|---------|-------|-------|
 | **Sandbox** | sandbox.passemarche.data.gouv.fr | Simulées | Tests internes | Équipe PM |
-| **Staging** | staging.passemarche.data.gouv.fr | Simulées | Intégration éditeurs | Éditeurs |
-| **Preprod** | preprod.passemarche.data.gouv.fr | Réelles | Recette | Éditeurs autorisés |
-| **Production** | passemarche.data.gouv.fr | Réelles | Production | Éditeurs validés |
+| **Staging** | staging.passemarche.data.gouv.fr | Simulées | Intégration plateformes de marchés publics |
+| **Preprod** | preprod.passemarche.data.gouv.fr | Réelles | Recette | plateformes de marchés publics autorisées |
+| **Production** | passemarche.data.gouv.fr | Réelles | Production | plateformes de marchés publics validées |
 
 ### 10.2 Staging
 
@@ -1074,7 +1074,7 @@ documents_package_FT{identifier}.zip
 
 **Caractéristiques** :
 - Données API simulées (pas d'appels aux APIs réelles)
-- Accès public pour les éditeurs
+- Accès public pour les plateformes de marchés publics
 - Environnement de référence pour les tests
 
 **Recommandation** : Utiliser cet environnement pour le développement initial de l'intégration.
@@ -1297,4 +1297,4 @@ R: **[À COMPLÉTER]** : Politique de chiffrement à préciser.
 
 ---
 
-*Document généré pour l'intégration des éditeurs de plateformes de marchés publics avec Passe Marché.*
+*Document généré pour l'intégration des plateformes de marchés publics avec Passe Marché.*

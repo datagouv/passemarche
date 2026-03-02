@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Le flux acheteur dans Passe Marché permet aux éditeurs de créer et configurer des marchés publics via API, puis de rediriger les acheteurs vers une interface dédiée pour finaliser la configuration. Ce processus garantit une expérience utilisateur optimale tout en maintenant le contrôle technique via API.
+Le flux acheteur dans Passe Marché permet aux plateformes de marchés publics de créer et configurer des marchés publics via API, puis de rediriger les acheteurs vers une interface dédiée pour finaliser la configuration. Ce processus garantit une expérience utilisateur optimale tout en maintenant le contrôle technique via API.
 
 ## Environnements
 
@@ -134,7 +134,7 @@ Content-Type: application/json
 
 ### 3. Interface de Configuration
 
-Une fois le marché créé, l'éditeur redirige l'acheteur vers l'URL fournie dans la réponse. L'interface de configuration suit un processus en 4 étapes :
+Une fois le marché créé, la plateforme de marchés publics redirige l'acheteur vers l'URL fournie dans la réponse. L'interface de configuration suit un processus en 4 étapes :
 
 #### Étape 1 : Setup Initial
 
