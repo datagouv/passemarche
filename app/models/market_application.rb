@@ -5,6 +5,7 @@ class MarketApplication < ApplicationRecord
   include Syncable
 
   belongs_to :public_market
+  belongs_to :user, optional: true
   has_one :editor, through: :public_market
 
   has_one_attached :attestation
@@ -25,6 +26,10 @@ class MarketApplication < ApplicationRecord
   validate :nested_attributes_valid
 
   before_validation :generate_identifier, on: :create
+
+  def accessible_by?(user)
+    user_id.nil? || user_id == user.id
+  end
 
   def find_authorized_document(attachment_id)
     market_attribute_responses
