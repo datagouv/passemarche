@@ -22,13 +22,15 @@
         </span>
       </div>
     </div>
-    <div class="fr-col-auto">
-      <%= admin_action_link_to t('admin.socle_de_base.show.archive_button'),
-            archive_admin_socle_de_base_path(@market_attribute),
-            method: :patch,
-            data: { turbo_method: :patch, turbo_confirm: t('admin.socle_de_base.show.archive_confirm') },
-            class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-archive-line" %>
-    </div>
+    <% if current_user_can_modify? %>
+      <div class="fr-col-auto">
+        <%= link_to t('admin.socle_de_base.show.archive_button'),
+              archive_admin_socle_de_base_path(@market_attribute),
+              method: :patch,
+              data: { turbo_method: :patch, turbo_confirm: t('admin.socle_de_base.show.archive_confirm') },
+              class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-archive-line" %>
+      </div>
+    <% end %>
   </div>
 
   <div class="fr-card fr-mb-4w">
@@ -121,9 +123,11 @@
     </div>
   </div>
 
-  <div class="fr-btns-group fr-btns-group--inline">
-    <%= admin_action_link_to t('admin.socle_de_base.edit.title'),
-          edit_admin_socle_de_base_path(@market_attribute),
-          class: "fr-btn" %>
-  </div>
+  <% if current_user_can_modify? %>
+    <div class="fr-btns-group fr-btns-group--inline">
+      <%= link_to t('admin.socle_de_base.edit.title'),
+            edit_admin_socle_de_base_path(@market_attribute),
+            class: "fr-btn" %>
+    </div>
+  <% end %>
 </div>

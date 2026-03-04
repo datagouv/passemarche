@@ -19,7 +19,7 @@ Feature: Admin Socle de Base - Consultation et edition d'un champ
 
   Scenario: View field detail page from table
     When I visit the socle de base page
-    And I click the "Modifier" link for "identite_siret"
+    And I click the "Consulter" link for "identite_siret"
     Then I should see the field detail page for "identite_siret"
     And I should see the configuration section showing "API"
 

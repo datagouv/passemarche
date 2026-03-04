@@ -92,7 +92,7 @@ end
 # Edit button steps
 
 Then('all {string} links should point to field detail pages') do |link_text|
-  links = all('a', text: link_text)
+  links = all('a', exact_text: link_text)
   expect(links).not_to be_empty
   links.each do |link|
     expect(link[:href]).to match(%r{/admin/socle_de_base/\d+})

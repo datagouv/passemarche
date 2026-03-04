@@ -74,12 +74,12 @@ Then('I should see a disabled archive button for the field') do
   expect(page).to have_button(I18n.t('admin.socle_de_base.archive_button'), disabled: true)
 end
 
-Then('I should see a disabled archive button') do
-  expect(page).to have_button(I18n.t('admin.socle_de_base.show.archive_button'), disabled: true)
+Then('I should not see the archive button') do
+  expect(page).to have_no_link(I18n.t('admin.socle_de_base.show.archive_button'))
 end
 
-Then('I should see a disabled edit button') do
-  expect(page).to have_button(I18n.t('admin.socle_de_base.edit.title'), disabled: true)
+Then('I should not see the edit button') do
+  expect(page).to have_no_link(I18n.t('admin.socle_de_base.edit.title'))
 end
 
 # --- Categories ---
