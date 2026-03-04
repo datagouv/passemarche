@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 fr:
+  auth_mailer:
+    magic_link:
+      subject: Votre lien de connexion à Passe Marché
+      greeting: Bonjour,
+      intro: "Vous avez demandé à accéder à Passe Marché pour préparer votre candidature pour le marché :"
+      cta_intro: "Cliquez sur le bouton ci-dessous pour vous connecter :"
+      cta: Lien de connexion
+      warning: "Attention, ce lien est valable pendant 30 minutes et ne peut être utilisé qu'une fois."
+      footer:
+        privacy: Politique de confidentialité
+        legal: Mentions légales
+        copyright: "© République Française - Tous droits réservés"
+        contact: contact@exemple.gouv.fr
   source_types:
     authentic_source:
       label: Récupéré automatiquement
