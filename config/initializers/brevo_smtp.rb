@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-unless Rails.env.test?
+unless Rails.env.local? || Rails.env.sandbox?
   Rails.application.config.action_mailer.delivery_method = :smtp
   Rails.application.config.action_mailer.smtp_settings = {
     address: 'smtp-relay.brevo.com',
