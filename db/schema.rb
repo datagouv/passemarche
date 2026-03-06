@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_02_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_03_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,11 +93,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_02_000001) do
     t.string "siret", limit: 14
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
     t.index ["provider_user_id"], name: "index_market_applications_on_provider_user_id"
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"
     t.index ["sync_status"], name: "index_market_applications_on_sync_status"
+    t.index ["user_id"], name: "index_market_applications_on_user_id"
   end
 
   create_table "market_attribute_responses", force: :cascade do |t|
@@ -386,6 +388,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_02_000001) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "market_applications", "public_markets"
+  add_foreign_key "market_applications", "users"
   add_foreign_key "market_attribute_responses", "market_applications"
   add_foreign_key "market_attribute_responses", "market_attributes"
   add_foreign_key "market_attributes", "subcategories"

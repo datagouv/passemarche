@@ -379,6 +379,29 @@ RSpec.describe MarketApplication, type: :model do
     # the correct STI class based on the 'type' parameter
   end
 
+  describe '#accessible_by?' do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
+
+    it 'returns true when user_id is nil (first come, first served)' do
+      application = build(:market_application, public_market:, user: nil)
+
+      expect(application.accessible_by?(user)).to be true
+    end
+
+    it 'returns true when user_id matches the given user' do
+      application = build(:market_application, public_market:, user:)
+
+      expect(application.accessible_by?(user)).to be true
+    end
+
+    it 'returns false when user_id belongs to another user' do
+      application = build(:market_application, public_market:, user: other_user)
+
+      expect(application.accessible_by?(user)).to be false
+    end
+  end
+
   describe 'context-aware validation' do
     let(:public_market) do
       create(:public_market, :completed, editor:).tap do |market|
