@@ -6,10 +6,22 @@ module Admin::AuditLogsHelper
   EVENT_BADGE_CLASSES = {
     'create' => 'fr-badge--success',
     'update' => 'fr-badge--info',
+    'archive' => 'fr-badge--warning',
     'destroy' => 'fr-badge--error'
   }.freeze
 
-  def version_event_badge(event)
+  def resolved_event(version)
+    return version.event unless version.event == 'update'
+
+    changes = version_changes(version)
+    deleted_at_change = changes['deleted_at']
+    return 'archive' if deleted_at_change && deleted_at_change.first.nil? && deleted_at_change.second.present?
+
+    'update'
+  end
+
+  def version_event_badge(version)
+    event = resolved_event(version)
     badge_class = EVENT_BADGE_CLASSES[event]
     tag.span(t("admin.audit_logs.events.#{event}"), class: "fr-badge fr-badge--sm #{badge_class}")
   end
@@ -41,7 +53,10 @@ module Admin::AuditLogsHelper
     item = version.item
     return version.item_type unless item
 
-    item.category_key&.humanize
+    category_key = item.category_key
+    return category_key.humanize unless category_key
+
+    Category.find_by(key: category_key)&.buyer_label || category_key.humanize
   end
 
   def version_changes(version)

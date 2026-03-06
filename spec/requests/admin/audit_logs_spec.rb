@@ -84,7 +84,7 @@ RSpec.describe 'Admin::AuditLogs', type: :request do
 
     it 'displays the version details' do
       get "/admin/historique/#{version.id}"
-      expect(response.body).to include('Détail de la modification')
+      expect(response.body).to include('Détail de la création')
       expect(response.body).to include('Création')
     end
 
