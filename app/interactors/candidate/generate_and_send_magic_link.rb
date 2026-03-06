@@ -15,7 +15,12 @@ module Candidate
     private
 
     def build_url(token)
-      "#{protocol}#{host}/auth/verify?token=#{token}&market_application_id=#{market_application.identifier}"
+      Rails.application.routes.url_helpers.verify_candidate_sessions_url(
+        token:,
+        market_application_id: market_application.identifier,
+        host:,
+        protocol: protocol.delete_suffix('://')
+      )
     end
   end
 end
