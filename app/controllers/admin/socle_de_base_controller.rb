@@ -113,12 +113,10 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     @categories = Category.active.ordered
     @subcategories = Subcategory.active.ordered.includes(:category)
     @market_types = MarketType.active
-    @input_types = MarketAttribute.input_types.keys
+    @input_types = supported_input_types
     @subcategories_json = build_subcategories_json
     @api_keys_by_name = build_api_keys_by_name
-    @input_type_hints = @input_types.index_with do |t|
-      I18n.t("admin.socle_de_base.input_type_hints.#{t}", default: nil)
-    end.compact
+    @input_type_hints = build_input_type_hints
   end
 
   def build_subcategories_json
@@ -132,6 +130,14 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
       .distinct.pluck(:api_name, :api_key)
       .group_by(&:first)
       .transform_values { |pairs| pairs.map(&:last).uniq.sort }
+  end
+
+  def supported_input_types
+    MarketAttribute.input_types.keys.select { |t| MarketAttributeResponse::INPUT_TYPE_MAP.key?(t) }
+  end
+
+  def build_input_type_hints
+    @input_types.index_with { |t| I18n.t("admin.socle_de_base.input_type_hints.#{t}", default: nil) }.compact
   end
 
   def prefill_from_presenter
