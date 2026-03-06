@@ -1,0 +1,83 @@
+<% content_for :title, t('candidate.sessions.new.title') %>
+
+<div class="fr-grid-row full-height-grid">
+  <div class="fr-col-12 fr-col-lg-7">
+    <div class="fr-container--fluid">
+      <div class="fr-mb-5w">
+        <h1 class="fr-h1 fr-mb-1w"><%= t('candidate.sessions.new.title') %></h1>
+        <p class="fr-text--lg fr-mb-0">
+          <% if @market_application %>
+            <%= t('candidate.sessions.new.subtitle_with_editor', editor: @market_application.public_market.editor.name) %>
+          <% else %>
+            <%= t('candidate.sessions.new.subtitle') %>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="fr-mb-3w">
+        <div class="fr-card">
+          <div class="fr-card__body">
+            <div class="fr-card__content">
+              <h2 class="fr-h5 fr-mb-3w"><%= t('candidate.sessions.new.employee_section') %></h2>
+
+              <% if @errors.present? %>
+                <div class="fr-alert fr-alert--error fr-mb-3w">
+                  <ul class="fr-list">
+                    <% @errors.each do |field, messages| %>
+                      <% Array(messages).each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+              <%= form_with url: candidate_sessions_path, method: :post, data: { turbo: false } do |form| %>
+                <% if @market_application %>
+                  <div class="fr-input-group fr-input-group--disabled fr-mb-3w">
+                    <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
+                    <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>
+                    <%= form.text_field :siret, class: 'fr-input', readonly: true, value: @market_application.siret %>
+                  </div>
+                <% else %>
+                  <div class="fr-input-group fr-mb-3w">
+                    <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
+                    <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>
+                    <%= form.text_field :siret, class: 'fr-input', autocomplete: 'off' %>
+                  </div>
+                <% end %>
+
+                <div class="fr-input-group fr-mb-3w">
+                  <%= form.label :email, t('candidate.sessions.new.email_label'), class: 'fr-label' %>
+                  <span class="fr-hint-text"><%= t('candidate.sessions.new.email_hint') %></span>
+                  <%= form.email_field :email, class: 'fr-input', autocomplete: 'email' %>
+                </div>
+
+                <%= form.submit t('candidate.sessions.new.submit'), class: 'fr-btn fr-btn--lg fr-width-full' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-card">
+        <div class="fr-card__body">
+          <div class="fr-card__content">
+            <h2 class="fr-h5 fr-mb-3w"><%= t('candidate.sessions.new.manager_section') %></h2>
+            <button class="fr-btn fr-btn--lg" disabled aria-disabled="true">
+              <%= t('candidate.sessions.new.proconnect_cta') %>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag 'form-logo.png', alt: t('candidate.shared.form_logo_alt') %>
+    </div>
+  </div>
+</div>
