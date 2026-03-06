@@ -1,0 +1,70 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: Marianne, arial, sans-serif; background-color: #f6f6f6;">
+  <tr>
+    <td align="center" style="padding: 24px 16px;">
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #dddddd;">
+
+        <%# Header %>
+        <tr>
+          <td colspan="2" style="background-color: #f5f5fe; padding: 40px 32px; text-align: center;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 700; color: #161616; line-height: 1.3;">
+              <%= t('auth_mailer.magic_link.subject') %>
+            </h1>
+          </td>
+        </tr>
+
+        <%# Body %>
+        <tr>
+          <td width="274" valign="top" style="padding: 28px 20px 28px 32px;">
+            <p style="margin: 0 0 12px; font-size: 18px; font-weight: 700; color: #161616;">
+              <%= t('auth_mailer.magic_link.greeting') %>
+            </p>
+
+            <p style="margin: 0 0 12px; font-size: 15px; color: #3a3a3a; line-height: 1.6;">
+              <%= t('auth_mailer.magic_link.intro') %>
+              &ldquo;<strong><%= @market_name %></strong>&rdquo;
+            </p>
+
+            <p style="margin: 0 0 20px; font-size: 15px; color: #3a3a3a;">
+              <%= t('auth_mailer.magic_link.cta_intro') %>
+            </p>
+
+            <table cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+              <tr>
+                <td style="background-color: #000091; border-radius: 4px;">
+                  <%= link_to t('auth_mailer.magic_link.cta'), @url,
+                    style: "display: inline-block; padding: 12px 24px; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none;" %>
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin: 0; font-size: 11px; color: #b34000; font-weight: 500; line-height: 1.5;">
+              <%= t('auth_mailer.magic_link.warning') %>
+            </p>
+          </td>
+
+          <%# Logo %>
+          <td width="326" valign="middle" align="center" style="padding: 28px 32px 28px 0; background-color: #ffffff;">
+            <img src="<%= logo_data_uri %>"
+                 alt=""
+                 width="120"
+                 style="display: block; width: 120px; height: 153px; margin: 0 auto;" />
+          </td>
+        </tr>
+
+        <%# Footer %>
+        <tr>
+          <td colspan="2" style="padding: 20px 32px; border-top: 1px solid #dddddd; text-align: center; background-color: #f5f5fe;">
+            <p style="margin: 0 0 8px; font-size: 13px;">
+              <a href="#" style="color: #0063cb; text-decoration: underline;"><%= t('auth_mailer.magic_link.footer.privacy') %></a>
+              &nbsp;|&nbsp;
+              <a href="#" style="color: #0063cb; text-decoration: underline;"><%= t('auth_mailer.magic_link.footer.legal') %></a>
+            </p>
+            <p style="margin: 0 0 4px; font-size: 12px; color: #666666;"><%= t('auth_mailer.magic_link.footer.copyright') %></p>
+            <p style="margin: 0; font-size: 12px; color: #666666;"><%= t('auth_mailer.magic_link.footer.contact') %></p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

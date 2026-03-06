@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  generates_token_for :magic_link, expires_in: 1.hour do
+  generates_token_for :magic_link, expires_in: 30.minutes do
     authentication_token_sent_at
   end
 
