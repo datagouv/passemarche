@@ -65,6 +65,13 @@ RSpec.describe 'Admin::Dashboards', type: :request do
     end
   end
 
+  describe 'DELETE /admin_users/sign_out' do
+    it 'redirects to admin sign-in page' do
+      delete destroy_admin_user_session_path
+      expect(response).to redirect_to(new_admin_user_session_path)
+    end
+  end
+
   context 'without authentication' do
     before do
       sign_out admin_user

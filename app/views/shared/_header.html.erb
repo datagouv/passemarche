@@ -35,6 +35,16 @@
                 <%= link_to t('header.navigation.buyer'), buyer_home_path,
                     class: class_names("fr-link", "fr-link--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
               </li>
+              <% if admin_user_signed_in? %>
+                <li>
+                  <span class="fr-link"><%= current_admin_user.email %></span>
+                </li>
+                <li>
+                  <%= link_to t('admin.navigation.logout'), destroy_admin_user_session_path,
+                      data: { turbo_method: :delete },
+                      class: "fr-link fr-icon-logout-box-r-line" %>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
