@@ -19,15 +19,13 @@ class MarketAttributeResponse::UrlInputComponent < MarketAttributeResponse::Base
     market_attribute_response.errors[:text]
   end
 
-  def input_group_css_class
-    css = 'fr-input-group'
-    css += ' fr-input-group--error' if errors?
-    css
-  end
-
   def input_css_class
     css = 'fr-input'
     css += ' fr-input--error' if errors?
     css
+  end
+
+  def input_id
+    "url-#{market_attribute_response.id}"
   end
 end
