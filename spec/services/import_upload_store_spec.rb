@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe ImportUploadStore do
   subject(:store) { described_class.new }
 
-  let(:upload_dir) { Rails.root.join('tmp/imports') }
+  let(:upload_dir) { Rails.root.join('storage/imports') }
 
   after do
     FileUtils.rm_rf(upload_dir)
