@@ -1,4 +1,4 @@
-<%= content_for :page_title, t('admin.audit_logs.show.title') %>
+<%= content_for :page_title, t("admin.audit_logs.show.title_#{resolved_event(@version)}") %>
 
 <div class="fr-container fr-my-4w">
   <%= render 'admin/shared/navigation' %>
@@ -7,7 +7,7 @@
     <%= link_to t('admin.audit_logs.show.back'), admin_audit_logs_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line" %>
   </div>
 
-  <h1 class="fr-h2 fr-mb-3w"><%= t('admin.audit_logs.show.title') %></h1>
+  <h1 class="fr-h2 fr-mb-3w"><%= t("admin.audit_logs.show.title_#{resolved_event(@version)}") %></h1>
 
   <div class="fr-card fr-card--no-arrow fr-mb-3w">
     <div class="fr-card__body">
@@ -19,7 +19,7 @@
           </div>
           <div class="fr-col-12 fr-col-md-4">
             <dt class="fr-text--bold"><%= t('admin.audit_logs.show.event') %></dt>
-            <dd><%= version_event_badge(@version.event) %></dd>
+            <dd><%= version_event_badge(@version) %></dd>
           </div>
           <div class="fr-col-12 fr-col-md-4">
             <dt class="fr-text--bold"><%= t('admin.audit_logs.show.performed_by') %></dt>

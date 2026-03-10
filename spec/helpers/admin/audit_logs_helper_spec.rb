@@ -3,21 +3,58 @@
 require 'rails_helper'
 
 RSpec.describe Admin::AuditLogsHelper, type: :helper do
+  describe '#resolved_event' do
+    it 'returns create for create events' do
+      version = instance_double(PaperTrail::Version, event: 'create', changeset: {})
+      expect(helper.resolved_event(version)).to eq('create')
+    end
+
+    it 'returns update for regular update events' do
+      version = instance_double(PaperTrail::Version, event: 'update',
+        changeset: { 'buyer_name' => %w[Old New] })
+      expect(helper.resolved_event(version)).to eq('update')
+    end
+
+    it 'returns archive when deleted_at changes from nil to a value' do
+      version = instance_double(PaperTrail::Version, event: 'update',
+        changeset: { 'deleted_at' => [nil, '2026-03-06 10:00:00'] })
+      expect(helper.resolved_event(version)).to eq('archive')
+    end
+
+    it 'returns update when deleted_at changes from a value to nil (unarchive)' do
+      version = instance_double(PaperTrail::Version, event: 'update',
+        changeset: { 'deleted_at' => ['2026-03-06 10:00:00', nil] })
+      expect(helper.resolved_event(version)).to eq('update')
+    end
+  end
+
   describe '#version_event_badge' do
     it 'renders a success badge for create events' do
-      result = helper.version_event_badge('create')
+      version = instance_double(PaperTrail::Version, event: 'create', changeset: {})
+      result = helper.version_event_badge(version)
       expect(result).to include('fr-badge--success')
       expect(result).to include('Création')
     end
 
     it 'renders an info badge for update events' do
-      result = helper.version_event_badge('update')
+      version = instance_double(PaperTrail::Version, event: 'update',
+        changeset: { 'buyer_name' => %w[Old New] })
+      result = helper.version_event_badge(version)
       expect(result).to include('fr-badge--info')
       expect(result).to include('Modification')
     end
 
+    it 'renders a warning badge for archive events' do
+      version = instance_double(PaperTrail::Version, event: 'update',
+        changeset: { 'deleted_at' => [nil, '2026-03-06 10:00:00'] })
+      result = helper.version_event_badge(version)
+      expect(result).to include('fr-badge--warning')
+      expect(result).to include('Archivage')
+    end
+
     it 'renders an error badge for destroy events' do
-      result = helper.version_event_badge('destroy')
+      version = instance_double(PaperTrail::Version, event: 'destroy', changeset: {})
+      result = helper.version_event_badge(version)
       expect(result).to include('fr-badge--error')
       expect(result).to include('Suppression')
     end
@@ -58,6 +95,26 @@ RSpec.describe Admin::AuditLogsHelper, type: :helper do
       version = instance_double(PaperTrail::Version,
         changeset: { 'buyer_name' => %w[Old New], 'updated_at' => [nil, Time.current] })
       expect(helper.version_scope_badge(version)).to eq('Acheteur')
+    end
+  end
+
+  describe '#version_category_label' do
+    it 'returns buyer label from Category when found' do
+      create(:category, key: 'identite_entreprise', buyer_label: "Identité de l'entreprise")
+      item = instance_double(MarketAttribute, category_key: 'identite_entreprise')
+      version = instance_double(PaperTrail::Version, item:)
+      expect(helper.version_category_label(version)).to eq("Identité de l'entreprise")
+    end
+
+    it 'falls back to humanize when category not found' do
+      item = instance_double(MarketAttribute, category_key: 'unknown_category')
+      version = instance_double(PaperTrail::Version, item:)
+      expect(helper.version_category_label(version)).to eq('Unknown category')
+    end
+
+    it 'returns item_type when item is nil' do
+      version = instance_double(PaperTrail::Version, item: nil, item_type: 'MarketAttribute')
+      expect(helper.version_category_label(version)).to eq('MarketAttribute')
     end
   end
 

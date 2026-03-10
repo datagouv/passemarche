@@ -995,12 +995,15 @@ fr:
         create: "Création"
         update: "Modification"
         destroy: "Suppression"
+        archive: "Archivage"
       scopes:
         buyer: "Acheteur"
         candidate: "Candidat"
         both: "Acheteur / Candidat"
       show:
-        title: "Détail de la modification"
+        title_create: "Détail de la création"
+        title_update: "Détail de la modification"
+        title_archive: "Détail de l'archivage"
         back: "Retour à l'historique"
         field: "Champ"
         before: "Avant"

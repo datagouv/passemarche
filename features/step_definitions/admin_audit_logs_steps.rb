@@ -63,12 +63,12 @@ When('I click {string} for the first audit log entry') do |link_text|
 end
 
 Then('I should see the modification details') do
-  expect(page).to have_content(I18n.t('admin.audit_logs.show.title'))
+  expect(page).to have_content(I18n.t('admin.audit_logs.show.title_update'))
   expect(page).to have_content('Modification')
 end
 
 Then('I should see the creation details') do
-  expect(page).to have_content(I18n.t('admin.audit_logs.show.title'))
+  expect(page).to have_content(I18n.t('admin.audit_logs.show.title_create'))
   expect(page).to have_content('Création')
 end
 
