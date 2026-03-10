@@ -75,6 +75,15 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     import_csv(csv_file)
   end
 
+  def export
+    attributes = MarketAttributeQueryService.call(filters: filter_params)
+    result = ExportSocleDeBaseCsvService.call(market_attributes: attributes)
+
+    send_data result[:csv_data],
+      filename: result[:filename],
+      type: 'text/csv; charset=utf-8'
+  end
+
   def archive
     attribute = MarketAttribute.find(params[:id])
 

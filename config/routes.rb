@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       collection do
         patch :reorder
         post :import
+        get :export
       end
       member do
         patch :archive
