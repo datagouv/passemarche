@@ -32,6 +32,25 @@ RSpec.describe Category, type: :model do
     end
   end
 
+  describe 'default position' do
+    it 'assigns next position when not provided' do
+      create(:category, position: 5)
+      category = create(:category, position: nil)
+      expect(category.position).to eq(6)
+    end
+
+    it 'keeps provided position' do
+      category = create(:category, position: 3)
+      expect(category.position).to eq(3)
+    end
+
+    it 'defaults to 1 when table is empty' do
+      Category.delete_all
+      category = create(:category, position: nil)
+      expect(category.position).to eq(1)
+    end
+  end
+
   describe '#soft_delete!' do
     let(:category) { create(:category) }
     let!(:subcategory) { create(:subcategory, category:) }

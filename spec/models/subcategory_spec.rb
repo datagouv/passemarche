@@ -33,6 +33,25 @@ RSpec.describe Subcategory, type: :model do
     end
   end
 
+  describe 'default position' do
+    it 'assigns next position when not provided' do
+      create(:subcategory, position: 5)
+      subcategory = create(:subcategory, position: nil)
+      expect(subcategory.position).to eq(6)
+    end
+
+    it 'keeps provided position' do
+      subcategory = create(:subcategory, position: 3)
+      expect(subcategory.position).to eq(3)
+    end
+
+    it 'defaults to 1 when table is empty' do
+      Subcategory.delete_all
+      subcategory = create(:subcategory, position: nil)
+      expect(subcategory.position).to eq(1)
+    end
+  end
+
   describe 'deletion protection' do
     let(:subcategory) { create(:subcategory) }
 

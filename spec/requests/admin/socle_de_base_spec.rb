@@ -371,53 +371,17 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
-  context 'without authentication' do
-    before do
-      sign_out admin_user
+  describe 'POST /admin/socle_de_base/import' do
+    it 'rejects a path traversal token and redirects' do
+      post '/admin/socle_de_base/import', params: { import_token: '../../etc/passwd' }
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(flash[:alert]).to be_present
     end
 
-    describe 'GET /admin/socle_de_base' do
-      it 'redirects to login' do
-        get '/admin/socle_de_base'
-        expect(response).to have_http_status(:redirect)
-      end
-    end
-
-    describe 'GET /admin/socle_de_base/new' do
-      it 'redirects to login' do
-        get '/admin/socle_de_base/new'
-        expect(response).to have_http_status(:redirect)
-      end
-    end
-
-    describe 'POST /admin/socle_de_base' do
-      it 'redirects to login' do
-        post '/admin/socle_de_base', params: { market_attribute: { buyer_name: 'test' } }
-        expect(response).to have_http_status(:redirect)
-      end
-    end
-
-    describe 'PATCH /admin/socle_de_base/reorder' do
-      it 'redirects to login' do
-        patch '/admin/socle_de_base/reorder', params: { ordered_ids: [1, 2] }, as: :json
-        expect(response).to have_http_status(:unauthorized)
-      end
-    end
-
-    describe 'PATCH /admin/socle_de_base/:id/archive' do
-      it 'redirects to login' do
-        attribute = create(:market_attribute)
-        patch "/admin/socle_de_base/#{attribute.id}/archive"
-        expect(response).to have_http_status(:redirect)
-        expect(attribute.reload.deleted_at).to be_nil
-      end
-    end
-
-    describe 'GET /admin/socle_de_base/export' do
-      it 'redirects to login' do
-        get '/admin/socle_de_base/export'
-        expect(response).to have_http_status(:redirect)
-      end
+    it 'rejects a non-UUID token and redirects' do
+      post '/admin/socle_de_base/import', params: { import_token: 'not-valid' }
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(flash[:alert]).to be_present
     end
   end
 
@@ -482,6 +446,56 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     it 'sets Content-Disposition with correct filename' do
       get '/admin/socle_de_base/export'
       expect(response.headers['Content-Disposition']).to include("socle-de-base-#{Date.current}.csv")
+    end
+  end
+
+  context 'without authentication' do
+    before do
+      sign_out admin_user
+    end
+
+    describe 'GET /admin/socle_de_base' do
+      it 'redirects to login' do
+        get '/admin/socle_de_base'
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe 'GET /admin/socle_de_base/new' do
+      it 'redirects to login' do
+        get '/admin/socle_de_base/new'
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe 'POST /admin/socle_de_base' do
+      it 'redirects to login' do
+        post '/admin/socle_de_base', params: { market_attribute: { buyer_name: 'test' } }
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe 'PATCH /admin/socle_de_base/reorder' do
+      it 'redirects to login' do
+        patch '/admin/socle_de_base/reorder', params: { ordered_ids: [1, 2] }, as: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe 'PATCH /admin/socle_de_base/:id/archive' do
+      it 'redirects to login' do
+        attribute = create(:market_attribute)
+        patch "/admin/socle_de_base/#{attribute.id}/archive"
+        expect(response).to have_http_status(:redirect)
+        expect(attribute.reload.deleted_at).to be_nil
+      end
+    end
+
+    describe 'GET /admin/socle_de_base/export' do
+      it 'redirects to login' do
+        get '/admin/socle_de_base/export'
+        expect(response).to have_http_status(:redirect)
+      end
     end
   end
 end

@@ -797,6 +797,25 @@ fr:
         success: "Import réussi : %{created} créé(s), %{updated} mis à jour, %{soft_deleted} archivé(s), %{skipped} ignoré(s)"
         no_file: "Veuillez sélectionner un fichier CSV"
         error: "Erreur lors de l'import : %{message}"
+        expired: "Le fichier d'import a expiré. Veuillez relancer l'import."
+      import_preview:
+        title: "Prévisualisation de l'import"
+        summary: "%{creates} création(s), %{updates} modification(s), %{deletes} archivage(s)"
+        creates_title:
+          one: "%{count} création"
+          other: "%{count} créations"
+        updates_title:
+          one: "%{count} modification"
+          other: "%{count} modifications"
+        deletes_title:
+          one: "%{count} archivage"
+          other: "%{count} archivages"
+        key: "Clé"
+        name: "Nom"
+        changes: "Modifications"
+        confirm: "Confirmer l'import"
+        cancel: "Annuler"
+        no_file: "Veuillez sélectionner un fichier CSV"
       cards:
         total:
           title: "Champs total"

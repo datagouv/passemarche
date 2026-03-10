@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Admin::SocleDeBaseController < Admin::ApplicationController
+  include Admin::CsvImportHandling
+
   wrap_parameters false
-  before_action :require_admin_role!, only: %i[new create edit update reorder archive import]
+  before_action :require_admin_role!, only: %i[new create edit update reorder archive import preview_import]
   before_action :load_form_data, only: %i[new create edit update]
 
   def index
@@ -67,21 +69,28 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
     head :ok
   end
 
-  def import
+  def preview_import
     csv_file = params.dig(:socle_de_base, :csv_file)
-
     return redirect_to admin_socle_de_base_index_path, alert: t('.no_file') unless csv_file
 
-    import_csv(csv_file)
+    @import_token = upload_store.persist(csv_file)
+    upload_store.cleanup_stale
+    run_dry_import(@import_token)
   end
 
-  def export
-    attributes = MarketAttributeQueryService.call(filters: filter_params)
-    result = ExportSocleDeBaseCsvService.call(market_attributes: attributes)
+  def import
+    import_token = params[:import_token]
 
-    send_data result[:csv_data],
-      filename: result[:filename],
-      type: 'text/csv; charset=utf-8'
+    if import_token
+      import_from_token(import_token)
+    else
+      csv_file = params.dig(:socle_de_base, :csv_file)
+      return redirect_to admin_socle_de_base_index_path, alert: t('.no_file') unless csv_file
+
+      import_csv(csv_file)
+    end
+  rescue ArgumentError
+    redirect_to admin_socle_de_base_index_path, alert: t('.expired')
   end
 
   def archive
@@ -94,6 +103,15 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
       redirect_to admin_socle_de_base_index_path,
         alert: t('.already_archived')
     end
+  end
+
+  def export
+    attributes = MarketAttributeQueryService.call(filters: filter_params)
+    result = ExportSocleDeBaseCsvService.call(market_attributes: attributes)
+
+    send_data result[:csv_data],
+      filename: result[:filename],
+      type: 'text/csv; charset=utf-8'
   end
 
   private
@@ -163,24 +181,6 @@ class Admin::SocleDeBaseController < Admin::ApplicationController
 
     subcategory = Subcategory.find_by(key: @market_attribute.subcategory_key)
     @market_attribute.subcategory_id = subcategory&.id
-  end
-
-  def import_csv(csv_file)
-    result = FieldConfigurationImport.call(csv_file_path: csv_file.tempfile.path)
-
-    if result.success?
-      redirect_to admin_socle_de_base_index_path, notice: format_statistics(result.statistics)
-    else
-      redirect_to admin_socle_de_base_index_path, alert: t('.error', message: result.message)
-    end
-  end
-
-  def format_statistics(stats)
-    t('admin.socle_de_base.import.success',
-      created: stats[:created],
-      updated: stats[:updated],
-      soft_deleted: stats[:soft_deleted],
-      skipped: stats[:skipped])
   end
 
   def filter_params
