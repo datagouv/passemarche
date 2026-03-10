@@ -31,25 +31,25 @@ end
 
 Then('the candidate navigation link should be active') do
   within('header.fr-header') do
-    expect(page).to have_css('a.fr-link--active', text: I18n.t('header.navigation.candidate'))
+    expect(page).to have_css('a.fr-btn--active', text: I18n.t('header.navigation.candidate'))
   end
 end
 
 Then('the candidate navigation link should not be active') do
   within('header.fr-header') do
-    expect(page).to have_no_css('a.fr-link--active', text: I18n.t('header.navigation.candidate'))
+    expect(page).to have_no_css('a.fr-btn--active', text: I18n.t('header.navigation.candidate'))
   end
 end
 
 Then('the buyer navigation link should be active') do
   within('header.fr-header') do
-    expect(page).to have_css('a.fr-link--active', text: I18n.t('header.navigation.buyer'))
+    expect(page).to have_css('a.fr-btn--active', text: I18n.t('header.navigation.buyer'))
   end
 end
 
 Then('the buyer navigation link should not be active') do
   within('header.fr-header') do
-    expect(page).to have_no_css('a.fr-link--active', text: I18n.t('header.navigation.buyer'))
+    expect(page).to have_no_css('a.fr-btn--active', text: I18n.t('header.navigation.buyer'))
   end
 end
 
