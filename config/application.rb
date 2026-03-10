@@ -24,6 +24,7 @@ module VoieRapide
     # in config/environments, which are processed later.
     #
     config.time_zone = 'Europe/Paris'
+    config.active_record.yaml_column_permitted_classes = [Symbol, Time]
     # config.eager_load_paths << Rails.root.join("extras")
 
     # I18n configuration

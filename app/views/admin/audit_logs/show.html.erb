@@ -44,8 +44,11 @@
   <% if changes.present? %>
     <h2 class="fr-h4"><%= t('admin.audit_logs.show.changed_attributes') %></h2>
 
-    <% if @version.event == 'create' %>
+    <% event = resolved_event(@version) %>
+    <% if event == 'create' %>
       <%= render 'creation_details', changes: changes %>
+    <% elsif event == 'archive' %>
+      <%= render 'archive_details', changes: changes %>
     <% else %>
       <%= render 'modification_details', changes: changes %>
     <% end %>

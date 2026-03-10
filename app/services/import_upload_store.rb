@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ImportUploadStore
-  UPLOAD_DIR = 'tmp/imports'
+  UPLOAD_DIR = 'storage/imports'
   STALE_AFTER = 1.hour
   UUID_PATTERN = /\A[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\z/
 

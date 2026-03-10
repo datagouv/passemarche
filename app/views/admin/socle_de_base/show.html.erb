@@ -51,7 +51,7 @@
           <div class="fr-col-4">
             <p class="fr-text--bold fr-mb-1v"><%= t('admin.socle_de_base.show.market_types') %></p>
             <% @presenter.market_types.each do |mt| %>
-              <span class="fr-badge fr-badge--sm fr-badge--blue-cumulus"><%= mt.code.humanize %></span>
+              <span class="fr-badge fr-badge--sm fr-badge--blue-cumulus"><%= t("market_types.#{mt.code}") %></span>
             <% end %>
           </div>
         </div>
