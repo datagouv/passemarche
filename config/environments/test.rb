@@ -63,6 +63,8 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 
+  config.import_upload_dir = Rails.root.join('tmp/imports')
+
   # Configure Active Record encryption for test environment
   config.active_record.encryption.primary_key = 'test_primary_key_for_testing_only'
   config.active_record.encryption.deterministic_key = 'test_deterministic_key_for_testing'
