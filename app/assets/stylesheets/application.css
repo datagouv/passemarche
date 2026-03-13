@@ -670,3 +670,19 @@
   background-color: #E8EDFF !important;
   color: #0063CB !important;
 }
+
+/* Environment banner for non-production */
+.environment-banner {
+  background-color: var(--red-marianne-sun-406, #e1000f);
+}
+
+.environment-banner .fr-notice__body {
+  padding: 8px 0;
+}
+
+.environment-banner__text {
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  font-weight: 700;
+}
