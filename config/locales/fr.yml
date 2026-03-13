@@ -349,6 +349,8 @@ fr:
         steps:
           identite_entreprise:
             title: Les informations concernant l'identité de l'entreprise
+            optional_fields_title: Informations complémentaires sur l'identité de l'entreprise
+            optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations complémentaires qui seront demandées aux candidats
           motifs_exclusion:
             title: "Les motifs d'exclusion"
             box_title: "Motifs d'exclusion obligatoire"
