@@ -1,0 +1,11 @@
+<% if non_production_environment? %>
+  <div class="environment-banner">
+    <div class="fr-container">
+      <div class="fr-notice__body">
+        <p class="environment-banner__text">
+          <%= t('shared.environment_banner.message', env: Rails.env) %>
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -11,4 +11,8 @@ module ApplicationHelper
   def page_break_class(context, index)
     'page-break-before' if index.positive? && context.in?(%i[pdf buyer])
   end
+
+  def non_production_environment?
+    !Rails.env.production?
+  end
 end

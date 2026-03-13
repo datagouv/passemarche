@@ -33,6 +33,17 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
         expect(result.attestation).to eq(market_application.attestation)
       end
 
+      it 'includes the watermark in the PDF' do
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+        allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+          expect(html_content).to include('Attestation%20de%20test')
+          expect(html_content).to include('background-image')
+          'fake pdf content'
+        end
+
+        subject
+      end
+
       it 'generates PDF with "Attestation de candidature" header' do
         allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
         allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|

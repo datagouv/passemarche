@@ -48,7 +48,6 @@ body {
 
 /* Cards */
 .fr-card {
-  background-color: #ffffff;
   border: 1px solid #dddddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -80,15 +79,6 @@ body {
 
 .fr-card__content {
   display: block;
-}
-
-/* Backgrounds */
-.fr-background-alt--grey {
-  background-color: #f6f6f6;
-}
-
-.fr-background-alt--blue-ecume {
-  background-color: #e3e3fd;
 }
 
 /* Text Colors */
@@ -127,7 +117,6 @@ h6 {
 .fr-badge {
   display: inline-block;
   padding: 4px 12px;
-  background-color: #f6f6f6;
   color: #161616;
   font-size: 12px;
   font-weight: 700;
@@ -147,12 +136,10 @@ h6 {
 }
 
 .fr-badge--success {
-  background-color: #b8fec9;
   color: #18753c;
 }
 
 .fr-badge--info {
-  background-color: #e8edff;
   color: #0063cb;
 }
 
@@ -374,18 +361,15 @@ strong {
 .fr-notice {
   margin-bottom: 4px;
   padding: 8px 12px;
-  background-color: #e3e3fd;
   border-left: 4px solid #000091;
   page-break-inside: avoid;
 }
 
 .fr-notice--info {
-  background-color: #e3e3fd;
   border-left-color: #000091;
 }
 
 .fr-notice--alert {
-  background-color: #fee7e6;
   border-left-color: #ce0500;
 }
 
@@ -431,7 +415,6 @@ strong {
 .attestation-certification {
   margin: 32px 0;
   padding: 16px;
-  background-color: #f6f6f6;
   border-left: 4px solid #000091;
 }
 
@@ -445,7 +428,6 @@ strong {
 
 /* Repeating page header for all pages */
 .pdf-page-header {
-  background-color: #ffffff;
   border-bottom: 2px solid #000091;
   display: table;
   width: 100%;

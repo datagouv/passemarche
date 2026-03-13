@@ -138,6 +138,10 @@ fr:
     renamed_documents:
       title: "Vos documents"
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
+    environment_banner:
+      message: "Vous êtes sur un environnement de test (%{env})"
+    pdf_environment_indicator:
+      watermark: "Attestation de test"
 
   errors:
     messages:
