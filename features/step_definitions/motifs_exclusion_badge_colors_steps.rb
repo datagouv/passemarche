@@ -17,6 +17,7 @@ Given('a market application with motifs exclusion answered Oui') do
     public_market: @public_market,
     siret: '73282932000074',
     attests_no_exclusion_motifs: true)
+  authenticate_as_candidate_for(@market_application)
 
   create(:market_attribute_response_radio_with_file_and_text,
     market_application: @market_application,
@@ -30,6 +31,7 @@ Given('a market application with motifs exclusion answered Non') do
     public_market: @public_market,
     siret: '73282932000074',
     attests_no_exclusion_motifs: true)
+  authenticate_as_candidate_for(@market_application)
 
   create(:market_attribute_response_radio_with_file_and_text,
     market_application: @market_application,

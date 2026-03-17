@@ -11,6 +11,7 @@ end
 
 Given('a candidate starts a new application') do
   @market_application = create(:market_application, public_market: @public_market, siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
   visit "/candidate/market_applications/#{@market_application.identifier}/market_information"
 end
 

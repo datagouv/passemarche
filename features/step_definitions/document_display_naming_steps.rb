@@ -25,6 +25,7 @@ Given('a candidate has started an application') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 
   stub_api_requests
 end
