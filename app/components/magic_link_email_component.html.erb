@@ -7,7 +7,11 @@
         <tr>
           <td colspan="2" style="background-color: #f5f5fe; padding: 40px 32px; text-align: center;">
             <h1 style="margin: 0; font-size: 26px; font-weight: 700; color: #161616; line-height: 1.3;">
-              <%= t('auth_mailer.magic_link.subject') %>
+              <% if @reconnection %>
+                <%= t('auth_mailer.reconnection_magic_link.subject') %>
+              <% else %>
+                <%= t('auth_mailer.magic_link.subject') %>
+              <% end %>
             </h1>
           </td>
         </tr>
@@ -16,23 +20,42 @@
         <tr>
           <td width="274" valign="top" style="padding: 28px 20px 28px 32px;">
             <p style="margin: 0 0 12px; font-size: 18px; font-weight: 700; color: #161616;">
-              <%= t('auth_mailer.magic_link.greeting') %>
+              <% if @reconnection %>
+                <%= t('auth_mailer.reconnection_magic_link.greeting') %>
+              <% else %>
+                <%= t('auth_mailer.magic_link.greeting') %>
+              <% end %>
             </p>
 
-            <p style="margin: 0 0 12px; font-size: 15px; color: #3a3a3a; line-height: 1.6;">
-              <%= t('auth_mailer.magic_link.intro') %>
-              &ldquo;<strong><%= @market_name %></strong>&rdquo;
-            </p>
+            <% if @reconnection %>
+              <p style="margin: 0 0 12px; font-size: 15px; color: #3a3a3a; line-height: 1.6;">
+                <%= t('auth_mailer.reconnection_magic_link.intro') %>
+              </p>
+              <p style="margin: 0 0 12px; font-size: 15px; color: #3a3a3a; line-height: 1.6;">
+                <%= t('auth_mailer.reconnection_magic_link.market_intro') %>
+                &ldquo;<strong><%= @market_name %></strong>&rdquo;
+              </p>
+            <% else %>
+              <p style="margin: 0 0 12px; font-size: 15px; color: #3a3a3a; line-height: 1.6;">
+                <%= t('auth_mailer.magic_link.intro') %>
+                &ldquo;<strong><%= @market_name %></strong>&rdquo;
+              </p>
+            <% end %>
 
             <p style="margin: 0 0 20px; font-size: 15px; color: #3a3a3a;">
-              <%= t('auth_mailer.magic_link.cta_intro') %>
+              <% if @reconnection %>
+                <%= t('auth_mailer.reconnection_magic_link.cta_intro') %>
+              <% else %>
+                <%= t('auth_mailer.magic_link.cta_intro') %>
+              <% end %>
             </p>
 
             <table cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
               <tr>
                 <td style="background-color: #000091; border-radius: 4px;">
-                  <%= link_to t('auth_mailer.magic_link.cta'), @url,
-                    style: "display: inline-block; padding: 12px 24px; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none;" %>
+                  <% cta_key = @reconnection ? 'auth_mailer.reconnection_magic_link.cta' : 'auth_mailer.magic_link.cta' %>
+                  <%= link_to t(cta_key), @url,
+                    style: "display: inline-block; padding: 12px 24px; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap;" %>
                 </td>
               </tr>
             </table>
