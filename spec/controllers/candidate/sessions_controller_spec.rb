@@ -10,8 +10,8 @@ RSpec.describe Candidate::SessionsController, type: :controller do
   let(:valid_siret) { market_application.siret }
 
   before do
-    allow(SiretValidationService).to receive(:call).and_call_original
-    allow(SiretValidationService).to receive(:call).with(valid_siret).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_call_original
+    allow(SiretValidator).to receive(:valid?).with(valid_siret).and_return(true)
   end
 
   describe 'POST #create' do
@@ -38,7 +38,7 @@ RSpec.describe Candidate::SessionsController, type: :controller do
     end
 
     context 'when SIRET is invalid' do
-      before { allow(SiretValidationService).to receive(:call).with('00000000000000').and_return(false) }
+      before { allow(SiretValidator).to receive(:valid?).with('00000000000000').and_return(false) }
 
       it 'returns unprocessable_content' do
         post :create, params: { email: user.email, siret: '00000000000000' }

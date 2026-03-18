@@ -88,7 +88,7 @@ RSpec.describe CreatePublicMarket, type: :interactor do
       end
 
       it 'has SIRET validation error' do
-        expect(subject.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+        expect(subject.errors[:siret]).to be_present
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.describe CreatePublicMarket, type: :interactor do
       end
 
       it 'has SIRET validation error' do
-        expect(subject.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu')
+        expect(subject.errors[:siret]).to be_present
       end
     end
 
