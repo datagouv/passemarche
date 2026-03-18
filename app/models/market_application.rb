@@ -18,11 +18,10 @@ class MarketApplication < ApplicationRecord
   attr_accessor :current_validation_step
 
   validates :identifier, presence: true, uniqueness: true
-  validates :siret, presence: true, format: { with: /\A\d{14}\z/ }
+  validates :siret, presence: true, siret: true
   validates :attests_no_exclusion_motifs, inclusion: { in: [true, false] }, allow_nil: false
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
   validate :market_must_be_completed
-  validate :siret_must_be_valid
   validate :nested_attributes_valid
 
   before_validation :generate_identifier, on: :create
@@ -101,13 +100,6 @@ class MarketApplication < ApplicationRecord
     return unless public_market
 
     errors.add(:public_market, 'must be completed') unless public_market.sync_completed?
-  end
-
-  def siret_must_be_valid
-    return if siret.blank?
-    return if SiretValidationService.call(siret)
-
-    errors.add(:siret, 'Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
   end
 
   def nested_attributes_valid
