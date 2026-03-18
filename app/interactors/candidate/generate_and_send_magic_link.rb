@@ -2,14 +2,14 @@
 
 module Candidate
   class GenerateAndSendMagicLink < ApplicationInteractor
-    delegate :user, :market_application, :host, :protocol, to: :context
+    delegate :user, :market_application, :host, :protocol, :reconnection, to: :context
 
     def call
       user.update!(authentication_token_sent_at: Time.current)
       token = user.generate_token_for(:magic_link)
       url = build_url(token)
 
-      AuthMailer.magic_link(user, url, market_application.public_market.name).deliver_later
+      AuthMailer.magic_link(user, url, market_application.public_market.name, reconnection:).deliver_later
     end
 
     private
