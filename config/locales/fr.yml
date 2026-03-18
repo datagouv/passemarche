@@ -431,6 +431,7 @@ fr:
       sent:
         title: "Vérifiez vos emails"
         message: "Un lien de connexion a été envoyé. Il est valable 30 minutes."
+        reconnection_market_intro: "Ce lien vous permettra de reprendre votre candidature pour le marché :"
       invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
       welcome: "Bienvenue,"
