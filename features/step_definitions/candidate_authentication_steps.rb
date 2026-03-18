@@ -4,8 +4,14 @@ Given('a candidate application exists for SIRET {string}') do |siret|
   @market_application = create(:market_application, public_market: @public_market, siret:)
 end
 
+Given('the candidate application is already assigned to {string}') do |email|
+  user = create(:user, email:)
+  @market_application.update!(user:)
+end
+
 Given('a candidate {string} has a valid magic link token') do |email|
-  @user = create(:user, email:, authentication_token_sent_at: Time.current)
+  @user = User.find_by(email:) || create(:user, email:)
+  @user.update!(authentication_token_sent_at: Time.current)
   @magic_link_token = @user.generate_token_for(:magic_link)
 end
 
