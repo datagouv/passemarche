@@ -44,6 +44,7 @@ Given(/^a candidate starts an application for this market \(urssaf\)$/) do
     public_market: @public_market,
     siret: '41816609600069'
   )
+  authenticate_as_candidate_for(@market_application)
 end
 
 Given('the URSSAF API will return a valid attestation') do

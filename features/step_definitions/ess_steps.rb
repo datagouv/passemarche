@@ -68,6 +68,7 @@ When('I start an application for the ESS market') do
     public_market: @public_market,
     siret: '41816609600069'
   )
+  authenticate_as_candidate_for(@market_application)
 end
 
 When('all APIs complete for ESS') do

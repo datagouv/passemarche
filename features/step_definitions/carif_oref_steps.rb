@@ -56,6 +56,7 @@ When('I start an application for the CARIF-OREF market') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '12000101100010')
+  authenticate_as_candidate_for(@market_application)
 end
 
 When('I fill in the SIRET for CARIF-OREF application') do

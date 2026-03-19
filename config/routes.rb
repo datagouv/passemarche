@@ -69,6 +69,11 @@ Rails.application.routes.draw do
   end
 
   namespace :candidate do
+    resource :sessions, only: %i[create destroy] do
+      get :verify
+      get :sent
+    end
+
     resources :market_applications, param: :identifier, only: [] do
       member do
         get ':id', to: 'market_applications#show', as: :step

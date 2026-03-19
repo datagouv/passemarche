@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Candidate::Authentication
+
   private
 
   def set_no_cache_headers

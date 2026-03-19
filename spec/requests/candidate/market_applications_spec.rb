@@ -12,10 +12,13 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:candidate_user) { create(:user) }
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
   before do
+    allow_any_instance_of(ApplicationController).to receive(:current_candidate).and_return(candidate_user)
+
     create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [public_market])
     create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [public_market])
     create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', subcategory_key: 'economic_capacities', public_markets: [public_market])

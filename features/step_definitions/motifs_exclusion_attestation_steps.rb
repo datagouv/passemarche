@@ -35,6 +35,7 @@ Given('a candidate application with attests_no_exclusion_motifs checked') do
     public_market: @public_market,
     siret: '73282932000074',
     attests_no_exclusion_motifs: true)
+  authenticate_as_candidate_for(@market_application)
 
   market_attribute = @public_market.market_attributes.find_by(key: 'test_motif_field')
   create(:market_attribute_response_text_input,

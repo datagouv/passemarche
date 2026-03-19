@@ -146,6 +146,7 @@ fr:
   errors:
     messages:
       blank: "doit être rempli(e)"
+      invalid: "n'est pas valide"
     market_application:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
@@ -407,6 +408,22 @@ fr:
   candidate:
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
+    sessions:
+      new:
+        title: "Bienvenue,"
+        subtitle: "Passe Marché vous permet de candidater aux marchés publics."
+        subtitle_with_editor: "%{editor} vous permet de candidater rapidement aux marchés publics."
+        employee_section: "Vous êtes un employé ?"
+        siret_label: "Veuillez saisir votre numéro de SIRET"
+        siret_hint: "Cela nous permet de récupérer des informations et documents automatiquement"
+        email_label: "Veuillez saisir votre adresse email"
+        submit: "Recevoir un lien de connexion"
+        manager_section: "Vous êtes dirigeant ?"
+        proconnect_cta: "S'identifier avec ProConnect"
+      sent:
+        title: "Vérifiez vos emails"
+        message: "Un lien de connexion a été envoyé. Il est valable 30 minutes."
+      invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
       welcome: "Bienvenue,"
       siret_label: "Votre numéro de SIRET"

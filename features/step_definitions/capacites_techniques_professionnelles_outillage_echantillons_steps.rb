@@ -29,6 +29,7 @@ Given('a candidate starts an application for this echantillons market') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 end
 
 # Navigation steps
