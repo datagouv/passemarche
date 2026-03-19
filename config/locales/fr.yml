@@ -14,6 +14,13 @@ fr:
         legal: Mentions légales
         copyright: "© République Française - Tous droits réservés"
         contact: contact@exemple.gouv.fr
+    reconnection_magic_link:
+      subject: Reprenez votre candidature sur Passe Marché
+      greeting: "Votre candidature,"
+      intro: "En vous connectant à Passe Marché, avec le même numéro de SIRET et la même adresse email qu'à la première connexion, vous pouvez modifier votre candidature à tout moment tant qu'elle n'a pas été transmise à l'acheteur."
+      market_intro: "Vous pouvez accéder au formulaire de candidature pour le marché :"
+      cta_intro: "Cliquez sur le bouton ci-dessous pour vous reconnecter et continuer :"
+      cta: Poursuivre ma candidature
   source_types:
     authentic_source:
       label: Récupéré automatiquement
@@ -408,6 +415,7 @@ fr:
   candidate:
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
+      email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
     sessions:
       new:
         title: "Bienvenue,"
@@ -423,6 +431,7 @@ fr:
       sent:
         title: "Vérifiez vos emails"
         message: "Un lien de connexion a été envoyé. Il est valable 30 minutes."
+        reconnection_market_intro: "Ce lien vous permettra de reprendre votre candidature pour le marché :"
       invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
       welcome: "Bienvenue,"

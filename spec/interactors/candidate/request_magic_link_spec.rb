@@ -61,6 +61,47 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       end
     end
 
+    context 'when market application already has a user and email does not match' do
+      before { market_application.update!(user: create(:user, email: 'other@example.com')) }
+
+      it 'fails' do
+        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+
+        expect(result).to be_failure
+        expect(result.errors[:email]).to be_present
+      end
+
+      it 'does not send an email' do
+        described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+
+        expect(ActionMailer::Base.deliveries).to be_empty
+      end
+    end
+
+    context 'when reconnecting with matching SIRET and email' do
+      let(:existing_user) { create(:user, email: valid_email) }
+
+      before { market_application.update!(user: existing_user) }
+
+      it 'succeeds' do
+        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+
+        expect(result).to be_success
+      end
+
+      it 'marks context as reconnection' do
+        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+
+        expect(result.reconnection).to be true
+      end
+
+      it 'sends the magic link email' do
+        expect do
+          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        end.to have_enqueued_mail(AuthMailer, :magic_link)
+      end
+    end
+
     context 'when all inputs are valid' do
       it 'succeeds' do
         result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)

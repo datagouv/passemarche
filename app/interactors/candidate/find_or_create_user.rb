@@ -5,6 +5,8 @@ module Candidate
     delegate :email, to: :context
 
     def call
+      return if context.user
+
       user = User.find_or_create_by_email(email)
 
       if user.persisted?

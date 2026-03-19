@@ -48,11 +48,49 @@ RSpec.describe Candidate::SessionsController, type: :controller do
     end
   end
 
+  describe 'POST #create' do
+    context 'when reconnecting with matching email' do
+      before { market_application.update!(user:) }
+
+      it 'stores reconnection_market_name in session' do
+        post :create, params: { email: user.email, siret: valid_siret }
+
+        expect(session[:reconnection_market_name]).to eq(market_application.public_market.name)
+      end
+
+      it 'redirects to sent path' do
+        post :create, params: { email: user.email, siret: valid_siret }
+
+        expect(response).to redirect_to(sent_candidate_sessions_path)
+      end
+    end
+
+    context 'when reconnecting with wrong email' do
+      before { market_application.update!(user: create(:user, email: 'other@example.com')) }
+
+      it 'returns unprocessable_content' do
+        post :create, params: { email: user.email, siret: valid_siret }
+
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+  end
+
   describe 'GET #sent' do
     it 'returns ok' do
       get :sent
 
       expect(response).to have_http_status(:ok)
+    end
+
+    context 'when reconnection_market_name is in session' do
+      before { session[:reconnection_market_name] = 'Marché test' }
+
+      it 'clears reconnection_market_name from session' do
+        get :sent
+
+        expect(session[:reconnection_market_name]).to be_nil
+      end
     end
   end
 
@@ -84,6 +122,30 @@ RSpec.describe Candidate::SessionsController, type: :controller do
       end
 
       it 'redirects to first step if no return_to stored' do
+        get :verify, params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :company_identification)
+        )
+      end
+    end
+
+    context 'when reconnecting (market_application already assigned to user)' do
+      before { market_application.update!(user:) }
+
+      it 'stores user_id in session' do
+        get :verify, params: { token:, market_application_id: market_application.identifier }
+
+        expect(session[:user_id]).to eq(user.id)
+      end
+
+      it 'does not change market_application user' do
+        expect do
+          get :verify, params: { token:, market_application_id: market_application.identifier }
+        end.not_to change { market_application.reload.user_id }
+      end
+
+      it 'redirects to first step of application' do
         get :verify, params: { token:, market_application_id: market_application.identifier }
 
         expect(response).to redirect_to(

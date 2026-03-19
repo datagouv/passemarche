@@ -11,6 +11,7 @@ module Candidate
       )
 
       if result.success?
+        store_reconnection_context(result)
         redirect_to sent_candidate_sessions_path
       else
         @errors = result.errors
@@ -18,7 +19,9 @@ module Candidate
       end
     end
 
-    def sent; end
+    def sent
+      @reconnection_market_name = session.delete(:reconnection_market_name)
+    end
 
     def verify
       user = User.find_by_token_for(:magic_link, params[:token])
@@ -37,10 +40,17 @@ module Candidate
     private
 
     def sign_in_candidate(user, market_application)
-      market_application.update!(user:) if market_application.user_id.nil?
+      reconnection = market_application.user_id.present?
+      market_application.update!(user:) unless reconnection
       session[:user_id] = user.id
       redirect_to session.delete(:return_to) ||
                   step_candidate_market_application_path(market_application.identifier, :company_identification)
+    end
+
+    def store_reconnection_context(result)
+      return unless result.reconnection
+
+      session[:reconnection_market_name] = result.market_application.public_market.name
     end
 
     def invalid_token

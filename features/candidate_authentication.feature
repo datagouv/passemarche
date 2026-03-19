@@ -33,3 +33,28 @@ Feature: Candidate authentication via magic link
     When I visit the magic link
     Then I should be on the first step of my application
     And I should be authenticated
+
+  Scenario: Candidate reconnects with matching SIRET and email
+    Given the candidate application is already assigned to "candidat@example.com"
+    When I visit the first step of my application
+    And I fill in "siret" with "73282932000074"
+    And I fill in "email" with "candidat@example.com"
+    And I click "Recevoir un lien de connexion"
+    Then I should see "Vérifiez vos emails"
+    And an email should have been sent to "candidat@example.com"
+
+  Scenario: Candidate reconnects with wrong email
+    Given the candidate application is already assigned to "original@example.com"
+    When I visit the first step of my application
+    And I fill in "siret" with "73282932000074"
+    And I fill in "email" with "wrong@example.com"
+    And I click "Recevoir un lien de connexion"
+    Then I should see the authentication form
+    And I should see an error message
+
+  Scenario: Reconnected candidate lands on their candidature
+    Given the candidate application is already assigned to "candidat@example.com"
+    And a candidate "candidat@example.com" has a valid magic link token
+    When I visit the magic link
+    Then I should be on the first step of my application
+    And I should be authenticated

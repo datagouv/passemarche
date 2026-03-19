@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class MagicLinkEmailComponent < ViewComponent::Base
-  def initialize(url:, market_name:)
+  def initialize(url:, market_name:, reconnection: false)
     @url = url
     @market_name = market_name
+    @reconnection = reconnection
   end
 
   private
