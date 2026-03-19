@@ -5,7 +5,7 @@ module Candidate
     delegate :siret, to: :context
 
     def call
-      return if SiretValidationService.call(siret)
+      return if SiretValidator.valid?(siret)
 
       context.fail!(errors: { siret: [I18n.t('errors.messages.invalid')] })
     end

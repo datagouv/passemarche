@@ -12,8 +12,8 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
   let(:protocol) { 'http://' }
 
   before do
-    allow(SiretValidationService).to receive(:call).and_call_original
-    allow(SiretValidationService).to receive(:call).with(valid_siret).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_call_original
+    allow(SiretValidator).to receive(:valid?).with(valid_siret).and_return(true)
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.deliveries.clear
   end
@@ -35,7 +35,7 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
     end
 
     context 'when SIRET is invalid (Luhn)' do
-      before { allow(SiretValidationService).to receive(:call).with('12345678901234').and_return(false) }
+      before { allow(SiretValidator).to receive(:valid?).with('12345678901234').and_return(false) }
 
       it 'fails' do
         result = described_class.call(email: valid_email, siret: '12345678901234', host:, protocol:)

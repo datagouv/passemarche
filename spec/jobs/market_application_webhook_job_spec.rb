@@ -12,7 +12,7 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
     WebMock.enable!
     stub_request(:post, editor.completion_webhook_url)
       .to_return(status: 200, body: 'OK')
-    allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_return(true)
   end
 
   after do

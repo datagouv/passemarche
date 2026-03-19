@@ -9,7 +9,7 @@ RSpec.describe AuthMailer, type: :mailer do
   let(:user) { build(:user, email: 'candidat@example.com') }
   let(:url) { 'http://localhost:3000/auth/verify?token=abc123&market_application_id=VR-2024-ABC' }
 
-  before { allow(SiretValidationService).to receive(:call).and_return(true) }
+  before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 
   describe '#magic_link' do
     let(:mail) { described_class.magic_link(user, url, public_market.name) }

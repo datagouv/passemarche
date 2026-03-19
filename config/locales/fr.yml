@@ -1140,10 +1140,12 @@ fr:
               cannot_be_alone: "Le marché de défense ne peut pas être le seul type sélectionné"
             market_type_codes:
               invalid_codes: "Les codes de marché contiennent des valeurs invalides : %{codes}"
+            siret:
+              invalid: "Le numéro de SIRET saisi est invalide ou non reconnu"
         market_application:
           attributes:
             siret:
-              invalid: "Le numéro SIRET doit être composé de 14 chiffres valides"
+              invalid: "Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie."
         market_attribute_response:
           attributes:
             documents:

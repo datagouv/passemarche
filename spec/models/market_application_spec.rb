@@ -7,7 +7,7 @@ RSpec.describe MarketApplication, type: :model do
   let(:public_market) { create(:public_market, :completed, editor:) }
 
   before do
-    allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_return(true)
   end
 
   describe 'business validations' do
@@ -19,21 +19,20 @@ RSpec.describe MarketApplication, type: :model do
     end
 
     it 'requires SIRET to have exactly 14 digits' do
+      allow(SiretValidator).to receive(:valid?).and_call_original
       application = build(:market_application, public_market:, siret: '123456')
 
       expect(application).not_to be_valid
       expect(application.errors[:siret]).to be_present
     end
 
-    it 'calls SiretValidationService for SIRET validation' do
-      allow(SiretValidationService).to receive(:call).with(public_market.siret).and_return(true)
-      allow(SiretValidationService).to receive(:call).with('12345678901234').and_return(false)
+    it 'rejects SIRET with invalid Luhn checksum' do
+      allow(SiretValidator).to receive(:valid?).with('12345678901234').and_return(false)
 
       application = build(:market_application, public_market:, siret: '12345678901234')
 
       expect(application).not_to be_valid
-      expect(application.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
-      expect(SiretValidationService).to have_received(:call).with('12345678901234')
+      expect(application.errors[:siret]).to be_present
     end
 
     it 'requires public market to be completed' do

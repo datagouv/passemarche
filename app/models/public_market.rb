@@ -13,11 +13,10 @@ class PublicMarket < ApplicationRecord
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
-  validates :siret, presence: true
+  validates :siret, presence: true, siret: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
   validate :must_have_valid_market_type_codes
-  validate :siret_must_be_valid
   validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
@@ -62,12 +61,5 @@ class PublicMarket < ApplicationRecord
     return if identifier.present?
 
     self.identifier = IdentifierGenerationService.call
-  end
-
-  def siret_must_be_valid
-    return if siret.blank?
-    return if SiretValidationService.call(siret)
-
-    errors.add(:siret, 'Le numéro de SIRET saisi est invalide ou non reconnu')
   end
 end
