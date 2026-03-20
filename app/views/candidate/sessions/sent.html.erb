@@ -18,7 +18,7 @@
 
       <% if @magic_link_url %>
         <div class="fr-alert fr-alert--info fr-mb-3w">
-          <p class="fr-alert__title">Sandbox</p>
+          <p class="fr-alert__title"><%= Rails.env.capitalize %></p>
           <p>
             <%= link_to "Accéder directement (lien magique)", @magic_link_url, class: "fr-link" %>
           </p>
