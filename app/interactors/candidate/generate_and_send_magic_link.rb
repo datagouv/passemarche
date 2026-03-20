@@ -6,13 +6,16 @@ module Candidate
 
     def call
       user.update!(authentication_token_sent_at: Time.current)
-      token = user.generate_token_for(:magic_link)
-      context.magic_link_url = build_url(token)
+      context.magic_link_url = build_url(user.generate_token_for(:magic_link))
 
-      AuthMailer.magic_link(user, context.magic_link_url, market_application.public_market.name, reconnection:).deliver_later
+      send_magic_link_email
     end
 
     private
+
+    def send_magic_link_email
+      AuthMailer.magic_link(user, context.magic_link_url, market_application.public_market.name, reconnection:).deliver_later
+    end
 
     def build_url(token)
       Rails.application.routes.url_helpers.verify_candidate_sessions_url(
