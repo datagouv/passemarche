@@ -12,6 +12,7 @@ module Candidate
 
       if result.success?
         store_reconnection_context(result)
+        store_magic_link_url(result)
         redirect_to sent_candidate_sessions_path
       else
         @errors = result.errors
@@ -21,6 +22,7 @@ module Candidate
 
     def sent
       @reconnection_market_name = session.delete(:reconnection_market_name)
+      @magic_link_url = session.delete(:magic_link_url)
     end
 
     def verify
@@ -51,6 +53,12 @@ module Candidate
       return unless result.reconnection
 
       session[:reconnection_market_name] = result.market_application.public_market.name
+    end
+
+    def store_magic_link_url(result)
+      return unless Rails.env.sandbox?
+
+      session[:magic_link_url] = result.magic_link_url
     end
 
     def invalid_token
