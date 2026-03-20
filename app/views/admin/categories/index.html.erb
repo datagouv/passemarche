@@ -28,12 +28,12 @@
              id="dropdown-categories-create">
           <ul class="fr-dropdown__list">
             <li>
-              <%= link_to '#', class: "fr-dropdown__link" do %>
+              <%= link_to new_admin_category_path, class: "fr-dropdown__link", data: { turbo_frame: "modal" } do %>
                 <%= t('admin.categories.actions.create_category') %>
               <% end %>
             </li>
             <li>
-              <%= link_to '#', class: "fr-dropdown__link" do %>
+              <%= link_to new_admin_subcategory_path, class: "fr-dropdown__link", data: { turbo_frame: "modal" } do %>
                 <%= t('admin.categories.actions.create_subcategory') %>
               <% end %>
             </li>

@@ -20,12 +20,12 @@ Rails.application.routes.draw do
         patch :archive
       end
     end
-    resources :categories, only: %i[index edit update] do
+    resources :categories, only: %i[index new create edit update] do
       collection do
         patch :reorder
       end
     end
-    resources :subcategories, only: %i[edit update] do
+    resources :subcategories, only: %i[new create edit update] do
       collection do
         patch :reorder
       end
