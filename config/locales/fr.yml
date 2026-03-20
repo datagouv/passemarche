@@ -1006,6 +1006,16 @@ fr:
         create_subcategory: "Créer une nouvelle sous-catégorie"
         edit: "Modifier"
       navigation_link: "Catégories et sous-catégories"
+      new:
+        title: "Créer une catégorie"
+        buyer_section: "Catégorie acheteur"
+        candidate_section: "Catégorie candidat"
+        label_field: "Intitulé de la catégorie"
+        submit: "Créer"
+        cancel: "Annuler"
+        close: "Fermer"
+      create:
+        success: "Catégorie créée avec succès"
       edit:
         title: "Modifier une catégorie"
         buyer_section: "Catégorie acheteur"
@@ -1017,6 +1027,18 @@ fr:
       update:
         success: "Catégorie modifiée avec succès"
     subcategories:
+      new:
+        title: "Créer une sous-catégorie"
+        buyer_section: "Sous catégorie acheteur"
+        candidate_section: "Sous catégorie candidat"
+        linked_category: "Liée à la catégorie"
+        select_category: "Sélectionner une catégorie"
+        label_field: "Intitulé de la sous catégorie"
+        submit: "Créer"
+        cancel: "Annuler"
+        close: "Fermer"
+      create:
+        success: "Sous-catégorie créée avec succès"
       edit:
         title: "Modifier une sous catégorie"
         buyer_section: "Sous catégorie acheteur"
