@@ -56,7 +56,7 @@ module Candidate
     end
 
     def store_magic_link_url(result)
-      return unless Rails.env.sandbox?
+      return unless Rails.env.sandbox? || Rails.env.development?
 
       session[:magic_link_url] = result.magic_link_url
     end
