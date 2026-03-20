@@ -12,6 +12,10 @@ class Admin::CategoriesController < Admin::ApplicationController
     @category = Category.new
   end
 
+  def edit
+    @category = Category.find(params[:id])
+  end
+
   def create
     @category = Category.new(category_params)
     @category.key = @category.buyer_label.parameterize(separator: '_') if @category.buyer_label.present?
@@ -22,10 +26,6 @@ class Admin::CategoriesController < Admin::ApplicationController
       render turbo_stream: turbo_stream.replace('modal', template: 'admin/categories/new', layout: false),
         status: :unprocessable_content
     end
-  end
-
-  def edit
-    @category = Category.find(params[:id])
   end
 
   def update

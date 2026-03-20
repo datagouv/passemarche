@@ -8,6 +8,11 @@ class Admin::SubcategoriesController < Admin::ApplicationController
     @categories = Category.active.ordered
   end
 
+  def edit
+    @subcategory = Subcategory.find(params[:id])
+    @categories = Category.active.ordered
+  end
+
   def create
     @subcategory = Subcategory.new(subcategory_params)
     @subcategory.key = @subcategory.buyer_label.parameterize(separator: '_') if @subcategory.buyer_label.present?
@@ -19,11 +24,6 @@ class Admin::SubcategoriesController < Admin::ApplicationController
       render turbo_stream: turbo_stream.replace('modal', template: 'admin/subcategories/new', layout: false),
         status: :unprocessable_content
     end
-  end
-
-  def edit
-    @subcategory = Subcategory.find(params[:id])
-    @categories = Category.active.ordered
   end
 
   def update
