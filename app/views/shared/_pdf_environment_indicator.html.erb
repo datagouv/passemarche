@@ -1,15 +1,1 @@
-<% if non_production_environment? %>
-  <%
-    watermark_text = t('shared.pdf_environment_indicator.watermark')
-    svg = %(<svg xmlns="http://www.w3.org/2000/svg" width="680" height="970"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Marianne, Arial, sans-serif" font-size="60" font-weight="700" fill="rgba(0,0,0,0.08)" transform="rotate(-35, 340, 485)">#{watermark_text}</text></svg>)
-    watermark_url = "data:image/svg+xml;charset=utf-8,#{ERB::Util.url_encode(svg)}"
-  %>
-  <style>
-    body {
-      background-image: url("<%= watermark_url %>");
-      background-repeat: repeat-y;
-      background-size: 100% auto;
-      -webkit-print-color-adjust: exact;
-    }
-  </style>
-<% end %>
+<%# Watermark is applied as a PDF overlay via PdfWatermark after generation %>

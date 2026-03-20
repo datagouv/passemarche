@@ -673,7 +673,7 @@
 
 /* Environment banner for non-production */
 .environment-banner {
-  background-color: var(--red-marianne-sun-406, #e1000f);
+  background-color: var(--yellow-tournesol-975-75, #fef4cd);
 }
 
 .environment-banner .fr-notice__body {
@@ -681,7 +681,7 @@
 }
 
 .environment-banner__text {
-  color: #fff;
+  color: var(--grey-50-1000, #161616);
   text-align: center;
   margin: 0;
   font-weight: 700;

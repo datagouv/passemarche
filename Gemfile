@@ -66,3 +66,5 @@ group :test do
   gem 'simplecov', require: false
   gem 'webmock', '~> 3.26'
 end
+
+gem "combine_pdf", "~> 1.0"
