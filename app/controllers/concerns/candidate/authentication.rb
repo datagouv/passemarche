@@ -17,11 +17,29 @@ module Candidate
     end
 
     def require_candidate_authentication
-      return if current_candidate
+      return if candidate_authenticated?
 
+      clear_candidate_authentication_session
       session[:return_to] = request.original_url
-      @identifier = params[:identifier]
       render 'candidate/sessions/new'
+    end
+
+    def ensure_market_application_in_session
+      session[:market_application_identifier] ||= @market_application.identifier
+    end
+
+    def candidate_authenticated?
+      return false unless current_candidate && @market_application
+
+      ensure_market_application_in_session
+
+      session[:market_application_identifier] == @market_application.identifier &&
+        @market_application.accessible_by?(current_candidate)
+    end
+
+    def clear_candidate_authentication_session
+      session.delete(:user_id)
+      session.delete(:market_application_identifier)
     end
   end
 end

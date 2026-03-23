@@ -8,6 +8,7 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:valid_email) { 'candidat@example.com' }
   let(:valid_siret) { market_application.siret }
+  let(:valid_market_application_id) { market_application.identifier }
   let(:host) { 'localhost:3000' }
   let(:protocol) { 'http://' }
 
@@ -21,14 +22,16 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
   describe '.call' do
     context 'when email is invalid' do
       it 'fails' do
-        result = described_class.call(email: 'not-an-email', siret: valid_siret, host:, protocol:)
+        result = described_class.call(email: 'not-an-email', siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result).to be_failure
         expect(result.errors[:email]).to be_present
       end
 
       it 'does not send an email' do
-        described_class.call(email: 'not-an-email', siret: valid_siret, host:, protocol:)
+        described_class.call(email: 'not-an-email', siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(ActionMailer::Base.deliveries).to be_empty
       end
@@ -38,14 +41,16 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       before { allow(SiretValidator).to receive(:valid?).with('12345678901234').and_return(false) }
 
       it 'fails' do
-        result = described_class.call(email: valid_email, siret: '12345678901234', host:, protocol:)
+        result = described_class.call(email: valid_email, siret: '12345678901234',
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result).to be_failure
         expect(result.errors[:siret]).to be_present
       end
 
       it 'does not send an email' do
-        described_class.call(email: valid_email, siret: '12345678901234', host:, protocol:)
+        described_class.call(email: valid_email, siret: '12345678901234',
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(ActionMailer::Base.deliveries).to be_empty
       end
@@ -53,8 +58,10 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
 
     context 'when no market application found for SIRET' do
       it 'fails' do
+        identifier = market_application.identifier
         market_application.destroy
-        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        result = described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: identifier, host:, protocol:)
 
         expect(result).to be_failure
         expect(result.errors[:siret]).to be_present
@@ -65,14 +72,16 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       before { market_application.update!(user: create(:user, email: 'other@example.com')) }
 
       it 'fails' do
-        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        result = described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result).to be_failure
         expect(result.errors[:email]).to be_present
       end
 
       it 'does not send an email' do
-        described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(ActionMailer::Base.deliveries).to be_empty
       end
@@ -84,34 +93,39 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       before { market_application.update!(user: existing_user) }
 
       it 'succeeds' do
-        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        result = described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result).to be_success
       end
 
       it 'marks context as reconnection' do
-        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        result = described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result.reconnection).to be true
       end
 
       it 'sends the magic link email' do
         expect do
-          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
         end.to have_enqueued_mail(AuthMailer, :magic_link)
       end
     end
 
     context 'when all inputs are valid' do
       it 'succeeds' do
-        result = described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        result = described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result).to be_success
       end
 
       it 'creates user if not existing' do
         expect do
-          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
         end.to change(User, :count).by(1)
       end
 
@@ -119,19 +133,22 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
         create(:user, email: valid_email)
 
         expect do
-          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
         end.not_to change(User, :count)
       end
 
       it 'sends the magic link email' do
         expect do
-          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
         end.to have_enqueued_mail(AuthMailer, :magic_link)
       end
 
       it 'updates authentication_token_sent_at' do
         freeze_time do
-          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
 
           user = User.find_by(email: valid_email)
           expect(user.authentication_token_sent_at).to eq(Time.current)
@@ -139,12 +156,14 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       end
 
       it 'invalidates previous token on resend' do
-        described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+        described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
         user = User.find_by(email: valid_email)
         first_sent_at = user.authentication_token_sent_at
 
         travel 1.minute do
-          described_class.call(email: valid_email, siret: valid_siret, host:, protocol:)
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
           expect(user.reload.authentication_token_sent_at).to be > first_sent_at
         end
       end
