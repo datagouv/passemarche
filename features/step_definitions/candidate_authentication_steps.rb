@@ -4,6 +4,19 @@ Given('a candidate application exists for SIRET {string}') do |siret|
   @market_application = create(:market_application, public_market: @public_market, siret:)
 end
 
+Given('a second candidate application exists for SIRET {string}') do |siret|
+  other_public_market = create(:public_market, :completed, editor: @public_market.editor)
+  @second_market_application = create(:market_application, public_market: other_public_market, siret:)
+end
+
+Given('I am authenticated for my application') do
+  authenticate_as_candidate_for(@market_application)
+end
+
+When('I visit the first step of my second application') do
+  visit step_candidate_market_application_path(@second_market_application.identifier, :company_identification)
+end
+
 Given('the candidate application is already assigned to {string}') do |email|
   user = create(:user, email:)
   @market_application.update!(user:)
