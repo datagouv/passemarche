@@ -2,10 +2,10 @@
 
 module Candidate
   class FindMarketApplicationBySiret < ApplicationInteractor
-    delegate :siret, :email, to: :context
+    delegate :siret, :email, :market_application_id, to: :context
 
     def call
-      application = MarketApplication.find_by(siret:)
+      application = find_application
 
       unless application
         context.fail!(errors: { siret: [I18n.t('candidate.request_magic_link.no_application_found')] })
@@ -19,18 +19,28 @@ module Candidate
     private
 
     def handle_reconnection(application)
-      context.reconnection = application.user_id.present?
+      existing_user = find_existing_siret_user(application)
+      context.reconnection = existing_user.present?
       return unless context.reconnection
 
-      validate_email_for_reconnection(application)
-      context.user = application.user
+      validate_email_for_user(existing_user)
+      context.user = existing_user
     end
 
-    def validate_email_for_reconnection(application)
-      existing_email = application.user.email
-      return if existing_email.casecmp(email).zero?
+    def find_existing_siret_user(application)
+      return application.user if application.user_id.present?
+
+      MarketApplication.where(siret:).where.not(user_id: nil).first&.user
+    end
+
+    def validate_email_for_user(existing_user)
+      return if existing_user.email.casecmp(email).zero?
 
       context.fail!(errors: { email: [I18n.t('candidate.request_magic_link.email_mismatch')] })
+    end
+
+    def find_application
+      MarketApplication.find_by(identifier: market_application_id, siret:)
     end
   end
 end

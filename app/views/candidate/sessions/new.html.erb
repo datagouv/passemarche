@@ -34,6 +34,7 @@
 
               <%= form_with url: candidate_sessions_path, method: :post, data: { turbo: false } do |form| %>
                 <% if @market_application %>
+                  <%= form.hidden_field :market_application_id, value: @market_application.identifier %>
                   <div class="fr-input-group fr-input-group--disabled fr-mb-3w">
                     <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
                     <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>

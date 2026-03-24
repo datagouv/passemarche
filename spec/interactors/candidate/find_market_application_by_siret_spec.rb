@@ -9,24 +9,43 @@ RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
   let(:market_application) { create(:market_application, public_market:, siret:) }
 
   describe '.call' do
-    context 'when no market application exists for the SIRET' do
+    context 'when the SIRET does not match the identified application' do
+      before { market_application }
+
       it 'fails with a siret error' do
-        result = described_class.call(siret: 'unknown', email: 'anyone@example.com')
+        result = described_class.call(siret: 'wrong_siret', email: 'anyone@example.com',
+          market_application_id: market_application.identifier)
 
         expect(result).to be_failure
         expect(result.errors[:siret]).to be_present
       end
     end
 
-    context 'when a market application exists without a user (first access)' do
+    context 'when the application is found (first access)' do
       before { market_application }
 
       it 'succeeds and sets reconnection to false' do
-        result = described_class.call(siret:, email: 'anyone@example.com')
+        result = described_class.call(siret:, email: 'anyone@example.com',
+          market_application_id: market_application.identifier)
 
         expect(result).to be_success
         expect(result.reconnection).to be false
         expect(result.market_application).to eq(market_application)
+      end
+    end
+
+    context 'when multiple applications exist for the same SIRET' do
+      let(:other_public_market) { create(:public_market, :completed, editor:) }
+      let(:other_application) { create(:market_application, public_market: other_public_market, siret:) }
+
+      before { market_application && other_application }
+
+      it 'finds the application matching the identifier' do
+        result = described_class.call(siret:, email: 'anyone@example.com',
+          market_application_id: other_application.identifier)
+
+        expect(result).to be_success
+        expect(result.market_application).to eq(other_application)
       end
     end
 
@@ -36,23 +55,53 @@ RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
       before { market_application.update!(user:) }
 
       it 'succeeds when email matches' do
-        result = described_class.call(siret:, email: 'original@example.com')
+        result = described_class.call(siret:, email: 'original@example.com',
+          market_application_id: market_application.identifier)
 
         expect(result).to be_success
         expect(result.reconnection).to be true
       end
 
       it 'succeeds when email matches with different casing' do
-        result = described_class.call(siret:, email: 'ORIGINAL@EXAMPLE.COM')
+        result = described_class.call(siret:, email: 'ORIGINAL@EXAMPLE.COM',
+          market_application_id: market_application.identifier)
 
         expect(result).to be_success
       end
 
       it 'fails when email does not match' do
-        result = described_class.call(siret:, email: 'wrong@example.com')
+        result = described_class.call(siret:, email: 'wrong@example.com',
+          market_application_id: market_application.identifier)
 
         expect(result).to be_failure
         expect(result.errors[:email]).to be_present
+      end
+    end
+
+    context 'when another application for the same SIRET already has a user' do
+      let(:other_public_market) { create(:public_market, :completed, editor:) }
+      let(:other_application) { create(:market_application, public_market: other_public_market, siret:) }
+      let(:user) { create(:user, email: 'original@example.com') }
+
+      before do
+        market_application
+        other_application.update!(user:)
+      end
+
+      it 'fails when email does not match the existing SIRET user' do
+        result = described_class.call(siret:, email: 'different@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_failure
+        expect(result.errors[:email]).to be_present
+      end
+
+      it 'succeeds when email matches the existing SIRET user' do
+        result = described_class.call(siret:, email: 'original@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_success
+        expect(result.reconnection).to be true
       end
     end
   end

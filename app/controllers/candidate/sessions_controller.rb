@@ -3,12 +3,7 @@
 module Candidate
   class SessionsController < ApplicationController
     def create
-      result = Candidate::RequestMagicLink.call(
-        email: params[:email],
-        siret: params[:siret],
-        host: request.host_with_port,
-        protocol: request.protocol
-      )
+      result = Candidate::RequestMagicLink.call(magic_link_request_params)
 
       if result.success?
         store_reconnection_context(result)
@@ -36,6 +31,7 @@ module Candidate
 
     def destroy
       session.delete(:user_id)
+      session.delete(:market_application_identifier)
       redirect_to root_path
     end
 
@@ -45,8 +41,19 @@ module Candidate
       reconnection = market_application.user_id.present?
       market_application.update!(user:) unless reconnection
       session[:user_id] = user.id
+      session[:market_application_identifier] = market_application.identifier
       redirect_to session.delete(:return_to) ||
                   step_candidate_market_application_path(market_application.identifier, :company_identification)
+    end
+
+    def magic_link_request_params
+      {
+        email: params[:email],
+        siret: params[:siret],
+        market_application_id: params[:market_application_id],
+        host: request.host_with_port,
+        protocol: request.protocol
+      }
     end
 
     def store_reconnection_context(result)

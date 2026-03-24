@@ -58,3 +58,18 @@ Feature: Candidate authentication via magic link
     When I visit the magic link
     Then I should be on the first step of my application
     And I should be authenticated
+
+  Scenario: Candidate with multiple applications authenticates for the correct one
+    Given a second candidate application exists for SIRET "73282932000074"
+    When I visit the first step of my second application
+    And I fill in "siret" with "73282932000074"
+    And I fill in "email" with "candidat@example.com"
+    And I click "Recevoir un lien de connexion"
+    Then I should see "Vérifiez vos emails"
+    And an email should have been sent to "candidat@example.com"
+
+  Scenario: Authenticated candidate is required to re-authenticate for a different application
+    Given a second candidate application exists for SIRET "73282932000074"
+    And I am authenticated for my application
+    When I visit the first step of my second application
+    Then I should see the authentication form

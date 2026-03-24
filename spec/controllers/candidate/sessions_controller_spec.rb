@@ -17,21 +17,21 @@ RSpec.describe Candidate::SessionsController, type: :controller do
   describe 'POST #create' do
     context 'when inputs are valid' do
       it 'redirects to sent path' do
-        post :create, params: { email: user.email, siret: valid_siret }
+        post :create, params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
 
         expect(response).to redirect_to(sent_candidate_sessions_path)
       end
 
       it 'sends the magic link email' do
         expect do
-          post :create, params: { email: user.email, siret: valid_siret }
+          post :create, params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
         end.to have_enqueued_mail(AuthMailer, :magic_link)
       end
     end
 
     context 'when email is invalid' do
       it 'returns unprocessable_content' do
-        post :create, params: { email: 'invalid', siret: valid_siret }
+        post :create, params: { email: 'invalid', siret: valid_siret, market_application_id: market_application.identifier }
 
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -41,7 +41,7 @@ RSpec.describe Candidate::SessionsController, type: :controller do
       before { allow(SiretValidator).to receive(:valid?).with('00000000000000').and_return(false) }
 
       it 'returns unprocessable_content' do
-        post :create, params: { email: user.email, siret: '00000000000000' }
+        post :create, params: { email: user.email, siret: '00000000000000', market_application_id: market_application.identifier }
 
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -53,13 +53,13 @@ RSpec.describe Candidate::SessionsController, type: :controller do
       before { market_application.update!(user:) }
 
       it 'stores reconnection_market_name in session' do
-        post :create, params: { email: user.email, siret: valid_siret }
+        post :create, params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
 
         expect(session[:reconnection_market_name]).to eq(market_application.public_market.name)
       end
 
       it 'redirects to sent path' do
-        post :create, params: { email: user.email, siret: valid_siret }
+        post :create, params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
 
         expect(response).to redirect_to(sent_candidate_sessions_path)
       end
@@ -69,7 +69,7 @@ RSpec.describe Candidate::SessionsController, type: :controller do
       before { market_application.update!(user: create(:user, email: 'other@example.com')) }
 
       it 'returns unprocessable_content' do
-        post :create, params: { email: user.email, siret: valid_siret }
+        post :create, params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
 
         expect(response).to have_http_status(:unprocessable_content)
       end
