@@ -30,7 +30,10 @@ module Candidate
     def find_existing_siret_user(application)
       return application.user if application.user_id.present?
 
-      MarketApplication.where(siret:).where.not(user_id: nil).first&.user
+      MarketApplication
+        .where(siret:, public_market: application.public_market)
+        .where.not(user_id: nil)
+        .first&.user
     end
 
     def validate_email_for_user(existing_user)
