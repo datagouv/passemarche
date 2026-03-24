@@ -5,7 +5,7 @@ module Candidate
     delegate :email, to: :context
 
     def call
-      return if email.to_s.match?(URI::MailTo::EMAIL_REGEXP)
+      return if EmailValidator.valid?(email)
 
       context.fail!(errors: { email: [I18n.t('errors.messages.invalid')] })
     end
