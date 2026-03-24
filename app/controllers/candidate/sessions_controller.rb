@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Candidate
-  class SessionsController < ApplicationController
+  class SessionsController < ::ApplicationController
     def create
       result = Candidate::RequestMagicLink.call(magic_link_request_params)
 

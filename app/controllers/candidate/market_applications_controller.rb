@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 module Candidate
-  class MarketApplicationsController < ApplicationController
+  class MarketApplicationsController < Candidate::ApplicationController
     include Wicked::Wizard
 
     prepend_before_action :set_steps
     prepend_before_action :find_market_application
-    before_action :require_candidate_authentication
     before_action :check_application_not_completed, except: [:retry_sync]
     before_action :set_wizard_steps
 

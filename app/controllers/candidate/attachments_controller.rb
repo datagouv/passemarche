@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Candidate
-  class AttachmentsController < ApplicationController
-    before_action :find_market_application
+  class AttachmentsController < Candidate::ApplicationController
+    prepend_before_action :find_market_application
 
     def destroy
       result = Candidate::DeleteFile.call(
