@@ -65,3 +65,38 @@ end
 Then('I should see an error message') do
   expect(page).to have_selector('.fr-alert--error')
 end
+
+Given('the public market has an email field in the {string} step') do |subcategory_key|
+  @email_attr = create(:market_attribute, :email,
+    key: 'identite_entreprise_contact_email',
+    category_key: 'identite_entreprise',
+    subcategory_key:,
+    public_markets: [@public_market])
+  create(:market_attribute_response_email_input,
+    market_application: @market_application,
+    market_attribute: @email_attr,
+    value: nil)
+end
+
+Given('the candidate application already has {string} in the email field') do |email|
+  response = @market_application.market_attribute_responses
+    .joins(:market_attribute)
+    .find_by(market_attributes: { key: 'identite_entreprise_contact_email' })
+  response.update!(value: { text: email })
+end
+
+When('I navigate to the {string} step') do |step|
+  visit step_candidate_market_application_path(@market_application.identifier, step)
+end
+
+Then('the email field should be pre-filled with {string}') do |email|
+  expect(page).to have_css("input[type='email'][value='#{email}']")
+end
+
+Then('the email field should contain {string}') do |email|
+  expect(page).to have_css("input[type='email'][value='#{email}']")
+end
+
+Then('the email field should not contain {string}') do |email|
+  expect(page).not_to have_css("input[type='email'][value='#{email}']")
+end
