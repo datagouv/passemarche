@@ -131,6 +131,8 @@ fr:
       not_scanned: "info"
 
   shared:
+    subcategory_labels:
+      market_information: "Informations du marché"
     source_badge:
       data_from_api: "Récupéré automatiquement"
       declared_by_candidate: "Déclaré par le candidat"

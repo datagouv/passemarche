@@ -17,7 +17,9 @@ module CategoryLabelHelper
     record = active_records_cache(model_class)[key.to_s]
     label = record&.public_send(:"#{role}_label")
 
-    label.presence || key.to_s.humanize
+    label.presence ||
+      I18n.t("shared.subcategory_labels.#{key}", default: nil) ||
+      key.to_s.humanize
   end
 
   def active_records_cache(model_class)
