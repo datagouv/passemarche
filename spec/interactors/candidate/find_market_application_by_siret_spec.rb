@@ -78,7 +78,33 @@ RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
       end
     end
 
-    context 'when another application for the same SIRET already has a user' do
+    context 'when another application for the same SIRET on the same market already has a user' do
+      let(:other_application) { create(:market_application, public_market:, siret:) }
+      let(:user) { create(:user, email: 'original@example.com') }
+
+      before do
+        market_application
+        other_application.update!(user:)
+      end
+
+      it 'fails when email does not match the existing user' do
+        result = described_class.call(siret:, email: 'different@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_failure
+        expect(result.errors[:email]).to be_present
+      end
+
+      it 'succeeds when email matches the existing user' do
+        result = described_class.call(siret:, email: 'original@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_success
+        expect(result.reconnection).to be true
+      end
+    end
+
+    context 'when another application for the same SIRET on a different market already has a user' do
       let(:other_public_market) { create(:public_market, :completed, editor:) }
       let(:other_application) { create(:market_application, public_market: other_public_market, siret:) }
       let(:user) { create(:user, email: 'original@example.com') }
@@ -88,20 +114,12 @@ RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
         other_application.update!(user:)
       end
 
-      it 'fails when email does not match the existing SIRET user' do
+      it 'succeeds with a different email' do
         result = described_class.call(siret:, email: 'different@example.com',
           market_application_id: market_application.identifier)
 
-        expect(result).to be_failure
-        expect(result.errors[:email]).to be_present
-      end
-
-      it 'succeeds when email matches the existing SIRET user' do
-        result = described_class.call(siret:, email: 'original@example.com',
-          market_application_id: market_application.identifier)
-
         expect(result).to be_success
-        expect(result.reconnection).to be true
+        expect(result.reconnection).to be false
       end
     end
   end
