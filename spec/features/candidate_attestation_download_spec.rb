@@ -3,10 +3,13 @@
 require 'rails_helper'
 
 RSpec.feature 'Candidate attestation download', type: :feature do
+  let(:user) { create(:user) }
+  let(:market_application) { create(:market_application, user:) }
+
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    sign_in_as_candidate(user, market_application)
   end
-  let(:market_application) { create(:market_application) }
 
   scenario 'completing application generates attestation and shows secure download link' do
     CompleteMarketApplication.call(market_application:)
