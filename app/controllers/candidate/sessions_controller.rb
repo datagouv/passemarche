@@ -11,6 +11,8 @@ module Candidate
         redirect_to sent_candidate_sessions_path
       else
         @errors = result.errors
+        @submitted_siret = params[:siret]
+        @submitted_email = params[:email]
         render 'candidate/sessions/new', status: :unprocessable_content
       end
     end
