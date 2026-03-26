@@ -65,8 +65,6 @@ RSpec.describe 'Candidate::Sessions', type: :request do
     end
 
     context 'when SIRET is invalid' do
-      before { allow(SiretValidator).to receive(:valid?).with('00000000000000').and_return(false) }
-
       it 'returns unprocessable_content' do
         post candidate_sessions_path, params: { email: user.email, siret: 'NOT-A-SIRET', market_application_id: market_application.identifier }
 
@@ -198,7 +196,7 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       it 'redirects to sessions new with alert' do
         get verify_candidate_sessions_path, params: { token: 'invalid_token', market_application_id: market_application.identifier }
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_candidate_sessions_path(market_application_id: market_application.identifier))
         expect(flash[:alert]).to eq(I18n.t('candidate.sessions.invalid_token'))
       end
     end
@@ -207,7 +205,7 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       it 'redirects to sessions new with alert' do
         get verify_candidate_sessions_path, params: { token:, market_application_id: 'VR-UNKNOWN' }
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_candidate_sessions_path(market_application_id: 'VR-UNKNOWN'))
         expect(flash[:alert]).to eq(I18n.t('candidate.sessions.invalid_token'))
       end
     end

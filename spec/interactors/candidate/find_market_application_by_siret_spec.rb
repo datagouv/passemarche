@@ -9,15 +9,24 @@ RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
   let(:market_application) { create(:market_application, public_market:, siret:) }
 
   describe '.call' do
+    context 'when no market_application_id is provided' do
+      it 'fails with a base error' do
+        result = described_class.call(siret:, email: 'anyone@example.com', market_application_id: nil)
+
+        expect(result).to be_failure
+        expect(result.errors[:base]).to include(I18n.t('candidate.request_magic_link.no_market_context'))
+      end
+    end
+
     context 'when the SIRET does not match the identified application' do
       before { market_application }
 
-      it 'fails with a siret error' do
+      it 'fails with a base error' do
         result = described_class.call(siret: 'wrong_siret', email: 'anyone@example.com',
           market_application_id: market_application.identifier)
 
         expect(result).to be_failure
-        expect(result.errors[:siret]).to be_present
+        expect(result.errors[:base]).to be_present
       end
     end
 
