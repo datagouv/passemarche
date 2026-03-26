@@ -14,7 +14,31 @@ RSpec.describe 'Candidate::Sessions', type: :request do
     allow(SiretValidator).to receive(:valid?).with(valid_siret).and_return(true)
   end
 
-  describe 'POST /candidate/sessions' do
+  describe 'GET #new' do
+    it 'returns ok' do
+      get new_candidate_sessions_path
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    context 'when market_application_id is provided' do
+      it 'returns ok' do
+        get new_candidate_sessions_path, params: { market_application_id: market_application.identifier }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when market_application_id is unknown' do
+      it 'returns ok' do
+        get new_candidate_sessions_path, params: { market_application_id: 'VR-UNKNOWN' }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe 'POST #create' do
     context 'when inputs are valid' do
       it 'redirects to sent path' do
         post candidate_sessions_path,
@@ -44,8 +68,7 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       before { allow(SiretValidator).to receive(:valid?).with('00000000000000').and_return(false) }
 
       it 'returns unprocessable_content' do
-        post candidate_sessions_path,
-          params: { email: user.email, siret: '00000000000000', market_application_id: market_application.identifier }
+        post candidate_sessions_path, params: { email: user.email, siret: 'NOT-A-SIRET', market_application_id: market_application.identifier }
 
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -172,9 +195,8 @@ RSpec.describe 'Candidate::Sessions', type: :request do
     end
 
     context 'when token is invalid' do
-      it 'redirects to root with alert' do
-        get verify_candidate_sessions_path,
-          params: { token: 'invalid_token', market_application_id: market_application.identifier }
+      it 'redirects to sessions new with alert' do
+        get verify_candidate_sessions_path, params: { token: 'invalid_token', market_application_id: market_application.identifier }
 
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t('candidate.sessions.invalid_token'))
@@ -182,9 +204,8 @@ RSpec.describe 'Candidate::Sessions', type: :request do
     end
 
     context 'when market_application is not found' do
-      it 'redirects to root with alert' do
-        get verify_candidate_sessions_path,
-          params: { token:, market_application_id: 'VR-UNKNOWN' }
+      it 'redirects to sessions new with alert' do
+        get verify_candidate_sessions_path, params: { token:, market_application_id: 'VR-UNKNOWN' }
 
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq(I18n.t('candidate.sessions.invalid_token'))

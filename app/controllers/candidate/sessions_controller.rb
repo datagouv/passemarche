@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 module Candidate
-  class SessionsController < ::ApplicationController
+  class SessionsController < ApplicationController
+    skip_before_action :require_candidate_authentication
+
+    def new
+      @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
+    end
+
     def create
       result = Candidate::RequestMagicLink.call(magic_link_request_params)
 
@@ -71,7 +77,8 @@ module Candidate
     end
 
     def invalid_token
-      redirect_to root_path, alert: t('candidate.sessions.invalid_token')
+      redirect_to new_candidate_sessions_path(market_application_id: params[:market_application_id]),
+        alert: t('candidate.sessions.invalid_token')
     end
   end
 end

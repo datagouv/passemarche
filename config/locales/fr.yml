@@ -422,6 +422,7 @@ fr:
       email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
+      no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
       email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
     sessions:
       new:
