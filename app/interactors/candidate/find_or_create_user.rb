@@ -12,7 +12,7 @@ module Candidate
       if user.persisted?
         context.user = user
       else
-        context.fail!(errors: user.errors.full_messages)
+        context.fail!(errors: { base: user.errors.full_messages })
       end
     end
   end

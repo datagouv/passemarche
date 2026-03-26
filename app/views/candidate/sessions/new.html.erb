@@ -23,6 +23,17 @@
               <%= form_with url: candidate_sessions_path, method: :post, data: { turbo: false } do |form| %>
                 <% siret_errors = @errors&.dig(:siret) %>
                 <% email_errors = @errors&.dig(:email) %>
+                <% base_errors = @errors&.dig(:base) %>
+
+                <% if base_errors.present? %>
+                  <div class="fr-alert fr-alert--error fr-mb-3w">
+                    <ul class="fr-list">
+                      <% Array(base_errors).each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
 
                 <% if @market_application %>
                   <%= form.hidden_field :market_application_id, value: @market_application.identifier %>
