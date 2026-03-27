@@ -120,11 +120,20 @@ module Candidate
     end
 
     def render_html_step
+      prefill_blank_email_responses
+
       if custom_view_exists?
         render_wizard
       else
         render 'generic_step', locals: { step: }
       end
+    end
+
+    def prefill_blank_email_responses
+      Candidate::PrefillEmailAttributeResponses.call(
+        market_application: @market_application,
+        candidate_email: current_candidate.email
+      )
     end
 
     def render_json_step

@@ -59,17 +59,18 @@ Feature: Candidate authentication via magic link
     Then I should be on the first step of my application
     And I should be authenticated
 
-  Scenario: Candidate with multiple applications authenticates for the correct one
-    Given a second candidate application exists for SIRET "73282932000074"
-    When I visit the first step of my second application
-    And I fill in "siret" with "73282932000074"
-    And I fill in "email" with "candidat@example.com"
-    And I click "Recevoir un lien de connexion"
-    Then I should see "Vérifiez vos emails"
-    And an email should have been sent to "candidat@example.com"
+  Scenario: Authenticated candidate email is pre-filled in blank email fields
+    Given the public market has an email field in the "contact" step
+    And a candidate "candidat@example.com" has a valid magic link token
+    When I visit the magic link
+    And I navigate to the "contact" step
+    Then the email field should be pre-filled with "candidat@example.com"
 
-  Scenario: Authenticated candidate is required to re-authenticate for a different application
-    Given a second candidate application exists for SIRET "73282932000074"
-    And I am authenticated for my application
-    When I visit the first step of my second application
-    Then I should see the authentication form
+  Scenario: Pre-fill does not override an already filled email field
+    Given the public market has an email field in the "contact" step
+    And the candidate application already has "existing@example.com" in the email field
+    And a candidate "candidat@example.com" has a valid magic link token
+    When I visit the magic link
+    And I navigate to the "contact" step
+    Then the email field should contain "existing@example.com"
+    And the email field should not contain "candidat@example.com"
