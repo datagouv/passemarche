@@ -153,13 +153,26 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
         end
       end
 
-      it 'invalidates previous token on resend' do
+      it 'does not update authentication_token_sent_at on resend within 30 minutes' do
         described_class.call(email: valid_email, siret: valid_siret,
           market_application_id: valid_market_application_id, host:, protocol:)
         user = User.find_by(email: valid_email)
         first_sent_at = user.authentication_token_sent_at
 
         travel 1.minute do
+          described_class.call(email: valid_email, siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
+          expect(user.reload.authentication_token_sent_at).to eq(first_sent_at)
+        end
+      end
+
+      it 'renews authentication_token_sent_at after token expiry' do
+        described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
+        user = User.find_by(email: valid_email)
+        first_sent_at = user.authentication_token_sent_at
+
+        travel 31.minutes do
           described_class.call(email: valid_email, siret: valid_siret,
             market_application_id: valid_market_application_id, host:, protocol:)
           expect(user.reload.authentication_token_sent_at).to be > first_sent_at
