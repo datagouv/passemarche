@@ -3,7 +3,7 @@
 require 'csv'
 
 class ImportSocleDeBaseCsvService < ApplicationService
-  Result = Struct.new(:success, :statistics, :errors, :changes, keyword_init: true) do
+  Result = Struct.new(:success, :statistics, :errors, :changes) do
     alias_method :success?, :success
   end
 

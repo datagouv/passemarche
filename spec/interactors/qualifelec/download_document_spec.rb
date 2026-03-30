@@ -8,8 +8,8 @@ RSpec.describe Qualifelec::DownloadDocument, type: :interactor do
   let(:document_url_1) { 'https://qualifelec.example.com/certificat-1.jpg' }
   let(:document_url_2) { 'https://qualifelec.example.com/certificat-2.jpg' }
   let(:jpeg_header) { "\xFF\xD8\xFF".dup.force_encoding('ASCII-8BIT') }
-  let(:document_body_1) { (jpeg_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT')) }
-  let(:document_body_2) { (jpeg_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT')) }
+  let(:document_body_1) { jpeg_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT') }
+  let(:document_body_2) { jpeg_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT') }
   let(:resource) { Resource.new(documents: [document_url_1, document_url_2]) }
   let(:bundled_data) { BundledData.new(data: resource) }
   let(:token) { 'test-token-12345' }

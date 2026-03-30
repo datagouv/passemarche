@@ -31,9 +31,9 @@ RSpec.describe ActesBilans, type: :organizer do
       let(:document_url_2) { 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v3_inpi_rne_actes_bilans/bilan_exemple_2.pdf' }
       let(:document_url_3) { 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v3_inpi_rne_actes_bilans/bilan_exemple_3.pdf' }
       let(:pdf_header) { '%PDF-'.dup.force_encoding('ASCII-8BIT') }
-      let(:document_body_1) { (pdf_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT')) }
-      let(:document_body_2) { (pdf_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT')) }
-      let(:document_body_3) { (pdf_header.dup + ("\x00" * 300).force_encoding('ASCII-8BIT')) }
+      let(:document_body_1) { pdf_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT') }
+      let(:document_body_2) { pdf_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT') }
+      let(:document_body_3) { pdf_header.dup + ("\x00" * 300).force_encoding('ASCII-8BIT') }
 
       before do
         stub_request(:get, api_url)
@@ -228,9 +228,9 @@ RSpec.describe ActesBilans, type: :organizer do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:, siret:) }
       let(:pdf_header) { '%PDF-'.dup.force_encoding('ASCII-8BIT') }
-      let(:document_body_1) { (pdf_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT')) }
-      let(:document_body_2) { (pdf_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT')) }
-      let(:document_body_3) { (pdf_header.dup + ("\x00" * 300).force_encoding('ASCII-8BIT')) }
+      let(:document_body_1) { pdf_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT') }
+      let(:document_body_2) { pdf_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT') }
+      let(:document_body_3) { pdf_header.dup + ("\x00" * 300).force_encoding('ASCII-8BIT') }
 
       let!(:bilans_attribute) do
         create(:market_attribute, :inline_file_upload, :from_api,

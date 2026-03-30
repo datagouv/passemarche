@@ -9,9 +9,9 @@ RSpec.describe ActesBilans::DownloadDocument, type: :interactor do
   let(:document_url_2) { 'https://inpi.example.com/bilan-2.pdf' }
   let(:document_url_3) { 'https://inpi.example.com/bilan-3.pdf' }
   let(:pdf_header) { '%PDF-'.dup.force_encoding('ASCII-8BIT') }
-  let(:document_body_1) { (pdf_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT')) }
-  let(:document_body_2) { (pdf_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT')) }
-  let(:document_body_3) { (pdf_header.dup + ("\x00" * 300).force_encoding('ASCII-8BIT')) }
+  let(:document_body_1) { pdf_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT') }
+  let(:document_body_2) { pdf_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT') }
+  let(:document_body_3) { pdf_header.dup + ("\x00" * 300).force_encoding('ASCII-8BIT') }
   let(:resource) { Resource.new(actes_et_bilans: [document_url_1, document_url_2, document_url_3]) }
   let(:bundled_data) { BundledData.new(data: resource) }
   let(:token) { 'test-token-12345' }
