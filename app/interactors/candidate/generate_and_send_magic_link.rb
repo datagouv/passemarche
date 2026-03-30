@@ -7,8 +7,9 @@ module Candidate
     def call
       user.update!(authentication_token_sent_at: Time.current)
       context.magic_link_url = build_url(user.generate_token_for(:magic_link))
-
       send_magic_link_email
+    rescue ActiveRecord::RecordInvalid => e
+      context.fail!(errors: { base: e.record.errors.full_messages })
     end
 
     private

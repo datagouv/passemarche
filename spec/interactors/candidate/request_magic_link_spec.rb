@@ -37,11 +37,9 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       end
     end
 
-    context 'when SIRET is invalid (Luhn)' do
-      before { allow(SiretValidator).to receive(:valid?).with('12345678901234').and_return(false) }
-
+    context 'when SIRET is invalid' do
       it 'fails' do
-        result = described_class.call(email: valid_email, siret: '12345678901234',
+        result = described_class.call(email: valid_email, siret: 'NOT-A-SIRET',
           market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(result).to be_failure
@@ -49,7 +47,7 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       end
 
       it 'does not send an email' do
-        described_class.call(email: valid_email, siret: '12345678901234',
+        described_class.call(email: valid_email, siret: 'NOT-A-SIRET',
           market_application_id: valid_market_application_id, host:, protocol:)
 
         expect(ActionMailer::Base.deliveries).to be_empty
@@ -57,14 +55,14 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
     end
 
     context 'when no market application found for SIRET' do
-      it 'fails' do
+      it 'fails with a base error' do
         identifier = market_application.identifier
         market_application.destroy
         result = described_class.call(email: valid_email, siret: valid_siret,
           market_application_id: identifier, host:, protocol:)
 
         expect(result).to be_failure
-        expect(result.errors[:siret]).to be_present
+        expect(result.errors[:base]).to be_present
       end
     end
 

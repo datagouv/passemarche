@@ -8,7 +8,8 @@ module Candidate
       application = find_application
 
       unless application
-        context.fail!(errors: { siret: [I18n.t('candidate.request_magic_link.no_application_found')] })
+        error_key = market_application_id.present? ? :no_application_found : :no_market_context
+        context.fail!(errors: { base: [I18n.t("candidate.request_magic_link.#{error_key}")] })
         return
       end
 

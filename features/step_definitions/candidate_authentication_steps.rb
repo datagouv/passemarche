@@ -63,7 +63,7 @@ Then('I should be authenticated') do
 end
 
 Then('I should see an error message') do
-  expect(page).to have_selector('.fr-alert--error')
+  expect(page).to have_selector('.fr-error-text, .fr-alert--error')
 end
 
 Given('the public market has an email field in the {string} step') do |subcategory_key|

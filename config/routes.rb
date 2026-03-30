@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   end
 
   namespace :candidate do
-    resource :sessions, only: %i[create destroy] do
+    resource :sessions, only: %i[new create destroy] do
       get :verify
       get :sent
     end

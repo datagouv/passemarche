@@ -415,8 +415,14 @@ fr:
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
 
   candidate:
+    validations:
+      siret_blank: "Veuillez renseigner votre numéro de SIRET"
+      siret_invalid: "Le numéro de SIRET saisi est invalide"
+      email_blank: "Veuillez renseigner votre adresse email"
+      email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
+      no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
       email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
     sessions:
       new:

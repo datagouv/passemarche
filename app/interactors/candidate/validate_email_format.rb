@@ -5,9 +5,11 @@ module Candidate
     delegate :email, to: :context
 
     def call
-      return if EmailValidator.valid?(email)
-
-      context.fail!(errors: { email: [I18n.t('errors.messages.invalid')] })
+      if email.blank?
+        context.fail!(errors: { email: [I18n.t('candidate.validations.email_blank')] })
+      elsif !EmailValidator.valid?(email)
+        context.fail!(errors: { email: [I18n.t('candidate.validations.email_invalid')] })
+      end
     end
   end
 end
