@@ -17,14 +17,14 @@ Feature: Candidate authentication via magic link
     When I visit the first step of my application
     And I fill in "siret" with "73282932000074"
     And I fill in "email" with "candidat@example.com"
-    And I click "Recevoir un lien de connexion"
+    And I submit the session form
     Then I should see "Vérifiez vos emails"
     And an email should have been sent to "candidat@example.com"
 
   Scenario: Candidate requests a magic link with invalid email
     When I visit the first step of my application
     And I fill in "email" with "not-an-email"
-    And I click "Recevoir un lien de connexion"
+    And I submit the session form
     Then I should see the authentication form
     And I should see an error message
 
@@ -39,7 +39,7 @@ Feature: Candidate authentication via magic link
     When I visit the first step of my application
     And I fill in "siret" with "73282932000074"
     And I fill in "email" with "candidat@example.com"
-    And I click "Recevoir un lien de connexion"
+    And I submit the session form
     Then I should see "Vérifiez vos emails"
     And an email should have been sent to "candidat@example.com"
 
@@ -48,7 +48,7 @@ Feature: Candidate authentication via magic link
     When I visit the first step of my application
     And I fill in "siret" with "73282932000074"
     And I fill in "email" with "wrong@example.com"
-    And I click "Recevoir un lien de connexion"
+    And I submit the session form
     Then I should see the authentication form
     And I should see an error message
 
@@ -65,6 +65,10 @@ Feature: Candidate authentication via magic link
     When I visit the magic link
     And I navigate to the "contact" step
     Then the email field should be pre-filled with "candidat@example.com"
+
+  Scenario: Submit button is disabled when email is empty
+    When I visit the first step of my application
+    Then the "Recevoir un lien de connexion" button should be disabled
 
   Scenario: Pre-fill does not override an already filled email field
     Given the public market has an email field in the "contact" step

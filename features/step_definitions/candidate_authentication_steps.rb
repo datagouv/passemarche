@@ -32,6 +32,10 @@ When('I visit the first step of my application') do
   visit step_candidate_market_application_path(@market_application.identifier, :company_identification)
 end
 
+When('I submit the session form') do
+  click_button I18n.t('candidate.sessions.new.submit'), disabled: :all
+end
+
 When('I fill in {string} with {string}') do |field, value|
   fill_in field, with: value
 end
@@ -99,4 +103,12 @@ end
 
 Then('the email field should not contain {string}') do |email|
   expect(page).not_to have_css("input[type='email'][value='#{email}']")
+end
+
+Then('the {string} button should be disabled') do |label|
+  expect(page).to have_button(label, disabled: true)
+end
+
+Then('the {string} button should be enabled') do |label|
+  expect(page).to have_button(label, disabled: false)
 end
