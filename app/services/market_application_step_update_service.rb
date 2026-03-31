@@ -54,7 +54,7 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def handle_generic_step
-    market_application.assign_attributes(params)
+    market_application.assign_attributes(assign_existing_response_ids(params))
 
     if market_application.save(context: step)
       market_application.market_attribute_responses.reload
@@ -78,6 +78,23 @@ class MarketApplicationStepUpdateService < ApplicationService
     Rails.logger.error "Error completing market application #{market_application.identifier}: #{e.message}"
     @flash_messages[:alert] = I18n.t('candidate.market_applications.completion_error')
     build_result(false)
+  end
+
+  def assign_existing_response_ids(original_params)
+    nested = original_params[:market_attribute_responses_attributes]
+    return original_params unless nested
+
+    existing = market_application.market_attribute_responses.reload.index_by(&:market_attribute_id)
+
+    nested.each_value do |attrs|
+      next if attrs[:id].present?
+
+      market_attr_id = attrs[:market_attribute_id].to_i
+      existing_response = existing[market_attr_id]
+      attrs[:id] = existing_response.id if existing_response
+    end
+
+    original_params
   end
 
   def build_result(success, additional_data = {})

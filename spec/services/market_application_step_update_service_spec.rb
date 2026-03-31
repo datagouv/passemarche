@@ -102,6 +102,46 @@ RSpec.describe MarketApplicationStepUpdateService do
 
         described_class.call(market_application, step, {})
       end
+
+      context 'when a response already exists but form submits with blank id' do
+        let(:market_attribute) do
+          create(:market_attribute, :radio_with_file_and_text,
+            subcategory_key: step.to_s,
+            category_key: 'test_category')
+        end
+
+        let!(:existing_response) do
+          create(:market_attribute_response_radio_with_file_and_text,
+            market_application:,
+            market_attribute:,
+            value: { 'radio_choice' => 'no' })
+        end
+
+        let(:params) do
+          ActionController::Parameters.new(
+            market_attribute_responses_attributes: {
+              '0' => {
+                'id' => '',
+                'market_attribute_id' => market_attribute.id.to_s,
+                'type' => 'RadioWithFileAndText',
+                'radio_choice' => 'yes',
+                'text' => ''
+              }
+            }
+          ).permit!
+        end
+
+        before do
+          public_market.market_attributes << market_attribute
+        end
+
+        it 'updates the existing response instead of raising a unique constraint error' do
+          result = described_class.call(market_application, step, params)
+
+          expect(result[:success]).to be true
+          expect(existing_response.reload.value['radio_choice']).to eq('yes')
+        end
+      end
     end
 
     context 'with summary step' do

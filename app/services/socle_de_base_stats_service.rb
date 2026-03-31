@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SocleDeBaseStatsService < ApplicationService
-  Stats = Struct.new(:total_count, :api_count, :manual_count, :mandatory_count, keyword_init: true)
+  Stats = Struct.new(:total_count, :api_count, :manual_count, :mandatory_count)
 
   def call
     Stats.new(

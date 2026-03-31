@@ -29,8 +29,8 @@ RSpec.describe Qualifelec, type: :organizer do
       let(:document_url_1) { 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v3_qualifelec_certificats/exemple-certificat-qualifelec-bac-a-sable-1.jpg' }
       let(:document_url_2) { 'https://raw.githubusercontent.com/etalab/siade_staging_data/refs/heads/develop/payloads/api_entreprise_v3_qualifelec_certificats/exemple-certificat-qualifelec-bac-a-sable-2.jpg' }
       let(:jpeg_header) { "\xFF\xD8\xFF".dup.force_encoding('ASCII-8BIT') }
-      let(:document_body_1) { (jpeg_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT')) }
-      let(:document_body_2) { (jpeg_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT')) }
+      let(:document_body_1) { jpeg_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT') }
+      let(:document_body_2) { jpeg_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT') }
 
       before do
         stub_request(:get, api_url)
@@ -220,8 +220,8 @@ RSpec.describe Qualifelec, type: :organizer do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:, siret:) }
       let(:jpeg_header) { "\xFF\xD8\xFF".dup.force_encoding('ASCII-8BIT') }
-      let(:document_body_1) { (jpeg_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT')) }
-      let(:document_body_2) { (jpeg_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT')) }
+      let(:document_body_1) { jpeg_header.dup + ("\x00" * 200).force_encoding('ASCII-8BIT') }
+      let(:document_body_2) { jpeg_header.dup + ("\x00" * 250).force_encoding('ASCII-8BIT') }
 
       let!(:certificate_attribute) do
         create(:market_attribute, :inline_file_upload, :from_api,
