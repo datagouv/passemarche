@@ -20,7 +20,8 @@
             <div class="fr-card__content">
               <h2 class="fr-h5 fr-mb-3w"><%= t('candidate.sessions.new.employee_section') %></h2>
 
-              <%= form_with url: candidate_sessions_path, method: :post, data: { turbo: false } do |form| %>
+              <%= form_with url: candidate_sessions_path, method: :post,
+                            data: { turbo: false, controller: 'input-validation' } do |form| %>
                 <% siret_errors = @errors&.dig(:siret) %>
                 <% email_errors = @errors&.dig(:email) %>
                 <% base_errors = @errors&.dig(:base) %>
@@ -61,13 +62,16 @@
                   <%= form.email_field :email, class: "fr-input #{'fr-input--error' if email_errors.present?}",
                                               autocomplete: 'email',
                                               value: @submitted_email,
-                                              aria: ({ describedby: 'email-error' } if email_errors.present?) %>
+                                              aria: ({ describedby: 'email-error' } if email_errors.present?),
+                                              data: { input_validation_target: 'input', action: 'input->input-validation#validateInput' } %>
                   <% if email_errors.present? %>
                     <p id="email-error" class="fr-error-text"><%= email_errors.first %></p>
                   <% end %>
                 </div>
 
-                <%= form.submit t('candidate.sessions.new.submit'), class: 'fr-btn fr-btn--lg fr-width-full' %>
+                <%= form.submit t('candidate.sessions.new.submit'), class: 'fr-btn fr-btn--lg fr-width-full',
+                                                                    disabled: true,
+                                                                    data: { input_validation_target: 'submitButton' } %>
               <% end %>
             </div>
           </div>
