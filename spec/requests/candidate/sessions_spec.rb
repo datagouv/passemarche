@@ -62,6 +62,13 @@ RSpec.describe 'Candidate::Sessions', type: :request do
 
         expect(response).to have_http_status(:unprocessable_content)
       end
+
+      it 'preserves market_application_id in the re-rendered form' do
+        post candidate_sessions_path,
+          params: { email: 'invalid', siret: valid_siret, market_application_id: market_application.identifier }
+
+        expect(response.body).to include(market_application.identifier)
+      end
     end
 
     context 'when SIRET is invalid' do

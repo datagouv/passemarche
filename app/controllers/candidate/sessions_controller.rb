@@ -19,6 +19,7 @@ module Candidate
         @errors = result.errors
         @submitted_siret = params[:siret]
         @submitted_email = params[:email]
+        @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
         render 'candidate/sessions/new', status: :unprocessable_content
       end
     end
