@@ -12,9 +12,22 @@
 <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
   <div class="fr-grid-row">
     <div class="fr-col-12">
-      <div class="fr-border-default--grey fr-p-4w fr-mb-4w">
-        <%= render "shared/notice", notice_text: t('candidate.market_applications.attestation_motifs_exclusion.info_banner') %>
+      <p class="fr-text--lg fr-mb-3w"><%= t('candidate.market_applications.attestation_motifs_exclusion.subtitle') %></p>
 
+      <div class="fr-mb-3w">
+        <%= link_to t('candidate.market_applications.attestation_motifs_exclusion.article_1_label'),
+              'https://www.legifrance.gouv.fr/codes/id/LEGISCTA000037703589',
+              class: 'fr-tag',
+              target: '_blank',
+              rel: 'noopener noreferrer' %>
+        <%= link_to t('candidate.market_applications.attestation_motifs_exclusion.article_2_label'),
+              'https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000037701019/LEGISCTA000037703603/',
+              class: 'fr-tag',
+              target: '_blank',
+              rel: 'noopener noreferrer' %>
+      </div>
+
+      <div class="fr-border-default--grey fr-p-4w fr-mb-4w">
         <div class="fr-checkbox-group">
           <%= form.check_box :attests_no_exclusion_motifs,
                 class: "fr-checkbox",
