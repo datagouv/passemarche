@@ -528,13 +528,45 @@ fr:
       urssaf_api_error: "Impossible de récupérer l'attestation de vigilance URSSAF : %{error}"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       attestation_motifs_exclusion:
-        header_title: "Les motifs d’exclusion"
+        header_title: "Les motifs d'exclusion"
         title: "Attestation sur l’honneur - Motifs d’exclusion"
         subtitle: "Le candidat déclare sur l’honneur ne pas être concerné par un motif d’exclusion prévu par le code de la commande publique."
         article_1_label: "Art. L.2141-1 à L.2141-5"
         article_2_label: "Art. L.2141-7 à L.2141-10"
         checkbox_label: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun des motifs d’exclusion visés aux articles ci-dessus."
         details_title: "En savoir plus sur les motifs d’exclusion"
+        details:
+          principe:
+            title: "Principe"
+            body: "Les motifs d'exclusion obligatoires s’imposent à l’acheteur. Lorsqu’un candidat se trouve dans l’un de ces cas, l’acheteur est tenu d’écarter sa candidature, sous réserve des mesures d’auto-apurement prévues par le code de la commande publique."
+          condamnations_penales:
+            title: "Condamnations pénales visées"
+            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive pour :"
+            tags:
+              - "Trafic de stupéfiants"
+              - "Traite des êtres humains"
+              - "Escroquerie"
+              - "Blanchiment"
+              - "Actes de terrorisme"
+              - "Corruption passive"
+              - "Trafic d’influence"
+              - "Prise illégale d’intérêt"
+              - "Atteintes à la liberté d’accès aux marchés"
+              - "Entraves à la justice"
+              - "Faux"
+              - "Association de malfaiteurs"
+          situation_entreprise:
+            title: "Situation de l'entreprise"
+            body: "Sont également exclus : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
+          manquements_fiscaux:
+            title: "Manquements fiscaux"
+            body: "L’exclusion s’applique aussi en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
+          presomption_entente:
+            title: "Présomption d'entente"
+            body: "S’il y a des indices prouvant qu’il y a eu accord entre elle et d’autres opérateurs économiques en vue de fausser la concurrence."
+          conflit_interet:
+            title: "Conflit d'intérêt"
+            body: "Faisant naître un doute sur l’impartialité de la procédure d’attribution du marché public."
       motifs_exclusion:
         provide_additional_info_button: "Je souhaite fournir des informations complémentaires"
         motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:

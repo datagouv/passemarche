@@ -52,6 +52,24 @@
           </button>
         </h3>
         <div class="fr-collapse" data-accordion-target="content" id="motifs-exclusion-details">
+          <div class="motifs-exclusion-accordion__content">
+            <% %i[principe condamnations_penales situation_entreprise manquements_fiscaux presomption_entente conflit_interet].each do |section| %>
+              <% section_t = t("candidate.market_applications.attestation_motifs_exclusion.details.#{section}") %>
+              <div class="motifs-exclusion-accordion__section">
+                <h4 class="motifs-exclusion-accordion__section-title">
+                  <%= section_t[:title] %>
+                </h4>
+                <p class="fr-mb-1w"><%= section_t[:body] %></p>
+                <% if section_t[:tags].present? %>
+                  <div class="fr-mt-1w">
+                    <% section_t[:tags].each do |tag| %>
+                      <span class="fr-tag fr-tag--sm fr-mr-1w fr-mb-1w"><%= tag %></span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         </div>
       </section>
 
