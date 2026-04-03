@@ -39,6 +39,22 @@
         </div>
       </div>
 
+      <section class="fr-accordion fr-mb-4w motifs-exclusion-accordion" data-controller="accordion">
+        <h3 class="fr-accordion__title">
+          <button type="button"
+                  class="fr-accordion__btn"
+                  data-accordion-target="button"
+                  data-action="click->accordion#toggle"
+                  aria-expanded="false"
+                  aria-controls="motifs-exclusion-details">
+            <span class="motifs-exclusion-accordion__badge" aria-hidden="true">?</span>
+            <%= t('candidate.market_applications.attestation_motifs_exclusion.details_title') %>
+          </button>
+        </h3>
+        <div class="fr-collapse" data-accordion-target="content" id="motifs-exclusion-details">
+        </div>
+      </section>
+
       <% if bodacc_motifs.any? %>
         <% bodacc_motifs.each do |motif| %>
           <% key = motif.market_attribute.key %>

@@ -534,6 +534,7 @@ fr:
         article_1_label: "Art. L.2141-1 à L.2141-5"
         article_2_label: "Art. L.2141-7 à L.2141-10"
         checkbox_label: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun des motifs d’exclusion visés aux articles ci-dessus."
+        details_title: "En savoir plus sur les motifs d’exclusion"
       motifs_exclusion:
         provide_additional_info_button: "Je souhaite fournir des informations complémentaires"
         motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
