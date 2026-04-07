@@ -123,7 +123,6 @@ class FakeEditorApp < Sinatra::Base
         market = Market.create_from_api({
           identifier: api_response['identifier'],
           name: market_data[:name],
-          lot_name: market_data[:lot_name],
           market_type_codes: market_data[:market_type_codes]
         })
 
@@ -463,10 +462,12 @@ class FakeEditorApp < Sinatra::Base
 
   def extract_market_data_from_params
     market_type_codes_array = Array(params[:market_type_codes]).compact
+    lot_names = Array(params[:lot_names]).map(&:strip).reject(&:empty?)
+    lots = lot_names.map { |name| { name: name } }
 
     {
       name: params[:name],
-      lot_name: params[:lot_name] && params[:lot_name].empty? ? nil : params[:lot_name],
+      lots: lots,
       deadline: params[:deadline],
       siret: params[:siret],
       market_type_codes: market_type_codes_array

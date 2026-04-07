@@ -66,18 +66,28 @@
                   placeholder="Ex: Fourniture de matériel informatique">
               </div>
 
-              <!-- Lot Name (Optional) -->
-              <div class="fr-input-group">
-                <label class="fr-label" for="lot_name">
-                  Nom du lot (optionnel)
-                  <span class="fr-hint-text">Si votre marché est divisé en lots</span>
+              <!-- Lots (Optional) -->
+              <div class="fr-form-group fr-mb-3w">
+                <label class="fr-label">
+                  Lots (optionnel)
+                  <span class="fr-hint-text">Ajoutez un ou plusieurs lots si votre marché est alloti</span>
                 </label>
-                <input
-                  class="fr-input"
-                  type="text"
-                  id="lot_name"
-                  name="lot_name"
-                  placeholder="Ex: Lot 1 - Ordinateurs portables">
+                <div id="lots-container">
+                  <div class="lot-row fr-mb-1w" style="display:flex; gap:0.5rem; align-items:center;">
+                    <input
+                      class="fr-input"
+                      type="text"
+                      name="lot_names[]"
+                      placeholder="Ex: Lot 1 - Ordinateurs portables"
+                      style="flex:1; min-width:0;">
+                    <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="display:none; flex-shrink:0;">
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+                <button type="button" id="add-lot-btn" class="fr-btn fr-btn--tertiary fr-btn--sm fr-mt-1w">
+                  + Ajouter un lot
+                </button>
               </div>
 
               <!-- Deadline -->
@@ -173,31 +183,41 @@
 
     <!-- Sidebar Help -->
     <div class="fr-col-12 fr-col-lg-4">
-      <div class="fr-callout fr-callout--blue-ecume">
-        <h3 class="fr-callout__title">
-          <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
-          À propos du processus
-        </h3>
-        <p class="fr-callout__text">
-          <strong>Étape 1 :</strong> Vous créez le marché avec les informations essentielles<br><br>
-          <strong>Étape 2 :</strong> Vous serez redirigé vers Passe Marché pour configurer les documents requis,
-          les critères de sélection, etc.<br><br>
-          <strong>Étape 3 :</strong> Une fois configuré, Passe Marché vous notifiera via webhook
-          et votre marché sera visible par les candidats.
-        </p>
-      </div>
-
-      <div class="fr-callout fr-mt-3w">
-        <h3 class="fr-callout__title">
-          <span class="fr-icon-lightbulb-line fr-icon--sm" aria-hidden="true"></span>
-          Conseils
-        </h3>
-        <ul class="fr-callout__text">
-          <li>Soyez précis dans l'intitulé du marché</li>
-          <li>Vérifiez bien la date limite</li>
-          <li>Choisissez la ou les typologies appropriées</li>
-        </ul>
-      </div>
+      <%= erb :'buyer/_market_form_help' %>
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    var container = document.getElementById('lots-container');
+    var addBtn = document.getElementById('add-lot-btn');
+    if (!container || !addBtn) return;
+
+    function updateRemoveButtons() {
+      var rows = container.querySelectorAll('.lot-row');
+      rows.forEach(function(row) {
+        row.querySelector('.remove-lot').style.display = rows.length > 1 ? 'inline-flex' : 'none';
+      });
+    }
+
+    addBtn.addEventListener('click', function() {
+      var n = container.querySelectorAll('.lot-row').length + 1;
+      var row = document.createElement('div');
+      row.className = 'lot-row fr-mb-1w';
+      row.style.cssText = 'display:flex; gap:0.5rem; align-items:center;';
+      row.innerHTML =
+        '<input class="fr-input" type="text" name="lot_names[]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:1; min-width:0;">' +
+        '<button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="flex-shrink:0;">Supprimer</button>';
+      container.appendChild(row);
+      updateRemoveButtons();
+    });
+
+    container.addEventListener('click', function(e) {
+      var removeBtn = e.target.closest('.remove-lot');
+      if (!removeBtn) return;
+      removeBtn.closest('.lot-row').remove();
+      updateRemoveButtons();
+    });
+  })();
+</script>
