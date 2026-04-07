@@ -10,6 +10,30 @@ RSpec.describe MarketApplication, type: :model do
     allow(SiretValidator).to receive(:valid?).and_return(true)
   end
 
+  describe 'lots association' do
+    it 'can be linked to multiple lots' do
+      application = create(:market_application, public_market:)
+      lot1 = create(:lot, public_market:)
+      lot2 = create(:lot, public_market:)
+      application.lots << lot1 << lot2
+
+      expect(application.lots).to contain_exactly(lot1, lot2)
+    end
+
+    it 'can exist without any lots' do
+      application = create(:market_application, public_market:)
+      expect(application.lots).to be_empty
+    end
+
+    it 'destroys market_application_lots when destroyed' do
+      application = create(:market_application, public_market:)
+      lot = create(:lot, public_market:)
+      application.lots << lot
+
+      expect { application.destroy }.to change(MarketApplicationLot, :count).by(-1)
+    end
+  end
+
   describe 'business validations' do
     it 'requires SIRET to be present' do
       application = build(:market_application, public_market:, siret: nil)

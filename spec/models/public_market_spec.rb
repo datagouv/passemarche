@@ -7,6 +7,25 @@ RSpec.describe PublicMarket, type: :model do
 
   subject(:public_market) { build(:public_market) }
 
+  describe 'associations' do
+    let(:editor) { create(:editor) }
+
+    it 'can have many lots' do
+      market = create(:public_market, :completed, editor:)
+      create(:lot, public_market: market)
+      create(:lot, public_market: market)
+
+      expect(market.lots.count).to eq(2)
+    end
+
+    it 'destroys lots when destroyed' do
+      market = create(:public_market, :completed, editor:)
+      create(:lot, public_market: market)
+
+      expect { market.destroy }.to change(Lot, :count).by(-1)
+    end
+  end
+
   describe 'validations' do
     let(:editor) { create(:editor) }
 
