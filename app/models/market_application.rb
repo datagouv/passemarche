@@ -12,6 +12,8 @@ class MarketApplication < ApplicationRecord
   has_one_attached :buyer_attestation
   has_one_attached :documents_package
   has_many :market_attribute_responses, dependent: :destroy
+  has_many :market_application_lots, dependent: :destroy
+  has_many :lots, through: :market_application_lots
 
   accepts_nested_attributes_for :market_attribute_responses, allow_destroy: true, reject_if: :all_blank
 

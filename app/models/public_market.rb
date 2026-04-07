@@ -8,6 +8,7 @@ class PublicMarket < ApplicationRecord
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
+  has_many :lots, dependent: :destroy
   has_many :market_applications, dependent: :destroy
 
   validates :identifier, presence: true, uniqueness: true
