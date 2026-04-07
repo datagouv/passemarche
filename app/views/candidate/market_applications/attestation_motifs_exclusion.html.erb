@@ -12,9 +12,22 @@
 <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
   <div class="fr-grid-row">
     <div class="fr-col-12">
-      <div class="fr-border-default--grey fr-p-4w fr-mb-4w">
-        <%= render "shared/notice", notice_text: t('candidate.market_applications.attestation_motifs_exclusion.info_banner') %>
+      <p class="fr-text--lg fr-mb-3w"><%= t('candidate.market_applications.attestation_motifs_exclusion.subtitle') %></p>
 
+      <div class="fr-mb-3w">
+        <%= link_to t('candidate.market_applications.attestation_motifs_exclusion.article_1_label'),
+              'https://www.legifrance.gouv.fr/codes/id/LEGISCTA000037703589',
+              class: 'fr-tag',
+              target: '_blank',
+              rel: 'noopener noreferrer' %>
+        <%= link_to t('candidate.market_applications.attestation_motifs_exclusion.article_2_label'),
+              'https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000037701019/LEGISCTA000037703603/',
+              class: 'fr-tag',
+              target: '_blank',
+              rel: 'noopener noreferrer' %>
+      </div>
+
+      <div class="fr-border-default--grey fr-p-4w fr-mb-4w">
         <div class="fr-checkbox-group">
           <%= form.check_box :attests_no_exclusion_motifs,
                 class: "fr-checkbox",
@@ -25,6 +38,40 @@
                 for: "attests_no_exclusion_motifs" %>
         </div>
       </div>
+
+      <section class="fr-accordion fr-mb-4w motifs-exclusion-accordion" data-controller="accordion">
+        <h3 class="fr-accordion__title">
+          <button type="button"
+                  class="fr-accordion__btn"
+                  data-accordion-target="button"
+                  data-action="click->accordion#toggle"
+                  aria-expanded="false"
+                  aria-controls="motifs-exclusion-details">
+            <span class="motifs-exclusion-accordion__badge" aria-hidden="true">?</span>
+            <%= t('candidate.market_applications.attestation_motifs_exclusion.details_title') %>
+          </button>
+        </h3>
+        <div class="fr-collapse" data-accordion-target="content" id="motifs-exclusion-details">
+          <div class="motifs-exclusion-accordion__content">
+            <% %i[principe condamnations_penales situation_entreprise manquements_fiscaux presomption_entente conflit_interet].each do |section| %>
+              <% section_t = t("candidate.market_applications.attestation_motifs_exclusion.details.#{section}") %>
+              <div class="motifs-exclusion-accordion__section">
+                <h4 class="motifs-exclusion-accordion__section-title">
+                  <%= section_t[:title] %>
+                </h4>
+                <p class="fr-mb-1w"><%= section_t[:body] %></p>
+                <% if section_t[:tags].present? %>
+                  <div class="fr-mt-1w">
+                    <% section_t[:tags].each do |tag| %>
+                      <span class="fr-tag fr-tag--sm fr-mr-1w fr-mb-1w"><%= tag %></span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </section>
 
       <% if bodacc_motifs.any? %>
         <% bodacc_motifs.each do |motif| %>
