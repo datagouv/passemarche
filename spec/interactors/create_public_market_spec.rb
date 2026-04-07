@@ -7,7 +7,6 @@ RSpec.describe CreatePublicMarket, type: :interactor do
   let(:valid_params) do
     {
       name: 'Test Market',
-      lot_name: 'Lot A',
       deadline: 1.month.from_now,
       siret: '13002526500013',
       market_type_codes: ['supplies']
@@ -111,6 +110,44 @@ RSpec.describe CreatePublicMarket, type: :interactor do
 
       it 'stores the SIRET correctly' do
         expect(subject.public_market.siret).to eq('13002526500013')
+      end
+    end
+
+    context 'with multiple lots' do
+      let(:params_with_lots) do
+        valid_params.merge(lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }])
+      end
+
+      subject { described_class.call(editor:, params: params_with_lots) }
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates the lots' do
+        expect { subject }.to change(Lot, :count).by(2)
+      end
+
+      it 'associates lots with the market' do
+        result = subject
+        expect(result.public_market.lots.map(&:name)).to contain_exactly('Lot 1', 'Lot 2')
+      end
+
+      it 'assigns positions sequentially' do
+        result = subject
+        expect(result.public_market.lots.ordered.map(&:position)).to eq([1, 2])
+      end
+    end
+
+    context 'without lots' do
+      subject { described_class.call(editor:, params: valid_params) }
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates no lots' do
+        expect { subject }.not_to change(Lot, :count)
       end
     end
   end
