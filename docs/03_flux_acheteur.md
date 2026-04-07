@@ -57,7 +57,10 @@ Content-Type: application/json
 {
   "public_market": {
     "name": "Fourniture de matériel informatique pour les services municipaux",
-    "lot_name": "Lot 1 - Ordinateurs portables et stations de travail",
+    "lots": [
+      {"name": "Lot 1 - Ordinateurs portables et stations de travail"},
+      {"name": "Lot 2 - Serveurs et infrastructure réseau"}
+    ],
     "deadline": "2024-06-15T23:59:59Z",
     "siret": "13002526500013",
     "market_type_codes": ["supplies", "services"]
@@ -73,7 +76,7 @@ Content-Type: application/json
 | `deadline`          | datetime | Date limite de candidature       | Requis, format ISO 8601                         |
 | `siret`             | string   | SIRET de l'organisation publique | Requis, exactement 14 chiffres, validation Luhn |
 | `market_type_codes` | array    | Types de marché                  | Requis, minimum 1 élément                       |
-| `lot_name`          | string   | Nom du lot spécifique            | Optionnel, max 255 caractères                   |
+| `lots`              | array    | Liste des lots du marché         | Optionnel, chaque lot requiert un `name`         |
 
 #### Codes de Types de Marché
 
@@ -209,7 +212,10 @@ Le webhook est automatiquement déclenché lors de la finalisation du marché et
   "market": {
     "identifier": "VR-2024-A1B2C3D4E5F6",
     "name": "Fourniture de matériel informatique pour les services municipaux",
-    "lot_name": "Lot 1 - Ordinateurs portables et stations de travail",
+    "lots": [
+      {"name": "Lot 1 - Ordinateurs portables et stations de travail"},
+      {"name": "Lot 2 - Serveurs et infrastructure réseau"}
+    ],
     "deadline": "2024-06-15T23:59:59Z",
     "market_type_codes": ["supplies", "services"],
     "completed_at": "2024-06-15T14:30:45Z",

@@ -634,10 +634,16 @@ Le payload pour créer un marché public doit respecter la structure suivante :
       "description": "Types de marché (defense ne peut pas être seul)",
       "required": true
     },
-    "lot_name": {
-      "type": "string",
-      "maxLength": 255,
-      "description": "Nom du lot spécifique",
+    "lots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"}
+        },
+        "required": ["name"]
+      },
+      "description": "Liste des lots du marché",
       "required": false
     }
   }
