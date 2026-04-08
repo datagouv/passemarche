@@ -5,14 +5,13 @@
 <%= stepper(
   current_step: :attestation_motifs_exclusion,
   steps: @wizard_steps,
-  i18n_scope: 'candidate',
-  show_separator: true
+  i18n_scope: 'candidate'
 ) %>
 
 <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
   <div class="fr-grid-row">
     <div class="fr-col-12">
-      <p class="fr-text--lg fr-mb-3w"><%= t('candidate.market_applications.attestation_motifs_exclusion.subtitle') %></p>
+      <p class="fr-text--lg fr-mb-3w"><%= t('candidate.market_applications.attestation_motifs_exclusion.declaration') %></p>
 
       <div class="fr-mb-3w">
         <%= link_to t('candidate.market_applications.attestation_motifs_exclusion.article_1_label'),
