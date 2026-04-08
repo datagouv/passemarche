@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_142919) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_07_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,6 +80,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_142919) do
     t.index ["client_id"], name: "index_editors_on_client_id", unique: true
     t.index ["name"], name: "index_editors_on_name", unique: true
     t.index ["webhook_secret"], name: "index_editors_on_webhook_secret", unique: true, where: "(webhook_secret IS NOT NULL)"
+  end
+
+  create_table "lots", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.bigint "public_market_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_lots_on_position"
+    t.index ["public_market_id"], name: "index_lots_on_public_market_id"
+  end
+
+  create_table "market_application_lots", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "lot_id", null: false
+    t.bigint "market_application_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lot_id"], name: "index_market_application_lots_on_lot_id"
+    t.index ["market_application_id", "lot_id"], name: "index_market_application_lots_unique", unique: true
+    t.index ["market_application_id"], name: "index_market_application_lots_on_market_application_id"
   end
 
   create_table "market_applications", force: :cascade do |t|
@@ -214,6 +234,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_142919) do
     t.datetime "deadline"
     t.bigint "editor_id", null: false
     t.string "identifier", null: false
+    t.integer "lot_limit"
     t.string "lot_name"
     t.text "market_type_codes", default: [], array: true
     t.string "name"
@@ -398,6 +419,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_142919) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "lots", "public_markets"
+  add_foreign_key "market_application_lots", "lots"
+  add_foreign_key "market_application_lots", "market_applications"
   add_foreign_key "market_applications", "public_markets"
   add_foreign_key "market_applications", "users"
   add_foreign_key "market_attribute_responses", "market_applications"
