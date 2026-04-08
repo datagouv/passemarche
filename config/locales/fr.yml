@@ -530,7 +530,7 @@ fr:
       attestation_motifs_exclusion:
         header_title: "Les motifs d'exclusion"
         title: "Attestation sur l’honneur - Motifs d’exclusion"
-        declaration: "Le candidat déclare sur l’honneur ne pas être concerné par un motif d’exclusion prévu par le code de la commande publique."
+        declaration: "Le candidat individuel déclare sur l’honneur ne pas être concerné par un motif d’exclusion prévu par le code de la commande publique."
         article_1_label: "Art. L.2141-1 à L.2141-5"
         article_2_label: "Art. L.2141-7 à L.2141-10"
         checkbox_label: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun des motifs d’exclusion visés aux articles ci-dessus."
