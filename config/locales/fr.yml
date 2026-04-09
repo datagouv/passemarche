@@ -426,6 +426,41 @@ fr:
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
 
   candidate:
+    lot_selection:
+      title: "Sélectionnez un ou plusieurs lot(s)"
+      subtitle: "Sélectionnez un ou plusieurs lots pour lequel/lesquels vous souhaitez soumettre une candidature."
+      submit: "Transmettre ma candidature"
+      market_info_title: "Informations du marché"
+      buyer_label: "Acheteur"
+      how_it_works_title: "Comment ça fonctionne"
+      how_it_works_step_1: "Sélectionnez vos lots"
+      how_it_works_step_2: "Complétez le formulaire de candidature"
+      how_it_works_step_3: "Soumettez votre candidature"
+      market_type_label: "Typologie"
+      deadline_label: "Date limite"
+      application_form_title: "Formulaire de candidature"
+      prepare: "Préparer"
+      progress_title: "Avancement des candidatures"
+      no_lot_selected: "Aucun lot sélectionné pour le moment"
+      select_all: "Tout sélectionner"
+      deselect_all: "Tout désélectionner"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
+      available_lots_count:
+        one: "1 lot disponible"
+        other: "%{count} lots disponibles"
+      lot_number: "Lot %{number}"
+      single_form_notice: "Vous n'avez qu'un seul formulaire de candidature à compléter, Passe Marché se charge de transmettre votre candidature pour les différents lots."
+      lot_limit_notice:
+        one: "L'acheteur a limité le nombre de lot auxquels vous pouvez candidater : %{count} lot maximum"
+        other: "L'acheteur a limité le nombre de lots auxquels vous pouvez candidater : %{count} lots maximum"
+      lot_limit_hint:
+        one: "Vous pouvez sélectionner au maximum %{count} lot."
+        other: "Vous pouvez sélectionner au maximum %{count} lots."
+      lot_limit_exceeded_notice:
+        one: "Vous avez atteint la limite : %{count} lot maximum autorisé."
+        other: "Vous avez atteint la limite : %{count} lots maximum autorisés."
     validations:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"
       siret_invalid: "Le numéro de SIRET saisi est invalide"
