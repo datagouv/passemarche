@@ -152,6 +152,15 @@ fr:
     pdf_environment_indicator:
       watermark: "Attestation de test"
 
+  activemodel:
+    errors:
+      models:
+        lot_selection_policy:
+          attributes:
+            base:
+              no_lot_selected: "Vous devez sélectionner au moins un lot"
+              lot_limit_exceeded: "Vous ne pouvez pas sélectionner plus de %{limit} lot(s) (vous en avez sélectionné %{count})"
+
   errors:
     messages:
       blank: "doit être rempli(e)"
