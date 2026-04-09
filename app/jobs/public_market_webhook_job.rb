@@ -17,7 +17,7 @@ class PublicMarketWebhookJob < WebhookJob
       market: {
         identifier: entity.identifier,
         name: entity.name,
-        lot_name: entity.lot_name,
+        lots: entity.lots.ordered.map { |lot| { id: lot.id, name: lot.name } },
         market_type_codes: entity.market_type_codes,
         completed_at: entity.completed_at.iso8601,
         field_keys: entity.market_attributes.pluck(:key)

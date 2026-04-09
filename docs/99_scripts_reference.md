@@ -262,7 +262,7 @@ create_market() {
   local market_data='{
     "public_market": {
       "name": "Test - Fourniture équipements informatiques",
-      "lot_name": "Lot unique - Ordinateurs",
+      "lots": [{"name": "Lot unique - Ordinateurs"}],
       "deadline": "2024-12-31T23:59:59Z",
       "siret": "13002526500013",
       "market_type_codes": ["supplies"]

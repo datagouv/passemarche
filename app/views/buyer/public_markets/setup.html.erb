@@ -17,10 +17,12 @@
         <p class="fr-text--sm fr-mb-0"><%= @public_market.name %></p>
       </div>
 
-      <% if @public_market.lot_name.present? %>
+      <% if @public_market.lots.any? %>
         <div class="fr-mb-2w">
           <h3 class="fr-text--md fr-mb-0 fr-text--bold"><%= t('buyer.shared.lot_name') %></h3>
-          <p class="fr-text--sm fr-mb-0"><%= @public_market.lot_name %></p>
+          <% @public_market.lots.ordered.each do |lot| %>
+            <p class="fr-text--sm fr-mb-0"><%= lot.name %></p>
+          <% end %>
         </div>
       <% end %>
 

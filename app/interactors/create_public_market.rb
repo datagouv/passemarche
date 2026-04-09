@@ -18,7 +18,16 @@ class CreatePublicMarket < ApplicationInteractor
   private
 
   def market_params
-    params.slice(:name, :lot_name, :deadline, :siret, :market_type_codes, :provider_user_id)
+    params.slice(:name, :deadline, :siret, :market_type_codes, :provider_user_id)
+      .merge(lots_attributes: lots_params)
+  end
+
+  def lots_params
+    (params[:lots].presence || []).each_with_index.map { |lot, i| build_lot(lot, i) }
+  end
+
+  def build_lot(lot, index)
+    { name: lot[:name], position: index + 1 }
   end
 
   def errors_from(record)

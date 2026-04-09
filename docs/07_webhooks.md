@@ -87,7 +87,7 @@ Les paramètres existants dans l'URL sont préservés.
   "market": {
     "identifier": "VR-2024-A1B2C3D4E5F6",
     "name": "Fourniture de matériel informatique",
-    "lot_name": "Lot 1 - Ordinateurs portables",
+    "lots": [{"name": "Lot 1 - Ordinateurs portables"}],
     "deadline": "2024-12-31T23:59:59.000Z",
     "market_type_codes": ["supplies", "services"],
     "completed_at": "2024-06-15T14:30:45.123Z",

@@ -156,7 +156,10 @@ Content-Type: application/json
 {
   "public_market": {
     "name": "Fourniture de matériel informatique",
-    "lot_name": "Lot 1 - Ordinateurs portables",
+    "lots": [
+      {"name": "Lot 1 - Ordinateurs portables"},
+      {"name": "Lot 2 - Serveurs et infrastructure"}
+    ],
     "deadline": "2024-12-31T23:59:59Z",
     "siret": "13002526500013",
     "market_type_codes": ["supplies", "services"],
@@ -173,7 +176,7 @@ Content-Type: application/json
 | `deadline`          | datetime | Oui    | Date limite candidature                                         | Format ISO 8601, futur            |
 | `siret`             | string   | Oui    | SIRET de l'organisation publique (14 chiffres, validation Luhn) | Exactement 14 chiffres numériques |
 | `market_type_codes` | array    | Oui    | Types de marché                                                 | Au moins 1 élément                |
-| `lot_name`          | string   | Non    | Nom du lot spécifique                                           | Max 255 caractères                |
+| `lots`              | array    | Non    | Liste des lots du marché                                        | Chaque lot requiert un `name`     |
 | `provider_user_id`  | string   | Non    | Identifiant de l'utilisateur côté éditeur (acheteur)            | Max 255 caractères                |
 
 **Types de Marché Valides**

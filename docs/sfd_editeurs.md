@@ -332,7 +332,10 @@ Content-Type: application/json
 {
   "public_market": {
     "name": "Fourniture de matériel informatique",
-    "lot_name": "Lot 1 - Ordinateurs portables",
+    "lots": [
+      {"name": "Lot 1 - Ordinateurs portables"},
+      {"name": "Lot 2 - Serveurs et infrastructure"}
+    ],
     "deadline": "2024-12-31T23:59:59Z",
     "siret": "13002526500013",
     "market_type_codes": ["supplies", "services"]
@@ -348,7 +351,7 @@ Content-Type: application/json
 | `deadline` | datetime | Oui | ISO 8601, futur | Date limite de candidature |
 | `siret` | string | Oui | 14 chiffres, validation Luhn | SIRET de l'organisation publique |
 | `market_type_codes` | array | Oui | Min 1 élément | Types de marché |
-| `lot_name` | string | Non | Max 255 caractères | Nom du lot spécifique |
+| `lots` | array | Non | Chaque lot requiert un `name` | Liste des lots du marché |
 
 #### 4.2.4 Types de marché
 
@@ -841,7 +844,7 @@ Déclenché lorsqu'un acheteur finalise la configuration d'un marché.
   "market": {
     "identifier": "VR-2024-A1B2C3D4E5F6",
     "name": "Fourniture de matériel informatique",
-    "lot_name": "Lot 1 - Ordinateurs portables",
+    "lots": [{"name": "Lot 1 - Ordinateurs portables"}],
     "deadline": "2024-12-31T23:59:59.000Z",
     "market_type_codes": ["supplies", "services"],
     "completed_at": "2024-06-15T14:30:45.123Z",
