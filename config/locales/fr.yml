@@ -301,7 +301,9 @@ fr:
     shared:
       market_info_title: "Les informations du marché"
       market_name: "Nom du marché"
-      lot_name: "Nom du lot"
+      lot_name:
+        one: "Nom du lot"
+        other: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       deadline_short: "Date limite"
       market_type: "Typologie de marché"
