@@ -26,7 +26,7 @@
           </div>
           <% if @public_market.lots.any? %>
             <div class="fr-mb-3w">
-              <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.lot_name') %></div>
+              <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.lot_name', count: @public_market.lots.size) %></div>
               <% @public_market.lots.ordered.each do |lot| %>
                 <div><%= lot.name %></div>
               <% end %>
