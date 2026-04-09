@@ -199,6 +199,49 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       end
     end
 
+    context 'when market has lots and no lots are selected' do
+      let(:market_with_lots) { create(:public_market, :completed, editor:) }
+      let(:application_with_lots) { create(:market_application, public_market: market_with_lots, siret: '73282932000074') }
+      let(:token_for_lots) do
+        user.update!(authentication_token_sent_at: Time.current)
+        user.generate_token_for(:magic_link)
+      end
+
+      before { create(:lot, public_market: market_with_lots, name: 'Lot 1') }
+
+      it 'redirects to lot selection' do
+        get verify_candidate_sessions_path,
+          params: { token: token_for_lots, market_application_id: application_with_lots.identifier }
+
+        expect(response).to redirect_to(
+          lot_selection_candidate_market_application_path(application_with_lots.identifier)
+        )
+      end
+    end
+
+    context 'when market has lots and lots are already selected' do
+      let(:market_with_lots) { create(:public_market, :completed, editor:) }
+      let(:application_with_lots) { create(:market_application, public_market: market_with_lots, siret: '73282932000074') }
+      let(:token_for_lots) do
+        user.update!(authentication_token_sent_at: Time.current)
+        user.generate_token_for(:magic_link)
+      end
+
+      before do
+        lot = create(:lot, public_market: market_with_lots, name: 'Lot 1')
+        application_with_lots.lots << lot
+      end
+
+      it 'redirects to company identification' do
+        get verify_candidate_sessions_path,
+          params: { token: token_for_lots, market_application_id: application_with_lots.identifier }
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(application_with_lots.identifier, :company_identification)
+        )
+      end
+    end
+
     context 'when token is invalid' do
       it 'redirects to sessions new with alert' do
         get verify_candidate_sessions_path, params: { token: 'invalid_token', market_application_id: market_application.identifier }
