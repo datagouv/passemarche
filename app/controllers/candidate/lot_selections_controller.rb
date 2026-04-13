@@ -6,7 +6,9 @@ module Candidate
     before_action :check_application_not_completed
     before_action :redirect_if_no_lots, only: [:show]
 
-    def show; end
+    def show
+      @presenter = MarketApplicationPresenter.new(@market_application)
+    end
 
     def update
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
@@ -25,7 +27,7 @@ module Candidate
 
     def find_market_application
       @market_application = MarketApplication
-        .includes(public_market: :lots)
+        .includes(:lots, public_market: :lots)
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
