@@ -6,7 +6,6 @@ FactoryBot.define do
     identifier { nil }
     completed_at { nil }
     name { "Système d'acquisition dynamique pour matériels informatiques" }
-    lot_name { 'Consommables informatiques neufs' }
     deadline { 1.month.from_now }
     siret { '13002526500013' }
 
@@ -24,10 +23,6 @@ FactoryBot.define do
 
     trait :with_provider_user_id do
       provider_user_id { 'editor-user-123' }
-    end
-
-    trait :without_lot do
-      lot_name { nil }
     end
   end
 end
