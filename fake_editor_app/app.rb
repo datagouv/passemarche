@@ -461,17 +461,18 @@ class FakeEditorApp < Sinatra::Base
   end
 
   def extract_market_data_from_params
-    market_type_codes_array = Array(params[:market_type_codes]).compact
-    lot_names = Array(params[:lot_names]).map(&:strip).reject(&:empty?)
-    lots = lot_names.map { |name| { name: name } }
-
     {
       name: params[:name],
-      lots: lots,
+      lots: extract_lots_from_params,
+      lot_limit: params[:lot_limit].to_s.strip.then { |v| v.empty? ? nil : v.to_i },
       deadline: params[:deadline],
       siret: params[:siret],
-      market_type_codes: market_type_codes_array
+      market_type_codes: Array(params[:market_type_codes]).compact
     }
+  end
+
+  def extract_lots_from_params
+    Array(params[:lot_names]).map(&:strip).reject(&:empty?).map { |name| { name: } }
   end
 
   def validate_market_data(market_data)

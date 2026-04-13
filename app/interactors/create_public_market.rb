@@ -18,7 +18,7 @@ class CreatePublicMarket < ApplicationInteractor
   private
 
   def market_params
-    params.slice(:name, :deadline, :siret, :market_type_codes, :provider_user_id)
+    params.slice(:name, :deadline, :siret, :market_type_codes, :provider_user_id, :lot_limit)
       .merge(lots_attributes: lots_params)
   end
 
