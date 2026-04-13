@@ -7,12 +7,16 @@
         <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.name %></span>
       </div>
     </div>
-    <% if market_application.public_market.lot_name.present? %>
+    <% if market_application.public_market.lots.any? %>
       <div class="field-layout-container">
         <div class="field-layout-content">
           <strong><%= t('shared.application_summary.lot_name') %></strong>
           <br>
-          <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.lot_name %></span>
+          <span class="fr-text--md fr-text--mention-grey">
+            <% market_application.public_market.lots.ordered.each do |lot| %>
+              <span class="fr-badge fr-badge--sm fr-mr-1w fr-mb-1w"><%= lot.name %></span>
+            <% end %>
+          </span>
         </div>
       </div>
     <% end %>

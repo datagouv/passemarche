@@ -77,7 +77,7 @@
                     <input
                       class="fr-input"
                       type="text"
-                      name="lot_names[]"
+                      name="lots[]"
                       placeholder="Ex: Lot 1 - Ordinateurs portables"
                       style="flex:1; min-width:0;">
                     <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="display:none; flex-shrink:0;">
@@ -222,7 +222,7 @@
       row.className = 'lot-row fr-mb-1w';
       row.style.cssText = 'display:flex; gap:0.5rem; align-items:center;';
       row.innerHTML =
-        '<input class="fr-input" type="text" name="lot_names[]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:1; min-width:0;">' +
+        '<input class="fr-input" type="text" name="lots[]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:1; min-width:0;">' +
         '<button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="flex-shrink:0;">Supprimer</button>';
       container.appendChild(row);
       updateRemoveButtons();
