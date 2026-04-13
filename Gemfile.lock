@@ -308,7 +308,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    pagy (43.4.4)
+    pagy (43.5.0)
       json
       uri
       yaml
@@ -588,7 +588,7 @@ DEPENDENCIES
   letter_opener
   lookbook
   mission_control-jobs
-  pagy (~> 43.4)
+  pagy (~> 43.5)
   paper_trail (~> 17.0)
   pg (>= 1.1)
   propshaft
