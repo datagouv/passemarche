@@ -168,6 +168,14 @@
              data-lot-selection-target="selectedLotsCount"
              data-one="<%= I18n.t('candidate.lot_selection.lots_count.one') %>"
              data-other="<%= I18n.t('candidate.lot_selection.lots_count.other') %>"></p>
+          <% if @presenter %>
+            <p class="fr-text--sm fr-mb-2w"
+               style="color: <%= @presenter.fields_complete? ? 'var(--text-default-success)' : 'var(--text-mention-grey)' %>;">
+              <%= t('candidate.lot_selection.fields_count',
+                    filled: @presenter.filled_fields_count,
+                    total: @presenter.total_fields_count) %>
+            </p>
+          <% end %>
           <div style="text-align: right;">
             <%= link_to step_candidate_market_application_path(@market_application.identifier, :company_identification),
                   style: "color: var(--blue-france-sun-113-625); font-size: 0.875rem; font-weight: 500;" do %>
