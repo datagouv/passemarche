@@ -7,6 +7,7 @@ module Candidate
     before_action :redirect_if_no_lots, only: [:show]
 
     def show
+      @submission_intent = submission_intent
       @presenter = MarketApplicationPresenter.new(@market_application)
     end
 
@@ -14,13 +15,15 @@ module Candidate
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
 
       unless policy.valid?
-        @errors = policy.errors.map(&:message)
-        render :show, status: :unprocessable_content
+        render_show_with_errors(policy.errors.map(&:message))
         return
       end
 
       @market_application.lot_ids = lot_ids_param
-      redirect_to step_candidate_market_application_path(@market_application.identifier, :summary)
+
+      return complete_submission if submission_intent == 'submit'
+
+      redirect_to_summary
     end
 
     private
@@ -48,6 +51,46 @@ module Candidate
 
     def lot_ids_param
       params.fetch(:market_application, {}).permit(lot_ids: [])[:lot_ids] || []
+    end
+
+    def submission_intent
+      params[:submission_intent].to_s
+    end
+
+    def queue_webhook_and_redirect(flash_options = {})
+      MarketApplicationWebhookJob.perform_later(
+        @market_application.id,
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
+      )
+      redirect_to candidate_sync_status_path(@market_application.identifier), flash_options
+    end
+
+    def complete_submission
+      complete_result = MarketApplicationStepUpdateService.call(@market_application, :summary, {})
+      apply_flash_messages(complete_result)
+
+      return queue_webhook_and_redirect if complete_result[:success] && complete_result[:redirect] == :sync_status
+      return redirect_to_summary if complete_result[:success]
+
+      render_show_with_errors
+    end
+
+    def apply_flash_messages(result)
+      result[:flash_messages].each do |key, value|
+        flash.now[key] = value
+      end
+    end
+
+    def redirect_to_summary
+      redirect_to step_candidate_market_application_path(@market_application.identifier, :summary)
+    end
+
+    def render_show_with_errors(errors = nil)
+      @errors = errors
+      @submission_intent = submission_intent
+      @presenter = MarketApplicationPresenter.new(@market_application)
+      render :show, status: :unprocessable_content
     end
   end
 end

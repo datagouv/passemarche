@@ -40,6 +40,18 @@ Feature: Candidate lot selection
     And the candidate reconnects to the application
     Then the candidate should be on the company identification step
 
+  Scenario: Summary submission goes through lot selection when market has lots
+    Given the candidate revisits the summary page
+    Then the summary should route submission to lot selection
+    When the candidate clicks submit from summary
+    Then the candidate should remain on the lot selection page
+
+  Scenario: Summary keeps direct submit when market has no lots
+    Given a public market without lots exists
+    And a candidate starts a new application for a market without lots
+    And the candidate revisits the summary page for market without lots
+    Then the summary should have a direct submit button
+
   Scenario: Progress card shows field counter with no fields filled
     Then the candidate should see the field counter showing "0/1 champs"
     And the progress card CTA should show "Préparer"
