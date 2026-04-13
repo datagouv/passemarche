@@ -42,8 +42,10 @@ Feature: Candidate lot selection
 
   Scenario: Progress card shows field counter with no fields filled
     Then the candidate should see the field counter showing "0/1 champs"
+    And the progress card CTA should show "Préparer"
 
-  Scenario: Progress card shows field counter in green when all fields are filled
+  Scenario: CA8 - Progress card CTA shows "Modifier" when fields are filled
     Given the candidate has filled all fields
     And the candidate revisits the lot selection page
     Then the candidate should see the field counter in green
+    And the progress card CTA should show "Modifier"
