@@ -176,10 +176,11 @@
                     total: @presenter.total_fields_count) %>
             </p>
           <% end %>
+          <% cta_translation_key = @presenter&.filled_fields_count.to_i.positive? ? 'candidate.lot_selection.modify' : 'candidate.lot_selection.prepare' %>
           <div style="text-align: right;">
             <%= link_to step_candidate_market_application_path(@market_application.identifier, :company_identification),
                   style: "color: var(--blue-france-sun-113-625); font-size: 0.875rem; font-weight: 500;" do %>
-              <%= t('candidate.lot_selection.prepare') %>
+              <%= t(cta_translation_key) %>
               <span class="fr-icon-arrow-right-line fr-icon--sm" aria-hidden="true"></span>
             <% end %>
           </div>

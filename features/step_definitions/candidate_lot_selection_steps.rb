@@ -132,3 +132,7 @@ end
 Then('the candidate should see the field counter in green') do
   expect(page).to have_css('[style*="text-default-success"]', visible: false)
 end
+
+Then('the progress card CTA should show {string}') do |cta_text|
+  expect(page).to have_link(cta_text, href: %r{/candidate/market_applications/.+/company_identification}, visible: :all)
+end
