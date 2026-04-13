@@ -125,6 +125,14 @@ Given('the candidate revisits the lot selection page') do
   visit lot_selection_candidate_market_application_path(@market_application.identifier)
 end
 
+Given('the candidate revisits the summary page') do
+  visit step_candidate_market_application_path(@market_application.identifier, :summary)
+end
+
+Given('the candidate revisits the summary page for market without lots') do
+  visit step_candidate_market_application_path(@market_application_no_lots.identifier, :summary)
+end
+
 Then('the candidate should see the field counter showing {string}') do |counter_text|
   expect(page).to have_css('p', text: counter_text, visible: false)
 end
@@ -135,4 +143,16 @@ end
 
 Then('the progress card CTA should show {string}') do |cta_text|
   expect(page).to have_link(cta_text, href: %r{/candidate/market_applications/.+/company_identification}, visible: :all)
+end
+
+Then('the summary should route submission to lot selection') do
+  expect(page).to have_link(href: %r{/candidate/market_applications/.+/lots\?submission_intent=submit})
+end
+
+When('the candidate clicks submit from summary') do
+  click_link_or_button(I18n.t('button.submit_summary'))
+end
+
+Then('the summary should have a direct submit button') do
+  expect(page).to have_button(I18n.t('button.submit_summary'))
 end

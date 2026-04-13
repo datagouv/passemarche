@@ -34,10 +34,18 @@
           <span class="fr-icon-arrow-left-line" aria-hidden="true"></span>
           <span class="fr-ml-1w">Précédent</span>
         <% end %>
-        <%= form_with model: @market_application, url: wizard_path, method: :put, local: true, data: { turbo: false } do |form| %>
-          <button type="submit" class="fr-btn fr-btn--icon-right">
+        <% if @market_application.public_market.lots.any? %>
+          <%= link_to lot_selection_candidate_market_application_path(@market_application.identifier, submission_intent: 'submit'),
+                class: "fr-btn" do %>
             <%= t('button.submit_summary') %>
-          </button>
+            <span class="fr-icon-arrow-right-line fr-icon--sm fr-ml-1w" aria-hidden="true"></span>
+          <% end %>
+        <% else %>
+          <%= form_with model: @market_application, url: wizard_path, method: :put, local: true, data: { turbo: false } do |form| %>
+            <button type="submit" class="fr-btn fr-btn--icon-right">
+              <%= t('button.submit_summary') %>
+            </button>
+          <% end %>
         <% end %>
       </div>
     </div>

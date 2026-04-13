@@ -34,6 +34,7 @@
                     method: :patch,
                     local: true,
                     data: { turbo: false } do %>
+        <%= hidden_field_tag :submission_intent, @submission_intent %>
 
         <% lots = @market_application.public_market.lots.ordered %>
 
@@ -101,7 +102,7 @@
                 style="width: 100%;"
                 data-lot-selection-target="submitButton"
                 disabled>
-          <%= t('candidate.lot_selection.submit') %>
+          <%= @submission_intent == 'submit' ? t('button.submit_summary') : t('candidate.lot_selection.submit') %>
         </button>
 
       <% end %>
