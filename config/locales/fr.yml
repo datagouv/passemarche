@@ -139,7 +139,7 @@ fr:
     application_summary:
       market_info_title: "Informations du marché"
       market_name: "Nom du marché"
-      lot_name: "Nom du lot"
+      lot_name: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
@@ -310,9 +310,7 @@ fr:
     shared:
       market_info_title: "Les informations du marché"
       market_name: "Nom du marché"
-      lot_name:
-        one: "Nom du lot"
-        other: "Nom des lots"
+      lot_name: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       deadline_short: "Date limite"
       market_type: "Typologie de marché"
@@ -498,7 +496,7 @@ fr:
       next: "Suivant"
       form_logo_alt: "Logo de formulaire"
       market_name: "Nom du marché"
-      lot_name: "Nom du lot"
+      lot_name: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
