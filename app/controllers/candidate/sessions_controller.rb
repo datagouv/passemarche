@@ -55,6 +55,8 @@ module Candidate
     end
 
     def first_step_path(market_application)
+      return candidate_sync_status_path(market_application.identifier) if market_application.completed?
+
       if market_application.public_market.lots.any? && market_application.lots.none?
         lot_selection_candidate_market_application_path(market_application.identifier)
       else

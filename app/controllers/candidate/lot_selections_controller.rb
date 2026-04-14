@@ -15,7 +15,10 @@ module Candidate
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
 
       unless policy.valid?
-        render_show_with_errors(policy.errors.map(&:message))
+        @errors = policy.errors.map(&:message)
+        @submission_intent = submission_intent
+        @presenter = MarketApplicationPresenter.new(@market_application)
+        render :show, status: :unprocessable_content
         return
       end
 
@@ -23,7 +26,7 @@ module Candidate
 
       return complete_submission if submission_intent == 'submit'
 
-      redirect_to_summary
+      redirect_to step_candidate_market_application_path(@market_application.identifier, :summary)
     end
 
     private
@@ -57,6 +60,22 @@ module Candidate
       params[:submission_intent].to_s
     end
 
+    def complete_submission
+      result = MarketApplicationStepUpdateService.call(@market_application, :summary, {})
+
+      return queue_webhook_and_redirect if result[:success] && result[:redirect] == :sync_status
+
+      render_submission_error(result[:flash_messages])
+    end
+
+    def render_submission_error(flash_messages)
+      flash_messages.each { |key, value| flash.now[key] = value }
+      @errors = flash_messages.values.compact
+      @submission_intent = submission_intent
+      @presenter = MarketApplicationPresenter.new(@market_application)
+      render :show, status: :unprocessable_content
+    end
+
     def queue_webhook_and_redirect(flash_options = {})
       MarketApplicationWebhookJob.perform_later(
         @market_application.id,
@@ -64,33 +83,6 @@ module Candidate
         request_protocol: request.protocol
       )
       redirect_to candidate_sync_status_path(@market_application.identifier), flash_options
-    end
-
-    def complete_submission
-      complete_result = MarketApplicationStepUpdateService.call(@market_application, :summary, {})
-      apply_flash_messages(complete_result)
-
-      return queue_webhook_and_redirect if complete_result[:success] && complete_result[:redirect] == :sync_status
-      return redirect_to_summary if complete_result[:success]
-
-      render_show_with_errors
-    end
-
-    def apply_flash_messages(result)
-      result[:flash_messages].each do |key, value|
-        flash.now[key] = value
-      end
-    end
-
-    def redirect_to_summary
-      redirect_to step_candidate_market_application_path(@market_application.identifier, :summary)
-    end
-
-    def render_show_with_errors(errors = nil)
-      @errors = errors
-      @submission_intent = submission_intent
-      @presenter = MarketApplicationPresenter.new(@market_application)
-      render :show, status: :unprocessable_content
     end
   end
 end

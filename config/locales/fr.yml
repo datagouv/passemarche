@@ -430,6 +430,7 @@ fr:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez un ou plusieurs lots pour lequel/lesquels vous souhaitez soumettre une candidature."
       submit: "Transmettre ma candidature"
+      pursue: "Poursuivre"
       market_info_title: "Informations du marché"
       buyer_label: "Acheteur"
       how_it_works_title: "Comment ça fonctionne"

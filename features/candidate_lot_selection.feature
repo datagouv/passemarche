@@ -52,6 +52,20 @@ Feature: Candidate lot selection
     And the candidate revisits the summary page for market without lots
     Then the summary should have a direct submit button
 
+  Scenario: Lots are pre-selected when returning to lot selection from summary
+    When the candidate selects the first lot
+    And the candidate submits the lot selection form
+    And the candidate revisits the summary page
+    And the candidate clicks submit from summary
+    Then the lot "Lot 1 - Fournitures" should be pre-selected
+
+  Scenario: Completed application redirects to sync status after authentication
+    When the candidate selects the first lot
+    And the candidate submits the lot selection form
+    And the application is completed
+    And the candidate reconnects to the application
+    Then the candidate should be on the sync status page
+
   Scenario: Progress card shows field counter with no fields filled
     Then the candidate should see the field counter showing "0/1 champs"
     And the progress card CTA should show "Préparer"

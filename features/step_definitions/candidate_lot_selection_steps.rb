@@ -156,3 +156,19 @@ end
 Then('the summary should have a direct submit button') do
   expect(page).to have_button(I18n.t('button.submit_summary'))
 end
+
+Then('the lot {string} should be pre-selected') do |lot_name|
+  expect(page).to have_field(lot_name, type: :checkbox, checked: true)
+end
+
+Given('the application is completed') do
+  @market_application.reload
+  @market_application.complete!
+end
+
+Then('the candidate should be on the sync status page') do
+  expect(page).to have_current_path(
+    %r{/candidate/market_application/.+/sync_status},
+    ignore_query: true
+  )
+end
