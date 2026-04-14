@@ -33,3 +33,19 @@ Feature: Candidate lot selection
     And the candidate submits the lot selection form
     Then the candidate should see an error about the lot limit
     And the candidate should remain on the lot selection page
+
+  Scenario: Candidate is not redirected to lot selection when lots are already selected
+    When the candidate selects the first lot
+    And the candidate submits the lot selection form
+    And the candidate reconnects to the application
+    Then the candidate should be on the company identification step
+
+  Scenario: Progress card shows field counter with no fields filled
+    Then the candidate should see the field counter showing "0/1 champs"
+    And the progress card CTA should show "Préparer"
+
+  Scenario: CA8 - Progress card CTA shows "Modifier" when fields are filled
+    Given the candidate has filled all fields
+    And the candidate revisits the lot selection page
+    Then the candidate should see the field counter in green
+    And the progress card CTA should show "Modifier"

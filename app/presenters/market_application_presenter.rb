@@ -110,16 +110,26 @@ class MarketApplicationPresenter
   end
 
   def visible_subcategory_keys
-    @visible_subcategory_keys ||= begin
-      hidden_attr_ids = @market_application.market_attribute_responses
-        .where(hidden: true)
-        .pluck(:market_attribute_id)
+    @visible_subcategory_keys ||= visible_market_attributes
+      .filter_map(&:subcategory_key)
+      .uniq
+  end
 
-      all_market_attributes
-        .reject { |attr| hidden_attr_ids.include?(attr.id) }
-        .filter_map(&:subcategory_key)
-        .uniq
+  # === PROGRESS METHODS ===
+
+  def total_fields_count
+    visible_market_attributes.size
+  end
+
+  def filled_fields_count
+    visible_market_attributes.count do |attr|
+      response = responses_by_attribute_id[attr.id]
+      response_has_data?(response)
     end
+  end
+
+  def fields_complete?
+    total_fields_count.positive? && filled_fields_count == total_fields_count
   end
 
   # === VALIDATION METHODS ===
@@ -147,7 +157,7 @@ class MarketApplicationPresenter
     return false if response.nil? || response.new_record?
 
     has_documents = response.respond_to?(:documents) && response.documents.attached?
-    has_value = response.value.present?
+    has_value = response.value.any? { |_, v| v.present? }
 
     has_documents || has_value
   end
@@ -158,6 +168,16 @@ class MarketApplicationPresenter
 
   def all_market_attributes
     @all_market_attributes ||= @market_application.public_market.market_attributes.sort_by(&:position)
+  end
+
+  def hidden_attr_ids
+    @hidden_attr_ids ||= @market_application.market_attribute_responses
+      .where(hidden: true)
+      .pluck(:market_attribute_id)
+  end
+
+  def visible_market_attributes
+    @visible_market_attributes ||= all_market_attributes.reject { |attr| hidden_attr_ids.include?(attr.id) }
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)

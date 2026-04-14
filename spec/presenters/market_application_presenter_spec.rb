@@ -328,6 +328,121 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
     end
   end
 
+  describe '#total_fields_count' do
+    it 'returns the number of market attributes' do
+      expect(presenter.total_fields_count).to eq(3)
+    end
+
+    context 'with no market attributes' do
+      let(:empty_market) { create(:public_market, :completed, editor:) }
+      let(:empty_application) { create(:market_application, public_market: empty_market) }
+      let(:empty_presenter) { described_class.new(empty_application) }
+
+      it 'returns 0' do
+        expect(empty_presenter.total_fields_count).to eq(0)
+      end
+    end
+  end
+
+  describe '#filled_fields_count' do
+    context 'when no responses exist' do
+      it 'returns 0' do
+        expect(presenter.filled_fields_count).to eq(0)
+      end
+    end
+
+    context 'when some responses have data' do
+      before do
+        MarketAttributeResponse::TextInput.create!(
+          market_application:,
+          market_attribute: identity_attr,
+          value: { text: 'ACME Corp' }
+        )
+        market_application.reload
+      end
+
+      it 'counts only responses with data' do
+        expect(presenter.filled_fields_count).to eq(1)
+      end
+    end
+
+    context 'when a response exists but with blank value' do
+      before do
+        MarketAttributeResponse::TextInput.create!(
+          market_application:,
+          market_attribute: identity_attr,
+          value: { text: '' }
+        )
+        market_application.reload
+      end
+
+      it 'does not count the response as filled' do
+        expect(presenter.filled_fields_count).to eq(0)
+      end
+    end
+
+    context 'when all responses have data' do
+      before do
+        [identity_attr, exclusion_attr, economic_attr].each do |attr|
+          MarketAttributeResponse::TextInput.create!(
+            market_application:,
+            market_attribute: attr,
+            value: { text: 'filled' }
+          )
+        end
+        market_application.reload
+      end
+
+      it 'returns the total count' do
+        expect(presenter.filled_fields_count).to eq(3)
+      end
+    end
+  end
+
+  describe '#fields_complete?' do
+    context 'when no fields exist' do
+      let(:empty_market) { create(:public_market, :completed, editor:) }
+      let(:empty_application) { create(:market_application, public_market: empty_market) }
+      let(:empty_presenter) { described_class.new(empty_application) }
+
+      it 'returns false' do
+        expect(empty_presenter.fields_complete?).to be false
+      end
+    end
+
+    context 'when some fields are filled' do
+      before do
+        MarketAttributeResponse::TextInput.create!(
+          market_application:,
+          market_attribute: identity_attr,
+          value: { text: 'ACME Corp' }
+        )
+        market_application.reload
+      end
+
+      it 'returns false' do
+        expect(presenter.fields_complete?).to be false
+      end
+    end
+
+    context 'when all fields are filled' do
+      before do
+        [identity_attr, exclusion_attr, economic_attr].each do |attr|
+          MarketAttributeResponse::TextInput.create!(
+            market_application:,
+            market_attribute: attr,
+            value: { text: 'filled' }
+          )
+        end
+        market_application.reload
+      end
+
+      it 'returns true' do
+        expect(presenter.fields_complete?).to be true
+      end
+    end
+  end
+
   describe '#response_component_class' do
     it 'returns the component class when it exists' do
       response = presenter.market_attribute_response_for(identity_attr)

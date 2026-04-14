@@ -103,3 +103,36 @@ Then('the candidate should remain on the lot selection page') do
     ignore_query: true
   )
 end
+
+When('the candidate reconnects to the application') do
+  @market_application.reload
+  user = @market_application.user
+  user.update!(authentication_token_sent_at: Time.current)
+  token = user.generate_token_for(:magic_link)
+  visit verify_candidate_sessions_path(token:, market_application_id: @market_application.identifier)
+end
+
+Given('the candidate has filled all fields') do
+  attr = @public_market.market_attributes.first
+  MarketAttributeResponse::TextInput.create!(
+    market_application: @market_application,
+    market_attribute: attr,
+    value: { text: 'filled value' }
+  )
+end
+
+Given('the candidate revisits the lot selection page') do
+  visit lot_selection_candidate_market_application_path(@market_application.identifier)
+end
+
+Then('the candidate should see the field counter showing {string}') do |counter_text|
+  expect(page).to have_css('p', text: counter_text, visible: false)
+end
+
+Then('the candidate should see the field counter in green') do
+  expect(page).to have_css('[style*="text-default-success"]', visible: false)
+end
+
+Then('the progress card CTA should show {string}') do |cta_text|
+  expect(page).to have_link(cta_text, href: %r{/candidate/market_applications/.+/company_identification}, visible: :all)
+end
