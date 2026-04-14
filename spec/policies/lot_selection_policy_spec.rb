@@ -45,7 +45,12 @@ RSpec.describe LotSelectionPolicy do
     end
 
     context 'when lot_limit is set' do
-      before { public_market.update!(lot_limit: 2) }
+      before do
+        lot1
+        lot2
+        lot3
+        public_market.update!(lot_limit: 2)
+      end
 
       it 'is valid when selected lots count equals the limit' do
         policy = described_class.new(market_application, [lot1.id, lot2.id])

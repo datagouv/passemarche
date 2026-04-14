@@ -1249,6 +1249,8 @@ fr:
             market_types:
               blank: "Les types de marché ne peuvent pas être vides"
               cannot_be_alone: "Le marché de défense ne peut pas être le seul type sélectionné"
+            lot_limit:
+              exceeds_lots_count: "Vous ne pouvez pas limiter un nombre de lots supérieur au nombre de lots créés."
             market_type_codes:
               invalid_codes: "Les codes de marché contiennent des valeurs invalides : %{codes}"
             siret:
