@@ -51,8 +51,15 @@ module Candidate
       market_application.update!(user:) unless reconnection
       session[:user_id] = user.id
       session[:market_application_identifier] = market_application.identifier
-      redirect_to session.delete(:return_to) ||
-                  step_candidate_market_application_path(market_application.identifier, :company_identification)
+      redirect_to first_step_path(market_application)
+    end
+
+    def first_step_path(market_application)
+      if market_application.public_market.lots.any? && market_application.lots.none?
+        lot_selection_candidate_market_application_path(market_application.identifier)
+      else
+        step_candidate_market_application_path(market_application.identifier, :company_identification)
+      end
     end
 
     def magic_link_request_params
