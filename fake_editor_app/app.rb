@@ -480,7 +480,7 @@ class FakeEditorApp < Sinatra::Base
     return 'Veuillez remplir la date limite.' if market_data[:deadline].to_s.strip.empty?
     return 'Veuillez remplir le SIRET de l\'organisation.' if market_data[:siret].to_s.strip.empty?
     return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
-    return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].nil?
+    return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].to_a.empty?
 
     nil
   end
