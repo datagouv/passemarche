@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
+RSpec.describe Candidate::ResolveMarketApplicationForReconnection, type: :interactor do
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
   let(:siret) { '73282932000074' }
@@ -110,6 +110,36 @@ RSpec.describe Candidate::FindMarketApplicationBySiret, type: :interactor do
 
         expect(result).to be_success
         expect(result.reconnection).to be true
+      end
+
+      it 'targets the already linked application for reconnection' do
+        result = described_class.call(siret:, email: 'original@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_success
+        expect(result.market_application).to eq(other_application)
+      end
+    end
+
+    context 'when multiple linked applications exist for the same SIRET and market' do
+      let(:existing_user) { create(:user, email: 'original@example.com') }
+      let(:completed_application) do
+        create(:market_application, :completed, public_market:, siret:, user: existing_user, completed_at: 2.days.ago)
+      end
+      let(:in_progress_application) { create(:market_application, public_market:, siret:, user: existing_user) }
+
+      before do
+        completed_application
+        in_progress_application
+      end
+
+      it 'prefers the completed linked application' do
+        result = described_class.call(siret:, email: 'original@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_success
+        expect(result.reconnection).to be true
+        expect(result.market_application).to eq(completed_application)
       end
     end
 
