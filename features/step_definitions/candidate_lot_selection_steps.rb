@@ -53,17 +53,21 @@ When('the candidate selects the first lot') do
   check 'Lot 1 - Fournitures'
 end
 
+When('the candidate deselects the first lot') do
+  uncheck 'Lot 1 - Fournitures'
+end
+
 When('the candidate selects all available lots') do
   check 'Lot 1 - Fournitures'
   check 'Lot 2 - Services'
 end
 
 When('the candidate submits the lot selection form') do
-  find('button[type="submit"]', visible: true).click
+  find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
 end
 
 When('the candidate submits the lot selection form without selecting any lot') do
-  find('button[type="submit"]', visible: true).click
+  find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
 end
 
 Then('the candidate should be on the company identification step') do
@@ -71,18 +75,6 @@ Then('the candidate should be on the company identification step') do
     %r{/candidate/market_applications/.+/company_identification},
     ignore_query: true
   )
-end
-
-Then('the candidate should be on the summary step') do
-  expect(page).to have_current_path(
-    %r{/candidate/market_applications/.+/summary},
-    ignore_query: true
-  )
-end
-
-Then('the selected lots should be saved') do
-  @market_application.reload
-  expect(@market_application.lots).to include(@lot1)
 end
 
 Then('the candidate should see an error about selecting at least one lot') do
@@ -112,7 +104,12 @@ When('the candidate reconnects to the application') do
   visit verify_candidate_sessions_path(token:, market_application_id: @market_application.identifier)
 end
 
+Then('the candidate should see the submit application button') do
+  expect(page).to have_button(I18n.t('button.submit_summary'))
+end
+
 Given('the candidate has filled all fields') do
+  @market_application.lots << @lot1
   attr = @public_market.market_attributes.first
   MarketAttributeResponse::TextInput.create!(
     market_application: @market_application,
@@ -125,6 +122,10 @@ Given('the candidate revisits the lot selection page') do
   visit lot_selection_candidate_market_application_path(@market_application.identifier)
 end
 
+Given('the candidate revisits the summary page') do
+  visit step_candidate_market_application_path(@market_application.identifier, :summary)
+end
+
 Then('the candidate should see the field counter showing {string}') do |counter_text|
   expect(page).to have_css('p', text: counter_text, visible: false)
 end
@@ -134,5 +135,28 @@ Then('the candidate should see the field counter in green') do
 end
 
 Then('the progress card CTA should show {string}') do |cta_text|
-  expect(page).to have_link(cta_text, href: %r{/candidate/market_applications/.+/company_identification}, visible: :all)
+  expect(page).to have_css('button', text: cta_text, visible: :all)
+end
+
+Then('the summary should have a direct submit button') do
+  expect(page).to have_button(I18n.t('button.submit_summary'))
+end
+
+Then('the unselected lots should be disabled and greyed out') do
+  unchecked_checkboxes = all('input[type="checkbox"]').reject(&:checked?)
+  expect(unchecked_checkboxes).to all(be_disabled)
+end
+
+Then('the candidate should see the lot limit reached message') do
+  expect(page).to have_css('[data-lot-selection-target="limitError"]:not([hidden])')
+end
+
+Then('all lots should be selectable again') do
+  all('input[type="checkbox"]').each do |checkbox|
+    expect(checkbox).not_to be_disabled
+  end
+end
+
+Then('the candidate should not see the lot limit reached message') do
+  expect(page).not_to have_css('[data-lot-selection-target="limitError"]:not([hidden])')
 end
