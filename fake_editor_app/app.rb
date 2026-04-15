@@ -472,7 +472,7 @@ class FakeEditorApp < Sinatra::Base
   end
 
   def extract_lots_from_params
-    Array(params[:lot_names]).map(&:strip).reject(&:empty?).map { |name| { name: } }
+    Array(params[:lots]).map(&:strip).reject(&:empty?).map { |name| { name: } }
   end
 
   def validate_market_data(market_data)

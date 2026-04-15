@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_07_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_13_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -235,7 +235,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_000003) do
     t.bigint "editor_id", null: false
     t.string "identifier", null: false
     t.integer "lot_limit"
-    t.string "lot_name"
     t.text "market_type_codes", default: [], array: true
     t.string "name"
     t.string "provider_user_id"
