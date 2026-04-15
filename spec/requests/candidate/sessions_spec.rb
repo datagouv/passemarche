@@ -242,6 +242,19 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       end
     end
 
+    context 'when market_application is already completed' do
+      before { market_application.update!(user:) && market_application.complete! }
+
+      it 'redirects to sync status' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          candidate_sync_status_path(market_application.identifier)
+        )
+      end
+    end
+
     context 'when token is invalid' do
       it 'redirects to sessions new with alert' do
         get verify_candidate_sessions_path, params: { token: 'invalid_token', market_application_id: market_application.identifier }
