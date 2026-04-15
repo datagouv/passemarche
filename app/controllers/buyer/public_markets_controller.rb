@@ -30,8 +30,12 @@ module Buyer
         redirect_to buyer_sync_status_path(@public_market.identifier)
       else
         jump_to(result[:next_step]) if result.is_a?(Hash) && result[:next_step]
+        @public_market.reload
         render_wizard @public_market
       end
+    rescue ActiveRecord::RecordInvalid
+      @public_market.reload
+      render_wizard @public_market
     end
 
     def retry_sync

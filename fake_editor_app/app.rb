@@ -16,6 +16,7 @@ class FakeEditorApp < Sinatra::Base
     set :views, File.join(File.dirname(__FILE__), 'views')
     set :public_folder, File.join(File.dirname(__FILE__), 'public')
     set :show_exceptions, development?
+    set :raise_errors, development?
   end
 
   helpers do
@@ -132,6 +133,10 @@ class FakeEditorApp < Sinatra::Base
         erb :'buyer/market_created'
       rescue StandardError => e
         @error = "Erreur lors de la création du marché: #{e.message}"
+        # Ensure variables are reset to prevent rendering issues
+        @success = nil
+        @market = nil
+        @configuration_url = nil
         erb :'buyer/market_new'
       end
     end
