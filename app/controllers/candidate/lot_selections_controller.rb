@@ -14,13 +14,21 @@ module Candidate
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
 
       unless policy.valid?
-        @errors = policy.errors.map(&:message)
-        render :show, status: :unprocessable_content
+        render_lot_selection_error(policy.errors.map(&:message))
         return
       end
 
       @market_application.lot_ids = lot_ids_param
-      redirect_to step_candidate_market_application_path(@market_application.identifier, :summary)
+
+      redirect_to step_candidate_market_application_path(@market_application.identifier, :company_identification)
+    end
+
+    def submit
+      result = MarketApplicationStepUpdateService.call(@market_application, :summary, {})
+
+      return queue_webhook_and_redirect if result[:success] && result[:redirect] == :sync_status
+
+      render_submission_error(result[:flash_messages])
     end
 
     private
@@ -48,6 +56,17 @@ module Candidate
 
     def lot_ids_param
       params.fetch(:market_application, {}).permit(lot_ids: [])[:lot_ids] || []
+    end
+
+    def render_lot_selection_error(errors)
+      @errors = errors
+      @presenter = MarketApplicationPresenter.new(@market_application)
+      render :show, status: :unprocessable_content
+    end
+
+    def render_submission_error(flash_messages)
+      flash_messages.each { |key, value| flash.now[key] = value }
+      render_lot_selection_error(flash_messages.values.compact)
     end
   end
 end

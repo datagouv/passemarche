@@ -439,7 +439,7 @@ fr:
       application_form_title: "Formulaire de candidature"
       prepare: "Préparer"
       modify: "Modifier"
-      fields_count: "%{filled}/%{total} champs"
+      fields_count: "%{filled}/%{total} champs complétés"
       progress_title: "Avancement des candidatures"
       no_lot_selected: "Aucun lot sélectionné pour le moment"
       select_all: "Tout sélectionner"

@@ -1,8 +1,13 @@
 <% content_for :title, t('candidate.lot_selection.title') %>
+<% lots_already_saved = @presenter.lots_saved? %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
 
 <div class="fr-container fr-py-6w"
      data-controller="lot-selection"
-     data-lot-selection-limit-value="<%= @market_application.public_market.lot_limit.to_i %>">
+     data-lot-selection-limit-value="<%= @market_application.public_market.lot_limit.to_i %>"
+     data-lot-selection-storage-key-value="lot-selection-<%= @market_application.identifier %>">
   <div class="fr-grid-row fr-grid-row--gutters">
 
     <div class="fr-col-12 fr-col-md-7">
@@ -33,8 +38,8 @@
       <%= form_with url: lot_selection_candidate_market_application_path(@market_application.identifier),
                     method: :patch,
                     local: true,
+                    id: "lot-selection-form",
                     data: { turbo: false } do %>
-
         <% lots = @market_application.public_market.lots.ordered %>
 
         <div class="fr-mb-4w" style="border: 1px solid var(--border-default-grey); border-radius: 4px;">
@@ -62,7 +67,7 @@
           </div>
 
           <% if @market_application.public_market.lot_limit.present? %>
-            <p class="fr-text--sm fr-mb-0 fr-px-3w fr-pt-2w" style="color: var(--text-default-error);">
+            <p class="fr-text--sm fr-text--mention-grey fr-mb-0 fr-px-3w fr-pt-2w">
               <%= t('candidate.lot_selection.lot_limit_notice', count: @market_application.public_market.lot_limit) %>
             </p>
             <p class="fr-text--sm fr-mb-0 fr-px-3w fr-pt-1w"
@@ -96,14 +101,21 @@
           <% end %>
         </div>
 
-        <button type="submit"
-                class="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                style="width: 100%;"
-                data-lot-selection-target="submitButton"
-                disabled>
-          <%= t('candidate.lot_selection.submit') %>
-        </button>
+      <% end %>
 
+      <%= form_with url: lot_selection_submit_candidate_market_application_path(@market_application.identifier),
+                    method: :post,
+                    local: true,
+                    data: { turbo: false } do %>
+        <% @market_application.lots.each do |lot| %>
+          <%= hidden_field_tag 'market_application[lot_ids][]', lot.id %>
+        <% end %>
+        <button type="submit"
+                class="fr-btn"
+                style="width: 100%; margin-top: 0.5rem;"
+                <%= 'disabled' unless lots_already_saved %>>
+          <%= t('button.submit_summary') %>
+        </button>
       <% end %>
     </div>
 
@@ -151,11 +163,12 @@
           <%= t('candidate.lot_selection.progress_title') %>
         </h2>
         <p class="fr-text--sm fr-text--mention-grey fr-mb-0"
-           data-lot-selection-target="noLotsText">
+           data-lot-selection-target="noLotsText"
+           <%= 'hidden' if lots_already_saved %>>
           <%= t('candidate.lot_selection.no_lot_selected') %>
         </p>
         <div data-lot-selection-target="progressCard"
-             hidden
+             <%= 'hidden' unless lots_already_saved %>
              style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 1rem;">
           <div class="fr-mb-1w" style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="fr-icon-draft-fill" aria-hidden="true"
@@ -176,13 +189,15 @@
                     total: @presenter.total_fields_count) %>
             </p>
           <% end %>
-          <% cta_translation_key = @presenter&.filled_fields_count.to_i.positive? ? 'candidate.lot_selection.modify' : 'candidate.lot_selection.prepare' %>
           <div style="text-align: right;">
-            <%= link_to step_candidate_market_application_path(@market_application.identifier, :company_identification),
-                  style: "color: var(--blue-france-sun-113-625); font-size: 0.875rem; font-weight: 500;" do %>
-              <%= t(cta_translation_key) %>
+            <button type="submit"
+                    form="lot-selection-form"
+                    data-lot-selection-target="submitButton"
+                    style="background: none; border: none; color: var(--blue-france-sun-113-625); font-size: 0.875rem; font-weight: 500; cursor: pointer; padding: 0;"
+                    <%= 'disabled' unless lots_already_saved %>>
+              <%= t(@presenter.cta_translation_key) %>
               <span class="fr-icon-arrow-right-line fr-icon--sm" aria-hidden="true"></span>
-            <% end %>
+            </button>
           </div>
         </div>
       </div>

@@ -78,6 +78,7 @@ Rails.application.routes.draw do
       member do
         get 'lots', to: 'lot_selections#show', as: :lot_selection
         patch 'lots', to: 'lot_selections#update'
+        post 'lots/submit', to: 'lot_selections#submit', as: :lot_selection_submit
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'
         patch ':id', to: 'market_applications#update'
