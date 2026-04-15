@@ -482,6 +482,12 @@ class FakeEditorApp < Sinatra::Base
     return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
     return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].to_a.empty?
 
+    lot_limit = market_data[:lot_limit]
+    lots_count = market_data[:lots].length
+    if lot_limit && lots_count.positive? && lot_limit > lots_count
+      return "Vous ne pouvez pas limiter un nombre de lots supérieur au nombre de lots créés."
+    end
+
     nil
   end
 end

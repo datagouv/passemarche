@@ -78,6 +78,36 @@ RSpec.describe PublicMarket, type: :model do
       end
     end
 
+    describe 'lot_limit validation' do
+      let(:editor) { create(:editor) }
+
+      it 'accepts lot_limit equal to the number of lots' do
+        public_market = build(:public_market, editor:, lot_limit: 2,
+          lots_attributes: [{ name: 'Lot 1', position: 1 }, { name: 'Lot 2', position: 2 }])
+        expect(public_market).to be_valid
+      end
+
+      it 'accepts lot_limit below the number of lots' do
+        public_market = build(:public_market, editor:, lot_limit: 1,
+          lots_attributes: [{ name: 'Lot 1', position: 1 }, { name: 'Lot 2', position: 2 }])
+        expect(public_market).to be_valid
+      end
+
+      it 'rejects lot_limit exceeding the number of lots' do
+        public_market = build(:public_market, editor:, lot_limit: 3,
+          lots_attributes: [{ name: 'Lot 1', position: 1 }, { name: 'Lot 2', position: 2 }])
+        expect(public_market).not_to be_valid
+        expect(public_market.errors[:lot_limit]).to include(
+          'Vous ne pouvez pas limiter un nombre de lots supérieur au nombre de lots créés.'
+        )
+      end
+
+      it 'accepts nil lot_limit' do
+        public_market = build(:public_market, editor:, lot_limit: nil)
+        expect(public_market).to be_valid
+      end
+    end
+
     describe 'provider_user_id validation' do
       it 'accepts nil provider_user_id' do
         public_market = build(:public_market, editor:, provider_user_id: nil)

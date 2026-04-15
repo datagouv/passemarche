@@ -139,6 +139,29 @@ RSpec.describe CreatePublicMarket, type: :interactor do
       end
     end
 
+    context 'with lot_limit exceeding the number of lots' do
+      let(:params_with_limit) do
+        valid_params.merge(
+          lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }],
+          lot_limit: 5
+        )
+      end
+
+      subject { described_class.call(editor:, params: params_with_limit) }
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'has a lot_limit validation error' do
+        expect(subject.errors[:lot_limit]).to be_present
+      end
+
+      it 'does not create the market' do
+        expect { subject }.not_to change(PublicMarket, :count)
+      end
+    end
+
     context 'without lots' do
       subject { described_class.call(editor:, params: valid_params) }
 

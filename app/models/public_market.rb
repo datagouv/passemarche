@@ -19,6 +19,7 @@ class PublicMarket < ApplicationRecord
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
   validate :must_have_valid_market_type_codes
+  validate :lot_limit_cannot_exceed_lots_count
   validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
@@ -57,6 +58,13 @@ class PublicMarket < ApplicationRecord
     return if invalid_codes.empty?
 
     errors.add(:market_type_codes, :invalid_codes, codes: invalid_codes.join(', '))
+  end
+
+  def lot_limit_cannot_exceed_lots_count
+    return if lot_limit.nil?
+    return if lot_limit <= lots.size
+
+    errors.add(:lot_limit, :exceeds_lots_count)
   end
 
   def generate_identifier
