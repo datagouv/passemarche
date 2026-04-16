@@ -112,6 +112,23 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
       end
     end
 
+    context 'when reconnecting from a new application while another linked application is already completed' do
+      let(:existing_user) { create(:user, email: valid_email) }
+      let(:completed_application) { create(:market_application, :completed, public_market:, siret: valid_siret, user: existing_user) }
+
+      before { completed_application }
+
+      it 'targets the completed linked application in generated magic link' do
+        result = described_class.call(email: valid_email, siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
+
+        expect(result).to be_success
+        expect(result.reconnection).to be true
+        expect(result.market_application).to eq(completed_application)
+        expect(result.magic_link_url).to include("market_application_id=#{completed_application.identifier}")
+      end
+    end
+
     context 'when all inputs are valid' do
       it 'succeeds' do
         result = described_class.call(email: valid_email, siret: valid_siret,

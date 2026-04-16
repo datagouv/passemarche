@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Candidate
-  class FindMarketApplicationBySiret < ApplicationInteractor
+  class ResolveMarketApplicationForReconnection < ApplicationInteractor
     delegate :siret, :email, :market_application_id, to: :context
 
     def call
@@ -20,21 +20,24 @@ module Candidate
     private
 
     def handle_reconnection(application)
-      existing_user = find_existing_siret_user(application)
-      context.reconnection = existing_user.present?
+      existing_application = find_existing_application_for_reconnection(application)
+      context.reconnection = existing_application.present?
       return unless context.reconnection
 
-      validate_email_for_user(existing_user)
-      context.user = existing_user
+      context.market_application = existing_application
+      validate_email_for_user(existing_application.user)
+      context.user = existing_application.user
     end
 
-    def find_existing_siret_user(application)
-      return application.user if application.user_id.present?
+    def find_existing_application_for_reconnection(application)
+      return application if application.user_id.present?
 
-      MarketApplication
+      linked_applications = MarketApplication
         .where(siret:, public_market: application.public_market)
         .where.not(user_id: nil)
-        .first&.user
+
+      linked_applications.where.not(completed_at: nil).order(completed_at: :desc).first ||
+        linked_applications.order(updated_at: :desc).first
     end
 
     def validate_email_for_user(existing_user)

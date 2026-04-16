@@ -199,6 +199,19 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       end
     end
 
+    context 'when reconnecting to an already completed application' do
+      before do
+        market_application.update!(user:, completed_at: Time.current, sync_status: :sync_completed)
+      end
+
+      it 'redirects to sync status page' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
+      end
+    end
+
     context 'when market has lots and no lots are selected' do
       let(:market_with_lots) { create(:public_market, :completed, editor:) }
       let(:application_with_lots) { create(:market_application, public_market: market_with_lots, siret: '73282932000074') }
