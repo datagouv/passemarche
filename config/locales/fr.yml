@@ -144,6 +144,12 @@ fr:
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
       no_documents_configured: "Aucun document requis configuré pour ce marché."
+    application_lots_summary:
+      title: "Liste des lots concernés par la candidature"
+      lot_number: "Lot %{number}"
+      lot_title_label: "Titre :"
+      lot_type_label: "Type :"
+      lot_cpv_label: "CPV :"
     renamed_documents:
       title: "Vos documents"
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
