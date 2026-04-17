@@ -1290,6 +1290,10 @@ fr:
               invalid_url: "doit être une URL valide (ex: https://..., ou www...)"
               blank: "Ce champ ne peut pas être vide"
               too_long: "Ce champ est trop long (maximum %{count} caractères)"
+        lot:
+          attributes:
+            cpv_code:
+              invalid_cpv_code: "doit respecter le format CPV (ex: 45000000-3)"
         editor:
           attributes:
             name:
@@ -1318,6 +1322,7 @@ fr:
         client_secret: "secret client"
         completion_webhook_url: "URL de webhook"
         redirect_url: "URL de redirection"
+        cpv_code: "code CPV"
         checked: "case à cocher"
         file: "fichier"
         value: "valeur"
