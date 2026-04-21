@@ -245,12 +245,12 @@ RSpec.describe 'Candidate::Sessions', type: :request do
         application_with_lots.lots << lot
       end
 
-      it 'redirects to company identification' do
+      it 'redirects to lot selection' do
         get verify_candidate_sessions_path,
           params: { token: token_for_lots, market_application_id: application_with_lots.identifier }
 
         expect(response).to redirect_to(
-          step_candidate_market_application_path(application_with_lots.identifier, :company_identification)
+          lot_selection_candidate_market_application_path(application_with_lots.identifier)
         )
       end
     end

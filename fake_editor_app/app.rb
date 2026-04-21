@@ -222,12 +222,13 @@ class FakeEditorApp < Sinatra::Base
       begin
         api_response = @fast_track_client.create_market_application(current_token.access_token, market_identifier, siret)
 
-        # Store the application locally
+        # Store the application locally only if not already known
+        existing = MarketApplication.find_by_identifier(api_response['identifier'])
         MarketApplication.create_from_api({
           identifier: api_response['identifier'],
           market_identifier:,
           siret:
-        })
+        }) unless existing
 
         # Redirect to the application URL in Passe Marché
         redirect api_response['application_url']

@@ -12,14 +12,14 @@ Feature: Candidate lot selection
     Then they should see the lot selection page
     And they should see a checkbox for each lot
 
-  Scenario: Candidate can select lots and access the wizard
-    When the candidate selects the first lot
-    And the candidate submits the lot selection form
-    Then the candidate should be on the summary step
-
   Scenario: Lot selection page does not appear when market has no lots
     Given a public market without lots exists
     And a candidate starts a new application for a market without lots
+    Then the candidate should be on the company identification step
+
+  Scenario: Candidate can select lots and proceed to the wizard
+    When the candidate selects the first lot
+    And the candidate submits the lot selection form
     Then the candidate should be on the company identification step
 
   Scenario: Candidate cannot proceed without selecting a lot
@@ -34,11 +34,21 @@ Feature: Candidate lot selection
     Then the candidate should see an error about the lot limit
     And the candidate should remain on the lot selection page
 
-  Scenario: Candidate is not redirected to lot selection when lots are already selected
+  Scenario: Candidate is redirected to lot selection when reconnecting
     When the candidate selects the first lot
     And the candidate submits the lot selection form
     And the candidate reconnects to the application
-    Then the candidate should be on the company identification step
+    Then they should see the lot selection page
+
+  Scenario: Candidate can submit the application from the lot selection page
+    When the candidate selects the first lot
+    And the candidate submits the lot selection form
+    And the candidate revisits the lot selection page
+    Then the candidate should see the submit application button
+
+  Scenario: Summary always has a direct submit button
+    Given the candidate revisits the summary page
+    Then the summary should have a direct submit button
 
   Scenario: Progress card shows field counter with no fields filled
     Then the candidate should see the field counter showing "0/1 champs"

@@ -115,6 +115,16 @@ class MarketApplicationPresenter
       .uniq
   end
 
+  # === LOT SELECTION ===
+
+  def lots_saved?
+    @market_application.lots.any?
+  end
+
+  def cta_translation_key
+    lots_saved? ? 'candidate.lot_selection.modify' : 'candidate.lot_selection.prepare'
+  end
+
   # === PROGRESS METHODS ===
 
   def total_fields_count

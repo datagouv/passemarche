@@ -4,5 +4,6 @@ class CompleteMarketApplication < ApplicationOrganizer
   organize MarkApplicationAsCompleted,
     GenerateAttestationPdf,
     GenerateBuyerAttestationPdf,
-    GenerateDocumentsPackage
+    GenerateDocumentsPackage,
+    QueueMarketApplicationWebhook
 end

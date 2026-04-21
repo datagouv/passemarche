@@ -2,9 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["checkbox", "checkboxGroup", "submitButton", "selectAllButton", "noLotsText", "progressCard", "selectedLotsCount", "limitError"]
-  static values = { limit: Number }
+  static values = { limit: Number, storageKey: String }
 
   connect() {
+    this._restoreSelectionFromStorage()
     this._update()
   }
 
@@ -47,8 +48,7 @@ export default class extends Controller {
     const checked = this.checkboxTargets.filter(cb => cb.checked)
     const hasChecked = checked.length > 0
     const limitReached = checked.length >= this._limit()
-
-    this.submitButtonTarget.disabled = !hasChecked
+    this.submitButtonTargets.forEach(btn => { btn.disabled = !hasChecked })
 
     this.checkboxTargets.forEach((cb, i) => {
       const isUnchecked = !cb.checked
@@ -83,5 +83,41 @@ export default class extends Controller {
         : this.selectedLotsCountTarget.dataset.other
       this.selectedLotsCountTarget.textContent = template.replace('%{count}', checked.length)
     }
+
+    this._persistSelection(checked)
+  }
+
+  _restoreSelectionFromStorage() {
+    if (!this.hasStorageKeyValue) {
+      return
+    }
+
+    const raw = localStorage.getItem(this.storageKeyValue)
+    if (!raw) {
+      return
+    }
+
+    try {
+      const selectedLotIds = JSON.parse(raw)
+      if (!Array.isArray(selectedLotIds)) {
+        return
+      }
+
+      const selectedSet = new Set(selectedLotIds.map(String))
+      this.checkboxTargets.forEach((checkbox) => {
+        checkbox.checked = selectedSet.has(String(checkbox.value))
+      })
+    } catch {
+      localStorage.removeItem(this.storageKeyValue)
+    }
+  }
+
+  _persistSelection(checkedCheckboxes) {
+    if (!this.hasStorageKeyValue) {
+      return
+    }
+
+    const selectedLotIds = checkedCheckboxes.map(checkbox => String(checkbox.value))
+    localStorage.setItem(this.storageKeyValue, JSON.stringify(selectedLotIds))
   }
 }
