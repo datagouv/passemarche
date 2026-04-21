@@ -24,9 +24,13 @@ module Candidate
     end
 
     def submit
-      result = MarketApplicationStepUpdateService.call(@market_application, :summary, {})
+      result = MarketApplicationStepUpdateService.call(
+        @market_application, :summary, {},
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
+      )
 
-      return queue_webhook_and_redirect if result[:success] && result[:redirect] == :sync_status
+      return redirect_to_sync_status if result[:success] && result[:redirect] == :sync_status
 
       render_submission_error(result[:flash_messages])
     end
@@ -56,6 +60,10 @@ module Candidate
 
     def lot_ids_param
       params.fetch(:market_application, {}).permit(lot_ids: [])[:lot_ids] || []
+    end
+
+    def redirect_to_sync_status
+      redirect_to candidate_sync_status_path(@market_application.identifier)
     end
 
     def render_lot_selection_error(errors)

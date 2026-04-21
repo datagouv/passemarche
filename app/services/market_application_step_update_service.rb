@@ -3,10 +3,12 @@
 class MarketApplicationStepUpdateService < ApplicationService
   attr_reader :flash_messages
 
-  def initialize(market_application, step, params = {})
+  def initialize(market_application, step, params = {}, request_host: nil, request_protocol: nil)
     @market_application = market_application
     @step = step
     @params = params
+    @request_host = request_host
+    @request_protocol = request_protocol
     @flash_messages = {}
   end
 
@@ -25,7 +27,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   private
 
-  attr_reader :market_application, :step, :params
+  attr_reader :market_application, :step, :params, :request_host, :request_protocol
 
   def handle_company_identification
     enqueue_api_data_fetch_if_needed
@@ -65,18 +67,15 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def handle_summary_completion
-    result = CompleteMarketApplication.call(market_application:)
-
-    if result.success?
-      build_result(true, redirect: :sync_status)
-    else
-      @flash_messages[:alert] = result.message
-      build_result(false)
-    end
-  rescue ActiveRecord::RecordInvalid,
-         ActiveRecord::RecordNotFound => e
+    result = CompleteMarketApplication.call(market_application:, request_host:, request_protocol:)
+    result.success? ? build_result(true, redirect: :sync_status) : handle_completion_failure(result.message)
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
     Rails.logger.error "Error completing market application #{market_application.identifier}: #{e.message}"
-    @flash_messages[:alert] = I18n.t('candidate.market_applications.completion_error')
+    handle_completion_failure(I18n.t('candidate.market_applications.completion_error'))
+  end
+
+  def handle_completion_failure(message)
+    @flash_messages[:alert] = message
     build_result(false)
   end
 

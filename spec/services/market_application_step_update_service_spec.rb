@@ -152,7 +152,7 @@ RSpec.describe MarketApplicationStepUpdateService do
 
       it 'calls CompleteMarketApplication organizer' do
         expect(CompleteMarketApplication).to receive(:call)
-          .with(market_application:)
+          .with(market_application:, request_host: nil, request_protocol: nil)
 
         described_class.call(market_application, :summary, {})
       end

@@ -22,7 +22,9 @@ module Candidate
       result = MarketApplicationStepUpdateService.call(
         @market_application,
         step.to_sym,
-        market_application_params
+        market_application_params,
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
       )
 
       handle_service_result(result)
@@ -43,7 +45,7 @@ module Candidate
       end
 
       if result[:redirect] == :sync_status
-        queue_webhook_and_redirect
+        redirect_to candidate_sync_status_path(@market_application.identifier)
       elsif result[:success]
         render_wizard(@market_application)
       elsif custom_view_exists?
