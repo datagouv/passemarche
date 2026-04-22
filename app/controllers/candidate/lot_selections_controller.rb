@@ -2,8 +2,9 @@
 
 module Candidate
   class LotSelectionsController < Candidate::ApplicationController
+    include Candidate::MarketApplicationGuard
+
     prepend_before_action :find_market_application
-    before_action :check_application_not_completed
     before_action :redirect_if_no_lots, only: [:show]
 
     def show
@@ -42,13 +43,6 @@ module Candidate
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
-    end
-
-    def check_application_not_completed
-      return unless @market_application.completed?
-
-      redirect_to candidate_sync_status_path(@market_application.identifier),
-        alert: t('candidate.market_applications.market_application_completed_cannot_edit')
     end
 
     def redirect_if_no_lots

@@ -13,7 +13,12 @@
       </div>
 
       <div class="fr-grid-row">
-        <%= form_with model: @market_application, url: wizard_path, local: true, data: { turbo: false }, class: "fr-mb-4w" do |form| %>
+        <%= form_with model: @market_application,
+                      url: company_identification_candidate_market_application_path(@market_application.identifier),
+                      method: :patch,
+                      local: true,
+                      data: { turbo: false },
+                      class: "fr-mb-4w" do |form| %>
           <div class="fr-mb-4w">
             <div class="fr-input-group fr-input-group--disabled">
               <%= form.label :siret, t('candidate.shared.siret_label'), class: "fr-label" %>
