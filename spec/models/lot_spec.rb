@@ -17,6 +17,42 @@ RSpec.describe Lot, type: :model do
       expect(lot).not_to be_valid
       expect(lot.errors[:public_market]).to be_present
     end
+
+    describe 'cpv_code format' do
+      it 'accepts a blank cpv_code' do
+        lot = build(:lot, public_market:, cpv_code: nil)
+        expect(lot).to be_valid
+      end
+
+      it 'accepts a valid cpv_code' do
+        lot = build(:lot, public_market:, cpv_code: '45000000-3')
+        expect(lot).to be_valid
+      end
+
+      it 'rejects a cpv_code without check digit' do
+        lot = build(:lot, public_market:, cpv_code: '45000000')
+        expect(lot).not_to be_valid
+        expect(lot.errors[:cpv_code]).to be_present
+      end
+
+      it 'rejects a cpv_code with letters' do
+        lot = build(:lot, public_market:, cpv_code: 'AB000000-3')
+        expect(lot).not_to be_valid
+        expect(lot.errors[:cpv_code]).to be_present
+      end
+
+      it 'rejects a cpv_code that is too short' do
+        lot = build(:lot, public_market:, cpv_code: '4500000-3')
+        expect(lot).not_to be_valid
+        expect(lot.errors[:cpv_code]).to be_present
+      end
+
+      it 'rejects a cpv_code with multiple check digits' do
+        lot = build(:lot, public_market:, cpv_code: '45000000-33')
+        expect(lot).not_to be_valid
+        expect(lot.errors[:cpv_code]).to be_present
+      end
+    end
   end
 
   describe 'position' do

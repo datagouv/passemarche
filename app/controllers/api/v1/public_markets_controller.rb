@@ -28,7 +28,7 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
 
   def public_market_params
     params.expect(public_market: [:name, :deadline, :siret, :provider_user_id, :lot_limit,
-                                  { market_type_codes: [], lots: [[:name]] }])
+                                  { market_type_codes: [], lots: [%i[name cpv_code]] }])
   end
 
   def success_response(public_market)

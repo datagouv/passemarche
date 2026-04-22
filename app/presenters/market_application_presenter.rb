@@ -71,6 +71,18 @@ class MarketApplicationPresenter
     nil
   end
 
+  # === LOTS METHODS ===
+
+  def selected_lots
+    @market_application.lots.ordered
+  end
+
+  def market_type_labels
+    @market_application.public_market.market_type_codes
+      .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
+      .join(', ')
+  end
+
   # === RESPONSE METHODS (with hidden filtering) ===
 
   def responses_for_subcategory(category_key, subcategory_key)
