@@ -22,10 +22,7 @@ Feature: Buyer Configuration Flow
     And I should see "Lot 1 - Ordinateurs portables"
 
     When I click on "Débuter l'activation de"
-    Then I should be on the first category page
-    And I should see "Étape 1 sur"
-    And I should see a "Précédent" button
-    And I should see a button "Suivant"
+    Then I should see "Configurer le type de vos lots"
 
     When I navigate through all category steps to summary
     Then I should be on the summary page
@@ -46,7 +43,7 @@ Feature: Buyer Configuration Flow
     And I should see "Fournitures"
 
     When I click on "Débuter l'activation de"
-    Then I should be on the first category page
+    Then I should be on the lot_config page
 
     When I navigate through all category steps to summary
     Then I should see "Fourniture de matériel informatique"
@@ -87,7 +84,7 @@ Feature: Buyer Configuration Flow
     When I check the "defense_industry" checkbox
     And I click on "Débuter l'activation de"
     Then the public market should be marked as defense_industry
-    And I should be on the first category page
+    And I should be on the lot_config page
 
   @editor_with_defense_capability
   Scenario: Ne pas marquer un marché comme défense en laissant la case décochée
@@ -102,7 +99,7 @@ Feature: Buyer Configuration Flow
     And I visit the setup page for my public market
     When I click on "Débuter l'activation de"
     Then the public market should not be marked as defense_industry
-    And I should be on the first category page
+    And I should be on the lot_config page
 
   @editor_with_defense_capability
   Scenario: Marché avec défense pré-configuré par l'éditeur
@@ -128,4 +125,4 @@ Feature: Buyer Configuration Flow
     When I visit the setup page for my public market
     And I click on "Débuter l'activation de"
     Then the public market should have all mandatory attributes from its market types
-    And I should be on the first category page
+    And I should be on the lot_config page
