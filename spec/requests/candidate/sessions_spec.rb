@@ -222,12 +222,12 @@ RSpec.describe 'Candidate::Sessions', type: :request do
 
       before { create(:lot, public_market: market_with_lots, name: 'Lot 1') }
 
-      it 'redirects to lot selection' do
+      it 'redirects to company identification' do
         get verify_candidate_sessions_path,
           params: { token: token_for_lots, market_application_id: application_with_lots.identifier }
 
         expect(response).to redirect_to(
-          lot_selection_candidate_market_application_path(application_with_lots.identifier)
+          company_identification_candidate_market_application_path(application_with_lots.identifier)
         )
       end
     end
@@ -245,12 +245,12 @@ RSpec.describe 'Candidate::Sessions', type: :request do
         application_with_lots.lots << lot
       end
 
-      it 'redirects to lot selection' do
+      it 'redirects to company identification' do
         get verify_candidate_sessions_path,
           params: { token: token_for_lots, market_application_id: application_with_lots.identifier }
 
         expect(response).to redirect_to(
-          lot_selection_candidate_market_application_path(application_with_lots.identifier)
+          company_identification_candidate_market_application_path(application_with_lots.identifier)
         )
       end
     end
