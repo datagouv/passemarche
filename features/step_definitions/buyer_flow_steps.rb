@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 When('I visit the setup page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :setup)
 end
 
 When('I visit the first category page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
   special_steps = %i[setup lot_config summary]
@@ -15,7 +15,7 @@ When('I visit the first category page for my public market') do
 end
 
 When('I visit a category page with optional fields for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
 
@@ -30,7 +30,7 @@ When('I visit a category page with optional fields for my public market') do
 end
 
 When('I visit the summary page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :summary)
 end
 
@@ -55,7 +55,7 @@ When('I navigate through all category steps to summary') do
 end
 
 Given('I am on the summary page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :summary)
 end
 
@@ -136,13 +136,13 @@ When('I check the {string} checkbox') do |checkbox_name|
 end
 
 Then('the public market should be marked as defense_industry') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
   expect(public_market.market_type_codes).to include('defense')
 end
 
 Then('the public market should not be marked as defense_industry') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
   expect(public_market.market_type_codes).not_to include('defense')
 end

@@ -132,6 +132,22 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       expect(category_steps).to all(be_a(Symbol))
       expect(category_steps.uniq).to eq(category_steps)
     end
+
+    context 'when the market has lots' do
+      before { create(:lot, public_market:) }
+
+      it 'includes :lot_config as the second step' do
+        steps = presenter.wizard_steps
+        expect(steps).to include(:lot_config)
+        expect(steps.index(:lot_config)).to eq(1)
+      end
+    end
+
+    context 'when the market has no lots' do
+      it 'does not include :lot_config' do
+        expect(presenter.wizard_steps).not_to include(:lot_config)
+      end
+    end
   end
 
   describe '#stepper_steps' do
