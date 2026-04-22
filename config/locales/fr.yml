@@ -115,8 +115,9 @@ fr:
 
   button:
     next_step: "Passer à l'étape suivante"
-    submit_summary: "Transmettre l'ensemble de mes candidatures"
+    previous: "Précédent"
     continue: "Continuer"
+    submit_summary: "Transmettre l'ensemble de mes candidatures"
 
   malware_scan:
     label:

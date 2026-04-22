@@ -4,7 +4,7 @@ class MarketApplicationPresenter
   include SidemenuHelper
   include MarketAttributeGrouping
 
-  INITIAL_WIZARD_STEPS = %i[company_identification api_data_recovery_status market_information].freeze
+  INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
   ATTESTATION_MOTIFS_EXCLUSION_STEP = :attestation_motifs_exclusion
