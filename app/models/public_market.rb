@@ -12,12 +12,15 @@ class PublicMarket < ApplicationRecord
   accepts_nested_attributes_for :lots
   has_many :market_applications, dependent: :destroy
 
+  attr_accessor :lot_limit_enabled
+
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
   validates :siret, presence: true, siret: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
+  validates :lot_limit, presence: true, if: :lot_limit_enabled
   validate :must_have_valid_market_type_codes
   validate :lot_limit_cannot_exceed_lots_count
   validates_uniqueness_of_association :market_attributes

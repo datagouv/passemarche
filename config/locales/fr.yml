@@ -333,6 +333,10 @@ fr:
       market_info_title: "Informations du marché"
       no_fields_configured: "Aucun champ configuré."
       finalize: "Finaliser la configuration"
+      lot_limit: "Limite de lots par candidat"
+      lot_limit_value:
+        one: "%{count} lot maximum"
+        other: "%{count} lots maximum"
     sync_status:
       title_suffix: "Synchronisation"
       success_title: "Synchronisation réussie"
@@ -356,11 +360,31 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
+        lot_config: "Configuration des lots"
         identite_entreprise: "Les informations concernant l'identité de l'entreprise"
         motifs_exclusion: "Les motifs d'exclusion"
         capacite_economique_financiere: Sélection des renseignements complémentaires (partie 1)
         capacites_techniques_professionnelles: Sélections des renseignements complémentaires (partie 2)
         summary: "Synthèse"
+      lot_config:
+        title: "Configurer le type de vos lots"
+        subtitle: "Vérifiez et ajustez le type de chaque lot avant de configurer les pièces justificatives."
+        lots_section_title: "Vérifiez les types transmis"
+        lots_section_subtitle: "Assurez-vous que les types transmis par la plateforme de marché sont exacts."
+        lot_number: "Lot %{number}"
+        lot_limit_section_title: "Indiquez si vous souhaitez limiter le nombre de lots"
+        lot_limit_section_subtitle: "Si vous le souhaitez, vous pouvez ajuster le nombre de lots auxquels une entreprise peut candidater."
+        lot_limit_question: "Souhaitez-vous limiter le nombre de lots ?"
+        lot_limit_yes: "Oui"
+        lot_limit_no: "Non"
+        lot_limit_label: "Nombre maximum de lots par candidat"
+        sidebar_buyer_label: "Acheteur"
+        sidebar_typology_label: "Typologie"
+        how_it_works_title: "Comment ça fonctionne"
+        how_it_works_step_1: "Vérifiez les types transmis par la plateforme"
+        how_it_works_step_2: "Limitez le nombre de lots si nécessaire"
+        how_it_works_step_3: "Passez à la configuration des candidatures"
+        submit: "Configurer les candidatures"
       generic_step:
         optional_question: Souhaitez-vous demander des renseignements complémentaires ?
         yes_option: Oui
@@ -1250,6 +1274,7 @@ fr:
               blank: "Les types de marché ne peuvent pas être vides"
               cannot_be_alone: "Le marché de défense ne peut pas être le seul type sélectionné"
             lot_limit:
+              blank: "Veuillez indiquer le nombre maximum de lots."
               exceeds_lots_count: "Vous ne pouvez pas limiter un nombre de lots supérieur au nombre de lots créés."
             market_type_codes:
               invalid_codes: "Les codes de marché contiennent des valeurs invalides : %{codes}"

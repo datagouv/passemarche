@@ -11,6 +11,8 @@ class MarketConfigurationService < ApplicationService
     case step
     when :setup
       handle_setup_step
+    when :lot_config
+      handle_lot_config_step
     when :summary
       complete_market
     else
@@ -21,6 +23,14 @@ class MarketConfigurationService < ApplicationService
   private
 
   attr_reader :public_market, :step, :params
+
+  def handle_lot_config_step
+    enabled = params[:lot_limit_enabled] == 'true'
+    public_market.lot_limit_enabled = enabled
+    public_market.lot_limit = enabled ? params[:lot_limit].presence&.to_i : nil
+    public_market.save!
+    public_market
+  end
 
   def handle_setup_step
     handle_defense_market_type

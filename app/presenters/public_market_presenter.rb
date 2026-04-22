@@ -5,6 +5,7 @@ class PublicMarketPresenter
   include MarketAttributeGrouping
 
   INITIAL_WIZARD_STEP = :setup
+  LOT_CONFIG_STEP = :lot_config
   FINAL_WIZARD_STEP = :summary
 
   def initialize(public_market)
@@ -12,7 +13,9 @@ class PublicMarketPresenter
   end
 
   def wizard_steps
-    [INITIAL_WIZARD_STEP] + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
+    steps = [INITIAL_WIZARD_STEP]
+    steps << LOT_CONFIG_STEP if @public_market.lots.any?
+    steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
   end
 
   def stepper_steps
@@ -91,6 +94,10 @@ class PublicMarketPresenter
     @selected_category_keys ||= selected_market_attributes_ordered
       .filter_map(&:category_key)
       .uniq
+  end
+
+  def market_types_label
+    @public_market.market_type_codes.map { |c| I18n.t("market_types.#{c}", default: c.humanize) }.join(', ')
   end
 
   def source_types

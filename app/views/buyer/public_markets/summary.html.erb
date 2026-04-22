@@ -31,6 +31,12 @@
                 <div><%= lot.name %></div>
               <% end %>
             </div>
+            <% if @public_market.lot_limit.present? %>
+              <div class="fr-mb-3w">
+                <div class="fr-text--bold fr-mb-1w"><%= t('buyer.summary.lot_limit') %></div>
+                <div><%= t('buyer.summary.lot_limit_value', count: @public_market.lot_limit) %></div>
+              </div>
+            <% end %>
           <% end %>
           <div class="fr-mb-3w">
             <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.deadline_short') %></div>
