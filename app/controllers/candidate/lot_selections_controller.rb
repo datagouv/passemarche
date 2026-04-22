@@ -19,8 +19,7 @@ module Candidate
       end
 
       @market_application.lot_ids = lot_ids_param
-
-      redirect_to step_candidate_market_application_path(@market_application.identifier, :company_identification)
+      redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
     end
 
     def submit
@@ -30,7 +29,7 @@ module Candidate
         request_protocol: request.protocol
       )
 
-      return redirect_to_sync_status if result[:success] && result[:redirect] == :sync_status
+      return redirect_to candidate_sync_status_path(@market_application.identifier) if result[:success] && result[:redirect] == :sync_status
 
       render_submission_error(result[:flash_messages])
     end
@@ -55,15 +54,11 @@ module Candidate
     def redirect_if_no_lots
       return if @market_application.public_market.lots.any?
 
-      redirect_to step_candidate_market_application_path(@market_application.identifier, :company_identification)
+      redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
     end
 
     def lot_ids_param
-      params.fetch(:market_application, {}).permit(lot_ids: [])[:lot_ids] || []
-    end
-
-    def redirect_to_sync_status
-      redirect_to candidate_sync_status_path(@market_application.identifier)
+      params.fetch(:market_application, {}).permit(lot_ids: [])[:lot_ids]&.map(&:to_i)&.reject(&:zero?) || []
     end
 
     def render_lot_selection_error(errors)
