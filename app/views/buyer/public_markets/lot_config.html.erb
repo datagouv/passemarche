@@ -29,7 +29,7 @@
                     <% @public_market.lots.ordered.each do |lot| %>
                       <tr>
                         <td><%= lot.name %></td>
-                        <td><strong><%= @presenter.market_types_label %></strong></td>
+                        <td><span class="fr-badge fr-badge--sm fr-badge--no-icon"><%= @presenter.market_types_label_with_source.upcase %></span></td>
                       </tr>
                     <% end %>
                   </tbody>
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right fr-btn--full-width">
+      <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right" style="width: 100%; justify-content: center;">
         <%= t('buyer.public_markets.lot_config.submit') %>
       </button>
     <% end %>
