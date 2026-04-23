@@ -24,7 +24,7 @@ module Buyer
     end
 
     def update
-      result = MarketConfigurationService.call(@public_market, step, step_params)
+      result = Buyer::PublicMarketWizardService.call(@public_market, step, step_params)
 
       if step == :summary
         redirect_to buyer_sync_status_path(@public_market.identifier)

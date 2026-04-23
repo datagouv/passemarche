@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe MarketConfigurationService do
+RSpec.describe Buyer::PublicMarketWizardService do
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
   let!(:supplies_market_type) { create(:market_type, code: 'supplies') }
