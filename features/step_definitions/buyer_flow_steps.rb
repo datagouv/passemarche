@@ -1,26 +1,27 @@
 # frozen_string_literal: true
 
 When('I visit the setup page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :setup)
 end
 
 When('I visit the first category page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
-  @first_category = presenter.wizard_steps[1] # First category after :setup
+  special_steps = %i[setup lot_config summary]
+  @first_category = presenter.wizard_steps.find { |s| special_steps.exclude?(s) }
   visit step_buyer_public_market_path(identifier: @market_identifier, id: @first_category)
 end
 
 When('I visit a category page with optional fields for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
 
   # Find a category that has optional fields
   category_with_optionals = presenter.wizard_steps.find do |step|
-    next if %i[setup summary].include?(step)
+    next if SPECIAL_WIZARD_STEPS.include?(step)
 
     presenter.optional_fields_for_category?(step.to_s)
   end
@@ -29,28 +30,32 @@ When('I visit a category page with optional fields for my public market') do
 end
 
 When('I visit the summary page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :summary)
 end
+
+SPECIAL_WIZARD_STEPS = %i[setup lot_config summary].freeze
 
 When('I navigate through all category steps to summary') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
 
-  # Skip setup (already done) and summary (our target)
-  category_steps = presenter.wizard_steps.reject { |s| %i[setup summary].include?(s) }
+  if presenter.wizard_steps.include?(:lot_config) &&
+     page.current_path == step_buyer_public_market_path(@market_identifier, :lot_config)
+    find("input[name='lot_limit_enabled'][value='false']").click
+    find('button[type="submit"]').click
+  end
+
+  category_steps = presenter.wizard_steps.reject { |s| SPECIAL_WIZARD_STEPS.include?(s) }
 
   category_steps.each do
-    # For steps with optional fields, answer "Non" to skip adding optionals
-    choose 'Non', allow_label_click: true if page.has_css?('input[name="additional_fields_choice"]')
-
-    # Click the submit button
+    choose 'Non', allow_label_click: true if page.has_css?('input[name="additional_fields_choice"]', wait: 0)
     find('input[type="submit"]').click
   end
 end
 
 Given('I am on the summary page for my public market') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :summary)
 end
 
@@ -61,14 +66,15 @@ end
 Then('I should be on the first category page') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
-  first_category = presenter.wizard_steps[1]
+  special_steps = %i[setup lot_config summary]
+  first_category = presenter.wizard_steps.find { |s| special_steps.exclude?(s) }
   expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, first_category))
 end
 
 Then('I should be on a category page') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
-  category_steps = presenter.wizard_steps.reject { |s| %i[setup summary].include?(s) }
+  category_steps = presenter.wizard_steps.reject { |s| SPECIAL_WIZARD_STEPS.include?(s) }
 
   current_path = page.current_path
   matched = category_steps.any? do |step|
@@ -130,13 +136,13 @@ When('I check the {string} checkbox') do |checkbox_name|
 end
 
 Then('the public market should be marked as defense_industry') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
   expect(public_market.market_type_codes).to include('defense')
 end
 
 Then('the public market should not be marked as defense_industry') do
-  @market_identifier = @last_api_response['identifier']
+  @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by(identifier: @market_identifier)
   expect(public_market.market_type_codes).not_to include('defense')
 end

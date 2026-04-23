@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe MarketConfigurationService do
+RSpec.describe Buyer::PublicMarketWizardService do
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies']) }
   let!(:supplies_market_type) { create(:market_type, code: 'supplies') }
@@ -157,6 +157,33 @@ RSpec.describe MarketConfigurationService do
 
         expect(public_market.reload.market_attributes).to include(mandatory_attribute, other_category_attr)
         expect(public_market.reload.market_attributes).not_to include(optional_attribute)
+      end
+    end
+
+    context 'with lot_config step' do
+      let(:public_market) { create(:public_market, editor:, market_type_codes: ['supplies'], lot_limit: nil) }
+
+      it 'sets lot_limit to nil when disabled' do
+        result = described_class.call(public_market, :lot_config, { lot_limit_enabled: 'false' })
+
+        expect(result).to eq(public_market)
+        expect(public_market.reload.lot_limit).to be_nil
+      end
+
+      it 'sets lot_limit when enabled with a value' do
+        create(:lot, public_market:)
+        result = described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '1' })
+
+        expect(result).to eq(public_market)
+        expect(public_market.reload.lot_limit).to eq(1)
+      end
+
+      it 'raises RecordInvalid when enabled but lot_limit is blank' do
+        expect do
+          described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '' })
+        end.to raise_error(ActiveRecord::RecordInvalid)
+
+        expect(public_market.errors[:lot_limit]).to include('Veuillez indiquer le nombre maximum de lots.')
       end
     end
 

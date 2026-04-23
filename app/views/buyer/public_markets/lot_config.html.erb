@@ -1,0 +1,136 @@
+<% content_for :title, "#{@public_market.editor.name} - #{t('buyer.public_markets.lot_config.title')}" %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-md-7">
+    <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.lot_config.title') %></h1>
+    <p class="fr-text--lg fr-mb-4w"><%= t('buyer.public_markets.lot_config.subtitle') %></p>
+
+    <% lot_limit_errors = @public_market.errors[:lot_limit] %>
+
+    <%= form_with url: wizard_path, method: :put, local: true, data: { turbo: false } do |form| %>
+      <div class="fr-mb-5w">
+        <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lots_section_title') %></h2>
+        <p class="fr-text--sm fr-text--mention fr-mb-3w">
+          <%= t('buyer.public_markets.lot_config.lots_section_subtitle') %>
+        </p>
+
+        <div class="fr-table fr-mb-0">
+          <div class="fr-table__wrapper">
+            <div class="fr-table__container">
+              <div class="fr-table__content">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col"><%= t('buyer.shared.lot_name') %></th>
+                      <th scope="col"><%= t('buyer.shared.market_type_short') %></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @public_market.lots.ordered.each do |lot| %>
+                      <tr>
+                        <td><%= lot.name %></td>
+                        <td><strong><%= @presenter.market_types_label %></strong></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-mb-5w" data-controller="radio-toggle">
+        <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lot_limit_section_title') %></h2>
+        <p class="fr-text--sm fr-text--mention fr-mb-3w">
+          <%= t('buyer.public_markets.lot_config.lot_limit_section_subtitle') %>
+        </p>
+
+        <fieldset class="fr-fieldset fr-fieldset--inline fr-mb-3w" aria-labelledby="lot-limit-legend">
+          <legend class="fr-fieldset__legend" id="lot-limit-legend">
+            <%= t('buyer.public_markets.lot_config.lot_limit_question') %>
+          </legend>
+          <div class="fr-fieldset__content">
+            <div class="fr-radio-group">
+              <%= radio_button_tag :lot_limit_enabled, 'true',
+                    @public_market.lot_limit.present?,
+                    id: 'lot_limit_enabled_yes',
+                    class: 'fr-radio',
+                    data: { action: 'change->radio-toggle#toggle' } %>
+              <%= label_tag 'lot_limit_enabled_yes',
+                    t('buyer.public_markets.lot_config.lot_limit_yes'),
+                    class: 'fr-label' %>
+            </div>
+            <div class="fr-radio-group">
+              <%= radio_button_tag :lot_limit_enabled, 'false',
+                    @public_market.lot_limit.nil?,
+                    id: 'lot_limit_enabled_no',
+                    class: 'fr-radio',
+                    data: { action: 'change->radio-toggle#toggle' } %>
+              <%= label_tag 'lot_limit_enabled_no',
+                    t('buyer.public_markets.lot_config.lot_limit_no'),
+                    class: 'fr-label' %>
+            </div>
+          </div>
+        </fieldset>
+
+        <div data-radio-toggle-target="field">
+          <div class="fr-input-group <%= 'fr-input-group--error' if lot_limit_errors.any? %>">
+            <%= label_tag :lot_limit,
+                  t('buyer.public_markets.lot_config.lot_limit_label'),
+                  class: 'fr-label' %>
+            <%= number_field_tag :lot_limit,
+                  @public_market.lot_limit,
+                  class: "fr-input #{'fr-input--error' if lot_limit_errors.any?}",
+                  min: 1,
+                  max: @public_market.lots.size,
+                  style: 'max-width: 8rem;',
+                  aria: (lot_limit_errors.any? ? { describedby: 'lot-limit-error' } : {}) %>
+            <% if lot_limit_errors.any? %>
+              <p id="lot-limit-error" class="fr-error-text"><%= lot_limit_errors.first %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right fr-btn--full-width">
+        <%= t('buyer.public_markets.lot_config.submit') %>
+      </button>
+    <% end %>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-4 fr-col-offset-md-1">
+    <div class="fr-mb-3w fr-p-3w fr-background-alt--grey">
+      <h2 class="fr-text--md fr-text--bold fr-mb-2w">
+        <%= t('buyer.shared.market_info_title') %>
+      </h2>
+      <div class="fr-grid-row fr-grid-row--gutters fr-mb-1w">
+        <span class="fr-col fr-text--sm fr-text--mention"><%= t('buyer.public_markets.lot_config.sidebar_buyer_label') %></span>
+        <span class="fr-col fr-text--sm fr-text--bold fr-text--right"><%= @public_market.name %></span>
+      </div>
+      <% if @public_market.market_type_codes.any? %>
+        <div class="fr-grid-row fr-grid-row--gutters fr-mb-1w">
+          <span class="fr-col fr-text--sm fr-text--mention"><%= t('buyer.public_markets.lot_config.sidebar_typology_label') %></span>
+          <span class="fr-col fr-text--sm fr-text--bold fr-text--right"><%= @presenter.market_types_label %></span>
+        </div>
+      <% end %>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <span class="fr-col fr-text--sm fr-text--mention"><%= t('buyer.shared.deadline_short') %></span>
+        <span class="fr-col fr-text--sm fr-text--bold fr-text--right">
+          <%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
+        </span>
+      </div>
+    </div>
+
+    <div class="fr-p-3w fr-background-alt--grey">
+      <h2 class="fr-text--md fr-text--bold fr-mb-2w">
+        <%= t('buyer.public_markets.lot_config.how_it_works_title') %>
+      </h2>
+      <ol class="fr-mb-0 fr-text--sm">
+        <li class="fr-mb-1w"><%= t('buyer.public_markets.lot_config.how_it_works_step_1') %></li>
+        <li class="fr-mb-1w"><%= t('buyer.public_markets.lot_config.how_it_works_step_2') %></li>
+        <li><%= t('buyer.public_markets.lot_config.how_it_works_step_3') %></li>
+      </ol>
+    </div>
+  </div>
+</div>
