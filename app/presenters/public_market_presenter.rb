@@ -104,6 +104,14 @@ class PublicMarketPresenter
     "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
   end
 
+  def lots
+    @lots ||= @public_market.lots.ordered.to_a
+  end
+
+  def lots?
+    lots.any?
+  end
+
   def source_types
     I18n.t('source_types')
   end
