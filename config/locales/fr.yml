@@ -385,7 +385,7 @@ fr:
         lot_limit_question: "Souhaitez-vous limiter le nombre de lots ?"
         lot_limit_yes: "Oui"
         lot_limit_no: "Non"
-        lot_limit_label: "Nombre maximum de lots par candidat"
+        lot_limit_label: "Indiquez le nombre de lots maximum auxquels une entreprise pourra candidater :"
         sidebar_buyer_label: "Acheteur"
         sidebar_typology_label: "Typologie"
         how_it_works_title: "Comment ça fonctionne"
