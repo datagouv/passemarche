@@ -100,6 +100,10 @@ class PublicMarketPresenter
     @public_market.market_type_codes.map { |c| I18n.t("market_types.#{c}", default: c.humanize) }.join(', ')
   end
 
+  def market_types_label_with_source
+    "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
+  end
+
   def source_types
     I18n.t('source_types')
   end

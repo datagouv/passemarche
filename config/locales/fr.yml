@@ -311,6 +311,8 @@ fr:
     services: "Services"
     works: "Travaux"
     defense: "Défense et sécurité"
+    source:
+      platform: "Plateforme"
 
   buyer:
     shared:
