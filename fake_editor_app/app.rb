@@ -470,7 +470,6 @@ class FakeEditorApp < Sinatra::Base
     {
       name: params[:name],
       lots: extract_lots_from_params,
-      lot_limit: params[:lot_limit].to_s.strip.then { |v| v.empty? ? nil : v.to_i },
       deadline: params[:deadline],
       siret: params[:siret],
       market_type_codes: Array(params[:market_type_codes]).compact
@@ -487,12 +486,6 @@ class FakeEditorApp < Sinatra::Base
     return 'Veuillez remplir le SIRET de l\'organisation.' if market_data[:siret].to_s.strip.empty?
     return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
     return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].to_a.empty?
-
-    lot_limit = market_data[:lot_limit]
-    lots_count = market_data[:lots].length
-    if lot_limit && lots_count.positive? && lot_limit > lots_count
-      return "Vous ne pouvez pas limiter un nombre de lots supérieur au nombre de lots créés."
-    end
 
     nil
   end
