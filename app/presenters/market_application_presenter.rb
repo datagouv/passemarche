@@ -74,11 +74,11 @@ class MarketApplicationPresenter
   # === LOTS METHODS ===
 
   def selected_lots
-    @market_application.lots.ordered
+    @selected_lots ||= @market_application.lots.ordered
   end
 
   def market_type_labels
-    @market_application.public_market.market_type_codes
+    @market_type_labels ||= @market_application.public_market.market_type_codes
       .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
       .join(', ')
   end
