@@ -74,7 +74,15 @@ class MarketApplicationPresenter
   # === LOTS METHODS ===
 
   def selected_lots
-    @selected_lots ||= @market_application.lots.ordered
+    @selected_lots ||= @market_application.lots.ordered.to_a
+  end
+
+  def public_market_lots
+    @public_market_lots ||= @market_application.public_market.lots.ordered.to_a
+  end
+
+  def public_market_has_lots?
+    public_market_lots.any?
   end
 
   def market_type_labels
@@ -130,7 +138,7 @@ class MarketApplicationPresenter
   # === LOT SELECTION ===
 
   def lots_saved?
-    @market_application.lots.any?
+    selected_lots.any?
   end
 
   def cta_translation_key
