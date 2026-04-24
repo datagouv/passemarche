@@ -139,6 +139,19 @@ RSpec.describe CreatePublicMarket, type: :interactor do
       end
     end
 
+    context 'with lots having cpv_code' do
+      let(:params_with_cpv) do
+        valid_params.merge(lots: [{ name: 'Lot 1', cpv_code: '45000000-7' }, { name: 'Lot 2', cpv_code: nil }])
+      end
+
+      subject { described_class.call(editor:, params: params_with_cpv) }
+
+      it 'persists the cpv_code' do
+        result = subject
+        expect(result.public_market.lots.ordered.map(&:cpv_code)).to eq(['45000000-7', nil])
+      end
+    end
+
     context 'with lot_limit exceeding the number of lots' do
       let(:params_with_limit) do
         valid_params.merge(

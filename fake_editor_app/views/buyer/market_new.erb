@@ -77,9 +77,16 @@
                     <input
                       class="fr-input"
                       type="text"
-                      name="lots[]"
+                      name="lots[][name]"
                       placeholder="Ex: Lot 1 - Ordinateurs portables"
-                      style="flex:1; min-width:0;">
+                      style="flex:2; min-width:0;">
+                    <input
+                      class="fr-input"
+                      type="text"
+                      name="lots[][cpv_code]"
+                      placeholder="Ex: 30213100-6"
+                      style="flex:1; min-width:0;"
+                      title="Code CPV (format: 8 chiffres-tiret-1 chiffre, ex: 30213100-6)">
                     <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="display:none; flex-shrink:0;">
                       Supprimer
                     </button>
@@ -207,7 +214,8 @@
       row.className = 'lot-row fr-mb-1w';
       row.style.cssText = 'display:flex; gap:0.5rem; align-items:center;';
       row.innerHTML =
-        '<input class="fr-input" type="text" name="lots[]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:1; min-width:0;">' +
+        '<input class="fr-input" type="text" name="lots[][name]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:2; min-width:0;">' +
+        '<input class="fr-input" type="text" name="lots[][cpv_code]" placeholder="Ex: 30213100-6" style="flex:1; min-width:0;" title="Code CPV (format: 8 chiffres-tiret-1 chiffre, ex: 30213100-6)">' +
         '<button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="flex-shrink:0;">Supprimer</button>';
       container.appendChild(row);
       updateRemoveButtons();

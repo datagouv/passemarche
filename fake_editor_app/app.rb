@@ -104,8 +104,7 @@ class FakeEditorApp < Sinatra::Base
 
       unless current_token&.valid?
         @error = "Token d'accès non valide. Veuillez vous authentifier d'abord."
-        erb :'buyer/market_new'
-        return
+        return erb(:'buyer/market_new')
       end
 
       market_data = extract_market_data_from_params
@@ -113,14 +112,12 @@ class FakeEditorApp < Sinatra::Base
 
       if validation_error
         @error = validation_error
-        erb :'buyer/market_new'
-        return
+        return erb(:'buyer/market_new')
       end
 
       begin
         api_response = @fast_track_client.create_public_market(current_token.access_token, market_data)
 
-        # Store the market locally
         market = Market.create_from_api({
           identifier: api_response['identifier'],
           name: market_data[:name],
@@ -133,7 +130,6 @@ class FakeEditorApp < Sinatra::Base
         erb :'buyer/market_created'
       rescue StandardError => e
         @error = "Erreur lors de la création du marché: #{e.message}"
-        # Ensure variables are reset to prevent rendering issues
         @success = nil
         @market = nil
         @configuration_url = nil
@@ -477,7 +473,18 @@ class FakeEditorApp < Sinatra::Base
   end
 
   def extract_lots_from_params
-    Array(params[:lots]).map(&:strip).reject(&:empty?).map { |name| { name: } }
+    lots = params[:lots]
+    return [] if lots.nil?
+
+    (lots.is_a?(Array) ? lots : [lots]).filter_map do |lot|
+      next unless lot.is_a?(Hash)
+
+      name = lot[:name].to_s.strip
+      next if name.empty?
+
+      cpv_code = lot[:cpv_code].to_s.strip
+      { name:, cpv_code: cpv_code.empty? ? nil : cpv_code }.compact
+    end
   end
 
   def validate_market_data(market_data)
@@ -486,7 +493,15 @@ class FakeEditorApp < Sinatra::Base
     return 'Veuillez remplir le SIRET de l\'organisation.' if market_data[:siret].to_s.strip.empty?
     return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
     return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].to_a.empty?
+    return error if (error = invalid_cpv_error(market_data[:lots]))
 
     nil
+  end
+
+  def invalid_cpv_error(lots)
+    invalid = lots.find { |lot| lot[:cpv_code].to_s.then { |cpv| !cpv.empty? && !cpv.match?(/\A\d{8}-\d\z/) } }
+    return unless invalid
+
+    "Code CPV invalide : « #{invalid[:cpv_code]} ». Format attendu : 8 chiffres, tiret, 1 chiffre (ex: 45000000-7)."
   end
 end

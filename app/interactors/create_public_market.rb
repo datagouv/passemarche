@@ -27,7 +27,7 @@ class CreatePublicMarket < ApplicationInteractor
   end
 
   def build_lot(lot, index)
-    { name: lot[:name], position: index + 1 }
+    { name: lot[:name], position: index + 1, cpv_code: lot[:cpv_code] }
   end
 
   def errors_from(record)
