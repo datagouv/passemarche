@@ -1,0 +1,16 @@
+<dl style="margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px;">
+  <div style="display: flex; gap: 8px;">
+    <dt class="fr-text--sm fr-text--mention-grey" style="margin: 0; line-height: 1.5;"><%= buyer_label %></dt>
+    <dd class="fr-text--sm fr-text--bold" style="margin: 0; line-height: 1.5;"><%= market_name %></dd>
+  </div>
+  <% if market_types_label.present? %>
+    <div style="display: flex; gap: 8px;">
+      <dt class="fr-text--sm fr-text--mention-grey" style="margin: 0; line-height: 1.5;"><%= typology_label %></dt>
+      <dd class="fr-text--sm fr-text--bold" style="margin: 0; line-height: 1.5;"><%= market_types_label %></dd>
+    </div>
+  <% end %>
+  <div style="display: flex; gap: 8px;">
+    <dt class="fr-text--sm fr-text--mention-grey" style="margin: 0; line-height: 1.5;"><%= deadline_label %></dt>
+    <dd class="fr-text--sm fr-text--bold" style="margin: 0; line-height: 1.5;"><%= deadline %></dd>
+  </div>
+</dl>

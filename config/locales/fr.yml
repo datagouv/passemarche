@@ -115,7 +115,7 @@ fr:
 
   button:
     next_step: "Passer à l'étape suivante"
-    submit_summary: "Transmettre ma candidature"
+    submit_summary: "Transmettre l'ensemble de mes candidatures"
     continue: "Continuer"
 
   malware_scan:
@@ -480,8 +480,8 @@ fr:
         one: "1 lot"
         other: "%{count} lots"
       available_lots_count:
-        one: "1 lot disponible"
-        other: "%{count} lots disponibles"
+        one: "1 lot"
+        other: "%{count} lots"
       lot_number: "Lot %{number}"
       single_form_notice: "Vous n'avez qu'un seul formulaire de candidature à compléter, Passe Marché se charge de transmettre votre candidature pour les différents lots."
       lot_limit_notice:
@@ -491,7 +491,7 @@ fr:
         one: "Vous pouvez sélectionner au maximum %{count} lot."
         other: "Vous pouvez sélectionner au maximum %{count} lots."
       lot_limit_exceeded_notice:
-        one: "Vous avez atteint la limite : %{count} lot maximum autorisé."
+        one: "Vous avez atteint la limite : %{count} lot maximum autorisé"
         other: "Vous avez atteint la limite : %{count} lots maximum autorisés."
     validations:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"

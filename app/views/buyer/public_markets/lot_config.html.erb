@@ -105,22 +105,13 @@
         <%= t('buyer.shared.market_info_title') %>
       </h2>
       <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
-      <dl style="margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px;">
-        <div style="display: flex; gap: 8px;">
-          <dt style="margin: 0; font-size: 0.875rem; color: var(--text-mention-grey); line-height: 1.5;"><%= t('buyer.public_markets.lot_config.sidebar_buyer_label') %></dt>
-          <dd style="margin: 0; font-size: 0.875rem; font-weight: 700; line-height: 1.5;"><%= @public_market.name %></dd>
-        </div>
-        <% if @public_market.market_type_codes.any? %>
-          <div style="display: flex; gap: 8px;">
-            <dt style="margin: 0; font-size: 0.875rem; color: var(--text-mention-grey); line-height: 1.5;"><%= t('buyer.public_markets.lot_config.sidebar_typology_label') %></dt>
-            <dd style="margin: 0; font-size: 0.875rem; font-weight: 700; line-height: 1.5;"><%= @presenter.market_types_label %></dd>
-          </div>
-        <% end %>
-        <div style="display: flex; gap: 8px;">
-          <dt style="margin: 0; font-size: 0.875rem; color: var(--text-mention-grey); line-height: 1.5;"><%= t('buyer.shared.deadline_short') %></dt>
-          <dd style="margin: 0; font-size: 0.875rem; font-weight: 700; line-height: 1.5;"><%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %></dd>
-        </div>
-      </dl>
+      <%= render 'shared/sidebar_market_info',
+            buyer_label: t('buyer.public_markets.lot_config.sidebar_buyer_label'),
+            market_name: @public_market.name,
+            typology_label: t('buyer.public_markets.lot_config.sidebar_typology_label'),
+            market_types_label: @public_market.market_type_codes.any? ? @presenter.market_types_label : nil,
+            deadline_label: t('buyer.shared.deadline_short'),
+            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
     </div>
 
     <div class="fr-background-alt--grey" style="padding: 20px;">
