@@ -84,7 +84,7 @@
                   class: "fr-input #{'fr-input--error' if lot_limit_errors.any?}",
                   min: 1,
                   max: @public_market.lots.size,
-                  style: 'max-width: 8rem;',
+                  style: 'width: 250px;',
                   aria: (lot_limit_errors.any? ? { describedby: 'lot-limit-error' } : {}) %>
             <% if lot_limit_errors.any? %>
               <p id="lot-limit-error" class="fr-error-text"><%= lot_limit_errors.first %></p>
@@ -100,35 +100,28 @@
   </div>
 
   <div class="fr-col-12 fr-col-md-4 fr-col-offset-md-1">
-    <div class="fr-mb-3w fr-p-3w fr-background-alt--grey">
-      <h2 class="fr-text--md fr-text--bold fr-mb-2w">
+    <div class="fr-mb-3w fr-background-alt--grey" style="padding: 20px;">
+      <h2 class="fr-text--md fr-text--bold" style="margin-bottom: 0.5rem;">
         <%= t('buyer.shared.market_info_title') %>
       </h2>
-      <div class="fr-grid-row fr-grid-row--gutters fr-mb-1w">
-        <span class="fr-col fr-text--sm fr-text--mention"><%= t('buyer.public_markets.lot_config.sidebar_buyer_label') %></span>
-        <span class="fr-col fr-text--sm fr-text--bold fr-text--right"><%= @public_market.name %></span>
-      </div>
-      <% if @public_market.market_type_codes.any? %>
-        <div class="fr-grid-row fr-grid-row--gutters fr-mb-1w">
-          <span class="fr-col fr-text--sm fr-text--mention"><%= t('buyer.public_markets.lot_config.sidebar_typology_label') %></span>
-          <span class="fr-col fr-text--sm fr-text--bold fr-text--right"><%= @presenter.market_types_label %></span>
-        </div>
-      <% end %>
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <span class="fr-col fr-text--sm fr-text--mention"><%= t('buyer.shared.deadline_short') %></span>
-        <span class="fr-col fr-text--sm fr-text--bold fr-text--right">
-          <%= l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
-        </span>
-      </div>
+      <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
+      <%= render 'shared/sidebar_market_info',
+            buyer_label: t('buyer.public_markets.lot_config.sidebar_buyer_label'),
+            market_name: @public_market.name,
+            typology_label: t('buyer.public_markets.lot_config.sidebar_typology_label'),
+            market_types_label: @public_market.market_type_codes.any? ? @presenter.market_types_label : nil,
+            deadline_label: t('buyer.shared.deadline_short'),
+            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
     </div>
 
-    <div class="fr-p-3w fr-background-alt--grey">
-      <h2 class="fr-text--md fr-text--bold fr-mb-2w">
+    <div class="fr-background-alt--grey" style="padding: 20px;">
+      <h2 class="fr-text--md fr-text--bold" style="margin-bottom: 0.5rem;">
         <%= t('buyer.public_markets.lot_config.how_it_works_title') %>
       </h2>
-      <ol class="fr-mb-0 fr-text--sm">
-        <li class="fr-mb-1w"><%= t('buyer.public_markets.lot_config.how_it_works_step_1') %></li>
-        <li class="fr-mb-1w"><%= t('buyer.public_markets.lot_config.how_it_works_step_2') %></li>
+      <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
+      <ol style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem; display: flex; flex-direction: column; gap: 4px;">
+        <li><%= t('buyer.public_markets.lot_config.how_it_works_step_1') %></li>
+        <li><%= t('buyer.public_markets.lot_config.how_it_works_step_2') %></li>
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_3') %></li>
       </ol>
     </div>

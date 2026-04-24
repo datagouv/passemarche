@@ -44,20 +44,23 @@
 
         <div class="fr-mb-4w" style="border: 1px solid var(--border-default-grey); border-radius: 4px;">
           <div class="fr-px-3w fr-py-2w"
-               style="border-bottom: 1px solid var(--border-default-grey); display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <p class="fr-text--bold fr-mb-0">
-                <%= @market_application.public_market.market_type_codes.any? ?
-                      t("market_types.#{@market_application.public_market.market_type_codes.first}",
-                        default: @market_application.public_market.market_type_codes.first.humanize) :
-                      t('candidate.lot_selection.lots_count', count: lots.size) %>
-              </p>
-              <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
-                <%= t('candidate.lot_selection.available_lots_count', count: lots.size) %>
-              </p>
+               style="border-bottom: 1px solid var(--border-default-grey); display: flex; justify-content: space-between; align-items: center; background: var(--background-alt-grey); border-radius: 4px 4px 0 0;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <%= market_type_icon_tag(@market_application.public_market.market_type_codes) %>
+              <div>
+                <p class="fr-text--bold fr-mb-0">
+                  <%= @market_application.public_market.market_type_codes.any? ?
+                        t("market_types.#{@market_application.public_market.market_type_codes.first}",
+                          default: @market_application.public_market.market_type_codes.first.humanize) :
+                        t('candidate.lot_selection.lots_count', count: lots.size) %>
+                </p>
+                <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
+                  <%= t('candidate.lot_selection.available_lots_count', count: lots.size) %>
+                </p>
+              </div>
             </div>
             <button type="button"
-                    class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+                    class="fr-link fr-text--sm"
                     data-action="lot-selection#selectAll"
                     data-lot-selection-target="selectAllButton"
                     data-select-text="<%= t('candidate.lot_selection.select_all') %>"
@@ -67,20 +70,22 @@
           </div>
 
           <% if @market_application.public_market.lot_limit.present? %>
-            <p class="fr-text--sm fr-text--mention-grey fr-mb-0 fr-px-3w fr-pt-2w">
-              <%= t('candidate.lot_selection.lot_limit_notice', count: @market_application.public_market.lot_limit) %>
-            </p>
-            <p class="fr-text--sm fr-mb-0 fr-px-3w fr-pt-1w"
-               style="color: var(--text-default-error);"
-               data-lot-selection-target="limitError"
-               hidden>
-              <%= t('candidate.lot_selection.lot_limit_exceeded_notice', count: @market_application.public_market.lot_limit) %>
-            </p>
+            <div class="fr-px-3w fr-pt-2w">
+              <p class="fr-text--sm fr-mb-0" style="color: var(--text-default-error);">
+                <%= t('candidate.lot_selection.lot_limit_notice', count: @market_application.public_market.lot_limit) %>
+              </p>
+              <p class="fr-text--sm fr-mb-0"
+                 style="color: var(--text-default-error);"
+                 data-lot-selection-target="limitError"
+                 hidden>
+                <%= t('candidate.lot_selection.lot_limit_exceeded_notice', count: @market_application.public_market.lot_limit) %>
+              </p>
+            </div>
           <% end %>
 
           <% lots.each_with_index do |lot, index| %>
-            <div class="fr-px-3w fr-py-2w">
-              <div class="fr-checkbox-group" data-lot-selection-target="checkboxGroup">
+            <div class="fr-px-3w fr-py-1w">
+              <div class="fr-checkbox-group" style="display: flex; align-items: center;" data-lot-selection-target="checkboxGroup">
                 <%= check_box_tag "market_application[lot_ids][]",
                       lot.id,
                       @market_application.lot_ids.include?(lot.id),
@@ -111,8 +116,8 @@
           <%= hidden_field_tag 'market_application[lot_ids][]', lot.id %>
         <% end %>
         <button type="submit"
-                class="fr-btn"
-                style="width: 100%; margin-top: 0.5rem;"
+                class="fr-btn fr-icon-send-plane-fill fr-btn--icon-right"
+                style="width: 100%; margin-top: 0.5rem; justify-content: center;"
                 <%= 'disabled' unless lots_already_saved %>>
           <%= t('button.submit_summary') %>
         </button>
@@ -121,47 +126,39 @@
 
     <div class="fr-col-12 fr-col-md-5">
 
-      <div class="fr-mb-3w fr-background-alt--grey fr-p-3w" style="border: 1px solid var(--border-default-grey); border-radius: 4px;">
-        <h2 class="fr-text--bold fr-mb-2w" style="font-size: 1rem;">
+      <div class="fr-mb-3w fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 20px;">
+        <h2 class="fr-text--bold" style="font-size: 1rem; margin-bottom: 0.5rem;">
           <%= t('candidate.lot_selection.market_info_title') %>
         </h2>
-        <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
-          <span class="fr-text--sm fr-text--mention-grey" style="white-space: nowrap;"><%= t('candidate.lot_selection.buyer_label') %></span>
-          <span class="fr-text--sm fr-text--bold" style="text-align: right;"><%= @market_application.public_market.name %></span>
-        </div>
-        <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
-          <span class="fr-text--sm fr-text--mention-grey" style="white-space: nowrap;"><%= t('candidate.lot_selection.market_type_label') %></span>
-          <span class="fr-text--sm fr-text--bold" style="text-align: right;">
-            <% if @market_application.public_market.market_type_codes.any? %>
-              <%= @market_application.public_market.market_type_codes.map { |c| t("market_types.#{c}", default: c.humanize) }.join(', ') %>
-            <% else %>
-              <%= t('candidate.shared.no_market_type') %>
-            <% end %>
-          </span>
-        </div>
-        <div style="display: flex; justify-content: space-between; gap: 1rem;">
-          <span class="fr-text--sm fr-text--mention-grey" style="white-space: nowrap;"><%= t('candidate.lot_selection.deadline_label') %></span>
-          <span class="fr-text--sm fr-text--bold" style="text-align: right;">
-            <%= l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %>
-          </span>
-        </div>
+        <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.5rem 0;">
+        <%= render 'shared/sidebar_market_info',
+              buyer_label: t('candidate.lot_selection.buyer_label'),
+              market_name: @market_application.public_market.name,
+              typology_label: t('candidate.lot_selection.market_type_label'),
+              market_types_label: @market_application.public_market.market_type_codes.any? ?
+                @market_application.public_market.market_type_codes.map { |c| t("market_types.#{c}", default: c.humanize) }.join(', ') :
+                t('candidate.shared.no_market_type'),
+              deadline_label: t('candidate.lot_selection.deadline_label'),
+              deadline: l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %>
       </div>
 
-      <div class="fr-mb-3w fr-background-alt--grey fr-p-3w" style="border: 1px solid var(--border-default-grey); border-radius: 4px;">
-        <h2 class="fr-text--bold fr-mb-2w" style="font-size: 1rem;">
+      <div class="fr-mb-3w fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 20px;">
+        <h2 class="fr-text--bold" style="font-size: 1rem; margin-bottom: 0.5rem;">
           <%= t('candidate.lot_selection.how_it_works_title') %>
         </h2>
-        <ol class="fr-mb-0" style="padding-left: 1.25rem; font-size: 0.875rem;">
-          <li class="fr-mb-1w"><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
-          <li class="fr-mb-1w"><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
+        <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.5rem 0;">
+        <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; display: flex; flex-direction: column; gap: 4px;">
+          <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
+          <li><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
           <li><%= t('candidate.lot_selection.how_it_works_step_3') %></li>
         </ol>
       </div>
 
-      <div class="fr-background-alt--grey fr-p-3w" style="border: 1px solid var(--border-default-grey); border-radius: 4px;">
-        <h2 class="fr-text--bold fr-mb-2w" style="font-size: 1rem;">
+      <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 20px;">
+        <h2 class="fr-text--bold" style="font-size: 1rem; margin-bottom: 0.5rem;">
           <%= t('candidate.lot_selection.progress_title') %>
         </h2>
+        <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.5rem 0;">
         <p class="fr-text--sm fr-text--mention-grey fr-mb-0"
            data-lot-selection-target="noLotsText"
            <%= 'hidden' if lots_already_saved %>>
@@ -169,7 +166,7 @@
         </p>
         <div data-lot-selection-target="progressCard"
              <%= 'hidden' unless lots_already_saved %>
-             style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 1rem;">
+             style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 1rem; background: white;">
           <div class="fr-mb-1w" style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="fr-icon-draft-fill" aria-hidden="true"
                   style="color: var(--blue-france-sun-113-625);"></span>
@@ -177,18 +174,18 @@
               <%= t('candidate.lot_selection.application_form_title') %>
             </span>
           </div>
-          <p class="fr-text--sm fr-text--mention-grey fr-mb-2w"
-             data-lot-selection-target="selectedLotsCount"
-             data-one="<%= I18n.t('candidate.lot_selection.lots_count.one') %>"
-             data-other="<%= I18n.t('candidate.lot_selection.lots_count.other') %>"></p>
           <% if @presenter %>
-            <p class="fr-text--sm fr-mb-2w"
-               style="color: <%= @presenter.fields_complete? ? 'var(--text-default-success)' : 'var(--text-mention-grey)' %>;">
+            <p class="fr-text--sm fr-mb-1w"
+               style="color: <%= @presenter.fields_complete? ? 'var(--text-default-success)' : 'var(--blue-france-sun-113-625)' %>;">
               <%= t('candidate.lot_selection.fields_count',
                     filled: @presenter.filled_fields_count,
                     total: @presenter.total_fields_count) %>
             </p>
           <% end %>
+          <p class="fr-text--sm fr-text--mention-grey fr-mb-2w"
+             data-lot-selection-target="selectedLotsCount"
+             data-one="<%= I18n.t('candidate.lot_selection.lots_count.one') %>"
+             data-other="<%= I18n.t('candidate.lot_selection.lots_count.other') %>"></p>
           <div style="text-align: right;">
             <button type="submit"
                     form="lot-selection-form"

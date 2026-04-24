@@ -539,7 +539,7 @@ end
 
 When('I complete the application on summary step') do
   expect(page).to have_current_path(/summary/)
-  click_button 'Transmettre ma candidature'
+  click_button I18n.t('button.submit_summary')
 end
 
 Then('the application status should be {string}') do |_expected_status|
