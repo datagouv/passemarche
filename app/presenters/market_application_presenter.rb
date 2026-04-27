@@ -74,11 +74,19 @@ class MarketApplicationPresenter
   # === LOTS METHODS ===
 
   def selected_lots
-    @market_application.lots.ordered
+    @selected_lots ||= @market_application.lots.ordered.to_a
+  end
+
+  def public_market_lots
+    @public_market_lots ||= @market_application.public_market.lots.ordered.to_a
+  end
+
+  def public_market_has_lots?
+    public_market_lots.any?
   end
 
   def market_type_labels
-    @market_application.public_market.market_type_codes
+    @market_type_labels ||= @market_application.public_market.market_type_codes
       .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
       .join(', ')
   end
@@ -130,7 +138,7 @@ class MarketApplicationPresenter
   # === LOT SELECTION ===
 
   def lots_saved?
-    @market_application.lots.any?
+    selected_lots.any?
   end
 
   def cta_translation_key

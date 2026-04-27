@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <% if market_application.lots.any? %>
+  <% if presenter.lots_saved? %>
     <%= render 'shared/application_lots_summary', presenter: presenter %>
   <% end %>
 
