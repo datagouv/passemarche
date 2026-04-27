@@ -18,51 +18,6 @@ RSpec.describe MarketApplicationStepUpdateService do
   end
 
   describe '.call' do
-    context 'with company_identification step' do
-      it 'returns success' do
-        result = described_class.call(market_application, :company_identification, {})
-
-        expect(result[:success]).to be true
-      end
-
-      it 'does not modify SIRET (SIRET is locked)' do
-        original_siret = market_application.siret
-
-        described_class.call(market_application, :company_identification, {})
-
-        expect(market_application.reload.siret).to eq(original_siret)
-      end
-
-      it 'does not call APIs directly' do
-        expect(Insee).not_to receive(:call)
-        expect(Rne).not_to receive(:call)
-
-        described_class.call(market_application, :company_identification, {})
-      end
-
-      it 'has no flash messages' do
-        result = described_class.call(market_application, :company_identification, {})
-
-        expect(result[:flash_messages]).to be_empty
-      end
-
-      it 'enqueues API data fetch job when api_fetch_status is empty' do
-        market_application.update!(api_fetch_status: {})
-
-        expect(FetchApiDataCoordinatorJob).to receive(:perform_later).with(market_application.id)
-
-        described_class.call(market_application, :company_identification, {})
-      end
-
-      it 'does not enqueue API data fetch job when api_fetch_status is present' do
-        market_application.update!(api_fetch_status: { 'insee' => { 'status' => 'completed' } })
-
-        expect(FetchApiDataCoordinatorJob).not_to receive(:perform_later)
-
-        described_class.call(market_application, :company_identification, {})
-      end
-    end
-
     context 'with api_data_recovery_status step' do
       let(:params) { {} }
 
@@ -79,8 +34,7 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
 
       it 'is a simple passthrough (API calls happen in background jobs)' do
-        # This step doesn't trigger API calls directly anymore
-        # API calls are triggered via background jobs in company_identification step
+        # API calls are enqueued by CompanyIdentificationsController
         result = described_class.call(market_application, :api_data_recovery_status, params)
 
         expect(result[:success]).to be true

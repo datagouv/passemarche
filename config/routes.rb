@@ -76,6 +76,8 @@ Rails.application.routes.draw do
 
     resources :market_applications, param: :identifier, only: [] do
       member do
+        get 'company_identification', to: 'company_identifications#show', as: :company_identification
+        patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection
         patch 'lots', to: 'lot_selections#update'
         post 'lots/submit', to: 'lot_selections#submit', as: :lot_selection_submit

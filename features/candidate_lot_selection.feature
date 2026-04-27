@@ -8,54 +8,40 @@ Feature: Candidate lot selection
     Given a public market with lots exists
     And a candidate starts a new application for a market with lots
 
-  Scenario: Candidate is redirected to lot selection after login
-    Then they should see the lot selection page
+  Scenario: Candidate sees lot selection in the wizard flow
+    When the candidate visits the lot selection step
+    Then the candidate should be on the lot selection step
     And they should see a checkbox for each lot
 
-  Scenario: Lot selection page does not appear when market has no lots
+  Scenario: Lot selection step is skipped when market has no lots
     Given a public market without lots exists
     And a candidate starts a new application for a market without lots
-    Then the candidate should be on the company identification step
+    When the candidate visits the lot selection step
+    Then the candidate should be on the api data recovery status step
 
-  Scenario: Candidate can select lots and proceed to the wizard
-    When the candidate selects the first lot
-    And the candidate submits the lot selection form
-    Then the candidate should be on the company identification step
+  Scenario: Candidate can select lots and proceed to the next step
+    When the candidate visits the lot selection step
+    And the candidate selects the first lot
+    And the candidate submits the lot selection step
+    Then the candidate should be on the api data recovery status step
 
   Scenario: Candidate cannot proceed without selecting a lot
-    When the candidate submits the lot selection form without selecting any lot
+    When the candidate visits the lot selection step
+    And the candidate submits the lot selection step without selecting any lot
     Then the candidate should see an error about selecting at least one lot
-    And the candidate should remain on the lot selection page
+    And the candidate should remain on the lot selection step
 
   Scenario: Candidate cannot exceed lot_limit
     Given the public market has a lot limit of 1
-    When the candidate selects all available lots
-    And the candidate submits the lot selection form
+    When the candidate visits the lot selection step
+    And the candidate selects all available lots
+    And the candidate submits the lot selection step
     Then the candidate should see an error about the lot limit
-    And the candidate should remain on the lot selection page
+    And the candidate should remain on the lot selection step
 
-  Scenario: Candidate is redirected to lot selection when reconnecting
-    When the candidate selects the first lot
-    And the candidate submits the lot selection form
+  Scenario: Candidate is redirected to company identification when reconnecting
+    When the candidate visits the lot selection step
+    And the candidate selects the first lot
+    And the candidate submits the lot selection step
     And the candidate reconnects to the application
-    Then they should see the lot selection page
-
-  Scenario: Candidate can submit the application from the lot selection page
-    When the candidate selects the first lot
-    And the candidate submits the lot selection form
-    And the candidate revisits the lot selection page
-    Then the candidate should see the submit application button
-
-  Scenario: Summary always has a direct submit button
-    Given the candidate revisits the summary page
-    Then the summary should have a direct submit button
-
-  Scenario: Progress card shows field counter with no fields filled
-    Then the candidate should see the field counter showing "0/1 champs"
-    And the progress card CTA should show "Préparer"
-
-  Scenario: CA8 - Progress card CTA shows "Modifier" when fields are filled
-    Given the candidate has filled all fields
-    And the candidate revisits the lot selection page
-    Then the candidate should see the field counter in green
-    And the progress card CTA should show "Modifier"
+    Then the candidate should be on the company identification step

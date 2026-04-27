@@ -26,7 +26,6 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   end
 
   STEPS = %i[
-    company_identification
     api_data_recovery_status
     market_information
     exclusion_criteria

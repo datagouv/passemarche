@@ -57,11 +57,7 @@ module Candidate
     def first_step_path(market_application)
       return candidate_sync_status_path(market_application.identifier) if market_application.completed?
 
-      if market_application.public_market.lots.any?
-        lot_selection_candidate_market_application_path(market_application.identifier)
-      else
-        step_candidate_market_application_path(market_application.identifier, :company_identification)
-      end
+      company_identification_candidate_market_application_path(market_application.identifier)
     end
 
     def magic_link_request_params

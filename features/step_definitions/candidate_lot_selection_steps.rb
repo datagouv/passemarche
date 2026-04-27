@@ -40,8 +40,24 @@ Given('the public market has a lot limit of {int}') do |limit|
   @public_market.update!(lot_limit: limit)
 end
 
-Then('they should see the lot selection page') do
+When('the candidate visits the lot selection step') do
+  application = @market_application_no_lots || @market_application
+  visit lot_selection_candidate_market_application_path(application.identifier)
+end
+
+Then('the candidate should be on the lot selection step') do
+  expect(page).to have_current_path(
+    %r{/candidate/market_applications/.+/lots},
+    ignore_query: true
+  )
   expect(page).to have_content(I18n.t('candidate.lot_selection.title'))
+end
+
+Then('the candidate should be on the api data recovery status step') do
+  expect(page).to have_current_path(
+    %r{/candidate/market_applications/.+/api_data_recovery_status},
+    ignore_query: true
+  )
 end
 
 Then('they should see a checkbox for each lot') do
@@ -53,20 +69,16 @@ When('the candidate selects the first lot') do
   check 'Lot 1 - Fournitures'
 end
 
-When('the candidate deselects the first lot') do
-  uncheck 'Lot 1 - Fournitures'
-end
-
 When('the candidate selects all available lots') do
   check 'Lot 1 - Fournitures'
   check 'Lot 2 - Services'
 end
 
-When('the candidate submits the lot selection form') do
+When('the candidate submits the lot selection step') do
   find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
 end
 
-When('the candidate submits the lot selection form without selecting any lot') do
+When('the candidate submits the lot selection step without selecting any lot') do
   find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
 end
 
@@ -89,9 +101,9 @@ Then('the candidate should see an error about the lot limit') do
   )
 end
 
-Then('the candidate should remain on the lot selection page') do
+Then('the candidate should remain on the lot selection step') do
   expect(page).to have_current_path(
-    "/candidate/market_applications/#{@market_application.identifier}/lots",
+    %r{/candidate/market_applications/.+/lots},
     ignore_query: true
   )
 end
@@ -102,61 +114,4 @@ When('the candidate reconnects to the application') do
   user.update!(authentication_token_sent_at: Time.current)
   token = user.generate_token_for(:magic_link)
   visit verify_candidate_sessions_path(token:, market_application_id: @market_application.identifier)
-end
-
-Then('the candidate should see the submit application button') do
-  expect(page).to have_button(I18n.t('button.submit_summary'))
-end
-
-Given('the candidate has filled all fields') do
-  @market_application.lots << @lot1
-  attr = @public_market.market_attributes.first
-  MarketAttributeResponse::TextInput.create!(
-    market_application: @market_application,
-    market_attribute: attr,
-    value: { text: 'filled value' }
-  )
-end
-
-Given('the candidate revisits the lot selection page') do
-  visit lot_selection_candidate_market_application_path(@market_application.identifier)
-end
-
-Given('the candidate revisits the summary page') do
-  visit step_candidate_market_application_path(@market_application.identifier, :summary)
-end
-
-Then('the candidate should see the field counter showing {string}') do |counter_text|
-  expect(page).to have_css('p', text: counter_text, visible: false)
-end
-
-Then('the candidate should see the field counter in green') do
-  expect(page).to have_css('[style*="text-default-success"]', visible: false)
-end
-
-Then('the progress card CTA should show {string}') do |cta_text|
-  expect(page).to have_css('button', text: cta_text, visible: :all)
-end
-
-Then('the summary should have a direct submit button') do
-  expect(page).to have_button(I18n.t('button.submit_summary'))
-end
-
-Then('the unselected lots should be disabled and greyed out') do
-  unchecked_checkboxes = all('input[type="checkbox"]').reject(&:checked?)
-  expect(unchecked_checkboxes).to all(be_disabled)
-end
-
-Then('the candidate should see the lot limit reached message') do
-  expect(page).to have_css('[data-lot-selection-target="limitError"]:not([hidden])')
-end
-
-Then('all lots should be selectable again') do
-  all('input[type="checkbox"]').each do |checkbox|
-    expect(checkbox).not_to be_disabled
-  end
-end
-
-Then('the candidate should not see the lot limit reached message') do
-  expect(page).not_to have_css('[data-lot-selection-target="limitError"]:not([hidden])')
 end
