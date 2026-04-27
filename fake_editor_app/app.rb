@@ -493,7 +493,8 @@ class FakeEditorApp < Sinatra::Base
     return 'Veuillez remplir le SIRET de l\'organisation.' if market_data[:siret].to_s.strip.empty?
     return 'Le SIRET doit contenir exactement 14 chiffres.' unless market_data[:siret].to_s.match?(/\A\d{14}\z/)
     return 'Veuillez sélectionner une typologie.' if market_data[:market_type_codes].to_a.empty?
-    return error if (error = invalid_cpv_error(market_data[:lots]))
+    cpv_error = invalid_cpv_error(market_data[:lots])
+    return cpv_error if cpv_error
 
     nil
   end
