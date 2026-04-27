@@ -308,7 +308,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    pagy (43.5.1)
+    pagy (43.5.3)
       json
       uri
       yaml
