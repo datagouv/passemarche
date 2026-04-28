@@ -1,7 +1,7 @@
 <div class="<%= input_group_css_class %>">
   <% label_html = capture do %>
     <span style="display: inline;">
-      <%= field_label %>&nbsp;<span style="color: #ce0500;">*</span><% if auto? || manual_after_api_failure? %>&nbsp;<%= render SourceBadgeComponent.new(market_attribute_response: market_attribute_response) %><% end %>
+      <%= field_label %>&nbsp;<span style="color: #ce0500;">*</span><% if auto? || manual_after_api_failure? %>&nbsp;<%= render source_badge_component %><% end %>
     </span>
   <% end %>
   <%= form.label :text, label_html.html_safe, class: "fr-label" %>

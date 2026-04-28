@@ -43,21 +43,24 @@ export default class extends Controller {
 
   expand() {
     this.buttonTarget.setAttribute("aria-expanded", "true")
+    this.contentTarget.style.setProperty("--collapse-max-height", "none")
     this.contentTarget.classList.add("fr-collapse--expanded")
   }
 
   collapse() {
     this.buttonTarget.setAttribute("aria-expanded", "false")
+    this.contentTarget.style.removeProperty("--collapse-max-height")
     this.contentTarget.classList.remove("fr-collapse--expanded")
   }
 
-  // Sync visual state with aria-expanded attribute on connect
   syncState() {
     const isExpanded = this.buttonTarget.getAttribute("aria-expanded") === "true"
 
     if (isExpanded) {
+      this.contentTarget.style.setProperty("--collapse-max-height", "none")
       this.contentTarget.classList.add("fr-collapse--expanded")
     } else {
+      this.contentTarget.style.removeProperty("--collapse-max-height")
       this.contentTarget.classList.remove("fr-collapse--expanded")
     }
   }

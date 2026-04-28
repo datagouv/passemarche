@@ -12,6 +12,8 @@
     presenter = MarketApplicationPresenter.new(market_application)
   %>
 
+  <%= render 'shared/pdf_environment_indicator' %>
+
   <!-- PDF Header (First page only) -->
   <div class="pdf-page-header">
     <div class="pdf-page-header-content">
@@ -30,6 +32,10 @@
       </div>
     </div>
   </div>
+
+  <% if presenter.lots_saved? %>
+    <%= render 'shared/application_lots_summary', presenter: presenter %>
+  <% end %>
 
   <!-- Application Summary Content (Same as web summary page) -->
   <%= render 'shared/application_summary_content',

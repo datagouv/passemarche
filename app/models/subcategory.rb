@@ -8,6 +8,8 @@ class Subcategory < ApplicationRecord
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :buyer_label, :candidate_label, presence: true
 
+  before_validation :set_default_position, on: :create
+
   scope :active, -> { where(deleted_at: nil) }
   scope :ordered, -> { order(:position) }
 
@@ -17,5 +19,11 @@ class Subcategory < ApplicationRecord
 
   def active?
     deleted_at.nil?
+  end
+
+  private
+
+  def set_default_position
+    self.position ||= self.class.maximum(:position).to_i + 1
   end
 end

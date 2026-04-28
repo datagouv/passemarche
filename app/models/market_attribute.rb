@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class MarketAttribute < ApplicationRecord
+  has_paper_trail on: %i[create update],
+    ignore: %i[position updated_at created_at]
+
   include UniqueAssociationValidator
+
+  attr_accessor :configuration_mode
 
   CATEGORY_TABS = %w[
     identite_entreprise
@@ -18,6 +23,9 @@ class MarketAttribute < ApplicationRecord
 
   validates :key, presence: true, uniqueness: true
   validates :category_key, :subcategory_key, presence: true
+  validates :input_type, presence: true
+  validate :input_type_has_response_mapping
+  validates :api_name, :api_key, presence: true, if: :from_api?
   validates_uniqueness_of_association :market_types, :public_markets
 
   enum :input_type, {
@@ -71,5 +79,30 @@ class MarketAttribute < ApplicationRecord
 
   def archived?
     deleted_at.present?
+  end
+
+  def resolved_buyer_name
+    buyer_name.presence || key.humanize
+  end
+
+  def resolved_buyer_description
+    buyer_description.presence
+  end
+
+  def resolved_candidate_name
+    candidate_name.presence || key.humanize
+  end
+
+  def resolved_candidate_description
+    candidate_description.presence
+  end
+
+  private
+
+  def input_type_has_response_mapping
+    return if input_type.blank?
+    return if MarketAttributeResponse::INPUT_TYPE_MAP.key?(input_type)
+
+    errors.add(:input_type, :invalid_mapping)
   end
 end

@@ -1,0 +1,18 @@
+<div class="fr-table fr-table--bordered">
+  <table>
+    <thead>
+      <tr>
+        <th><%= t('admin.audit_logs.show.field') %></th>
+        <th><%= t('admin.audit_logs.show.value') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% changes.each do |attr_name, (_, value)| %>
+        <tr>
+          <td class="fr-text--bold"><%= human_attribute_label(attr_name) %></td>
+          <td><%= format_change_value(value) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -155,7 +155,7 @@ RSpec.describe ApiFetchable do
     let(:job) { dummy_job_class.new }
     let(:result) { instance_double('Interactor::Context', success?: false) }
     let(:market_attribute) do
-      create(:market_attribute, :text_input, api_name: 'dummy_api').tap do |attr|
+      create(:market_attribute, :text_input, api_name: 'dummy_api', api_key: 'dummy_key').tap do |attr|
         attr.public_markets << public_market
       end
     end

@@ -1,0 +1,34 @@
+<%= form_tag admin_audit_logs_path, method: :get, class: "fr-mb-3w" do %>
+  <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--bottom">
+    <div class="fr-col-12 fr-col-md-3">
+      <div class="fr-input-group">
+        <%= label_tag :query, t('admin.audit_logs.filters.search_placeholder'), class: "fr-label" %>
+        <%= text_field_tag :query, @filter_params[:query], class: "fr-input", placeholder: t('admin.audit_logs.filters.search_placeholder') %>
+      </div>
+    </div>
+    <div class="fr-col-12 fr-col-md-2">
+      <div class="fr-input-group">
+        <%= label_tag :date_from, t('admin.audit_logs.filters.date_from'), class: "fr-label" %>
+        <%= date_field_tag :date_from, @filter_params[:date_from], class: "fr-input" %>
+      </div>
+    </div>
+    <div class="fr-col-12 fr-col-md-2">
+      <div class="fr-input-group">
+        <%= label_tag :date_to, t('admin.audit_logs.filters.date_to'), class: "fr-label" %>
+        <%= date_field_tag :date_to, @filter_params[:date_to], class: "fr-input" %>
+      </div>
+    </div>
+    <div class="fr-col-12 fr-col-md-3">
+      <div class="fr-select-group">
+        <%= label_tag :admin_user_id, t('admin.audit_logs.filters.user'), class: "fr-label" %>
+        <%= select_tag :admin_user_id,
+              options_from_collection_for_select(@admin_users, :id, :email, @filter_params[:admin_user_id]),
+              include_blank: t('admin.audit_logs.filters.all_users'),
+              class: "fr-select" %>
+      </div>
+    </div>
+    <div class="fr-col-12 fr-col-md-2">
+      <%= submit_tag t('admin.audit_logs.filters.submit'), class: "fr-btn" %>
+    </div>
+  </div>
+<% end %>

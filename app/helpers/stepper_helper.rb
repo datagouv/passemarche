@@ -116,16 +116,13 @@ module StepperHelper
   end
 
   def resolve_step_title(step, i18n_scope)
-    if i18n_scope.start_with?('buyer')
-      t("buyer.public_markets.steps.#{step}")
-    else
-      category = Category.find_by(key: step.to_s)
-      return category.candidate_label if category&.candidate_label.present?
+    role = i18n_scope.start_with?('buyer') ? :buyer : :candidate
+    category = Category.find_by(key: step.to_s)
+    label = category&.public_send(:"#{role}_label")
+    return label if label.present?
 
-      category_key = "form_fields.#{i18n_scope}.categories.#{step}"
-      fallback_key = "candidate.market_applications.steps.#{step}"
-      t(category_key, default: t(fallback_key, default: step.to_s.humanize))
-    end
+    fallback_scope = role == :buyer ? 'buyer.public_markets' : 'candidate.market_applications'
+    t("#{fallback_scope}.steps.#{step}", default: step.to_s.humanize)
   end
 
   def resolve_next_step_title(current_step, steps, i18n_scope)

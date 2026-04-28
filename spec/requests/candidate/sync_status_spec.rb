@@ -7,6 +7,9 @@ RSpec.describe 'Candidate::SyncStatus', type: :request do
   let(:redirect_url) { nil }
   let(:public_market) { create(:public_market, :completed, editor:, sync_status: 'sync_completed') }
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
+  let(:user) { create(:user) }
+
+  before { sign_in_as_candidate(user, market_application) }
 
   describe 'GET /candidate/market_application/:identifier/sync_status' do
     let(:sync_status_path) { candidate_sync_status_path(market_application.identifier) }

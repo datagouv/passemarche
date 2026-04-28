@@ -5,17 +5,14 @@ class SocleDeBasePresenter
     @market_attribute = market_attribute
   end
 
-  def buyer_name
-    I18n.t("form_fields.buyer.fields.#{key}.name", default: key.humanize)
-  end
+  delegate :resolved_buyer_name, :resolved_buyer_description,
+    :resolved_candidate_name, :resolved_candidate_description,
+    to: :@market_attribute
 
-  def candidate_name
-    I18n.t("form_fields.candidate.fields.#{key}.name", default: key.humanize)
-  end
-
-  def candidate_description
-    I18n.t("form_fields.candidate.fields.#{key}.description", default: nil)
-  end
+  alias buyer_name resolved_buyer_name
+  alias buyer_description resolved_buyer_description
+  alias candidate_name resolved_candidate_name
+  alias candidate_description resolved_candidate_description
 
   def buyer_category_label
     subcategory&.category&.buyer_label || category_key.humanize
@@ -56,7 +53,8 @@ class SocleDeBasePresenter
   MARKET_TYPE_BADGES = [
     { letter: 'T', code: 'works' },
     { letter: 'F', code: 'supplies' },
-    { letter: 'S', code: 'services' }
+    { letter: 'S', code: 'services' },
+    { letter: 'D', code: 'defense' }
   ].freeze
 
   def market_type_badges
@@ -67,5 +65,10 @@ class SocleDeBasePresenter
     end
   end
 
-  delegate :key, :category_key, :subcategory_key, :subcategory, :mandatory?, :from_api?, :api_name, to: :@market_attribute
+  def input_type_label
+    @market_attribute.input_type.humanize
+  end
+
+  delegate :key, :category_key, :subcategory_key, :subcategory, :mandatory?, :from_api?, :api_name, :api_key,
+    :market_types, to: :@market_attribute
 end

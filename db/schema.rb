@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,6 +82,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
     t.index ["webhook_secret"], name: "index_editors_on_webhook_secret", unique: true, where: "(webhook_secret IS NOT NULL)"
   end
 
+  create_table "lots", force: :cascade do |t|
+    t.string "cpv_code"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.bigint "public_market_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_lots_on_position"
+    t.index ["public_market_id"], name: "index_lots_on_public_market_id"
+  end
+
+  create_table "market_application_lots", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "lot_id", null: false
+    t.bigint "market_application_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lot_id"], name: "index_market_application_lots_on_lot_id"
+    t.index ["market_application_id", "lot_id"], name: "index_market_application_lots_unique", unique: true
+    t.index ["market_application_id"], name: "index_market_application_lots_on_market_application_id"
+  end
+
   create_table "market_applications", force: :cascade do |t|
     t.jsonb "api_fetch_status", default: {}, null: false
     t.boolean "attests_no_exclusion_motifs", default: false, null: false
@@ -93,15 +114,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
     t.string "siret", limit: 14
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
     t.index ["provider_user_id"], name: "index_market_applications_on_provider_user_id"
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"
     t.index ["siret"], name: "index_market_applications_on_siret"
     t.index ["sync_status"], name: "index_market_applications_on_sync_status"
+    t.index ["user_id"], name: "index_market_applications_on_user_id"
   end
 
   create_table "market_attribute_responses", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "hidden", default: false
     t.bigint "market_application_id", null: false
     t.bigint "market_attribute_id", null: false
     t.integer "source", default: 0, null: false
@@ -116,6 +140,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
   create_table "market_attributes", force: :cascade do |t|
     t.string "api_key"
     t.string "api_name"
+    t.text "buyer_description"
+    t.string "buyer_name"
+    t.text "candidate_description"
+    t.string "candidate_name"
     t.string "category_key", null: false
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
@@ -207,7 +235,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
     t.datetime "deadline"
     t.bigint "editor_id", null: false
     t.string "identifier", null: false
-    t.string "lot_name"
+    t.integer "lot_limit"
     t.text "market_type_codes", default: [], array: true
     t.string "name"
     t.string "provider_user_id"
@@ -219,6 +247,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
     t.index ["provider_user_id"], name: "index_public_markets_on_provider_user_id"
     t.index ["siret"], name: "index_public_markets_on_siret"
     t.index ["sync_status"], name: "index_public_markets_on_sync_status"
+  end
+
+  create_table "solid_cache_entries", force: :cascade do |t|
+    t.integer "byte_size", null: false
+    t.datetime "created_at", null: false
+    t.binary "key", null: false
+    t.bigint "key_hash", null: false
+    t.binary "value", null: false
+    t.index ["byte_size"], name: "index_solid_cache_entries_on_byte_size"
+    t.index ["key_hash", "byte_size"], name: "index_solid_cache_entries_on_key_hash_and_byte_size"
+    t.index ["key_hash"], name: "index_solid_cache_entries_on_key_hash", unique: true
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
@@ -357,9 +396,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_163210) do
     t.index ["position"], name: "index_subcategories_on_position"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "authentication_token_sent_at"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.datetime "created_at"
+    t.string "event", null: false
+    t.bigint "item_id", null: false
+    t.string "item_type", null: false
+    t.text "object"
+    t.text "object_changes"
+    t.bigint "whodunnit"
+    t.index ["created_at"], name: "index_versions_on_created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_versions_on_whodunnit"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "lots", "public_markets"
+  add_foreign_key "market_application_lots", "lots"
+  add_foreign_key "market_application_lots", "market_applications"
   add_foreign_key "market_applications", "public_markets"
+  add_foreign_key "market_applications", "users"
   add_foreign_key "market_attribute_responses", "market_applications"
   add_foreign_key "market_attribute_responses", "market_attributes"
   add_foreign_key "market_attributes", "subcategories"

@@ -8,7 +8,7 @@ RSpec.describe FetchFntpDataJob, type: :job do
   let(:market_application) { create(:market_application, public_market:, siret:, api_fetch_status: {}) }
 
   let!(:fntp_attribute) do
-    create(:market_attribute, api_name: 'fntp').tap do |attr|
+    create(:market_attribute, api_name: 'fntp', api_key: 'fntp').tap do |attr|
       attr.public_markets << public_market
     end
   end

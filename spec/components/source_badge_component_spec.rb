@@ -7,129 +7,106 @@ RSpec.describe SourceBadgeComponent, type: :component do
 
   describe '#render?' do
     context 'with auto source' do
-      it 'returns true' do
+      it 'returns true regardless of context' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :auto, value: { 'text' => 'Auto' })
-        component = described_class.new(market_attribute_response: response)
 
-        expect(component.render?).to be true
+        expect(described_class.new(market_attribute_response: response).render?).to be true
+        expect(described_class.new(market_attribute_response: response, context: :buyer).render?).to be true
+        expect(described_class.new(market_attribute_response: response, context: :web).render?).to be true
+        expect(described_class.new(market_attribute_response: response, context: :pdf).render?).to be true
       end
     end
 
     context 'with manual_after_api_failure source' do
-      it 'returns true' do
+      it 'returns true only in buyer context' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :manual_after_api_failure, value: { 'text' => 'Test' })
-        component = described_class.new(market_attribute_response: response)
 
-        expect(component.render?).to be true
+        expect(described_class.new(market_attribute_response: response, context: :buyer).render?).to be true
+        expect(described_class.new(market_attribute_response: response, context: :web).render?).to be false
+        expect(described_class.new(market_attribute_response: response, context: :pdf).render?).to be false
+        expect(described_class.new(market_attribute_response: response).render?).to be false
       end
     end
 
     context 'with manual source' do
-      it 'returns false' do
+      it 'returns true only in buyer context' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :manual, value: { 'text' => 'Test' })
-        component = described_class.new(market_attribute_response: response)
 
-        expect(component.render?).to be false
+        expect(described_class.new(market_attribute_response: response, context: :buyer).render?).to be true
+        expect(described_class.new(market_attribute_response: response, context: :web).render?).to be false
+        expect(described_class.new(market_attribute_response: response, context: :pdf).render?).to be false
+        expect(described_class.new(market_attribute_response: response).render?).to be false
       end
     end
 
     context 'with explicit source parameter' do
-      it 'returns true when source is :auto' do
-        component = described_class.new(source: :auto)
-
-        expect(component.render?).to be true
+      it 'returns true for :auto regardless of context' do
+        expect(described_class.new(source: :auto).render?).to be true
+        expect(described_class.new(source: :auto, context: :buyer).render?).to be true
+        expect(described_class.new(source: :auto, context: :web).render?).to be true
       end
 
-      it 'returns true when source is :manual_after_api_failure' do
-        component = described_class.new(source: :manual_after_api_failure)
+      it 'returns true for :manual_after_api_failure only in buyer context' do
+        expect(described_class.new(source: :manual_after_api_failure, context: :buyer).render?).to be true
+        expect(described_class.new(source: :manual_after_api_failure, context: :web).render?).to be false
+        expect(described_class.new(source: :manual_after_api_failure).render?).to be false
+      end
 
-        expect(component.render?).to be true
+      it 'returns true for :manual only in buyer context' do
+        expect(described_class.new(source: :manual, context: :buyer).render?).to be true
+        expect(described_class.new(source: :manual, context: :web).render?).to be false
+        expect(described_class.new(source: :manual).render?).to be false
       end
 
       it 'returns false when source is nil' do
-        component = described_class.new(source: nil)
-
-        expect(component.render?).to be false
+        expect(described_class.new(source: nil).render?).to be false
       end
 
       it 'returns false without any parameters' do
-        component = described_class.new
-
-        expect(component.render?).to be false
+        expect(described_class.new.render?).to be false
       end
     end
   end
 
   describe '#badge_text' do
     context 'when auto source' do
-      it 'returns i18n translation for data_from_api' do
+      it 'returns récupéré automatiquement' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :auto, value: { 'text' => 'Auto' })
         component = described_class.new(market_attribute_response: response)
 
-        allow(I18n).to receive(:t).with('candidate.market_applications.badges.data_from_api')
-          .and_return('Données API')
-
-        expect(component.badge_text).to eq('Données API')
+        expect(component.badge_text).to eq('Récupéré automatiquement')
       end
     end
 
-    context 'when manual_after_api_failure source' do
-      it 'returns i18n translation for declared_on_honor' do
+    context 'when manual_after_api_failure source in buyer context' do
+      it 'returns déclaré par le candidat' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :manual_after_api_failure, value: { 'text' => 'Test' })
-        component = described_class.new(market_attribute_response: response)
+        component = described_class.new(market_attribute_response: response, context: :buyer)
 
-        allow(I18n).to receive(:t).with('candidate.market_applications.badges.declared_on_honor')
-          .and_return('Déclaré sur l\'honneur')
+        expect(component.badge_text).to eq('Déclaré par le candidat')
+      end
+    end
 
-        expect(component.badge_text).to eq('Déclaré sur l\'honneur')
+    context 'when manual source in buyer context' do
+      it 'returns déclaré par le candidat' do
+        response = create(:market_attribute_response_text_input, market_attribute:, source: :manual, value: { 'text' => 'Test' })
+        component = described_class.new(market_attribute_response: response, context: :buyer)
+
+        expect(component.badge_text).to eq('Déclaré par le candidat')
       end
     end
 
     context 'with explicit source parameter' do
-      it 'returns i18n translation for data_from_api when source is :auto' do
-        component = described_class.new(source: :auto)
-
-        allow(I18n).to receive(:t).with('candidate.market_applications.badges.data_from_api')
-          .and_return('Données API')
-
-        expect(component.badge_text).to eq('Données API')
+      it 'returns récupéré automatiquement when source is :auto' do
+        expect(described_class.new(source: :auto).badge_text).to eq('Récupéré automatiquement')
       end
 
-      it 'returns i18n translation for declared_on_honor when source is :manual_after_api_failure' do
-        component = described_class.new(source: :manual_after_api_failure)
-
-        allow(I18n).to receive(:t).with('candidate.market_applications.badges.declared_on_honor')
-          .and_return('Déclaré sur l\'honneur')
-
-        expect(component.badge_text).to eq('Déclaré sur l\'honneur')
-      end
-    end
-
-    context 'with buyer context' do
-      it 'returns buyer translation for data_from_api when source is :auto' do
-        component = described_class.new(source: :auto, context: :buyer)
-
-        expect(component.badge_text).to eq('De source authentique')
+      it 'returns déclaré par le candidat when source is :manual_after_api_failure in buyer context' do
+        expect(described_class.new(source: :manual_after_api_failure, context: :buyer).badge_text).to eq('Déclaré par le candidat')
       end
 
-      it 'returns buyer translation for declared_on_honor when source is :manual_after_api_failure' do
-        component = described_class.new(source: :manual_after_api_failure, context: :buyer)
-
-        expect(component.badge_text).to eq('Déclarée sur l\'honneur')
-      end
-    end
-
-    context 'with candidate context (default)' do
-      it 'returns candidate translation for data_from_api when source is :auto' do
-        component = described_class.new(source: :auto)
-
-        expect(component.badge_text).to eq('Récupéré automatiquement')
-      end
-
-      it 'returns candidate translation for declared_on_honor when source is :manual_after_api_failure' do
-        component = described_class.new(source: :manual_after_api_failure)
-
-        expect(component.badge_text).to eq('Déclaré sur l\'honneur')
+      it 'returns déclaré par le candidat when source is :manual in buyer context' do
+        expect(described_class.new(source: :manual, context: :buyer).badge_text).to eq('Déclaré par le candidat')
       end
     end
   end
@@ -144,24 +121,19 @@ RSpec.describe SourceBadgeComponent, type: :component do
       end
     end
 
-    context 'when manual_after_api_failure source' do
+    context 'when manual_after_api_failure source in buyer context' do
       it 'returns info badge classes' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :manual_after_api_failure, value: { 'text' => 'Test' })
-        component = described_class.new(market_attribute_response: response)
+        component = described_class.new(market_attribute_response: response, context: :buyer)
 
         expect(component.badge_css_class).to eq('fr-badge fr-badge--info fr-badge--sm')
       end
     end
 
-    context 'with explicit source parameter' do
-      it 'returns success badge classes when source is :auto' do
-        component = described_class.new(source: :auto)
-
-        expect(component.badge_css_class).to eq('fr-badge fr-badge--success fr-badge--sm')
-      end
-
-      it 'returns info badge classes when source is :manual_after_api_failure' do
-        component = described_class.new(source: :manual_after_api_failure)
+    context 'when manual source in buyer context' do
+      it 'returns info badge classes' do
+        response = create(:market_attribute_response_text_input, market_attribute:, source: :manual, value: { 'text' => 'Test' })
+        component = described_class.new(market_attribute_response: response, context: :buyer)
 
         expect(component.badge_css_class).to eq('fr-badge fr-badge--info fr-badge--sm')
       end
@@ -170,69 +142,53 @@ RSpec.describe SourceBadgeComponent, type: :component do
 
   describe 'rendered output' do
     context 'when auto source' do
-      it 'renders badge with success class and text' do
+      it 'renders green badge in all contexts' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :auto, value: { 'text' => 'Auto' })
-        component = described_class.new(market_attribute_response: response)
 
-        render_inline(component)
+        render_inline(described_class.new(market_attribute_response: response, context: :buyer))
+        expect(page).to have_css('span.fr-badge.fr-badge--success.fr-badge--sm')
 
+        render_inline(described_class.new(market_attribute_response: response, context: :web))
         expect(page).to have_css('span.fr-badge.fr-badge--success.fr-badge--sm')
       end
 
       it 'does not include line break' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :auto, value: { 'text' => 'Auto' })
-        component = described_class.new(market_attribute_response: response)
-
-        render_inline(component)
-
+        render_inline(described_class.new(market_attribute_response: response))
         expect(rendered_content).not_to include('<br>')
       end
     end
 
     context 'when manual_after_api_failure source' do
-      it 'renders badge with info class' do
+      it 'renders blue badge only in buyer context' do
         response = create(:market_attribute_response_text_input, market_attribute:, source: :manual_after_api_failure, value: { 'text' => 'Test' })
-        component = described_class.new(market_attribute_response: response)
 
-        render_inline(component)
-
+        render_inline(described_class.new(market_attribute_response: response, context: :buyer))
         expect(page).to have_css('span.fr-badge.fr-badge--info.fr-badge--sm')
-      end
-    end
 
-    context 'when manual source' do
-      it 'does not render anything' do
-        response = create(:market_attribute_response_text_input, market_attribute:, source: :manual, value: { 'text' => 'Test' })
-        component = described_class.new(market_attribute_response: response)
+        render_inline(described_class.new(market_attribute_response: response, context: :web))
+        expect(rendered_content).to be_blank
 
-        render_inline(component)
-
+        render_inline(described_class.new(market_attribute_response: response, context: :pdf))
         expect(rendered_content).to be_blank
       end
     end
 
-    context 'with explicit source parameter' do
-      it 'renders badge with success class when source is :auto' do
-        component = described_class.new(source: :auto)
+    context 'when manual source' do
+      it 'renders blue badge only in buyer context' do
+        response = create(:market_attribute_response_text_input, market_attribute:, source: :manual, value: { 'text' => 'Test' })
 
-        render_inline(component)
-
-        expect(page).to have_css('span.fr-badge.fr-badge--success.fr-badge--sm')
-      end
-
-      it 'renders badge with info class when source is :manual_after_api_failure' do
-        component = described_class.new(source: :manual_after_api_failure)
-
-        render_inline(component)
-
+        render_inline(described_class.new(market_attribute_response: response, context: :buyer))
         expect(page).to have_css('span.fr-badge.fr-badge--info.fr-badge--sm')
+
+        render_inline(described_class.new(market_attribute_response: response, context: :web))
+        expect(rendered_content).to be_blank
       end
+    end
 
-      it 'does not render anything without parameters' do
-        component = described_class.new
-
-        render_inline(component)
-
+    context 'without parameters' do
+      it 'does not render' do
+        render_inline(described_class.new)
         expect(rendered_content).to be_blank
       end
     end

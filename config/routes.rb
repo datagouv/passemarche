@@ -9,25 +9,31 @@ Rails.application.routes.draw do
     resource :dashboard, only: [:show] do
       get :export, on: :member
     end
-    resources :socle_de_base, only: %i[index create] do
+    resources :socle_de_base, only: %i[index new create show edit update] do
       collection do
         patch :reorder
+        post :import
+        post :preview_import
+        get :export
       end
       member do
         patch :archive
       end
     end
-    resources :categories, only: %i[index edit update] do
+    resources :categories, only: %i[index new create edit update] do
       collection do
         patch :reorder
       end
     end
-    resources :subcategories, only: %i[edit update] do
+    resources :subcategories, only: %i[new create edit update] do
       collection do
         patch :reorder
       end
     end
-    mount MissionControl::Jobs::Engine, at: '/jobs'
+    resources :audit_logs, only: %i[index show], path: 'historique'
+    constraints(->(request) { request.env['warden'].user(:admin_user)&.admin? }) do
+      mount MissionControl::Jobs::Engine, at: '/jobs'
+    end
     root 'editors#index'
   end
   devise_for :admin_users, skip: %i[registrations passwords confirmations unlocks]
@@ -63,8 +69,17 @@ Rails.application.routes.draw do
   end
 
   namespace :candidate do
+    resource :sessions, only: %i[new create destroy] do
+      get :verify
+      get :sent
+    end
+
     resources :market_applications, param: :identifier, only: [] do
       member do
+        get 'company_identification', to: 'company_identifications#show', as: :company_identification
+        patch 'company_identification', to: 'company_identifications#update'
+        get 'lots', to: 'lot_selections#show', as: :lot_selection
+        patch 'lots', to: 'lot_selections#update'
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'
         patch ':id', to: 'market_applications#update'

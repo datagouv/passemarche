@@ -9,11 +9,10 @@
 <%= content_tag html_tag, class: "#{wrapper_classes} #{content_classes}" do %>
   <div class="field-layout-container">
     <div class="field-layout-content">
-      <strong><%= t("form_fields.candidate.fields.#{field_key}.name") %></strong>
-      <% description_key = "form_fields.candidate.fields.#{field_key}.description" %>
-      <% if I18n.exists?(description_key) %>
+      <strong><%= field.resolved_candidate_name %></strong>
+      <% if (description = field.resolved_candidate_description) %>
         <br>
-        <span class="fr-text--sm fr-text--mention-grey"><%= t(description_key) %></span>
+        <span class="fr-text--sm fr-text--mention-grey"><%= description %></span>
       <% end %>
     </div>
   </div>

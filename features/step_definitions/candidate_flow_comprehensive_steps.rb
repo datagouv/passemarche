@@ -91,6 +91,7 @@ Given('a candidate starts a comprehensive application') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 
   # Configure API stubs for comprehensive tests
   stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v3/insee/sirene/etablissements/73282932000074.*})
@@ -442,6 +443,7 @@ Given('a market with checkbox_with_document fields exists') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 end
 
 When('I visit the checkbox with document step') do
@@ -537,7 +539,7 @@ end
 
 When('I complete the application on summary step') do
   expect(page).to have_current_path(/summary/)
-  click_button 'Transmettre ma candidature'
+  click_button I18n.t('button.submit_summary')
 end
 
 Then('the application status should be {string}') do |_expected_status|

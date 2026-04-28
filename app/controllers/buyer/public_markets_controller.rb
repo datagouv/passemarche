@@ -12,7 +12,7 @@ module Buyer
 
     def show
       case step
-      when :setup, :summary
+      when :setup, :summary, :lot_config
         render_wizard
       else
         @current_category = step.to_s
@@ -24,14 +24,17 @@ module Buyer
     end
 
     def update
-      result = MarketConfigurationService.call(@public_market, step, step_params)
+      result = Buyer::PublicMarketWizardService.call(@public_market, step, step_params)
 
       if step == :summary
         redirect_to buyer_sync_status_path(@public_market.identifier)
       else
         jump_to(result[:next_step]) if result.is_a?(Hash) && result[:next_step]
+        @public_market.reload
         render_wizard @public_market
       end
+    rescue ActiveRecord::RecordInvalid
+      render_wizard
     end
 
     def retry_sync
@@ -57,6 +60,11 @@ module Buyer
       case step
       when :setup, :summary
         params[:public_market] || {}
+      when :lot_config
+        {
+          lot_limit_enabled: params[:lot_limit_enabled],
+          lot_limit: params[:lot_limit]
+        }
       else
         # Category step - collect selected optional fields
         { selected_attribute_keys: params[:selected_attribute_keys] || [] }

@@ -4,7 +4,7 @@ class MarketApplicationPresenter
   include SidemenuHelper
   include MarketAttributeGrouping
 
-  INITIAL_WIZARD_STEPS = %i[company_identification api_data_recovery_status market_information].freeze
+  INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
   ATTESTATION_MOTIFS_EXCLUSION_STEP = :attestation_motifs_exclusion
@@ -63,11 +63,42 @@ class MarketApplicationPresenter
     )
   end
 
+  def response_component_class(response)
+    return nil if response&.type.blank?
+
+    "MarketAttributeResponse::#{response.type}Component".constantize
+  rescue NameError
+    nil
+  end
+
+  # === LOTS METHODS ===
+
+  def selected_lots
+    @selected_lots ||= @market_application.lots.ordered.to_a
+  end
+
+  def public_market_lots
+    @public_market_lots ||= @market_application.public_market.lots.ordered.to_a
+  end
+
+  def public_market_has_lots?
+    public_market_lots.any?
+  end
+
+  def market_type_labels
+    @market_type_labels ||= @market_application.public_market.market_type_codes
+      .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
+      .join(', ')
+  end
+
+  # === RESPONSE METHODS (with hidden filtering) ===
+
   def responses_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
     market_attributes = market_attributes_for_subcategory(category_key, subcategory_key)
     market_attributes.map { |attr| market_attribute_response_for(attr) }
+      .reject(&:hidden?)
   end
 
   def responses_for_category(category_key)
@@ -76,11 +107,16 @@ class MarketApplicationPresenter
     all_market_attributes
       .select { |attr| attr.category_key == category_key.to_s }
       .map { |attr| market_attribute_response_for(attr) }
+      .reject(&:hidden?)
   end
 
   def responses_grouped_by_subcategory(category_key)
+    return {} if category_key.blank?
+
     responses_for_category(category_key).group_by { |r| r.market_attribute.subcategory_key }
   end
+
+  # === WIZARD AND NAVIGATION ===
 
   def stepper_steps
     steps = category_keys.map(&:to_sym)
@@ -89,9 +125,44 @@ class MarketApplicationPresenter
   end
 
   def wizard_steps
-    all_steps = (INITIAL_WIZARD_STEPS + subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
+    all_steps = (INITIAL_WIZARD_STEPS + visible_subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
     inject_attestation_motifs_exclusion_step(all_steps)
   end
+
+  def visible_subcategory_keys
+    @visible_subcategory_keys ||= visible_market_attributes
+      .filter_map(&:subcategory_key)
+      .uniq
+  end
+
+  # === LOT SELECTION ===
+
+  def lots_saved?
+    selected_lots.any?
+  end
+
+  def cta_translation_key
+    lots_saved? ? 'candidate.lot_selection.modify' : 'candidate.lot_selection.prepare'
+  end
+
+  # === PROGRESS METHODS ===
+
+  def total_fields_count
+    visible_market_attributes.size
+  end
+
+  def filled_fields_count
+    visible_market_attributes.count do |attr|
+      response = responses_by_attribute_id[attr.id]
+      response_has_data?(response)
+    end
+  end
+
+  def fields_complete?
+    total_fields_count.positive? && filled_fields_count == total_fields_count
+  end
+
+  # === VALIDATION METHODS ===
 
   def optional_market_attributes?
     @market_application.public_market.market_attributes.exists?(mandatory: false)
@@ -116,7 +187,7 @@ class MarketApplicationPresenter
     return false if response.nil? || response.new_record?
 
     has_documents = response.respond_to?(:documents) && response.documents.attached?
-    has_value = response.value.present?
+    has_value = response.value.any? { |_, v| v.present? }
 
     has_documents || has_value
   end
@@ -127,6 +198,16 @@ class MarketApplicationPresenter
 
   def all_market_attributes
     @all_market_attributes ||= @market_application.public_market.market_attributes.sort_by(&:position)
+  end
+
+  def hidden_attr_ids
+    @hidden_attr_ids ||= @market_application.market_attribute_responses
+      .where(hidden: true)
+      .pluck(:market_attribute_id)
+  end
+
+  def visible_market_attributes
+    @visible_market_attributes ||= all_market_attributes.reject { |attr| hidden_attr_ids.include?(attr.id) }
   end
 
   def organize_fields_by_category_and_subcategory(market_attributes)

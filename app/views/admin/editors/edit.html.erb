@@ -47,27 +47,31 @@
           </div>
 
           <div class="fr-fieldset__element">
-            <div class="fr-input-group" data-controller="webhook-secret-toggle">
+            <div class="fr-input-group">
               <label class="fr-label"><%= t('admin.editors.edit.client_secret') %></label>
-              <div style="position: relative;">
-                <input type="text"
-                       class="fr-input"
-                       value="<%= '•' * 64 %>"
-                       disabled
-                       readonly
-                       style="padding-right: 45px;"
-                       data-webhook-secret-toggle-target="field"
-                       data-webhook-secret-toggle-masked-value="<%= '•' * 64 %>"
-                       data-webhook-secret-toggle-real-value="<%= @editor.client_secret %>">
-                <button type="button"
-                        class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
-                        data-action="click->webhook-secret-toggle#toggle"
-                        data-webhook-secret-toggle-target="button"
-                        title="<%= t('admin.shared.show_hide_secret') %>"
-                        style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
-                  <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
-                </button>
-              </div>
+              <% if current_user_can_modify? %>
+                <div style="position: relative;" data-controller="webhook-secret-toggle">
+                  <input type="text"
+                         class="fr-input"
+                         value="<%= '•' * 64 %>"
+                         disabled
+                         readonly
+                         style="padding-right: 45px;"
+                         data-webhook-secret-toggle-target="field"
+                         data-webhook-secret-toggle-masked-value="<%= '•' * 64 %>"
+                         data-webhook-secret-toggle-real-value="<%= @editor.client_secret %>">
+                  <button type="button"
+                          class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                          data-action="click->webhook-secret-toggle#toggle"
+                          data-webhook-secret-toggle-target="button"
+                          title="<%= t('admin.shared.show_hide_secret') %>"
+                          style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
+                    <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
+                  </button>
+                </div>
+              <% else %>
+                <input type="text" class="fr-input" value="<%= '•' * 64 %>" disabled readonly>
+              <% end %>
             </div>
           </div>
         </fieldset>
@@ -121,26 +125,32 @@
               <%= form.label :webhook_secret, t('admin.editors.edit.webhook_secret'), class: "fr-label" %>
               <span class="fr-hint-text"><%= t('admin.editors.edit.webhook_secret_hint') %></span>
               <% if @editor.webhook_secret.present? %>
-                <div style="position: relative;" data-controller="webhook-secret-toggle">
-                  <%= form.text_field :webhook_secret,
-                      class: "fr-input",
-                      value: "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
-                      disabled: true,
-                      style: "padding-right: 45px;",
-                      data: {
-                        "webhook-secret-toggle-target": "field",
-                        "webhook-secret-toggle-masked-value": "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
-                        "webhook-secret-toggle-real-value": @editor.webhook_secret
-                      } %>
-                  <button type="button"
-                          class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
-                          data-action="click->webhook-secret-toggle#toggle"
-                          data-webhook-secret-toggle-target="button"
-                          title="<%= t('admin.shared.show_hide_secret') %>"
-                          style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
-                    <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
-                  </button>
-                </div>
+                <% if current_user_can_modify? %>
+                  <div style="position: relative;" data-controller="webhook-secret-toggle">
+                    <%= form.text_field :webhook_secret,
+                        class: "fr-input",
+                        value: "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+                        disabled: true,
+                        style: "padding-right: 45px;",
+                        data: {
+                          "webhook-secret-toggle-target": "field",
+                          "webhook-secret-toggle-masked-value": "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+                          "webhook-secret-toggle-real-value": @editor.webhook_secret
+                        } %>
+                    <button type="button"
+                            class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                            data-action="click->webhook-secret-toggle#toggle"
+                            data-webhook-secret-toggle-target="button"
+                            title="<%= t('admin.shared.show_hide_secret') %>"
+                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 2;">
+                      <span class="fr-icon-eye-line" data-webhook-secret-toggle-target="icon" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                <% else %>
+                  <input type="text" class="fr-input"
+                         value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                         disabled readonly>
+                <% end %>
               <% end %>
             </div>
 

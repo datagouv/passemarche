@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Candidate::Authentication
+
   private
 
   def set_no_cache_headers
@@ -16,5 +18,9 @@ class ApplicationController < ActionController::Base
     else
       super
     end
+  end
+
+  def after_sign_out_path_for(_resource)
+    new_admin_user_session_path
   end
 end

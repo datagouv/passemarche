@@ -7,7 +7,7 @@ RSpec.describe CreateMarketApplication, type: :interactor do
   let(:siret) { '73282932000074' }
 
   before do
-    allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_return(true)
   end
 
   describe '.call' do
@@ -48,8 +48,8 @@ RSpec.describe CreateMarketApplication, type: :interactor do
       let(:invalid_siret) { '12345678901234' }
 
       before do
-        allow(SiretValidationService).to receive(:call).with(public_market.siret).and_return(true)
-        allow(SiretValidationService).to receive(:call).with(invalid_siret).and_return(false)
+        allow(SiretValidator).to receive(:valid?).with(public_market.siret).and_return(true)
+        allow(SiretValidator).to receive(:valid?).with(invalid_siret).and_return(false)
       end
 
       subject { described_class.call(public_market:, siret: invalid_siret) }

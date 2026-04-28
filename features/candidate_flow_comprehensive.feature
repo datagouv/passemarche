@@ -66,7 +66,7 @@ Feature: Comprehensive Candidate Application Flow
 
     Then I should be on the "summary" step
     And I should see a summary of all my responses
-    When I click "Transmettre ma candidature"
+    When I click "Transmettre l'ensemble de mes candidatures"
     Then my application should be submitted successfully
 
   Scenario: Verify hidden type fields are present in all forms
@@ -194,7 +194,7 @@ Feature: Comprehensive Candidate Application Flow
 
   Scenario: File upload validation errors
     When I visit the "documents" step
-    And I attempt to upload an invalid file "document.txt"
+    And I attempt to upload an invalid file "document.exe"
     And I click "Suivant"
     Then I should see a file format validation error
     And I should remain on the "documents" step

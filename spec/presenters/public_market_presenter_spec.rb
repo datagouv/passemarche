@@ -132,6 +132,22 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       expect(category_steps).to all(be_a(Symbol))
       expect(category_steps.uniq).to eq(category_steps)
     end
+
+    context 'when the market has lots' do
+      before { create(:lot, public_market:) }
+
+      it 'includes :lot_config as the second step' do
+        steps = presenter.wizard_steps
+        expect(steps).to include(:lot_config)
+        expect(steps.index(:lot_config)).to eq(1)
+      end
+    end
+
+    context 'when the market has no lots' do
+      it 'does not include :lot_config' do
+        expect(presenter.wizard_steps).not_to include(:lot_config)
+      end
+    end
   end
 
   describe '#stepper_steps' do
@@ -150,6 +166,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
 
     it 'returns the parent category when given a subcategory key' do
       expect(presenter.parent_category_for('test_basic_information')).to eq('test_company_identity')
+    end
+
+    it 'returns nil for blank input' do
+      expect(presenter.parent_category_for(nil)).to be_nil
+      expect(presenter.parent_category_for('')).to be_nil
     end
   end
 
@@ -176,6 +197,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       result = presenter.mandatory_fields_for_category('test_economic_capacity')
       expect(result).to be_empty
     end
+
+    it 'returns empty hash for blank category' do
+      expect(presenter.mandatory_fields_for_category(nil)).to eq({})
+      expect(presenter.mandatory_fields_for_category('')).to eq({})
+    end
   end
 
   describe '#optional_fields_for_category' do
@@ -189,6 +215,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       result = presenter.optional_fields_for_category('test_company_identity')
       expect(result).to be_empty
     end
+
+    it 'returns empty hash for blank category' do
+      expect(presenter.optional_fields_for_category(nil)).to eq({})
+      expect(presenter.optional_fields_for_category('')).to eq({})
+    end
   end
 
   describe '#optional_fields_for_category?' do
@@ -198,6 +229,11 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
 
     it 'returns false when category has no optional fields' do
       expect(presenter.optional_fields_for_category?('test_company_identity')).to be false
+    end
+
+    it 'returns false for blank category' do
+      expect(presenter.optional_fields_for_category?(nil)).to be false
+      expect(presenter.optional_fields_for_category?('')).to be false
     end
   end
 

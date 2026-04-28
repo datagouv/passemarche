@@ -17,7 +17,7 @@ class MarketAttributeResponse::CheckboxWithDocumentComponent < MarketAttributeRe
   end
 
   def max_file_size
-    MarketAttributeResponse::CheckboxWithDocument::MAX_FILE_SIZE
+    Rails.configuration.file_upload.max_size
   end
 
   def naming_service

@@ -66,18 +66,35 @@
                   placeholder="Ex: Fourniture de matériel informatique">
               </div>
 
-              <!-- Lot Name (Optional) -->
-              <div class="fr-input-group">
-                <label class="fr-label" for="lot_name">
-                  Nom du lot (optionnel)
-                  <span class="fr-hint-text">Si votre marché est divisé en lots</span>
+              <!-- Lots (Optional) -->
+              <div class="fr-form-group fr-mb-3w">
+                <label class="fr-label">
+                  Lots (optionnel)
+                  <span class="fr-hint-text">Ajoutez un ou plusieurs lots si votre marché est alloti</span>
                 </label>
-                <input
-                  class="fr-input"
-                  type="text"
-                  id="lot_name"
-                  name="lot_name"
-                  placeholder="Ex: Lot 1 - Ordinateurs portables">
+                <div id="lots-container">
+                  <div class="lot-row fr-mb-1w" style="display:flex; gap:0.5rem; align-items:center;">
+                    <input
+                      class="fr-input"
+                      type="text"
+                      name="lots[][name]"
+                      placeholder="Ex: Lot 1 - Ordinateurs portables"
+                      style="flex:2; min-width:0;">
+                    <input
+                      class="fr-input"
+                      type="text"
+                      name="lots[][cpv_code]"
+                      placeholder="Ex: 30213100-6"
+                      style="flex:1; min-width:0;"
+                      title="Code CPV (format: 8 chiffres-tiret-1 chiffre, ex: 30213100-6)">
+                    <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="display:none; flex-shrink:0;">
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+                <button type="button" id="add-lot-btn" class="fr-btn fr-btn--tertiary fr-btn--sm fr-mt-1w">
+                  + Ajouter un lot
+                </button>
               </div>
 
               <!-- Deadline -->
@@ -120,32 +137,32 @@
                 <fieldset class="fr-fieldset" id="market-type-codes">
                   <legend class="fr-fieldset__legend fr-text--regular" id="market-type-codes-legend">
                     Typologie du marché
-                    <span class="fr-hint-text">Sélectionnez au moins une typologie</span>
+                    <span class="fr-hint-text">Sélectionnez un seul type — il s'applique à tous les lots</span>
                   </legend>
                   <div class="fr-fieldset__content">
-                    <div class="fr-checkbox-group">
-                      <input type="checkbox" id="type-works" name="market_type_codes[]" value="works">
+                    <div class="fr-radio-group">
+                      <input type="radio" id="type-works" name="market_type_codes[]" value="works">
                       <label class="fr-label" for="type-works">
                         Travaux
                         <span class="fr-hint-text">Marchés de travaux de construction, rénovation, etc.</span>
                       </label>
                     </div>
-                    <div class="fr-checkbox-group">
-                      <input type="checkbox" id="type-supplies" name="market_type_codes[]" value="supplies">
+                    <div class="fr-radio-group">
+                      <input type="radio" id="type-supplies" name="market_type_codes[]" value="supplies">
                       <label class="fr-label" for="type-supplies">
                         Fournitures
                         <span class="fr-hint-text">Marchés d'achat de biens et équipements</span>
                       </label>
                     </div>
-                    <div class="fr-checkbox-group">
-                      <input type="checkbox" id="type-services" name="market_type_codes[]" value="services">
+                    <div class="fr-radio-group">
+                      <input type="radio" id="type-services" name="market_type_codes[]" value="services">
                       <label class="fr-label" for="type-services">
                         Services
                         <span class="fr-hint-text">Marchés de prestations de services</span>
                       </label>
                     </div>
-                    <div class="fr-checkbox-group">
-                      <input type="checkbox" id="type-defense" name="market_type_codes[]" value="defense">
+                    <div class="fr-radio-group">
+                      <input type="radio" id="type-defense" name="market_type_codes[]" value="defense">
                       <label class="fr-label" for="type-defense">
                         Défense
                         <span class="fr-hint-text">Marchés de défense et de sécurité</span>
@@ -173,31 +190,42 @@
 
     <!-- Sidebar Help -->
     <div class="fr-col-12 fr-col-lg-4">
-      <div class="fr-callout fr-callout--blue-ecume">
-        <h3 class="fr-callout__title">
-          <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
-          À propos du processus
-        </h3>
-        <p class="fr-callout__text">
-          <strong>Étape 1 :</strong> Vous créez le marché avec les informations essentielles<br><br>
-          <strong>Étape 2 :</strong> Vous serez redirigé vers Passe Marché pour configurer les documents requis,
-          les critères de sélection, etc.<br><br>
-          <strong>Étape 3 :</strong> Une fois configuré, Passe Marché vous notifiera via webhook
-          et votre marché sera visible par les candidats.
-        </p>
-      </div>
-
-      <div class="fr-callout fr-mt-3w">
-        <h3 class="fr-callout__title">
-          <span class="fr-icon-lightbulb-line fr-icon--sm" aria-hidden="true"></span>
-          Conseils
-        </h3>
-        <ul class="fr-callout__text">
-          <li>Soyez précis dans l'intitulé du marché</li>
-          <li>Vérifiez bien la date limite</li>
-          <li>Choisissez la ou les typologies appropriées</li>
-        </ul>
-      </div>
+      <%= erb :'buyer/_market_form_help' %>
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    var container = document.getElementById('lots-container');
+    var addBtn = document.getElementById('add-lot-btn');
+    if (!container || !addBtn) return;
+
+    function updateRemoveButtons() {
+      var rows = container.querySelectorAll('.lot-row');
+      rows.forEach(function(row) {
+        row.querySelector('.remove-lot').style.display = rows.length > 1 ? 'inline-flex' : 'none';
+      });
+    }
+
+    addBtn.addEventListener('click', function() {
+      var n = container.querySelectorAll('.lot-row').length + 1;
+      var row = document.createElement('div');
+      row.className = 'lot-row fr-mb-1w';
+      row.style.cssText = 'display:flex; gap:0.5rem; align-items:center;';
+      row.innerHTML =
+        '<input class="fr-input" type="text" name="lots[][name]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:2; min-width:0;">' +
+        '<input class="fr-input" type="text" name="lots[][cpv_code]" placeholder="Ex: 30213100-6" style="flex:1; min-width:0;" title="Code CPV (format: 8 chiffres-tiret-1 chiffre, ex: 30213100-6)">' +
+        '<button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="flex-shrink:0;">Supprimer</button>';
+      container.appendChild(row);
+      updateRemoveButtons();
+    });
+
+    container.addEventListener('click', function(e) {
+      var removeBtn = e.target.closest('.remove-lot');
+      if (!removeBtn) return;
+      removeBtn.closest('.lot-row').remove();
+      updateRemoveButtons();
+    });
+  })();
+</script>

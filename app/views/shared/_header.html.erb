@@ -14,6 +14,9 @@
                   alt: t('header.logo_operator_alt'),
                   class: 'fr-responsive-img' %>
             </div>
+            <div class="fr-header__navbar">
+              <button data-fr-opened="false" aria-controls="modal-header-menu" title="Menu" type="button" id="button-header-menu" class="fr-btn--menu fr-btn">Menu</button>
+            </div>
           </div>
           <div class="fr-header__service">
             <%= link_to root_path, title: t('header.home_title') do %>
@@ -26,18 +29,49 @@
         </div>
         <div class="fr-header__tools">
           <div class="fr-header__tools-links">
-            <ul class="fr-links-group">
+            <ul class="fr-btns-group">
               <li>
                 <%= link_to t('header.navigation.candidate'), candidate_home_path,
-                    class: class_names("fr-link", "fr-link--active": current_page?(candidate_home_path)) %>
+                    class: class_names("fr-btn", "fr-btn--active": current_page?(candidate_home_path)) %>
               </li>
               <li>
                 <%= link_to t('header.navigation.buyer'), buyer_home_path,
-                    class: class_names("fr-link", "fr-link--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
+                    class: class_names("fr-btn", "fr-btn--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
               </li>
+              <% if admin_user_signed_in? %>
+                <li>
+                  <%= link_to t('admin.navigation.logout'), destroy_admin_user_session_path,
+                      data: { turbo_method: :delete },
+                      class: "fr-btn fr-icon-logout-box-r-line" %>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="fr-header__menu fr-modal" id="modal-header-menu" aria-labelledby="button-header-menu">
+    <div class="fr-container">
+      <button aria-controls="modal-header-menu" title="Fermer" type="button" class="fr-btn--close fr-btn">Fermer</button>
+      <div class="fr-header__menu-links">
+        <ul class="fr-btns-group">
+          <li>
+            <%= link_to t('header.navigation.candidate'), candidate_home_path,
+                class: class_names("fr-btn", "fr-btn--active": current_page?(candidate_home_path)) %>
+          </li>
+          <li>
+            <%= link_to t('header.navigation.buyer'), buyer_home_path,
+                class: class_names("fr-btn", "fr-btn--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
+          </li>
+          <% if admin_user_signed_in? %>
+            <li>
+              <%= link_to t('admin.navigation.logout'), destroy_admin_user_session_path,
+                  data: { turbo_method: :delete },
+                  class: "fr-btn fr-icon-logout-box-r-line" %>
+            </li>
+          <% end %>
+        </ul>
       </div>
     </div>
   </div>

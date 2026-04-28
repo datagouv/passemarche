@@ -21,7 +21,7 @@
       </div>
       <div class="certificate-col certificate-col--right">
         <div class="fr-mb-1w">
-          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+          <%= render component.source_badge_component %>
         </div>
         <%= render MarketAttributeResponse::ApiDisplay::OpqibiComponent.new(
           market_attribute_response: component.market_attribute_response,
@@ -43,7 +43,7 @@
       </div>
       <div class="certificate-col certificate-col--right">
         <div class="fr-mb-1w">
-          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+          <%= render component.source_badge_component %>
         </div>
         <%= render MarketAttributeResponse::ApiDisplay::FranceCompetencesComponent.new(
           market_attribute_response: component.market_attribute_response,
@@ -60,7 +60,7 @@
       </div>
       <div class="certificate-col certificate-col--right">
         <div class="fr-mb-1w">
-          <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+          <%= render component.source_badge_component %>
         </div>
         <p class="fr-text--sm fr-text--mention-grey">
           <%= component.auto_filled_message %>
@@ -73,7 +73,7 @@
     <div class="certificate-col certificate-col--left">
       <h6 class="fr-mb-2w fr-text--md">
         <%= component.field_label %>
-        <%= render SourceBadgeComponent.new(market_attribute_response: component.market_attribute_response) %>
+        <%= render component.source_badge_component %>
       </h6>
       <% if component.field_description.present? %>
         <span class="fr-hint-text fr-mb-2w fr-text--sm">

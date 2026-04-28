@@ -8,19 +8,24 @@
         <th scope="col"><%= t('admin.categories.categories_table.headers.actions') %></th>
       </tr>
     </thead>
-    <tbody data-controller="drag-reorder"
-           data-drag-reorder-url-value="<%= reorder_admin_categories_path %>">
+    <tbody <% if current_user_can_modify? %>
+             data-controller="drag-reorder"
+             data-drag-reorder-url-value="<%= reorder_admin_categories_path %>"
+           <% end %>>
       <% @categories.each do |category| %>
         <tr data-item-id="<%= category.id %>">
-          <td data-drag-handle>
-            <%= render 'admin/socle_de_base/drag_handle_icon' %>
+          <td <% if current_user_can_modify? %>data-drag-handle<% end %>>
+            <% if current_user_can_modify? %>
+              <%= render 'admin/socle_de_base/drag_handle_icon' %>
+            <% end %>
           </td>
           <td><%= category.buyer_label %></td>
           <td><%= category.candidate_label %></td>
           <td>
-            <%= link_to t('admin.categories.actions.edit'), edit_admin_category_path(category),
-                        class: "fr-btn fr-btn--secondary fr-btn--sm",
-                        data: { turbo_frame: "modal" } %>
+            <%= admin_action_link_to t('admin.categories.actions.edit'),
+                                     edit_admin_category_path(category),
+                                     class: "fr-btn fr-btn--secondary fr-btn--sm",
+                                     data: { turbo_frame: "modal" } %>
           </td>
         </tr>
       <% end %>

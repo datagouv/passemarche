@@ -9,7 +9,7 @@ RSpec.describe ApiBlockStatusPresenter do
   let(:presenter) { ApiBlockStatusPresenter.new(market_application) }
 
   before do
-    allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_return(true)
     allow(market_application).to receive(:api_names_to_fetch).and_return(%w[insee rne attestations_fiscales probtp qualibat dgfip_chiffres_affaires])
   end
 

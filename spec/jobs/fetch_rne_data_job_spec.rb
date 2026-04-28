@@ -9,12 +9,12 @@ RSpec.describe FetchRneDataJob, type: :job do
 
   # Create market attributes that will be filled by the API
   let!(:rne_attribute_1) do
-    create(:market_attribute, api_name: 'rne').tap do |attr|
+    create(:market_attribute, api_name: 'rne', api_key: 'rne').tap do |attr|
       attr.public_markets << public_market
     end
   end
   let!(:rne_attribute_2) do
-    create(:market_attribute, api_name: 'rne').tap do |attr|
+    create(:market_attribute, api_name: 'rne', api_key: 'rne').tap do |attr|
       attr.public_markets << public_market
     end
   end

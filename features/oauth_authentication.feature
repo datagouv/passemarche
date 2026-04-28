@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-Feature: OAuth2 Authentication pour les Éditeurs
-  En tant qu'éditeur de plateforme de marchés publics
+Feature: OAuth2 Authentication pour les plateformes de marchés publics
+  En tant que plateforme de marchés publics
   Je veux pouvoir m'authentifier via OAuth2 avec client credentials
   Afin d'accéder aux services de Passe Marché via API
 

@@ -14,7 +14,9 @@ Given('a public market with capacites_techniques_professionnelles_outillage_echa
     input_type: 'capacites_techniques_professionnelles_outillage_echantillons',
     category_key: 'capacites_techniques_professionnelles',
     subcategory_key: 'capacites_techniques_professionnelles_outillage',
-    mandatory: true
+    mandatory: true,
+    candidate_name: 'Illustration des réalisations : échantillons, photographie ou description des fournitures',
+    candidate_description: 'Ajoutez des échantillons, photos ou descriptions pour démontrer la conformité, la qualité des fournitures proposées et illustrer vos réalisations.'
   )
   @echantillons_attr.save!
   @echantillons_attr.public_markets << @public_market unless @echantillons_attr.public_markets.include?(@public_market)
@@ -27,6 +29,7 @@ Given('a candidate starts an application for this echantillons market') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 end
 
 # Navigation steps

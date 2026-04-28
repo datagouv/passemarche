@@ -7,7 +7,31 @@ RSpec.describe MarketApplication, type: :model do
   let(:public_market) { create(:public_market, :completed, editor:) }
 
   before do
-    allow(SiretValidationService).to receive(:call).and_return(true)
+    allow(SiretValidator).to receive(:valid?).and_return(true)
+  end
+
+  describe 'lots association' do
+    it 'can be linked to multiple lots' do
+      application = create(:market_application, public_market:)
+      lot1 = create(:lot, public_market:)
+      lot2 = create(:lot, public_market:)
+      application.lots << lot1 << lot2
+
+      expect(application.lots).to contain_exactly(lot1, lot2)
+    end
+
+    it 'can exist without any lots' do
+      application = create(:market_application, public_market:)
+      expect(application.lots).to be_empty
+    end
+
+    it 'destroys market_application_lots when destroyed' do
+      application = create(:market_application, public_market:)
+      lot = create(:lot, public_market:)
+      application.lots << lot
+
+      expect { application.destroy }.to change(MarketApplicationLot, :count).by(-1)
+    end
   end
 
   describe 'business validations' do
@@ -19,21 +43,20 @@ RSpec.describe MarketApplication, type: :model do
     end
 
     it 'requires SIRET to have exactly 14 digits' do
+      allow(SiretValidator).to receive(:valid?).and_call_original
       application = build(:market_application, public_market:, siret: '123456')
 
       expect(application).not_to be_valid
       expect(application.errors[:siret]).to be_present
     end
 
-    it 'calls SiretValidationService for SIRET validation' do
-      allow(SiretValidationService).to receive(:call).with(public_market.siret).and_return(true)
-      allow(SiretValidationService).to receive(:call).with('12345678901234').and_return(false)
+    it 'rejects SIRET with invalid Luhn checksum' do
+      allow(SiretValidator).to receive(:valid?).with('12345678901234').and_return(false)
 
       application = build(:market_application, public_market:, siret: '12345678901234')
 
       expect(application).not_to be_valid
-      expect(application.errors[:siret]).to include('Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie.')
-      expect(SiretValidationService).to have_received(:call).with('12345678901234')
+      expect(application.errors[:siret]).to be_present
     end
 
     it 'requires public market to be completed' do
@@ -377,6 +400,29 @@ RSpec.describe MarketApplication, type: :model do
     # NOTE: build_market_attribute_response was removed in favor of Rails' standard
     # accepts_nested_attributes_for implementation which automatically builds
     # the correct STI class based on the 'type' parameter
+  end
+
+  describe '#accessible_by?' do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
+
+    it 'returns true when user_id is nil (first come, first served)' do
+      application = build(:market_application, public_market:, user: nil)
+
+      expect(application.accessible_by?(user)).to be true
+    end
+
+    it 'returns true when user_id matches the given user' do
+      application = build(:market_application, public_market:, user:)
+
+      expect(application.accessible_by?(user)).to be true
+    end
+
+    it 'returns false when user_id belongs to another user' do
+      application = build(:market_application, public_market:, user: other_user)
+
+      expect(application.accessible_by?(user)).to be false
+    end
   end
 
   describe 'context-aware validation' do

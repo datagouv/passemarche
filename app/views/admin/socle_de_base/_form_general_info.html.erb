@@ -1,0 +1,40 @@
+<div class="fr-card fr-card--no-border fr-mb-4w">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <h2 class="fr-h4"><%= t('admin.socle_de_base.show.general_info') %></h2>
+
+      <div class="fr-select-group fr-mb-3w" data-controller="input-type-hint"
+           data-input-type-hint-descriptions-value="<%= @input_type_hints.to_json %>">
+        <%= f.label :input_type, t('admin.socle_de_base.show.field_type'), class: 'fr-label' %>
+        <%= f.select :input_type,
+              @input_types.map { |t| [t.humanize, t] },
+              {}, class: 'fr-select',
+              data: { input_type_hint_target: 'select', action: 'input-type-hint#changed' } %>
+        <p class="fr-hint-text" data-input-type-hint-target="hint">
+          <%= @input_type_hints[@market_attribute.input_type] %>
+        </p>
+      </div>
+
+      <div class="fr-checkbox-group fr-mb-3w">
+        <%= f.check_box :mandatory, class: 'fr-checkbox' %>
+        <%= f.label :mandatory, t('admin.socle_de_base.show.mandatory'), class: 'fr-label' %>
+      </div>
+
+      <fieldset class="fr-fieldset fr-mb-3w">
+        <legend class="fr-fieldset__legend fr-text--bold"><%= t('admin.socle_de_base.show.market_types') %></legend>
+        <% @market_types.each do |mt| %>
+          <div class="fr-fieldset__element">
+            <div class="fr-checkbox-group">
+              <% checked_ids = @submitted_market_type_ids || @market_attribute.market_type_ids %>
+              <%= check_box_tag 'market_attribute[market_type_ids][]', mt.id,
+                    checked_ids.include?(mt.id),
+                    id: "market_type_#{mt.id}" %>
+              <%= label_tag "market_type_#{mt.id}", t("market_types.#{mt.code}", default: mt.code.humanize), class: 'fr-label' %>
+            </div>
+          </div>
+        <% end %>
+        <%= hidden_field_tag 'market_attribute[market_type_ids][]', '' %>
+      </fieldset>
+    </div>
+  </div>
+</div>

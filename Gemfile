@@ -6,8 +6,9 @@ ruby '3.4.5'
 
 gem 'bootsnap', require: false
 gem 'csv'
+gem 'clamby', '~> 1.6'
 gem 'devise'
-gem 'doorkeeper', '~> 5.7'
+gem 'doorkeeper', '~> 5.9'
 gem 'faraday', '~> 2.14'
 gem 'importmap-rails'
 gem 'interactor', '~> 3.2'
@@ -18,7 +19,7 @@ gem 'pg', '>= 1.1'
 gem 'pundit', '~> 2.4'
 gem 'propshaft'
 gem 'puma', '>= 5.0'
-gem 'rails', '~> 8.1.2'
+gem 'rails', '~> 8.1.3'
 gem 'rubyzip', '~> 3.2'
 gem 'solid_cable'
 gem 'solid_cache'
@@ -27,6 +28,8 @@ gem 'stimulus-rails'
 gem 'thruster', require: false
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
+gem 'pagy', '~> 43.5'
+gem 'paper_trail', '~> 17.0'
 gem 'view_component'
 gem 'wicked'
 gem 'wicked_pdf'
@@ -50,6 +53,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'letter_opener'
   gem 'web-console'
 end
 
@@ -62,3 +66,5 @@ group :test do
   gem 'simplecov', require: false
   gem 'webmock', '~> 3.26'
 end
+
+gem "combine_pdf", "~> 1.0"

@@ -82,9 +82,9 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
       expect(response.body).not_to include("data-item-id=\"#{deleted_attribute.id}\"")
     end
 
-    it 'displays edit buttons' do
+    it 'displays consulter buttons' do
       get '/admin/socle_de_base'
-      expect(response.body).to include('Modifier')
+      expect(response.body).to include('Consulter')
     end
 
     it 'filters by category' do
@@ -106,6 +106,11 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
 
       expect(response.body).to include("data-item-id=\"#{identity_attribute.id}\"")
       expect(response.body).to include("data-item-id=\"#{exclusion_attribute.id}\"")
+    end
+
+    it 'includes a link to create a new field' do
+      get '/admin/socle_de_base'
+      expect(response.body).to include(new_admin_socle_de_base_path)
     end
   end
 
@@ -142,26 +147,86 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
-  describe 'POST /admin/socle_de_base' do
-    let(:csv_content) { file_fixture('field_configuration_import.csv') }
+  describe 'GET /admin/socle_de_base/new' do
+    let!(:category) { create(:category, :with_labels, key: 'identite_entreprise') }
+    let!(:subcategory) { create(:subcategory, :with_labels, key: 'identification', category:) }
+    let!(:works_type) { create(:market_type, :works) }
 
-    context 'with a valid CSV file' do
-      it 'imports and redirects with success flash' do
-        post '/admin/socle_de_base', params: {
-          socle_de_base: { csv_file: fixture_file_upload('field_configuration_import.csv', 'text/csv') }
+    it 'returns http success' do
+      get '/admin/socle_de_base/new'
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'displays the form title' do
+      get '/admin/socle_de_base/new'
+      expect(response.body).to include('Créer un nouveau champ')
+    end
+
+    it 'displays the form sections' do
+      get '/admin/socle_de_base/new'
+      expect(response.body).to include(I18n.t('admin.socle_de_base.show.general_info'))
+      expect(response.body).to include(I18n.t('admin.socle_de_base.show.description'))
+      expect(response.body).to include(I18n.t('admin.socle_de_base.show.configuration'))
+    end
+
+    it 'displays categories in select' do
+      get '/admin/socle_de_base/new'
+      expect(response.body).to include(category.buyer_label)
+    end
+
+    it 'displays market types as checkboxes' do
+      get '/admin/socle_de_base/new'
+      expect(response.body).to include('Travaux')
+    end
+  end
+
+  describe 'POST /admin/socle_de_base' do
+    let!(:category) { create(:category, key: 'identite_entreprise') }
+    let!(:subcategory) { create(:subcategory, key: 'identification', category:) }
+    let!(:works_type) { create(:market_type, :works) }
+
+    let(:valid_params) do
+      {
+        market_attribute: {
+          input_type: 'text_input',
+          mandatory: '1',
+          configuration_mode: 'manual',
+          subcategory_id: subcategory.id.to_s,
+          buyer_name: 'Numéro SIRET',
+          candidate_name: 'Votre SIRET',
+          buyer_description: 'Identifiant SIRET',
+          candidate_description: 'Renseignez votre SIRET',
+          market_type_ids: [works_type.id.to_s]
         }
+      }
+    end
+
+    context 'with valid params' do
+      it 'creates a market attribute' do
+        expect { post '/admin/socle_de_base', params: valid_params }.to change(MarketAttribute, :count).by(1)
+      end
+
+      it 'redirects to index with success notice' do
+        post '/admin/socle_de_base', params: valid_params
         expect(response).to redirect_to(admin_socle_de_base_index_path)
         follow_redirect!
-        expect(response.body).to include('Import réussi')
+        expect(response.body).to include('créé avec succès')
       end
     end
 
-    context 'without a file' do
-      it 'redirects with error flash' do
-        post '/admin/socle_de_base', params: { socle_de_base: {} }
-        expect(response).to redirect_to(admin_socle_de_base_index_path)
-        follow_redirect!
-        expect(response.body).to include('Veuillez sélectionner un fichier CSV')
+    context 'with invalid params' do
+      it 're-renders the form with errors when buyer_name is missing' do
+        post '/admin/socle_de_base', params: {
+          market_attribute: valid_params[:market_attribute].merge(buyer_name: '')
+        }
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 're-renders the form with errors when market_type_ids is empty' do
+        post '/admin/socle_de_base', params: {
+          market_attribute: valid_params[:market_attribute].merge(market_type_ids: [''])
+        }
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -203,6 +268,187 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     end
   end
 
+  describe 'GET /admin/socle_de_base/:id' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_show',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification',
+        api_name: 'Insee',
+        api_key: 'siret')
+    end
+
+    it 'returns http success' do
+      get "/admin/socle_de_base/#{market_attribute.id}"
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'displays the configuration section' do
+      get "/admin/socle_de_base/#{market_attribute.id}"
+      expect(response.body).to include('Configuration')
+    end
+  end
+
+  describe 'GET /admin/socle_de_base/:id/edit' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_edit',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification')
+    end
+
+    it 'returns http success' do
+      get "/admin/socle_de_base/#{market_attribute.id}/edit"
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'displays the form' do
+      get "/admin/socle_de_base/#{market_attribute.id}/edit"
+      expect(response.body).to include('Modifier le champ')
+    end
+  end
+
+  describe 'PATCH /admin/socle_de_base/:id' do
+    let(:market_type) { create(:market_type, code: 'works') }
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_update',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification').tap { |a| a.market_types << market_type }
+    end
+
+    let(:valid_update_params) do
+      {
+        buyer_name: 'Buyer field',
+        candidate_name: 'Candidate field',
+        market_type_ids: [market_type.id.to_s]
+      }
+    end
+
+    it 'updates and redirects on success' do
+      patch "/admin/socle_de_base/#{market_attribute.id}", params: {
+        market_attribute: valid_update_params.merge(input_type: 'text_input', mandatory: true)
+      }
+      expect(response).to redirect_to(admin_socle_de_base_path(market_attribute))
+    end
+
+    it 'updates the attribute values' do
+      patch "/admin/socle_de_base/#{market_attribute.id}", params: {
+        market_attribute: valid_update_params.merge(input_type: 'text_input', mandatory: true)
+      }
+      market_attribute.reload
+      expect(market_attribute.input_type).to eq('text_input')
+      expect(market_attribute).to be_mandatory
+    end
+
+    it 'updates buyer and candidate fields' do
+      patch "/admin/socle_de_base/#{market_attribute.id}", params: {
+        market_attribute: valid_update_params.merge(
+          buyer_name: 'Titre acheteur',
+          buyer_description: 'Desc acheteur',
+          candidate_name: 'Titre candidat',
+          candidate_description: 'Desc candidat'
+        )
+      }
+      market_attribute.reload
+      expect(market_attribute.buyer_name).to eq('Titre acheteur')
+      expect(market_attribute.candidate_name).to eq('Titre candidat')
+    end
+  end
+
+  describe 'PATCH /admin/socle_de_base/:id/archive' do
+    let!(:market_attribute) do
+      create(:market_attribute,
+        key: 'test_archive',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification')
+    end
+
+    it 'soft-deletes and redirects to index' do
+      patch "/admin/socle_de_base/#{market_attribute.id}/archive"
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(market_attribute.reload.deleted_at).not_to be_nil
+    end
+  end
+
+  describe 'POST /admin/socle_de_base/import' do
+    it 'rejects a path traversal token and redirects' do
+      post '/admin/socle_de_base/import', params: { import_token: '../../etc/passwd' }
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(flash[:alert]).to be_present
+    end
+
+    it 'rejects a non-UUID token and redirects' do
+      post '/admin/socle_de_base/import', params: { import_token: 'not-valid' }
+      expect(response).to redirect_to(admin_socle_de_base_index_path)
+      expect(flash[:alert]).to be_present
+    end
+  end
+
+  describe 'GET /admin/socle_de_base/export' do
+    let!(:works_type) { create(:market_type, :works) }
+    let!(:services_type) { create(:market_type, :services) }
+
+    let!(:identity_attribute) do
+      create(:market_attribute,
+        key: 'test_identity',
+        category_key: 'identite_entreprise',
+        subcategory_key: 'identite_entreprise_identification',
+        api_name: 'Insee',
+        api_key: 'siret',
+        market_types: [works_type, services_type])
+    end
+
+    let!(:exclusion_attribute) do
+      create(:market_attribute,
+        key: 'test_exclusion',
+        category_key: 'motifs_exclusion',
+        subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
+        market_types: [works_type])
+    end
+
+    it 'returns a CSV file' do
+      get '/admin/socle_de_base/export'
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include('text/csv')
+    end
+
+    it 'includes correct headers in CSV' do
+      get '/admin/socle_de_base/export'
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      expect(csv.headers).to include('Clé', 'Catégorie (clé)', 'Catégorie acheteur', 'Obligatoire',
+        'Source (api_name)', 'Types de marché')
+    end
+
+    it 'includes all active attributes without filters' do
+      get '/admin/socle_de_base/export'
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      keys = csv.map { |row| row['Clé'] } # rubocop:disable Rails/Pluck
+      expect(keys).to include('test_identity', 'test_exclusion')
+    end
+
+    it 'filters by category' do
+      get '/admin/socle_de_base/export', params: { category: 'identite_entreprise' }
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      keys = csv.map { |row| row['Clé'] } # rubocop:disable Rails/Pluck
+      expect(keys).to include('test_identity')
+      expect(keys).not_to include('test_exclusion')
+    end
+
+    it 'filters by source' do
+      get '/admin/socle_de_base/export', params: { source: 'api' }
+      csv = CSV.parse(response.body, col_sep: ';', headers: true)
+      keys = csv.map { |row| row['Clé'] } # rubocop:disable Rails/Pluck
+      expect(keys).to include('test_identity')
+      expect(keys).not_to include('test_exclusion')
+    end
+
+    it 'sets Content-Disposition with correct filename' do
+      get '/admin/socle_de_base/export'
+      expect(response.headers['Content-Disposition']).to include("socle-de-base-#{Date.current}.csv")
+    end
+  end
+
   context 'without authentication' do
     before do
       sign_out admin_user
@@ -211,6 +457,20 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
     describe 'GET /admin/socle_de_base' do
       it 'redirects to login' do
         get '/admin/socle_de_base'
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe 'GET /admin/socle_de_base/new' do
+      it 'redirects to login' do
+        get '/admin/socle_de_base/new'
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
+    describe 'POST /admin/socle_de_base' do
+      it 'redirects to login' do
+        post '/admin/socle_de_base', params: { market_attribute: { buyer_name: 'test' } }
         expect(response).to have_http_status(:redirect)
       end
     end
@@ -228,6 +488,13 @@ RSpec.describe 'Admin::SocleDeBase', type: :request do
         patch "/admin/socle_de_base/#{attribute.id}/archive"
         expect(response).to have_http_status(:redirect)
         expect(attribute.reload.deleted_at).to be_nil
+      end
+    end
+
+    describe 'GET /admin/socle_de_base/export' do
+      it 'redirects to login' do
+        get '/admin/socle_de_base/export'
+        expect(response).to have_http_status(:redirect)
       end
     end
   end

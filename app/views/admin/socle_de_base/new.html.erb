@@ -1,0 +1,46 @@
+<%= content_for :page_title, t('admin.socle_de_base.new.title') %>
+
+<div class="fr-container fr-my-4w">
+  <%= render 'admin/shared/navigation' %>
+
+  <div class="fr-grid-row">
+    <div class="fr-col-12 fr-col-md-8">
+      <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <ol class="fr-breadcrumb__list">
+          <li>
+            <%= link_to t('admin.navigation.socle_de_base'), admin_socle_de_base_index_path, class: "fr-breadcrumb__link" %>
+          </li>
+          <li>
+            <a class="fr-breadcrumb__link" aria-current="page"><%= t('admin.socle_de_base.new.breadcrumb') %></a>
+          </li>
+        </ol>
+      </nav>
+
+      <h1 class="fr-h2"><%= t('admin.socle_de_base.new.title') %></h1>
+
+      <% if @errors.present? %>
+        <div class="fr-alert fr-alert--error fr-mb-3w">
+          <h3 class="fr-alert__title"><%= t('admin.socle_de_base.errors.title') %></h3>
+          <ul>
+            <% @errors.each do |attribute, messages| %>
+              <% Array(messages).each do |message| %>
+                <li><%= MarketAttribute.human_attribute_name(attribute) %> <%= message %></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with model: @market_attribute, url: admin_socle_de_base_index_path, local: true do |f| %>
+        <%= render 'form_general_info', f: f %>
+        <%= render 'form_descriptions', f: f %>
+        <%= render 'form_configuration', f: f %>
+
+        <div class="fr-mt-4w">
+          <%= f.submit t('admin.socle_de_base.form.submit'), class: "fr-btn" %>
+          <%= link_to t('admin.socle_de_base.form.cancel'), admin_socle_de_base_index_path, class: "fr-btn fr-btn--secondary fr-ml-2w" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

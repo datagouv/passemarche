@@ -11,10 +11,7 @@ class MarketAttributeResponse::TextInput::AutoFormComponent < ViewComponent::Bas
   end
 
   def field_label
-    I18n.t(
-      "form_fields.candidate.fields.#{market_attribute.key}.name",
-      default: market_attribute.key.humanize
-    )
+    market_attribute.resolved_candidate_name
   end
 
   def auto_filled_message

@@ -53,7 +53,7 @@ end
 
 def create_criminal_conviction_attribute
   MarketAttribute.find_or_create_by(key: 'motifs_exclusion_sociaux_declarations_test') do |attr|
-    attr.input_type = :checkbox
+    attr.input_type = :checkbox_with_document
     attr.category_key = 'test_motifs_exclusion_sociaux'
     attr.subcategory_key = 'test_motifs_exclusion_sociaux_declarations'
     attr.mandatory = true
@@ -71,7 +71,7 @@ end
 
 def create_prior_contract_breach_attribute
   MarketAttribute.find_or_create_by(key: 'motifs_exclusion_appreciation_acheteur_discretionnaire_test1') do |attr|
-    attr.input_type = :checkbox
+    attr.input_type = :checkbox_with_document
     attr.category_key = 'test_motifs_exclusion_appreciation_acheteur'
     attr.subcategory_key = 'test_motifs_exclusion_appreciation_acheteur_discretionnaire'
     attr.mandatory = false
@@ -80,7 +80,7 @@ end
 
 def create_undue_influence_attribute
   MarketAttribute.find_or_create_by(key: 'motifs_exclusion_appreciation_acheteur_discretionnaire_test2') do |attr|
-    attr.input_type = :checkbox
+    attr.input_type = :checkbox_with_document
     attr.category_key = 'test_motifs_exclusion_appreciation_acheteur'
     attr.subcategory_key = 'test_motifs_exclusion_appreciation_acheteur_discretionnaire'
     attr.mandatory = false

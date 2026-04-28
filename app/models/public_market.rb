@@ -8,16 +8,21 @@ class PublicMarket < ApplicationRecord
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
+  has_many :lots, dependent: :destroy
+  accepts_nested_attributes_for :lots
   has_many :market_applications, dependent: :destroy
+
+  attr_accessor :lot_limit_enabled
 
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true
-  validates :siret, presence: true
+  validates :siret, presence: true, siret: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
+  validates :lot_limit, presence: true, if: :lot_limit_enabled
   validate :must_have_valid_market_type_codes
-  validate :siret_must_be_valid
+  validate :lot_limit_cannot_exceed_lots_count
   validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
@@ -58,16 +63,16 @@ class PublicMarket < ApplicationRecord
     errors.add(:market_type_codes, :invalid_codes, codes: invalid_codes.join(', '))
   end
 
+  def lot_limit_cannot_exceed_lots_count
+    return if lot_limit.nil?
+    return if lot_limit <= lots.size
+
+    errors.add(:lot_limit, :exceeds_lots_count)
+  end
+
   def generate_identifier
     return if identifier.present?
 
     self.identifier = IdentifierGenerationService.call
-  end
-
-  def siret_must_be_valid
-    return if siret.blank?
-    return if SiretValidationService.call(siret)
-
-    errors.add(:siret, 'Le numéro de SIRET saisi est invalide ou non reconnu')
   end
 end

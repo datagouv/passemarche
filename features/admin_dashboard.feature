@@ -18,8 +18,8 @@ Feature: Admin Activity Dashboard
     And "Editor 1" has 1 completed market application
     When I visit the admin dashboard
     Then I should see "Suivi d" on the page
-    And I should see the statistic "diteurs configur" with value "2"
-    And I should see the statistic "diteurs actifs" with value "1"
+    And I should see the statistic "plateformes de marchés publics configurée" with value "2"
+    And I should see the statistic "actives et autorisées" with value "1"
     And I should see the statistic "s cr" with value "2"
 
   Scenario: Filtering dashboard by editor via URL

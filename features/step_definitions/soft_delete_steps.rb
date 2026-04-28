@@ -48,6 +48,7 @@ Given('a candidate starts an application for the market') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 
   stub_request(:get, %r{https://staging\.entreprise\.api\.gouv\.fr/v3/insee/sirene/etablissements/73282932000074.*})
     .to_return(

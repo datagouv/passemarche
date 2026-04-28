@@ -185,6 +185,23 @@ RSpec.describe MapApiData, type: :interactor do
         response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
         expect(response.source).to eq('auto')
       end
+
+      it 'does not set hidden when not in value' do
+        subject
+        response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+        expect(response.hidden).to be false
+      end
+
+      context 'when value contains hidden flag' do
+        let(:ess_value) { { 'radio_choice' => 'yes', 'text' => 'Auto-detected', 'hidden' => true } }
+
+        it 'sets hidden column from value and removes it from value hash' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.hidden).to be true
+          expect(response.value).not_to have_key('hidden')
+        end
+      end
     end
 
     context 'when market_application is not provided' do

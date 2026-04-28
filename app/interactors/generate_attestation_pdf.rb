@@ -75,7 +75,7 @@ class GenerateAttestationPdf < ApplicationInteractor
     )
 
     # Generate PDF with WickedPdf (wkhtmltopdf)
-    WickedPdf.new.pdf_from_string(
+    pdf_content = WickedPdf.new.pdf_from_string(
       html_content,
       page_size: 'A4',
       margin: {
@@ -86,5 +86,7 @@ class GenerateAttestationPdf < ApplicationInteractor
       },
       print_media_type: true
     )
+
+    PdfWatermarkService.call(pdf_content)
   end
 end

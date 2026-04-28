@@ -1,0 +1,101 @@
+<% content_for :title, t('candidate.sessions.new.title') %>
+
+<div class="fr-grid-row full-height-grid">
+  <div class="fr-col-12 fr-col-lg-7">
+    <div class="fr-container--fluid">
+      <div class="fr-mb-5w">
+        <h1 class="fr-h1 fr-mb-1w"><%= t('candidate.sessions.new.title') %></h1>
+        <p class="fr-text--lg fr-mb-0">
+          <% if @market_application %>
+            <%= t('candidate.sessions.new.subtitle_with_editor', editor: @market_application.public_market.editor.name) %>
+          <% else %>
+            <%= t('candidate.sessions.new.subtitle') %>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="fr-mb-3w">
+        <div class="fr-card">
+          <div class="fr-card__body">
+            <div class="fr-card__content">
+              <h2 class="fr-h5 fr-mb-3w"><%= t('candidate.sessions.new.employee_section') %></h2>
+
+              <%= form_with url: candidate_sessions_path, method: :post,
+                            data: { turbo: false, controller: 'input-validation' } do |form| %>
+                <% siret_errors = @errors&.dig(:siret) %>
+                <% email_errors = @errors&.dig(:email) %>
+                <% base_errors = @errors&.dig(:base) %>
+
+                <% if base_errors.present? %>
+                  <div class="fr-alert fr-alert--error fr-mb-3w">
+                    <ul class="fr-list">
+                      <% Array(base_errors).each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <% if @market_application %>
+                  <%= form.hidden_field :market_application_id, value: @market_application.identifier %>
+                  <div class="fr-input-group fr-input-group--disabled fr-mb-3w">
+                    <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
+                    <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>
+                    <%= form.text_field :siret, class: 'fr-input', readonly: true, value: @market_application.siret %>
+                  </div>
+                <% else %>
+                  <div class="fr-input-group <%= 'fr-input-group--error' if siret_errors.present? %> fr-mb-3w">
+                    <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
+                    <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>
+                    <%= form.text_field :siret, class: "fr-input #{'fr-input--error' if siret_errors.present?}",
+                                                autocomplete: 'off',
+                                                value: @submitted_siret,
+                                                aria: ({ describedby: 'siret-error' } if siret_errors.present?) %>
+                    <% if siret_errors.present? %>
+                      <p id="siret-error" class="fr-error-text"><%= siret_errors.first %></p>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <div class="fr-input-group <%= 'fr-input-group--error' if email_errors.present? %> fr-mb-3w">
+                  <%= form.label :email, t('candidate.sessions.new.email_label'), class: 'fr-label' %>
+                  <%= form.email_field :email, class: "fr-input #{'fr-input--error' if email_errors.present?}",
+                                              autocomplete: 'email',
+                                              value: @submitted_email,
+                                              aria: ({ describedby: 'email-error' } if email_errors.present?),
+                                              data: { input_validation_target: 'input', action: 'input->input-validation#validateInput' } %>
+                  <% if email_errors.present? %>
+                    <p id="email-error" class="fr-error-text"><%= email_errors.first %></p>
+                  <% end %>
+                </div>
+
+                <%= form.submit t('candidate.sessions.new.submit'), class: 'fr-btn fr-btn--lg fr-width-full',
+                                                                    disabled: true,
+                                                                    data: { input_validation_target: 'submitButton' } %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-card">
+        <div class="fr-card__body">
+          <div class="fr-card__content">
+            <h2 class="fr-h5 fr-mb-3w"><%= t('candidate.sessions.new.manager_section') %></h2>
+            <button class="fr-btn fr-btn--lg" disabled aria-disabled="true">
+              <%= t('candidate.sessions.new.proconnect_cta') %>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag 'form-logo.png', alt: t('candidate.shared.form_logo_alt') %>
+    </div>
+  </div>
+</div>

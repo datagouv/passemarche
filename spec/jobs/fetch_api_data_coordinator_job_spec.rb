@@ -10,12 +10,12 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
     context 'with market that has all API attributes' do
       it 'spawns all individual API fetch jobs' do
         # Ensure market has attributes from all APIs
-        insee_attr = create(:market_attribute, api_name: 'insee')
-        rne_attr = create(:market_attribute, api_name: 'rne')
-        dgfip_attr = create(:market_attribute, api_name: 'attestations_fiscales')
-        dgfip_chiffres_affaires_attr = create(:market_attribute, api_name: 'dgfip_chiffres_affaires')
-        qualibat_attr = create(:market_attribute, api_name: 'qualibat')
-        urssaf_attr = create(:market_attribute, api_name: 'urssaf_attestation_vigilance')
+        insee_attr = create(:market_attribute, api_name: 'insee', api_key: 'siret')
+        rne_attr = create(:market_attribute, api_name: 'rne', api_key: 'rne')
+        dgfip_attr = create(:market_attribute, api_name: 'attestations_fiscales', api_key: 'attestations_fiscales')
+        dgfip_chiffres_affaires_attr = create(:market_attribute, api_name: 'dgfip_chiffres_affaires', api_key: 'dgfip_chiffres_affaires')
+        qualibat_attr = create(:market_attribute, api_name: 'qualibat', api_key: 'qualibat')
+        urssaf_attr = create(:market_attribute, api_name: 'urssaf_attestation_vigilance', api_key: 'urssaf_attestation_vigilance')
         public_market.market_attributes << [insee_attr, rne_attr, dgfip_attr, dgfip_chiffres_affaires_attr, qualibat_attr, urssaf_attr]
 
         expect(FetchInseeDataJob).to receive(:perform_later).with(market_application.id)
@@ -55,8 +55,8 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
     context 'with market that has subset of API attributes' do
       it 'only spawns jobs for APIs the market uses' do
         # Market only has insee and rne attributes
-        insee_attr = create(:market_attribute, api_name: 'insee')
-        rne_attr = create(:market_attribute, api_name: 'rne')
+        insee_attr = create(:market_attribute, api_name: 'insee', api_key: 'siret')
+        rne_attr = create(:market_attribute, api_name: 'rne', api_key: 'rne')
         public_market.market_attributes << [insee_attr, rne_attr]
 
         expect(FetchInseeDataJob).to receive(:perform_later).with(market_application.id)
@@ -91,7 +91,7 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
 
     context 'when an error occurs spawning jobs' do
       before do
-        insee_attr = create(:market_attribute, api_name: 'insee')
+        insee_attr = create(:market_attribute, api_name: 'insee', api_key: 'siret')
         public_market.market_attributes << [insee_attr]
 
         allow(FetchInseeDataJob)

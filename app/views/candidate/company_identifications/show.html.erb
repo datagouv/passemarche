@@ -1,0 +1,48 @@
+<% content_for :title, t('candidate.company_identification.title') %>
+
+<div class="fr-grid-row full-height-grid">
+  <div class="fr-col-12 fr-col-lg-7">
+    <div class="fr-container--fluid">
+      <div class="fr-grid-row">
+        <div class="fr-mb-5w fr-pt-4w">
+          <h1 class="fr-h1 fr-mb-1w"><%= t('candidate.shared.welcome') %></h1>
+          <p class="fr-text--lg fr-mb-0">
+            <%= t('candidate.company_identification.intro', editor: @market_application.public_market.editor.name) %>
+          </p>
+        </div>
+      </div>
+
+      <div class="fr-grid-row">
+        <%= form_with model: @market_application,
+                      url: company_identification_candidate_market_application_path(@market_application.identifier),
+                      method: :patch,
+                      local: true,
+                      data: { turbo: false },
+                      class: "fr-mb-4w" do |form| %>
+          <div class="fr-mb-4w">
+            <div class="fr-input-group fr-input-group--disabled">
+              <%= form.label :siret, t('candidate.shared.siret_label'), class: "fr-label" %>
+              <span class="fr-hint-text"><%= t('candidate.shared.siret_hint') %></span>
+              <%= form.text_field :siret,
+                    class: "fr-input",
+                    disabled: true,
+                    readonly: true %>
+            </div>
+          </div>
+
+          <div class="fr-mb-4w">
+            <%= form.submit t('candidate.shared.continue'), class: "fr-btn fr-btn--lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4 fr-background-alt--blue-france">
+    <div class="center-content">
+      <%= image_tag "form-logo.png", alt: t('candidate.shared.form_logo_alt') %>
+    </div>
+  </div>
+</div>

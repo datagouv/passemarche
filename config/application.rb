@@ -24,11 +24,15 @@ module VoieRapide
     # in config/environments, which are processed later.
     #
     config.time_zone = 'Europe/Paris'
+    config.active_record.yaml_column_permitted_classes = [Symbol, Time]
     # config.eager_load_paths << Rails.root.join("extras")
 
     # I18n configuration
     config.i18n.default_locale = :fr
     config.i18n.available_locales = %i[fr en]
+
+    # Use cache-backed sessions to avoid the 4KB cookie size limit
+    config.session_store :cache_store
 
     # Configure Active Job to use SolidQueue
     config.active_job.queue_adapter = :solid_queue

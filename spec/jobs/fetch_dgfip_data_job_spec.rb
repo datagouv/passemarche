@@ -8,12 +8,12 @@ RSpec.describe FetchDgfipDataJob, type: :job do
   let(:market_application) { create(:market_application, public_market:, siret:, api_fetch_status: {}) }
 
   let!(:dgfip_attribute_1) do
-    create(:market_attribute, api_name: 'attestations_fiscales').tap do |attr|
+    create(:market_attribute, api_name: 'attestations_fiscales', api_key: 'attestations_fiscales').tap do |attr|
       attr.public_markets << public_market
     end
   end
   let!(:dgfip_attribute_2) do
-    create(:market_attribute, api_name: 'attestations_fiscales').tap do |attr|
+    create(:market_attribute, api_name: 'attestations_fiscales', api_key: 'attestations_fiscales').tap do |attr|
       attr.public_markets << public_market
     end
   end

@@ -210,6 +210,59 @@ RSpec.describe MarketAttribute, type: :model do
     end
   end
 
+  describe '#resolved_buyer_name' do
+    it 'returns DB value when present' do
+      attribute = build(:market_attribute, key: 'test_key', buyer_name: 'Custom Name')
+      expect(attribute.resolved_buyer_name).to eq('Custom Name')
+    end
+
+    it 'falls back to humanized key when DB value is nil' do
+      attribute = build(:market_attribute, key: 'some_field', buyer_name: nil)
+      expect(attribute.resolved_buyer_name).to eq('Some field')
+    end
+
+    it 'ignores blank DB value' do
+      attribute = build(:market_attribute, key: 'test_key', buyer_name: '  ')
+      expect(attribute.resolved_buyer_name).to eq('Test key')
+    end
+  end
+
+  describe '#resolved_buyer_description' do
+    it 'returns DB value when present' do
+      attribute = build(:market_attribute, key: 'test_key', buyer_description: 'Custom Desc')
+      expect(attribute.resolved_buyer_description).to eq('Custom Desc')
+    end
+
+    it 'returns nil when DB value is absent' do
+      attribute = build(:market_attribute, key: 'test_key', buyer_description: nil)
+      expect(attribute.resolved_buyer_description).to be_nil
+    end
+  end
+
+  describe '#resolved_candidate_name' do
+    it 'returns DB value when present' do
+      attribute = build(:market_attribute, key: 'test_key', candidate_name: 'Candidate Custom')
+      expect(attribute.resolved_candidate_name).to eq('Candidate Custom')
+    end
+
+    it 'falls back to humanized key when DB value is nil' do
+      attribute = build(:market_attribute, key: 'test_key', candidate_name: nil)
+      expect(attribute.resolved_candidate_name).to eq('Test key')
+    end
+  end
+
+  describe '#resolved_candidate_description' do
+    it 'returns DB value when present' do
+      attribute = build(:market_attribute, key: 'test_key', candidate_description: 'Candidate Desc')
+      expect(attribute.resolved_candidate_description).to eq('Candidate Desc')
+    end
+
+    it 'returns nil when DB value is absent' do
+      attribute = build(:market_attribute, key: 'test_key', candidate_description: nil)
+      expect(attribute.resolved_candidate_description).to be_nil
+    end
+  end
+
   describe 'CATEGORY_TABS' do
     it 'contains the expected category keys' do
       expected_tabs = %w[

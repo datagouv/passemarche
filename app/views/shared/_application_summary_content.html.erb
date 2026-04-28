@@ -14,9 +14,8 @@
 
 <% if category_keys.any? %>
   <% category_keys.each_with_index do |category, index| %>
-    <%# Attestation section %>
     <% if category == :attestation_motifs_exclusion %>
-      <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if [:pdf, :buyer].include?(context) && index > 0 %>">
+      <div class="fr-card fr-mb-2w category-card <%= page_break_class(context, index) %>">
         <%= render 'shared/card_header', title: t("candidate.market_applications.attestation_motifs_exclusion.header_title"), background: "fr-background-alt--grey" %>
         <div class="fr-card__body fr-mt-1w fr-mb-1w">
           <%= render 'shared/candidate_attestation_motifs_exclusion',
@@ -28,7 +27,8 @@
 
     <% subcategories = presenter.subcategories_for_category(category) %>
     <% next if subcategories.empty? %>
-    <div class="fr-card fr-mb-2w category-card <%= 'page-break-before' if [:pdf, :buyer].include?(context) && index > 0 %>">
+
+    <div class="fr-card fr-mb-2w category-card <%= page_break_class(context, index) %>">
       <%= render 'shared/card_header', title: category_label(category, role: :candidate), background: "fr-background-alt--grey" %>
       <div class="fr-card__body fr-mt-1w fr-mb-1w">
         <% if context == :web && category == 'motifs_exclusion' && presenter.missing_mandatory_motifs_exclusion? %>
@@ -40,78 +40,18 @@
         <% end %>
 
         <% if category == 'identite_entreprise' %>
-          <div class="fr-card fr-mb-1w fr-card--no-border fr-mt-2w">
-          <%= render 'shared/card_sub_header', title: t('shared.application_summary.market_info_title'), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--lg" do %>
-            <div class="field-layout-container">
-              <div class="field-layout-content">
-                <strong><%= t('shared.application_summary.market_name') %></strong>
-                <br>
-                <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.name %></span>
-              </div>
-            </div>
-            <% if market_application.public_market.lot_name.present? %>
-              <div class="field-layout-container">
-                <div class="field-layout-content">
-                  <strong><%= t('shared.application_summary.lot_name') %></strong>
-                  <br>
-                  <span class="fr-text--md fr-text--mention-grey"><%= market_application.public_market.lot_name %></span>
-                </div>
-              </div>
-            <% end %>
-              <div class="field-layout-container">
-                <div class="field-layout-content">
-                  <strong><%= t('shared.application_summary.deadline') %></strong>
-                  <br>
-                  <span class="fr-text--md fr-text--mention-grey"><%= l(market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</span>
-                </div>
-              </div>
-              <div class="field-layout-container">
-                <div class="field-layout-content">
-                  <strong><%= t('shared.application_summary.market_type') %></strong>
-                  <br>
-                  <span class="fr-text--md fr-text--mention-grey">
-                    <% if market_application.public_market.market_type_codes.any? %>
-                      <% market_application.public_market.market_type_codes.each do |market_type_code| %>
-                        <span class="fr-badge fr-badge--md fr-mr-1w">
-                          <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
-                        </span>
-                      <% end %>
-                    <% else %>
-                      <%= t('shared.application_summary.no_market_type') %>
-                    <% end %>
-                  </span>
-                </div>
-              </div>
-          <% end %>
-          </div>
+          <%= render 'shared/market_info_summary', market_application: market_application %>
         <% end %>
 
         <% subcategories.each do |subcategory| %>
           <% market_attributes = presenter.market_attributes_for_subcategory(category, subcategory) %>
           <% next if market_attributes.empty? %>
 
-          <div class="fr-card fr-mb-1w fr-card--no-border fr-mt-2w">
-            <%= render 'shared/card_sub_header', title: subcategory_label(subcategory, role: :candidate), background: "fr-background-alt--blue-ecume", color: "fr-text-title--blue-france", additional_classes: "fr-text--md" do %>
-              <% market_attributes.each do |attribute| %>
-                <% response = presenter.market_attribute_response_for(attribute) %>
-                <% if response&.type.present? %>
-                  <%
-                    component_class = begin
-                      "MarketAttributeResponse::#{response.type}Component".constantize
-                    rescue NameError
-                      nil
-                    end
-                  %>
-                  <% if component_class %>
-                    <%= render component_class.new(market_attribute_response: response, context: context) %>
-                  <% else %>
-                    <% partial_name = "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_display" %>
-                    <%= render partial_name, market_attribute_response: response, context: context %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% end %>
-          </div>
+          <%= render 'shared/subcategory_attributes',
+                     presenter: presenter,
+                     subcategory: subcategory,
+                     market_attributes: market_attributes,
+                     context: context %>
         <% end %>
       </div>
     </div>

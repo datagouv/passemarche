@@ -18,51 +18,6 @@ RSpec.describe MarketApplicationStepUpdateService do
   end
 
   describe '.call' do
-    context 'with company_identification step' do
-      it 'returns success' do
-        result = described_class.call(market_application, :company_identification, {})
-
-        expect(result[:success]).to be true
-      end
-
-      it 'does not modify SIRET (SIRET is locked)' do
-        original_siret = market_application.siret
-
-        described_class.call(market_application, :company_identification, {})
-
-        expect(market_application.reload.siret).to eq(original_siret)
-      end
-
-      it 'does not call APIs directly' do
-        expect(Insee).not_to receive(:call)
-        expect(Rne).not_to receive(:call)
-
-        described_class.call(market_application, :company_identification, {})
-      end
-
-      it 'has no flash messages' do
-        result = described_class.call(market_application, :company_identification, {})
-
-        expect(result[:flash_messages]).to be_empty
-      end
-
-      it 'enqueues API data fetch job when api_fetch_status is empty' do
-        market_application.update!(api_fetch_status: {})
-
-        expect(FetchApiDataCoordinatorJob).to receive(:perform_later).with(market_application.id)
-
-        described_class.call(market_application, :company_identification, {})
-      end
-
-      it 'does not enqueue API data fetch job when api_fetch_status is present' do
-        market_application.update!(api_fetch_status: { 'insee' => { 'status' => 'completed' } })
-
-        expect(FetchApiDataCoordinatorJob).not_to receive(:perform_later)
-
-        described_class.call(market_application, :company_identification, {})
-      end
-    end
-
     context 'with api_data_recovery_status step' do
       let(:params) { {} }
 
@@ -79,8 +34,7 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
 
       it 'is a simple passthrough (API calls happen in background jobs)' do
-        # This step doesn't trigger API calls directly anymore
-        # API calls are triggered via background jobs in company_identification step
+        # API calls are enqueued by CompanyIdentificationsController
         result = described_class.call(market_application, :api_data_recovery_status, params)
 
         expect(result[:success]).to be true
@@ -102,6 +56,46 @@ RSpec.describe MarketApplicationStepUpdateService do
 
         described_class.call(market_application, step, {})
       end
+
+      context 'when a response already exists but form submits with blank id' do
+        let(:market_attribute) do
+          create(:market_attribute, :radio_with_file_and_text,
+            subcategory_key: step.to_s,
+            category_key: 'test_category')
+        end
+
+        let!(:existing_response) do
+          create(:market_attribute_response_radio_with_file_and_text,
+            market_application:,
+            market_attribute:,
+            value: { 'radio_choice' => 'no' })
+        end
+
+        let(:params) do
+          ActionController::Parameters.new(
+            market_attribute_responses_attributes: {
+              '0' => {
+                'id' => '',
+                'market_attribute_id' => market_attribute.id.to_s,
+                'type' => 'RadioWithFileAndText',
+                'radio_choice' => 'yes',
+                'text' => ''
+              }
+            }
+          ).permit!
+        end
+
+        before do
+          public_market.market_attributes << market_attribute
+        end
+
+        it 'updates the existing response instead of raising a unique constraint error' do
+          result = described_class.call(market_application, step, params)
+
+          expect(result[:success]).to be true
+          expect(existing_response.reload.value['radio_choice']).to eq('yes')
+        end
+      end
     end
 
     context 'with summary step' do
@@ -112,7 +106,7 @@ RSpec.describe MarketApplicationStepUpdateService do
 
       it 'calls CompleteMarketApplication organizer' do
         expect(CompleteMarketApplication).to receive(:call)
-          .with(market_application:)
+          .with(market_application:, request_host: nil, request_protocol: nil)
 
         described_class.call(market_application, :summary, {})
       end

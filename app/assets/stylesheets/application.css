@@ -284,10 +284,8 @@
 }
 
 /* Header navigation active state */
-.fr-header .fr-links-group .fr-link.fr-link--active {
+.fr-header .fr-btns-group .fr-btn.fr-btn--active {
   background-color: #eee !important;
-  padding: 0.25rem 0.75rem !important;
-  border-radius: 4px !important;
 }
 
 .fr-badge.fr-badge--info-custom {
@@ -648,4 +646,43 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+}
+
+/* Security badges - remove DSFR default icons */
+.fr-badge--no-icon::before,
+.fr-badge--no-icon::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Security badge colors and layout */
+.fr-badge--security-safe {
+  background-color: #B8FEC9 !important;
+  color: #18753C !important;
+}
+
+.fr-badge--security-unsafe {
+  background-color: #FFE9E9 !important;
+  color: #CE0500 !important;
+}
+
+.fr-badge--security-scanning {
+  background-color: #E8EDFF !important;
+  color: #0063CB !important;
+}
+
+/* Environment banner for non-production */
+.environment-banner {
+  background-color: var(--yellow-tournesol-975-75, #fef4cd);
+}
+
+.environment-banner .fr-notice__body {
+  padding: 8px 0;
+}
+
+.environment-banner__text {
+  color: var(--grey-50-1000, #161616);
+  text-align: center;
+  margin: 0;
+  font-weight: 700;
 }

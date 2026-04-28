@@ -11,6 +11,7 @@ end
 
 Given('a candidate starts a new application') do
   @market_application = create(:market_application, public_market: @public_market, siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
   visit "/candidate/market_applications/#{@market_application.identifier}/market_information"
 end
 
@@ -34,5 +35,5 @@ Then('I should see a summary of my application') do
 end
 
 When('I submit my application') do
-  click_button 'Transmettre ma candidature'
+  click_button I18n.t('button.submit_summary')
 end

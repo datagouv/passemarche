@@ -23,7 +23,6 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       {
         public_market: {
           name: 'Test Market Name',
-          lot_name: 'Test Lot Name',
           deadline: 1.month.from_now.iso8601,
           siret: '13002526500013',
           market_type_codes: ['supplies']
@@ -207,12 +206,35 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
 
+    context 'with lots' do
+      let(:params_with_lots) do
+        market_params.deep_merge(
+          public_market: { lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }] }
+        )
+      end
+
+      before do
+        post '/api/v1/public_markets',
+          params: params_with_lots.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'creates the market with lots' do
+        expect(response).to have_http_status(:created)
+        json_response = response.parsed_body
+        public_market = PublicMarket.find_by(identifier: json_response['identifier'])
+        expect(public_market.lots.map(&:name)).to contain_exactly('Lot 1', 'Lot 2')
+      end
+    end
+
     context 'with missing SIRET' do
       let(:invalid_params) do
         {
           public_market: {
             name: 'Test Market Name',
-            lot_name: 'Test Lot Name',
             deadline: 1.month.from_now.iso8601,
             market_type_codes: ['supplies']
           }
@@ -347,7 +369,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           it 'returns validation error' do
             expect(response).to have_http_status(:unprocessable_content)
             json_response = response.parsed_body
-            expect(json_response['errors']['market_type_codes']).to include('Market type codes ne peut pas être seul')
+            expect(json_response['errors']['market_type_codes']).to include('ne peut pas être seul')
           end
         end
       end

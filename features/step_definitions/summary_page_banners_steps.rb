@@ -44,6 +44,7 @@ Given('a market application exists for this market') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 end
 
 When('I visit the candidate summary page') do
@@ -78,6 +79,7 @@ Given('a market application exists with attestation not confirmed') do
     public_market: @public_market,
     siret: '73282932000074',
     attests_no_exclusion_motifs: false)
+  authenticate_as_candidate_for(@market_application)
 end
 
 Given('a market application exists with attestation confirmed') do
@@ -85,6 +87,7 @@ Given('a market application exists with attestation confirmed') do
     public_market: @public_market,
     siret: '73282932000074',
     attests_no_exclusion_motifs: true)
+  authenticate_as_candidate_for(@market_application)
 end
 
 Then('I should see the exclusion motifs warning banner') do
@@ -115,12 +118,14 @@ Given('a market application exists without motifs exclusion data') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 end
 
 Given('a market application exists with motifs exclusion data filled') do
   @market_application = create(:market_application,
     public_market: @public_market,
     siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
 
   response = MarketAttributeResponse::FileUpload.create!(
     market_application: @market_application,

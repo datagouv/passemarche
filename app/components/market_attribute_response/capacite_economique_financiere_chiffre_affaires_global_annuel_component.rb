@@ -88,6 +88,20 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     I18n.t('candidate.market_applications.form_fields.capacite_economique_financiere_chiffre_affaires_global_annuel.notice')
   end
 
+  def formatted_turnover_for_display(year_key)
+    return nil if field_from_api?(year_key, 'turnover') && context != :buyer
+
+    formatted_turnover(year_key)
+  end
+
+  def turnover_badge_component(year_key)
+    badge_component_for(year_key, 'turnover', value: turnover_value(year_key))
+  end
+
+  def fiscal_year_end_badge_component(year_key)
+    badge_component_for(year_key, 'fiscal_year_end', value: fiscal_year_end_value(year_key))
+  end
+
   def not_provided_message
     'Non renseigné'
   end
@@ -111,5 +125,16 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
 
   def table_style
     context == :web ? 'border:1px solid #ddd;width:100%;' : ''
+  end
+
+  private
+
+  def badge_component_for(year_key, field_name, value:)
+    source = if field_from_api?(year_key, field_name)
+               :auto
+             elsif value.present?
+               :manual_after_api_failure
+             end
+    SourceBadgeComponent.new(source:, context:) if source
   end
 end

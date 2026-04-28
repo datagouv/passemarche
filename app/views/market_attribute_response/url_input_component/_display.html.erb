@@ -1,0 +1,22 @@
+<div class="field-layout-container">
+  <div class="field-layout-content">
+    <strong>
+      <%= component.field_label %>
+    </strong>
+
+    <% if component.show_value? %>
+      <br>
+      <span class="fr-text--sm fr-text--mention-grey">
+        <% if component.text_value.present? %>
+          <%= link_to component.text_value, component.text_value, target: "_blank", rel: "noopener" %>
+        <% else %>
+          <%= component.display_value %>
+        <% end %>
+      </span>
+    <% end %>
+  </div>
+  <div class="field-layout-badge">
+    <%= render component.source_badge_component %>
+  </div>
+</div>
+<hr class="fr-hr">

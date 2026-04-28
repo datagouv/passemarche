@@ -68,61 +68,62 @@ export default class extends Controller {
   }
 
   addFileToList(filename, signedId) {
-    if (!this.hasFilesListTarget) return
+  if (!this.hasFilesListTarget) return
 
-    // Remove "no files" message if present
-    const emptyMessage = this.filesListTarget.querySelector('span')
-    if (emptyMessage && emptyMessage.textContent.includes('Aucun fichier')) {
-      emptyMessage.remove()
-    }
-
-    // Ensure the container has the right structure
-    let documentsList = this.filesListTarget.querySelector('.fr-mt-2w')
-    if (!documentsList) {
-      documentsList = document.createElement('div')
-      documentsList.className = 'fr-mt-2w fr-text--sm fr-mb-0'
-
-      const header = document.createElement('strong')
-      header.textContent = 'Documents actuels :'
-      documentsList.appendChild(header)
-
-      this.filesListTarget.appendChild(documentsList)
-    }
-
-    // Create file item
-    const fileItem = document.createElement('div')
-    fileItem.className = 'file-item'
-    fileItem.dataset.signedId = signedId
-
-    const fileLink = document.createElement('span')
-    fileLink.className = 'file-link'
-    fileLink.textContent = filename
-    fileItem.appendChild(fileLink)
-
-    if (this.deletableValue && this.marketApplicationIdentifierValue) {
-      const deleteWrapper = document.createElement('span')
-      deleteWrapper.className = 'file-delete-wrapper'
-
-      const deleteButton = document.createElement('button')
-      deleteButton.type = 'button'
-      deleteButton.className = 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-delete-line'
-      deleteButton.textContent = 'Supprimer'
-      deleteButton.title = `Supprimer ${filename}`
-      deleteButton.dataset.controller = 'file-delete'
-      deleteButton.dataset.fileDeleteSignedIdValue = signedId
-      deleteButton.dataset.fileDeleteUrlValue = `/candidate/market_applications/${this.marketApplicationIdentifierValue}/attachments/${signedId}`
-      deleteButton.dataset.fileDeleteFilenameValue = filename
-      deleteButton.dataset.fileDeleteConfirmMessageValue = this.deleteConfirmMessageValue
-      deleteButton.dataset.fileDeleteErrorMessageValue = this.deleteErrorMessageValue
-      deleteButton.dataset.fileDeleteNetworkErrorMessageValue = this.networkErrorMessageValue
-      deleteButton.dataset.action = 'click->file-delete#delete'
-
-      deleteWrapper.appendChild(deleteButton)
-      fileItem.appendChild(deleteWrapper)
-    }
-
-    documentsList.appendChild(fileItem)
+  // Remove "no files" message if present
+  const emptyMessage = this.filesListTarget.querySelector('span')
+  if (emptyMessage && emptyMessage.textContent.includes('Aucun fichier')) {
+    emptyMessage.remove()
   }
+
+  // Ensure the container has the right structure
+  let documentsList = this.filesListTarget.querySelector('.fr-mt-2w')
+  if (!documentsList) {
+    documentsList = document.createElement('div')
+    documentsList.className = 'fr-mt-2w fr-text--sm fr-mb-0'
+
+    const header = document.createElement('strong')
+    header.textContent = 'Documents actuels :'
+    documentsList.appendChild(header)
+
+    this.filesListTarget.appendChild(documentsList)
+  }
+
+  // Create the file item container
+  const fileItem = document.createElement('div')
+  fileItem.className = 'file-item'
+
+  // Create the file link
+  const fileLink = document.createElement('span')
+  fileLink.className = 'file-link'
+  fileLink.textContent = filename
+  fileItem.appendChild(fileLink)
+
+  // Optionally add delete button
+  if (this.deletableValue && this.marketApplicationIdentifierValue) {
+    const deleteWrapper = document.createElement('span')
+    deleteWrapper.className = 'file-delete-wrapper'
+
+    const deleteButton = document.createElement('button')
+    deleteButton.type = 'button'
+    deleteButton.className = 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-delete-line'
+    deleteButton.textContent = 'Supprimer'
+    deleteButton.title = `Supprimer ${filename}`
+    deleteButton.dataset.controller = 'file-delete'
+    deleteButton.dataset.fileDeleteSignedIdValue = signedId
+    deleteButton.dataset.fileDeleteUrlValue = `/candidate/market_applications/${this.marketApplicationIdentifierValue}/attachments/${signedId}`
+    deleteButton.dataset.fileDeleteFilenameValue = filename
+    deleteButton.dataset.fileDeleteConfirmMessageValue = this.deleteConfirmMessageValue
+    deleteButton.dataset.fileDeleteErrorMessageValue = this.deleteErrorMessageValue
+    deleteButton.dataset.fileDeleteNetworkErrorMessageValue = this.networkErrorMessageValue
+    deleteButton.dataset.action = 'click->file-delete#delete'
+
+    deleteWrapper.appendChild(deleteButton)
+    fileItem.appendChild(deleteWrapper)
+  }
+
+  documentsList.appendChild(fileItem)
+}
 
   // DirectUpload callbacks (called by DirectUpload)
   directUploadWillStoreFileWithXHR(request) {

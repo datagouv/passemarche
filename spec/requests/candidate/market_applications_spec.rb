@@ -12,10 +12,13 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:candidate_user) { create(:user) }
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
   before do
+    allow_any_instance_of(ApplicationController).to receive(:current_candidate).and_return(candidate_user)
+
     create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [public_market])
     create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [public_market])
     create(:market_attribute, key: 'turnover', category_key: 'economic_capacities', subcategory_key: 'economic_capacities', public_markets: [public_market])
@@ -23,7 +26,6 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   end
 
   STEPS = %i[
-    company_identification
     api_data_recovery_status
     market_information
     exclusion_criteria
@@ -124,6 +126,54 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       expect(response).to have_http_status(:success)
       expect(response.body).to include('Bienvenue,')
       expect(response.body).to include(market_application.siret)
+    end
+
+    context 'when the step has a blank email_input response' do
+      let!(:email_attribute) do
+        create(:market_attribute, :email,
+          key: 'identite_entreprise_contact_email',
+          category_key: 'identite_entreprise',
+          subcategory_key: 'identite_entreprise_contact',
+          public_markets: [public_market])
+      end
+      let!(:email_response) do
+        create(:market_attribute_response_email_input,
+          market_application:,
+          market_attribute: email_attribute,
+          value: nil)
+      end
+
+      it 'pre-fills the email field with the authenticated user email' do
+        get "/candidate/market_applications/#{market_application.identifier}/identite_entreprise_contact"
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include(candidate_user.email)
+      end
+    end
+
+    context 'when the step has an email_input response already filled' do
+      let(:existing_email) { 'already@filled.com' }
+      let!(:email_attribute) do
+        create(:market_attribute, :email,
+          key: 'identite_entreprise_contact_email',
+          category_key: 'identite_entreprise',
+          subcategory_key: 'identite_entreprise_contact',
+          public_markets: [public_market])
+      end
+      let!(:email_response) do
+        create(:market_attribute_response_email_input,
+          market_application:,
+          market_attribute: email_attribute,
+          value: { text: existing_email })
+      end
+
+      it 'does not override the existing value' do
+        get "/candidate/market_applications/#{market_application.identifier}/identite_entreprise_contact"
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include(existing_email)
+        expect(response.body).not_to include(candidate_user.email)
+      end
     end
   end
 

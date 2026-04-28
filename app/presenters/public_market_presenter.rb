@@ -5,6 +5,7 @@ class PublicMarketPresenter
   include MarketAttributeGrouping
 
   INITIAL_WIZARD_STEP = :setup
+  LOT_CONFIG_STEP = :lot_config
   FINAL_WIZARD_STEP = :summary
 
   def initialize(public_market)
@@ -12,7 +13,9 @@ class PublicMarketPresenter
   end
 
   def wizard_steps
-    [INITIAL_WIZARD_STEP] + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
+    steps = [INITIAL_WIZARD_STEP]
+    steps << LOT_CONFIG_STEP if @public_market.lots.any?
+    steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
   end
 
   def stepper_steps
@@ -20,6 +23,8 @@ class PublicMarketPresenter
   end
 
   def parent_category_for(step_key)
+    return nil if step_key.blank?
+
     step_str = step_key.to_s
     return step_str if available_category_keys.include?(step_str)
 
@@ -39,16 +44,22 @@ class PublicMarketPresenter
   end
 
   def mandatory_fields_for_category(category_key)
+    return {} if category_key.blank?
+
     attrs = available_attributes_array.select { |a| a.mandatory && a.category_key == category_key.to_s }
     group_by_subcategory(attrs)
   end
 
   def optional_fields_for_category(category_key)
+    return {} if category_key.blank?
+
     attrs = available_attributes_array.select { |a| !a.mandatory && a.category_key == category_key.to_s }
     group_by_subcategory(attrs)
   end
 
   def optional_fields_for_category?(category_key)
+    return false if category_key.blank?
+
     available_attributes_array.any? { |a| !a.mandatory && a.category_key == category_key.to_s }
   end
 
@@ -85,12 +96,24 @@ class PublicMarketPresenter
       .uniq
   end
 
-  def should_display_subcategory?(subcategories)
-    subcategories.keys.size > 1
+  def market_types_label
+    @public_market.market_type_codes.map { |c| I18n.t("market_types.#{c}", default: c.humanize) }.join(', ')
+  end
+
+  def market_types_label_with_source
+    "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
+  end
+
+  def lots
+    @lots ||= @public_market.lots.ordered.to_a
+  end
+
+  def lots?
+    lots.any?
   end
 
   def source_types
-    I18n.t('form_fields.source_types')
+    I18n.t('source_types')
   end
 
   def field_by_key(key)

@@ -1,0 +1,200 @@
+<% content_for :title, t('candidate.lot_selection.title') %>
+<% lots_already_saved = @presenter.lots_saved? %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
+
+<div class="fr-container fr-py-6w"
+     data-controller="lot-selection"
+     data-lot-selection-limit-value="<%= @market_application.public_market.lot_limit.to_i %>"
+     data-lot-selection-storage-key-value="lot-selection-<%= @market_application.identifier %>">
+  <div class="fr-grid-row fr-grid-row--gutters">
+
+    <div class="fr-col-12 fr-col-md-7">
+      <h1 class="fr-h3 fr-mb-1w"><%= t('candidate.lot_selection.title') %></h1>
+      <p class="fr-text--sm fr-text--mention-grey fr-mb-3w">
+        <%= t('candidate.lot_selection.subtitle') %>
+      </p>
+
+      <% if @errors&.any? %>
+        <div class="fr-alert fr-alert--error fr-mb-3w" role="alert">
+          <ul class="fr-list">
+            <% @errors.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="fr-notice fr-notice--info fr-mb-3w">
+        <div class="fr-notice__body fr-px-2w fr-py-1w">
+          <p class="fr-notice__title"></p>
+          <p class="fr-notice__desc">
+            <%= t('candidate.lot_selection.single_form_notice') %>
+          </p>
+        </div>
+      </div>
+
+      <%= form_with url: lot_selection_candidate_market_application_path(@market_application.identifier),
+                    method: :patch,
+                    local: true,
+                    id: "lot-selection-form",
+                    data: { turbo: false } do %>
+        <% lots = @market_application.public_market.lots.ordered %>
+
+        <div class="fr-mb-4w" style="border: 1px solid var(--border-default-grey); border-radius: 4px;">
+          <div class="fr-px-3w fr-py-2w"
+               style="border-bottom: 1px solid var(--border-default-grey); display: flex; justify-content: space-between; align-items: center; background: var(--background-alt-grey); border-radius: 4px 4px 0 0;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <%= market_type_icon_tag(@market_application.public_market.market_type_codes) %>
+              <div>
+                <p class="fr-text--bold fr-mb-0">
+                  <%= @market_application.public_market.market_type_codes.any? ?
+                        t("market_types.#{@market_application.public_market.market_type_codes.first}",
+                          default: @market_application.public_market.market_type_codes.first.humanize) :
+                        t('candidate.lot_selection.lots_count', count: lots.size) %>
+                </p>
+                <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
+                  <%= t('candidate.lot_selection.available_lots_count', count: lots.size) %>
+                </p>
+              </div>
+            </div>
+            <button type="button"
+                    class="fr-link fr-text--xs"
+                    style="text-decoration: underline;"
+                    data-action="lot-selection#selectAll"
+                    data-lot-selection-target="selectAllButton"
+                    data-select-text="<%= t('candidate.lot_selection.select_all') %>"
+                    data-deselect-text="<%= t('candidate.lot_selection.deselect_all') %>">
+              <%= t('candidate.lot_selection.select_all') %>
+            </button>
+          </div>
+
+          <% if @market_application.public_market.lot_limit.present? %>
+            <div class="fr-px-3w fr-pt-2w">
+              <p class="fr-text--sm fr-mb-0" style="color: var(--text-default-error);">
+                <%= t('candidate.lot_selection.lot_limit_notice', count: @market_application.public_market.lot_limit) %>
+              </p>
+              <p class="fr-text--sm fr-mb-0"
+                 style="color: var(--text-default-error);"
+                 data-lot-selection-target="limitError"
+                 hidden>
+                <%= t('candidate.lot_selection.lot_limit_exceeded_notice', count: @market_application.public_market.lot_limit) %>
+              </p>
+            </div>
+          <% end %>
+
+          <div class="fr-px-3w fr-py-2w" style="display: flex; flex-direction: column; gap: 1rem;">
+            <% lots.each_with_index do |lot, index| %>
+              <div class="fr-checkbox-group" style="display: flex; align-items: center;" data-lot-selection-target="checkboxGroup">
+                <%= check_box_tag "market_application[lot_ids][]",
+                      lot.id,
+                      @market_application.lot_ids.include?(lot.id),
+                      id: "lot_#{lot.id}",
+                      class: "fr-checkbox",
+                      data: {
+                        lot_selection_target: "checkbox",
+                        action: "change->lot-selection#toggle"
+                      } %>
+                <label class="fr-label" for="lot_<%= lot.id %>">
+                  <%= lot.name %>
+                  <span class="fr-hint-text">
+                    <%= t('candidate.lot_selection.lot_number', number: index + 1) %>
+                  </span>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+      <% end %>
+
+      <button type="submit"
+              form="lot-selection-form"
+              name="final_submit"
+              value="1"
+              class="fr-btn fr-icon-send-plane-fill fr-btn--icon-right"
+              style="width: 100%; margin-top: 0.5rem; justify-content: center;"
+              <%= 'disabled' unless lots_already_saved %>>
+        <%= t('button.submit_summary') %>
+      </button>
+    </div>
+
+    <div class="fr-col-12 fr-col-md-5">
+
+      <div class="fr-mb-3w fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 20px;">
+        <h2 class="fr-text--bold" style="font-size: 1rem; margin-bottom: 0.5rem;">
+          <%= t('candidate.lot_selection.market_info_title') %>
+        </h2>
+        <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.5rem 0;">
+        <%= render 'shared/sidebar_market_info',
+              buyer_label: t('candidate.lot_selection.buyer_label'),
+              market_name: @market_application.public_market.name,
+              typology_label: t('candidate.lot_selection.market_type_label'),
+              market_types_label: @market_application.public_market.market_type_codes.any? ?
+                @market_application.public_market.market_type_codes.map { |c| t("market_types.#{c}", default: c.humanize) }.join(', ') :
+                t('candidate.shared.no_market_type'),
+              deadline_label: t('candidate.lot_selection.deadline_label'),
+              deadline: l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %>
+      </div>
+
+      <div class="fr-mb-3w fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 20px;">
+        <h2 class="fr-text--bold" style="font-size: 1rem; margin-bottom: 0.5rem;">
+          <%= t('candidate.lot_selection.how_it_works_title') %>
+        </h2>
+        <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.5rem 0;">
+        <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; display: flex; flex-direction: column; gap: 4px;">
+          <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
+          <li><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
+          <li><%= t('candidate.lot_selection.how_it_works_step_3') %></li>
+        </ol>
+      </div>
+
+      <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 20px;">
+        <h2 class="fr-text--bold" style="font-size: 1rem; margin-bottom: 0.5rem;">
+          <%= t('candidate.lot_selection.progress_title') %>
+        </h2>
+        <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.5rem 0;">
+        <p class="fr-text--sm fr-text--mention-grey fr-mb-0"
+           data-lot-selection-target="noLotsText"
+           <%= 'hidden' if lots_already_saved %>>
+          <%= t('candidate.lot_selection.no_lot_selected') %>
+        </p>
+        <div data-lot-selection-target="progressCard"
+             <%= 'hidden' unless lots_already_saved %>
+             style="border: 1px solid var(--border-default-grey); border-radius: 4px; padding: 1rem; background: white;">
+          <div class="fr-mb-1w" style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="fr-icon-draft-fill" aria-hidden="true"
+                  style="color: var(--blue-france-sun-113-625);"></span>
+            <span class="fr-text--bold" style="color: var(--blue-france-sun-113-625); font-size: 0.875rem;">
+              <%= t('candidate.lot_selection.application_form_title') %>
+            </span>
+          </div>
+          <% if @presenter %>
+            <p class="fr-text--sm fr-mb-1w"
+               style="color: <%= @presenter.fields_complete? ? 'var(--text-default-success)' : 'var(--blue-france-sun-113-625)' %>;">
+              <%= t('candidate.lot_selection.fields_count',
+                    filled: @presenter.filled_fields_count,
+                    total: @presenter.total_fields_count) %>
+            </p>
+          <% end %>
+          <p class="fr-text--sm fr-text--mention-grey fr-mb-2w"
+             data-lot-selection-target="selectedLotsCount"
+             data-one="<%= I18n.t('candidate.lot_selection.lots_count.one') %>"
+             data-other="<%= I18n.t('candidate.lot_selection.lots_count.other') %>"></p>
+          <div style="text-align: right;">
+            <button type="submit"
+                    form="lot-selection-form"
+                    data-lot-selection-target="submitButton"
+                    style="background: none; border: none; color: var(--blue-france-sun-113-625); font-size: 0.875rem; font-weight: 500; cursor: pointer; padding: 0;"
+                    <%= 'disabled' unless lots_already_saved %>>
+              <%= t(@presenter.cta_translation_key) %>
+              <span class="fr-icon-arrow-right-line fr-icon--sm" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

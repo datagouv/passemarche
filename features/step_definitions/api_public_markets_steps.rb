@@ -18,6 +18,9 @@ When('I create a public market with the following details:') do |table|
     @public_market_params.delete('market_types')
   end
 
+  lot_name = @public_market_params.delete('lot_name')
+  @public_market_params['lots'] = [{ 'name' => lot_name }] if lot_name
+
   header 'Authorization', nil
 
   token = @access_token || @previous_token
@@ -65,7 +68,6 @@ Then('the public market should be saved in the database') do
 
   expect(public_market).to be_present
   expect(public_market.name).to eq(@public_market_params['name'])
-  expect(public_market.lot_name).to eq(@public_market_params['lot_name'])
   expect(public_market.deadline.utc.iso8601).to eq(@public_market_params['deadline'])
 
   # Check market types
@@ -73,6 +75,12 @@ Then('the public market should be saved in the database') do
     expected_codes = @public_market_params['market_type_codes']
     actual_codes = public_market.market_type_codes
     expect(actual_codes).to match_array(expected_codes)
+  end
+
+  if @public_market_params['lots']
+    expected_names = @public_market_params['lots'].pluck('name')
+    actual_names = public_market.lots.ordered.map(&:name)
+    expect(actual_names).to match_array(expected_names)
   end
 end
 
@@ -87,7 +95,7 @@ Then('the public market should have no lot name') do
   identifier = @response_body['identifier']
   public_market = PublicMarket.find_by(identifier:)
 
-  expect(public_market.lot_name).to be_nil
+  expect(public_market.lots).to be_empty
 end
 
 Then('I should receive an authentication error') do

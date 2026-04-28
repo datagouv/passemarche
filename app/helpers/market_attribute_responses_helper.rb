@@ -19,13 +19,11 @@ module MarketAttributeResponsesHelper
   end
 
   def field_label(market_attribute_response)
-    t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.name",
-      default: market_attribute_response.market_attribute.key.humanize)
+    market_attribute_response.market_attribute.resolved_candidate_name
   end
 
   def field_description(market_attribute_response)
-    t("form_fields.candidate.fields.#{market_attribute_response.market_attribute.key}.description",
-      default: nil)
+    market_attribute_response.market_attribute.resolved_candidate_description
   end
 
   def file_upload_hint_text(max_size_class)

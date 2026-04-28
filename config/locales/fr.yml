@@ -1,6 +1,34 @@
 # frozen_string_literal: true
 
 fr:
+  auth_mailer:
+    magic_link:
+      subject: Votre lien de connexion à Passe Marché
+      greeting: Bonjour,
+      intro: "Vous avez demandé à accéder à Passe Marché pour préparer votre candidature pour le marché :"
+      cta_intro: "Cliquez sur le bouton ci-dessous pour vous connecter :"
+      cta: Lien de connexion
+      warning: "Attention, ce lien est valable pendant 30 minutes et ne peut être utilisé qu'une fois."
+      footer:
+        privacy: Politique de confidentialité
+        legal: Mentions légales
+        copyright: "© République Française - Tous droits réservés"
+        contact: contact@exemple.gouv.fr
+    reconnection_magic_link:
+      subject: Reprenez votre candidature sur Passe Marché
+      greeting: "Votre candidature,"
+      intro: "En vous connectant à Passe Marché, avec le même numéro de SIRET et la même adresse email qu'à la première connexion, vous pouvez modifier votre candidature à tout moment tant qu'elle n'a pas été transmise à l'acheteur."
+      market_intro: "Vous pouvez accéder au formulaire de candidature pour le marché :"
+      cta_intro: "Cliquez sur le bouton ci-dessous pour vous reconnecter et continuer :"
+      cta: Poursuivre ma candidature
+  source_types:
+    authentic_source:
+      label: Récupéré automatiquement
+      badge_class: fr-badge--success
+    honor_declaration:
+      label: Déclaré par le candidat
+      badge_class: fr-badge--info
+
   time:
     am: "am"
     pm: "pm"
@@ -87,23 +115,63 @@ fr:
 
   button:
     next_step: "Passer à l'étape suivante"
-    submit_summary: "Transmettre ma candidature"
+    previous: "Précédent"
     continue: "Continuer"
+    submit_summary: "Transmettre l'ensemble de mes candidatures"
+
+  malware_scan:
+    label:
+      safe: "Fichier vérifié"
+      unsafe: "Malware détecté"
+      scanning: "Scan en cours..."
+      not_scanned: "Non vérifié"
+    badge_class:
+      safe: "success"
+      unsafe: "error"
+      scanning: "info"
+      not_scanned: "info"
 
   shared:
+    subcategory_labels:
+      market_information: "Informations du marché"
+    source_badge:
+      data_from_api: "Récupéré automatiquement"
+      declared_by_candidate: "Déclaré par le candidat"
     application_summary:
       market_info_title: "Informations du marché"
       market_name: "Nom du marché"
-      lot_name: "Nom du lot"
+      lot_name: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
       no_documents_configured: "Aucun document requis configuré pour ce marché."
+    application_lots_summary:
+      title: "Liste des lots concernés par la candidature"
+      lot_number: "Lot %{number}"
+      lot_title_label: "Titre :"
+      lot_type_label: "Type :"
+      lot_cpv_label: "CPV :"
     renamed_documents:
       title: "Vos documents"
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
+    environment_banner:
+      message: "Vous êtes sur un environnement de test (%{env})"
+    pdf_environment_indicator:
+      watermark: "Attestation de test"
+
+  activemodel:
+    errors:
+      models:
+        lot_selection_policy:
+          attributes:
+            base:
+              no_lot_selected: "Vous devez sélectionner au moins un lot"
+              lot_limit_exceeded: "Vous ne pouvez pas sélectionner plus de %{limit} lot(s) (vous en avez sélectionné %{count})"
 
   errors:
+    messages:
+      blank: "doit être rempli(e)"
+      invalid: "n'est pas valide"
     market_application:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
@@ -244,12 +312,14 @@ fr:
     services: "Services"
     works: "Travaux"
     defense: "Défense et sécurité"
+    source:
+      platform: "Plateforme"
 
   buyer:
     shared:
       market_info_title: "Les informations du marché"
       market_name: "Nom du marché"
-      lot_name: "Nom du lot"
+      lot_name: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       deadline_short: "Date limite"
       market_type: "Typologie de marché"
@@ -272,6 +342,10 @@ fr:
       market_info_title: "Informations du marché"
       no_fields_configured: "Aucun champ configuré."
       finalize: "Finaliser la configuration"
+      lot_limit: "Limite de lots par candidat"
+      lot_limit_value:
+        one: "%{count} lot maximum"
+        other: "%{count} lots maximum"
     sync_status:
       title_suffix: "Synchronisation"
       success_title: "Synchronisation réussie"
@@ -295,11 +369,31 @@ fr:
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
+        lot_config: "Configuration des lots"
         identite_entreprise: "Les informations concernant l'identité de l'entreprise"
         motifs_exclusion: "Les motifs d'exclusion"
         capacite_economique_financiere: Sélection des renseignements complémentaires (partie 1)
         capacites_techniques_professionnelles: Sélections des renseignements complémentaires (partie 2)
         summary: "Synthèse"
+      lot_config:
+        title: "Configurer le type de vos lots"
+        subtitle: "Vérifiez et ajustez le type de chaque lot avant de configurer les pièces justificatives."
+        lots_section_title: "Vérifiez les types transmis"
+        lots_section_subtitle: "Assurez-vous que les types transmis par la plateforme de marché sont exacts."
+        lot_number: "Lot %{number}"
+        lot_limit_section_title: "Indiquez si vous souhaitez limiter le nombre de lots"
+        lot_limit_section_subtitle: "Si vous le souhaitez, vous pouvez ajuster le nombre de lots auxquels une entreprise peut candidater."
+        lot_limit_question: "Souhaitez-vous limiter le nombre de lots ?"
+        lot_limit_yes: "Oui"
+        lot_limit_no: "Non"
+        lot_limit_label: "Indiquez le nombre de lots maximum auxquels une entreprise pourra candidater :"
+        sidebar_buyer_label: "Acheteur"
+        sidebar_typology_label: "Typologie"
+        how_it_works_title: "Comment ça fonctionne"
+        how_it_works_step_1: "Vérifiez les types transmis par la plateforme"
+        how_it_works_step_2: "Limitez le nombre de lots si nécessaire"
+        how_it_works_step_3: "Passez à la configuration des candidatures"
+        submit: "Configurer les candidatures"
       generic_step:
         optional_question: Souhaitez-vous demander des renseignements complémentaires ?
         yes_option: Oui
@@ -307,6 +401,8 @@ fr:
         steps:
           identite_entreprise:
             title: Les informations concernant l'identité de l'entreprise
+            optional_fields_title: Informations complémentaires sur l'identité de l'entreprise
+            optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations complémentaires qui seront demandées aux candidats
           motifs_exclusion:
             title: "Les motifs d'exclusion"
             box_title: "Motifs d'exclusion obligatoire"
@@ -338,7 +434,7 @@ fr:
         loading: "Synchronisation en cours..."
         processing:
           title: "Synchronisation en cours"
-          message: "Votre marché est en cours de synchronisation avec la plateforme de l'éditeur. Veuillez patienter quelques instants."
+          message: "Votre marché est en cours de synchronisation avec la plateforme de marchés publics. Veuillez patienter quelques instants."
         completed:
           title: "Synchronisation terminée"
           message: "Votre marché a été synchronisé avec succès. Vous pouvez maintenant continuer."
@@ -348,9 +444,6 @@ fr:
         continue: "Continuer"
         contact_support: "Contacter le support"
     attestations:
-      badges:
-        data_from_api: "De source authentique"
-        declared_on_honor: "Déclarée sur l'honneur"
       motifs_exclusion:
         candidate_attestation_title: "Attestation du candidat"
         candidate_attestation_confirmed_notice: "J'atteste sur l'honneur que mon entreprise ne rentre pas dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L. 2341-1 à L. 2341-3 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique et m'engage à informer l'acheteur de tout changement de situation sans délai."
@@ -364,16 +457,79 @@ fr:
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
 
   candidate:
+    lot_selection:
+      title: "Sélectionnez un ou plusieurs lot(s)"
+      subtitle: "Sélectionnez un ou plusieurs lots pour lequel/lesquels vous souhaitez soumettre une candidature."
+      submit: "Transmettre ma candidature"
+      market_info_title: "Informations du marché"
+      buyer_label: "Acheteur"
+      how_it_works_title: "Comment ça fonctionne"
+      how_it_works_step_1: "Sélectionnez vos lots"
+      how_it_works_step_2: "Complétez le formulaire de candidature"
+      how_it_works_step_3: "Soumettez votre candidature"
+      market_type_label: "Typologie"
+      deadline_label: "Date limite"
+      application_form_title: "Formulaire de candidature"
+      prepare: "Préparer"
+      modify: "Modifier"
+      fields_count: "%{filled}/%{total} champs complétés"
+      progress_title: "Avancement des candidatures"
+      no_lot_selected: "Aucun lot sélectionné pour le moment"
+      select_all: "Tout sélectionner"
+      deselect_all: "Tout désélectionner"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
+      available_lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
+      lot_number: "Lot %{number}"
+      single_form_notice: "Vous n'avez qu'un seul formulaire de candidature à compléter, Passe Marché se charge de transmettre votre candidature pour les différents lots."
+      lot_limit_notice:
+        one: "L'acheteur a limité le nombre de lot auxquels vous pouvez candidater : %{count} lot maximum"
+        other: "L'acheteur a limité le nombre de lots auxquels vous pouvez candidater : %{count} lots maximum"
+      lot_limit_hint:
+        one: "Vous pouvez sélectionner au maximum %{count} lot."
+        other: "Vous pouvez sélectionner au maximum %{count} lots."
+      lot_limit_exceeded_notice:
+        one: "Vous avez atteint la limite : %{count} lot maximum autorisé"
+        other: "Vous avez atteint la limite : %{count} lots maximum autorisés."
+    validations:
+      siret_blank: "Veuillez renseigner votre numéro de SIRET"
+      siret_invalid: "Le numéro de SIRET saisi est invalide"
+      email_blank: "Veuillez renseigner votre adresse email"
+      email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
+    request_magic_link:
+      no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
+      no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
+      email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
+    sessions:
+      new:
+        title: "Bienvenue,"
+        subtitle: "Passe Marché vous permet de candidater aux marchés publics."
+        subtitle_with_editor: "%{editor} vous permet de candidater rapidement aux marchés publics."
+        employee_section: "Vous êtes un employé ?"
+        siret_label: "Veuillez saisir votre numéro de SIRET"
+        siret_hint: "Cela nous permet de récupérer des informations et documents automatiquement"
+        email_label: "Veuillez saisir votre adresse email"
+        submit: "Recevoir un lien de connexion"
+        manager_section: "Vous êtes dirigeant ?"
+        proconnect_cta: "S'identifier avec ProConnect"
+      sent:
+        title: "Vérifiez vos emails"
+        message: "Un lien de connexion a été envoyé. Il est valable 30 minutes."
+        connection_market_intro: "Ce lien vous permettra de reprendre votre candidature pour le marché :"
+      invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
       welcome: "Bienvenue,"
       siret_label: "Votre numéro de SIRET"
-      siret_hint: "Ce numéro a été fourni par l'éditeur et ne peut pas être modifié"
+      siret_hint: "Ce numéro a été fourni par la plateforme de marchés publics et ne peut pas être modifié"
       continue: "Continuer"
       previous: "Précédent"
       next: "Suivant"
       form_logo_alt: "Logo de formulaire"
       market_name: "Nom du marché"
-      lot_name: "Nom du lot"
+      lot_name: "Nom des lots"
       deadline: "Date et heure limite de remise des plis"
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
@@ -449,15 +605,47 @@ fr:
       rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       qualibat_api_error: "Impossible de récupérer la certification Qualibat de votre entreprise : %{error}"
       urssaf_api_error: "Impossible de récupérer l'attestation de vigilance URSSAF : %{error}"
-      badges:
-        data_from_api: "Récupéré automatiquement"
-        declared_on_honor: "Déclaré sur l'honneur"
       auto_filled_message: "Cette information a été récupérée automatiquement et ne nécessite pas votre intervention."
       attestation_motifs_exclusion:
         header_title: "Les motifs d'exclusion"
-        title: "Attestation sur l'honneur - Motifs d'exclusion"
-        checkbox_label: "J’atteste que mon entreprise n’est concernée par aucun motif d’exclusion"
-        info_banner: "L'entreprise ne doit pas faire l'objet d'un motif d'exclusion tel que prévu aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique."
+        title: "Attestation sur l’honneur - Motifs d’exclusion"
+        declaration: "Le candidat individuel déclare sur l’honneur ne pas être concerné par un motif d’exclusion prévu par le code de la commande publique."
+        article_1_label: "Art. L.2141-1 à L.2141-5"
+        article_2_label: "Art. L.2141-7 à L.2141-10"
+        checkbox_label: "J’atteste sur l’honneur que mon entreprise n’est concernée par aucun des motifs d’exclusion visés aux articles ci-dessus."
+        details_title: "En savoir plus sur les motifs d’exclusion"
+        details:
+          principe:
+            title: "Principe"
+            body: "Les motifs d'exclusion obligatoires s’imposent à l’acheteur. Lorsqu’un candidat se trouve dans l’un de ces cas, l’acheteur est tenu d’écarter sa candidature, sous réserve des mesures d’auto-apurement prévues par le code de la commande publique."
+          condamnations_penales:
+            title: "Condamnations pénales visées"
+            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive pour :"
+            tags:
+              - "Trafic de stupéfiants"
+              - "Traite des êtres humains"
+              - "Escroquerie"
+              - "Blanchiment"
+              - "Actes de terrorisme"
+              - "Corruption passive"
+              - "Trafic d’influence"
+              - "Prise illégale d’intérêt"
+              - "Atteintes à la liberté d’accès aux marchés"
+              - "Entraves à la justice"
+              - "Faux"
+              - "Association de malfaiteurs"
+          situation_entreprise:
+            title: "Situation de l'entreprise"
+            body: "Sont également exclus : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
+          manquements_fiscaux:
+            title: "Manquements fiscaux"
+            body: "L’exclusion s’applique aussi en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
+          presomption_entente:
+            title: "Présomption d'entente"
+            body: "S’il y a des indices prouvant qu’il y a eu accord entre elle et d’autres opérateurs économiques en vue de fausser la concurrence."
+          conflit_interet:
+            title: "Conflit d'intérêt"
+            body: "Faisant naître un doute sur l’impartialité de la procédure d’attribution du marché public."
       motifs_exclusion:
         provide_additional_info_button: "Je souhaite fournir des informations complémentaires"
         motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
@@ -629,25 +817,26 @@ fr:
       show_secret: "Afficher le secret"
       not_configured: "Non configurée"
     navigation:
-      editors: "Éditeurs"
+      editors: "plateformes de marchés publics"
       dashboard: "Tableau de bord"
       socle_de_base: "Socle de base"
       background_jobs: "Tâches en arrière-plan"
+      logout: "Déconnexion"
     dashboard:
       title: "Suivi d'activité"
       title_with_editor: "Suivi d'activité - %{editor_name}"
       filter:
-        label: "Filtrer par éditeur"
-        all_editors: "Tous les éditeurs"
+        label: "Filtrer par plateforme"
+        all_editors: "Toutes les plateformes de marchés publics"
       export_button: "Exporter (CSV)"
       info_button_title: "Plus d'informations"
       cards:
         editors_total:
-          title: "Éditeurs configurés"
-          tooltip: "Nombre total d'éditeurs enregistrés sur la plateforme"
+          title: "plateformes de marchés publics configurées"
+          tooltip: "Nombre total de plateformes de marchés publics enregistrées sur la plateforme"
         editors_active:
-          title: "Éditeurs actifs et autorisés"
-          tooltip: "Éditeurs pouvant créer des marchés"
+          title: "plateformes de marchés publics actives et autorisées"
+          tooltip: "plateformes de marchés publics pouvant créer des marchés"
         markets_total:
           title: "Marchés créés"
           tooltip: "Nombre total de marchés publics créés"
@@ -692,13 +881,13 @@ fr:
       webhook_secret_generated: "Nouveau secret webhook généré avec succès"
       webhook_secret_error: "Erreur lors de la génération du secret"
       index:
-        title: "Gestion des éditeurs"
-        add: "Ajouter un éditeur"
+        title: "Gestion des plateformes de marchés publics"
+        add: "Ajouter une plateforme"
         client_id: "Client ID"
         confirm_delete: "Êtes-vous sûr ?"
       new:
-        breadcrumb: "Nouvel éditeur"
-        title: "Nouvel éditeur"
+        breadcrumb: "Nouvelle plateforme"
+        title: "Nouvelle plateforme"
         can_create_defense_markets: "Peut créer des marchés de défense et sécurité (MDS)"
       edit:
         breadcrumb: "Modifier"
@@ -742,7 +931,7 @@ fr:
       manage_button: "Gérer le socle de base"
       export_button: "Exporter"
       new_field_button: "Nouveau champ"
-      edit_button: "Modifier"
+      show_button: "Consulter"
       archive_button: "Archiver"
       archive:
         confirm: "Êtes-vous sûr de vouloir archiver ce champ ? Il ne sera plus visible dans le socle de base."
@@ -761,10 +950,28 @@ fr:
         submit: "Importer"
         cancel: "Annuler"
         close: "Fermer"
-      create:
         success: "Import réussi : %{created} créé(s), %{updated} mis à jour, %{soft_deleted} archivé(s), %{skipped} ignoré(s)"
         no_file: "Veuillez sélectionner un fichier CSV"
         error: "Erreur lors de l'import : %{message}"
+        expired: "Le fichier d'import a expiré. Veuillez relancer l'import."
+      import_preview:
+        title: "Prévisualisation de l'import"
+        summary: "%{creates} création(s), %{updates} modification(s), %{deletes} archivage(s)"
+        creates_title:
+          one: "%{count} création"
+          other: "%{count} créations"
+        updates_title:
+          one: "%{count} modification"
+          other: "%{count} modifications"
+        deletes_title:
+          one: "%{count} archivage"
+          other: "%{count} archivages"
+        key: "Clé"
+        name: "Nom"
+        changes: "Modifications"
+        confirm: "Confirmer l'import"
+        cancel: "Annuler"
+        no_file: "Veuillez sélectionner un fichier CSV"
       cards:
         total:
           title: "Champs total"
@@ -804,10 +1011,104 @@ fr:
         source_manual: "Manuelle"
         no_results: "Aucun champ ne correspond à votre recherche."
         reset: "Réinitialiser les filtres"
+      input_type_hints:
+        file_upload: "Le candidat dépose un ou plusieurs fichiers."
+        text_input: "Le candidat saisit une réponse courte sur une seule ligne."
+        checkbox: "Le candidat coche une case pour confirmer (oui/non)."
+        textarea: "Le candidat saisit un texte libre sur plusieurs lignes."
+        email_input: "Le candidat saisit une adresse email."
+        phone_input: "Le candidat saisit un numéro de téléphone."
+        checkbox_with_document: "Le candidat coche une case et peut joindre un document justificatif."
+        file_or_textarea: "Le candidat dépose un fichier ou rédige une réponse texte."
+        url_input: "Le candidat saisit une adresse web (URL)."
+        radio_with_file_and_text: "Le candidat choisit une option et peut joindre un fichier et un commentaire."
+        radio_with_justification_required: "Le candidat choisit une option et doit fournir une justification."
+        radio_with_justification_optional: "Le candidat choisit une option et peut fournir une justification."
+        inline_file_upload: "Téléversement de fichier affiché en ligne dans le formulaire."
+        inline_url_input: "Saisie d'URL affichée en ligne dans le formulaire."
+        realisations_livraisons: "Le candidat décrit des réalisations ou livraisons passées (tableau structuré)."
+        presentation_intervenants: "Le candidat présente les intervenants du projet."
+        capacite_economique_financiere_chiffre_affaires_global_annuel: "Tableau pré-rempli du chiffre d'affaires annuel (données API)."
+        capacite_economique_financiere_effectifs_moyens_annuels: "Tableau pré-rempli des effectifs moyens annuels (données API)."
+        capacites_techniques_professionnelles_outillage_echantillons: "Le candidat décrit son outillage, matériel et équipements techniques."
       market_type_badges:
         works: "T"
         supplies: "F"
         services: "S"
+        defense: "D"
+      show:
+        back: "Retour au socle de base"
+        general_info: "Informations générales"
+        field_type: "Type de champ"
+        mandatory: "Champ obligatoire"
+        market_types: "Types de marché"
+        description: "Description"
+        buyer_view: "Vue acheteur"
+        candidate_view: "Vue candidat"
+        category: "Catégorie"
+        subcategory: "Sous-catégorie"
+        title_field: "Titre"
+        description_field: "Description"
+        configuration: "Configuration"
+        mode: "Mode"
+        mode_api: "API"
+        mode_manual: "Manuelle"
+        api_source: "API source"
+        api_key: "Clé API"
+        archive_button: "Archiver ce champ"
+        archive_confirm: "Êtes-vous sûr de vouloir archiver ce champ ?"
+      new:
+        title: "Créer un nouveau champ"
+        breadcrumb: "Nouveau champ"
+      edit:
+        title: "Modifier le champ"
+        submit: "Modifier"
+        cancel: "Annuler"
+        select_option: "Sélectionner..."
+      create:
+        success: "Le champ a été créé avec succès."
+      update:
+        success: "Champ modifié avec succès"
+      form:
+        general_info:
+          title: "Informations générales"
+          input_type: "Type de saisie"
+          input_type_hint: "Sélectionnez le type de champ qui sera affiché au candidat"
+          input_type_prompt: "Sélectionnez un type de saisie"
+          mandatory: "Champ obligatoire"
+          mandatory_hint: "Si coché, ce champ sera requis pour toute candidature"
+        configuration:
+          title: "Configuration de la source"
+          source: "Source des données"
+          source_manual: "Manuel"
+          source_manual_hint: "Le candidat renseigne cette information manuellement"
+          source_api: "API"
+          source_api_hint: "Cette information est récupérée automatiquement via une API"
+          api_name: "Nom de l'API"
+          api_name_hint: "Nom du fournisseur de données (ex : Insee, Urssaf)"
+          api_key: "Clé API"
+          api_key_hint: "Identifiant technique du champ dans l'API (ex : siret, denomination)"
+        descriptions:
+          title: "Descriptions acheteur / candidat"
+          category: "Catégorie"
+          category_prompt: "Sélectionnez une catégorie"
+          subcategory: "Sous-catégorie"
+          subcategory_prompt: "Sélectionnez une sous-catégorie"
+          buyer_name: "Intitulé acheteur"
+          buyer_name_hint: "Nom du champ tel qu'affiché à l'acheteur"
+          candidate_name: "Intitulé candidat"
+          candidate_name_hint: "Nom du champ tel qu'affiché au candidat"
+          buyer_description: "Description acheteur"
+          buyer_description_hint: "Texte d'aide affiché à l'acheteur"
+          candidate_description: "Description candidat"
+          candidate_description_hint: "Texte d'aide affiché au candidat"
+        market_types:
+          title: "Types de marché"
+          hint: "Sélectionnez au moins un type de marché"
+        submit: "Créer le champ"
+        cancel: "Annuler"
+      errors:
+        title: "Erreurs dans le formulaire"
     categories:
       title: "Catégories et sous catégories"
       back_link: "Retour"
@@ -827,6 +1128,16 @@ fr:
         create_subcategory: "Créer une nouvelle sous-catégorie"
         edit: "Modifier"
       navigation_link: "Catégories et sous-catégories"
+      new:
+        title: "Créer une catégorie"
+        buyer_section: "Catégorie acheteur"
+        candidate_section: "Catégorie candidat"
+        label_field: "Intitulé de la catégorie"
+        submit: "Créer"
+        cancel: "Annuler"
+        close: "Fermer"
+      create:
+        success: "Catégorie créée avec succès"
       edit:
         title: "Modifier une catégorie"
         buyer_section: "Catégorie acheteur"
@@ -838,6 +1149,18 @@ fr:
       update:
         success: "Catégorie modifiée avec succès"
     subcategories:
+      new:
+        title: "Créer une sous-catégorie"
+        buyer_section: "Sous catégorie acheteur"
+        candidate_section: "Sous catégorie candidat"
+        linked_category: "Liée à la catégorie"
+        select_category: "Sélectionner une catégorie"
+        label_field: "Intitulé de la sous catégorie"
+        submit: "Créer"
+        cancel: "Annuler"
+        close: "Fermer"
+      create:
+        success: "Sous-catégorie créée avec succès"
       edit:
         title: "Modifier une sous catégorie"
         buyer_section: "Sous catégorie acheteur"
@@ -849,35 +1172,97 @@ fr:
         close: "Fermer"
       update:
         success: "Sous-catégorie modifiée avec succès"
+    audit_logs:
+      title: "Historique des modifications"
+      filters:
+        search_placeholder: "Rechercher par catégorie ou contenu..."
+        date_from: "Date de début"
+        date_to: "Date de fin"
+        user: "Utilisateur"
+        all_users: "Tous les utilisateurs"
+        submit: "Filtrer"
+      table:
+        category: "Catégorie"
+        scope: "Périmètre"
+        action_type: "Type de modification"
+        user: "Utilisateur"
+        date: "Date"
+        detail: "Voir le détail"
+      events:
+        create: "Création"
+        update: "Modification"
+        destroy: "Suppression"
+        archive: "Archivage"
+      scopes:
+        buyer: "Acheteur"
+        candidate: "Candidat"
+        both: "Acheteur / Candidat"
+      show:
+        title_create: "Détail de la création"
+        title_update: "Détail de la modification"
+        title_archive: "Détail de l'archivage"
+        back: "Retour à l'historique"
+        field: "Champ"
+        before: "Avant"
+        after: "Après"
+        trackable: "Élément concerné"
+        performed_by: "Effectué par"
+        performed_at: "Le"
+        buyer_content: "Contenu acheteur"
+        candidate_content: "Contenu candidat"
+        event: "Action"
+        changed_attributes: "Attributs modifiés"
+        value: "Valeur"
+      empty: "Aucune modification enregistrée"
+      attribute_labels:
+        buyer_name: "Titre acheteur"
+        buyer_description: "Description acheteur"
+        candidate_name: "Titre candidat"
+        candidate_description: "Description candidat"
+        mandatory: "Obligatoire"
+        input_type: "Type de champ"
+        api_name: "Nom API"
+        api_key: "Clé API"
+        category_key: "Catégorie"
+        subcategory_key: "Sous-catégorie"
+        deleted_at: "Archivé"
+        key: "Clé technique"
 
   activerecord:
+    attributes:
+      market_attribute:
+        buyer_name: "Intitulé acheteur"
+        candidate_name: "Intitulé candidat"
+        market_types: "Types de marché"
+        api_name: "Nom de l'API"
+        api_key: "Clé API"
     errors:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
-        cannot_be_alone: "%{attribute} ne peut pas être seul"
-        inclusion: "%{attribute} n'est pas inclus dans la liste des valeurs autorisées"
-        invalid: "%{attribute} n'est pas valide"
-        blank: "%{attribute} ne peut pas être vide"
-        taken: "%{attribute} est déjà utilisé"
-        too_long: "%{attribute} est trop long (maximum %{count} caractères)"
-        too_short: "%{attribute} est trop court (minimum %{count} caractères)"
-        wrong_length: "%{attribute} ne fait pas la bonne longueur (doit contenir %{count} caractères)"
-        not_a_number: "%{attribute} n'est pas un nombre"
-        greater_than: "%{attribute} doit être supérieur à %{count}"
-        greater_than_or_equal_to: "%{attribute} doit être supérieur ou égal à %{count}"
-        equal_to: "%{attribute} doit être égal à %{count}"
-        less_than: "%{attribute} doit être inférieur à %{count}"
-        less_than_or_equal_to: "%{attribute} doit être inférieur ou égal à %{count}"
-        other_than: "%{attribute} doit être différent de %{count}"
-        odd: "%{attribute} doit être impair"
-        even: "%{attribute} doit être pair"
-        present: "%{attribute} doit être renseigné"
-        required: "%{attribute} est requis"
-        confirmation: "%{attribute} ne concorde pas avec %{attribute} (confirmation)"
-        accepted: "%{attribute} doit être accepté"
-        empty: "%{attribute} doit être vide"
-        in: "%{attribute} n'est pas inclus dans la liste"
-        excluded: "%{attribute} n'est pas disponible"
+        cannot_be_alone: "ne peut pas être seul"
+        inclusion: "n'est pas inclus dans la liste des valeurs autorisées"
+        invalid: "n'est pas valide"
+        blank: "ne peut pas être vide"
+        taken: "est déjà utilisé"
+        too_long: "est trop long (maximum %{count} caractères)"
+        too_short: "est trop court (minimum %{count} caractères)"
+        wrong_length: "ne fait pas la bonne longueur (doit contenir %{count} caractères)"
+        not_a_number: "n'est pas un nombre"
+        greater_than: "doit être supérieur à %{count}"
+        greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
+        equal_to: "doit être égal à %{count}"
+        less_than: "doit être inférieur à %{count}"
+        less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
+        other_than: "doit être différent de %{count}"
+        odd: "doit être impair"
+        even: "doit être pair"
+        present: "doit être renseigné"
+        required: "est requis"
+        confirmation: "ne concorde pas avec la confirmation"
+        accepted: "doit être accepté"
+        empty: "doit être vide"
+        in: "n'est pas inclus dans la liste"
+        excluded: "n'est pas disponible"
       json_schema:
         invalid_format: "Le format n'est pas valide"
         too_long: "Le contenu est trop long"
@@ -897,12 +1282,17 @@ fr:
             market_types:
               blank: "Les types de marché ne peuvent pas être vides"
               cannot_be_alone: "Le marché de défense ne peut pas être le seul type sélectionné"
+            lot_limit:
+              blank: "Veuillez indiquer le nombre maximum de lots."
+              exceeds_lots_count: "Vous ne pouvez pas limiter un nombre de lots supérieur au nombre de lots créés."
             market_type_codes:
               invalid_codes: "Les codes de marché contiennent des valeurs invalides : %{codes}"
+            siret:
+              invalid: "Le numéro de SIRET saisi est invalide ou non reconnu"
         market_application:
           attributes:
             siret:
-              invalid: "Le numéro SIRET doit être composé de 14 chiffres valides"
+              invalid: "Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie."
         market_attribute_response:
           attributes:
             documents:
@@ -934,6 +1324,10 @@ fr:
               invalid_url: "doit être une URL valide (ex: https://..., ou www...)"
               blank: "Ce champ ne peut pas être vide"
               too_long: "Ce champ est trop long (maximum %{count} caractères)"
+        lot:
+          attributes:
+            cpv_code:
+              invalid_cpv_code: "doit respecter le format CPV (ex: 45000000-3)"
         editor:
           attributes:
             name:
@@ -962,6 +1356,7 @@ fr:
         client_secret: "secret client"
         completion_webhook_url: "URL de webhook"
         redirect_url: "URL de redirection"
+        cpv_code: "code CPV"
         checked: "case à cocher"
         file: "fichier"
         value: "valeur"

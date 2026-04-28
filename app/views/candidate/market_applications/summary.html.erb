@@ -8,8 +8,15 @@
              color: 'error' %>
 <% end %>
 
-<div class="fr-grid-row fr-grid-row--center">
+<div class="fr-grid-row fr-grid-row--center"
+     data-controller="summary-scan-refresh"
+     data-summary-scan-refresh-url-value="<%= wizard_path %>.json">
   <div class="fr-col-12">
+    <% if @presenter.lots_saved? %>
+      <div class="fr-mb-4w">
+        <%= render 'shared/application_lots_summary', presenter: @presenter %>
+      </div>
+    <% end %>
     <% if @presenter %>
       <div class="fr-mb-4w">
         <%= render 'shared/application_summary_content',

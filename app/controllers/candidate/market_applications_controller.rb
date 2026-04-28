@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 module Candidate
-  class MarketApplicationsController < ApplicationController
+  class MarketApplicationsController < Candidate::ApplicationController
     include Wicked::Wizard
+    include Candidate::MarketApplicationGuard
 
     prepend_before_action :set_steps
-    before_action :check_application_not_completed, except: [:retry_sync]
+    prepend_before_action :find_market_application
     before_action :set_wizard_steps
+    skip_before_action :check_application_not_completed, only: [:retry_sync]
 
     def show
-      @presenter = MarketApplicationPresenter.new(@market_application)
-      @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application) if step == :api_data_recovery_status
+      if step == :api_data_recovery_status
+        @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application)
+        @back_path = back_path_before_wizard
+      end
 
       respond_to do |format|
         format.html { render_html_step }
@@ -19,12 +23,12 @@ module Candidate
     end
 
     def update
-      @presenter = MarketApplicationPresenter.new(@market_application)
-
       result = MarketApplicationStepUpdateService.call(
         @market_application,
         step.to_sym,
-        market_application_params
+        market_application_params,
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
       )
 
       handle_service_result(result)
@@ -45,7 +49,7 @@ module Candidate
       end
 
       if result[:redirect] == :sync_status
-        queue_webhook_and_redirect
+        redirect_to candidate_sync_status_path(@market_application.identifier)
       elsif result[:success]
         render_wizard(@market_application)
       elsif custom_view_exists?
@@ -56,34 +60,18 @@ module Candidate
     end
 
     def set_wizard_steps
-      find_market_application
-      return unless @market_application
-
-      @presenter = MarketApplicationPresenter.new(@market_application)
-      @wizard_steps = @presenter.stepper_steps
+      @wizard_steps = presenter.stepper_steps
     end
 
     def set_steps
-      find_market_application
-      return unless @market_application
-
-      @presenter ||= MarketApplicationPresenter.new(@market_application)
-      self.steps = @presenter.wizard_steps
-    end
-
-    def queue_webhook_and_redirect(flash_options = {})
-      MarketApplicationWebhookJob.perform_later(
-        @market_application.id,
-        request_host: request.host_with_port,
-        request_protocol: request.protocol
-      )
-      redirect_to candidate_sync_status_path(@market_application.identifier), flash_options
+      self.steps = presenter.wizard_steps
     end
 
     def find_market_application
       @market_application = MarketApplication
         .includes(
-          public_market: :market_attributes,
+          :lots,
+          public_market: %i[lots market_attributes],
           market_attribute_responses: :market_attribute
         )
         .find_by!(identifier: params[:identifier])
@@ -92,11 +80,8 @@ module Candidate
       render plain: 'La candidature recherchée n\'a pas été trouvée', status: :not_found
     end
 
-    def check_application_not_completed
-      return unless @market_application.completed?
-
-      redirect_to candidate_sync_status_path(@market_application.identifier),
-        alert: t('candidate.market_applications.market_application_completed_cannot_edit')
+    def presenter
+      @presenter ||= MarketApplicationPresenter.new(@market_application)
     end
 
     def custom_view_exists?
@@ -121,15 +106,21 @@ module Candidate
       nested_params.permit!
     end
 
+    def back_path_before_wizard
+      if @market_application.public_market.lots.any?
+        lot_selection_candidate_market_application_path(@market_application.identifier)
+      else
+        company_identification_candidate_market_application_path(@market_application.identifier)
+      end
+    end
+
     def finish_wizard_path
       root_path
     end
 
-    def api_fetch_status_response
-      { api_fetch_status: @market_application.api_fetch_status }
-    end
-
     def render_html_step
+      prefill_blank_email_responses
+
       if custom_view_exists?
         render_wizard
       else
@@ -137,10 +128,21 @@ module Candidate
       end
     end
 
+    def prefill_blank_email_responses
+      Candidate::PrefillEmailAttributeResponses.call(
+        market_application: @market_application,
+        candidate_email: current_candidate.email
+      )
+    end
+
     def render_json_step
       if step == :api_data_recovery_status
         set_no_cache_headers
-        render json: api_fetch_status_response
+        render json: { api_fetch_status: @market_application.api_fetch_status }
+      elsif step == :summary
+        set_no_cache_headers
+        result = Candidate::PrepareDocumentScanStatus.call(market_application: @market_application, view_context:)
+        render json: result.scan_status
       else
         head :not_found
       end

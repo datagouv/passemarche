@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Candidate
-  class SyncStatusController < ApplicationController
-    before_action :find_market_application
+  class SyncStatusController < Candidate::ApplicationController
+    prepend_before_action :find_market_application
 
     def show
       respond_to do |format|

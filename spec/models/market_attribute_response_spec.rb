@@ -104,6 +104,23 @@ RSpec.describe MarketAttributeResponse, type: :model do
     end
   end
 
+  describe '#hidden?' do
+    it 'returns true when hidden is true' do
+      response = build(:market_attribute_response, hidden: true)
+      expect(response.hidden?).to be true
+    end
+
+    it 'returns false when hidden is false' do
+      response = build(:market_attribute_response, hidden: false)
+      expect(response.hidden?).to be false
+    end
+
+    it 'returns false when hidden is nil' do
+      response = build(:market_attribute_response, hidden: nil)
+      expect(response.hidden?).to be false
+    end
+  end
+
   describe '.with_file_attachments' do
     it 'generates correct SQL query' do
       scope = MarketAttributeResponse.with_file_attachments

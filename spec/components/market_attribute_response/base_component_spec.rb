@@ -157,39 +157,36 @@ RSpec.describe MarketAttributeResponse::BaseComponent, type: :component do
   end
 
   describe '#field_label' do
-    it 'returns i18n translation' do
+    it 'returns DB value when candidate_name is present' do
+      market_attribute.update!(candidate_name: 'DB Label')
       response = create(:market_attribute_response_text_input, market_attribute:, value: { 'text' => 'Test' })
       component = described_class.new(market_attribute_response: response)
 
-      allow(I18n).to receive(:t).with(
-        'form_fields.candidate.fields.test_field.name',
-        default: 'Test field'
-      ).and_return('Test Field Label')
-
-      expect(component.field_label).to eq('Test Field Label')
+      expect(component.field_label).to eq('DB Label')
     end
 
-    it 'returns humanized key as default' do
+    it 'falls back to humanized key when candidate_name is blank' do
       response = create(:market_attribute_response_text_input, market_attribute:, value: { 'text' => 'Test' })
       component = described_class.new(market_attribute_response: response)
 
-      label = component.field_label
-
-      expect(label).to be_a(String)
+      expect(component.field_label).to eq('Test field')
     end
   end
 
   describe '#field_description' do
-    it 'returns i18n translation when present' do
+    it 'returns DB value when candidate_description is present' do
+      market_attribute.update!(candidate_description: 'DB Description')
       response = create(:market_attribute_response_text_input, market_attribute:, value: { 'text' => 'Test' })
       component = described_class.new(market_attribute_response: response)
 
-      allow(I18n).to receive(:t).with(
-        'form_fields.candidate.fields.test_field.description',
-        default: nil
-      ).and_return('Field description')
+      expect(component.field_description).to eq('DB Description')
+    end
 
-      expect(component.field_description).to eq('Field description')
+    it 'returns nil when candidate_description is blank' do
+      response = create(:market_attribute_response_text_input, market_attribute:, value: { 'text' => 'Test' })
+      component = described_class.new(market_attribute_response: response)
+
+      expect(component.field_description).to be_nil
     end
   end
 

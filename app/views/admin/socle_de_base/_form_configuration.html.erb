@@ -1,0 +1,55 @@
+<div class="fr-card fr-card--no-border fr-mb-4w" data-controller="configuration-toggle"
+     data-configuration-toggle-api-keys-value="<%= @api_keys_by_name.to_json %>"
+     data-configuration-toggle-current-api-key-value="<%= @market_attribute.api_key %>">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      <h2 class="fr-h4"><%= t('admin.socle_de_base.show.configuration') %></h2>
+
+      <fieldset class="fr-fieldset fr-mb-3w">
+        <div class="fr-fieldset__element">
+          <div class="fr-radio-group">
+            <% api_selected = @market_attribute.configuration_mode == 'api' || @market_attribute.from_api? %>
+            <%= radio_button_tag 'market_attribute[configuration_mode]', 'api',
+                  api_selected,
+                  id: 'config_api',
+                  data: { action: 'configuration-toggle#toggle' } %>
+            <%= label_tag 'config_api', t('admin.socle_de_base.show.mode_api'), class: 'fr-label' %>
+          </div>
+        </div>
+        <div class="fr-fieldset__element">
+          <div class="fr-radio-group">
+            <%= radio_button_tag 'market_attribute[configuration_mode]', 'manual',
+                  !api_selected,
+                  id: 'config_manual',
+                  data: { action: 'configuration-toggle#toggle' } %>
+            <%= label_tag 'config_manual', t('admin.socle_de_base.show.mode_manual'), class: 'fr-label' %>
+          </div>
+        </div>
+      </fieldset>
+
+      <div data-configuration-toggle-target="apiFields"
+           <% unless api_selected %>style="display: none"<% end %>>
+        <div class="fr-select-group fr-mb-3w">
+          <%= f.label :api_name, t('admin.socle_de_base.show.api_source'), class: 'fr-label' %>
+          <%= f.select :api_name,
+                options_for_select(@api_keys_by_name.keys.sort, @market_attribute.api_name),
+                { include_blank: t('admin.socle_de_base.edit.select_option') },
+                class: 'fr-select',
+                data: { configuration_toggle_target: 'apiSelect', action: 'configuration-toggle#apiChanged' } %>
+        </div>
+
+        <div class="fr-select-group fr-mb-3w">
+          <%= f.label :api_key, t('admin.socle_de_base.show.api_key'), class: 'fr-label' %>
+          <%
+            current_keys = @api_keys_by_name[@market_attribute.api_name] || []
+          %>
+          <%= f.select :api_key,
+                options_for_select(current_keys, @market_attribute.api_key),
+                { include_blank: current_keys.empty? ? '—' : nil },
+                class: 'fr-select',
+                data: { configuration_toggle_target: 'apiKeySelect' } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
