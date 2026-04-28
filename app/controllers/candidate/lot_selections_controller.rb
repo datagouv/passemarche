@@ -20,19 +20,12 @@ module Candidate
       end
 
       @market_application.lot_ids = lot_ids_param
-      redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
-    end
 
-    def submit
-      result = MarketApplicationStepUpdateService.call(
-        @market_application, :summary, {},
-        request_host: request.host_with_port,
-        request_protocol: request.protocol
-      )
-
-      return redirect_to candidate_sync_status_path(@market_application.identifier) if result[:success] && result[:redirect] == :sync_status
-
-      render_submission_error(result[:flash_messages])
+      if params[:final_submit].present?
+        complete_application
+      else
+        redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
+      end
     end
 
     private
@@ -59,6 +52,18 @@ module Candidate
       @errors = errors
       @presenter = MarketApplicationPresenter.new(@market_application)
       render :show, status: :unprocessable_content
+    end
+
+    def complete_application
+      result = MarketApplicationStepUpdateService.call(
+        @market_application, :summary, {},
+        request_host: request.host_with_port,
+        request_protocol: request.protocol
+      )
+
+      return render_submission_error(result[:flash_messages]) unless result[:success]
+
+      redirect_to candidate_sync_status_path(@market_application.identifier)
     end
 
     def render_submission_error(flash_messages)

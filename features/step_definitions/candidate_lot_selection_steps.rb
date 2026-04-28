@@ -75,11 +75,11 @@ When('the candidate selects all available lots') do
 end
 
 When('the candidate submits the lot selection step') do
-  find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
+  find('button[type="submit"][form="lot-selection-form"][name="final_submit"]').click
 end
 
 When('the candidate submits the lot selection step without selecting any lot') do
-  find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
+  find('button[type="submit"][form="lot-selection-form"][name="final_submit"]', visible: :all).click
 end
 
 Then('the candidate should be on the company identification step') do
