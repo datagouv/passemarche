@@ -109,20 +109,15 @@
 
       <% end %>
 
-      <%= form_with url: lot_selection_submit_candidate_market_application_path(@market_application.identifier),
-                    method: :post,
-                    local: true,
-                    data: { turbo: false } do %>
-        <% @market_application.lots.each do |lot| %>
-          <%= hidden_field_tag 'market_application[lot_ids][]', lot.id %>
-        <% end %>
-        <button type="submit"
-                class="fr-btn fr-icon-send-plane-fill fr-btn--icon-right"
-                style="width: 100%; margin-top: 0.5rem; justify-content: center;"
-                <%= 'disabled' unless lots_already_saved %>>
-          <%= t('button.submit_summary') %>
-        </button>
-      <% end %>
+      <button type="submit"
+              form="lot-selection-form"
+              name="final_submit"
+              value="1"
+              class="fr-btn fr-icon-send-plane-fill fr-btn--icon-right"
+              style="width: 100%; margin-top: 0.5rem; justify-content: center;"
+              <%= 'disabled' unless lots_already_saved %>>
+        <%= t('button.submit_summary') %>
+      </button>
     </div>
 
     <div class="fr-col-12 fr-col-md-5">
