@@ -3,8 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Candidate::Dashboards', type: :request do
+  let(:editor) { create(:editor) }
   let(:user) { create(:user, email: 'candidat@example.com') }
-  let(:public_market) { create(:public_market, :completed, editor: create(:editor)) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:application) { create(:market_application, public_market:, user:) }
 
   before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 
@@ -19,9 +21,7 @@ RSpec.describe 'Candidate::Dashboards', type: :request do
     end
 
     context 'when authenticated' do
-      before do
-        allow_any_instance_of(ApplicationController).to receive(:current_candidate).and_return(user)
-      end
+      before { sign_in_as_candidate(user, application) }
 
       it 'returns ok' do
         get candidate_dashboard_path
