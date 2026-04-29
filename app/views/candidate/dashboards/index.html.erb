@@ -1,0 +1,29 @@
+<% content_for :title, t("candidate.dashboard.title") %>
+
+<nav class="fr-breadcrumb" aria-label="vous êtes ici :">
+  <ol class="fr-breadcrumb__list">
+    <li><%= link_to t("breadcrumb.home"), root_path, class: "fr-breadcrumb__link" %></li>
+    <li><span class="fr-breadcrumb__link" aria-current="page"><%= t("candidate.dashboard.title") %></span></li>
+  </ol>
+</nav>
+
+<h1 class="fr-h1 fr-mb-4w"><%= t("candidate.dashboard.title") %></h1>
+
+<div class="fr-grid-row fr-grid-row--gutters fr-mb-6w">
+  <div class="fr-col-6 fr-col-md-3">
+    <%= render "summary_tile",
+          count: @in_progress_count,
+          label: t("candidate.dashboard.summary.in_progress"),
+          color_class: "fr-dashboard-tile--blue" %>
+  </div>
+  <div class="fr-col-6 fr-col-md-3">
+    <%= render "summary_tile",
+          count: @completed_count,
+          label: t("candidate.dashboard.summary.completed"),
+          color_class: "fr-dashboard-tile--green" %>
+  </div>
+</div>
+
+<% @applications.each do |application| %>
+  <%= render "card", application: application %>
+<% end %>
