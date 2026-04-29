@@ -45,3 +45,8 @@ Feature: Candidate dashboard
     When I visit the dashboard
     Then I should see "1" for in-progress count
     And I should see "1" for completed count
+
+  Scenario: Dashboard shows buyer name when present
+    Given the public market has a buyer name "Ville de Paris"
+    When I visit the dashboard
+    Then I should see "Ville de Paris"

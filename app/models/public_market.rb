@@ -27,6 +27,10 @@ class PublicMarket < ApplicationRecord
 
   before_validation :generate_identifier, on: :create
 
+  def buyer_display_name
+    buyer_name.presence || siret
+  end
+
   def defense_industry?
     market_type_codes.any?('defense')
   end

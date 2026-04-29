@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-# Configure ActiveJob to perform jobs inline during Cucumber tests
-# This ensures that when background jobs are triggered, they execute immediately
-# before the next step runs
+# Use inline adapter so jobs (emails, API calls) execute immediately during Cucumber scenarios.
+# Individual jobs are tested in isolation via their own specs.
 
 Before do
-  # Use inline adapter to perform jobs immediately when enqueued
   ActiveJob::Base.queue_adapter = :inline
 end

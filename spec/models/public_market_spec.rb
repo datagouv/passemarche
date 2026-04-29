@@ -213,6 +213,18 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '#buyer_display_name' do
+    it 'returns the buyer_name when present' do
+      public_market = build(:public_market, buyer_name: 'Ville de Paris')
+      expect(public_market.buyer_display_name).to eq('Ville de Paris')
+    end
+
+    it 'falls back to siret when buyer_name is blank' do
+      public_market = build(:public_market, buyer_name: nil)
+      expect(public_market.buyer_display_name).to eq(public_market.siret)
+    end
+  end
+
   describe '#defense_industry?' do
     it 'returns true when defense is in market_type_codes' do
       public_market = build(:public_market, market_type_codes: %w[supplies defense])
