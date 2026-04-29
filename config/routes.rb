@@ -69,6 +69,8 @@ Rails.application.routes.draw do
   end
 
   namespace :candidate do
+    get 'dashboard', to: 'dashboards#index', as: :dashboard
+
     resource :sessions, only: %i[new create destroy] do
       get :verify
       get :sent
