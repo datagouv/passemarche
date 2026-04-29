@@ -45,3 +45,7 @@ Then('I should see {string} for completed count') do |count|
     expect(page).to have_text(count)
   end
 end
+
+Given('the public market has a buyer name {string}') do |buyer_name|
+  @public_market.update!(buyer_name:)
+end

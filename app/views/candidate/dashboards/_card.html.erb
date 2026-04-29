@@ -23,7 +23,7 @@
 
       <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
         <span class="fr-icon-building-line fr-icon--sm" aria-hidden="true"></span>
-        <%= application.public_market.siret %>
+        <%= application.public_market.buyer_name.presence || application.public_market.siret %>
 
         <% if application.completed_at? %>
           &nbsp;
