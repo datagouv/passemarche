@@ -2,6 +2,8 @@
 
 module Candidate
   class DashboardsController < Candidate::ApplicationController
+    include Pagy::Method
+
     skip_before_action :require_candidate_authentication
     before_action :require_candidate_session
 
@@ -11,9 +13,10 @@ module Candidate
         .for_siret(session_siret)
       @in_progress_count = base_scope.in_progress.count
       @completed_count = base_scope.completed.count
-      @applications = base_scope
-        .by_last_modification
-        .includes(:public_market, :lots)
+      @pagy, @applications = pagy(
+        base_scope.by_last_modification.includes(:public_market, :lots),
+        limit: 10
+      )
     end
 
     private

@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 fr:
+  pagy:
+    nav:
+      aria_label: "Pagination"
+      first: "Première page"
+      prev: "Page précédente"
+      next: "Page suivante"
+      last: "Dernière page"
+
   breadcrumb:
     home: "Accueil"
 
