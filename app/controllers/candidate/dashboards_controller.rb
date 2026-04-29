@@ -2,18 +2,21 @@
 
 module Candidate
   class DashboardsController < Candidate::ApplicationController
+    include Pagy::Method
+
     skip_before_action :require_candidate_authentication
     before_action :require_candidate_session
 
     def index
-      @applications = MarketApplication
+      base_scope = MarketApplication
         .for_user(current_candidate)
         .for_siret(session_siret)
-        .by_last_modification
-        .includes(:public_market, :lots)
-        .to_a
-      @in_progress_count = @applications.count { |a| a.completed_at.nil? }
-      @completed_count = @applications.count(&:completed_at?)
+      @in_progress_count = base_scope.in_progress.count
+      @completed_count = base_scope.completed.count
+      @pagy, @applications = pagy(
+        base_scope.by_last_modification.includes(:public_market, :lots),
+        limit: 10
+      )
     end
 
     private
