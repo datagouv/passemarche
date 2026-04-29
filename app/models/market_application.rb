@@ -28,6 +28,12 @@ class MarketApplication < ApplicationRecord
 
   before_validation :generate_identifier, on: :create
 
+  scope :for_user, ->(user) { where(user:) }
+  scope :for_siret, ->(siret) { where(siret:) }
+  scope :in_progress, -> { where(completed_at: nil) }
+  scope :completed, -> { where.not(completed_at: nil) }
+  scope :by_last_modification, -> { order(updated_at: :desc) }
+
   def accessible_by?(user)
     user_id.nil? || user_id == user.id
   end

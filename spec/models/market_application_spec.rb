@@ -550,4 +550,54 @@ RSpec.describe MarketApplication, type: :model do
       expect(response_b.should_validate_for_current_step?).to be false
     end
   end
+
+  describe 'scopes' do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user, email: 'other@example.com') }
+
+    describe '.for_user' do
+      it 'returns only applications belonging to the given user' do
+        mine = create(:market_application, public_market:, user:)
+        create(:market_application, public_market:, user: other_user)
+
+        expect(described_class.for_user(user)).to contain_exactly(mine)
+      end
+    end
+
+    describe '.in_progress' do
+      it 'returns applications without completed_at' do
+        ongoing = create(:market_application, public_market:)
+        create(:market_application, :completed, public_market:)
+
+        expect(described_class.in_progress).to contain_exactly(ongoing)
+      end
+    end
+
+    describe '.completed' do
+      it 'returns applications with completed_at set' do
+        done = create(:market_application, :completed, public_market:)
+        create(:market_application, public_market:)
+
+        expect(described_class.completed).to contain_exactly(done)
+      end
+    end
+
+    describe '.by_last_modification' do
+      it 'orders applications by updated_at descending' do
+        older = create(:market_application, public_market:, updated_at: 2.days.ago)
+        newer = create(:market_application, public_market:, updated_at: 1.day.ago)
+
+        expect(described_class.by_last_modification).to eq([newer, older])
+      end
+    end
+
+    describe '.for_siret' do
+      it 'returns only applications matching the given SIRET' do
+        matching = create(:market_application, public_market:, siret: '73282932000074')
+        create(:market_application, public_market:, siret: '41816609600069')
+
+        expect(described_class.for_siret('73282932000074')).to contain_exactly(matching)
+      end
+    end
+  end
 end
