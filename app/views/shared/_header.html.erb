@@ -30,14 +30,21 @@
         <div class="fr-header__tools">
           <div class="fr-header__tools-links">
             <ul class="fr-btns-group">
-              <li>
-                <%= link_to t('header.navigation.candidate'), candidate_home_path,
-                    class: class_names("fr-btn", "fr-btn--active": current_page?(candidate_home_path)) %>
-              </li>
-              <li>
-                <%= link_to t('header.navigation.buyer'), buyer_home_path,
-                    class: class_names("fr-btn", "fr-btn--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
-              </li>
+              <% if current_candidate %>
+                <li>
+                  <%= link_to t('header.navigation.my_applications'), candidate_dashboard_path,
+                      class: class_names("fr-btn", "fr-btn--tertiary", "fr-icon-list-unordered", "fr-btn--icon-left", "fr-btn--active": current_page?(candidate_dashboard_path)) %>
+                </li>
+              <% else %>
+                <li>
+                  <%= link_to t('header.navigation.candidate'), candidate_home_path,
+                      class: class_names("fr-btn", "fr-btn--active": current_page?(candidate_home_path)) %>
+                </li>
+                <li>
+                  <%= link_to t('header.navigation.buyer'), buyer_home_path,
+                      class: class_names("fr-btn", "fr-btn--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
+                </li>
+              <% end %>
               <% if admin_user_signed_in? %>
                 <li>
                   <%= link_to t('admin.navigation.logout'), destroy_admin_user_session_path,
@@ -56,14 +63,21 @@
       <button aria-controls="modal-header-menu" title="Fermer" type="button" class="fr-btn--close fr-btn">Fermer</button>
       <div class="fr-header__menu-links">
         <ul class="fr-btns-group">
-          <li>
-            <%= link_to t('header.navigation.candidate'), candidate_home_path,
-                class: class_names("fr-btn", "fr-btn--active": current_page?(candidate_home_path)) %>
-          </li>
-          <li>
-            <%= link_to t('header.navigation.buyer'), buyer_home_path,
-                class: class_names("fr-btn", "fr-btn--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
-          </li>
+          <% if current_candidate %>
+            <li>
+              <%= link_to t('header.navigation.my_applications'), candidate_dashboard_path,
+                  class: class_names("fr-btn", "fr-btn--tertiary", "fr-icon-list-unordered", "fr-btn--icon-left", "fr-btn--active": current_page?(candidate_dashboard_path)) %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to t('header.navigation.candidate'), candidate_home_path,
+                  class: class_names("fr-btn", "fr-btn--active": current_page?(candidate_home_path)) %>
+            </li>
+            <li>
+              <%= link_to t('header.navigation.buyer'), buyer_home_path,
+                  class: class_names("fr-btn", "fr-btn--active": current_page?(buyer_home_path) || current_page?(root_path)) %>
+            </li>
+          <% end %>
           <% if admin_user_signed_in? %>
             <li>
               <%= link_to t('admin.navigation.logout'), destroy_admin_user_session_path,

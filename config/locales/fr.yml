@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 fr:
+  breadcrumb:
+    home: "Accueil"
+
   auth_mailer:
     magic_link:
       subject: Votre lien de connexion à Passe Marché
@@ -101,6 +104,8 @@ fr:
     navigation:
       candidate: "Je suis un candidat"
       buyer: "Je suis un acheteur public"
+      my_applications: "Mes candidatures"
+      logout: "Me déconnecter"
 
   footer:
     links:
@@ -457,6 +462,30 @@ fr:
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
 
   candidate:
+    dashboard:
+      title: "Mes candidatures"
+      summary:
+        in_progress: "Candidatures en cours"
+        completed: "Candidatures terminées"
+      application:
+        lots_count:
+          one: "1 lot"
+          other: "%{count} lots"
+        modified_on: "Modifiée le %{date}"
+        submitted_on: "Déposée le %{date}"
+        status:
+          in_progress: "En cours"
+          submitted: "Transmise"
+        delete_modal:
+          title: "Supprimer la candidature"
+          body: "Vous êtes sur le point de supprimer cette candidature, l'ensemble des éléments que vous avez complétés seront perdus. Êtes-vous sûr de vouloir la supprimer ?"
+          confirm: "Supprimer"
+          cancel: "Annuler"
+          close: "Fermer"
+      actions:
+        edit: "Modifier"
+        view: "Consulter"
+        delete: "Supprimer"
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez un ou plusieurs lots pour lequel/lesquels vous souhaitez soumettre une candidature."
