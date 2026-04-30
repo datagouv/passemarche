@@ -27,3 +27,5 @@
 <% @applications.each do |application| %>
   <%= render "card", application: application %>
 <% end %>
+
+<%= pagy_dsfr_nav(@pagy) %>
