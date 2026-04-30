@@ -11,17 +11,7 @@ module Candidate
     def create
       result = Candidate::RequestMagicLink.call(magic_link_request_params)
 
-      if result.success?
-        store_reconnection_context(result)
-        store_magic_link_url(result)
-        redirect_to sent_candidate_sessions_path
-      else
-        @errors = result.errors
-        @submitted_siret = params[:siret]
-        @submitted_email = params[:email]
-        @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
-        render 'candidate/sessions/new', status: :unprocessable_content
-      end
+      result.success? ? handle_magic_link_sent(result) : handle_magic_link_failed(result)
     end
 
     def sent
@@ -58,6 +48,21 @@ module Candidate
       return candidate_sync_status_path(market_application.identifier) if market_application.completed?
 
       company_identification_candidate_market_application_path(market_application.identifier)
+    end
+
+    def handle_magic_link_sent(result)
+      clear_candidate_authentication_session
+      store_reconnection_context(result)
+      store_magic_link_url(result)
+      redirect_to sent_candidate_sessions_path
+    end
+
+    def handle_magic_link_failed(result)
+      @errors = result.errors
+      @submitted_siret = params[:siret]
+      @submitted_email = params[:email]
+      @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
+      render 'candidate/sessions/new', status: :unprocessable_content
     end
 
     def magic_link_request_params

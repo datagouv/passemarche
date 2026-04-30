@@ -686,3 +686,20 @@
   margin: 0;
   font-weight: 700;
 }
+
+/* Dashboard summary tiles */
+.fr-dashboard-tile {
+  background-color: var(--grey-1000-50, #fff);
+  border: 1px solid var(--grey-925-125, #e5e5e5);
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom-width: 4px;
+}
+
+.fr-dashboard-tile--blue {
+  border-bottom-color: var(--blue-france-sun-113-625, #000091);
+}
+
+.fr-dashboard-tile--green {
+  border-bottom-color: var(--success-main-525, #18753c);
+}

@@ -251,7 +251,7 @@ When('I click {string}') do |button_text|
   if button_text == 'Suivant' && page.has_button?('Continuer', disabled: false)
     click_button 'Continuer'
   else
-    click_button button_text
+    click_link_or_button button_text
   end
 end
 

@@ -107,6 +107,33 @@ RSpec.describe 'Candidate::Sessions', type: :request do
         expect(response).to have_http_status(:unprocessable_content)
       end
     end
+
+    context 'when already authenticated as a different user' do
+      let(:other_user) { create(:user, authentication_token_sent_at: Time.current) }
+      let(:other_market) { create(:public_market, :completed, editor:) }
+      let(:other_application) { create(:market_application, public_market: other_market) }
+
+      before do
+        allow(SiretValidator).to receive(:valid?).with(other_application.siret).and_return(true)
+        token = other_user.generate_token_for(:magic_link)
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: other_application.identifier }
+      end
+
+      it 'clears the existing session so the old user is no longer current' do
+        post candidate_sessions_path,
+          params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
+
+        expect(session[:user_id]).to be_nil
+      end
+
+      it 'clears the existing market_application_identifier from session' do
+        post candidate_sessions_path,
+          params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
+
+        expect(session[:market_application_identifier]).to be_nil
+      end
+    end
   end
 
   describe 'GET /candidate/sessions/sent' do
