@@ -1,15 +1,7 @@
 <div class="fr-card fr-card--no-arrow fr-card--horizontal fr-mb-2w">
   <div class="fr-card__body">
     <div class="fr-card__content">
-      <% if application.completed_at? %>
-        <p class="fr-badge fr-badge--success fr-badge--sm fr-mb-2w">
-          <%= t("candidate.dashboard.application.status.submitted").upcase %>
-        </p>
-      <% else %>
-        <p class="fr-badge fr-badge--info fr-badge--sm fr-mb-2w">
-          <%= t("candidate.dashboard.application.status.in_progress").upcase %>
-        </p>
-      <% end %>
+      <%= render 'shared/application_status_badge', application: application, size: :sm %>
 
       <h2 class="fr-h4 fr-mb-1w">
         <%= application.public_market.name %>
@@ -29,12 +21,12 @@
           &nbsp;
           <span class="fr-icon-calendar-line fr-icon--sm" aria-hidden="true"></span>
           <%= t("candidate.dashboard.application.submitted_on",
-                date: l(application.completed_at.to_date, format: '%-d %B %Y')) %>
+                date: l(application.completed_at.to_date, format: :day_month_year)) %>
         <% else %>
           &nbsp;
           <span class="fr-icon-edit-line fr-icon--sm" aria-hidden="true"></span>
           <%= t("candidate.dashboard.application.modified_on",
-                date: l(application.updated_at.to_date, format: '%-d %B %Y')) %>
+                date: l(application.updated_at.to_date, format: :day_month_year)) %>
         <% end %>
       </p>
     </div>
@@ -43,9 +35,10 @@
       <ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline fr-btns-group--right">
         <% if application.completed_at? %>
           <li>
-            <button class="fr-btn fr-btn--sm fr-btn--secondary" disabled aria-disabled="true">
+            <%= link_to consultation_candidate_market_application_path(application.identifier),
+                        class: "fr-btn fr-btn--sm fr-btn--secondary" do %>
               <%= t("candidate.dashboard.actions.view") %>
-            </button>
+            <% end %>
           </li>
         <% else %>
           <li>
