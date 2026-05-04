@@ -1,6 +1,6 @@
 <% content_for :title, t("candidate.dashboard.title") %>
 
-<nav class="fr-breadcrumb" aria-label="vous êtes ici :">
+<nav class="fr-breadcrumb" aria-label="<%= t('breadcrumb.aria_label') %>">
   <ol class="fr-breadcrumb__list">
     <li><%= link_to t("breadcrumb.home"), root_path, class: "fr-breadcrumb__link" %></li>
     <li><span class="fr-breadcrumb__link" aria-current="page"><%= t("candidate.dashboard.title") %></span></li>

@@ -1,0 +1,58 @@
+<% content_for :title, @presenter.market_name %>
+
+<nav class="fr-breadcrumb" aria-label="<%= t('breadcrumb.aria_label') %>">
+  <ol class="fr-breadcrumb__list">
+    <li><%= link_to t('breadcrumb.home'), root_path, class: "fr-breadcrumb__link" %></li>
+    <li><%= link_to t('candidate.dashboard.title'), candidate_dashboard_path, class: "fr-breadcrumb__link" %></li>
+    <li><span class="fr-breadcrumb__link" aria-current="page"><%= @presenter.market_name %></span></li>
+  </ol>
+</nav>
+
+<div class="fr-mb-4w">
+  <%= render 'shared/application_status_badge', application: @market_application %>
+
+  <h1 class="fr-h1 fr-mb-1w"><%= @presenter.market_name %></h1>
+
+  <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
+    <span class="fr-icon-building-line fr-icon--sm" aria-hidden="true"></span>
+    <%= @presenter.market_siret %>
+    &nbsp;
+    <span class="fr-icon-calendar-line fr-icon--sm" aria-hidden="true"></span>
+    <%= t('candidate.application_consultations.submitted_on',
+          date: l(@presenter.submitted_at.to_date, format: :day_month_year)) %>
+  </p>
+</div>
+
+<div class="fr-mb-4w">
+  <% if @presenter.lots_saved? %>
+    <div class="fr-mb-4w">
+      <%= render 'shared/application_lots_summary', presenter: @presenter %>
+    </div>
+  <% end %>
+
+  <%= render 'shared/application_summary_content',
+             market_application: @market_application,
+             presenter: @presenter,
+             context: :web %>
+</div>
+
+<div class="fr-mb-4w">
+  <p class="fr-text--sm fr-text--mention-grey fr-mb-3w fr-text--italic">
+    <%= t('candidate.market_applications.summary.submission_disclaimer') %>
+  </p>
+
+  <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline fr-btns-group--icon-left">
+    <%= link_to candidate_dashboard_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left" do %>
+      <span class="fr-icon-arrow-left-line" aria-hidden="true"></span>
+      <%= t('candidate.application_consultations.back_to_dashboard') %>
+    <% end %>
+
+    <% if @presenter.attestation_attached? %>
+      <%= link_to rails_blob_path(@presenter.attestation, disposition: 'attachment'),
+                  class: "fr-btn fr-btn--icon-right" do %>
+        <%= t('candidate.application_consultations.download_attestation') %>
+        <span class="fr-icon-download-line" aria-hidden="true"></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
