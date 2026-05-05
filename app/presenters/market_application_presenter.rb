@@ -2,7 +2,7 @@
 
 class MarketApplicationPresenter
   include SidemenuHelper
-  include MarketAttributeGrouping
+  include MarketPresenterConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
@@ -46,10 +46,6 @@ class MarketApplicationPresenter
       .uniq
 
     subcategories + category_subcategories
-  end
-
-  def field_by_key(key)
-    MarketAttribute.find_by(key: key.to_s)
   end
 
   def market_attributes_for_subcategory(category_key, subcategory_key)

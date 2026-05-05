@@ -2,7 +2,7 @@
 
 class PublicMarketPresenter
   include SidemenuHelper
-  include MarketAttributeGrouping
+  include MarketPresenterConcern
 
   INITIAL_WIZARD_STEP = :setup
   LOT_CONFIG_STEP = :lot_config
@@ -97,7 +97,9 @@ class PublicMarketPresenter
   end
 
   def market_types_label
-    @public_market.market_type_codes.map { |c| I18n.t("market_types.#{c}", default: c.humanize) }.join(', ')
+    @market_types_label ||= @public_market.market_type_codes
+      .map { |c| I18n.t("market_types.#{c}", default: c.humanize) }
+      .join(', ')
   end
 
   def market_types_label_with_source
@@ -114,10 +116,6 @@ class PublicMarketPresenter
 
   def source_types
     I18n.t('source_types')
-  end
-
-  def field_by_key(key)
-    MarketAttribute.find_by(key: key.to_s)
   end
 
   def available_mandatory_market_attributes
