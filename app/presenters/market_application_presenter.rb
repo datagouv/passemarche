@@ -4,6 +4,10 @@ class MarketApplicationPresenter
   include SidemenuHelper
   include MarketAttributeGrouping
 
+  delegate :name, :siret, to: :public_market, prefix: :market
+  delegate :attestation, to: :@market_application
+  delegate :attached?, to: :attestation, prefix: true
+
   INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
@@ -71,6 +75,10 @@ class MarketApplicationPresenter
     nil
   end
 
+  def submitted_at
+    @market_application.completed_at
+  end
+
   # === LOTS METHODS ===
 
   def selected_lots
@@ -78,7 +86,7 @@ class MarketApplicationPresenter
   end
 
   def public_market_lots
-    @public_market_lots ||= @market_application.public_market.lots.ordered.to_a
+    @public_market_lots ||= public_market.lots.ordered.to_a
   end
 
   def public_market_has_lots?
@@ -86,7 +94,7 @@ class MarketApplicationPresenter
   end
 
   def market_type_labels
-    @market_type_labels ||= @market_application.public_market.market_type_codes
+    @market_type_labels ||= public_market.market_type_codes
       .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
       .join(', ')
   end
@@ -165,7 +173,7 @@ class MarketApplicationPresenter
   # === VALIDATION METHODS ===
 
   def optional_market_attributes?
-    @market_application.public_market.market_attributes.exists?(mandatory: false)
+    public_market.market_attributes.exists?(mandatory: false)
   end
 
   def missing_mandatory_motifs_exclusion?
@@ -177,8 +185,12 @@ class MarketApplicationPresenter
 
   private
 
+  def public_market
+    @public_market ||= @market_application.public_market
+  end
+
   def mandatory_motifs_exclusion_attributes
-    @market_application.public_market.market_attributes
+    public_market.market_attributes
       .where(mandatory: true)
       .where('category_key LIKE ?', 'motifs_exclusion%')
   end
@@ -197,7 +209,7 @@ class MarketApplicationPresenter
   end
 
   def all_market_attributes
-    @all_market_attributes ||= @market_application.public_market.market_attributes.sort_by(&:position)
+    @all_market_attributes ||= public_market.market_attributes.sort_by(&:position)
   end
 
   def hidden_attr_ids

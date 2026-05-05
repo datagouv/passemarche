@@ -11,6 +11,7 @@ fr:
 
   breadcrumb:
     home: "Accueil"
+    aria_label: "vous êtes ici :"
 
   auth_mailer:
     magic_link:
@@ -54,6 +55,7 @@ fr:
       default: "%d/%m/%Y"
       short: "%d %b"
       long: "%A %d %B %Y"
+      day_month_year: "%-d %B %Y"
     day_names:
       - dimanche
       - lundi
@@ -494,6 +496,12 @@ fr:
         edit: "Modifier"
         view: "Consulter"
         delete: "Supprimer"
+    application_consultations:
+      submitted_on: "Déposée le %{date}"
+      back_to_dashboard: "Retour à mes candidatures"
+      download_attestation: "Télécharger l'attestation de candidature"
+      not_found: "Candidature introuvable"
+      not_accessible: "Cette candidature n'est pas consultable"
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez un ou plusieurs lots pour lequel/lesquels vous souhaitez soumettre une candidature."
