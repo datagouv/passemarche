@@ -89,12 +89,6 @@ class MarketApplicationPresenter
     public_market_lots.any?
   end
 
-  def market_type_labels
-    @market_type_labels ||= public_market.market_type_codes
-      .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
-      .join(', ')
-  end
-
   # === RESPONSE METHODS (with hidden filtering) ===
 
   def responses_for_subcategory(category_key, subcategory_key)
@@ -183,6 +177,10 @@ class MarketApplicationPresenter
 
   def public_market
     @public_market ||= @market_application.public_market
+  end
+
+  def market_type_codes
+    public_market.market_type_codes
   end
 
   def mandatory_motifs_exclusion_attributes

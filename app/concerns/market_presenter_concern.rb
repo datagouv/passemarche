@@ -10,4 +10,10 @@ module MarketPresenterConcern
   def field_by_key(key)
     MarketAttribute.find_by(key: key.to_s)
   end
+
+  def market_types_label
+    @market_types_label ||= market_type_codes
+      .map { |c| I18n.t("market_types.#{c}", default: c.humanize) }
+      .join(', ')
+  end
 end

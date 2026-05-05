@@ -131,9 +131,7 @@
               buyer_label: t('candidate.lot_selection.buyer_label'),
               market_name: @market_application.public_market.name,
               typology_label: t('candidate.lot_selection.market_type_label'),
-              market_types_label: @market_application.public_market.market_type_codes.any? ?
-                @market_application.public_market.market_type_codes.map { |c| t("market_types.#{c}", default: c.humanize) }.join(', ') :
-                t('candidate.shared.no_market_type'),
+              market_types_label: @presenter.market_types_label.presence || t('candidate.shared.no_market_type'),
               deadline_label: t('candidate.lot_selection.deadline_label'),
               deadline: l(@market_application.public_market.deadline, format: '%d/%m/%Y %H:%M') %>
       </div>

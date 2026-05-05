@@ -96,12 +96,6 @@ class PublicMarketPresenter
       .uniq
   end
 
-  def market_types_label
-    @market_types_label ||= @public_market.market_type_codes
-      .map { |c| I18n.t("market_types.#{c}", default: c.humanize) }
-      .join(', ')
-  end
-
   def market_types_label_with_source
     "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
   end
@@ -126,6 +120,10 @@ class PublicMarketPresenter
 
   def available_optional_market_attributes
     available_attributes.optional
+  end
+
+  def market_type_codes
+    @public_market.market_type_codes
   end
 
   def all_market_attributes

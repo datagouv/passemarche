@@ -33,6 +33,18 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
 
   subject(:presenter) { described_class.new(market_application) }
 
+  describe '#market_types_label' do
+    it 'returns localized market type codes joined by comma' do
+      label = presenter.market_types_label
+      expect(label).to be_a(String)
+      expect(label).to be_present
+    end
+
+    it 'memoizes the result' do
+      expect(presenter.market_types_label).to equal(presenter.market_types_label)
+    end
+  end
+
   describe '#stepper_steps' do
     it 'returns categories plus summary as symbols' do
       expected_steps = %i[identite_entreprise exclusion_criteria economic_capacities summary]
