@@ -35,6 +35,10 @@ RSpec.describe CreatePublicMarket, type: :interactor do
         expect(result.public_market.name).to eq('Test Market')
         expect(result.public_market.editor).to eq(editor)
       end
+
+      it 'enqueues FetchPublicMarketBuyerNameJob' do
+        expect { subject }.to have_enqueued_job(FetchPublicMarketBuyerNameJob)
+      end
     end
 
     context 'with nil editor' do

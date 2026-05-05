@@ -10,6 +10,7 @@ class CreatePublicMarket < ApplicationInteractor
 
     if market.save
       context.public_market = market
+      FetchPublicMarketBuyerNameJob.perform_later(market.id)
     else
       context.fail!(errors: errors_from(market))
     end
