@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Candidate
-  class SessionsController < ApplicationController
+  class SessionsController < Candidate::ApplicationController
     skip_before_action :require_candidate_authentication
 
     def new
