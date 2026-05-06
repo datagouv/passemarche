@@ -8,7 +8,8 @@ module Buyer
     prepend_before_action :initialize_presenter, except: [:retry_sync]
     prepend_before_action :find_public_market
     before_action :check_market_not_completed, except: [:retry_sync]
-    before_action :set_wizard_steps
+    before_action :set_wizard_steps, except: [:retry_sync]
+    skip_before_action :setup_wizard, only: [:retry_sync]
 
     def show
       case step
