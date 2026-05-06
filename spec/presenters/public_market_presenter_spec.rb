@@ -98,11 +98,15 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
-  describe '#field_by_key' do
-    it 'returns market attribute by key' do
-      field = presenter.field_by_key('test_siret')
-      expect(field).to be_a(MarketAttribute)
-      expect(field.key).to eq('test_siret')
+  describe '#market_types_label' do
+    it 'returns localized market type codes joined by comma' do
+      label = presenter.market_types_label
+      expect(label).to be_a(String)
+      expect(label).to be_present
+    end
+
+    it 'memoizes the result' do
+      expect(presenter.market_types_label).to equal(presenter.market_types_label)
     end
   end
 

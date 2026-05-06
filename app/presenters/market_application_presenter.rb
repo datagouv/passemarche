@@ -2,7 +2,7 @@
 
 class MarketApplicationPresenter
   include SidemenuHelper
-  include MarketAttributeGrouping
+  include MarketPresenterConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
@@ -48,10 +48,6 @@ class MarketApplicationPresenter
     subcategories + category_subcategories
   end
 
-  def field_by_key(key)
-    MarketAttribute.find_by(key: key.to_s)
-  end
-
   def market_attributes_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
@@ -91,12 +87,6 @@ class MarketApplicationPresenter
 
   def public_market_has_lots?
     public_market_lots.any?
-  end
-
-  def market_type_labels
-    @market_type_labels ||= public_market.market_type_codes
-      .map { |code| I18n.t("market_types.#{code}", default: code.humanize) }
-      .join(', ')
   end
 
   # === RESPONSE METHODS (with hidden filtering) ===
@@ -187,6 +177,10 @@ class MarketApplicationPresenter
 
   def public_market
     @public_market ||= @market_application.public_market
+  end
+
+  def market_type_codes
+    public_market.market_type_codes
   end
 
   def mandatory_motifs_exclusion_attributes
