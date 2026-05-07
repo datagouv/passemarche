@@ -24,7 +24,7 @@
                 </button>
               <% end %>
               <%= link_to t('candidate.sync_status.return_to_editor', editor: @market_application.editor.name),
-                          @market_application.editor.build_redirect_url(
+                          @market_application.editor.build_candidate_return_url(
                             market: @market_application.public_market,
                             application: @market_application
                           ) || root_path,

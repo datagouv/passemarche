@@ -28,7 +28,7 @@
             </div>
             <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
               <%= link_to t('buyer.sync_status.return_to_editor', editor: @public_market.editor.name),
-                          @public_market.editor.build_redirect_url(market: @public_market) || root_path,
+                          @public_market.editor.build_buyer_return_url(market: @public_market) || root_path,
                           class: 'fr-btn' %>
             </div>
           </div>
