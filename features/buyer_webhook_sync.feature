@@ -14,12 +14,19 @@ Feature: Synchronisation webhook acheteur
     When je visite la page de statut de synchronisation acheteur
     Then je vois "Synchronisation en cours"
 
-  Scenario: Page de succès après synchronisation
+  Scenario: Page de succès après synchronisation sans URL de retour acheteur configurée
     Given le marché a été synchronisé avec succès
     When je visite la page de statut de synchronisation acheteur
     Then je vois "Synchronisation réussie"
     And je vois l'identifiant du marché sur la page
-    And je vois un lien pour retourner sur l'éditeur
+    And je vois un lien de retour vers la page d'accueil
+
+  Scenario: Page de succès après synchronisation avec URL de retour acheteur configurée
+    Given l'éditeur a une URL de retour acheteur "https://editeur.example.com/marches"
+    And le marché a été synchronisé avec succès
+    When je visite la page de statut de synchronisation acheteur
+    Then je vois "Synchronisation réussie"
+    And je vois un lien de retour vers "https://editeur.example.com/marches"
 
   Scenario: Page d'erreur en cas d'échec de synchronisation
     Given le marché a échoué à se synchroniser

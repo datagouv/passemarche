@@ -19,6 +19,19 @@ Given('la candidature a échoué à se synchroniser') do
   @market_application.update!(sync_status: :sync_failed)
 end
 
+Given("l'éditeur a une URL de retour candidat {string}") do |url|
+  @editor.update!(candidate_return_url: url)
+end
+
 When('je visite la page de statut de synchronisation candidat') do
   visit candidate_sync_status_path(@market_application.identifier)
+end
+
+Then('je vois un lien de retour candidat vers {string}') do |base_url|
+  expected_href = "#{base_url}?market_identifier=#{@market_application.public_market.identifier}&application_identifier=#{@market_application.identifier}"
+  expect(page).to have_link(@editor.name, href: expected_href)
+end
+
+Then('je vois un lien de retour candidat vers la page d\'accueil') do
+  expect(page).to have_link(@editor.name, href: '/')
 end

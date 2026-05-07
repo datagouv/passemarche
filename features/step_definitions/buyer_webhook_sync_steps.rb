@@ -43,8 +43,17 @@ Then('je vois l\'identifiant du marché sur la page') do
   expect(page).to have_content(@public_market.identifier)
 end
 
-Then('je vois un lien pour retourner sur l\'éditeur') do
-  expect(page).to have_link(@editor.name)
+Given("l'éditeur a une URL de retour acheteur {string}") do |url|
+  @editor.update!(buyer_return_url: url)
+end
+
+Then('je vois un lien de retour vers la page d\'accueil') do
+  expect(page).to have_link(@editor.name, href: '/')
+end
+
+Then('je vois un lien de retour vers {string}') do |base_url|
+  expected_href = "#{base_url}?market_identifier=#{@public_market.identifier}"
+  expect(page).to have_link(@editor.name, href: expected_href)
 end
 
 Then('je vois un bouton {string}') do |label|
