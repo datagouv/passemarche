@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  include Candidate::Authentication
+  helper_method :current_candidate
 
   private
+
+  def current_candidate
+    return @current_candidate if defined?(@current_candidate)
+
+    @current_candidate = User.find_by(id: session[:user_id])
+  end
 
   def set_no_cache_headers
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'

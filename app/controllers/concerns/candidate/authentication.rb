@@ -4,17 +4,7 @@ module Candidate
   module Authentication
     extend ActiveSupport::Concern
 
-    included do
-      helper_method :current_candidate
-    end
-
     private
-
-    def current_candidate
-      return @current_candidate if defined?(@current_candidate)
-
-      @current_candidate = User.find_by(id: session[:user_id])
-    end
 
     def require_candidate_authentication
       return if candidate_authenticated?
@@ -35,7 +25,9 @@ module Candidate
     end
 
     def candidate_authenticated?
-      return false unless current_candidate && @market_application
+      return false unless current_candidate
+
+      return session_siret.present? unless @market_application
 
       ensure_market_application_in_session
 

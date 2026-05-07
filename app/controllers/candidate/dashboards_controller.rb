@@ -4,9 +4,6 @@ module Candidate
   class DashboardsController < Candidate::ApplicationController
     include Pagy::Method
 
-    skip_before_action :require_candidate_authentication
-    before_action :require_candidate_session
-
     def index
       base_scope = MarketApplication
         .for_user(current_candidate)
@@ -17,15 +14,6 @@ module Candidate
         base_scope.by_last_modification.includes(:public_market, :lots),
         limit: 10
       )
-    end
-
-    private
-
-    def require_candidate_session
-      return if current_candidate.present? && session_siret.present?
-
-      session[:return_to] = request.original_url
-      render 'candidate/sessions/new'
     end
   end
 end
