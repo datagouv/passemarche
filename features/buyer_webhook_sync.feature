@@ -19,7 +19,7 @@ Feature: Synchronisation webhook acheteur
     When je visite la page de statut de synchronisation acheteur
     Then je vois "Synchronisation réussie"
     And je vois l'identifiant du marché sur la page
-    And je vois un lien de retour vers la page d'accueil
+    And je ne vois pas de lien de retour acheteur
 
   Scenario: Page de succès après synchronisation avec URL de retour acheteur configurée
     Given l'éditeur a une URL de retour acheteur "https://editeur.example.com/marches"

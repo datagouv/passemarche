@@ -41,8 +41,8 @@ RSpec.describe 'Buyer::SyncStatus', type: :request do
       context 'when editor has no buyer_return_url configured' do
         let(:buyer_return_url) { nil }
 
-        it 'displays redirect link to root path' do
-          expect(response.body).to include('href="/"')
+        it 'does not display a return link' do
+          expect(response.body).not_to include(I18n.t('buyer.sync_status.return_to_editor', editor: editor.name))
         end
       end
     end

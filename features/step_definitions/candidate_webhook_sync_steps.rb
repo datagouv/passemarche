@@ -32,6 +32,6 @@ Then('je vois un lien de retour candidat vers {string}') do |base_url|
   expect(page).to have_link(@editor.name, href: expected_href)
 end
 
-Then('je vois un lien de retour candidat vers la page d\'accueil') do
-  expect(page).to have_link(@editor.name, href: '/')
+Then('je ne vois pas de lien de retour candidat') do
+  expect(page).not_to have_link(I18n.t('candidate.sync_status.return_to_editor', editor: @editor.name))
 end

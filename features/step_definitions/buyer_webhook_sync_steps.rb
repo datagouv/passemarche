@@ -47,8 +47,8 @@ Given("l'éditeur a une URL de retour acheteur {string}") do |url|
   @editor.update!(buyer_return_url: url)
 end
 
-Then('je vois un lien de retour vers la page d\'accueil') do
-  expect(page).to have_link(@editor.name, href: '/')
+Then('je ne vois pas de lien de retour acheteur') do
+  expect(page).not_to have_link(I18n.t('buyer.sync_status.return_to_editor', editor: @editor.name))
 end
 
 Then('je vois un lien de retour vers {string}') do |base_url|

@@ -18,7 +18,7 @@ Feature: Synchronisation webhook candidat
     Given la candidature a été synchronisée avec succès
     When je visite la page de statut de synchronisation candidat
     Then je vois "Votre candidature a été transmise !"
-    And je vois un lien de retour candidat vers la page d'accueil
+    And je ne vois pas de lien de retour candidat
 
   Scenario: Page de succès après synchronisation avec URL de retour candidat configurée
     Given l'éditeur a une URL de retour candidat "https://editeur.example.com/candidatures"
