@@ -108,7 +108,8 @@
               <div class="fr-card__content">
                 <% if @editor.webhook_configured? %>
                   <p><strong><%= t('admin.editors.show.webhook_url') %></strong> <%= @editor.completion_webhook_url %></p>
-                  <p><strong><%= t('admin.editors.show.redirect_url') %></strong> <%= @editor.redirect_url || t('admin.shared.not_configured') %></p>
+                  <p><strong><%= t('admin.editors.show.buyer_return_url') %></strong> <%= @editor.buyer_return_url || t('admin.shared.not_configured') %></p>
+                  <p><strong><%= t('admin.editors.show.candidate_return_url') %></strong> <%= @editor.candidate_return_url || t('admin.shared.not_configured') %></p>
                   <p><strong><%= t('admin.editors.show.secret_configured') %></strong>
                     <% if @editor.webhook_secret.present? %>
                       <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>
