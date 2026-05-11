@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Candidate::ResolveMarketApplicationForReconnection, type: :interactor do
+RSpec.describe Candidate::FindMarketApplication, type: :interactor do
   let(:editor) { create(:editor) }
   let(:public_market) { create(:public_market, :completed, editor:) }
   let(:siret) { '73282932000074' }
