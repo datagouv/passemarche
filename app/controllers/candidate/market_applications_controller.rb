@@ -8,7 +8,7 @@ module Candidate
     prepend_before_action :set_steps
     prepend_before_action :find_market_application
     before_action :set_wizard_steps
-    skip_before_action :check_application_not_completed, only: %i[retry_sync]
+    skip_before_action :check_application_not_completed, only: %i[retry_sync destroy]
 
     def show
       if step == :api_data_recovery_status
@@ -34,6 +34,15 @@ module Candidate
       handle_service_result(result)
     end
 
+    def destroy
+      result = DeleteMarketApplication.call(market_application: @market_application)
+
+      return redirect_to candidate_dashboard_path, alert: t('candidate.market_applications.delete_failure') unless result.success?
+
+      update_session_after_deletion(result.next_application)
+      redirect_to after_deletion_path(result.next_application), notice: t('candidate.market_applications.delete_success')
+    end
+
     def retry_sync
       @market_application.update!(sync_status: :sync_pending)
 
@@ -41,6 +50,18 @@ module Candidate
     end
 
     private
+
+    def update_session_after_deletion(next_application)
+      if next_application
+        session[:market_application_identifier] = next_application.identifier
+      else
+        clear_candidate_authentication_session
+      end
+    end
+
+    def after_deletion_path(next_application)
+      next_application ? candidate_dashboard_path : root_path
+    end
 
     def handle_service_result(result)
       # Apply flash messages from service

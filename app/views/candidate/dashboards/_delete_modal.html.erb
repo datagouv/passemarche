@@ -24,10 +24,10 @@
           <div class="fr-modal__footer">
             <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline fr-btns-group--icon-left fr-btns-group--reverse">
               <li>
-                <button class="fr-btn"
-                        aria-controls="deletion-modal-<%= application.identifier %>">
-                  <%= t("candidate.dashboard.application.delete_modal.confirm") %>
-                </button>
+                <%= button_to t("candidate.dashboard.application.delete_modal.confirm"),
+                              candidate_market_application_path(application.identifier),
+                              method: :delete,
+                              class: "fr-btn" %>
               </li>
               <li>
                 <button class="fr-btn fr-btn--secondary"
