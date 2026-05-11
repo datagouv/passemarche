@@ -14,11 +14,18 @@ Feature: Synchronisation webhook candidat
     When je visite la page de statut de synchronisation candidat
     Then je vois "Synchronisation en cours"
 
-  Scenario: Page de succès après synchronisation
+  Scenario: Page de succès après synchronisation sans URL de retour candidat configurée
     Given la candidature a été synchronisée avec succès
     When je visite la page de statut de synchronisation candidat
     Then je vois "Votre candidature a été transmise !"
-    And je vois un lien pour retourner sur l'éditeur
+    And je ne vois pas de lien de retour candidat
+
+  Scenario: Page de succès après synchronisation avec URL de retour candidat configurée
+    Given l'éditeur a une URL de retour candidat "https://editeur.example.com/candidatures"
+    And la candidature a été synchronisée avec succès
+    When je visite la page de statut de synchronisation candidat
+    Then je vois "Votre candidature a été transmise !"
+    And je vois un lien de retour candidat vers "https://editeur.example.com/candidatures"
 
   Scenario: Page d'erreur en cas d'échec de synchronisation
     Given la candidature a échoué à se synchroniser

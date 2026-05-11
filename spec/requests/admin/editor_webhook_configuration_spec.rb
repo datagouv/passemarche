@@ -17,7 +17,8 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('Configuration Webhook')
       expect(response.body).to include('URL de webhook de complétion')
-      expect(response.body).to include('URL de redirection')
+      expect(response.body).to include('URL de retour acheteur')
+      expect(response.body).to include('URL de retour candidat')
       expect(response.body).to include('Secret webhook')
     end
 
@@ -52,7 +53,8 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
             client_id: editor.client_id,
             client_secret: editor.client_secret,
             completion_webhook_url: 'https://example.com/webhook',
-            redirect_url: 'https://example.com/success'
+            buyer_return_url: 'https://example.com/buyer',
+            candidate_return_url: 'https://example.com/candidate'
           }
         }
       end
@@ -62,7 +64,8 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
 
         editor.reload
         expect(editor.completion_webhook_url).to eq('https://example.com/webhook')
-        expect(editor.redirect_url).to eq('https://example.com/success')
+        expect(editor.buyer_return_url).to eq('https://example.com/buyer')
+        expect(editor.candidate_return_url).to eq('https://example.com/candidate')
         expect(response).to redirect_to(admin_editor_path(editor))
       end
     end
@@ -125,7 +128,8 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
       before do
         editor.update!(
           completion_webhook_url: 'https://example.com/webhook',
-          redirect_url: 'https://example.com/success',
+          buyer_return_url: 'https://example.com/buyer',
+          candidate_return_url: 'https://example.com/candidate',
           webhook_secret: 'secret123'
         )
       end
@@ -136,7 +140,8 @@ RSpec.describe 'Admin::Editors webhook configuration', type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('Configuration Webhook')
         expect(response.body).to include('https://example.com/webhook')
-        expect(response.body).to include('https://example.com/success')
+        expect(response.body).to include('https://example.com/buyer')
+        expect(response.body).to include('https://example.com/candidate')
         expect(response.body).to include('Oui') # Secret configured
       end
     end

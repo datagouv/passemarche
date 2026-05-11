@@ -8,7 +8,7 @@ module Candidate
     prepend_before_action :set_steps
     prepend_before_action :find_market_application
     before_action :set_wizard_steps
-    skip_before_action :check_application_not_completed, only: [:retry_sync]
+    skip_before_action :check_application_not_completed, only: %i[retry_sync]
 
     def show
       if step == :api_data_recovery_status

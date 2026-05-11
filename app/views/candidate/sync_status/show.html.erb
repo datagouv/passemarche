@@ -23,12 +23,14 @@
                   <span class="fr-ml-1w"><%= t('candidate.sync_status.download_attestation') %></span>
                 </button>
               <% end %>
-              <%= link_to t('candidate.sync_status.return_to_editor', editor: @market_application.editor.name),
-                          @market_application.editor.build_redirect_url(
-                            market: @market_application.public_market,
-                            application: @market_application
-                          ) || root_path,
-                          class: 'fr-btn' %>
+              <% if (candidate_url = @market_application.editor.build_candidate_return_url(
+                market: @market_application.public_market,
+                application: @market_application
+              )) %>
+                <%= link_to t('candidate.sync_status.return_to_editor', editor: @market_application.editor.name),
+                            candidate_url,
+                            class: 'fr-btn' %>
+              <% end %>
             </div>
           </div>
 

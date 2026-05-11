@@ -943,8 +943,10 @@ fr:
         webhook_config: "Configuration Webhook"
         completion_webhook_url: "URL de webhook de complétion"
         completion_webhook_hint: "URL HTTPS où seront envoyées les notifications de complétion de marché"
-        redirect_url: "URL de redirection"
-        redirect_url_hint: "URL de redirection après complétion. Les paramètres market_identifier et application_identifier seront automatiquement ajoutés."
+        buyer_return_url: "URL de retour acheteur"
+        buyer_return_url_hint: "URL de retour vers la plateforme acheteur après configuration du marché. Le paramètre market_identifier sera automatiquement ajouté."
+        candidate_return_url: "URL de retour candidat"
+        candidate_return_url_hint: "URL de retour vers la plateforme acheteur après dépôt de candidature. Les paramètres market_identifier et application_identifier seront automatiquement ajoutés."
         webhook_secret: "Secret webhook"
         webhook_secret_hint: "Secret utilisé pour signer les payloads (HMAC-SHA256)"
         generate_new_secret: "Générer un nouveau secret"
@@ -963,7 +965,8 @@ fr:
         client_secret: "Client Secret :"
         webhook_config: "Configuration Webhook"
         webhook_url: "URL de webhook :"
-        redirect_url: "URL de redirection :"
+        buyer_return_url: "URL de retour acheteur :"
+        candidate_return_url: "URL de retour candidat :"
         secret_configured: "Secret configuré :"
         webhook_not_configured: "Webhook non configuré"
         confirm_delete: "Êtes-vous sûr de vouloir supprimer cet éditeur ?"
@@ -1382,9 +1385,12 @@ fr:
             completion_webhook_url:
               invalid_url: "L'URL de webhook de completion n'est pas valide"
               https_required: "L'URL de webhook de completion doit utiliser HTTPS en production"
-            redirect_url:
-              invalid_url: "L'URL de redirection n'est pas valide"
-              https_required: "L'URL de redirection doit utiliser HTTPS en production"
+            buyer_return_url:
+              invalid_url: "L'URL de retour acheteur n'est pas valide"
+              https_required: "L'URL de retour acheteur doit utiliser HTTPS en production"
+            candidate_return_url:
+              invalid_url: "L'URL de retour candidat n'est pas valide"
+              https_required: "L'URL de retour candidat doit utiliser HTTPS en production"
       attributes:
         # Generic attribute names that can be used across models
         name: "nom"
@@ -1400,7 +1406,8 @@ fr:
         client_id: "identifiant client"
         client_secret: "secret client"
         completion_webhook_url: "URL de webhook"
-        redirect_url: "URL de redirection"
+        buyer_return_url: "URL de retour acheteur"
+        candidate_return_url: "URL de retour candidat"
         cpv_code: "code CPV"
         checked: "case à cocher"
         file: "fichier"

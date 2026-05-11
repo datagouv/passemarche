@@ -145,45 +145,74 @@ RSpec.describe Editor, type: :model do
     end
   end
 
-  describe '#build_redirect_url' do
-    let(:editor) { create(:editor, redirect_url:) }
+  describe '#build_buyer_return_url' do
+    let(:editor) { create(:editor, buyer_return_url:) }
     let(:public_market) { create(:public_market, :completed, editor:) }
-    let(:market_application) { create(:market_application, public_market:) }
 
-    context 'when redirect_url is blank' do
-      let(:redirect_url) { nil }
+    context 'when buyer_return_url is blank' do
+      let(:buyer_return_url) { nil }
 
       it 'returns nil' do
-        expect(editor.build_redirect_url(market: public_market)).to be_nil
+        expect(editor.build_buyer_return_url(market: public_market)).to be_nil
       end
     end
 
-    context 'when redirect_url has no query params' do
-      let(:redirect_url) { 'https://example.com/callback' }
+    context 'when buyer_return_url has no query params' do
+      let(:buyer_return_url) { 'https://example.com/marches' }
 
       it 'appends market_identifier as query param' do
-        result = editor.build_redirect_url(market: public_market)
+        result = editor.build_buyer_return_url(market: public_market)
 
-        expect(result).to eq("https://example.com/callback?market_identifier=#{public_market.identifier}")
+        expect(result).to eq("https://example.com/marches?market_identifier=#{public_market.identifier}")
       end
+    end
 
-      it 'appends both identifiers when application is provided' do
-        result = editor.build_redirect_url(market: public_market, application: market_application)
+    context 'when buyer_return_url already has query params' do
+      let(:buyer_return_url) { 'https://example.com/marches?tab=config' }
+
+      it 'preserves existing params and appends market_identifier' do
+        result = editor.build_buyer_return_url(market: public_market)
 
         expect(result).to eq(
-          "https://example.com/callback?market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
+          "https://example.com/marches?tab=config&market_identifier=#{public_market.identifier}"
+        )
+      end
+    end
+  end
+
+  describe '#build_candidate_return_url' do
+    let(:editor) { create(:editor, candidate_return_url:) }
+    let(:public_market) { create(:public_market, :completed, editor:) }
+    let(:market_application) { create(:market_application, public_market:) }
+
+    context 'when candidate_return_url is blank' do
+      let(:candidate_return_url) { nil }
+
+      it 'returns nil' do
+        expect(editor.build_candidate_return_url(market: public_market, application: market_application)).to be_nil
+      end
+    end
+
+    context 'when candidate_return_url has no query params' do
+      let(:candidate_return_url) { 'https://example.com/candidatures' }
+
+      it 'appends market_identifier and application_identifier' do
+        result = editor.build_candidate_return_url(market: public_market, application: market_application)
+
+        expect(result).to eq(
+          "https://example.com/candidatures?market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
         )
       end
     end
 
-    context 'when redirect_url already has query params' do
-      let(:redirect_url) { 'https://example.com/callback?existing=value' }
+    context 'when candidate_return_url already has query params' do
+      let(:candidate_return_url) { 'https://example.com/candidatures?tab=suivi' }
 
-      it 'preserves existing params and appends identifiers' do
-        result = editor.build_redirect_url(market: public_market, application: market_application)
+      it 'preserves existing params and appends both identifiers' do
+        result = editor.build_candidate_return_url(market: public_market, application: market_application)
 
         expect(result).to eq(
-          "https://example.com/callback?existing=value&market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
+          "https://example.com/candidatures?tab=suivi&market_identifier=#{public_market.identifier}&application_identifier=#{market_application.identifier}"
         )
       end
     end

@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Buyer::SyncStatus', type: :request do
-  let(:editor) { create(:editor, redirect_url:) }
-  let(:redirect_url) { nil }
+  let(:editor) { create(:editor, buyer_return_url:) }
+  let(:buyer_return_url) { nil }
   let(:public_market) { create(:public_market, editor:) }
 
   describe 'GET /buyer/public_markets/:identifier/sync_status' do
@@ -30,19 +30,19 @@ RSpec.describe 'Buyer::SyncStatus', type: :request do
         get sync_status_path
       end
 
-      context 'when editor has redirect_url configured' do
-        let(:redirect_url) { 'https://editor.example.com/callback' }
+      context 'when editor has buyer_return_url configured' do
+        let(:buyer_return_url) { 'https://editor.example.com/callback' }
 
         it 'displays redirect link with market_identifier query param' do
           expect(response.body).to include("market_identifier=#{public_market.identifier}")
         end
       end
 
-      context 'when editor has no redirect_url configured' do
-        let(:redirect_url) { nil }
+      context 'when editor has no buyer_return_url configured' do
+        let(:buyer_return_url) { nil }
 
-        it 'displays redirect link to root path' do
-          expect(response.body).to include('href="/"')
+        it 'does not display a return link' do
+          expect(response.body).not_to include(I18n.t('buyer.sync_status.return_to_editor', editor: editor.name))
         end
       end
     end
