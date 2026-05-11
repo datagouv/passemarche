@@ -12,6 +12,10 @@ Then('I should be on the dashboard') do
   expect(page).to have_current_path(candidate_dashboard_path)
 end
 
+Then('I should be on the home page') do
+  expect(page).to have_current_path(root_path)
+end
+
 Given('my application has an attestation') do
   pdf_content = '%PDF-1.4 fake pdf content'
   @market_application.attestation.attach(
