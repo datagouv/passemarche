@@ -4,13 +4,18 @@ class DeleteMarketApplication < ApplicationInteractor
   delegate :market_application, to: :context
 
   def call
-    context.fail!(message: 'Impossible de supprimer une candidature transmise') if market_application.completed?
+    context.fail! if market_application.completed?
+    context.fail! unless market_application.destroy
 
+    context.next_application = next_application_for_user
+  end
+
+  private
+
+  def next_application_for_user
     user = market_application.user
-    siret = market_application.siret
+    return unless user
 
-    market_application.destroy!
-
-    context.next_application = user && MarketApplication.for_user(user).for_siret(siret).first
+    MarketApplication.for_user(user).for_siret(market_application.siret).first
   end
 end

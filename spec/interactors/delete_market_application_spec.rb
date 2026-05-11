@@ -51,10 +51,6 @@ RSpec.describe DeleteMarketApplication, type: :interactor do
       it 'fails' do
         expect(subject).to be_failure
       end
-
-      it 'provides error message' do
-        expect(subject.message).to eq('Impossible de supprimer une candidature transmise')
-      end
     end
   end
 end
