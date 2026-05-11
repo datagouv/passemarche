@@ -547,7 +547,7 @@ fr:
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
       no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
-      email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
+      reconnection_email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
     sessions:
       new:
         title: "Bienvenue,"
@@ -644,6 +644,8 @@ fr:
             montant: "Montant en euros"
             description: "Décrivez en détail la réalisation"
       market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
+      delete_success: "Votre candidature a bien été supprimée."
+      delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
       insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"
