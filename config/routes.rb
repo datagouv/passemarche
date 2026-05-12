@@ -76,7 +76,7 @@ Rails.application.routes.draw do
       get :sent
     end
 
-    resources :market_applications, param: :identifier, only: [] do
+    resources :market_applications, param: :identifier, only: [:destroy] do
       member do
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'

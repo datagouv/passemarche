@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Completable
   def completed?
     completed_at.present?
