@@ -687,6 +687,32 @@
   font-weight: 700;
 }
 
+/* Lots detail table */
+.lots-detail-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  border: 1px solid var(--border-default-grey, #dddddd);
+}
+
+.lots-detail-table th,
+.lots-detail-table td {
+  border-bottom: 1px solid var(--border-default-grey, #dddddd);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lots-detail-table tr:last-child td {
+  border-bottom: none;
+}
+
+.lots-detail-table th {
+  background-color: var(--background-alt-grey, #f6f6f6);
+  font-weight: 700;
+}
+
+
 /* Dashboard summary tiles */
 .fr-dashboard-tile {
   background-color: var(--grey-1000-50, #fff);
