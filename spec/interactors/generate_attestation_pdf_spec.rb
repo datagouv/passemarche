@@ -3,9 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe GenerateAttestationPdf, type: :interactor do
-  # Helper to normalize apostrophes for comparison (HTML entities vs plain text)
   def normalize_apostrophes(text)
     text.gsub('&#39;', "'").tr("\u2019", "'")
+  end
+
+  def capture_html
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_call_original
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string) do |_instance, html_content, _options|
+      yield(html_content)
+      'fake pdf content'
+    end
+    subject
   end
 
   before do
@@ -137,6 +145,60 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
           end
 
           subject
+        end
+      end
+    end
+
+    context 'with lots' do
+      let(:lot1) { create(:lot, public_market: market_application.public_market, name: 'Fournitures bureau', position: 1, cpv_code: '30192000-1') }
+      let(:lot2) { create(:lot, public_market: market_application.public_market, name: 'Mobilier', position: 2, cpv_code: nil) }
+
+      before do
+        create(:market_application_lot, market_application:, lot: lot1)
+        create(:market_application_lot, market_application:, lot: lot2)
+      end
+
+      it 'includes the lots summary with lot tags' do
+        capture_html do |html|
+          expect(html).to include('Liste des lots concernés par la candidature')
+          expect(html).to include('Lot 1')
+          expect(html).to include('Lot 2')
+        end
+      end
+
+      it 'includes the annex notice' do
+        capture_html do |html|
+          expect(html).to include('figure en annexe de la présente attestation')
+        end
+      end
+
+      it 'includes the detailed lots table with lot names' do
+        capture_html do |html|
+          expect(html).to include('Annexes')
+          expect(html).to include('Liste détaillée des lots concernés par la candidature')
+          expect(html).to include('Fournitures bureau')
+          expect(html).to include('Mobilier')
+        end
+      end
+
+      it 'includes the CPV code when present' do
+        capture_html do |html|
+          expect(html).to include('30192000-1')
+        end
+      end
+
+      it 'shows "Non renseigné" when CPV is absent' do
+        capture_html do |html|
+          expect(html).to include('Non renseigné')
+        end
+      end
+    end
+
+    context 'without lots' do
+      it 'does not include the lots summary section' do
+        capture_html do |html|
+          expect(html).not_to include('Liste des lots concernés par la candidature')
+          expect(html).not_to include('Liste détaillée des lots concernés par la candidature')
         end
       end
     end
