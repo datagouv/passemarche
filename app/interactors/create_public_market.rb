@@ -28,7 +28,13 @@ class CreatePublicMarket < ApplicationInteractor
   end
 
   def build_lot(lot, index)
-    { name: lot[:name], position: index + 1, cpv_code: lot[:cpv_code] }
+    { name: lot[:name], position: index + 1, cpv_code: lot[:cpv_code],
+      platform_market_type: market_type_for_lot(lot[:lot_type_code]) }
+  end
+
+  def market_type_for_lot(lot_type_code)
+    code = lot_type_code.presence || params[:market_type_codes]&.first
+    MarketType.find_by(code:)
   end
 
   def errors_from(record)
