@@ -394,7 +394,10 @@ fr:
         title: "Configurer le type de vos lots"
         subtitle: "Vérifiez et ajustez le type de chaque lot avant de configurer les pièces justificatives."
         lots_section_title: "Vérifiez les types transmis"
-        lots_section_subtitle: "Assurez-vous que les types transmis par la plateforme de marché sont exacts."
+        lots_section_subtitle: "Assurez-vous que les types transmis par la plateforme de marché sont exacts et modifiez-les si besoin."
+        platform_banner_global_type: "La plateforme %{platform} a transmis le type %{type} pour l'ensemble des lots. Sélectionnez les lots dont le type est incorrect pour les modifier."
+        platform_banner_per_lot_type: "La plateforme %{platform} a transmis un type distinct pour chaque lot. Sélectionnez les lots dont le type est incorrect pour les modifier."
+        platform_source: "Plateforme"
         lot_number: "Lot %{number}"
         lot_limit_section_title: "Indiquez si vous souhaitez limiter le nombre de lots"
         lot_limit_section_subtitle: "Si vous le souhaitez, vous pouvez ajuster le nombre de lots auxquels une entreprise peut candidater."
@@ -406,8 +409,9 @@ fr:
         sidebar_typology_label: "Typologie"
         how_it_works_title: "Comment ça fonctionne"
         how_it_works_step_1: "Vérifiez les types transmis par la plateforme"
-        how_it_works_step_2: "Limitez le nombre de lots si nécessaire"
-        how_it_works_step_3: "Passez à la configuration des candidatures"
+        how_it_works_step_2: "Modifiez les types de lots si nécessaires"
+        how_it_works_step_3: "Limitez le nombre de lots si nécessaire"
+        how_it_works_step_4: "Passez à la configuration des candidatures"
         submit: "Configurer les candidatures"
       generic_step:
         optional_question: Souhaitez-vous demander des renseignements complémentaires ?

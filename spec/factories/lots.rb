@@ -5,6 +5,9 @@ FactoryBot.define do
     association :public_market, :completed
     sequence(:name) { |n| "Lot #{n}" }
     position { nil }
-    association :platform_market_type, factory: :market_type
+
+    trait :with_platform_type do
+      association :platform_market_type, factory: :market_type
+    end
   end
 end
