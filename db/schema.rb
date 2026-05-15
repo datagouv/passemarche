@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_093244) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_15_054753) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -86,10 +86,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_093244) do
   create_table "lots", force: :cascade do |t|
     t.string "cpv_code"
     t.datetime "created_at", null: false
+    t.bigint "market_type_id"
     t.string "name", null: false
+    t.bigint "platform_market_type_id"
     t.integer "position", default: 0, null: false
     t.bigint "public_market_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["market_type_id"], name: "index_lots_on_market_type_id"
+    t.index ["platform_market_type_id"], name: "index_lots_on_platform_market_type_id"
     t.index ["position"], name: "index_lots_on_position"
     t.index ["public_market_id"], name: "index_lots_on_public_market_id"
   end
@@ -421,6 +425,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_093244) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "lots", "market_types"
+  add_foreign_key "lots", "market_types", column: "platform_market_type_id"
   add_foreign_key "lots", "public_markets"
   add_foreign_key "market_application_lots", "lots"
   add_foreign_key "market_application_lots", "market_applications"

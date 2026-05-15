@@ -2,6 +2,8 @@
 
 class Lot < ApplicationRecord
   belongs_to :public_market
+  belongs_to :platform_market_type, class_name: 'MarketType', optional: true
+  belongs_to :market_type, class_name: 'MarketType', optional: true
   has_many :market_application_lots, dependent: :destroy
   has_many :market_applications, through: :market_application_lots
 
@@ -14,6 +16,10 @@ class Lot < ApplicationRecord
   before_validation :set_default_position, on: :create
 
   scope :ordered, -> { order(:position) }
+
+  def effective_market_type
+    market_type || platform_market_type
+  end
 
   private
 

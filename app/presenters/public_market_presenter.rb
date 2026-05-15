@@ -108,6 +108,26 @@ class PublicMarketPresenter
     lots.any?
   end
 
+  def lots_for_config
+    @lots_for_config ||= @public_market.lots.ordered
+      .includes(:platform_market_type, :market_type)
+      .to_a
+  end
+
+  def platform_type_banner_text
+    typed = lots_for_config.select(&:platform_market_type)
+    return nil if typed.none?
+
+    if typed.map(&:platform_market_type_id).uniq.one?
+      I18n.t('buyer.public_markets.lot_config.platform_banner_global_type',
+        platform: @public_market.editor.name,
+        type: I18n.t("market_types.#{typed.first.platform_market_type.code}"))
+    else
+      I18n.t('buyer.public_markets.lot_config.platform_banner_per_lot_type',
+        platform: @public_market.editor.name)
+    end
+  end
+
   def source_types
     I18n.t('source_types')
   end
