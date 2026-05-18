@@ -525,3 +525,52 @@ strong {
   font-size: 14px;
 }
 
+/* Lot tags (fr-tags-group / fr-tag) */
+.fr-tags-group {
+  display: block;
+  margin-bottom: 8px;
+  line-height: 2.2;
+  padding: 0;
+  list-style: none;
+}
+
+.fr-tags-group li {
+  display: inline;
+}
+
+.fr-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #eeeeee;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+/* Lots detail table */
+.lots-detail-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border: 1px solid #dddddd;
+}
+
+.lots-detail-table th,
+.lots-detail-table td {
+  border-bottom: 1px solid #dddddd;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lots-detail-table tr:last-child td {
+  border-bottom: none;
+}
+
+.lots-detail-table th {
+  background-color: #f6f6f6;
+  font-weight: 700;
+}

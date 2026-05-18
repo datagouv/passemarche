@@ -166,6 +166,18 @@ fr:
       lot_title_label: "Titre :"
       lot_type_label: "Type :"
       lot_cpv_label: "CPV :"
+      annex_notice:
+        one: "Le lot pour lequel l'entreprise candidate s'engage figure en annexe de la présente attestation."
+        other: "L'ensemble des %{count} lots pour lesquels l'entreprise candidate s'engage figure en annexe de la présente attestation."
+    application_lots_annex:
+      annex_title: "Annexes"
+      title: "Liste détaillée des lots concernés par la candidature"
+      column_number: "Numéro du lot"
+      column_name: "Nom"
+      column_cpv: "CPV"
+      column_type: "Type"
+      cpv_not_provided: "Non renseigné"
+      type_not_provided: "Non renseigné"
     renamed_documents:
       title: "Vos documents"
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"

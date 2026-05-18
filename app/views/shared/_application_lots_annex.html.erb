@@ -1,0 +1,29 @@
+<div class="fr-card fr-mb-2w category-card">
+  <%= render 'shared/card_header',
+             title: t('shared.application_lots_annex.title'),
+             background: "fr-background-alt--grey" %>
+  <div class="fr-card__body fr-mt-1w fr-mb-1w">
+    <div class="lots-detail-table">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"><%= t('shared.application_lots_annex.column_number') %></th>
+            <th scope="col"><%= t('shared.application_lots_annex.column_name') %></th>
+            <th scope="col"><%= t('shared.application_lots_annex.column_cpv') %></th>
+            <th scope="col"><%= t('shared.application_lots_annex.column_type') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% presenter.selected_lots.each do |lot| %>
+            <tr>
+              <td><%= t('shared.application_lots_summary.lot_number', number: lot.position) %></td>
+              <td><%= lot.name %></td>
+              <td><%= lot.cpv_code.presence || t('shared.application_lots_annex.cpv_not_provided') %></td>
+              <td><%= presenter.market_types_label.presence || t('shared.application_lots_annex.type_not_provided') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

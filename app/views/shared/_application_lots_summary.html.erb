@@ -3,17 +3,14 @@
              title: t('shared.application_lots_summary.title'),
              background: "fr-background-alt--grey" %>
   <div class="fr-card__body fr-mt-1w fr-mb-1w">
-    <% presenter.selected_lots.each_with_index do |lot, index| %>
-      <div class="<%= 'fr-mb-3w' if index < presenter.selected_lots.size - 1 %>">
-        <p class="fr-text--md fr-mb-0"><strong><%= t('shared.application_lots_summary.lot_number', number: lot.position) %></strong></p>
-        <p class="fr-text--md fr-text--mention-grey fr-mb-0"><%= t('shared.application_lots_summary.lot_title_label') %>&nbsp;<%= lot.name %></p>
-        <% if presenter.market_types_label.present? %>
-          <p class="fr-text--md fr-text--mention-grey fr-mb-0"><%= t('shared.application_lots_summary.lot_type_label') %>&nbsp;<%= presenter.market_types_label %></p>
-        <% end %>
-        <% if lot.cpv_code.present? %>
-          <p class="fr-text--md fr-text--mention-grey fr-mb-0"><%= t('shared.application_lots_summary.lot_cpv_label') %>&nbsp;<%= lot.cpv_code %></p>
-        <% end %>
-      </div>
-    <% end %>
+    <ul class="fr-tags-group fr-mb-1w">
+      <% presenter.selected_lots.each do |lot| %>
+        <li><span class="fr-tag"><%= t('shared.application_lots_summary.lot_number', number: lot.position) %></span></li>
+      <% end %>
+    </ul>
+    <p class="fr-text--md fr-mb-0">
+      <span class="fr-icon-info-fill fr-icon--sm fr-mr-1v fr-text-action-high--blue-france" aria-hidden="true"></span>
+      <%= t('shared.application_lots_summary.annex_notice', count: presenter.selected_lots.size) %>
+    </p>
   </div>
 </div>

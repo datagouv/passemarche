@@ -60,6 +60,13 @@
   <p class="fr-text--md fr-text--mention-grey"><%= t('shared.application_summary.no_documents_configured') %></p>
 <% end %>
 
+<% if presenter.lots_saved? %>
+  <div class="page-break-before">
+    <h2 class="fr-h4 fr-text--center fr-mb-2w"><%= t('shared.application_lots_annex.annex_title') %></h2>
+    <%= render 'shared/application_lots_annex', presenter: presenter %>
+  </div>
+<% end %>
+
 <%= render 'shared/renamed_documents_section',
            market_application: market_application,
            context: context %>
