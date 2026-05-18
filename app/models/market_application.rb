@@ -34,6 +34,10 @@ class MarketApplication < ApplicationRecord
   scope :completed, -> { where.not(completed_at: nil) }
   scope :by_last_modification, -> { order(updated_at: :desc) }
 
+  def in_progress?
+    !completed?
+  end
+
   def accessible_by?(user)
     user_id.nil? || user_id == user.id
   end

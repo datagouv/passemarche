@@ -118,6 +118,18 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#in_progress?' do
+    it 'returns true when not completed' do
+      application = build(:market_application, public_market:)
+      expect(application.in_progress?).to be true
+    end
+
+    it 'returns false when completed' do
+      application = build(:market_application, :completed, public_market:)
+      expect(application.in_progress?).to be false
+    end
+  end
+
   describe 'sync status helpers' do
     let(:application) { create(:market_application, public_market:, siret: '12345678901234', identifier: nil) }
 

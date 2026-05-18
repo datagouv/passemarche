@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Candidate
-  class ResolveMarketApplicationForReconnection < ApplicationInteractor
+  class FindMarketApplication < ApplicationInteractor
     delegate :siret, :email, :market_application_id, to: :context
 
     def call
@@ -43,7 +43,7 @@ module Candidate
     def validate_email_for_user(existing_user)
       return if existing_user.email.casecmp(email).zero?
 
-      context.fail!(errors: { email: [I18n.t('candidate.request_magic_link.email_mismatch')] })
+      context.fail!(errors: { email: [I18n.t('candidate.request_magic_link.reconnection_email_mismatch')] })
     end
 
     def find_application
