@@ -1,7 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkbox", "checkboxGroup", "submitButton", "selectAllButton", "noLotsText", "progressCard", "selectedLotsCount", "limitError"]
+  static targets = ["checkbox", "checkboxGroup", "submitButton", "selectAllButton",
+                    "noLotsText", "selectedLotsTags", "limitError"]
   static values = { limit: Number, storageKey: String }
 
   connect() {
@@ -48,6 +49,7 @@ export default class extends Controller {
     const checked = this.checkboxTargets.filter(cb => cb.checked)
     const hasChecked = checked.length > 0
     const limitReached = checked.length >= this._limit()
+
     this.submitButtonTargets.forEach(btn => { btn.disabled = !hasChecked })
 
     this.checkboxTargets.forEach((cb, i) => {
@@ -69,39 +71,41 @@ export default class extends Controller {
         : this.selectAllButtonTarget.dataset.selectText || "Tout sélectionner"
     }
 
-    if (this.hasNoLotsTextTarget) {
-      this.noLotsTextTarget.hidden = hasChecked
-    }
-
-    if (this.hasProgressCardTarget) {
-      this.progressCardTarget.hidden = !hasChecked
-    }
-
-    if (this.hasSelectedLotsCountTarget && hasChecked) {
-      const template = checked.length === 1
-        ? this.selectedLotsCountTarget.dataset.one
-        : this.selectedLotsCountTarget.dataset.other
-      this.selectedLotsCountTarget.textContent = template.replace('%{count}', checked.length)
-    }
-
+    this._renderSelectedLotsTags(checked)
     this._persistSelection(checked)
   }
 
-  _restoreSelectionFromStorage() {
-    if (!this.hasStorageKeyValue) {
-      return
+  _renderSelectedLotsTags(checked) {
+    if (!this.hasNoLotsTextTarget && !this.hasSelectedLotsTagsTarget) return
+
+    if (this.hasNoLotsTextTarget) {
+      this.noLotsTextTarget.hidden = checked.length > 0
     }
 
-    const raw = localStorage.getItem(this.storageKeyValue)
-    if (!raw) {
-      return
+    if (this.hasSelectedLotsTagsTarget) {
+      this.selectedLotsTagsTarget.replaceChildren(
+        ...checked.map(cb => {
+          const span = document.createElement("span")
+          span.className = "fr-tag"
+          span.style.background = "white"
+          const name = cb.dataset.lotName || ""
+          const type = cb.dataset.lotType
+          span.textContent = type ? `${name} - ${type}` : name
+          return span
+        })
+      )
     }
+  }
+
+  _restoreSelectionFromStorage() {
+    if (!this.hasStorageKeyValue) return
+
+    const raw = localStorage.getItem(this.storageKeyValue)
+    if (!raw) return
 
     try {
       const selectedLotIds = JSON.parse(raw)
-      if (!Array.isArray(selectedLotIds)) {
-        return
-      }
+      if (!Array.isArray(selectedLotIds)) return
 
       const selectedSet = new Set(selectedLotIds.map(String))
       this.checkboxTargets.forEach((checkbox) => {
@@ -113,9 +117,7 @@ export default class extends Controller {
   }
 
   _persistSelection(checkedCheckboxes) {
-    if (!this.hasStorageKeyValue) {
-      return
-    }
+    if (!this.hasStorageKeyValue) return
 
     const selectedLotIds = checkedCheckboxes.map(checkbox => String(checkbox.value))
     localStorage.setItem(this.storageKeyValue, JSON.stringify(selectedLotIds))
