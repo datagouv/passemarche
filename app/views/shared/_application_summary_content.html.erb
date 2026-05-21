@@ -60,7 +60,7 @@
   <p class="fr-text--md fr-text--mention-grey"><%= t('shared.application_summary.no_documents_configured') %></p>
 <% end %>
 
-<% if presenter.lots_saved? %>
+<% if presenter.lots_saved? && context != :web %>
   <div class="page-break-before">
     <h2 class="fr-h4 fr-text--center fr-mb-2w"><%= t('shared.application_lots_annex.annex_title') %></h2>
     <%= render 'shared/application_lots_annex', presenter: presenter %>

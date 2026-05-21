@@ -168,7 +168,7 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
 
       it 'includes the annex notice' do
         capture_html do |html|
-          expect(html).to include('figure en annexe de la présente attestation')
+          expect(html).to include('figure en annexe de l&#39;attestation de candidature.')
         end
       end
 
