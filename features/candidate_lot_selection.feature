@@ -19,11 +19,12 @@ Feature: Candidate lot selection
     When the candidate visits the lot selection step
     Then the candidate should be on the api data recovery status step
 
-  Scenario: Candidate can select lots and proceed to the next step
+  Scenario: Candidate can select lots and reach the preparation page
     When the candidate visits the lot selection step
     And the candidate selects the first lot
-    And the candidate submits the lot selection step
-    Then the candidate should be on the api data recovery status step
+    And the candidate clicks Suivant
+    Then the candidate should be on the lot selection step
+    And the candidate should see the preparation page
 
   Scenario: Candidate cannot proceed without selecting a lot
     When the candidate visits the lot selection step
@@ -35,13 +36,34 @@ Feature: Candidate lot selection
     Given the public market has a lot limit of 1
     When the candidate visits the lot selection step
     And the candidate selects all available lots
-    And the candidate submits the lot selection step
+    And the candidate submits the lot selection step without selecting any lot
     Then the candidate should see an error about the lot limit
     And the candidate should remain on the lot selection step
+
+  Scenario: Preparation page shows Commencer when form not started
+    When the candidate visits the lot selection step
+    And the candidate selects the first lot
+    And the candidate clicks Suivant
+    Then the candidate should see the preparation page
+    And the candidate should see the complete button
+
+  Scenario: Preparation page hides how it works when form is started
+    Given the candidate has already started the form
+    When the candidate visits the preparation page
+    Then the candidate should see the preparation page
+    And the candidate should not see the how it works section
+    And the candidate should see the modify button
+
+  Scenario: Candidate can edit lots from the preparation page
+    When the candidate visits the lot selection step
+    And the candidate selects the first lot
+    And the candidate clicks Suivant
+    And the candidate clicks the edit lots button
+    Then the candidate should be on the lot selection step
 
   Scenario: Candidate is redirected to company identification when reconnecting
     When the candidate visits the lot selection step
     And the candidate selects the first lot
-    And the candidate submits the lot selection step
+    And the candidate clicks Suivant
     And the candidate reconnects to the application
     Then the candidate should be on the company identification step
