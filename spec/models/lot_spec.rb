@@ -4,6 +4,25 @@ require 'rails_helper'
 
 RSpec.describe Lot, type: :model do
   let(:public_market) { create(:public_market, :completed) }
+  describe 'effective_market_type' do
+    it 'returns the buyer type when set' do
+      platform_type = create(:market_type)
+      buyer_type = create(:market_type, :services)
+      lot = create(:lot, public_market:, platform_market_type: platform_type, market_type: buyer_type)
+      expect(lot.effective_market_type).to eq(buyer_type)
+    end
+
+    it 'returns the platform type when no buyer override' do
+      platform_type = create(:market_type)
+      lot = create(:lot, public_market:, platform_market_type: platform_type, market_type: nil)
+      expect(lot.effective_market_type).to eq(platform_type)
+    end
+
+    it 'returns nil when neither type is set' do
+      lot = create(:lot, public_market:, platform_market_type: nil)
+      expect(lot.effective_market_type).to be_nil
+    end
+  end
 
   describe 'validations' do
     it 'requires name to be present' do

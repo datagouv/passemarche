@@ -141,6 +141,31 @@ RSpec.describe CreatePublicMarket, type: :interactor do
         result = subject
         expect(result.public_market.lots.ordered.map(&:position)).to eq([1, 2])
       end
+
+      it 'assigns platform_market_type from global market type when no per-lot type' do
+        result = subject
+        supplies = MarketType.find_by(code: 'supplies')
+        expect(result.public_market.lots.map(&:platform_market_type)).to all(eq(supplies))
+      end
+    end
+
+    context 'with lots having a per-lot type' do
+      before { MarketType.find_or_create_by(code: 'works') }
+
+      let(:params_with_per_lot_type) do
+        valid_params.merge(lots: [
+          { name: 'Lot 1', lot_type_code: 'supplies' },
+          { name: 'Lot 2', lot_type_code: 'works' }
+        ])
+      end
+
+      subject { described_class.call(editor:, params: params_with_per_lot_type) }
+
+      it 'assigns each lot its own platform_market_type' do
+        result = subject
+        types = result.public_market.lots.ordered.map { |l| l.platform_market_type.code }
+        expect(types).to eq(%w[supplies works])
+      end
     end
 
     context 'with lots having cpv_code' do

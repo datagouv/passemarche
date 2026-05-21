@@ -14,6 +14,10 @@
           <%= t('buyer.public_markets.lot_config.lots_section_subtitle') %>
         </p>
 
+        <% if (banner_text = @presenter.platform_type_banner_text) %>
+          <%= render 'shared/notice', notice_text: banner_text %>
+        <% end %>
+
         <div class="fr-table fr-mb-0">
           <div class="fr-table__wrapper">
             <div class="fr-table__container">
@@ -26,10 +30,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% @public_market.lots.ordered.each do |lot| %>
+                    <% @presenter.lots_for_config.each do |lot| %>
                       <tr>
                         <td><%= lot.name %></td>
-                        <td><span class="fr-badge fr-badge--sm fr-badge--no-icon"><%= @presenter.market_types_label_with_source.upcase %></span></td>
+                        <td><%= render 'buyer/public_markets/lot_type_badge', lot: lot %></td>
                       </tr>
                     <% end %>
                   </tbody>
@@ -123,6 +127,7 @@
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_1') %></li>
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_2') %></li>
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_3') %></li>
+        <li><%= t('buyer.public_markets.lot_config.how_it_works_step_4') %></li>
       </ol>
     </div>
   </div>

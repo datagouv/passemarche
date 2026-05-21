@@ -281,6 +281,53 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
+  describe '#lots_for_config' do
+    it 'returns lots ordered by position with associations eager-loaded' do
+      lot1 = create(:lot, public_market:, position: 2)
+      lot2 = create(:lot, public_market:, position: 1)
+      expect(presenter.lots_for_config).to eq([lot2, lot1])
+    end
+  end
+
+  describe '#platform_type_banner_text' do
+    context 'when no lots have a platform type' do
+      before { create(:lot, public_market:, platform_market_type: nil) }
+
+      it 'returns nil' do
+        expect(presenter.platform_type_banner_text).to be_nil
+      end
+    end
+
+    context 'when all lots share the same platform type' do
+      before do
+        create(:lot, public_market:, platform_market_type: market_type)
+        create(:lot, public_market:, platform_market_type: market_type)
+      end
+
+      it 'returns the global type banner' do
+        text = presenter.platform_type_banner_text
+        expect(text).to include(public_market.editor.name)
+        expect(text).to include(I18n.t("market_types.#{market_type.code}"))
+      end
+    end
+
+    context 'when lots have different platform types' do
+      let(:other_type) { create(:market_type, :works) }
+
+      before do
+        create(:lot, public_market:, platform_market_type: market_type)
+        create(:lot, public_market:, platform_market_type: other_type)
+      end
+
+      it 'returns the per-lot type banner' do
+        text = presenter.platform_type_banner_text
+        expect(text).to include(public_market.editor.name)
+        expect(text).not_to include(I18n.t("market_types.#{market_type.code}"))
+        expect(text).not_to include(I18n.t("market_types.#{other_type.code}"))
+      end
+    end
+  end
+
   describe 'with soft-deleted market attributes' do
     let!(:soft_deleted_attribute) do
       attr = create(:market_attribute,

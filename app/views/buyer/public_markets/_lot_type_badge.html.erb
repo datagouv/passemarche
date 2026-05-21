@@ -1,0 +1,12 @@
+<% if lot.market_type.present? %>
+  <span class="fr-badge fr-badge--sm fr-badge--no-icon fr-badge--warning">
+    <%= "#{t("market_types.#{lot.platform_market_type&.code}")} (#{t('buyer.public_markets.lot_config.platform_source')})".upcase %>
+  </span>
+  <span class="fr-badge fr-badge--sm fr-badge--no-icon fr-badge--blue-cumulus">
+    <%= t("market_types.#{lot.market_type.code}").upcase %>
+  </span>
+<% elsif lot.platform_market_type.present? %>
+  <span class="fr-badge fr-badge--sm fr-badge--no-icon">
+    <%= "#{t("market_types.#{lot.platform_market_type.code}")} (#{t('buyer.public_markets.lot_config.platform_source')})".upcase %>
+  </span>
+<% end %>
