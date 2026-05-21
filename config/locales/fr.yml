@@ -167,8 +167,8 @@ fr:
       lot_type_label: "Type :"
       lot_cpv_label: "CPV :"
       annex_notice:
-        one: "Le lot pour lequel l'entreprise candidate s'engage figure en annexe de la présente attestation."
-        other: "L'ensemble des %{count} lots pour lesquels l'entreprise candidate s'engage figure en annexe de la présente attestation."
+        one: "Le lot pour lequel l'entreprise candidate s'engage figure en annexe de l'attestation de candidature."
+        other: "L'ensemble des %{count} lots pour lesquels l'entreprise candidate s'engage figure en annexe de l'attestation de candidature."
     application_lots_annex:
       annex_title: "Annexes"
       title: "Liste détaillée des lots concernés par la candidature"
