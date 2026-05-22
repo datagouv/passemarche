@@ -6,6 +6,7 @@ class PublicMarketPresenter
 
   INITIAL_WIZARD_STEP = :setup
   LOT_CONFIG_STEP = :lot_config
+  FORM_CONFIG_STEP = :form_config
   FINAL_WIZARD_STEP = :summary
 
   def initialize(public_market)
@@ -14,7 +15,10 @@ class PublicMarketPresenter
 
   def wizard_steps
     steps = [INITIAL_WIZARD_STEP]
-    steps << LOT_CONFIG_STEP if @public_market.lots.any?
+    if @public_market.lots.any?
+      steps << LOT_CONFIG_STEP
+      steps << FORM_CONFIG_STEP
+    end
     steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
   end
 
@@ -98,6 +102,17 @@ class PublicMarketPresenter
 
   def market_types_label_with_source
     "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
+  end
+
+  def lots_by_effective_type
+    lots_for_config.group_by(&:effective_market_type)
+  end
+
+  def lot_effective_type_label(lot)
+    type = lot.effective_market_type
+    return nil unless type
+
+    I18n.t("market_types.#{type.code}", default: type.code.humanize)
   end
 
   def lots
