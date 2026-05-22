@@ -424,6 +424,7 @@ fr:
         how_it_works_step_2: "Modifiez les types de lots si nécessaires"
         how_it_works_step_3: "Limitez le nombre de lots si nécessaire"
         how_it_works_step_4: "Passez à la configuration des candidatures"
+        select_lot: "Sélectionner le lot %{name}"
         submit: "Configurer les candidatures"
       form_config:
         title: "Configurez le formulaire de candidature"

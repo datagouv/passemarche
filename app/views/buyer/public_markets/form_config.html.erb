@@ -1,0 +1,80 @@
+<% content_for :title, "#{@public_market.editor.name} - #{t('buyer.public_markets.form_config.title')}" %>
+
+<h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.form_config.title') %></h1>
+<p class="fr-text--lg fr-mb-4w"><%= t('buyer.public_markets.form_config.subtitle') %></p>
+
+<%= render 'shared/notice', notice_text: t('buyer.public_markets.form_config.banner') %>
+
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12 fr-col-md-4">
+    <div class="fr-mb-3w fr-background-alt--grey" style="padding: 20px;">
+      <h2 class="fr-text--md fr-text--bold" style="margin-bottom: 0.5rem;">
+        <%= t('buyer.shared.market_info_title') %>
+      </h2>
+      <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
+      <%= render 'shared/sidebar_market_info',
+            buyer_label: t('buyer.public_markets.form_config.sidebar_buyer_label'),
+            market_name: @public_market.buyer_display_name,
+            typology_label: t('buyer.public_markets.form_config.sidebar_typology_label'),
+            market_types_label: @public_market.market_type_codes.any? ? @presenter.market_types_label : nil,
+            deadline_label: t('buyer.shared.deadline_short'),
+            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
+    </div>
+
+    <div class="fr-background-alt--grey" style="padding: 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+        <h2 class="fr-text--md fr-text--bold" style="margin: 0;">
+          <%= t('buyer.public_markets.form_config.lots_section_title') %>
+        </h2>
+        <%= link_to step_buyer_public_market_path(identifier: @public_market.identifier, id: :lot_config),
+              class: 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-line',
+              title: t('buyer.public_markets.form_config.edit_lots_label'),
+              aria: { label: t('buyer.public_markets.form_config.edit_lots_label') } do %>
+        <% end %>
+      </div>
+      <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.75rem 0;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        <% @presenter.lots_for_config.each do |lot| %>
+          <span class="fr-tag fr-tag--sm">
+            <% type_label = @presenter.lot_effective_type_label(lot) %>
+            <%= type_label ? "#{lot.name} - #{type_label.downcase}" : lot.name %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-md-8">
+    <div class="fr-background-alt--grey fr-p-4w fr-mb-3w">
+      <div class="fr-mb-2w" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <% @presenter.lots_by_effective_type.each do |market_type, type_lots| %>
+          <% if market_type %>
+            <span class="fr-tag fr-tag--sm">
+              <%= t("market_types.#{market_type.code}", default: market_type.code.humanize) %>
+            </span>
+          <% end %>
+          <span class="fr-tag fr-tag--sm">
+            <%= t('buyer.public_markets.form_config.lots_count', count: type_lots.size) %>
+          </span>
+        <% end %>
+      </div>
+
+      <h2 class="fr-h5 fr-mb-3w"><%= t('buyer.public_markets.form_config.form_block_title') %></h2>
+
+      <%= form_with url: wizard_path, method: :put, local: true, data: { turbo: false } do |_form| %>
+        <div style="display: flex; justify-content: flex-end;">
+          <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right">
+            <%= t('buyer.public_markets.form_config.configure_button') %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <button type="button"
+            class="fr-btn fr-btn--secondary fr-icon-arrow-right-line fr-btn--icon-right"
+            style="width: 100%; justify-content: center;"
+            disabled>
+      <%= t('buyer.public_markets.form_config.transmit_button') %>
+    </button>
+  </div>
+</div>
