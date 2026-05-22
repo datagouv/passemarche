@@ -13,7 +13,7 @@ module Buyer
 
     def show
       case step
-      when :setup, :summary, :lot_config
+      when :setup, :summary, :lot_config, :form_config
         render_wizard
       else
         @current_category = step.to_s
@@ -66,6 +66,8 @@ module Buyer
           lot_limit_enabled: params[:lot_limit_enabled],
           lot_limit: params[:lot_limit]
         }
+      when :form_config
+        {}
       else
         # Category step - collect selected optional fields
         { selected_attribute_keys: params[:selected_attribute_keys] || [] }
