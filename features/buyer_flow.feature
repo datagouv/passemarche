@@ -22,13 +22,13 @@ Feature: Buyer Configuration Flow
     And I should see "Lot 1 - Ordinateurs portables"
 
     When I click on "Débuter l'activation de"
-    Then I should see "Configurer le type de vos lots"
+    Then I should see "Configurez le type de vos lots"
 
     When I navigate through all category steps to summary
     Then I should be on the summary page
     And I should see "Synthèse des paramètres de la candidature"
     And I should see "Informations du marché"
-    And I should see a button "Finaliser la configuration"
+    And I should see a button "Transmettre la configuration"
 
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market

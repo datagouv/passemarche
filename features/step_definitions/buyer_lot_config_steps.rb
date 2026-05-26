@@ -49,3 +49,17 @@ Given('the buyer lot config public market has a lot limit of {int}') do |limit|
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   public_market.update!(lot_limit: limit)
 end
+
+When('I visit the form_config page for my public market') do
+  @market_identifier ||= @last_api_response['identifier']
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: :form_config)
+end
+
+Then('I should be on the form_config page') do
+  @market_identifier ||= @last_api_response['identifier']
+  expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :form_config))
+end
+
+When('I click the edit lots button') do
+  find("a[aria-label='#{I18n.t('buyer.public_markets.form_config.edit_lots_label')}']").click
+end
