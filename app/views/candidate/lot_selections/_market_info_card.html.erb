@@ -1,0 +1,13 @@
+<div class="fr-mb-2w fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
+  <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
+    <%= t('candidate.lot_selection.market_info_title') %>
+  </h2>
+  <hr class="fr-my-1w" style="border: none; border-top: 1px solid var(--border-default-grey);">
+  <%= render 'shared/sidebar_market_info',
+        buyer_label: t('candidate.lot_selection.buyer_label'),
+        market_name: public_market.name,
+        typology_label: t('candidate.lot_selection.market_type_label'),
+        market_types_label: presenter.market_types_label.presence || t('candidate.shared.no_market_type'),
+        deadline_label: t('candidate.lot_selection.deadline_label'),
+        deadline: l(public_market.deadline, format: '%d/%m/%Y %H:%M') %>
+</div>

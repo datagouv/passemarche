@@ -40,9 +40,24 @@ Given('the public market has a lot limit of {int}') do |limit|
   @public_market.update!(lot_limit: limit)
 end
 
+Given('the candidate has already started the form') do
+  @market_application = create(:market_application, public_market: @public_market, siret: '73282932000074')
+  @market_application.lots << @lot1
+  attr = @public_market.market_attributes.first
+  create(:market_attribute_response_text_input,
+    market_application: @market_application,
+    market_attribute: attr,
+    value: { text: 'Acme Corp' })
+  authenticate_as_candidate_for(@market_application)
+end
+
 When('the candidate visits the lot selection step') do
   application = @market_application_no_lots || @market_application
   visit lot_selection_candidate_market_application_path(application.identifier)
+end
+
+When('the candidate visits the preparation page') do
+  visit lot_selection_candidate_market_application_path(@market_application.identifier)
 end
 
 Then('the candidate should be on the lot selection step') do
@@ -50,7 +65,6 @@ Then('the candidate should be on the lot selection step') do
     %r{/candidate/market_applications/.+/lots},
     ignore_query: true
   )
-  expect(page).to have_content(I18n.t('candidate.lot_selection.title'))
 end
 
 Then('the candidate should be on the api data recovery status step') do
@@ -74,12 +88,32 @@ When('the candidate selects all available lots') do
   check 'Lot 2 - Services'
 end
 
-When('the candidate submits the lot selection step') do
-  find('button[type="submit"][form="lot-selection-form"][name="final_submit"]').click
+When('the candidate clicks Suivant') do
+  find('button[type="submit"][form="lot-selection-form"]').click
 end
 
 When('the candidate submits the lot selection step without selecting any lot') do
-  find('button[type="submit"][form="lot-selection-form"][name="final_submit"]', visible: :all).click
+  find('button[type="submit"][form="lot-selection-form"]', visible: :all).click
+end
+
+Then('the candidate should see the preparation page') do
+  expect(page).to have_content(I18n.t('candidate.lot_selection.prepare_title'))
+end
+
+Then('the candidate should see the complete button') do
+  expect(page).to have_content(I18n.t('candidate.lot_selection.start'))
+end
+
+Then('the candidate should see the modify button') do
+  expect(page).to have_content(I18n.t('candidate.lot_selection.modify'))
+end
+
+Then('the candidate should not see the how it works section') do
+  expect(page).not_to have_content(I18n.t('candidate.lot_selection.how_it_works_title'))
+end
+
+When('the candidate clicks the edit lots button') do
+  click_on I18n.t('candidate.lot_selection.edit_lots')
 end
 
 Then('the candidate should be on the company identification step') do

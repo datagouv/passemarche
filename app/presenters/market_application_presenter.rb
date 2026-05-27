@@ -78,7 +78,7 @@ class MarketApplicationPresenter
   # === LOTS METHODS ===
 
   def selected_lots
-    @selected_lots ||= @market_application.lots.ordered.to_a
+    @selected_lots ||= @market_application.lots.sort_by(&:position)
   end
 
   def public_market_lots
@@ -139,8 +139,17 @@ class MarketApplicationPresenter
     selected_lots.any?
   end
 
+  def form_started?
+    responses_by_attribute_id.any?
+  end
+
+  def lot_type_label(lot)
+    code = lot.effective_market_type&.code || public_market.market_type_codes.first
+    code.present? ? I18n.t("market_types.#{code}", default: code.humanize) : nil
+  end
+
   def cta_translation_key
-    lots_saved? ? 'candidate.lot_selection.modify' : 'candidate.lot_selection.prepare'
+    form_started? ? 'candidate.lot_selection.modify' : 'candidate.lot_selection.start'
   end
 
   # === PROGRESS METHODS ===

@@ -9,9 +9,12 @@ module Candidate
 
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
+      @editing = !@presenter.lots_saved? || params[:edit].present?
     end
 
     def update
+      return complete_application if params[:final_submit].present?
+
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
 
       unless policy.valid?
@@ -20,19 +23,17 @@ module Candidate
       end
 
       @market_application.lot_ids = lot_ids_param
-
-      if params[:final_submit].present?
-        complete_application
-      else
-        redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
-      end
+      redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
     end
 
     private
 
     def find_market_application
       @market_application = MarketApplication
-        .includes(:lots, public_market: :lots)
+        .includes(
+          { lots: %i[market_type platform_market_type] },
+          public_market: { lots: %i[market_type platform_market_type] }
+        )
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
@@ -50,6 +51,7 @@ module Candidate
 
     def render_lot_selection_error(errors)
       @errors = errors
+      @editing = true
       @presenter = MarketApplicationPresenter.new(@market_application)
       render :show, status: :unprocessable_content
     end
