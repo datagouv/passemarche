@@ -175,18 +175,16 @@
           </div>
         </div>
 
-        <% unless @presenter.form_started? %>
-          <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
-            <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
-              <%= t('candidate.lot_selection.how_it_works_title') %>
-            </h2>
-            <hr class="fr-my-1w" style="border: none; border-top: 1px solid var(--border-default-grey);">
-            <ol class="fr-text--sm" style="margin: 0; padding-left: 1.25rem;">
-              <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
-              <li class="fr-mt-1w"><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
-            </ol>
-          </div>
-        <% end %>
+        <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
+          <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
+            <%= t('candidate.lot_selection.how_it_works_title') %>
+          </h2>
+          <hr class="fr-my-1w" style="border: none; border-top: 1px solid var(--border-default-grey);">
+          <ol class="fr-text--sm" style="margin: 0; padding-left: 1.25rem;">
+            <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
+            <li class="fr-mt-1w"><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
+          </ol>
+        </div>
       </div>
 
       <%# Colonne droite : dossier de candidature %>
