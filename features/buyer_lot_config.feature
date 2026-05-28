@@ -12,7 +12,7 @@ Feature: Buyer Lot Configuration Step
 
   Scenario: L'acheteur accède à la page de configuration des lots
     When I visit the lot_config page for my public market
-    Then I should see "Configurer le type de vos lots"
+    Then I should see "Configurez le type de vos lots"
     And I should see "Lot 1"
     And I should see "Lot 2"
     And I should see "Lot 3"
@@ -22,7 +22,7 @@ Feature: Buyer Lot Configuration Step
     When I visit the setup page for my public market
     And I click on "Débuter l'activation de"
     Then I should be on the lot_config page
-    And I should see "Configurer le type de vos lots"
+    And I should see "Configurez le type de vos lots"
 
   Scenario: L'acheteur choisit de ne pas limiter les lots
     When I visit the lot_config page for my public market
@@ -61,4 +61,22 @@ Feature: Buyer Lot Configuration Step
     Then I should be on the lot_config page
     When I choose "Non" for lot limit
     And I submit the lot_config form
+    Then I should be on the form_config page
+    And I should see "Configurez le formulaire de candidature"
+
+  Scenario: La page form_config affiche la liste des lots et le bouton Configurer
+    When I visit the form_config page for my public market
+    Then I should see "Configurez le formulaire de candidature"
+    And I should see "Formulaire de candidature à configurer"
+    And I should see "Configurer"
+    And I should see "Transmettre la configuration"
+
+  Scenario: Le bouton crayon sur form_config renvoie vers lot_config
+    When I visit the form_config page for my public market
+    And I click the edit lots button
+    Then I should be on the lot_config page
+
+  Scenario: Depuis form_config, Configurer mène à la première étape de catégorie
+    When I visit the form_config page for my public market
+    And I click on "Configurer"
     Then I should be on the first category page

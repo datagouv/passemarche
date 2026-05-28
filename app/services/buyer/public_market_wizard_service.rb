@@ -14,6 +14,8 @@ module Buyer
         handle_setup_step
       when :lot_config
         handle_lot_config_step
+      when :form_config
+        public_market
       when :summary
         complete_market
       else
