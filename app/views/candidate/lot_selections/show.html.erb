@@ -155,9 +155,9 @@
       <div class="fr-col-12 fr-col-md-5">
         <%= render 'market_info_card', public_market: public_market, presenter: @presenter %>
 
-        <div class="fr-mb-2w fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
+        <div class="fr-mb-2w fr-background-alt--grey fr-border-default--grey fr-px-3w fr-py-2w">
           <div class="fr-mb-1w" style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
+            <h2 class="fr-text--bold fr-text--md fr-mb-0">
               <%= t('candidate.lot_selection.lots_list_title') %>
             </h2>
             <%= link_to lot_selection_candidate_market_application_path(@market_application.identifier, edit: 1),
@@ -166,21 +166,21 @@
                   aria: { label: t('candidate.lot_selection.edit_lots') } do %>
             <% end %>
           </div>
-          <hr class="fr-my-1w" style="border: none; border-top: 1px solid var(--border-default-grey);">
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+          <hr class="fr-hr fr-my-1w">
+          <div class="fr-tags-group">
             <% @presenter.selected_lots.each do |lot| %>
               <% type = @presenter.lot_type_label(lot) %>
-              <span class="fr-tag" style="background: white;"><%= type ? "#{lot.name} - #{type}" : lot.name %></span>
+              <span class="fr-tag"><%= type ? "#{lot.name} - #{type}" : lot.name %></span>
             <% end %>
           </div>
         </div>
 
-        <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
-          <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
+        <div class="fr-background-alt--grey fr-border-default--grey fr-px-3w fr-py-2w">
+          <h2 class="fr-text--bold fr-text--md fr-mb-0">
             <%= t('candidate.lot_selection.how_it_works_title') %>
           </h2>
-          <hr class="fr-my-1w" style="border: none; border-top: 1px solid var(--border-default-grey);">
-          <ol class="fr-text--sm" style="margin: 0; padding-left: 1.25rem;">
+          <hr class="fr-hr fr-my-1w">
+          <ol class="fr-text--sm fr-pl-3w fr-mb-0">
             <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
             <li class="fr-mt-1w"><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
           </ol>
@@ -189,8 +189,8 @@
 
       <%# Colonne droite : dossier de candidature %>
       <div class="fr-col-12 fr-col-md-7">
-        <div class="fr-mb-3w" style="border: 1px solid var(--border-default-grey);">
-          <div class="fr-px-3w fr-pt-2w" style="display: flex; align-items: center; gap: 0.5rem;">
+        <div class="fr-mb-3w fr-border-default--grey fr-px-3w fr-py-2w">
+          <div class="fr-tags-group fr-mb-2w">
             <%= market_type_icon_tag(public_market.market_type_codes) %>
             <% if market_type_code.present? %>
               <span class="fr-tag fr-tag--sm">
@@ -202,20 +202,18 @@
             </span>
           </div>
 
-          <div class="fr-px-3w fr-py-2w">
-            <h2 class="fr-h6 fr-mb-1w"><%= t('candidate.lot_selection.application_form_title') %></h2>
-            <p class="fr-text--sm fr-mb-2w"
-               style="color: <%= @presenter.fields_complete? ? 'var(--text-default-success)' : 'var(--blue-france-sun-113-625)' %>;">
-              <%= t('candidate.lot_selection.fields_count',
-                    filled: @presenter.filled_fields_count,
-                    total: @presenter.total_fields_count) %>
-            </p>
-            <div class="fr-text--right">
-              <%= link_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status),
-                    class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right" do %>
-                <%= t(@presenter.cta_translation_key) %>
-              <% end %>
-            </div>
+          <h2 class="fr-h6 fr-mb-1v"><%= t('candidate.lot_selection.application_form_title') %></h2>
+          <p class="fr-text--sm fr-mb-2w <%= @presenter.fields_complete? ? 'fr-text-default--success' : 'fr-text-title--blue-france' %>">
+            <%= t('candidate.lot_selection.fields_count',
+                  filled: @presenter.filled_fields_count,
+                  total: @presenter.total_fields_count) %>
+          </p>
+
+          <div style="display: flex; justify-content: flex-end;">
+            <%= link_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status),
+                  class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right" do %>
+              <%= t(@presenter.cta_translation_key) %>
+            <% end %>
           </div>
         </div>
 
