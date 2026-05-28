@@ -47,11 +47,11 @@ Feature: Candidate lot selection
     Then the candidate should see the preparation page
     And the candidate should see the complete button
 
-  Scenario: Preparation page hides how it works when form is started
+  Scenario: Preparation page shows how it works even when form is started
     Given the candidate has already started the form
     When the candidate visits the preparation page
     Then the candidate should see the preparation page
-    And the candidate should not see the how it works section
+    And the candidate should see the how it works section
     And the candidate should see the modify button
 
   Scenario: Candidate can edit lots from the preparation page
