@@ -23,6 +23,7 @@ module Candidate
       end
 
       @market_application.lot_ids = lot_ids_param
+      Candidate::EnqueueApiDataFetch.call(market_application: @market_application)
       redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
     end
 
