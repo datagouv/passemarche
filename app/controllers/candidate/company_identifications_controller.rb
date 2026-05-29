@@ -9,11 +9,10 @@ module Candidate
     def show; end
 
     def update
-      enqueue_api_data_fetch_if_needed
-
       if @market_application.public_market.lots.any?
         redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
       else
+        enqueue_api_data_fetch_if_needed
         redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
       end
     end

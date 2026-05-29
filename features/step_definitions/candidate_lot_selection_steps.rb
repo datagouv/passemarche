@@ -108,8 +108,8 @@ Then('the candidate should see the modify button') do
   expect(page).to have_content(I18n.t('candidate.lot_selection.modify'))
 end
 
-Then('the candidate should not see the how it works section') do
-  expect(page).not_to have_content(I18n.t('candidate.lot_selection.how_it_works_title'))
+Then('the candidate should see the how it works section') do
+  expect(page).to have_content(I18n.t('candidate.lot_selection.how_it_works_title'))
 end
 
 When('the candidate clicks the edit lots button') do
