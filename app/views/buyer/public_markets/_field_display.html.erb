@@ -24,6 +24,25 @@
       <% end %>
     </div>
     <div class="field-layout-badge">
+      <% if @presenter.multi_type_lots? && field %>
+        <% scopes = @presenter.scopes_for_attribute(field) %>
+        <% if scopes.any? %>
+          <div style="display: flex; gap: 0.25rem; flex-wrap: wrap; margin-bottom: 0.25rem;">
+            <% scopes.each do |scope| %>
+              <% if scope == :commun %>
+                <span class="fr-tag fr-tag--sm" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                  <span class="fr-icon-links-fill fr-icon--xs" aria-hidden="true"></span>
+                  <%= t('buyer.public_markets.form_config.scope_commun_badge') %>
+                </span>
+              <% else %>
+                <span class="fr-tag fr-tag--sm" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                  <%= t("market_types.#{scope}") %>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
       <% if field && source_type %>
         <% source_info = t("source_types.#{source_type}") %>
         <span class="fr-badge <%= source_info[:badge_class] %>">

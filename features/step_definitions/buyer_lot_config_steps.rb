@@ -8,6 +8,11 @@ Given('I create a public market with multiple lots') do
   @market_identifier = public_market.identifier
 end
 
+Given('I create a public market with lots of multiple types') do
+  public_market = create(:public_market, :multi_type, editor: @editor, name: 'Marché hétérogène travaux et services')
+  @market_identifier = public_market.identifier
+end
+
 When('I visit the lot_config page for my public market') do
   @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :lot_config)
