@@ -225,6 +225,59 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '#multi_type_lots?' do
+    let(:works_type)    { create(:market_type, :works) }
+    let(:services_type) { create(:market_type, :services) }
+    let(:market)        { create(:public_market, :completed) }
+
+    context 'sans lot' do
+      it 'retourne false' do
+        expect(market.multi_type_lots?).to be false
+      end
+    end
+
+    context 'avec des lots tous du même type' do
+      before do
+        create(:lot, public_market: market, market_type: works_type)
+        create(:lot, public_market: market, market_type: works_type)
+      end
+
+      it 'retourne false' do
+        expect(market.multi_type_lots?).to be false
+      end
+    end
+
+    context 'avec des lots de types différents' do
+      before do
+        create(:lot, public_market: market, market_type: works_type)
+        create(:lot, public_market: market, market_type: services_type)
+      end
+
+      it 'retourne true' do
+        expect(market.multi_type_lots?).to be true
+      end
+    end
+
+    context 'avec des lots sans type (platform_market_type uniquement)' do
+      before do
+        create(:lot, public_market: market, platform_market_type: works_type)
+        create(:lot, public_market: market, platform_market_type: services_type)
+      end
+
+      it 'retourne true en utilisant le type effectif' do
+        expect(market.multi_type_lots?).to be true
+      end
+    end
+
+    context 'avec des lots sans aucun type' do
+      before { create(:lot, public_market: market) }
+
+      it 'retourne false' do
+        expect(market.multi_type_lots?).to be false
+      end
+    end
+  end
+
   describe '#defense_industry?' do
     it 'returns true when defense is in market_type_codes' do
       public_market = build(:public_market, market_type_codes: %w[supplies defense])

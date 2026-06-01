@@ -27,6 +27,13 @@ class PublicMarket < ApplicationRecord
 
   before_validation :generate_identifier, on: :create
 
+  def multi_type_lots?
+    lots.includes(:market_type, :platform_market_type)
+      .filter_map(&:effective_market_type)
+      .uniq
+      .size > 1
+  end
+
   def buyer_display_name
     buyer_name.presence || siret
   end
