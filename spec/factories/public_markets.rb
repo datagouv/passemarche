@@ -24,5 +24,17 @@ FactoryBot.define do
     trait :with_provider_user_id do
       provider_user_id { 'editor-user-123' }
     end
+
+    trait :multi_type do
+      after(:create) do |market|
+        works_type    = MarketType.find_or_create_by!(code: 'works')
+        services_type = MarketType.find_or_create_by!(code: 'services')
+        market.market_type_codes = %w[works services]
+        market.save!
+        create(:lot, public_market: market, name: 'Gros œuvre',    market_type: works_type)
+        create(:lot, public_market: market, name: 'Charpente',     market_type: works_type)
+        create(:lot, public_market: market, name: 'Prestations SI', market_type: services_type)
+      end
+    end
   end
 end
