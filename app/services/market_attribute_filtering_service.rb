@@ -15,18 +15,10 @@ class MarketAttributeFilteringService < ApplicationService
 
   def available_attributes
     MarketAttribute.joins(:market_types)
-      .where(market_types: { code: effective_type_codes })
+      .where(market_types: { code: public_market.effective_market_type_codes })
+      .includes(:market_types)
       .distinct
       .active
       .ordered
-  end
-
-  def effective_type_codes
-    lot_type_codes = public_market.lots
-      .includes(:market_type, :platform_market_type)
-      .filter_map(&:effective_market_type)
-      .map(&:code)
-      .uniq
-    (public_market.market_type_codes + lot_type_codes).uniq
   end
 end

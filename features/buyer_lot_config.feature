@@ -80,3 +80,14 @@ Feature: Buyer Lot Configuration Step
     When I visit the form_config page for my public market
     And I click on "Configurer"
     Then I should be on the first category page
+
+  @buyer_form_config_multi_type
+  Scenario: La page form_config affiche les types de lots pour un marché multi-types
+    Given I create a public market with lots of multiple types
+    When I visit the form_config page for my public market
+    Then I should see "Travaux"
+    And I should see "Services"
+    And I should see "Lot 1 - Gros œuvre"
+    And I should see "Formulaire de candidature à configurer"
+    And I should see "Transmettre la configuration"
+
