@@ -184,3 +184,13 @@ Then('they should see lots grouped by type') do
   expect(lot1_index).to be > works_index
   expect(lot3_index).to be > services_index
 end
+
+When('the candidate selects one lot of each type') do
+  check 'Lot 1 - Gros œuvre'
+  check 'Lot 3 - Prestations SI'
+end
+
+Then('the preparation page should show the selected lot type tags') do
+  expect(page).to have_css('.fr-tag', text: I18n.t('market_types.works'))
+  expect(page).to have_css('.fr-tag', text: I18n.t('market_types.services'))
+end
