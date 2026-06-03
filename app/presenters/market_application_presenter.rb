@@ -3,6 +3,7 @@
 class MarketApplicationPresenter
   include SidemenuHelper
   include MarketPresenterConcern
+  include CandidateMultiTypeLotConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
@@ -94,8 +95,8 @@ class MarketApplicationPresenter
   def responses_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
-    market_attributes = market_attributes_for_subcategory(category_key, subcategory_key)
-    market_attributes.map { |attr| market_attribute_response_for(attr) }
+    market_attributes_for_subcategory(category_key, subcategory_key)
+      .map { |attr| market_attribute_response_for(attr) }
       .reject(&:hidden?)
   end
 

@@ -51,73 +51,79 @@
                       local: true,
                       id: "lot-selection-form",
                       data: { turbo: false } do %>
-          <% lots = public_market.lots.sort_by(&:position) %>
 
-          <div class="fr-mb-4w" style="border: 1px solid var(--border-default-grey);">
-            <div class="fr-px-3w fr-py-2w"
-                 style="border-bottom: 1px solid var(--border-default-grey); display: flex; justify-content: space-between; align-items: center; background: var(--background-alt-grey);">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <%= market_type_icon_tag(public_market.market_type_codes) %>
-                <div>
-                  <p class="fr-text--bold fr-mb-0">
-                    <%= market_type_code.present? ?
-                          t("market_types.#{market_type_code}", default: market_type_code.humanize) :
-                          t('candidate.lot_selection.lots_count', count: lots.size) %>
-                  </p>
-                  <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
-                    <%= t('candidate.lot_selection.available_lots_count', count: lots.size) %>
-                  </p>
-                </div>
-              </div>
-              <button type="button"
-                      class="fr-link fr-text--xs"
-                      style="text-decoration: underline;"
-                      data-action="lot-selection#selectAll"
-                      data-lot-selection-target="selectAllButton"
-                      data-select-text="<%= t('candidate.lot_selection.select_all') %>"
-                      data-deselect-text="<%= t('candidate.lot_selection.deselect_all') %>">
-                <%= t('candidate.lot_selection.select_all') %>
-              </button>
+          <% if public_market.lot_limit.present? %>
+            <div class="fr-mb-2w">
+              <p class="fr-text--sm fr-mb-0" style="color: var(--text-default-error);">
+                <%= t('candidate.lot_selection.lot_limit_notice', count: public_market.lot_limit) %>
+              </p>
+              <p class="fr-text--sm fr-mb-0"
+                 style="color: var(--text-default-error);"
+                 data-lot-selection-target="limitError"
+                 hidden>
+                <%= t('candidate.lot_selection.lot_limit_exceeded_notice', count: public_market.lot_limit) %>
+              </p>
             </div>
+          <% end %>
 
-            <% if public_market.lot_limit.present? %>
-              <div class="fr-px-3w fr-pt-2w">
-                <p class="fr-text--sm fr-mb-0" style="color: var(--text-default-error);">
-                  <%= t('candidate.lot_selection.lot_limit_notice', count: public_market.lot_limit) %>
-                </p>
-                <p class="fr-text--sm fr-mb-0"
-                   style="color: var(--text-default-error);"
-                   data-lot-selection-target="limitError"
-                   hidden>
-                  <%= t('candidate.lot_selection.lot_limit_exceeded_notice', count: public_market.lot_limit) %>
-                </p>
-              </div>
-            <% end %>
-
-            <div class="fr-px-3w fr-py-2w" style="display: flex; flex-direction: column; gap: 1rem;">
-              <% lots.each_with_index do |lot, index| %>
-                <div class="fr-checkbox-group" style="display: flex; align-items: center;" data-lot-selection-target="checkboxGroup">
-                  <%= check_box_tag "market_application[lot_ids][]",
-                        lot.id,
-                        @market_application.lot_ids.include?(lot.id),
-                        id: "lot_#{lot.id}",
-                        class: "fr-checkbox",
-                        data: {
-                          lot_selection_target: "checkbox",
-                          action: "change->lot-selection#toggle",
-                          lot_name: lot.name,
-                          lot_type: @presenter.lot_type_label(lot)
-                        } %>
-                  <label class="fr-label" for="lot_<%= lot.id %>">
-                    <%= lot.name %>
-                    <span class="fr-hint-text">
-                      <%= t('candidate.lot_selection.lot_number', number: index + 1) %>
-                    </span>
-                  </label>
+          <% @presenter.lots_by_type_sorted.each do |market_type, type_lots| %>
+            <div class="fr-mb-3w" style="border: 1px solid var(--border-default-grey);" data-lot-selection-group>
+              <div class="fr-px-3w fr-py-2w"
+                   style="border-bottom: 1px solid var(--border-default-grey); display: flex; justify-content: space-between; align-items: center; background: var(--background-alt-grey);">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <% type_codes = market_type ? [market_type.code] : public_market.market_type_codes %>
+                  <%= market_type_icon_tag(type_codes) %>
+                  <div>
+                    <p class="fr-text--bold fr-mb-0">
+                      <% if market_type %>
+                        <%= t("market_types.#{market_type.code}", default: market_type.code.humanize) %>
+                      <% elsif market_type_code.present? %>
+                        <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+                      <% else %>
+                        <%= t('candidate.lot_selection.lots_count', count: type_lots.size) %>
+                      <% end %>
+                    </p>
+                    <p class="fr-text--sm fr-text--mention-grey fr-mb-0">
+                      <%= t('candidate.lot_selection.available_lots_count', count: type_lots.size) %>
+                    </p>
+                  </div>
                 </div>
-              <% end %>
+                <button type="button"
+                        class="fr-link fr-text--xs"
+                        style="text-decoration: underline;"
+                        data-action="lot-selection#selectAll"
+                        data-lot-selection-target="selectAllButton"
+                        data-select-text="<%= t('candidate.lot_selection.select_all') %>"
+                        data-deselect-text="<%= t('candidate.lot_selection.deselect_all') %>">
+                  <%= t('candidate.lot_selection.select_all') %>
+                </button>
+              </div>
+
+              <div class="fr-px-3w fr-py-2w" style="display: flex; flex-direction: column; gap: 1rem;">
+                <% type_lots.each_with_index do |lot, index| %>
+                  <div class="fr-checkbox-group" style="display: flex; align-items: center;" data-lot-selection-target="checkboxGroup">
+                    <%= check_box_tag "market_application[lot_ids][]",
+                          lot.id,
+                          @market_application.lot_ids.include?(lot.id),
+                          id: "lot_#{lot.id}",
+                          class: "fr-checkbox",
+                          data: {
+                            lot_selection_target: "checkbox",
+                            action: "change->lot-selection#toggle",
+                            lot_name: lot.name,
+                            lot_type: @presenter.lot_type_label(lot)
+                          } %>
+                    <label class="fr-label" for="lot_<%= lot.id %>">
+                      <%= lot.name %>
+                      <span class="fr-hint-text">
+                        <%= t('candidate.lot_selection.lot_number', number: lot.position) %>
+                      </span>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
             </div>
-          </div>
+          <% end %>
         <% end %>
 
         <button type="submit"

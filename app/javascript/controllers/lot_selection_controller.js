@@ -21,20 +21,22 @@ export default class extends Controller {
     this._update()
   }
 
-  selectAll() {
-    const checked = this.checkboxTargets.filter(cb => cb.checked)
-    const limitReached = checked.length >= this._limit()
-    const allChecked = checked.length === this.checkboxTargets.length
+  selectAll(event) {
+    const button = event.currentTarget
+    const groupCheckboxes = this._checkboxesForButton(button)
+    const checked = groupCheckboxes.filter(cb => cb.checked)
+    const limit = this._limit()
+    const allChecked = checked.length === groupCheckboxes.length
+    const limitReached = this.checkboxTargets.filter(cb => cb.checked).length >= limit
 
     if (allChecked || limitReached) {
-      this.checkboxTargets.forEach(cb => { cb.checked = false })
+      groupCheckboxes.forEach(cb => { cb.checked = false })
     } else {
-      const limit = this._limit()
-      let selected = checked.length
-      this.checkboxTargets.forEach(cb => {
-        if (!cb.checked && selected < limit) {
+      let totalSelected = this.checkboxTargets.filter(cb => cb.checked).length
+      groupCheckboxes.forEach(cb => {
+        if (!cb.checked && totalSelected < limit) {
           cb.checked = true
-          selected++
+          totalSelected++
         }
       })
     }
@@ -45,10 +47,16 @@ export default class extends Controller {
     return this.hasLimitValue && this.limitValue > 0 ? this.limitValue : Infinity
   }
 
+  _checkboxesForButton(button) {
+    const group = button.closest("[data-lot-selection-group]")
+    if (!group) return this.checkboxTargets
+    return Array.from(group.querySelectorAll("[data-lot-selection-target='checkbox']"))
+  }
+
   _update() {
-    const checked = this.checkboxTargets.filter(cb => cb.checked)
-    const hasChecked = checked.length > 0
-    const limitReached = checked.length >= this._limit()
+    const allChecked = this.checkboxTargets.filter(cb => cb.checked)
+    const hasChecked = allChecked.length > 0
+    const limitReached = allChecked.length >= this._limit()
 
     this.submitButtonTargets.forEach(btn => { btn.disabled = !hasChecked })
 
@@ -64,15 +72,20 @@ export default class extends Controller {
       this.limitErrorTarget.hidden = !limitReached
     }
 
-    if (this.hasSelectAllButtonTarget) {
-      const allSelected = checked.length === this.checkboxTargets.length || limitReached
-      this.selectAllButtonTarget.textContent = allSelected
-        ? this.selectAllButtonTarget.dataset.deselectText || "Tout désélectionner"
-        : this.selectAllButtonTarget.dataset.selectText || "Tout sélectionner"
-    }
+    this._updateSelectAllButtons()
+    this._renderSelectedLotsTags(allChecked)
+    this._persistSelection(allChecked)
+  }
 
-    this._renderSelectedLotsTags(checked)
-    this._persistSelection(checked)
+  _updateSelectAllButtons() {
+    this.selectAllButtonTargets.forEach(button => {
+      const groupCheckboxes = this._checkboxesForButton(button)
+      const groupChecked = groupCheckboxes.filter(cb => cb.checked)
+      const allGroupSelected = groupChecked.length === groupCheckboxes.length && groupCheckboxes.length > 0
+      button.textContent = allGroupSelected
+        ? button.dataset.deselectText || "Tout désélectionner"
+        : button.dataset.selectText || "Tout sélectionner"
+    })
   }
 
   _renderSelectedLotsTags(checked) {

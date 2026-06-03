@@ -149,3 +149,38 @@ When('the candidate reconnects to the application') do
   token = user.generate_token_for(:magic_link)
   visit verify_candidate_sessions_path(token:, market_application_id: @market_application.identifier)
 end
+
+Given('a multi-type public market with lots exists') do
+  works_type    = MarketType.find_or_create_by!(code: 'works')
+  services_type = MarketType.find_or_create_by!(code: 'services')
+
+  @editor = create(:editor)
+  @multi_public_market = create(:public_market, :completed, editor: @editor,
+    name: 'Marché hétérogène travaux et services')
+  @multi_public_market.market_type_codes = %w[works services]
+  @multi_public_market.save!
+
+  @lot_works1    = create(:lot, public_market: @multi_public_market, name: 'Lot 1 - Gros œuvre',
+    market_type: works_type)
+  @lot_works2    = create(:lot, public_market: @multi_public_market, name: 'Lot 2 - Charpente',
+    market_type: works_type)
+  @lot_services1 = create(:lot, public_market: @multi_public_market, name: 'Lot 3 - Prestations SI',
+    market_type: services_type)
+end
+
+Given('a candidate starts a new application for the multi-type market') do
+  @market_application = create(:market_application, public_market: @multi_public_market,
+    siret: '73282932000074')
+  authenticate_as_candidate_for(@market_application)
+end
+
+Then('they should see lots grouped by type') do
+  expect(page).to have_content(I18n.t('market_types.works'))
+  expect(page).to have_content(I18n.t('market_types.services'))
+  works_index = page.body.index(I18n.t('market_types.works'))
+  services_index = page.body.index(I18n.t('market_types.services'))
+  lot1_index   = page.body.index('Lot 1 - Gros œuvre')
+  lot3_index   = page.body.index('Lot 3 - Prestations SI')
+  expect(lot1_index).to be > works_index
+  expect(lot3_index).to be > services_index
+end

@@ -67,3 +67,11 @@ Feature: Candidate lot selection
     And the candidate clicks Suivant
     And the candidate reconnects to the application
     Then the candidate should be on the company identification step
+
+  @candidate_multi_type_lots
+  Scenario: Lots are grouped by type on the selection page for a multi-type market
+    Given a multi-type public market with lots exists
+    And a candidate starts a new application for the multi-type market
+    When the candidate visits the lot selection step
+    Then they should see lots grouped by type
+
