@@ -7,6 +7,7 @@ class MarketApplicationPresenter
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
+  delegate :multi_type_selected_lots?, to: :@market_application
 
   INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
@@ -76,6 +77,20 @@ class MarketApplicationPresenter
   end
 
   # === LOTS METHODS ===
+
+  def lots_by_effective_type
+    @lots_by_effective_type ||= selected_lots.group_by(&:effective_market_type)
+  end
+
+  def selected_lot_types
+    @selected_lot_types ||= @market_application.selected_lot_types
+  end
+
+  def lots_by_type_sorted
+    @lots_by_type_sorted ||= public_market.lots.ordered
+      .includes(:market_type, :platform_market_type)
+      .group_by(&:effective_market_type)
+  end
 
   def selected_lots
     @selected_lots ||= @market_application.lots.sort_by(&:position)

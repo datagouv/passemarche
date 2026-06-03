@@ -191,10 +191,10 @@
       <div class="fr-col-12 fr-col-md-7">
         <div class="fr-mb-3w fr-border-default--grey fr-px-3w fr-py-2w">
           <div class="fr-tags-group fr-mb-2w">
-            <%= market_type_icon_tag(public_market.market_type_codes) %>
-            <% if market_type_code.present? %>
+            <%= market_type_icon_tag(@presenter.selected_lot_types.map(&:code)) %>
+            <% @presenter.selected_lot_types.each do |type| %>
               <span class="fr-tag fr-tag--sm">
-                <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+                <%= t("market_types.#{type.code}", default: type.code.humanize) %>
               </span>
             <% end %>
             <span class="fr-tag fr-tag--sm">

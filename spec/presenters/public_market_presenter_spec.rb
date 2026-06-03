@@ -110,15 +110,6 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
     end
   end
 
-  describe '#source_types' do
-    it 'returns localized source types' do
-      source_types = presenter.source_types
-      expect(source_types).to be_a(Hash)
-      expect(source_types).to have_key(:authentic_source)
-      expect(source_types).to have_key(:honor_declaration)
-    end
-  end
-
   describe '#wizard_steps' do
     it 'returns steps starting with setup, then categories, ending with summary' do
       steps = presenter.wizard_steps
@@ -137,7 +128,7 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       expect(category_steps.uniq).to eq(category_steps)
     end
 
-    context 'when the market has lots' do
+    context 'when the market has lots (mono-type)' do
       before { create(:lot, public_market:) }
 
       it 'includes :lot_config as the second step' do
@@ -145,11 +136,51 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
         expect(steps).to include(:lot_config)
         expect(steps.index(:lot_config)).to eq(1)
       end
+
+      it 'includes :form_config after :lot_config' do
+        steps = presenter.wizard_steps
+        expect(steps).to include(:form_config)
+        expect(steps.index(:form_config)).to eq(steps.index(:lot_config) + 1)
+      end
+    end
+
+    context 'when the market has lots of multiple types' do
+      let!(:works_type)    { create(:market_type, :works) }
+      let!(:services_type) { create(:market_type, :services) }
+
+      let!(:works_attr) do
+        attr = create(:market_attribute, key: 'w_attr', category_key: 'cat_w', subcategory_key: 'sub_w')
+        works_type.market_attributes << attr
+        attr
+      end
+
+      before do
+        create(:lot, public_market:, market_type: works_type)
+        create(:lot, public_market:, market_type: services_type)
+        public_market.market_type_codes = %w[works services]
+        public_market.save!
+      end
+
+      it 'includes :form_config after :lot_config' do
+        steps = presenter.wizard_steps
+        expect(steps).to include(:form_config)
+        expect(steps.index(:form_config)).to eq(steps.index(:lot_config) + 1)
+      end
+
+      it 'retourne toutes les catégories disponibles' do
+        steps = presenter.wizard_steps
+        expect(steps).to include(:form_config)
+        expect(steps).to include(:summary)
+      end
     end
 
     context 'when the market has no lots' do
       it 'does not include :lot_config' do
         expect(presenter.wizard_steps).not_to include(:lot_config)
+      end
+
+      it 'does not include :form_config' do
+        expect(presenter.wizard_steps).not_to include(:form_config)
       end
     end
   end
@@ -278,6 +309,164 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
 
       expect(mandatory_keys).to include('test_defense_supply_chain')
       expect(optional_keys).to include('test_company_category')
+    end
+  end
+
+  describe '#multi_type_lots?' do
+    context 'sans lot' do
+      it 'retourne false' do
+        expect(presenter.multi_type_lots?).to be false
+      end
+    end
+
+    context 'avec des lots du même type' do
+      let(:works_type) { create(:market_type, :works) }
+
+      before do
+        create(:lot, public_market:, market_type: works_type)
+        create(:lot, public_market:, market_type: works_type)
+      end
+
+      it 'retourne false' do
+        expect(presenter.multi_type_lots?).to be false
+      end
+    end
+
+    context 'avec des lots de types différents' do
+      let(:works_type)    { create(:market_type, :works) }
+      let(:services_type) { create(:market_type, :services) }
+
+      before do
+        create(:lot, public_market:, market_type: works_type)
+        create(:lot, public_market:, market_type: services_type)
+      end
+
+      it 'retourne true' do
+        expect(presenter.multi_type_lots?).to be true
+      end
+    end
+  end
+
+  describe '#lot_market_types' do
+    let(:works_type)    { create(:market_type, :works) }
+    let(:services_type) { create(:market_type, :services) }
+
+    before do
+      create(:lot, public_market:, market_type: works_type)
+      create(:lot, public_market:, market_type: services_type)
+      create(:lot, public_market:, market_type: works_type)
+    end
+
+    it 'retourne les types distincts des lots' do
+      expect(presenter.lot_market_types).to match_array([works_type, services_type])
+    end
+  end
+
+  describe '#scopes' do
+    context 'marché mono-type' do
+      it 'retourne un tableau vide' do
+        expect(presenter.scopes).to be_empty
+      end
+    end
+
+    context 'marché multi-type (works + services)' do
+      let(:works_type)    { create(:market_type, :works) }
+      let(:services_type) { create(:market_type, :services) }
+
+      before do
+        create(:lot, public_market:, market_type: works_type)
+        create(:lot, public_market:, market_type: services_type)
+      end
+
+      it 'commence par :commun suivi des codes de type' do
+        scopes = presenter.scopes
+        expect(scopes.first).to eq(:commun)
+        expect(scopes).to include(:works, :services)
+      end
+    end
+  end
+
+  describe '#scopes_for_attribute' do
+    let!(:works_type)    { create(:market_type, :works) }
+    let!(:services_type) { create(:market_type, :services) }
+    let!(:supplies_type) { create(:market_type) }
+
+    let(:multi_market) do
+      market = build(:public_market)
+      market.market_type_codes = %w[works services]
+      market.save!
+      market
+    end
+    let(:multi_presenter) { described_class.new(multi_market) }
+
+    before do
+      create(:lot, public_market: multi_market, market_type: works_type)
+      create(:lot, public_market: multi_market, market_type: services_type)
+    end
+
+    it 'retourne [:commun] pour un attribut lié aux deux types du marché' do
+      attr = create(:market_attribute, key: 'common_test', category_key: 'c', subcategory_key: 's')
+      works_type.market_attributes << attr
+      services_type.market_attributes << attr
+      expect(multi_presenter.scopes_for_attribute(attr)).to eq([:commun])
+    end
+
+    it 'retourne [:works] pour un attribut lié uniquement à works' do
+      attr = create(:market_attribute, key: 'works_test', category_key: 'c', subcategory_key: 's')
+      works_type.market_attributes << attr
+      expect(multi_presenter.scopes_for_attribute(attr)).to eq([:works])
+    end
+
+    it 'retourne :commun pour un attribut lié à works et services sur un marché works+services+supplies' do
+      market3 = build(:public_market)
+      market3.market_type_codes = %w[works services supplies]
+      market3.save!
+      create(:lot, public_market: market3, market_type: works_type)
+      create(:lot, public_market: market3, market_type: services_type)
+      create(:lot, public_market: market3, market_type: supplies_type)
+
+      attr = create(:market_attribute, key: 'ws_test', category_key: 'c', subcategory_key: 's')
+      works_type.market_attributes << attr
+      services_type.market_attributes << attr
+
+      presenter3 = described_class.new(market3)
+      expect(presenter3.scopes_for_attribute(attr)).to eq([:commun])
+    end
+
+    it 'retourne [] si le marché est mono-type' do
+      attr = create(:market_attribute, key: 'mono_test', category_key: 'c', subcategory_key: 's')
+      expect(presenter.scopes_for_attribute(attr)).to be_empty
+    end
+  end
+
+  describe '#lot_count_for_scope' do
+    let!(:works_type)    { create(:market_type, :works) }
+    let!(:services_type) { create(:market_type, :services) }
+
+    let(:multi_market) do
+      market = build(:public_market)
+      market.market_type_codes = %w[works services]
+      market.save!
+      market
+    end
+    let(:multi_presenter) { described_class.new(multi_market) }
+
+    before do
+      create(:lot, public_market: multi_market, market_type: works_type)
+      create(:lot, public_market: multi_market, market_type: works_type)
+      create(:lot, public_market: multi_market, market_type: services_type)
+    end
+
+    it 'retourne le total des lots pour :commun' do
+      expect(multi_presenter.lot_count_for_scope(:commun)).to eq(3)
+    end
+
+    it 'retourne le nombre de lots works pour :works' do
+      expect(multi_presenter.lot_count_for_scope(:works)).to eq(2)
+    end
+
+    it 'retourne le nombre de lots services pour :services' do
+      expect(multi_presenter.lot_count_for_scope(:services)).to eq(1)
     end
   end
 
