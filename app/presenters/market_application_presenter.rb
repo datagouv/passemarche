@@ -143,9 +143,12 @@ class MarketApplicationPresenter
   end
 
   def visible_subcategory_keys
-    @visible_subcategory_keys ||= visible_market_attributes
-      .filter_map(&:subcategory_key)
-      .uniq
+    @visible_subcategory_keys ||= category_keys.flat_map do |cat_key|
+      visible_market_attributes
+        .select { |attr| attr.category_key == cat_key }
+        .filter_map(&:subcategory_key)
+        .uniq
+    end
   end
 
   # === LOT SELECTION ===
