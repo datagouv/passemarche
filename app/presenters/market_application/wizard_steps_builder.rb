@@ -20,6 +20,15 @@ class MarketApplication::WizardStepsBuilder
     inject_attestation_step(stepper_group_keys + [FINAL_STEP])
   end
 
+  # Étapes stepper pour un scope donné (multi-type)
+  # ex: INITIAL_STEPS + sous-catégories commun + FINAL_STEP
+  def stepper_steps_for_scope(scope)
+    return stepper_steps unless multi_type?
+
+    scope_keys = inject_attestation_step(subcategory_keys_for_scope(scope).dup)
+    inject_attestation_step((INITIAL_STEPS + scope_keys + [FINAL_STEP]).uniq)
+  end
+
   # Mappe n'importe quelle étape wizard vers son groupe stepper
   # Utilisé par toutes les vues : stepper current_step: @presenter.stepper_step_for(step)
   def stepper_step_for(step)

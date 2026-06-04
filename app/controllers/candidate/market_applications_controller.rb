@@ -82,8 +82,12 @@ module Candidate
     end
 
     def set_wizard_steps
-      @wizard_steps = presenter.stepper_steps
       @current_scope = presenter.scope_for_step(step) if step != :wicked_finish
+      @wizard_steps = if @current_scope
+                        presenter.stepper_steps_for_scope(@current_scope)
+                      else
+                        presenter.stepper_steps
+                      end
       @back_path = back_path_before_wizard if back_to_lot_selection?
     end
 

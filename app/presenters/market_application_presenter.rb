@@ -9,7 +9,7 @@ class MarketApplicationPresenter
   delegate :attestation, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
   delegate :multi_type_selected_lots?, to: :@market_application
-  delegate :wizard_steps, :stepper_steps, :stepper_step_for,
+  delegate :wizard_steps, :stepper_steps, :stepper_step_for, :stepper_steps_for_scope,
     :scope_for_step, :subcategory_keys_for_scope, :active_scopes, :attributes_for_scope,
     to: :wizard_steps_builder
 
