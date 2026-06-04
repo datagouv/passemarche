@@ -248,10 +248,10 @@ Then('I should see a summary of all my responses') do
 end
 
 When('I click {string}') do |button_text|
-  if button_text == 'Suivant' && page.has_button?('Continuer', disabled: false)
-    click_button 'Continuer'
+  if button_text == 'Suivant'
+    submit_step
   else
-    click_link_or_button button_text
+    click_on_text button_text
   end
 end
 
@@ -289,13 +289,7 @@ Then('each file upload field should have type {string}') do |expected_type|
 end
 
 When('I submit the form') do
-  if page.has_button?('Suivant')
-    click_button 'Suivant'
-  elsif page.has_button?('Continuer')
-    click_button 'Continuer'
-  else
-    raise "No submit button found (looked for 'Suivant' and 'Continuer')"
-  end
+  submit_step
 end
 
 Then('all responses should be created with correct STI types') do
@@ -566,38 +560,12 @@ def fill_in_field_by_type(input_type, value)
 end
 
 def fill_in_all_available_fields
-  page.all('input[type="text"]').each_with_index do |field, index|
-    next if field[:readonly] || field[:disabled]
-    next if field[:name].include?('siret')
-
-    field.set("Test Value #{index}")
-  end
-
-  page.all('input[type="email"]').each do |field|
-    field.set('test@example.com')
-  end
-
-  page.all('input[type="tel"]').each do |field|
-    field.set('01 23 45 67 89')
-  end
-
-  page.all('textarea').each do |field|
-    field.set('Description test')
-  end
-
-  page.all('input[type="checkbox"]').each(&:check)
-
-  page.all('input[type="file"]').each do |field|
-    test_file_path = Rails.root.join('tmp/test_upload.pdf')
-    File.write(test_file_path, '%PDF-1.4 test content')
-    field.attach_file(test_file_path)
-  end
+  fill_in_visible_fields
+  attach_test_files_to_all_inputs
 end
 
 When('I upload a valid document {string}') do |filename|
-  test_file_path = Rails.root.join("tmp/#{filename}")
-  File.write(test_file_path, '%PDF-1.4 fake pdf content for testing')
-  page.first('input[type="file"]').attach_file(test_file_path)
+  attach_test_file(filename)
 end
 
 When('I leave the required file upload empty') do
