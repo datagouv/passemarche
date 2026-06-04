@@ -15,12 +15,7 @@ class PublicMarketPresenter
   end
 
   def wizard_steps
-    steps = [INITIAL_WIZARD_STEP]
-    if @public_market.lots.any?
-      steps << LOT_CONFIG_STEP
-      steps << FORM_CONFIG_STEP
-    end
-    steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
+    [INITIAL_WIZARD_STEP] + optional_lot_steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
   end
 
   def stepper_steps
@@ -136,6 +131,10 @@ class PublicMarketPresenter
   end
 
   private
+
+  def optional_lot_steps
+    lots.any? ? [LOT_CONFIG_STEP, FORM_CONFIG_STEP] : []
+  end
 
   def available_optional_market_attributes
     available_attributes.optional
