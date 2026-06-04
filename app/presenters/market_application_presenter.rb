@@ -9,8 +9,8 @@ class MarketApplicationPresenter
   delegate :attestation, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
   delegate :multi_type_selected_lots?, to: :@market_application
-  delegate :wizard_steps, :stepper_steps, :stepper_steps_for_scope,
-    :scope_for_step, :subcategory_keys_for_scope, :active_scopes, :attributes_for_scope,
+  delegate :wizard_steps, :stepper_steps, :scope_for_step,
+    :subcategory_keys_for_scope, :active_scopes, :attributes_for_scope,
     to: :wizard_steps_builder
 
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
@@ -185,10 +185,6 @@ class MarketApplicationPresenter
 
   def all_scopes_complete?
     active_scopes.all? { |scope| scope_complete?(scope) }
-  end
-
-  def stepper_step_for(step, scope = nil)
-    wizard_steps_builder.stepper_step_for(step, scope)
   end
 
   def first_step_for_scope(scope)
