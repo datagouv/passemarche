@@ -1,7 +1,8 @@
 <% content_for :title, "#{@market_application.siret} - #{category_label(step.to_s, role: :candidate)}" %>
 
 <% current_category = @presenter.parent_category_for(step.to_s) %>
-<%= stepper current_step: current_category,
+<% stepper_current = @presenter.multi_type_selected_lots? ? step : current_category %>
+<%= stepper current_step: stepper_current,
             steps: @wizard_steps,
             i18n_scope: 'candidate',
             show_separator: true %>
