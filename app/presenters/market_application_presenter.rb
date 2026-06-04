@@ -191,6 +191,18 @@ class MarketApplicationPresenter
     subcategory_keys_for_scope(scope).first || :api_data_recovery_status
   end
 
+  def lots_count_for_scope(scope)
+    return selected_lots.size if scope == :commun
+
+    selected_lots.count { |lot| lot.effective_market_type&.code == scope.to_s }
+  end
+
+  def market_type_codes_for_scope(scope)
+    return selected_lot_types.map(&:code) if scope == :commun
+
+    [scope.to_s]
+  end
+
   # === VALIDATION METHODS ===
 
   def optional_market_attributes?

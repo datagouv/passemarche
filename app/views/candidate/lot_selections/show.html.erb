@@ -193,21 +193,41 @@
           <% @presenter.active_scopes.each do |scope| %>
             <% complete = @presenter.scope_complete?(scope) %>
             <% first_step = @presenter.first_step_for_scope(scope) %>
-            <div class="fr-mb-2w fr-border-default--grey fr-px-3w fr-py-2w">
-              <h2 class="fr-h6 fr-mb-1v">
-                <%= t("candidate.lot_selection.scope_title.#{scope}",
-                      default: t("market_types.#{scope}", default: scope.to_s.humanize)) %>
-              </h2>
-              <p class="fr-text--sm fr-mb-2w <%= complete ? 'fr-text-default--success' : 'fr-text-title--blue-france' %>">
-                <%= t('candidate.lot_selection.fields_count',
-                      filled: @presenter.filled_fields_count_for_scope(scope),
-                      total: @presenter.total_fields_count_for_scope(scope)) %>
-              </p>
-              <div style="display: flex; justify-content: flex-end;">
-                <%= link_to step_candidate_market_application_path(@market_application.identifier, first_step),
-                      class: "fr-btn fr-btn--sm fr-icon-arrow-right-line fr-btn--icon-right" do %>
-                  <%= complete ? t('candidate.lot_selection.modify') : t('candidate.lot_selection.start') %>
+            <% lot_count = @presenter.lots_count_for_scope(scope) %>
+            <div class="fr-mb-2w" style="border: 1px solid var(--border-default-grey);">
+              <div class="fr-px-3w fr-py-1w fr-tags-group"
+                   style="border-bottom: 1px solid var(--border-default-grey); background: var(--background-alt-grey);">
+                <%= market_type_icon_tag(@presenter.market_type_codes_for_scope(scope)) %>
+                <% if scope == :commun %>
+                  <span class="fr-tag fr-tag--sm">
+                    <%= t('candidate.lot_selection.scope_lots_count.commun', count: lot_count) %>
+                  </span>
+                <% else %>
+                  <span class="fr-tag fr-tag--sm">
+                    <%= t("market_types.#{scope}", default: scope.to_s.humanize) %>
+                  </span>
+                  <span class="fr-tag fr-tag--sm">
+                    <%= t('candidate.lot_selection.lots_count', count: lot_count) %>
+                  </span>
                 <% end %>
+              </div>
+              <div class="fr-px-3w fr-py-2w">
+                <h2 class="fr-h6 fr-mb-1v">
+                  <%= t("candidate.lot_selection.scope_title.#{scope}",
+                        default: t("candidate.lot_selection.scope_type_title.#{scope}",
+                                   default: t("market_types.#{scope}", default: scope.to_s.humanize))) %>
+                </h2>
+                <p class="fr-text--sm fr-mb-2w <%= complete ? 'fr-text-default--success' : 'fr-text-title--blue-france' %>">
+                  <%= t('candidate.lot_selection.fields_count',
+                        filled: @presenter.filled_fields_count_for_scope(scope),
+                        total: @presenter.total_fields_count_for_scope(scope)) %>
+                </p>
+                <div style="display: flex; justify-content: flex-end;">
+                  <%= link_to step_candidate_market_application_path(@market_application.identifier, first_step),
+                        class: "fr-btn fr-btn--sm fr-icon-edit-line fr-btn--icon-right" do %>
+                    <%= complete ? t('candidate.lot_selection.modify') : t('candidate.lot_selection.start') %>
+                  <% end %>
+                </div>
               </div>
             </div>
           <% end %>

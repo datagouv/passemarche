@@ -570,6 +570,14 @@ fr:
       application_form_title: "Formulaire de candidature"
       scope_title:
         commun: "Informations communes"
+      scope_type_title:
+        travaux: "Informations pour les lots de types travaux"
+        services: "Informations pour les lots de types services"
+        fournitures: "Informations pour les lots de types fournitures"
+      scope_lots_count:
+        commun:
+          one: "commun à tous les types de lots · 1 lot"
+          other: "communs à tous les types de lots · %{count} lots"
       fields_count: "%{filled}/%{total} champs complétés"
       start: "Compléter"
       modify: "Modifier"
