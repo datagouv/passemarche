@@ -4,12 +4,14 @@
   current_category = @presenter.parent_category_for(step.to_s)
 %>
 
-<%= stepper(
-  current_step: current_category,
-  steps: @wizard_steps,
-  i18n_scope: 'candidate',
-  show_separator: true
-) %>
+<% unless @presenter.multi_type_selected_lots? %>
+  <%= stepper(
+    current_step: current_category,
+    steps: @wizard_steps,
+    i18n_scope: 'candidate',
+    show_separator: true
+  ) %>
+<% end %>
 
 <% subcategories = @presenter.subcategories_for_category(current_category) %>
 

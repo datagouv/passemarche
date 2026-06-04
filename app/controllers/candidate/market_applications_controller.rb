@@ -83,7 +83,20 @@ module Candidate
 
     def set_wizard_steps
       @wizard_steps = presenter.stepper_steps
-      @current_scope = presenter.scope_for_step(step) if step != :wicked_finish
+      return if step == :wicked_finish
+
+      @current_scope = presenter.scope_for_step(step)
+      @back_path = lot_selection_path_for_scope if first_step_of_scope?
+    end
+
+    def lot_selection_path_for_scope
+      lot_selection_candidate_market_application_path(@market_application.identifier)
+    end
+
+    def first_step_of_scope?
+      return false unless presenter.multi_type_selected_lots?
+
+      presenter.active_scopes.any? { |scope| presenter.first_step_for_scope(scope) == step }
     end
 
     def set_steps

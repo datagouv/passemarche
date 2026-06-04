@@ -187,8 +187,8 @@ class MarketApplicationPresenter
     active_scopes.all? { |scope| scope_complete?(scope) }
   end
 
-  def first_step_for_scope(scope)
-    subcategory_keys_for_scope(scope).first || :api_data_recovery_status
+  def first_step_for_scope(_scope)
+    :api_data_recovery_status
   end
 
   def lots_count_for_scope(scope)
