@@ -5,21 +5,10 @@ class PublicMarketPresenter
   include MarketPresenterConcern
   include MultiTypeLotConcern
 
-  INITIAL_WIZARD_STEP = :setup
-  LOT_CONFIG_STEP = :lot_config
-  FORM_CONFIG_STEP = :form_config
-  FINAL_WIZARD_STEP = :summary
+  delegate :wizard_steps, :stepper_steps, to: :wizard_steps_builder
 
   def initialize(public_market)
     @public_market = public_market
-  end
-
-  def wizard_steps
-    [INITIAL_WIZARD_STEP] + optional_lot_steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
-  end
-
-  def stepper_steps
-    available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
   end
 
   def parent_category_for(step_key)
@@ -132,8 +121,11 @@ class PublicMarketPresenter
 
   private
 
-  def optional_lot_steps
-    lots.any? ? [LOT_CONFIG_STEP, FORM_CONFIG_STEP] : []
+  def wizard_steps_builder
+    @wizard_steps_builder ||= PublicMarket::WizardStepsBuilder.new(
+      public_market: @public_market,
+      available_category_keys:
+    )
   end
 
   def available_optional_market_attributes
