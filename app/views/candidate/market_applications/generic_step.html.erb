@@ -6,7 +6,13 @@
             i18n_scope: 'candidate',
             show_separator: true %>
 
-<% subcategories = @presenter.subcategories_for_category(current_category) %>
+<% all_subcategories = @presenter.subcategories_for_category(current_category) %>
+<% subcategories = if @current_scope
+                     scope_keys = @presenter.subcategory_keys_for_scope(@current_scope).map(&:to_s)
+                     all_subcategories.select { |s| scope_keys.include?(s.to_s) }
+                   else
+                     all_subcategories
+                   end %>
 <% responses_by_subcategory = @presenter.responses_grouped_by_subcategory(current_category) %>
 
 <%= form_with model: @market_application,

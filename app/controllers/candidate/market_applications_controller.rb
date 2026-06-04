@@ -83,6 +83,7 @@ module Candidate
 
     def set_wizard_steps
       @wizard_steps = presenter.stepper_steps
+      @current_scope = presenter.scope_for_step(step) if step != :wicked_finish
     end
 
     def set_steps
