@@ -16,26 +16,30 @@ class MarketApplication::WizardStepsBuilder
     inject_attestation_step(steps.uniq)
   end
 
+  # Étapes visuelles du stepper — toujours des groupes logiques
+  # Mono-type : catégories du marché + summary
+  # Multi-type : première sous-cat de chaque scope + summary (affiché sur la page lot_selection)
   def stepper_steps
     inject_attestation_step(stepper_group_keys + [FINAL_STEP])
   end
 
-  # Étapes stepper pour un scope donné (multi-type)
-  # ex: INITIAL_STEPS + sous-catégories commun + FINAL_STEP
+  # Étapes stepper contextuelles pour un scope donné
+  # Utilisé dans le wizard multi-type : chaque scope a son propre stepper
+  # Structure : INITIAL_STEPS + catégories du scope + FINAL_STEP
   def stepper_steps_for_scope(scope)
     return stepper_steps unless multi_type?
 
-    scope_keys = inject_attestation_step(subcategory_keys_for_scope(scope).dup)
-    inject_attestation_step((INITIAL_STEPS + scope_keys + [FINAL_STEP]).uniq)
+    scope_category_keys = category_keys_for_scope(scope)
+    inject_attestation_step((INITIAL_STEPS + scope_category_keys + [FINAL_STEP]).uniq)
   end
 
-  # Mappe n'importe quelle étape wizard vers son groupe stepper
-  # Utilisé par toutes les vues : stepper current_step: @presenter.stepper_step_for(step)
-  def stepper_step_for(step)
+  # Mappe une étape wizard vers son groupe dans le stepper contextuel du scope
+  def stepper_step_for(step, scope = nil)
     step = step.to_sym
-    return step if stepper_steps.include?(step)
+    steps = scope ? stepper_steps_for_scope(scope) : stepper_steps
+    return step if steps.include?(step)
 
-    step_to_stepper_group[step]
+    step_to_stepper_group_for_scope(step, scope)
   end
 
   def scope_for_step(step)
@@ -96,40 +100,49 @@ class MarketApplication::WizardStepsBuilder
     scopes.filter_map { |_, keys| keys.first }
   end
 
-  # Table de correspondance wizard_step → stepper_group
-  # INITIAL_STEPS et FINAL_STEP se mappent sur eux-mêmes
-  def step_to_stepper_group
-    @step_to_stepper_group ||= build_step_to_stepper_group
+  # Catégories distinctes des attributs d'un scope
+  def category_keys_for_scope(scope)
+    subcategory_keys = subcategory_keys_for_scope(scope).map(&:to_s)
+    @visible_attributes
+      .select { |attr| subcategory_keys.include?(attr.subcategory_key) }
+      .filter_map(&:category_key)
+      .uniq
+      .map(&:to_sym)
   end
 
-  def build_step_to_stepper_group
-    mapping = {}
+  # Mappe une sous-catégorie vers sa catégorie parente (groupe stepper mono-type)
+  # ou vers la sous-catégorie elle-même si déjà un groupe stepper (multi-type)
+  def step_to_stepper_group_for_scope(step, scope)
+    fixed = { ATTESTATION_STEP => ATTESTATION_STEP, FINAL_STEP => FINAL_STEP }
+    return fixed[step] if fixed.key?(step)
 
+    if scope
+      step
+    else
+      subcategory_to_category_mapping[step]
+    end
+  end
+
+  def subcategory_to_category_mapping
+    @subcategory_to_category_mapping ||= fixed_step_mapping.merge(category_subcategory_mapping)
+  end
+
+  def fixed_step_mapping
+    mapping = {}
     INITIAL_STEPS.each { |s| mapping[s] = s }
     mapping[ATTESTATION_STEP] = ATTESTATION_STEP
     mapping[FINAL_STEP] = FINAL_STEP
-
-    if multi_type?
-      scopes.each_value do |keys|
-        group_key = keys.first
-        keys.each { |k| mapping[k] = group_key }
-      end
-    else
-      category_step_mapping(mapping)
-    end
-
     mapping
   end
 
-  def category_step_mapping(mapping)
-    category_keys.each do |cat_key|
+  def category_subcategory_mapping
+    category_keys.each_with_object({}) do |cat_key, mapping|
       cat_sym = cat_key.to_sym
+      mapping[cat_sym] = cat_sym
       @visible_attributes
         .select { |attr| attr.category_key == cat_key }
-        .filter_map(&:subcategory_key)
-        .uniq
+        .filter_map(&:subcategory_key).uniq
         .each { |sub| mapping[sub.to_sym] = cat_sym }
-      mapping[cat_sym] = cat_sym
     end
   end
 
