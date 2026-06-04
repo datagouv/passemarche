@@ -12,6 +12,16 @@ module MarketBuilderHelpers
     attr
   end
 
+  def setup_market_with_attributes(attributes_list)
+    @editor ||= FactoryBot.create(:editor, :authorized_and_active)
+    @public_market ||= FactoryBot.create(:public_market, :completed, editor: @editor)
+    attributes_list.map do |attrs|
+      attr = MarketAttribute.find_or_create_by(key: attrs[:key]) { |a| attrs.except(:key).each { |k, v| a.send(:"#{k}=", v) } }
+      @public_market.market_attributes << attr unless @public_market.market_attributes.include?(attr)
+      attr
+    end
+  end
+
   def setup_market_with_lots(*lot_names, editor: nil)
     @editor ||= editor || FactoryBot.create(:editor)
     @public_market ||= begin
