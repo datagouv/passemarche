@@ -199,7 +199,10 @@
                 <%= market_type_icon_tag(@presenter.market_type_codes_for_scope(scope)) %>
                 <% if scope == :commun %>
                   <span class="fr-tag fr-tag--sm">
-                    <%= t('candidate.lot_selection.scope_lots_count.commun', count: lot_count) %>
+                    <%= t('candidate.lot_selection.scope_tag_commun') %>
+                  </span>
+                  <span class="fr-tag fr-tag--sm">
+                    <%= t('candidate.lot_selection.lots_count', count: lot_count) %>
                   </span>
                 <% else %>
                   <span class="fr-tag fr-tag--sm">
