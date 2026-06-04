@@ -46,13 +46,12 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
   end
 
   describe '#stepper_steps' do
-    it 'returns categories plus summary as symbols' do
-      expected_steps = %i[identite_entreprise exclusion_criteria economic_capacities summary]
-      expect(presenter.stepper_steps).to match_array(expected_steps)
-    end
-
     it 'includes summary as the last step' do
       expect(presenter.stepper_steps.last).to eq(:summary)
+    end
+
+    it 'delegates to wizard_steps_builder' do
+      expect(presenter.stepper_steps).to eq(presenter.send(:wizard_steps_builder).stepper_steps)
     end
 
     context 'with no market attributes' do
@@ -67,27 +66,24 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
   end
 
   describe '#wizard_steps' do
-    it 'returns fixed steps, subcategories, and summary' do
-      expected_steps = %i[
-        api_data_recovery_status
-        market_information
-        identification
-        exclusion_criteria
-        financial_capacity
-        summary
-      ]
-      expect(presenter.wizard_steps).to match_array(expected_steps)
+    it 'starts with initial steps and ends with summary' do
+      steps = presenter.wizard_steps
+      expect(steps.first(2)).to eq(%i[api_data_recovery_status market_information])
+      expect(steps.last).to eq(:summary)
     end
 
-    it 'removes duplicates with uniq' do
+    it 'includes subcategory keys' do
+      expect(presenter.wizard_steps).to include(:identification, :financial_capacity)
+    end
+
+    it 'contains no duplicates' do
       create(:market_attribute,
         key: 'another_field',
         category_key: 'identite_entreprise',
         subcategory_key: 'identification',
         public_markets: [public_market])
 
-      identification_count = presenter.wizard_steps.count(:identification)
-      expect(identification_count).to eq(1)
+      expect(presenter.wizard_steps.count(:identification)).to eq(1)
     end
   end
 
@@ -176,14 +172,6 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
   end
 
   describe 'constants' do
-    it 'has correct initial wizard steps' do
-      expect(described_class::INITIAL_WIZARD_STEPS).to eq(%i[api_data_recovery_status market_information])
-    end
-
-    it 'has correct final wizard step' do
-      expect(described_class::FINAL_WIZARD_STEP).to eq(:summary)
-    end
-
     it 'has correct market info parent category' do
       expect(described_class::MARKET_INFO_PARENT_CATEGORY).to eq('identite_entreprise')
     end

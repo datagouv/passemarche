@@ -8,11 +8,11 @@ class MarketApplicationPresenter
   delegate :attestation, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
   delegate :multi_type_selected_lots?, to: :@market_application
+  delegate :wizard_steps, :stepper_steps, :scope_for_step,
+    :subcategory_keys_for_scope, :active_scopes, :attributes_for_scope,
+    to: :wizard_steps_builder
 
-  INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
-  FINAL_WIZARD_STEP = :summary
   MARKET_INFO_PARENT_CATEGORY = 'identite_entreprise'
-  ATTESTATION_MOTIFS_EXCLUSION_STEP = :attestation_motifs_exclusion
 
   def initialize(market_application)
     @market_application = market_application
@@ -23,7 +23,9 @@ class MarketApplicationPresenter
   end
 
   def category_keys_with_attestation_motifs_exclusion
-    inject_attestation_motifs_exclusion_step(category_keys.dup)
+    category_keys_for_stepper.dup.tap do |steps|
+      inject_attestation_motifs_exclusion_step(steps)
+    end
   end
 
   def parent_category_for(subcategory_key)
@@ -109,8 +111,8 @@ class MarketApplicationPresenter
   def responses_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
-    market_attributes = market_attributes_for_subcategory(category_key, subcategory_key)
-    market_attributes.map { |attr| market_attribute_response_for(attr) }
+    market_attributes_for_subcategory(category_key, subcategory_key)
+      .map { |attr| market_attribute_response_for(attr) }
       .reject(&:hidden?)
   end
 
@@ -127,28 +129,6 @@ class MarketApplicationPresenter
     return {} if category_key.blank?
 
     responses_for_category(category_key).group_by { |r| r.market_attribute.subcategory_key }
-  end
-
-  # === WIZARD AND NAVIGATION ===
-
-  def stepper_steps
-    steps = category_keys.map(&:to_sym)
-    steps = inject_attestation_motifs_exclusion_step(steps)
-    steps + [FINAL_WIZARD_STEP]
-  end
-
-  def wizard_steps
-    all_steps = (INITIAL_WIZARD_STEPS + visible_subcategory_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]).uniq
-    inject_attestation_motifs_exclusion_step(all_steps)
-  end
-
-  def visible_subcategory_keys
-    @visible_subcategory_keys ||= category_keys.flat_map do |cat_key|
-      visible_market_attributes
-        .select { |attr| attr.category_key == cat_key }
-        .filter_map(&:subcategory_key)
-        .uniq
-    end
   end
 
   # === LOT SELECTION ===
@@ -202,6 +182,14 @@ class MarketApplicationPresenter
 
   private
 
+  def wizard_steps_builder
+    @wizard_steps_builder ||= MarketApplication::WizardStepsBuilder.new(
+      market_application: @market_application,
+      visible_attributes: visible_market_attributes,
+      selected_lot_types:
+    )
+  end
+
   def public_market
     @public_market ||= @market_application.public_market
   end
@@ -254,15 +242,15 @@ class MarketApplicationPresenter
     @category_keys ||= all_market_attributes.filter_map(&:category_key).uniq
   end
 
-  def subcategory_keys
-    @subcategory_keys ||= all_market_attributes.filter_map(&:subcategory_key).uniq
+  def category_keys_for_stepper
+    category_keys.map(&:to_sym)
   end
 
   def inject_attestation_motifs_exclusion_step(steps)
     first_exclusion_index = steps.find_index { |s| s.to_s.start_with?('motifs_exclusion') }
     return steps unless first_exclusion_index
 
-    steps.insert(first_exclusion_index, ATTESTATION_MOTIFS_EXCLUSION_STEP)
+    steps.insert(first_exclusion_index, MarketApplication::WizardStepsBuilder::ATTESTATION_STEP)
     steps
   end
 end

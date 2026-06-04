@@ -89,6 +89,16 @@ class MarketApplication < ApplicationRecord
     end
   end
 
+  def selected_lot_types
+    lots.includes(:market_type, :platform_market_type)
+      .filter_map(&:effective_market_type)
+      .uniq
+  end
+
+  def multi_type_selected_lots?
+    selected_lot_types.size > 1
+  end
+
   def all_security_scans_complete?
     file_responses = market_attribute_responses
       .select { |r| r.respond_to?(:documents) && r.documents.attached? }
