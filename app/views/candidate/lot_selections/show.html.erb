@@ -195,8 +195,7 @@
             <% first_step = @presenter.first_step_for_scope(scope) %>
             <% lot_count = @presenter.lots_count_for_scope(scope) %>
             <div class="fr-mb-2w" style="border: 1px solid var(--border-default-grey);">
-              <div class="fr-px-3w fr-py-1w fr-tags-group"
-                   style="border-bottom: 1px solid var(--border-default-grey); background: var(--background-alt-grey);">
+              <div class="fr-px-3w fr-py-1w fr-tags-group">
                 <%= market_type_icon_tag(@presenter.market_type_codes_for_scope(scope)) %>
                 <% if scope == :commun %>
                   <span class="fr-tag fr-tag--sm">

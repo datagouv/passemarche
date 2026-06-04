@@ -84,6 +84,7 @@ module Candidate
     def set_wizard_steps
       @wizard_steps = presenter.stepper_steps
       @current_scope = presenter.scope_for_step(step) if step != :wicked_finish
+      @back_path = back_path_before_wizard
     end
 
     def set_steps
@@ -130,11 +131,22 @@ module Candidate
     end
 
     def back_path_before_wizard
-      if @market_application.public_market.lots.any?
-        lot_selection_candidate_market_application_path(@market_application.identifier)
-      else
-        company_identification_candidate_market_application_path(@market_application.identifier)
-      end
+      return lot_selection_candidate_market_application_path(@market_application.identifier) if back_to_lot_selection?
+
+      company_identification_candidate_market_application_path(@market_application.identifier)
+    end
+
+    def back_to_lot_selection?
+      return false if step == :wicked_finish
+
+      @market_application.public_market.lots.any? &&
+        (step == :api_data_recovery_status || first_step_of_scope?)
+    end
+
+    def first_step_of_scope?
+      return false unless presenter.multi_type_selected_lots?
+
+      presenter.active_scopes.any? { |scope| presenter.first_step_for_scope(scope) == step }
     end
 
     def finish_wizard_path

@@ -73,7 +73,7 @@ class MarketApplication::WizardStepsBuilder
   def stepper_scope_labels
     return category_keys.map(&:to_sym) unless multi_type?
 
-    scopes.keys.map { |scope| :"scope_#{scope}" }
+    scopes.filter_map { |_, keys| keys.first }
   end
 
   def attributes_for_scope(scope)
