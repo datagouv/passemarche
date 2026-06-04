@@ -5,7 +5,7 @@
 %>
 
 <%= stepper(
-  current_step: current_category,
+  current_step: @presenter.stepper_step_for(step),
   steps: @wizard_steps,
   i18n_scope: 'candidate',
   show_separator: true
