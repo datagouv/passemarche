@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class MarketApplicationPresenter
   include SidemenuHelper
   include MarketPresenterConcern
@@ -167,6 +168,29 @@ class MarketApplicationPresenter
     total_fields_count.positive? && filled_fields_count == total_fields_count
   end
 
+  def total_fields_count_for_scope(scope)
+    attributes_for_scope_as_market_attributes(scope).size
+  end
+
+  def filled_fields_count_for_scope(scope)
+    attributes_for_scope_as_market_attributes(scope).count do |attr|
+      response_has_data?(responses_by_attribute_id[attr.id])
+    end
+  end
+
+  def scope_complete?(scope)
+    total = total_fields_count_for_scope(scope)
+    total.positive? && filled_fields_count_for_scope(scope) == total
+  end
+
+  def all_scopes_complete?
+    active_scopes.all? { |scope| scope_complete?(scope) }
+  end
+
+  def first_step_for_scope(scope)
+    subcategory_keys_for_scope(scope).first || :api_data_recovery_status
+  end
+
   # === VALIDATION METHODS ===
 
   def optional_market_attributes?
@@ -181,6 +205,11 @@ class MarketApplicationPresenter
   end
 
   private
+
+  def attributes_for_scope_as_market_attributes(scope)
+    scope_keys = subcategory_keys_for_scope(scope).map(&:to_s)
+    visible_market_attributes.select { |attr| scope_keys.include?(attr.subcategory_key) }
+  end
 
   def wizard_steps_builder
     @wizard_steps_builder ||= MarketApplication::WizardStepsBuilder.new(
@@ -254,3 +283,4 @@ class MarketApplicationPresenter
     steps
   end
 end
+# rubocop:enable Metrics/ClassLength

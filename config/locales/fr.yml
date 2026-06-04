@@ -568,6 +568,8 @@ fr:
       lots_list_title: "Liste des lots"
       edit_lots: "Modifier les lots"
       application_form_title: "Formulaire de candidature"
+      scope_title:
+        commun: "Informations communes"
       fields_count: "%{filled}/%{total} champs complétés"
       start: "Compléter"
       modify: "Modifier"
