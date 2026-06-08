@@ -162,8 +162,12 @@ class MarketApplicationPresenter
   end
 
   def lot_type_label(lot)
-    code = lot.effective_market_type&.code || public_market.market_type_codes.first
+    code = lot_type_code(lot)
     code.present? ? I18n.t("market_types.#{code}", default: code.humanize) : nil
+  end
+
+  def lot_type_code(lot)
+    lot.effective_market_type&.code || public_market.market_type_codes.first
   end
 
   def cta_translation_key

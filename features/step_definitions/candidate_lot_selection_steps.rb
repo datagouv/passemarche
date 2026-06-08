@@ -191,6 +191,6 @@ When('the candidate selects one lot of each type') do
 end
 
 Then('the preparation page should show the selected lot type tags') do
-  expect(page).to have_css('.fr-tag', text: I18n.t('market_types.works'))
-  expect(page).to have_css('.fr-tag', text: I18n.t('market_types.services'))
+  expect(page).to have_css('.market-type-badge', text: I18n.t('market_types.works'))
+  expect(page).to have_css('.market-type-badge', text: I18n.t('market_types.services'))
 end
