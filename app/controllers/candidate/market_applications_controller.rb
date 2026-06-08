@@ -12,6 +12,7 @@ module Candidate
 
     def show
       if step == :api_data_recovery_status
+        Candidate::EnqueueApiDataFetch.call(market_application: @market_application)
         @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application)
         @back_path = back_path_before_wizard
       end

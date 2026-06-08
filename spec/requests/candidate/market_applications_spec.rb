@@ -177,6 +177,24 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     end
   end
 
+  describe 'GET /candidate/market_applications/:identifier/api_data_recovery_status' do
+    it 'enqueues FetchApiDataCoordinatorJob when api_fetch_status is empty' do
+      market_application.update!(api_fetch_status: {})
+
+      expect do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+      end.to have_enqueued_job(FetchApiDataCoordinatorJob).with(market_application.id)
+    end
+
+    it 'does not enqueue FetchApiDataCoordinatorJob when api_fetch_status is already present' do
+      market_application.update!(api_fetch_status: { 'insee' => { 'status' => 'completed' } })
+
+      expect do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+      end.not_to have_enqueued_job(FetchApiDataCoordinatorJob)
+    end
+  end
+
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do
     let(:next_step) { 'api_data_recovery_status' }
 
