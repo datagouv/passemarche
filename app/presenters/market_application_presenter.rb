@@ -7,6 +7,7 @@ class MarketApplicationPresenter
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
+  delegate :multi_type_selected_lots?, to: :@market_application
 
   INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
@@ -77,6 +78,20 @@ class MarketApplicationPresenter
 
   # === LOTS METHODS ===
 
+  def lots_by_effective_type
+    @lots_by_effective_type ||= selected_lots.group_by(&:effective_market_type)
+  end
+
+  def selected_lot_types
+    @selected_lot_types ||= @market_application.selected_lot_types
+  end
+
+  def lots_by_type_sorted
+    @lots_by_type_sorted ||= public_market.lots.ordered
+      .includes(:market_type, :platform_market_type)
+      .group_by(&:effective_market_type)
+  end
+
   def selected_lots
     @selected_lots ||= @market_application.lots.sort_by(&:position)
   end
@@ -94,8 +109,8 @@ class MarketApplicationPresenter
   def responses_for_subcategory(category_key, subcategory_key)
     return [] if category_key.blank? || subcategory_key.blank?
 
-    market_attributes = market_attributes_for_subcategory(category_key, subcategory_key)
-    market_attributes.map { |attr| market_attribute_response_for(attr) }
+    market_attributes_for_subcategory(category_key, subcategory_key)
+      .map { |attr| market_attribute_response_for(attr) }
       .reject(&:hidden?)
   end
 
@@ -128,9 +143,12 @@ class MarketApplicationPresenter
   end
 
   def visible_subcategory_keys
-    @visible_subcategory_keys ||= visible_market_attributes
-      .filter_map(&:subcategory_key)
-      .uniq
+    @visible_subcategory_keys ||= category_keys.flat_map do |cat_key|
+      visible_market_attributes
+        .select { |attr| attr.category_key == cat_key }
+        .filter_map(&:subcategory_key)
+        .uniq
+    end
   end
 
   # === LOT SELECTION ===

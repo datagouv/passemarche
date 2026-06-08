@@ -533,4 +533,85 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
       expect(response_for_deleted).to be_present
     end
   end
+
+  describe 'multi-type lot methods' do
+    let(:works_type)    { MarketType.find_or_create_by!(code: 'works') }
+    let(:services_type) { MarketType.find_or_create_by!(code: 'services') }
+
+    let(:multi_type_market) do
+      works_type
+      services_type
+      create(:public_market, :completed, editor:).tap do |pm|
+        pm.market_type_codes = %w[works services]
+        pm.save!
+      end
+    end
+
+    let!(:common_attr) do
+      create(:market_attribute,
+        key: 'common_field',
+        category_key: 'common_cat',
+        subcategory_key: 'common_sub',
+        public_markets: [multi_type_market],
+        market_types: [works_type, services_type])
+    end
+
+    let!(:works_attr) do
+      create(:market_attribute,
+        key: 'works_field',
+        category_key: 'works_cat',
+        subcategory_key: 'works_sub',
+        public_markets: [multi_type_market],
+        market_types: [works_type])
+    end
+
+    let!(:services_attr) do
+      create(:market_attribute,
+        key: 'services_field',
+        category_key: 'services_cat',
+        subcategory_key: 'services_sub',
+        public_markets: [multi_type_market],
+        market_types: [services_type])
+    end
+
+    let(:lot_works)    { create(:lot, public_market: multi_type_market, market_type: works_type) }
+    let(:lot_services) { create(:lot, public_market: multi_type_market, market_type: services_type) }
+
+    let(:multi_application) do
+      app = create(:market_application, public_market: multi_type_market)
+      app.lots = [lot_works, lot_services]
+      app
+    end
+
+    subject(:multi_presenter) { described_class.new(multi_application) }
+
+    describe '#multi_type_selected_lots?' do
+      it 'returns true when selected lots have different types' do
+        expect(multi_presenter.multi_type_selected_lots?).to be true
+      end
+
+      it 'returns false when only one lot type is selected' do
+        single_app = create(:market_application, public_market: multi_type_market)
+        single_app.lots = [lot_works]
+        presenter = described_class.new(single_app)
+        expect(presenter.multi_type_selected_lots?).to be false
+      end
+    end
+
+    describe '#lots_by_effective_type' do
+      it 'groups selected lots by their effective market type' do
+        result = multi_presenter.lots_by_effective_type
+        expect(result.keys).to contain_exactly(works_type, services_type)
+        expect(result[works_type]).to contain_exactly(lot_works)
+        expect(result[services_type]).to contain_exactly(lot_services)
+      end
+    end
+
+    describe '#lots_by_type_sorted' do
+      it 'groups all public market lots by effective type' do
+        result = multi_presenter.lots_by_type_sorted
+        expect(result.keys).to include(works_type, services_type)
+      end
+    end
+  end
 end
