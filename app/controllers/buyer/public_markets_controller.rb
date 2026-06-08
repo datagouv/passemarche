@@ -57,6 +57,10 @@ module Buyer
       @wizard_steps = @presenter.stepper_steps
     end
 
+    def finish_wizard_path
+      root_path
+    end
+
     def step_params
       case step
       when :setup, :summary
@@ -69,7 +73,6 @@ module Buyer
       when :form_config
         {}
       else
-        # Category step - collect selected optional fields
         { selected_attribute_keys: params[:selected_attribute_keys] || [] }
       end
     end
@@ -89,10 +92,6 @@ module Buyer
 
     def initialize_presenter
       @presenter = PublicMarketPresenter.new(@public_market)
-    end
-
-    def finish_wizard_path
-      root_path
     end
 
     def step_template

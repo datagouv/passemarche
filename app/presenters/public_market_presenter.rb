@@ -3,6 +3,7 @@
 class PublicMarketPresenter
   include SidemenuHelper
   include MarketPresenterConcern
+  include MultiTypeLotConcern
 
   INITIAL_WIZARD_STEP = :setup
   LOT_CONFIG_STEP = :lot_config
@@ -100,20 +101,7 @@ class PublicMarketPresenter
       .uniq
   end
 
-  def market_types_label_with_source
-    "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
-  end
-
-  def lots_by_effective_type
-    lots_for_config.group_by(&:effective_market_type)
-  end
-
-  def lot_effective_type_label(lot)
-    type = lot.effective_market_type
-    return nil unless type
-
-    I18n.t("market_types.#{type.code}", default: type.code.humanize)
-  end
+  delegate :multi_type_lots?, to: :@public_market
 
   def lots
     @lots ||= @public_market.lots.ordered.to_a
@@ -141,10 +129,6 @@ class PublicMarketPresenter
       I18n.t('buyer.public_markets.lot_config.platform_banner_per_lot_type',
         platform: @public_market.editor.name)
     end
-  end
-
-  def source_types
-    I18n.t('source_types')
   end
 
   def available_mandatory_market_attributes
@@ -198,7 +182,7 @@ class PublicMarketPresenter
   def available_attributes_ordered_by_id
     @available_attributes_ordered_by_id ||= begin
       ids = MarketAttribute.joins(:market_types)
-        .where(market_types: { code: @public_market.market_type_codes })
+        .where(market_types: { code: @public_market.effective_market_type_codes })
         .where(deleted_at: nil)
         .select(:id)
         .distinct

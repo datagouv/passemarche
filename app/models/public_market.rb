@@ -27,6 +27,15 @@ class PublicMarket < ApplicationRecord
 
   before_validation :generate_identifier, on: :create
 
+  def multi_type_lots?
+    effective_lot_market_types.size > 1
+  end
+
+  def effective_market_type_codes
+    lot_codes = effective_lot_market_types.map(&:code)
+    (market_type_codes + lot_codes).uniq
+  end
+
   def buyer_display_name
     buyer_name.presence || siret
   end
@@ -49,6 +58,12 @@ class PublicMarket < ApplicationRecord
   end
 
   private
+
+  def effective_lot_market_types
+    lots.includes(:market_type, :platform_market_type)
+      .filter_map(&:effective_market_type)
+      .uniq
+  end
 
   def must_have_valid_market_type_codes
     check_valid_market_type_codes

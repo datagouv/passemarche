@@ -37,7 +37,8 @@
         <% @presenter.lots_for_config.each do |lot| %>
           <span class="fr-tag fr-tag--sm">
             <% type_label = @presenter.lot_effective_type_label(lot) %>
-            <%= type_label ? "#{lot.name} - #{type_label.downcase}" : lot.name %>
+            <% lot_label = "#{t('buyer.public_markets.lot_config.lot_number', number: lot.position)} - #{lot.name}" %>
+            <%= type_label ? "#{lot_label} - #{type_label.downcase}" : lot_label %>
           </span>
         <% end %>
       </div>
@@ -47,16 +48,16 @@
   <div class="fr-col-12 fr-col-md-8">
     <div class="fr-background-alt--grey fr-p-4w fr-mb-3w">
       <div class="fr-mb-2w" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <% @presenter.lots_by_effective_type.each do |market_type, type_lots| %>
+        <% @presenter.lots_by_effective_type.each_key do |market_type| %>
           <% if market_type %>
             <span class="fr-tag fr-tag--sm">
               <%= t("market_types.#{market_type.code}", default: market_type.code.humanize) %>
             </span>
           <% end %>
-          <span class="fr-tag fr-tag--sm">
-            <%= t('buyer.public_markets.form_config.lots_count', count: type_lots.size) %>
-          </span>
         <% end %>
+        <span class="fr-tag fr-tag--sm">
+          <%= t('buyer.public_markets.form_config.lots_count', count: @presenter.lots_for_config.size) %>
+        </span>
       </div>
 
       <h2 class="fr-h5 fr-mb-3w"><%= t('buyer.public_markets.form_config.form_block_title') %></h2>

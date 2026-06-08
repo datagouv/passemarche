@@ -1,5 +1,4 @@
 <% content_for :title, "#{@public_market.editor.name} - #{t('buyer.public_markets.lot_config.title')}" %>
-
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12 fr-col-md-4">
     <div class="fr-mb-3w fr-background-alt--grey" style="padding: 20px;">
@@ -33,20 +32,16 @@
   <div class="fr-col-12 fr-col-md-8">
     <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.lot_config.title') %></h1>
     <p class="fr-text--lg fr-mb-4w"><%= t('buyer.public_markets.lot_config.subtitle') %></p>
-
     <% lot_limit_errors = @public_market.errors[:lot_limit] %>
-
     <%= form_with url: wizard_path, method: :put, local: true, data: { turbo: false } do |form| %>
       <div class="fr-mb-5w">
         <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lots_section_title') %></h2>
         <p class="fr-text--sm fr-text--mention fr-mb-3w">
           <%= t('buyer.public_markets.lot_config.lots_section_subtitle') %>
         </p>
-
         <% if (banner_text = @presenter.platform_type_banner_text) %>
           <%= render 'shared/notice', notice_text: banner_text %>
         <% end %>
-
         <div class="fr-table fr-mb-0">
           <div class="fr-table__wrapper">
             <div class="fr-table__container">
@@ -81,13 +76,11 @@
           </div>
         </div>
       </div>
-
       <div class="fr-mb-5w" data-controller="radio-toggle">
         <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lot_limit_section_title') %></h2>
         <p class="fr-text--sm fr-text--mention fr-mb-3w">
           <%= t('buyer.public_markets.lot_config.lot_limit_section_subtitle') %>
         </p>
-
         <fieldset class="fr-fieldset fr-fieldset--inline fr-mb-3w" aria-labelledby="lot-limit-legend">
           <legend class="fr-fieldset__legend" id="lot-limit-legend">
             <%= t('buyer.public_markets.lot_config.lot_limit_question') %>
@@ -115,7 +108,6 @@
             </div>
           </div>
         </fieldset>
-
         <div data-radio-toggle-target="field">
           <div class="fr-input-group <%= 'fr-input-group--error' if lot_limit_errors.any? %>">
             <%= label_tag :lot_limit,
@@ -134,7 +126,6 @@
           </div>
         </div>
       </div>
-
       <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right" style="width: 100%; justify-content: center;">
         <%= t('buyer.public_markets.lot_config.submit') %>
       </button>
