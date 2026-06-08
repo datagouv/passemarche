@@ -19,7 +19,7 @@
               <td><%= t('shared.application_lots_summary.lot_number', number: lot.position) %></td>
               <td><%= lot.name %></td>
               <td><%= lot.cpv_code.presence || t('shared.application_lots_annex.cpv_not_provided') %></td>
-              <td><%= presenter.market_types_label.presence || t('shared.application_lots_annex.type_not_provided') %></td>
+              <td><%= presenter.lot_type_label(lot).presence || t('shared.application_lots_annex.type_not_provided') %></td>
             </tr>
           <% end %>
         </tbody>
