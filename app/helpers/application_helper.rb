@@ -18,7 +18,8 @@ module ApplicationHelper
 
   MARKET_TYPE_CONFIGS = {
     'works' => { icon: 'icon-travaux.svg', icon_only: 'icon-travaux-only.svg', bg: '#FEEBD0' },
-    'services' => { icon: 'icon-services.svg', icon_only: 'icon-services-only.svg', bg: '#FEE7FC' }
+    'services' => { icon: 'icon-services.svg', icon_only: 'icon-services-only.svg', bg: '#FEE7FC' },
+    'supplies' => { icon: 'icon-fournitures.svg', icon_only: 'icon-fournitures-only.svg', bg: '#D9EAF8' }
   }.freeze
 
   def market_type_icon_tag(market_type_codes)
@@ -27,6 +28,18 @@ module ApplicationHelper
     return unless config
 
     image_tag config[:icon], alt: '', aria: { hidden: true }, width: 36, height: 36, class: 'market-type-icon'
+  end
+
+  def market_type_scope_tag(scope)
+    code = scope.to_s
+    config = MARKET_TYPE_CONFIGS[code]
+    content = if config
+                image_tag(config[:icon_only], alt: '', aria: { hidden: true }, width: 16, height: 16) +
+                  t("market_types.#{code}")
+              else
+                t("market_types.#{code}", default: code.humanize)
+              end
+    content_tag(:span, content, class: 'fr-tag fr-tag--sm')
   end
 
   def market_type_badge_tag(code, label, background: nil)

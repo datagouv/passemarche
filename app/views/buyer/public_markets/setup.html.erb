@@ -36,11 +36,11 @@
       <div class="fr-mb-2w">
         <h3 class="fr-text--md fr-mb-1w fr-text--bold"><%= t('buyer.shared.market_type') %></h3>
         <% if @public_market.market_type_codes.any? %>
-          <% @public_market.market_type_codes.each do |market_type_code| %>
-            <span class="fr-badge fr-badge--sm fr-mr-1w">
-              <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
-            </span>
-          <% end %>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <% @public_market.market_type_codes.each do |market_type_code| %>
+              <%= market_type_badge_tag(market_type_code, t("market_types.#{market_type_code}", default: market_type_code.humanize)) %>
+            <% end %>
+          </div>
         <% else %>
           <p class="fr-text--sm fr-mb-0"><%= t('buyer.shared.no_market_type') %></p>
         <% end %>
