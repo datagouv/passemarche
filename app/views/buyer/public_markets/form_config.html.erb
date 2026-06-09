@@ -50,9 +50,7 @@
       <div class="fr-mb-2w" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
         <% @presenter.lots_by_effective_type.each_key do |market_type| %>
           <% if market_type %>
-            <span class="fr-tag fr-tag--sm">
-              <%= t("market_types.#{market_type.code}", default: market_type.code.humanize) %>
-            </span>
+            <%= market_type_badge_tag(market_type.code, t("market_types.#{market_type.code}", default: market_type.code.humanize)) %>
           <% end %>
         <% end %>
         <span class="fr-tag fr-tag--sm">

@@ -48,7 +48,7 @@
             <% if @public_market.market_type_codes.any? %>
               <% @public_market.market_type_codes.each do |market_type_code| %>
                 <span class="fr-badge fr-badge--sm fr-mr-1w">
-                  <%= t("market_types.#{market_type_code}", default: market_type_code.humanize) %>
+                  <%= t("market_types.#{market_type_code}", default: market_type_code.humanize).upcase %>
                 </span>
               <% end %>
             <% else %>
