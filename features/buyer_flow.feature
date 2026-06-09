@@ -48,7 +48,7 @@ Feature: Buyer Configuration Flow
     When I navigate through all category steps to summary
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "Fournitures"
+    And I should see "FOURNITURES"
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the first category page for my public market
