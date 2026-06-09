@@ -729,3 +729,24 @@
 .fr-dashboard-tile--green {
   border-bottom-color: var(--success-main-525, #18753c);
 }
+
+/* Market type badges */
+.market-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  background-color: #F6F6F6;
+}
+
+.market-type-badge img,
+.market-type-icon {
+  flex-shrink: 0;
+}
+
+.fr-tags-group--market-types {
+  gap: 8px;
+  row-gap: 12px;
+}

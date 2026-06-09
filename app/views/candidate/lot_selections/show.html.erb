@@ -173,10 +173,11 @@
             <% end %>
           </div>
           <hr class="fr-hr fr-my-1w">
-          <div class="fr-tags-group">
+          <div class="fr-tags-group fr-tags-group--market-types">
             <% @presenter.selected_lots.each do |lot| %>
-              <% type = @presenter.lot_type_label(lot) %>
-              <span class="fr-tag"><%= type ? "#{lot.name} - #{type}" : lot.name %></span>
+              <% type_label = @presenter.lot_type_label(lot) %>
+              <%= market_type_badge_tag(nil, type_label ? "#{lot.name} - #{type_label}" : lot.name,
+                    background: 'white') %>
             <% end %>
           </div>
         </div>
@@ -196,14 +197,11 @@
       <%# Colonne droite : dossier de candidature %>
       <div class="fr-col-12 fr-col-md-7">
         <div class="fr-mb-3w fr-border-default--grey fr-px-3w fr-py-2w">
-          <div class="fr-tags-group fr-mb-2w">
-            <%= market_type_icon_tag(@presenter.selected_lot_types.map(&:code)) %>
+          <div class="fr-tags-group fr-tags-group--market-types fr-mb-2w">
             <% @presenter.selected_lot_types.each do |type| %>
-              <span class="fr-tag fr-tag--sm">
-                <%= t("market_types.#{type.code}", default: type.code.humanize) %>
-              </span>
+              <%= market_type_badge_tag(type.code, t("market_types.#{type.code}", default: type.code.humanize)) %>
             <% end %>
-            <span class="fr-tag fr-tag--sm">
+            <span class="market-type-badge">
               <%= t('candidate.lot_selection.lots_count', count: @presenter.selected_lots.size) %>
             </span>
           </div>
