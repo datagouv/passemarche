@@ -639,7 +639,12 @@ Le payload pour créer un marché public doit respecter la structure suivante :
       "items": {
         "type": "object",
         "properties": {
-          "name": {"type": "string"}
+          "name": {"type": "string"},
+          "cpv_code": {
+            "type": "string",
+            "pattern": "^\\d{8}-\\d$",
+            "description": "Code CPV (ex: 30213100-6)"
+          }
         },
         "required": ["name"]
       },
