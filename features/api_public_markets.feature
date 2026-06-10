@@ -123,3 +123,16 @@ Feature: API Public Markets Management
     Then the configuration URL should contain the identifier
     And the configuration URL should use the correct host
     And the configuration URL should point to the buyer configuration page
+
+  Scenario: Mettre à jour la DLRO d'un marché avec succès
+    Given a public market exists for the current editor with identifier "VR-2026-TESTMARKET01"
+    When I update the deadline of market "VR-2026-TESTMARKET01" to "2027-06-30T18:00:00Z"
+    Then the response status should be 200
+    And the response should contain the updated deadline "2027-06-30T18:00:00Z"
+    And the market "VR-2026-TESTMARKET01" should have deadline "2027-06-30T18:00:00Z" in the database
+
+  Scenario: Échec de mise à jour DLRO avec une deadline vide
+    Given a public market exists for the current editor with identifier "VR-2026-TESTMARKET01"
+    When I update the deadline of market "VR-2026-TESTMARKET01" to ""
+    Then the response status should be 422
+    And the response should contain validation errors
