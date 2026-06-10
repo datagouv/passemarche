@@ -12,10 +12,6 @@ Given('I am on the buyer home page') do
   visit buyer_home_path
 end
 
-Then('I should see {string}') do |text|
-  expect(page).to have_content(text)
-end
-
 Then('I should see the same content as the buyer homepage') do
   home_main_content = page.find('.fr-callout').text
   visit buyer_home_path

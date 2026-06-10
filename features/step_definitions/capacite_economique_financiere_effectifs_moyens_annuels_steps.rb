@@ -1,24 +1,19 @@
+# frozen_string_literal: true
+
 World(FactoryBot::Syntax::Methods)
 
-# Background steps
 Given('a public market with capacite_economique_financiere_effectifs_moyens_annuels field exists') do
-  @editor = create(:editor, :authorized_and_active)
-  @public_market = create(:public_market, :completed, editor: @editor)
-
-  @effectifs_attr = MarketAttribute.find_or_create_by(key: 'capacite_economique_financiere_effectifs_moyens_annuels') do |attr|
-    attr.input_type = 'capacite_economique_financiere_effectifs_moyens_annuels'
-    attr.category_key = 'capacites_techniques_professionnelles'
-    attr.subcategory_key = 'capacites_techniques_professionnelles_effectifs'
-    attr.mandatory = true
-  end
-  @effectifs_attr.public_markets << @public_market unless @effectifs_attr.public_markets.include?(@public_market)
+  @effectifs_attr = setup_market_with_attribute(
+    key: 'capacite_economique_financiere_effectifs_moyens_annuels',
+    input_type: 'capacite_economique_financiere_effectifs_moyens_annuels',
+    category_key: 'capacites_techniques_professionnelles',
+    subcategory_key: 'capacites_techniques_professionnelles_effectifs',
+    mandatory: true
+  )
 end
 
 Given('a candidate starts an application for this market \(effectifs moyens annuels)') do
-  @market_application = create(:market_application,
-    public_market: @public_market,
-    siret: '73282932000074')
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application
 end
 
 # Navigation steps

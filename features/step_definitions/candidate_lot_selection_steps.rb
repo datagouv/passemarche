@@ -1,38 +1,20 @@
 # frozen_string_literal: true
 
-def create_public_market_with_company_name_attribute(editor)
-  public_market = create(:public_market, :completed, editor:)
-  attr = MarketAttribute.find_or_create_by(key: 'company_name') do |a|
-    a.category_key = 'identite_entreprise'
-    a.subcategory_key = 'market_information'
-    a.input_type = :text_input
-    a.mandatory = false
-  end
-  public_market.market_attributes << attr
-  public_market
-end
-
 Given('a public market with lots exists') do
-  @editor = create(:editor)
-  @public_market = create_public_market_with_company_name_attribute(@editor)
-  @lot1 = create(:lot, public_market: @public_market, name: 'Lot 1 - Fournitures')
-  @lot2 = create(:lot, public_market: @public_market, name: 'Lot 2 - Services')
+  @lot1, @lot2 = setup_market_with_lots('Lot 1 - Fournitures', 'Lot 2 - Services')
 end
 
 Given('a candidate starts a new application for a market with lots') do
-  @market_application = create(:market_application, public_market: @public_market, siret: '73282932000074')
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application
 end
 
 Given('a public market without lots exists') do
   @editor_no_lots = create(:editor)
-  @public_market_no_lots = create_public_market_with_company_name_attribute(@editor_no_lots)
+  @public_market_no_lots = FactoryBot.create(:public_market, :completed, editor: @editor_no_lots)
 end
 
 Given('a candidate starts a new application for a market without lots') do
-  @market_application_no_lots = create(:market_application,
-    public_market: @public_market_no_lots,
-    siret: '73282932000074')
+  @market_application_no_lots = create(:market_application, public_market: @public_market_no_lots, siret: '73282932000074')
   authenticate_as_candidate_for(@market_application_no_lots)
 end
 

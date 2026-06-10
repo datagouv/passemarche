@@ -4,27 +4,19 @@ World(FactoryBot::Syntax::Methods)
 
 # Background steps
 Given('a public market with realisations_livraisons field exists') do
-  @editor = create(:editor, :authorized_and_active)
-  @public_market = create(:public_market, :completed, editor: @editor)
-
-  @realisations_attr = MarketAttribute.find_or_create_by(
-    key: 'test_realisations_livraisons'
-  ) do |attr|
-    attr.input_type = 'realisations_livraisons'
-    attr.category_key = 'test_capacites_techniques_professionnelles'
-    attr.subcategory_key = 'test_capacites_techniques_professionnelles_realisations'
-    attr.mandatory = true
-    attr.candidate_name = 'Les principaux travaux effectués par votre entreprise au cours des dernières années (3 ou 5 ans)'
-    attr.candidate_description = 'Décrivez les principaux travaux effectués, en précisant leur date, leur montant et leurs destinataires.'
-  end
-  @realisations_attr.public_markets << @public_market unless @realisations_attr.public_markets.include?(@public_market)
+  @realisations_attr = setup_market_with_attribute(
+    key: 'test_realisations_livraisons',
+    input_type: 'realisations_livraisons',
+    category_key: 'test_capacites_techniques_professionnelles',
+    subcategory_key: 'test_capacites_techniques_professionnelles_realisations',
+    mandatory: true,
+    candidate_name: 'Les principaux travaux effectués par votre entreprise au cours des dernières années (3 ou 5 ans)',
+    candidate_description: 'Décrivez les principaux travaux effectués, en précisant leur date, leur montant et leurs destinataires.'
+  )
 end
 
 Given('a candidate starts an application for this realisations market') do
-  @market_application = create(:market_application,
-    public_market: @public_market,
-    siret: '73282932000074')
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application
 end
 
 # Navigation steps
