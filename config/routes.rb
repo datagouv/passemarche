@@ -43,7 +43,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :public_markets, only: [:create] do
+      resources :public_markets, param: :identifier, only: %i[create update] do
         resources :market_applications, only: [:create]
       end
       resources :market_applications, only: [] do

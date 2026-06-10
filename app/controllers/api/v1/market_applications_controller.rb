@@ -38,7 +38,7 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   private
 
   def find_public_market
-    @public_market = current_editor.public_markets.find_by(identifier: params[:public_market_id])
+    @public_market = current_editor.public_markets.find_by(identifier: params[:public_market_identifier])
 
     return if @public_market
 
