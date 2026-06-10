@@ -5,6 +5,8 @@ class PublicMarket < ApplicationRecord
   include Completable
   include Syncable
 
+  has_paper_trail on: %i[create update], only: [:deadline]
+
   belongs_to :editor
 
   has_and_belongs_to_many :market_attributes
