@@ -25,11 +25,15 @@
             <div><%= @public_market.name %></div>
           </div>
           <% if @presenter.lots? %>
-            <div class="fr-mb-3w">
+            <div class="fr-mb-3w"
+                 data-controller="collapsible-list"
+                 data-collapsible-list-show-more-value="<%= t('shared.collapsible_lots.show_more') %>"
+                 data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>">
               <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.lot_name') %></div>
               <% @presenter.lots.each do |lot| %>
-                <div><%= lot.name %></div>
+                <div data-collapsible-list-target="item"><%= lot.name %></div>
               <% end %>
+              <%= collapsible_toggle_button(align: :left) %>
             </div>
             <% if @public_market.lot_limit.present? %>
               <div class="fr-mb-3w">

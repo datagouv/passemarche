@@ -42,14 +42,14 @@
                   <div class="field-layout-content">
                     <strong><%= t('candidate.shared.lot_name') %></strong>
                     <br>
-                    <span class="fr-text--sm fr-text--mention-grey">
+                    <span class="fr-text--sm fr-text--mention-grey"
+                          data-controller="collapsible-list"
+                          data-collapsible-list-show-more-value="<%= t('shared.collapsible_lots.show_more') %>"
+                          data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>">
                       <% @presenter.public_market_lots.each do |lot| %>
-                        <% lot_label = t('candidate.lot_selection.lot_number', number: lot.position) %>
-                        <% type_label = @presenter.lot_type_label(lot) %>
-                        <span class="fr-badge fr-badge--sm fr-mr-1w fr-mb-1w">
-                          <%= type_label ? "#{lot_label} - #{type_label}" : lot_label %>
-                        </span>
+                        <span class="fr-badge fr-badge--sm fr-mr-1w fr-mb-1w" data-collapsible-list-target="item"><%= @presenter.lot_display_label(lot) %></span>
                       <% end %>
+                      <%= collapsible_toggle_button(align: :left) %>
                     </span>
                   </div>
                 </div>

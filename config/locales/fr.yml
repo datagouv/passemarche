@@ -147,6 +147,9 @@ fr:
       not_scanned: "info"
 
   shared:
+    collapsible_lots:
+      show_more: "Voir plus"
+      show_less: "Voir moins"
     subcategory_labels:
       market_information: "Informations du marché"
     source_badge:

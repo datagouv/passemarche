@@ -67,7 +67,11 @@
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody data-controller="<%= @presenter.lots_for_config.size > 10 ? 'collapsible-rows' : '' %>"
+                 data-collapsible-rows-threshold-value="10"
+                 data-collapsible-rows-colspan-value="3"
+                 data-collapsible-rows-show-more-label-value="<%= t('shared.collapsible_lots.show_more') %>"
+                 data-collapsible-rows-show-less-label-value="<%= t('shared.collapsible_lots.show_less') %>">
             <% @presenter.lots_for_config.each do |lot| %>
               <%= render 'buyer/public_markets/lot_row', lot: lot %>
             <% end %>
