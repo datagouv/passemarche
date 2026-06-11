@@ -56,6 +56,10 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+    patch 'public_markets/:identifier/lots',
+      to: 'lots#update_types',
+      as: :lot_types
+
     resources :public_markets, param: :identifier, only: [] do
       member do
         get ':id', to: 'public_markets#show', as: :step

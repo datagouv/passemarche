@@ -44,6 +44,15 @@ class PublicMarket < ApplicationRecord
     market_type_codes.any?('defense')
   end
 
+  def update_lot_types(lot_ids, market_type)
+    transaction do
+      lots.where(id: lot_ids).each do |lot|
+        effective_type = lot.platform_market_type == market_type ? nil : market_type
+        lot.update!(market_type: effective_type)
+      end
+    end
+  end
+
   def add_market_attributes(new_attributes)
     all_attributes = (market_attributes.to_a + Array(new_attributes)).uniq
     self.market_attributes = all_attributes

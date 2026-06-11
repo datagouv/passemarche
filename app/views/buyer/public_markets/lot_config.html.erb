@@ -1,4 +1,11 @@
 <% content_for :title, "#{@public_market.editor.name} - #{t('buyer.public_markets.lot_config.title')}" %>
+
+<h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.lot_config.title') %></h1>
+<p class="fr-text--lg fr-mb-2w"><%= t('buyer.public_markets.lot_config.subtitle') %></p>
+<% if (banner_text = @presenter.platform_type_banner_text) %>
+  <%= render 'shared/notice', notice_text: banner_text %>
+<% end %>
+
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12 fr-col-md-4">
     <div class="fr-mb-3w fr-background-alt--grey" style="padding: 20px;">
@@ -30,52 +37,73 @@
   </div>
 
   <div class="fr-col-12 fr-col-md-8">
-    <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.lot_config.title') %></h1>
-    <p class="fr-text--lg fr-mb-4w"><%= t('buyer.public_markets.lot_config.subtitle') %></p>
     <% lot_limit_errors = @public_market.errors[:lot_limit] %>
     <%= form_with url: wizard_path, method: :put, local: true, data: { turbo: false } do |form| %>
-      <div class="fr-mb-5w">
+      <div class="fr-mb-5w"
+           data-controller="lot-type-picker"
+           data-lot-type-picker-update-url-value="<%= buyer_lot_types_path(@public_market.identifier) %>">
         <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lots_section_title') %></h2>
-        <p class="fr-text--sm fr-text--mention fr-mb-3w">
+        <p class="fr-text--sm fr-text--mention fr-mb-2w">
           <%= t('buyer.public_markets.lot_config.lots_section_subtitle') %>
         </p>
-        <% if (banner_text = @presenter.platform_type_banner_text) %>
-          <%= render 'shared/notice', notice_text: banner_text %>
-        <% end %>
-        <div class="fr-table fr-mb-0">
-          <div class="fr-table__wrapper">
-            <div class="fr-table__container">
-              <div class="fr-table__content">
-                <table>
-                  <thead>
-                    <tr>
-                      <th scope="col" style="width: 3rem;"></th>
-                      <th scope="col"><%= t('buyer.shared.lot_name') %></th>
-                      <th scope="col"><%= t('buyer.shared.market_type_short') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @presenter.lots_for_config.each do |lot| %>
-                      <tr>
-                        <td style="width: 3rem; text-align: center; vertical-align: middle;">
-                          <%= label_tag "lot_#{lot.id}", class: 'fr-sr-only' do %>
-                            <%= t('buyer.public_markets.lot_config.select_lot', name: lot.name) %>
-                          <% end %>
-                          <%= check_box_tag 'selected_lot_ids[]', lot.id, false,
-                                id: "lot_#{lot.id}",
-                                style: 'width: 1.125rem; height: 1.125rem; cursor: pointer; accent-color: var(--blue-france-sun-113-625);' %>
-                        </td>
-                        <td><%= lot.name %></td>
-                        <td><%= render 'buyer/public_markets/lot_type_badge', lot: lot %></td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid var(--border-default-grey);">
+          <thead>
+            <tr style="background: var(--background-alt-grey);">
+              <th scope="col" style="width: 3rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-default-grey); border-right: 1px solid var(--border-default-grey);"></th>
+              <th scope="col" style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-default-grey); text-align: left; font-weight: bold;">
+                <%= t('buyer.public_markets.lot_config.column_lot') %>
+              </th>
+              <th scope="col" style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-default-grey); text-align: left; font-weight: bold;">
+                <%= t('buyer.shared.market_type_short') %>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @presenter.lots_for_config.each do |lot| %>
+              <%= render 'buyer/public_markets/lot_row', lot: lot %>
+            <% end %>
+          </tbody>
+        </table>
+
+        <div data-lot-type-picker-target="panel"
+             style="display: none; border: 1px solid var(--border-default-grey); padding: 2.5rem; margin-top: 1rem; background-color: #F5F5FE;">
+          <p class="fr-text--md fr-text--bold fr-mb-2w">
+            <%= t('buyer.public_markets.lot_config.type_picker_title') %>
+          </p>
+          <% picker_market_types = @presenter.picker_market_types %>
+          <div style="display: flex; gap: 1rem; align-items: stretch; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <% [['works', 'icon-travaux-only.svg'], ['services', 'icon-services-only.svg'], ['supplies', 'icon-fournitures-only.svg']].each do |code, icon| %>
+              <% market_type = picker_market_types[code] %>
+              <% next unless market_type %>
+              <% bg = ApplicationHelper::MARKET_TYPE_CONFIGS.dig(code, :bg) %>
+              <div style="display: flex; align-items: stretch; border: 1px solid var(--border-default-grey); overflow: hidden; flex: 1; min-width: 160px;">
+                <label style="display: flex; align-items: center; gap: 0.75rem; padding: 12px 16px; cursor: pointer; background-color: #ffffff; flex: 1;">
+                  <%= radio_button_tag :market_type_id, market_type.id, false,
+                        id: "market_type_#{code}",
+                        style: 'width: 1.125rem; height: 1.125rem; cursor: pointer; accent-color: var(--blue-france-sun-113-625); flex-shrink: 0;',
+                        data: { 'lot-type-picker-target': 'radio' } %>
+                  <span style="white-space: nowrap;"><%= t("market_types.#{code}") %></span>
+                </label>
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background-color: <%= bg %>; flex-shrink: 0; padding: 16px;">
+                  <%= image_tag icon, alt: '', aria: { hidden: true }, width: 24, height: 24 %>
+                </span>
               </div>
-            </div>
+            <% end %>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+            <%= button_tag t('buyer.public_markets.lot_config.type_picker_cancel'),
+                  type: 'button',
+                  class: 'fr-btn fr-btn--secondary',
+                  style: 'background-color: #ffffff;',
+                  data: { action: 'lot-type-picker#cancel' } %>
+            <%= button_tag t('buyer.public_markets.lot_config.type_picker_apply'),
+                  type: 'button',
+                  class: 'fr-btn fr-icon-check-line fr-btn--icon-right',
+                  data: { action: 'lot-type-picker#apply' } %>
           </div>
         </div>
       </div>
+
       <div class="fr-mb-5w" data-controller="radio-toggle">
         <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lot_limit_section_title') %></h2>
         <p class="fr-text--sm fr-text--mention fr-mb-3w">
