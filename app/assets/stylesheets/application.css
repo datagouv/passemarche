@@ -680,6 +680,19 @@
   padding: 8px 0;
 }
 
+.fr-notice--compact {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.fr-notice--compact .fr-notice__body {
+  padding-left: 0.75rem;
+}
+
+.fr-notice__title {
+  font-weight: 400;
+}
+
 .environment-banner__text {
   color: var(--grey-50-1000, #161616);
   text-align: center;
