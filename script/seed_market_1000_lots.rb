@@ -25,7 +25,7 @@ lots_data = Array.new(1000) do |i|
   location   = LOCATIONS[i % LOCATIONS.size]
   cpv_code   = type_def[:cpv_codes][i % type_def[:cpv_codes].size]
 
-  { name: "Lot #{i + 1} - #{name_base} - #{location}", type: type_def[:type], cpv_code: }
+  { name: "#{name_base} - #{location}", type: type_def[:type], cpv_code: }
 end
 
 puts "📋 #{lots_data.size} lots generated"
