@@ -95,6 +95,10 @@ class PublicMarketPresenter
     lots.any?
   end
 
+  def picker_market_types
+    @picker_market_types ||= MarketType.where(code: %w[works services supplies]).index_by(&:code)
+  end
+
   def lots_for_config
     @lots_for_config ||= @public_market.lots.ordered
       .includes(:platform_market_type, :market_type)

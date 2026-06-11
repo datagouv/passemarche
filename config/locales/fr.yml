@@ -424,8 +424,12 @@ fr:
         how_it_works_step_2: "Modifiez les types de lots si nécessaires"
         how_it_works_step_3: "Limitez le nombre de lots si nécessaire"
         how_it_works_step_4: "Passez à la configuration des candidatures"
+        column_lot: "Lot"
         select_lot: "Sélectionner le lot %{name}"
         submit: "Configurer les candidatures"
+        type_picker_title: "Affecter un type aux lots sélectionnés"
+        type_picker_apply: "Appliquer le nouveau type"
+        type_picker_cancel: "Annuler"
       form_config:
         title: "Configurez le formulaire de candidature"
         subtitle: "Configurez les pièces justificatives attendues dans le cadre de la candidature à votre marché."
