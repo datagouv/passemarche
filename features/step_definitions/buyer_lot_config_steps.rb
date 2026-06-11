@@ -68,3 +68,34 @@ end
 When('I click the edit lots button') do
   find("a[aria-label='#{I18n.t('buyer.public_markets.form_config.edit_lots_label')}']").click
 end
+
+Then('the type picker panel should be hidden') do
+  expect(find('[data-lot-type-picker-target="panel"]', visible: false)).not_to be_visible
+end
+
+Then('the type picker panel should be visible') do
+  expect(find('[data-lot-type-picker-target="panel"]', visible: false)).to be_visible
+end
+
+Given('the lots have platform type {string}') do |code|
+  market_type = MarketType.find_by!(code:)
+  public_market = PublicMarket.find_by!(identifier: @market_identifier)
+  public_market.lots.each { |lot| lot.update!(platform_market_type: market_type) }
+end
+
+When('I check the first lot checkbox') do
+  first('input[data-action*="lot-type-picker#toggle"]').check
+end
+
+When('I select the type {string} in the type picker') do |label|
+  within('[data-lot-type-picker-target="panel"]') do
+    choose label
+  end
+end
+
+Then('the first lot should have market type {string}') do |code|
+  public_market = PublicMarket.find_by!(identifier: @market_identifier)
+  first_lot = public_market.lots.ordered.first
+  expect(page).to have_css("#lot_row_#{first_lot.id}")
+  expect(first_lot.reload.market_type&.code).to eq(code)
+end

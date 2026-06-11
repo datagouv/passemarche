@@ -91,3 +91,28 @@ Feature: Buyer Lot Configuration Step
     And I should see "Formulaire de candidature à configurer"
     And I should see "Transmettre la configuration"
 
+  @buyer_lot_type_picker @javascript
+  Scenario: Le bandeau TypePicker apparaît quand un lot est sélectionné
+    When I visit the lot_config page for my public market
+    Then the type picker panel should be hidden
+    When I check the first lot checkbox
+    Then the type picker panel should be visible
+
+  @buyer_lot_type_picker @javascript
+  Scenario: L'acheteur modifie le type d'un lot sélectionné
+    Given the lots have platform type "works"
+    When I visit the lot_config page for my public market
+    And I check the first lot checkbox
+    And I select the type "Services" in the type picker
+    And I click "Appliquer le nouveau type"
+    Then the first lot should have market type "services"
+    And I should see "SERVICES"
+
+  @buyer_lot_type_picker @javascript
+  Scenario: Annuler dans le TypePicker décoche les lots et ferme le bandeau
+    When I visit the lot_config page for my public market
+    And I check the first lot checkbox
+    Then the type picker panel should be visible
+    When I click "Annuler"
+    Then the type picker panel should be hidden
+
