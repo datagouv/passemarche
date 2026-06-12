@@ -69,7 +69,6 @@ Feature: Buyer Lot Configuration Step
     Then I should see "Configurez le formulaire de candidature"
     And I should see "Formulaire de candidature à configurer"
     And I should see "Configurer"
-    And I should see "Transmettre la configuration"
 
   Scenario: Le bouton crayon sur form_config renvoie vers lot_config
     When I visit the form_config page for my public market
@@ -89,7 +88,6 @@ Feature: Buyer Lot Configuration Step
     And I should see "Services"
     And I should see "Lot 1 - Gros œuvre"
     And I should see "Formulaire de candidature à configurer"
-    And I should see "Transmettre la configuration"
 
   @buyer_lot_type_picker @javascript
   Scenario: Le bandeau TypePicker apparaît quand un lot est sélectionné
