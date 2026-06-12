@@ -406,7 +406,6 @@ fr:
         title: "Configurez le type de vos lots"
         subtitle: "Vérifiez et ajustez le type de chaque lot avant de configurer les pièces justificatives."
         lots_section_title: "Vérifiez les types transmis"
-        lots_section_subtitle: "Assurez-vous que les types transmis par la plateforme de marché sont exacts et modifiez-les si besoin."
         platform_banner_global_type: "Votre plateforme d'achat nous a transmis une typologie de marché pour les lots, si le type d'un lot est erroné vous pouvez le sélectionner pour lui appliquer la bonne typologie (travaux, services, fournitures)"
         platform_banner_per_lot_type: "Votre plateforme d'achat nous a transmis une typologie de marché pour les lots, si le type d'un lot est erroné vous pouvez le sélectionner pour lui appliquer la bonne typologie (travaux, services, fournitures)"
         platform_source: "PLATEFORME"
