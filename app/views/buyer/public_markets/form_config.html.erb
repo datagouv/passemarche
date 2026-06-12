@@ -37,7 +37,7 @@
         <% @presenter.lots_for_config.each do |lot| %>
           <span class="fr-tag fr-tag--sm">
             <% type_label = @presenter.lot_effective_type_label(lot) %>
-            <% lot_label = "#{t('buyer.public_markets.lot_config.lot_number', number: lot.position)} - #{lot.name}" %>
+            <% lot_label = t('buyer.public_markets.lot_config.lot_number', number: lot.position) %>
             <%= type_label ? "#{lot_label} - #{type_label.downcase}" : lot_label %>
           </span>
         <% end %>

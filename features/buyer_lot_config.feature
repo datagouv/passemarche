@@ -86,7 +86,7 @@ Feature: Buyer Lot Configuration Step
     When I visit the form_config page for my public market
     Then I should see "Travaux"
     And I should see "Services"
-    And I should see "Lot 1 - Gros œuvre"
+    And I should see "Lot 1 - travaux"
     And I should see "Formulaire de candidature à configurer"
 
   @buyer_lot_type_picker @javascript

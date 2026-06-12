@@ -3,6 +3,7 @@
 class MarketApplicationPresenter
   include SidemenuHelper
   include MarketPresenterConcern
+  include LotLabelConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
@@ -159,15 +160,6 @@ class MarketApplicationPresenter
 
   def form_started?
     responses_by_attribute_id.any?
-  end
-
-  def lot_type_label(lot)
-    code = lot_type_code(lot)
-    code.present? ? I18n.t("market_types.#{code}", default: code.humanize) : nil
-  end
-
-  def lot_type_code(lot)
-    lot.effective_market_type&.code || public_market.market_type_codes.first
   end
 
   def cta_translation_key
