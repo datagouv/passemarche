@@ -101,9 +101,7 @@ export default class extends Controller {
           const span = document.createElement("span")
           span.className = "fr-tag"
           span.style.background = "white"
-          const name = cb.dataset.lotName || ""
-          const type = cb.dataset.lotType
-          span.textContent = type ? `${name} - ${type}` : name
+          span.textContent = cb.dataset.lotName || ""
           return span
         })
       )

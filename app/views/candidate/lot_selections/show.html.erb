@@ -108,8 +108,7 @@
                           data: {
                             lot_selection_target: "checkbox",
                             action: "change->lot-selection#toggle",
-                            lot_name: lot.name,
-                            lot_type: @presenter.lot_type_label(lot)
+                            lot_name: @presenter.lot_display_label(lot)
                           } %>
                     <label class="fr-label" for="lot_<%= lot.id %>">
                       <%= lot.name %>
@@ -173,8 +172,7 @@
           <div class="fr-tags-group fr-tags-group--market-types">
             <% @presenter.selected_lots.each do |lot| %>
               <% type_label = @presenter.lot_type_label(lot) %>
-              <%= market_type_badge_tag(nil, type_label ? "#{lot.name} - #{type_label}" : lot.name,
-                    background: 'white') %>
+              <%= market_type_badge_tag(nil, @presenter.lot_display_label(lot), background: 'white') %>
             <% end %>
           </div>
         </div>
