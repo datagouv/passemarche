@@ -1,19 +1,37 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkbox", "panel", "radio"]
+  static targets = ["checkbox", "checkboxColumn", "panel", "radio", "editButton", "toggleAllButton"]
   static values = { updateUrl: String }
 
+  enableEdit() {
+    this.checkboxColumnTargets.forEach(el => { el.style.display = "" })
+    this.editButtonTarget.style.display = "none"
+    this.toggleAllButtonTarget.style.display = ""
+    this.panelTarget.style.display = "block"
+  }
+
   toggle() {
-    const anyChecked = this.checkboxTargets.some(cb => cb.checked)
-    this.panelTarget.style.display = anyChecked ? "block" : "none"
-    if (!anyChecked) this.#resetRadios()
+    const allChecked = this.checkboxTargets.every(cb => cb.checked)
+    this.toggleAllButtonTarget.textContent = allChecked
+      ? this.toggleAllButtonTarget.dataset.deselectText
+      : this.toggleAllButtonTarget.dataset.selectText
+  }
+
+  toggleAll() {
+    const allChecked = this.checkboxTargets.every(cb => cb.checked)
+    this.checkboxTargets.forEach(cb => { cb.checked = !allChecked })
+    this.toggle()
   }
 
   cancel() {
     this.checkboxTargets.forEach(cb => { cb.checked = false })
     this.#resetRadios()
     this.panelTarget.style.display = "none"
+    this.checkboxColumnTargets.forEach(el => { el.style.display = "none" })
+    this.editButtonTarget.style.display = ""
+    this.toggleAllButtonTarget.style.display = "none"
+    this.toggleAllButtonTarget.textContent = this.toggleAllButtonTarget.dataset.selectText
   }
 
   async apply() {
@@ -23,6 +41,8 @@ export default class extends Controller {
     const lotIds = this.checkboxTargets
       .filter(cb => cb.checked)
       .map(cb => cb.value)
+
+    if (lotIds.length === 0) return
 
     const body = new FormData()
     body.append("market_type_id", selectedRadio.value)

@@ -77,6 +77,14 @@ Then('the type picker panel should be visible') do
   expect(find('[data-lot-type-picker-target="panel"]', visible: false)).to be_visible
 end
 
+Then('the lot checkboxes should be hidden') do
+  expect(first('[data-lot-type-picker-target="checkboxColumn"]', visible: false)).not_to be_visible
+end
+
+Then('the lot checkboxes should be visible') do
+  expect(first('[data-lot-type-picker-target="checkboxColumn"]', visible: false)).to be_visible
+end
+
 Given('the lots have platform type {string}') do |code|
   market_type = MarketType.find_by!(code:)
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
