@@ -743,6 +743,47 @@
   border-bottom-color: var(--success-main-525, #18753c);
 }
 
+/* Lot type configuration table */
+.lot-config-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-default-grey);
+}
+
+.lot-config-table thead tr {
+  background: var(--background-alt-grey);
+}
+
+.lot-config-table th,
+.lot-config-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-default-grey);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.lot-config-table th {
+  font-weight: bold;
+}
+
+.lot-config-table__selection-col {
+  width: 3rem;
+  text-align: center;
+  background-color: var(--background-alt-grey);
+  border-right: 1px solid var(--border-default-grey);
+}
+
+.lot-config-table__type-col {
+  min-width: 12rem;
+}
+
+.lot-config-table__type-col-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* Market type badges */
 .market-type-badge {
   display: inline-flex;

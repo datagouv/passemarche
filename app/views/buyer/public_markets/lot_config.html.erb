@@ -42,19 +42,28 @@
       <div class="fr-mb-5w"
            data-controller="lot-type-picker"
            data-lot-type-picker-update-url-value="<%= buyer_lot_types_path(@public_market.identifier) %>">
-        <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lots_section_title') %></h2>
-        <p class="fr-text--sm fr-text--mention fr-mb-2w">
-          <%= t('buyer.public_markets.lot_config.lots_section_subtitle') %>
-        </p>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid var(--border-default-grey);">
+        <table class="lot-config-table">
           <thead>
-            <tr style="background: var(--background-alt-grey);">
-              <th scope="col" style="width: 3rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-default-grey); border-right: 1px solid var(--border-default-grey);"></th>
-              <th scope="col" style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-default-grey); text-align: left; font-weight: bold;">
+            <tr>
+              <th scope="col"
+                  class="lot-config-table__selection-col"
+                  aria-label="<%= t('buyer.public_markets.lot_config.checkbox_column_label') %>"
+                  data-lot-type-picker-target="checkboxColumn"
+                  style="display: none;"></th>
+              <th scope="col">
                 <%= t('buyer.public_markets.lot_config.column_lot') %>
               </th>
-              <th scope="col" style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-default-grey); text-align: left; font-weight: bold;">
-                <%= t('buyer.shared.market_type_short') %>
+              <th scope="col" class="lot-config-table__type-col">
+                <div class="lot-config-table__type-col-inner">
+                  <span><%= t('buyer.shared.market_type_short') %></span>
+                  <%= render 'shared/select_all_button',
+                        action: 'lot-type-picker#toggleAll',
+                        target_controller: 'lot-type-picker',
+                        target_name: 'toggleAllButton',
+                        select_text: t('buyer.public_markets.lot_config.select_all'),
+                        deselect_text: t('buyer.public_markets.lot_config.deselect_all'),
+                        display_none: true %>
+                </div>
               </th>
             </tr>
           </thead>
@@ -64,6 +73,11 @@
             <% end %>
           </tbody>
         </table>
+
+        <%= button_tag t('buyer.public_markets.lot_config.edit_lot_types_button'),
+              type: 'button',
+              class: 'fr-btn fr-btn--secondary fr-btn--sm fr-icon-edit-line fr-btn--icon-left fr-mt-2w',
+              data: { action: 'lot-type-picker#enableEdit', 'lot-type-picker-target': 'editButton' } %>
 
         <div data-lot-type-picker-target="panel"
              style="display: none; border: 1px solid var(--border-default-grey); padding: 2.5rem; margin-top: 1rem; background-color: #F5F5FE;">

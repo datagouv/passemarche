@@ -88,15 +88,13 @@
                     </p>
                   </div>
                 </div>
-                <button type="button"
-                        class="fr-link fr-text--xs"
-                        style="text-decoration: underline;"
-                        data-action="lot-selection#selectAll"
-                        data-lot-selection-target="selectAllButton"
-                        data-select-text="<%= t('candidate.lot_selection.select_all') %>"
-                        data-deselect-text="<%= t('candidate.lot_selection.deselect_all') %>">
-                  <%= t('candidate.lot_selection.select_all') %>
-                </button>
+                <%= render 'shared/select_all_button',
+                      action: 'lot-selection#selectAll',
+                      target_controller: 'lot-selection',
+                      target_name: 'selectAllButton',
+                      select_text: t('candidate.lot_selection.select_all'),
+                      deselect_text: t('candidate.lot_selection.deselect_all'),
+                      display_none: false %>
               </div>
 
               <div class="fr-px-3w fr-py-2w" style="display: flex; flex-direction: column; gap: 1rem;">
