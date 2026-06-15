@@ -239,6 +239,70 @@ Content-Type: application/json
 }
 ```
 
+#### Mettre à jour la DLRO d'un Marché
+
+Mise à jour de la date limite de remise des offres (DLRO) d'un marché existant. Chaque modification est historisée (ancienne valeur, nouvelle valeur, horodatage).
+
+**`PATCH /api/v1/public_markets/{identifier}`**
+
+**En-têtes** :
+
+```http
+Authorization: Bearer {access_token}
+Content-Type: application/json
+```
+
+**Paramètres de chemin**
+
+| Paramètre    | Type   | Description                                   |
+| ------------ | ------ | --------------------------------------------- |
+| `identifier` | string | Identifiant du marché (format VR-YYYY-XXXXXX) |
+
+**Corps de Requête** :
+
+```json
+{
+  "public_market": {
+    "deadline": "2025-03-31T17:00:00Z"
+  }
+}
+```
+
+**Paramètres**
+
+| Champ      | Type     | Requis | Description             | Contraintes       |
+| ---------- | -------- | ------ | ----------------------- | ----------------- |
+| `deadline` | datetime | Oui    | Nouvelle date limite    | Format ISO 8601   |
+
+**Réponse de Succès (200)**
+
+```json
+{
+  "identifier": "VR-2024-A1B2C3D4E5F6",
+  "deadline": "2025-03-31T17:00:00Z"
+}
+```
+
+**Réponses d'Erreur**
+
+**404 - Marché non trouvé ou n'appartient pas à l'éditeur** :
+
+```json
+{
+  "error": "Resource not found"
+}
+```
+
+**422 - Deadline manquante** :
+
+```json
+{
+  "errors": {
+    "deadline": ["doit être rempli(e)"]
+  }
+}
+```
+
 ***
 
 ### Gestion des Candidatures

@@ -179,6 +179,40 @@ Then('the configuration URL should point to the buyer configuration page') do
   expect(configuration_url).to end_with("/buyer/public_markets/#{identifier}/setup")
 end
 
+Given('a public market exists for the current editor with identifier {string}') do |identifier|
+  market_type = MarketType.find_or_create_by!(code: 'supplies')
+  @existing_market = @editor.public_markets.create!(
+    identifier:,
+    name: 'Marché de test',
+    deadline: 1.month.from_now,
+    siret: '13002526500013',
+    market_type_codes: [market_type.code]
+  )
+end
+
+When('I update the deadline of market {string} to {string}') do |identifier, new_deadline|
+  token = @access_token || @previous_token
+  header 'Authorization', "Bearer #{token}" if token
+  header 'Content-Type', 'application/json'
+
+  patch "/api/v1/public_markets/#{identifier}",
+    { public_market: { deadline: new_deadline } }.to_json
+
+  @response_status = last_response.status
+  @response_body = JSON.parse(last_response.body) if last_response.body.present?
+rescue JSON::ParserError
+  @response_body = nil
+end
+
+Then('the response should contain the updated deadline {string}') do |expected_deadline|
+  expect(@response_body['deadline']).to eq(expected_deadline)
+end
+
+Then('the market {string} should have deadline {string} in the database') do |identifier, expected_deadline|
+  market = PublicMarket.find_by!(identifier:)
+  expect(market.deadline.utc.iso8601).to eq(expected_deadline)
+end
+
 When('I create a defense_industry public market with the following details:') do |table|
   @public_market_params = table.rows_hash
 

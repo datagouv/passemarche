@@ -421,4 +421,110 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
   end
+
+  describe 'PATCH /api/v1/public_markets/:identifier' do
+    let(:new_deadline) { 2.months.from_now.utc.iso8601 }
+    let(:public_market) { create(:public_market, editor:) }
+
+    context 'with valid OAuth token and valid deadline' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the identifier and updated deadline' do
+        json_response = response.parsed_body
+        expect(json_response['identifier']).to eq(public_market.identifier)
+        expect(json_response['deadline']).to eq(new_deadline)
+      end
+
+      it 'updates the deadline in the database' do
+        expect(public_market.reload.deadline.utc.iso8601).to eq(new_deadline)
+      end
+
+      it 'creates a PaperTrail version for the update' do
+        versions = public_market.reload.versions
+        expect(versions.map(&:event)).to include('update')
+      end
+    end
+
+    context 'with missing deadline' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: '' } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns deadline validation error' do
+        json_response = response.parsed_body
+        expect(json_response['errors']).to have_key('deadline')
+      end
+    end
+
+    context 'without OAuth token' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}"
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with unknown identifier' do
+      before do
+        patch '/api/v1/public_markets/UNKNOWN-ID',
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'with a market belonging to another editor' do
+      let(:other_editor) do
+        Editor.create!(
+          name: 'Other Editor',
+          client_id: 'other_client_id',
+          client_secret: 'other_client_secret',
+          authorized: true,
+          active: true
+        )
+      end
+      let(:other_market) { create(:public_market, editor: other_editor) }
+
+      before do
+        patch "/api/v1/public_markets/#{other_market.identifier}",
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end
