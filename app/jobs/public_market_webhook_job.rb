@@ -14,14 +14,27 @@ class PublicMarketWebhookJob < WebhookJob
     {
       event: 'market.completed',
       timestamp: entity.completed_at.iso8601,
-      market: {
-        identifier: entity.identifier,
-        name: entity.name,
-        lots: entity.lots.ordered.map { |lot| { id: lot.id, name: lot.name } },
-        market_type_codes: entity.market_type_codes,
-        completed_at: entity.completed_at.iso8601,
-        field_keys: entity.market_attributes.pluck(:key)
-      }
+      market: market_payload(entity)
     }
+  end
+
+  def market_payload(entity)
+    {
+      identifier: entity.identifier,
+      name: entity.name,
+      lots: entity.lots.ordered.map { |lot| lot_payload(lot) },
+      market_type_codes: entity.market_type_codes,
+      completed_at: entity.completed_at.iso8601,
+      field_keys: entity.market_attributes.pluck(:key)
+    }
+  end
+
+  def lot_payload(lot)
+    {
+      id: lot.id,
+      name: lot.name,
+      cpv_code: lot.cpv_code,
+      market_type_code: lot.effective_market_type&.code
+    }.compact
   end
 end

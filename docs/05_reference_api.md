@@ -157,8 +157,8 @@ Content-Type: application/json
   "public_market": {
     "name": "Fourniture de matériel informatique",
     "lots": [
-      {"name": "Lot 1 - Ordinateurs portables"},
-      {"name": "Lot 2 - Serveurs et infrastructure"}
+      {"name": "Lot 1 - Ordinateurs portables", "cpv_code": "30213100-6", "lot_type_code": "supplies"},
+      {"name": "Lot 2 - Serveurs et infrastructure", "lot_type_code": "services"}
     ],
     "deadline": "2024-12-31T23:59:59Z",
     "siret": "13002526500013",
@@ -177,6 +177,14 @@ Content-Type: application/json
 | `siret`             | string   | Oui    | SIRET de l'organisation publique (14 chiffres, validation Luhn) | Exactement 14 chiffres numériques |
 | `market_type_codes` | array    | Oui    | Types de marché                                                 | Au moins 1 élément                |
 | `lots`              | array    | Non    | Liste des lots du marché                                        | Chaque lot requiert un `name`     |
+
+**Propriétés d'un lot**
+
+| Champ      | Type   | Requis | Description          | Contraintes                              |
+| ---------- | ------ | ------ | -------------------- | ---------------------------------------- |
+| `name`          | string | Oui    | Nom du lot              | Max 255 caractères                                 |
+| `cpv_code`      | string | Non    | Code CPV du lot         | Format `XXXXXXXX-X` (8 chiffres, tiret, 1 chiffre) |
+| `lot_type_code` | string | Non    | Type de marché du lot   | `supplies`, `services`, `works` — si absent, hérite du premier `market_type_codes` |
 | `provider_user_id`  | string   | Non    | Identifiant de l'utilisateur côté éditeur (acheteur)            | Max 255 caractères                |
 
 **Types de Marché Valides**
