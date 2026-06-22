@@ -10,6 +10,6 @@
           data: { action: 'change->lot-type-picker#toggle', 'lot-type-picker-target': 'checkbox' },
           style: 'width: 1.125rem; height: 1.125rem; cursor: pointer; accent-color: var(--blue-france-sun-113-625);' %>
   </td>
-  <td><%= t('buyer.public_markets.lot_config.lot_number', number: lot.position) %></td>
+  <td><%= t('buyer.public_markets.lot_config.lot_number', number: lot.position) %> - <%= lot.name %></td>
   <td><%= render 'buyer/public_markets/lot_type_badge', lot: lot %></td>
 </tr>
