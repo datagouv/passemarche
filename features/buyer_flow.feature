@@ -19,7 +19,7 @@ Feature: Buyer Configuration Flow
     When I visit the setup page for my public market
     Then I should see "Bienvenue,"
     And I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    And I should see "1 lot"
 
     When I click on "Débuter l'activation de"
     Then I should see "Configurez le type de vos lots"
@@ -39,7 +39,7 @@ Feature: Buyer Configuration Flow
   Scenario: Vérification de la cohérence des informations du marché à travers les étapes
     When I visit the setup page for my public market
     Then I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    And I should see "1 lot"
     And I should see "Fournitures"
 
     When I click on "Débuter l'activation de"

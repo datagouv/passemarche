@@ -347,6 +347,10 @@ fr:
       market_info_title: "Les informations du marché"
       market_name: "Nom du marché"
       lot_name: "Nom des lots"
+      lots_market: "Les lots du marché"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
       deadline: "Date et heure limite de remise des plis"
       deadline_short: "Date limite"
       market_type: "Typologie de marché"
