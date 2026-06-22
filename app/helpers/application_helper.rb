@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  def current_candidate
+    User.find_by(id: session[:user_id]) if respond_to?(:session, true)
+  end
+
   def format_paris_time(datetime, format = '%d/%m/%Y à %H:%M')
     return '-' if datetime.nil?
 
