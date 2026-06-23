@@ -709,3 +709,33 @@ test_connectivity() {
 ***
 
 Ces scripts sont fournis comme utilitaires complémentaires. Adaptez-les selon vos besoins spécifiques et votre environnement de production.
+
+***
+
+## Scripts internes — Test et QA
+
+### Créer un marché de test avec 1000 lots
+
+Simule un marché créé via l'API avec 1000 lots typés (fournitures, services, travaux). Utile pour tester l'UI de sélection de lots sous charge.
+
+**Disponible en :** development, sandbox, staging uniquement.
+
+```bash
+bin/rails runner script/seed_market_1000_lots.rb
+```
+
+Le script :
+- Crée un nouveau marché `[TEST] Marché 1000 lots` à chaque exécution
+- Génère 1000 lots avec `platform_market_type` rempli (comme un vrai marché créé via API)
+- Enregistre le marché dans la base SQLite du fake editor (dashboard acheteur)
+- Affiche l'identifier à utiliser dans le fake editor
+
+**Exemple de sortie :**
+```
+📋 1000 lots generated
+✅ Market: [TEST] Marché 1000 lots (VR-2026-00XXXXX)
+✅ 1000 lots created
+✅ Market registered in fake editor DB
+
+🎯 Identifier : VR-2026-00XXXXX
+```
