@@ -38,11 +38,9 @@
            data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>"
            style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: flex-start;">
         <% @presenter.lots_for_config.each do |lot| %>
-          <span class="fr-tag fr-tag--sm" data-collapsible-list-target="item">
-            <% type_label = @presenter.lot_effective_type_label(lot) %>
-            <% lot_label = t('buyer.public_markets.lot_config.lot_number', number: lot.position) %>
-            <%= type_label ? "#{lot_label} - #{type_label.downcase}" : lot_label %>
-          </span>
+          <% type_label = @presenter.lot_effective_type_label(lot) %>
+          <% lot_label = t('buyer.public_markets.lot_config.lot_number', number: lot.position) %>
+          <%= market_type_badge_tag(nil, type_label ? "#{lot_label} - #{type_label.downcase}" : lot_label, background: 'white') %>
         <% end %>
         <%= collapsible_toggle_button %>
       </div>
@@ -50,7 +48,7 @@
   </div>
 
   <div class="fr-col-12 fr-col-md-8">
-    <div class="fr-background-alt--grey fr-p-4w fr-mb-3w">
+    <div class="fr-border-default--grey fr-px-3w fr-py-2w fr-mb-3w">
       <div class="fr-mb-2w" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
         <% @presenter.lots_by_effective_type.each_key do |market_type| %>
           <% if market_type %>
