@@ -20,7 +20,7 @@
       <% if @presenter.lots? %>
         <div class="fr-mb-2w">
           <h3 class="fr-text--md fr-mb-0 fr-text--bold"><%= t('buyer.shared.lots_market') %></h3>
-          <p class="fr-text--sm fr-mb-0"><%= t('buyer.shared.lots_count', count: @presenter.lots.count) %></p>
+          <p class="fr-text--sm fr-mb-0 fr-text--mention-grey"><%= t('buyer.shared.lots_count', count: @presenter.lots.size) %></p>
         </div>
       <% end %>
 

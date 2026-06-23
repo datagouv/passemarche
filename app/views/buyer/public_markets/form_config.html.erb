@@ -33,14 +33,18 @@
         <% end %>
       </div>
       <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.75rem 0;">
-      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+      <div data-controller="collapsible-list"
+           data-collapsible-list-show-more-value="<%= t('shared.collapsible_lots.show_more') %>"
+           data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>"
+           style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: flex-start;">
         <% @presenter.lots_for_config.each do |lot| %>
-          <span class="fr-tag fr-tag--sm">
+          <span class="fr-tag fr-tag--sm" data-collapsible-list-target="item">
             <% type_label = @presenter.lot_effective_type_label(lot) %>
             <% lot_label = t('buyer.public_markets.lot_config.lot_number', number: lot.position) %>
             <%= type_label ? "#{lot_label} - #{type_label.downcase}" : lot_label %>
           </span>
         <% end %>
+        <%= collapsible_toggle_button %>
       </div>
     </div>
   </div>

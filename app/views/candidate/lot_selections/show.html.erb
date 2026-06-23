@@ -10,7 +10,9 @@
   <div class="fr-container fr-py-6w"
        data-controller="lot-selection"
        data-lot-selection-limit-value="<%= public_market.lot_limit.to_i %>"
-       data-lot-selection-storage-key-value="lot-selection-<%= @market_application.identifier %>">
+       data-lot-selection-storage-key-value="lot-selection-<%= @market_application.identifier %>"
+       data-lot-selection-show-more-label="<%= t('shared.collapsible_lots.show_more') %>"
+       data-lot-selection-show-less-label="<%= t('shared.collapsible_lots.show_less') %>">
     <h1 class="fr-h3 fr-mb-1w"><%= t('candidate.lot_selection.title') %></h1>
     <p class="fr-text--sm fr-text--mention-grey fr-mb-3w">
       <%= t('candidate.lot_selection.subtitle') %>
@@ -25,6 +27,7 @@
         <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
           <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
             <%= t('candidate.lot_selection.selected_lots_title') %>
+            <span data-lot-selection-target="selectedLotsCount" style="font-weight: normal; color: var(--text-mention-grey);"></span>
           </h2>
           <hr class="fr-my-1w" style="border: none; border-top: 1px solid var(--border-default-grey);">
           <p class="fr-text--sm fr-text--mention-grey fr-mb-0" data-lot-selection-target="noLotsText">
@@ -88,18 +91,25 @@
                     </p>
                   </div>
                 </div>
-                <%= render 'shared/select_all_button',
-                      action: 'lot-selection#selectAll',
-                      target_controller: 'lot-selection',
-                      target_name: 'selectAllButton',
-                      select_text: t('candidate.lot_selection.select_all'),
-                      deselect_text: t('candidate.lot_selection.deselect_all'),
-                      display_none: false %>
+                <button type="button"
+                        class="fr-link fr-text--xs"
+                        style="text-decoration: underline;"
+                        data-action="lot-selection#selectAll"
+                        data-lot-selection-target="selectAllButton"
+                        data-select-text="<%= t('candidate.lot_selection.select_all') %>"
+                        data-deselect-text="<%= t('candidate.lot_selection.deselect_all') %>">
+                  <%= t('candidate.lot_selection.select_all') %>
+                </button>
               </div>
 
-              <div class="fr-px-3w fr-py-2w" style="display: flex; flex-direction: column; gap: 1rem;">
-                <% type_lots.each_with_index do |lot, index| %>
-                  <div class="fr-checkbox-group" style="display: flex; align-items: center;" data-lot-selection-target="checkboxGroup">
+              <div class="fr-px-3w fr-py-2w"
+                   style="display: flex; flex-direction: column; gap: 1rem;"
+                   data-controller="collapsible-list"
+                   data-collapsible-list-threshold-value="10"
+                   data-collapsible-list-show-more-value="<%= t('shared.collapsible_lots.show_more') %>"
+                   data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>">
+                <% type_lots.each do |lot| %>
+                  <div class="fr-checkbox-group" style="display: flex; align-items: center;" data-lot-selection-target="checkboxGroup" data-collapsible-list-target="item">
                     <%= check_box_tag "market_application[lot_ids][]",
                           lot.id,
                           @market_application.lot_ids.include?(lot.id),
@@ -108,7 +118,8 @@
                           data: {
                             lot_selection_target: "checkbox",
                             action: "change->lot-selection#toggle",
-                            lot_name: @presenter.lot_display_label(lot)
+                            lot_name: t('candidate.lot_selection.lot_number', number: lot.position),
+                            lot_type: @presenter.lot_type_label(lot)
                           } %>
                     <label class="fr-label" for="lot_<%= lot.id %>">
                       <%= lot.name %>
@@ -118,6 +129,7 @@
                     </label>
                   </div>
                 <% end %>
+                <%= collapsible_toggle_button(align: :left) %>
               </div>
             </div>
           <% end %>
@@ -161,6 +173,7 @@
           <div class="fr-mb-1w" style="display: flex; justify-content: space-between; align-items: center;">
             <h2 class="fr-text--bold fr-text--md fr-mb-0">
               <%= t('candidate.lot_selection.lots_list_title') %>
+              <span style="font-weight: normal; color: var(--text-mention-grey);">(<%= @presenter.selected_lots.size %>)</span>
             </h2>
             <%= link_to lot_selection_candidate_market_application_path(@market_application.identifier, edit: 1),
                   class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-fill",
@@ -169,11 +182,17 @@
             <% end %>
           </div>
           <hr class="fr-hr fr-my-1w">
-          <div class="fr-tags-group fr-tags-group--market-types">
+          <div class="fr-tags-group fr-tags-group--market-types"
+               data-controller="collapsible-list"
+               data-collapsible-list-show-more-value="<%= t('shared.collapsible_lots.show_more') %>"
+               data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>">
             <% @presenter.selected_lots.each do |lot| %>
-              <% type_label = @presenter.lot_type_label(lot) %>
-              <%= market_type_badge_tag(nil, @presenter.lot_display_label(lot), background: 'white') %>
+              <span data-collapsible-list-target="item">
+                <%= market_type_badge_tag(nil, @presenter.lot_display_label(lot),
+                      background: 'white') %>
+              </span>
             <% end %>
+            <%= collapsible_toggle_button(align: :left) %>
           </div>
         </div>
 

@@ -57,4 +57,15 @@ module ApplicationHelper
       content_tag(:span, label, class: 'market-type-badge', style:)
     end
   end
+
+  def collapsible_toggle_button(align: :center)
+    button = tag.button(
+      type: 'button',
+      hidden: true,
+      class: 'collapsible-list__toggle',
+      data: { collapsible_list_target: 'toggle', action: 'collapsible-list#toggle' }
+    )
+    wrapper_class = align == :left ? 'collapsible-list__toggle-wrapper collapsible-list__toggle-wrapper--left' : 'collapsible-list__toggle-wrapper'
+    content_tag(:div, button, class: wrapper_class)
+  end
 end

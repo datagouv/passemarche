@@ -3,10 +3,14 @@
              title: t('shared.application_lots_summary.title'),
              background: "fr-background-alt--grey" %>
   <div class="fr-card__body fr-mt-1w fr-mb-1w">
-    <ul class="fr-tags-group fr-mb-1w">
+    <ul class="fr-tags-group fr-mb-1w"
+        data-controller="collapsible-list"
+        data-collapsible-list-show-more-value="<%= t('shared.collapsible_lots.show_more') %>"
+        data-collapsible-list-show-less-value="<%= t('shared.collapsible_lots.show_less') %>">
       <% presenter.selected_lots.each do |lot| %>
-        <li><span class="fr-tag"><%= t('shared.application_lots_summary.lot_number', number: lot.position) %></span></li>
+        <li data-collapsible-list-target="item"><span class="fr-tag"><%= t('shared.application_lots_summary.lot_number', number: lot.position) %></span></li>
       <% end %>
+      <li style="width: 100%;"><%= collapsible_toggle_button(align: :left) %></li>
     </ul>
     <p class="fr-text--md fr-mb-0">
       <span class="fr-icon-info-fill fr-icon--sm fr-mr-1v fr-text-action-high--blue-france" aria-hidden="true"></span>
