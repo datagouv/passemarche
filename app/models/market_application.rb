@@ -4,6 +4,8 @@ class MarketApplication < ApplicationRecord
   include Completable
   include Syncable
 
+  has_paper_trail on: %i[update], only: [:completed_at]
+
   belongs_to :public_market
   belongs_to :user, optional: true
   has_one :editor, through: :public_market
