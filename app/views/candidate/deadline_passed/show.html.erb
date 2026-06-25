@@ -1,0 +1,28 @@
+<% content_for :title, t('candidate.deadline_passed.title') %>
+
+<div class="fr-grid-row fr-grid-row--gutters status-page">
+  <div class="fr-col-12 fr-col-lg-7 center-content">
+    <div class="fr-mb-4w">
+      <h1 class="fr-h3"><%= t('candidate.deadline_passed.heading') %></h1>
+      <p><%= t('candidate.deadline_passed.explanation') %></p>
+      <p><%= t('candidate.deadline_passed.contact_hint') %></p>
+
+      <% if (candidate_url = @market_application.public_market.editor.build_candidate_return_url(
+        market: @market_application.public_market,
+        application: @market_application
+      )) %>
+        <div class="fr-btns-group fr-mt-3w">
+          <%= link_to t('candidate.deadline_passed.return_to_platform'),
+                      candidate_url,
+                      class: 'fr-btn' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="fr-col-12 fr-col-lg-1"></div>
+
+  <div class="fr-col-12 fr-col-lg-4 center-content">
+    <%= image_tag "sync_status_error.png", alt: t('candidate.deadline_passed.image_alt') %>
+  </div>
+</div>
