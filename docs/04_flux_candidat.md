@@ -89,6 +89,28 @@ Content-Type: application/json
 * `identifier` : Identifiant unique de la candidature (format FT + date + hash)
 * `application_url` : URL vers l'interface de candidature
 
+#### Comportement en cas de re-candidature
+
+Si une candidature complétée existe déjà pour le même SIRET sur ce marché et que la date limite n'est pas dépassée, l'appel remet à zéro la candidature existante :
+
+* Les **données saisies manuellement** par le candidat sont conservées (pré-remplissage du formulaire)
+* Les **données issues des API** sont supprimées et relancées lors du parcours candidat pour récupérer les données à jour
+* L'attestation et le dossier ZIP précédents sont purgés
+* Une nouvelle attestation horodatée est générée à chaque soumission
+* L'identifiant de la candidature reste le même
+
+Si une candidature en cours (non complétée) existe, elle est retournée telle quelle.
+
+#### Traçabilité des dépôts
+
+Chaque changement de `completed_at` (soumission ou remise à zéro) est historisé via PaperTrail. L'historique des versions permet de retrouver les dates de chaque dépôt et de chaque re-candidature.
+
+#### Vérification de la date limite
+
+Si la date limite est dépassée et qu'une candidature complétée existe, l'API retourne la candidature existante sans la remettre à zéro (pas de reset). La création et la poursuite d'une candidature en cours restent possibles même après la date limite.
+
+Côté interface candidat, un candidat dont la candidature est complétée et dont le marché est fermé voit une page dédiée indiquant que la modification n'est plus possible.
+
 #### Réponses d'Erreur
 
 **Marché non trouvé (404)** :
