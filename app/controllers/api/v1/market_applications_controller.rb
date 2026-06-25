@@ -15,7 +15,8 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     )
 
     if result.success?
-      render json: success_response(result.market_application), status: :created
+      status = result.market_application.previously_new_record? ? :created : :ok
+      render json: success_response(result.market_application), status:
     else
       render json: { errors: result.errors }, status: :unprocessable_content
     end
