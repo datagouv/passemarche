@@ -141,83 +141,93 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
   end
 
   describe 'Access Control & Data Integrity' do
-    let(:completed_market) do
-      create(:public_market, :completed,
+    let(:published_market) do
+      create(:public_market, :published,
         editor:,
-        market_type_codes: [supplies_type.code],
-        sync_status: :sync_completed)
+        market_type_codes: [supplies_type.code])
     end
 
     let(:first_category) do
-      presenter = PublicMarketPresenter.new(completed_market)
+      presenter = PublicMarketPresenter.new(published_market)
       presenter.wizard_steps[1]
     end
 
-    shared_examples 'redirects completed market with alert' do |step_name|
-      it "redirects to sync status page from #{step_name} step" do
-        expect(response).to redirect_to(buyer_sync_status_path(completed_market.identifier))
-      end
-
-      it "sets alert message for #{step_name} step" do
-        expect(flash[:alert]).to eq(I18n.t('buyer.public_markets.market_completed_cannot_edit'))
+    shared_examples 'redirects published market' do |step_name|
+      it "redirects to published page from #{step_name} step" do
+        expect(response).to redirect_to(buyer_published_path(published_market.identifier))
       end
     end
 
-    describe 'GET requests to wizard steps for completed markets' do
+    describe 'GET requests to wizard steps for published markets' do
       context 'when accessing setup step' do
-        before { get "/buyer/public_markets/#{completed_market.identifier}/setup" }
-        include_examples 'redirects completed market with alert', 'setup'
+        before { get "/buyer/public_markets/#{published_market.identifier}/setup" }
+        include_examples 'redirects published market', 'setup'
       end
 
       context 'when accessing a category step' do
-        before { get "/buyer/public_markets/#{completed_market.identifier}/#{first_category}" }
-        include_examples 'redirects completed market with alert', 'category'
+        before { get "/buyer/public_markets/#{published_market.identifier}/#{first_category}" }
+        include_examples 'redirects published market', 'category'
       end
 
       context 'when accessing summary step' do
-        before { get "/buyer/public_markets/#{completed_market.identifier}/summary" }
-        include_examples 'redirects completed market with alert', 'summary'
+        before { get "/buyer/public_markets/#{published_market.identifier}/summary" }
+        include_examples 'redirects published market', 'summary'
       end
     end
 
-    describe 'PATCH requests to wizard steps for completed markets' do
+    describe 'PATCH requests to wizard steps for published markets' do
       context 'when updating setup step' do
-        before { patch "/buyer/public_markets/#{completed_market.identifier}/setup" }
-        include_examples 'redirects completed market with alert', 'setup'
+        before { patch "/buyer/public_markets/#{published_market.identifier}/setup" }
+        include_examples 'redirects published market', 'setup'
       end
 
       context 'when updating a category step' do
         before do
-          patch "/buyer/public_markets/#{completed_market.identifier}/#{first_category}",
+          patch "/buyer/public_markets/#{published_market.identifier}/#{first_category}",
             params: { selected_attribute_keys: [optional_attr_1.key] }
         end
-        include_examples 'redirects completed market with alert', 'category'
+        include_examples 'redirects published market', 'category'
       end
 
-      context 'when trying to complete already completed market' do
-        before { patch "/buyer/public_markets/#{completed_market.identifier}/summary" }
-        include_examples 'redirects completed market with alert', 'summary'
+      context 'when trying to update summary of published market' do
+        before { patch "/buyer/public_markets/#{published_market.identifier}/summary" }
+        include_examples 'redirects published market', 'summary'
       end
     end
 
-    describe 'state preservation for completed markets' do
-      let(:original_attributes) { completed_market.market_attributes.pluck(:key) }
-
-      it 'does not modify market attributes when accessing category step' do
-        patch "/buyer/public_markets/#{completed_market.identifier}/#{first_category}"
-
-        completed_market.reload
-        expect(completed_market.market_attributes.pluck(:key)).to eq(original_attributes)
+    describe 'completed but non-published markets allow re-entry' do
+      let(:completed_market) do
+        create(:public_market, :completed,
+          editor:,
+          market_type_codes: [supplies_type.code])
       end
 
-      it 'preserves completion status and timestamps' do
-        original_completed_at = completed_market.completed_at
+      let(:completed_first_category) do
+        presenter = PublicMarketPresenter.new(completed_market)
+        presenter.wizard_steps[1]
+      end
 
+      it 'allows access to wizard steps' do
+        get "/buyer/public_markets/#{completed_market.identifier}/setup"
+        expect(response).to have_http_status(:success)
+
+        get "/buyer/public_markets/#{completed_market.identifier}/#{completed_first_category}"
+        expect(response).to have_http_status(:success)
+
+        get "/buyer/public_markets/#{completed_market.identifier}/summary"
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'allows updates to wizard steps' do
+        patch "/buyer/public_markets/#{completed_market.identifier}/setup"
+        expect(response).to have_http_status(:redirect)
+      end
+
+      it 're-submits summary and enqueues new webhook' do
         patch "/buyer/public_markets/#{completed_market.identifier}/summary"
 
-        completed_market.reload
-        expect(completed_market.completed_at).to eq(original_completed_at)
-        expect(completed_market).to be_completed
+        expect(response).to redirect_to(buyer_sync_status_path(completed_market.identifier))
+        expect(PublicMarketWebhookJob).to have_been_enqueued.with(completed_market.id)
       end
     end
 
