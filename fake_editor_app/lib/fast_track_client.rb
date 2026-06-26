@@ -86,6 +86,23 @@ class FastTrackClient
     response.parsed_response
   end
 
+  def publish_market(access_token, identifier)
+    response = self.class.post(
+      "#{@base_url}/api/v1/public_markets/#{identifier}/publish",
+      headers: {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      }
+    )
+
+    unless response.success?
+      error_msg = extract_error_message(response.parsed_response, response)
+      raise error_msg
+    end
+
+    response.parsed_response
+  end
+
   def create_market_application(access_token, public_market_identifier, siret)
     payload = { market_application: { siret: siret } }
 

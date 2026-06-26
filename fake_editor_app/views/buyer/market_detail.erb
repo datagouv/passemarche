@@ -146,8 +146,8 @@
 
         <!-- Sidebar -->
         <div class="fr-col-12 fr-col-lg-4">
-          <!-- Actions rapides (only shown when market needs configuration) -->
-          <% if @market.status == 'created' && @market.configuration_url %>
+          <!-- Actions rapides -->
+          <% if @market.status != 'published' && @market.configuration_url %>
             <div class="fr-callout fr-mb-3w">
               <h3 class="fr-callout__title">
                 <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
@@ -159,8 +159,17 @@
                    rel="noopener external"
                    class="fr-btn fr-btn--sm fr-btn--primary">
                   <span class="fr-icon-settings-5-line" aria-hidden="true"></span>
-                  Configurer le marché
+                  <%= @market.status == 'completed' ? 'Modifier la configuration' : 'Configurer le marché' %>
                 </a>
+                <% if @market.status == 'completed' %>
+                  <form action="/buyer/markets/<%= @market.identifier %>/publish" method="post" style="display:inline;">
+                    <button type="submit" class="fr-btn fr-btn--sm fr-btn--secondary"
+                            onclick="return confirm('Êtes-vous sûr de vouloir publier ce marché ? La configuration sera verrouillée.')">
+                      <span class="fr-icon-lock-line" aria-hidden="true"></span>
+                      Publier la consultation
+                    </button>
+                  </form>
+                <% end %>
               </div>
             </div>
           <% end %>
