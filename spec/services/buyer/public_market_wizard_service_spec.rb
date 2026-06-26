@@ -202,6 +202,33 @@ RSpec.describe Buyer::PublicMarketWizardService do
           described_class.call(public_market, :summary, {})
         end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
       end
+
+      context 'when market was already completed (re-submission)' do
+        let(:public_market) { create(:public_market, :completed, editor:, market_type_codes: ['supplies']) }
+
+        it 're-stamps completed_at' do
+          original_completed_at = public_market.completed_at
+
+          travel_to 1.hour.from_now do
+            described_class.call(public_market, :summary, {})
+            expect(public_market.reload.completed_at).to be > original_completed_at
+          end
+        end
+
+        it 'resets sync_status to sync_pending' do
+          expect(public_market.sync_status).to eq('sync_completed')
+
+          described_class.call(public_market, :summary, {})
+
+          expect(public_market.reload.sync_status).to eq('sync_pending')
+        end
+
+        it 'enqueues a new webhook job' do
+          expect do
+            described_class.call(public_market, :summary, {})
+          end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
+        end
+      end
     end
   end
 end
