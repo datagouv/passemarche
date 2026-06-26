@@ -3,7 +3,7 @@
 module Buyer
   class LotsController < ApplicationController
     before_action :find_public_market
-    before_action :check_market_not_completed
+    before_action :check_market_not_published
 
     def update_types
       market_type = MarketType.find_by(id: params[:market_type_id])
@@ -35,10 +35,10 @@ module Buyer
       render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
     end
 
-    def check_market_not_completed
-      return unless @public_market.completed?
+    def check_market_not_published
+      return unless @public_market.published?
 
-      render plain: t('buyer.public_markets.market_completed_cannot_edit'), status: :unprocessable_content
+      render plain: t('buyer.public_markets.market_published_cannot_edit'), status: :unprocessable_content
     end
   end
 end

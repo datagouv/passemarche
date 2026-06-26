@@ -406,7 +406,7 @@ fr:
       image_alt: "Illustration consultation publiée"
     public_markets:
       wizard_completed: "Marché configuré avec succès"
-      market_completed_cannot_edit: "Ce marché a déjà été complété et ne peut plus être modifié."
+      market_published_cannot_edit: "Ce marché a été publié et sa configuration ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"

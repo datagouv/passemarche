@@ -42,8 +42,8 @@ RSpec.describe 'Buyer::Lots', type: :request do
       end
     end
 
-    context 'when the market is completed' do
-      let(:public_market) { create(:public_market, :completed, editor:, market_type_codes: [works_type.code]) }
+    context 'when the market is published' do
+      let(:public_market) { create(:public_market, :published, editor:, market_type_codes: [works_type.code]) }
 
       it 'returns unprocessable entity' do
         patch buyer_lot_types_path(public_market.identifier),
@@ -51,6 +51,19 @@ RSpec.describe 'Buyer::Lots', type: :request do
           headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
         expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context 'when the market is completed but not published' do
+      let(:public_market) { create(:public_market, :completed, editor:, market_type_codes: [works_type.code]) }
+
+      it 'allows lot type updates' do
+        patch buyer_lot_types_path(public_market.identifier),
+          params: { lot_ids: [lot1.id], market_type_id: services_type.id },
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+        expect(response).to have_http_status(:ok)
+        expect(lot1.reload.market_type).to eq(services_type)
       end
     end
 
