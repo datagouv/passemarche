@@ -66,6 +66,26 @@ class FastTrackClient
     response.parsed_response
   end
 
+  def update_public_market_deadline(access_token, public_market_identifier, deadline)
+    payload = { public_market: { deadline: deadline } }
+
+    response = self.class.patch(
+      "#{@base_url}/api/v1/public_markets/#{public_market_identifier}",
+      body: payload.to_json,
+      headers: {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      }
+    )
+
+    unless response.success?
+      error_msg = extract_error_message(response.parsed_response, response)
+      raise "Deadline update failed: #{error_msg}"
+    end
+
+    response.parsed_response
+  end
+
   def create_market_application(access_token, public_market_identifier, siret)
     payload = { market_application: { siret: siret } }
 
