@@ -187,6 +187,30 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '#published?' do
+    it 'returns true when published_at is present' do
+      public_market = build(:public_market, published_at: Time.zone.now)
+      expect(public_market).to be_published
+    end
+
+    it 'returns false when published_at is nil' do
+      public_market = build(:public_market, published_at: nil)
+      expect(public_market).not_to be_published
+    end
+  end
+
+  describe '#publish!' do
+    let(:editor) { create(:editor) }
+    let(:public_market) { create(:public_market, editor:) }
+
+    it 'sets published_at to current time' do
+      freeze_time do
+        public_market.publish!
+        expect(public_market.published_at).to eq(Time.zone.now)
+      end
+    end
+  end
+
   describe 'sync status helpers' do
     let(:public_market) { build(:public_market) }
 

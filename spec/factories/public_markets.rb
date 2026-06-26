@@ -21,6 +21,12 @@ FactoryBot.define do
       sync_status { :sync_completed }
     end
 
+    trait :published do
+      completed_at { Time.zone.now }
+      published_at { Time.zone.now }
+      sync_status { :sync_completed }
+    end
+
     trait :with_provider_user_id do
       provider_user_id { 'editor-user-123' }
     end
