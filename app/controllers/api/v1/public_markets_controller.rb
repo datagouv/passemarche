@@ -2,7 +2,7 @@
 
 class Api::V1::PublicMarketsController < Api::V1::BaseController
   before_action :validate_defense_market_permission, only: [:create]
-  before_action :find_public_market, only: [:update]
+  before_action :find_public_market, only: %i[update publish]
 
   def create
     result = CreatePublicMarket.call(editor: current_editor, params: create_params)
@@ -19,6 +19,16 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
       render json: { identifier: @public_market.identifier, deadline: @public_market.deadline.utc.iso8601 }
     else
       render json: { errors: @public_market.errors.messages }, status: :unprocessable_content
+    end
+  end
+
+  def publish
+    result = PublishPublicMarket.call(public_market: @public_market)
+
+    if result.success?
+      render json: { identifier: @public_market.identifier, published_at: @public_market.published_at.utc.iso8601 }
+    else
+      render json: { errors: result.errors }, status: :unprocessable_content
     end
   end
 
