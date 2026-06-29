@@ -21,13 +21,8 @@ class CreateMarketApplication < ApplicationInteractor
   end
 
   def reset_existing_application(application)
-    result = ResetMarketApplication.call(market_application: application)
-
-    if result.success?
-      context.market_application = application
-    else
-      context.fail!(errors: { base: [result.message] })
-    end
+    ResetMarketApplication.call!(market_application: application)
+    context.market_application = application
   end
 
   def create_new_application

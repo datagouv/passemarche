@@ -39,7 +39,7 @@ class PublicMarket < ApplicationRecord
   end
 
   def open?
-    deadline > Time.zone.now
+    deadline.present? && deadline > Time.zone.now
   end
 
   def buyer_display_name

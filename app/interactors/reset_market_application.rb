@@ -19,7 +19,7 @@ class ResetMarketApplication < ApplicationInteractor
 
   def purge_generated_attachments
     %i[attestation buyer_attestation documents_package].each do |attachment|
-      market_application.public_send(attachment).purge if market_application.public_send(attachment).attached?
+      market_application.public_send(attachment).purge_later if market_application.public_send(attachment).attached?
     end
   end
 
