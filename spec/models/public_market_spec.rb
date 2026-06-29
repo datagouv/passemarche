@@ -213,6 +213,25 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '#open?' do
+    it 'returns true when deadline is in the future' do
+      public_market = build(:public_market, deadline: 1.hour.from_now)
+      expect(public_market).to be_open
+    end
+
+    it 'returns false when deadline is in the past' do
+      public_market = build(:public_market, deadline: 1.hour.ago)
+      expect(public_market).not_to be_open
+    end
+
+    it 'returns false when deadline is exactly now' do
+      freeze_time do
+        public_market = build(:public_market, deadline: Time.zone.now)
+        expect(public_market).not_to be_open
+      end
+    end
+  end
+
   describe '#buyer_display_name' do
     it 'returns the buyer_name when present' do
       public_market = build(:public_market, buyer_name: 'Ville de Paris')

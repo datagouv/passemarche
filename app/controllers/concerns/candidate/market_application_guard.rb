@@ -13,8 +13,12 @@ module Candidate
     def check_application_not_completed
       return unless @market_application&.completed?
 
-      redirect_to candidate_sync_status_path(@market_application.identifier),
-        alert: t('candidate.market_applications.market_application_completed_cannot_edit')
+      if @market_application.public_market.open?
+        redirect_to candidate_sync_status_path(@market_application.identifier),
+          alert: t('candidate.market_applications.market_application_completed_cannot_edit')
+      else
+        redirect_to deadline_passed_candidate_market_application_path(@market_application.identifier)
+      end
     end
   end
 end

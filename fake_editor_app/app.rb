@@ -152,6 +152,34 @@ class FakeEditorApp < Sinatra::Base
       erb :'buyer/market_detail'
     end
 
+    post '/markets/:identifier/update_deadline' do
+      @market = Market.find_by_identifier(params[:identifier])
+      current_token = Token.current_token
+
+      unless @market && current_token&.valid?
+        @error = "Marché non trouvé ou token invalide."
+        redirect '/buyer'
+        return
+      end
+
+      begin
+        client = FastTrackClient.new(ENV['CLIENT_ID'], ENV['CLIENT_SECRET'], ENV['FAST_TRACK_URL'])
+        result = client.update_public_market_deadline(current_token.access_token, @market.identifier, params[:deadline])
+        data = @market.data
+        data['deadline'] = result['deadline']
+        @market.update(market_data: data.to_json)
+        @success = "Date limite mise à jour."
+      rescue StandardError => e
+        @error = "Erreur : #{e.message}"
+      end
+
+      @market.reload
+      @applications = @market.applications
+      @current_token = current_token
+      @tab = 'overview'
+      erb :'buyer/market_detail'
+    end
+
     get '/applications/:identifier' do
       @application = MarketApplication.find_by_identifier(params[:identifier])
 

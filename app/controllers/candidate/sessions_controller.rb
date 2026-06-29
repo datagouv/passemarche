@@ -45,7 +45,11 @@ module Candidate
     end
 
     def first_step_path(market_application)
-      return candidate_sync_status_path(market_application.identifier) if market_application.completed?
+      if market_application.completed?
+        return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
+
+        return candidate_sync_status_path(market_application.identifier)
+      end
 
       company_identification_candidate_market_application_path(market_application.identifier)
     end

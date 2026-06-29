@@ -38,6 +38,10 @@ class PublicMarket < ApplicationRecord
     (market_type_codes + lot_codes).uniq
   end
 
+  def open?
+    deadline.present? && deadline > Time.zone.now
+  end
+
   def buyer_display_name
     buyer_name.presence || siret
   end

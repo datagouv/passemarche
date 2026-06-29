@@ -517,6 +517,13 @@ fr:
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
 
   candidate:
+    deadline_passed:
+      title: "Date limite dépassée"
+      heading: "Vous ne pouvez plus modifier votre candidature"
+      explanation: "La date limite de réception des candidatures est dépassée, vous ne pouvez donc plus modifier votre candidature."
+      contact_hint: "Pour toutes questions, contactez la plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
+      image_alt: "Illustration date limite dépassée"
     dashboard:
       title: "Mes candidatures"
       summary:

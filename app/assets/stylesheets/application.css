@@ -84,6 +84,10 @@
   height: 100%;
 }
 
+.status-page {
+  min-height: 70vh;
+}
+
 /* Full height grid layout - for split-screen layouts */
 .full-height-grid {
   min-height: 60vh; /* Minimum 60% of viewport height for better visual balance */

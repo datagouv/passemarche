@@ -82,6 +82,7 @@ Rails.application.routes.draw do
 
     resources :market_applications, param: :identifier, only: [:destroy] do
       member do
+        get 'deadline_passed', to: 'deadline_passed#show', as: :deadline_passed
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection
