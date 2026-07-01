@@ -33,7 +33,7 @@ class MapApiData < ApplicationInteractor
   def create_or_update_response(market_attribute)
     response = find_or_initialize_response(market_attribute)
     value = populate_response_value(response, market_attribute)
-    response.source = :auto unless response.manual_after_api_failure?
+    response.source = :auto
     save_response(response, value)
   end
 

@@ -101,13 +101,13 @@ RSpec.describe MapApiData, type: :interactor do
             source: :manual_after_api_failure)
         end
 
-        it 'does not change source from manual_after_api_failure' do
+        it 'changes source to auto when API succeeds' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
-          expect(response.source).to eq('manual_after_api_failure')
+          expect(response.source).to eq('auto')
         end
 
-        it 'still updates the value even with manual_after_api_failure source' do
+        it 'updates the value with the API data' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
           expect(response.text).to eq('41816609600069')
