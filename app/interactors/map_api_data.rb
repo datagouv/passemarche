@@ -99,7 +99,8 @@ class MapApiData < ApplicationInteractor
 
   def handle_radio_with_file_and_text(response, value)
     response.hidden = value['hidden'] == true
-    response.value = value.except('hidden')
+    response.radio_choice = value['radio_choice']
+    response.text = value['text'] if response.radio_yes?
   end
 
   def handle_default_text(response, value)

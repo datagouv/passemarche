@@ -202,6 +202,65 @@ RSpec.describe MapApiData, type: :interactor do
           expect(response.value).not_to have_key('hidden')
         end
       end
+
+      context 'when re-applying and API still detects yes' do
+        let(:ess_value) { { 'radio_choice' => 'yes', 'text' => 'ESS certified company' } }
+
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ess_attribute, market_application:)
+          response.radio_choice = 'yes'
+          response.source = :auto
+          response.documents.attach(io: StringIO.new('PDF'), filename: 'justif.pdf', content_type: 'application/pdf')
+          response.save!
+        end
+
+        it 'preserves existing documents' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.documents.count).to eq(1)
+        end
+      end
+
+      context 'when re-applying and API now detects no' do
+        let(:ess_value) { { 'radio_choice' => 'no' } }
+
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ess_attribute, market_application:)
+          response.radio_choice = 'yes'
+          response.source = :auto
+          response.documents.attach(io: StringIO.new('PDF'), filename: 'justif.pdf', content_type: 'application/pdf')
+          response.save!
+        end
+
+        it 'sets radio_choice to no' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.radio_choice).to eq('no')
+        end
+
+        it 'purges existing documents' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.documents).not_to be_attached
+        end
+      end
+
+      context 'when re-applying and API now detects yes but candidate had said no' do
+        let(:ess_value) { { 'radio_choice' => 'yes', 'text' => 'ESS certified company' } }
+
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ess_attribute, market_application:)
+          response.radio_choice = 'no'
+          response.source = :manual_after_api_failure
+          response.save!
+        end
+
+        it 'forces radio_choice to yes' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.radio_choice).to eq('yes')
+        end
+      end
     end
 
     context 'when market_application is not provided' do
@@ -325,10 +384,10 @@ RSpec.describe MapApiData, type: :interactor do
           response.save!
         end
 
-        it 'does not change source from manual_after_api_failure' do
+        it 'changes source to auto when API succeeds' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: attestation_attribute)
-          expect(response.source).to eq('manual_after_api_failure')
+          expect(response.source).to eq('auto')
         end
 
         it 'still attaches the new document' do
