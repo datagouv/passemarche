@@ -41,6 +41,10 @@ group :development, :test, :sandbox do
   gem 'lookbook'
 end
 
+group :sandbox do
+  gem 'aws-sdk-s3', require: false
+end
+
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails', '~> 6.5'
