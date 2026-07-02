@@ -97,7 +97,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       end
     end
 
-    context 'when market application has API-downloaded documents' do
+    context 'when market application has API-downloaded documents (no lots — flat documents/ folder)' do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
       let(:attestation_attribute) do
@@ -132,7 +132,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'includes API document with api_ prefix in ZIP' do
+      it 'places API document in documents/' do
         zip_stream = double('zip_stream')
         allow(zip_stream).to receive(:put_next_entry)
         allow(zip_stream).to receive(:write)
@@ -146,7 +146,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       end
     end
 
-    context 'when market application has user-uploaded documents' do
+    context 'when market application has user-uploaded documents (no lots — flat documents/ folder)' do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
       let(:document_attribute) do
@@ -178,7 +178,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'includes user document with user_ prefix in ZIP' do
+      it 'places user document in documents/' do
         zip_stream = double('zip_stream')
         allow(zip_stream).to receive(:put_next_entry)
         allow(zip_stream).to receive(:write)
@@ -192,7 +192,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       end
     end
 
-    context 'when market application has both API and user-uploaded documents' do
+    context 'when market application has both API and user-uploaded documents (no lots — flat documents/ folder)' do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
       let(:api_attribute) do
@@ -243,7 +243,7 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'includes both API and user documents with correct prefixes' do
+      it 'places all documents in documents/' do
         zip_stream = double('zip_stream')
         allow(zip_stream).to receive(:put_next_entry)
         allow(zip_stream).to receive(:write)
@@ -253,6 +253,163 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
 
         expect(zip_stream).to receive(:put_next_entry).with(%r{^documents/user_02_01_custom_document_field_user_upload\.pdf$})
         expect(zip_stream).to receive(:write).with('User PDF content')
+
+        allow(Zip::OutputStream).to receive(:write_buffer).and_yield(zip_stream).and_return(double('zip_buffer', string: 'fake zip content'))
+
+        subject
+      end
+    end
+
+    context 'when market application has a type-specific document (CA-4 — RG2/3/4)' do
+      let(:public_market) { create(:public_market, :completed) }
+      let(:market_application) { create(:market_application, public_market:) }
+      let(:works_type) { create(:market_type, :works) }
+      let(:services_type) { create(:market_type, :services) }
+      let(:works_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'references_travaux',
+          market_types: [works_type],
+          public_markets: [public_market])
+      end
+
+      before do
+        works_lot = create(:lot, public_market:, market_type: works_type)
+        services_lot = create(:lot, public_market:, market_type: services_type)
+        market_application.lots << works_lot << services_lot
+
+        market_application.buyer_attestation.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: "buyer_attestation_FT#{market_application.identifier}.pdf",
+          content_type: 'application/pdf'
+        )
+
+        response = MarketAttributeResponse.build_for_attribute(works_attribute, market_application:)
+        response.documents.attach(
+          io: StringIO.new('Works PDF content'),
+          filename: 'references_travaux.pdf',
+          content_type: 'application/pdf'
+        )
+        response.save!
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'places document in documents-travaux/' do
+        zip_stream = double('zip_stream')
+        allow(zip_stream).to receive(:put_next_entry)
+        allow(zip_stream).to receive(:write)
+
+        expect(zip_stream).to receive(:put_next_entry).with(%r{^documents-travaux/user_01_01_references_travaux_references_travaux\.pdf$})
+        expect(zip_stream).to receive(:write).with('Works PDF content')
+
+        allow(Zip::OutputStream).to receive(:write_buffer).and_yield(zip_stream).and_return(double('zip_buffer', string: 'fake zip content'))
+
+        subject
+      end
+    end
+
+    context 'when market application has documents for Travaux and Services (CA-1 — RG1/2/3/5)' do
+      let(:public_market) { create(:public_market, :completed) }
+      let(:market_application) { create(:market_application, public_market:) }
+      let(:works_type) { create(:market_type, :works) }
+      let(:services_type) { create(:market_type, :services) }
+      let(:common_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'attestation_fiscale',
+          public_markets: [public_market])
+      end
+      let(:works_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'references_travaux',
+          market_types: [works_type],
+          public_markets: [public_market])
+      end
+      let(:services_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'references_services',
+          market_types: [services_type],
+          public_markets: [public_market])
+      end
+
+      before do
+        works_lot = create(:lot, public_market:, market_type: works_type)
+        services_lot = create(:lot, public_market:, market_type: services_type)
+        market_application.lots << works_lot << services_lot
+
+        market_application.buyer_attestation.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: "buyer_attestation_FT#{market_application.identifier}.pdf",
+          content_type: 'application/pdf'
+        )
+
+        common_response = MarketAttributeResponse.build_for_attribute(common_attribute, market_application:)
+        common_response.documents.attach(io: StringIO.new('Common PDF'), filename: 'attestation.pdf', content_type: 'application/pdf')
+        common_response.save!
+
+        works_response = MarketAttributeResponse.build_for_attribute(works_attribute, market_application:)
+        works_response.documents.attach(io: StringIO.new('Works PDF'), filename: 'references_travaux.pdf', content_type: 'application/pdf')
+        works_response.save!
+
+        services_response = MarketAttributeResponse.build_for_attribute(services_attribute, market_application:)
+        services_response.documents.attach(io: StringIO.new('Services PDF'), filename: 'references_services.pdf', content_type: 'application/pdf')
+        services_response.save!
+      end
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'places common doc in documents-communs/, type docs in their respective subfolders' do
+        zip_stream = double('zip_stream')
+        allow(zip_stream).to receive(:put_next_entry)
+        allow(zip_stream).to receive(:write)
+
+        expect(zip_stream).to receive(:put_next_entry).with(%r{^documents-communs/user_01_01_attestation_fiscale_attestation\.pdf$})
+        expect(zip_stream).to receive(:put_next_entry).with(%r{^documents-travaux/user_02_01_references_travaux_references_travaux\.pdf$})
+        expect(zip_stream).to receive(:put_next_entry).with(%r{^documents-services/user_03_01_references_services_references_services\.pdf$})
+
+        allow(Zip::OutputStream).to receive(:write_buffer).and_yield(zip_stream).and_return(double('zip_buffer', string: 'fake zip content'))
+
+        subject
+      end
+    end
+
+    context 'when attribute is shared across multiple types (CA-3 — RG6)' do
+      let(:public_market) { create(:public_market, :completed) }
+      let(:market_application) { create(:market_application, public_market:) }
+      let(:works_type) { create(:market_type, :works) }
+      let(:services_type) { create(:market_type, :services) }
+      let(:multi_type_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'kbis',
+          market_types: [works_type, services_type],
+          public_markets: [public_market])
+      end
+
+      before do
+        works_lot = create(:lot, public_market:, market_type: works_type)
+        services_lot = create(:lot, public_market:, market_type: services_type)
+        market_application.lots << works_lot << services_lot
+
+        market_application.buyer_attestation.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: "buyer_attestation_FT#{market_application.identifier}.pdf",
+          content_type: 'application/pdf'
+        )
+
+        response = MarketAttributeResponse.build_for_attribute(multi_type_attribute, market_application:)
+        response.documents.attach(io: StringIO.new('Kbis PDF'), filename: 'kbis.pdf', content_type: 'application/pdf')
+        response.save!
+      end
+
+      it 'places multi-type document in documents-communs/ (not duplicated)' do
+        zip_stream = double('zip_stream')
+        allow(zip_stream).to receive(:put_next_entry)
+        allow(zip_stream).to receive(:write)
+
+        expect(zip_stream).to receive(:put_next_entry).with(%r{^documents-communs/user_01_01_kbis_kbis\.pdf$}).once
 
         allow(Zip::OutputStream).to receive(:write_buffer).and_yield(zip_stream).and_return(double('zip_buffer', string: 'fake zip content'))
 

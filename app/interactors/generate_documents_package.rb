@@ -94,7 +94,7 @@ class GenerateDocumentsPackage < ApplicationInteractor
   def load_file_attachable_responses
     market_application.market_attribute_responses
       .with_file_attachments
-      .includes(:market_attribute, documents_attachments: :blob)
+      .includes(market_attribute: :market_types, documents_attachments: :blob)
       .order(:id)
   end
 
@@ -125,9 +125,9 @@ class GenerateDocumentsPackage < ApplicationInteractor
   end
   # rubocop:enable Metrics/AbcSize
 
-  def add_single_document_to_zip(zip, document, _response, _response_index, _doc_index)
+  def add_single_document_to_zip(zip, document, response, _response_index, _doc_index)
     system_filename = naming_service.system_filename_for(document)
-    zip_filename = "documents/#{system_filename}"
+    zip_filename = "#{zip_folder_for(response)}/#{system_filename}"
 
     zip.put_next_entry(zip_filename)
     zip.write(document.download)
@@ -135,6 +135,23 @@ class GenerateDocumentsPackage < ApplicationInteractor
          Zip::Error => e
     Rails.logger.error "Failed to add document #{document.filename} to ZIP: #{e.message}"
     Sentry.capture_exception(e, level: :error, extra: { filename: document.filename.to_s })
+  end
+
+  def zip_folder_for(response)
+    return 'documents' unless multi_type_market?
+
+    types = response.market_attribute.market_types.to_a
+    return 'documents-communs' unless types.size == 1
+
+    label = I18n.t("market_types.#{types.first.code}", default: types.first.code.to_s)
+    slug = ActiveSupport::Inflector.transliterate(label).downcase.tr(' ', '-').gsub(/[^a-z0-9-]/, '')
+    "documents-#{slug}"
+  end
+
+  def multi_type_market?
+    return @multi_type_market unless @multi_type_market.nil?
+
+    @multi_type_market = market_application.multi_type_selected_lots?
   end
 
   def naming_service
