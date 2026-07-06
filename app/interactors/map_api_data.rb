@@ -33,7 +33,7 @@ class MapApiData < ApplicationInteractor
   def create_or_update_response(market_attribute)
     response = find_or_initialize_response(market_attribute)
     value = populate_response_value(response, market_attribute)
-    response.source = :auto unless response.manual_after_api_failure?
+    response.source = :auto
     save_response(response, value)
   end
 
@@ -99,7 +99,8 @@ class MapApiData < ApplicationInteractor
 
   def handle_radio_with_file_and_text(response, value)
     response.hidden = value['hidden'] == true
-    response.value = value.except('hidden')
+    response.radio_choice = value['radio_choice']
+    response.text = value['text'] if response.radio_yes?
   end
 
   def handle_default_text(response, value)
@@ -112,9 +113,29 @@ class MapApiData < ApplicationInteractor
 
   def assign_parsed_json_value(response, value)
     parsed_data = JSON.parse(value)
-    response.value = parsed_data
+    response.value = merge_with_existing_value(response, parsed_data)
   rescue JSON::ParserError
     response.text = value
+  end
+
+  def merge_with_existing_value(response, api_data)
+    existing = response.value
+    return api_data if existing.blank? || !existing.is_a?(Hash)
+
+    api_fields = api_data['_api_fields'] || {}
+
+    existing.merge(api_data) do |key, existing_val, api_val|
+      next api_val if key == '_api_fields'
+      next api_val unless existing_val.is_a?(Hash) && api_val.is_a?(Hash)
+
+      merge_year_fields(existing_val, api_val, api_fields[key] || [])
+    end
+  end
+
+  def merge_year_fields(existing_val, api_val, year_api_fields)
+    existing_val.merge(api_val) do |field, existing_field_val, api_field_val|
+      year_api_fields.include?(field) ? api_field_val : existing_field_val
+    end
   end
 
   def opqibi_structured_data?(market_attribute)

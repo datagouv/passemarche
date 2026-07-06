@@ -8,7 +8,7 @@ CHIFFRE_AFFAIRES_ATTRS = {
   key: 'capacite_economique_financiere_chiffre_affaires_global_annuel',
   input_type: 'capacite_economique_financiere_chiffre_affaires_global_annuel',
   category_key: 'capacite_economique_financiere',
-  subcategory_key: 'chiffre_affaires',
+  subcategory_key: 'capacite_economique_financiere_chiffre_affaires',
   mandatory: true,
   api_name: 'dgfip_chiffres_affaires',
   api_key: 'chiffres_affaires_data'
@@ -27,7 +27,7 @@ Given('a candidate starts an application for this market') do
 end
 
 When('I visit the economic capacities step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/chiffre_affaires"
+  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere_chiffre_affaires"
 end
 
 When('I visit the summary step') do
@@ -35,7 +35,7 @@ When('I visit the summary step') do
 end
 
 When('I navigate back to the economic capacities step') do
-  visit "/candidate/market_applications/#{@market_application.identifier}/chiffre_affaires"
+  visit "/candidate/market_applications/#{@market_application.identifier}/capacite_economique_financiere_chiffre_affaires"
 end
 
 Then('I should see the title {string}') do |title|
@@ -95,7 +95,7 @@ Then('the economic capacity form should be submitted successfully') do
 end
 
 Then('the economic capacity form should not be submitted') do
-  expect(page).to have_current_path(/chiffre_affaires/)
+  expect(page).to have_current_path(/capacite_economique_financiere_chiffre_affaires/)
   expect(page).to have_css('.fr-message--error')
 end
 

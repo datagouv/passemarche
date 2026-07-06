@@ -101,13 +101,13 @@ RSpec.describe MapApiData, type: :interactor do
             source: :manual_after_api_failure)
         end
 
-        it 'does not change source from manual_after_api_failure' do
+        it 'changes source to auto when API succeeds' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
-          expect(response.source).to eq('manual_after_api_failure')
+          expect(response.source).to eq('auto')
         end
 
-        it 'still updates the value even with manual_after_api_failure source' do
+        it 'updates the value with the API data' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: siret_attribute)
           expect(response.text).to eq('41816609600069')
@@ -200,6 +200,65 @@ RSpec.describe MapApiData, type: :interactor do
           response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
           expect(response.hidden).to be true
           expect(response.value).not_to have_key('hidden')
+        end
+      end
+
+      context 'when re-applying and API still detects yes' do
+        let(:ess_value) { { 'radio_choice' => 'yes', 'text' => 'ESS certified company' } }
+
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ess_attribute, market_application:)
+          response.radio_choice = 'yes'
+          response.source = :auto
+          response.documents.attach(io: StringIO.new('PDF'), filename: 'justif.pdf', content_type: 'application/pdf')
+          response.save!
+        end
+
+        it 'preserves existing documents' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.documents.count).to eq(1)
+        end
+      end
+
+      context 'when re-applying and API now detects no' do
+        let(:ess_value) { { 'radio_choice' => 'no' } }
+
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ess_attribute, market_application:)
+          response.radio_choice = 'yes'
+          response.source = :auto
+          response.documents.attach(io: StringIO.new('PDF'), filename: 'justif.pdf', content_type: 'application/pdf')
+          response.save!
+        end
+
+        it 'sets radio_choice to no' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.radio_choice).to eq('no')
+        end
+
+        it 'purges existing documents' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.documents).not_to be_attached
+        end
+      end
+
+      context 'when re-applying and API now detects yes but candidate had said no' do
+        let(:ess_value) { { 'radio_choice' => 'yes', 'text' => 'ESS certified company' } }
+
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ess_attribute, market_application:)
+          response.radio_choice = 'no'
+          response.source = :manual_after_api_failure
+          response.save!
+        end
+
+        it 'forces radio_choice to yes' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ess_attribute)
+          expect(response.radio_choice).to eq('yes')
         end
       end
     end
@@ -325,10 +384,10 @@ RSpec.describe MapApiData, type: :interactor do
           response.save!
         end
 
-        it 'does not change source from manual_after_api_failure' do
+        it 'changes source to auto when API succeeds' do
           subject
           response = market_application.market_attribute_responses.find_by(market_attribute: attestation_attribute)
-          expect(response.source).to eq('manual_after_api_failure')
+          expect(response.source).to eq('auto')
         end
 
         it 'still attaches the new document' do
@@ -858,6 +917,68 @@ RSpec.describe MapApiData, type: :interactor do
           response = market_application.market_attribute_responses.find_by(market_attribute: opqibi_attribute)
           expect(response.value['date_delivrance_certificat']).to eq('2021-01-28')
           expect(response.value['duree_validite_certificat']).to eq('valable un an')
+        end
+      end
+    end
+
+    context 'when resource contains chiffres affaires (complex economic capacity)' do
+      let(:api_name) { 'dgfip_chiffres_affaires' }
+
+      let!(:ca_attribute) do
+        create(:market_attribute, :chiffre_affaires, :from_api,
+          key: 'capacite_economique_financiere_chiffre_affaires',
+          api_name: 'dgfip_chiffres_affaires',
+          api_key: 'chiffres_affaires_data',
+          public_markets: [public_market])
+      end
+
+      let(:api_value) do
+        {
+          'year_1' => { 'turnover' => 500_000, 'market_percentage' => nil, 'fiscal_year_end' => '2023-12-31' },
+          'year_2' => { 'turnover' => 450_000, 'market_percentage' => nil, 'fiscal_year_end' => '2022-12-31' },
+          'year_3' => { 'turnover' => nil, 'market_percentage' => nil, 'fiscal_year_end' => nil },
+          '_api_fields' => { 'year_1' => %w[turnover fiscal_year_end], 'year_2' => %w[turnover fiscal_year_end] }
+        }.to_json
+      end
+
+      let(:resource) { Resource.new(chiffres_affaires_data: api_value) }
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      context 'when candidate had previously filled market_percentage manually' do
+        before do
+          response = MarketAttributeResponse.build_for_attribute(ca_attribute, market_application:)
+          response.source = :manual_after_api_failure
+          response.value = {
+            'year_1' => { 'turnover' => 100_000, 'market_percentage' => 60, 'fiscal_year_end' => '2022-12-31' },
+            'year_2' => { 'turnover' => nil, 'market_percentage' => 40, 'fiscal_year_end' => nil },
+            'year_3' => { 'turnover' => nil, 'market_percentage' => nil, 'fiscal_year_end' => nil },
+            '_api_fields' => {}
+          }
+          response.save!(validate: false)
+        end
+
+        it 'replaces API fields (turnover, fiscal_year_end) with fresh API data' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ca_attribute)
+          expect(response.value['year_1']['turnover']).to eq(500_000)
+          expect(response.value['year_1']['fiscal_year_end']).to eq('2023-12-31')
+          expect(response.value['year_2']['turnover']).to eq(450_000)
+        end
+
+        it 'preserves manually filled market_percentage' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ca_attribute)
+          expect(response.value['year_1']['market_percentage']).to eq(60)
+          expect(response.value['year_2']['market_percentage']).to eq(40)
+        end
+
+        it 'changes source to auto' do
+          subject
+          response = market_application.market_attribute_responses.find_by(market_attribute: ca_attribute)
+          expect(response.source).to eq('auto')
         end
       end
     end
