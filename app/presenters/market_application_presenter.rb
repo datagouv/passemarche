@@ -4,6 +4,7 @@ class MarketApplicationPresenter
   include SidemenuHelper
   include MarketPresenterConcern
   include LotLabelConcern
+  include MultiTypeLotConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
@@ -77,11 +78,20 @@ class MarketApplicationPresenter
     @market_application.completed_at
   end
 
-  # === LOTS METHODS ===
+  def scopes_for_attribute(attribute)
+    return [] unless multi_type_selected_lots?
 
-  def lots_by_effective_type
-    @lots_by_effective_type ||= selected_lots.group_by(&:effective_market_type)
+    super
   end
+
+  def scopes_for_category(category_key)
+    return [] unless multi_type_selected_lots?
+
+    all_market_attributes.select { |a| a.category_key == category_key.to_s }
+      .flat_map { |a| scopes_for_attribute(a) }.uniq
+  end
+
+  # === LOTS METHODS ===
 
   def selected_lot_types
     @selected_lot_types ||= @market_application.selected_lot_types
@@ -94,16 +104,14 @@ class MarketApplicationPresenter
   end
 
   def selected_lots
-    @selected_lots ||= @market_application.lots.sort_by(&:position)
+    @selected_lots ||= @market_application.lots.includes(:market_type, :platform_market_type).sort_by(&:position)
   end
 
   def public_market_lots
     @public_market_lots ||= public_market.lots.ordered.to_a
   end
 
-  def public_market_has_lots?
-    public_market_lots.any?
-  end
+  def public_market_has_lots? = public_market_lots.any?
 
   # === RESPONSE METHODS (with hidden filtering) ===
 
@@ -198,6 +206,14 @@ class MarketApplicationPresenter
 
   private
 
+  def lots_for_config
+    selected_lots
+  end
+
+  def multi_type_lots?
+    multi_type_selected_lots?
+  end
+
   def public_market
     @public_market ||= @market_application.public_market
   end
@@ -226,7 +242,7 @@ class MarketApplicationPresenter
   end
 
   def all_market_attributes
-    @all_market_attributes ||= public_market.market_attributes.sort_by(&:position)
+    @all_market_attributes ||= public_market.market_attributes.includes(:market_types).sort_by(&:position)
   end
 
   def hidden_attr_ids
@@ -250,15 +266,10 @@ class MarketApplicationPresenter
     @category_keys ||= all_market_attributes.filter_map(&:category_key).uniq
   end
 
-  def subcategory_keys
-    @subcategory_keys ||= all_market_attributes.filter_map(&:subcategory_key).uniq
-  end
-
   def inject_attestation_motifs_exclusion_step(steps)
-    first_exclusion_index = steps.find_index { |s| s.to_s.start_with?('motifs_exclusion') }
-    return steps unless first_exclusion_index
+    idx = steps.find_index { |s| s.to_s.start_with?('motifs_exclusion') }
+    return steps unless idx
 
-    steps.insert(first_exclusion_index, ATTESTATION_MOTIFS_EXCLUSION_STEP)
-    steps
+    steps.insert(idx, ATTESTATION_MOTIFS_EXCLUSION_STEP)
   end
 end
