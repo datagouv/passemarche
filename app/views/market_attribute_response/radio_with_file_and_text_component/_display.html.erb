@@ -3,6 +3,7 @@
     <div class="fr-grid-row fr-mb-2w">
       <div class="fr-col">
         <strong><%= component.field_label %></strong>
+        <%= component.scope_tags_html %>
 
         <% if component.ess_api_data? %>
           <%# API-fetched ESS data - use dedicated component %>

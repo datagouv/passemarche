@@ -52,9 +52,9 @@ module ApplicationHelper
     style = bg ? "background-color:#{bg};" : nil
     if config
       icon = image_tag(config[:icon_only], alt: '', aria: { hidden: true }, width: 16, height: 16)
-      content_tag(:span, icon + label, class: 'market-type-badge', style:)
+      content_tag(:span, icon + label, class: 'fr-tag fr-tag--sm market-type-badge', style:)
     else
-      content_tag(:span, label, class: 'market-type-badge', style:)
+      content_tag(:span, label, class: 'fr-tag fr-tag--sm market-type-badge', style:)
     end
   end
 
