@@ -446,7 +446,7 @@ fr:
         banner: "Vous n'avez qu'un seul formulaire de candidature à configurer, Passe Marché se charge de transmettre votre configuration pour les différents lots."
         form_block_title: "Formulaire de candidature à configurer"
         configure_button: "Configurer"
-        scope_commun_badge: "Commun aux lots"
+        scope_commun_badge: "Commun"
         lots_section_title: "Liste des lots"
         lots_count:
           one: "1 lot"

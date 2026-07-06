@@ -4,12 +4,12 @@
   background ||= ""
   color ||= ""
   additional_classes ||= "fr-text--lg"
+  scope_badges ||= []
 %>
 
 <div class="fr-card__header">
   <%= content_tag(
     tag,
-    title,
     class: [
       "fr-card__title",
       "fr-mb-0",
@@ -17,10 +17,26 @@
       "fr-px-2w",
       additional_classes,
       background,
-      color
-    ].join(" ")
-      )
-  %>
+      color,
+      scope_badges.any? ? "fr-card__title--with-badges" : nil
+    ].compact.join(" ")
+  ) do %>
+    <span class="fr-card__title-text"><%= title %></span>
+    <% if scope_badges.any? %>
+      <span class="fr-card__title-badges">
+        <% scope_badges.each do |scope| %>
+          <% if scope == :commun %>
+            <span class="fr-tag fr-tag--sm market-scope-tag">
+              <span class="fr-icon-links-fill fr-icon--xs fr-mr-1v" aria-hidden="true"></span>
+              <%= t('buyer.public_markets.form_config.scope_commun_badge') %>
+            </span>
+          <% else %>
+            <%= market_type_badge_tag(scope.to_s, t("market_types.#{scope}", default: scope.to_s.humanize)) %>
+          <% end %>
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
 </div>
 
 <% if block_given? %>
