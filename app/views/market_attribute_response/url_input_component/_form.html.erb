@@ -10,7 +10,7 @@
   <div class="certificate-row">
     <div class="certificate-col certificate-col--left">
       <h6 class="fr-mb-2w fr-text--md">
-        <%= component.field_label %>
+        <%= component.field_label_with_scope %>
       </h6>
       <% if component.field_description.present? %>
         <span class="fr-mb-2w fr-text--sm">
@@ -31,7 +31,7 @@
   <div class="certificate-row">
     <div class="certificate-col certificate-col--left">
       <h6 class="fr-mb-2w fr-text--md">
-        <%= component.field_label %>
+        <%= component.field_label_with_scope %>
         <%= render component.source_badge_component %>
       </h6>
       <% if component.field_description.present? %>
