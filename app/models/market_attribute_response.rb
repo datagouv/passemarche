@@ -57,6 +57,10 @@ class MarketAttributeResponse < ApplicationRecord
     false
   end
 
+  def reset_api_data!
+    destroy!
+  end
+
   def run_validations!
     # Skip all validations if this response is not part of the current validation step
     should_validate = should_validate_for_current_step?

@@ -336,6 +336,62 @@ RSpec.describe MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffai
     end
   end
 
+  describe '#reset_api_data!' do
+    subject(:response) do
+      create(:market_attribute_response_chiffre_affaires,
+        market_application:,
+        source: :auto,
+        value: {
+          'year_1' => { 'turnover' => 500_000, 'market_percentage' => 75, 'fiscal_year_end' => '2023-12-31' },
+          'year_2' => { 'turnover' => 450_000, 'market_percentage' => 80, 'fiscal_year_end' => '2022-12-31' },
+          '_api_fields' => { 'year_1' => %w[turnover fiscal_year_end], 'year_2' => %w[turnover fiscal_year_end] }
+        })
+    end
+
+    before { response.reset_api_data! }
+
+    it 'keeps the record' do
+      expect(MarketAttributeResponse.exists?(response.id)).to be true
+    end
+
+    it 'removes API fields from value' do
+      reloaded = response.reload
+      expect(reloaded.value['year_1'].keys).not_to include('turnover', 'fiscal_year_end')
+      expect(reloaded.value['year_2'].keys).not_to include('turnover', 'fiscal_year_end')
+    end
+
+    it 'preserves manually entered market_percentage' do
+      expect(response.reload.value['year_1']['market_percentage']).to eq(75)
+      expect(response.reload.value['year_2']['market_percentage']).to eq(80)
+    end
+
+    it 'removes _api_fields metadata' do
+      expect(response.reload.value.key?('_api_fields')).to be false
+    end
+
+    it 'changes source to manual' do
+      expect(response.reload).to be_manual
+    end
+
+    context 'when all data is from the API (no manual input)' do
+      subject(:response) do
+        create(:market_attribute_response_chiffre_affaires,
+          market_application:,
+          source: :auto,
+          value: {
+            'year_1' => { 'turnover' => 500_000, 'fiscal_year_end' => '2023-12-31' },
+            '_api_fields' => { 'year_1' => %w[turnover fiscal_year_end] }
+          })
+      end
+
+      before { response.reset_api_data! }
+
+      it 'destroys the record' do
+        expect(MarketAttributeResponse.exists?(response.id)).to be false
+      end
+    end
+  end
+
   describe 'class methods' do
     describe '.json_schema_properties' do
       it 'returns the expected properties' do
