@@ -76,6 +76,47 @@ RSpec.describe ResetMarketApplication, type: :interactor do
         subject
         expect(MarketAttributeResponse.exists?(manual_after_failure_response.id)).to be true
       end
+
+      context 'when there is a CA response with mixed API and manual data' do
+        let!(:ca_response) do
+          create(:market_attribute_response_chiffre_affaires,
+            market_application:,
+            source: :auto,
+            value: {
+              'year_1' => { 'turnover' => 500_000, 'market_percentage' => 75, 'fiscal_year_end' => '2023-12-31' },
+              '_api_fields' => { 'year_1' => %w[turnover fiscal_year_end] }
+            })
+        end
+
+        it 'keeps the CA response record' do
+          subject
+          expect(MarketAttributeResponse.exists?(ca_response.id)).to be true
+        end
+
+        it 'removes API fields but preserves market_percentage' do
+          subject
+          reloaded = ca_response.reload
+          expect(reloaded.value['year_1']['market_percentage']).to eq(75)
+          expect(reloaded.value['year_1'].key?('turnover')).to be false
+        end
+      end
+
+      context 'when a CA response has only API data (no manual input)' do
+        let!(:pure_api_ca_response) do
+          create(:market_attribute_response_chiffre_affaires,
+            market_application:,
+            source: :auto,
+            value: {
+              'year_1' => { 'turnover' => 300_000, 'fiscal_year_end' => '2023-12-31' },
+              '_api_fields' => { 'year_1' => %w[turnover fiscal_year_end] }
+            })
+        end
+
+        it 'destroys the CA response' do
+          subject
+          expect(MarketAttributeResponse.exists?(pure_api_ca_response.id)).to be false
+        end
+      end
     end
   end
 end
