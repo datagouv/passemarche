@@ -14,7 +14,7 @@ class ResetMarketApplication < ApplicationInteractor
   private
 
   def purge_api_responses
-    market_application.market_attribute_responses.where(source: :auto).destroy_all
+    market_application.market_attribute_responses.where(source: :auto).find_each(&:reset_api_data!)
   end
 
   def purge_generated_attachments
