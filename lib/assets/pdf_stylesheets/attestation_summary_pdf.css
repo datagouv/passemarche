@@ -74,6 +74,22 @@ body {
   color: #161616;
 }
 
+.fr-card__title--with-badges {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fr-card__title--with-badges .fr-card__title-text {
+  flex: 1;
+}
+
+.fr-card__title--with-badges .fr-card__title-badges {
+  flex-shrink: 0;
+  padding-left: 1rem;
+  font-weight: normal;
+}
+
 .fr-card__body {
   padding: 8px 16px;
 }
@@ -523,6 +539,50 @@ strong {
 
 .renamed-document-text {
   font-size: 14px;
+}
+
+/* Market scope tags (type badges on each field) */
+.market-scope-tags {
+  margin-bottom: 4px;
+}
+
+.market-scope-tag {
+  font-size: 12px;
+  color: #555555;
+}
+
+.market-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.market-type-badge img {
+  display: none;
+}
+
+.fr-tag.fr-tag--sm,
+.fr-tag.fr-tag--xs {
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 20px;
+  margin-right: 4px;
+  margin-bottom: 2px;
+  background-color: #eeeeee;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.fr-tag img {
+  display: none;
+}
+
+.fr-icon-links-fill,
+.fr-icon--xs {
+  display: none;
 }
 
 /* Lot tags (fr-tags-group / fr-tag) */

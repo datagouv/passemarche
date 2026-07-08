@@ -28,8 +28,9 @@
     <% subcategories = presenter.subcategories_for_category(category) %>
     <% next if subcategories.empty? %>
 
+    <% identity_scopes = category.to_s == MarketApplicationPresenter::MARKET_INFO_PARENT_CATEGORY ? presenter.scopes_for_category(category) : [] %>
     <div class="fr-card fr-mb-2w category-card <%= page_break_class(context, index) %>">
-      <%= render 'shared/card_header', title: category_label(category, role: :candidate), background: "fr-background-alt--grey" %>
+      <%= render 'shared/card_header', title: category_label(category, role: :candidate), background: "fr-background-alt--grey", scope_badges: identity_scopes %>
       <div class="fr-card__body fr-mt-1w fr-mb-1w">
         <% if context == :web && category == 'motifs_exclusion' && presenter.missing_mandatory_motifs_exclusion? %>
           <div class="fr-mt-2w">
@@ -51,7 +52,8 @@
                      presenter: presenter,
                      subcategory: subcategory,
                      market_attributes: market_attributes,
-                     context: context %>
+                     context: context,
+                     show_field_scopes: category.to_s != MarketApplicationPresenter::MARKET_INFO_PARENT_CATEGORY %>
         <% end %>
       </div>
     </div>

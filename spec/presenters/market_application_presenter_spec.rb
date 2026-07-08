@@ -613,5 +613,26 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
         expect(result.keys).to include(works_type, services_type)
       end
     end
+
+    describe '#scopes_for_attribute' do
+      it 'returns [:commun] for an attribute shared across all selected lot types' do
+        expect(multi_presenter.scopes_for_attribute(common_attr)).to eq([:commun])
+      end
+
+      it 'returns [:works] for a works-specific attribute' do
+        expect(multi_presenter.scopes_for_attribute(works_attr)).to eq([:works])
+      end
+
+      it 'returns [:services] for a services-specific attribute' do
+        expect(multi_presenter.scopes_for_attribute(services_attr)).to eq([:services])
+      end
+
+      it 'returns [] when the application is not multi-type' do
+        single_app = create(:market_application, public_market: multi_type_market)
+        single_app.lots = [lot_works]
+        single_presenter = described_class.new(single_app)
+        expect(single_presenter.scopes_for_attribute(common_attr)).to eq([])
+      end
+    end
   end
 end

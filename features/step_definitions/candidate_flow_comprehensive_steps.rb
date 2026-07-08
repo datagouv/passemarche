@@ -8,26 +8,22 @@ Given('a comprehensive public market with all input types exists') do
   @editor = create(:editor, :authorized_and_active)
   @public_market = create(:public_market, :completed, editor: @editor)
 
-  {
-    comprehensive_test_email: { input_type: 'email_input', category_key: 'identite_entreprise', subcategory_key: 'contact', mandatory: true },
-    comprehensive_test_phone: { input_type: 'phone_input', category_key: 'identite_entreprise', subcategory_key: 'contact', mandatory: true },
-    comprehensive_test_company_name: { input_type: 'text_input', category_key: 'identite_entreprise', subcategory_key: 'identification', mandatory: true },
-    comprehensive_test_exclusion: { input_type: 'checkbox_with_document', category_key: 'exclusion_criteria', subcategory_key: 'declarations', mandatory: true },
-    comprehensive_test_economic: { input_type: 'textarea', category_key: 'economic_capacities', subcategory_key: 'description', mandatory: true },
-    comprehensive_test_technical: { input_type: 'file_upload', category_key: 'technical_capacities', subcategory_key: 'documents', mandatory: true },
-    comprehensive_test_checkbox_doc: { input_type: 'checkbox_with_document', category_key: 'technical_capacities', subcategory_key: 'attestations', mandatory: false },
-    comprehensive_test_certifications: { input_type: 'checkbox_with_document', category_key: 'technical_capacities', subcategory_key: 'certifications', mandatory: true },
-    capacite_economique_financiere_chiffre_affaires_global_annuel: {
-      input_type: 'capacite_economique_financiere_chiffre_affaires_global_annuel',
-      category_key: 'capacite_economique_financiere',
-      subcategory_key: 'capacite_economique_financiere_chiffre_affaires',
-      mandatory: false,
-      api_name: 'dgfip_chiffres_affaires',
-      api_key: 'chiffres_affaires_data'
-    }
-  }.each do |key, attrs|
-    attr = MarketAttribute.find_or_create_by(key:) { |a| attrs.each { |k, v| a.send(:"#{k}=", v) } }
-    @public_market.market_attributes << attr unless @public_market.market_attributes.include?(attr)
+  [
+    { key: :comprehensive_test_email, input_type: 'email_input', category_key: 'identite_entreprise', subcategory_key: 'contact', mandatory: true },
+    { key: :comprehensive_test_phone, input_type: 'phone_input', category_key: 'identite_entreprise', subcategory_key: 'contact', mandatory: true },
+    { key: :comprehensive_test_company_name, input_type: 'text_input', category_key: 'identite_entreprise', subcategory_key: 'identification', mandatory: true },
+    { key: :comprehensive_test_exclusion, input_type: 'checkbox_with_document', category_key: 'exclusion_criteria', subcategory_key: 'declarations', mandatory: true },
+    { key: :comprehensive_test_economic, input_type: 'textarea', category_key: 'economic_capacities', subcategory_key: 'description', mandatory: true },
+    { key: :comprehensive_test_technical, input_type: 'file_upload', category_key: 'technical_capacities', subcategory_key: 'documents', mandatory: true },
+    { key: :comprehensive_test_checkbox_doc, input_type: 'checkbox_with_document', category_key: 'technical_capacities', subcategory_key: 'attestations', mandatory: false },
+    { key: :comprehensive_test_certifications, input_type: 'checkbox_with_document', category_key: 'technical_capacities', subcategory_key: 'certifications', mandatory: true },
+    { key: :capacite_economique_financiere_chiffre_affaires_global_annuel, input_type: 'capacite_economique_financiere_chiffre_affaires_global_annuel',
+      category_key: 'capacite_economique_financiere', subcategory_key: 'capacite_economique_financiere_chiffre_affaires',
+      mandatory: false, api_name: 'dgfip_chiffres_affaires', api_key: 'chiffres_affaires_data' }
+  ].each_with_index do |attrs, index|
+    key = attrs.delete(:key)
+    attr = create(:market_attribute, key: "#{key}_#{@public_market.id}", position: index + 1, **attrs)
+    @public_market.market_attributes << attr
   end
 end
 
@@ -77,6 +73,7 @@ end
 When('all APIs complete successfully') do
   @market_application.update!(api_fetch_status: completed_api_status)
   visit current_path
+  expect(page).to have_button('Continuer', disabled: false, wait: 10)
 end
 
 Given('I have filled all required fields across all steps') do
@@ -84,6 +81,7 @@ Given('I have filled all required fields across all steps') do
   click_button 'Continuer'
   @market_application.update!(api_fetch_status: completed_api_status)
   visit current_path
+  expect(page).to have_button('Continuer', disabled: false, wait: 10)
   click_button 'Continuer'
 
   step('I click "Suivant"')
