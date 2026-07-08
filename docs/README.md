@@ -2,6 +2,6 @@
 
 ## Note pour les contributeurs et contributrices
 
-Cette documentation est synchronisée avec GitBook via l'intégration GitHub.
+Cette documentation est publiée sur [guides.data.gouv.fr](https://guides.data.gouv.fr/passe-marche).
 
-> **Important** : pour qu'un fichier apparaisse sur GitBook, il doit être référencé dans le fichier [`SUMMARY.md`](../SUMMARY.md) à la racine du projet. Tout fichier Markdown non listé dans `SUMMARY.md` ne sera pas publié sur GitBook.
+> **Important** : pour mettre à jour la documentation publique, ouvrir une pull request sur le dépôt [datagouv/guides.data.gouv.fr](https://github.com/datagouv/guides.data.gouv.fr) en copiant les fichiers modifiés dans le répertoire `passemarche/`. Tout nouveau fichier doit également être référencé dans le `SUMMARY.md` de ce dépôt.
