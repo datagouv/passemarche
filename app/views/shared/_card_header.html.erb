@@ -27,7 +27,7 @@
         <% scope_badges.each do |scope| %>
           <% if scope == :commun %>
             <span class="fr-tag fr-tag--sm market-scope-tag">
-              <span class="fr-icon-links-fill fr-icon--xs fr-mr-1v" aria-hidden="true"></span>
+              <%= commun_scope_icon_svg %>
               <%= t('buyer.public_markets.form_config.scope_commun_badge') %>
             </span>
           <% else %>
