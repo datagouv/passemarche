@@ -3,9 +3,9 @@ name: Tests
 on: [push]
 
 jobs:
-  test:
+  rspec:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:latest
@@ -23,17 +23,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
-    
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.4.5
         bundler-cache: true
-    
+
     - name: Install dependencies
       run: |
         bundle install
-    
+
     - name: Setup database
       env:
         RAILS_ENV: test
@@ -41,7 +41,7 @@ jobs:
       run: |
         bundle exec rails db:create
         bundle exec rails db:schema:load
-    
+
     - name: Run RSpec tests
       env:
         RAILS_ENV: test
@@ -49,16 +49,60 @@ jobs:
       run: |
         bundle exec rspec
 
-    - name: Run Cucumber tests
+  cucumber:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [0, 1, 2, 3]
+      fail-fast: false
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: voie_rapide
+          POSTGRES_DB: voie_rapide_test
+          POSTGRES_PASSWORD: wow*veryrapide
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.4.5
+        bundler-cache: true
+
+    - name: Install dependencies
+      run: |
+        bundle install
+
+    - name: Setup database
+      env:
+        RAILS_ENV: test
+        DATABASE_URL: postgres://voie_rapide:wow*veryrapide@localhost:5432/voie_rapide_test
+      run: |
+        bundle exec rails db:create
+        bundle exec rails db:schema:load
+
+    - name: Run Cucumber tests (shard ${{ matrix.node }})
       env:
         RAILS_ENV: test
         DATABASE_URL: postgres://voie_rapide:wow*veryrapide@localhost:5432/voie_rapide_test
         CUCUMBER_PUBLISH_QUIET: true
       run: |
-        bundle exec cucumber --tags "not @wip"
+        FEATURES=$(ls features/*.feature | awk "NR % 4 == ${{ matrix.node }}")
+        bundle exec cucumber --tags "not @wip" $FEATURES
 
   deploy-sandbox:
-    needs: test
+    needs: [rspec, cucumber]
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     timeout-minutes: 10
