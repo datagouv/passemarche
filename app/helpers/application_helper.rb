@@ -8,7 +8,6 @@ module ApplicationHelper
   def format_paris_time(datetime, format = '%d/%m/%Y à %H:%M')
     return '-' if datetime.nil?
 
-    # Convert to Paris timezone - Rails will handle this automatically with Time.zone
     datetime.in_time_zone('Europe/Paris').strftime(format)
   end
 
@@ -46,12 +45,19 @@ module ApplicationHelper
     content_tag(:span, content, class: 'fr-tag fr-tag--sm')
   end
 
+  def commun_scope_icon_svg
+    tag.img(src: svg_asset_data_uri('icon-commun-only.svg'), alt: '', aria: { hidden: true }, width: 12, height: 12)
+  end
+
   def market_type_badge_tag(code, label, background: nil)
     config = MARKET_TYPE_CONFIGS[code]
     bg = background || config&.dig(:bg)
     style = bg ? "background-color:#{bg};" : nil
     if config
-      icon = image_tag(config[:icon_only], alt: '', aria: { hidden: true }, width: 16, height: 16)
+      icon = tag.img(
+        src: svg_asset_data_uri(config[:icon_only]),
+        alt: '', aria: { hidden: true }, width: 16, height: 16
+      )
       content_tag(:span, icon + label, class: 'fr-tag fr-tag--sm market-type-badge', style:)
     else
       content_tag(:span, label, class: 'fr-tag fr-tag--sm market-type-badge', style:)
@@ -67,5 +73,20 @@ module ApplicationHelper
     )
     wrapper_class = align == :left ? 'collapsible-list__toggle-wrapper collapsible-list__toggle-wrapper--left' : 'collapsible-list__toggle-wrapper'
     content_tag(:div, button, class: wrapper_class)
+  end
+
+  private
+
+  def svg_asset_data_uri(filename)
+    raise ArgumentError, "expected an SVG asset, got #{filename}" unless filename.end_with?('.svg')
+
+    "data:image/svg+xml;base64,#{svg_asset_base64(filename)}"
+  end
+
+  def svg_asset_base64(filename)
+    Rails.cache.fetch("svg_asset_base64/#{filename}") do
+      path = Rails.root.join('app/assets/images', filename)
+      Base64.strict_encode64(File.read(path))
+    end
   end
 end

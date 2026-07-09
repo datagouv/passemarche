@@ -29,8 +29,7 @@ class MarketAttributeResponse::BaseComponent < ViewComponent::Base
 
   def commun_scope_tag
     label = I18n.t('buyer.public_markets.form_config.scope_commun_badge')
-    icon = helpers.content_tag(:span, '', class: 'fr-icon-links-fill fr-icon--xs fr-mr-1v', aria: { hidden: true })
-    helpers.content_tag(:span, icon + label, class: 'fr-tag fr-tag--sm market-scope-tag')
+    helpers.content_tag(:span, helpers.commun_scope_icon_svg + label, class: 'fr-tag fr-tag--sm market-scope-tag')
   end
 
   def form_mode?

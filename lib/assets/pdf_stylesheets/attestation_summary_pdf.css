@@ -561,7 +561,8 @@ strong {
 }
 
 .market-type-badge img {
-  display: none;
+  vertical-align: middle;
+  margin-right: 3px;
 }
 
 .fr-tag.fr-tag--sm,
@@ -576,13 +577,10 @@ strong {
   white-space: nowrap;
 }
 
-.fr-tag img {
-  display: none;
-}
-
-.fr-icon-links-fill,
-.fr-icon--xs {
-  display: none;
+.fr-tag img,
+.fr-tag svg {
+  vertical-align: middle;
+  margin-right: 3px;
 }
 
 /* Lot tags (fr-tags-group / fr-tag) */
