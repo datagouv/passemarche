@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 module MultiTypeLotConcern
+  include MarketAttributeScopeResolver
+
   def lot_market_types
     @lot_market_types ||= lots_for_config.filter_map(&:effective_market_type).uniq
   end
+
+  alias scope_lot_market_types lot_market_types
 
   def scopes
     return [] unless multi_type_lots?
@@ -21,20 +25,7 @@ module MultiTypeLotConcern
     type_ids = lot_market_types.map(&:id)
     return [] if type_ids.empty?
 
-    scope == :commun ? common_attributes(type_ids) : type_specific_attributes(scope, type_ids)
-  end
-
-  def scopes_for_attribute(attribute)
-    type_ids = lot_market_types.map(&:id)
-    return [] if type_ids.empty?
-
-    attr_type_ids = attribute.market_types.map(&:id)
-    matched_type_ids = type_ids & attr_type_ids
-    return [:commun] if matched_type_ids.size > 1
-
-    lot_market_types
-      .select { |t| attr_type_ids.include?(t.id) }
-      .map { |t| t.code.to_sym }
+    scope == :commun ? scope_commun_attributes(type_ids) : scope_type_specific_attributes(scope, type_ids)
   end
 
   def lots_by_effective_type
@@ -50,19 +41,7 @@ module MultiTypeLotConcern
 
   private
 
-  def common_attributes(type_ids)
-    available_attributes_array.select do |attr|
-      (type_ids & attr.market_types.map(&:id)).size > 1
-    end
-  end
-
-  def type_specific_attributes(scope, type_ids)
-    target = lot_market_types.find { |t| t.code == scope.to_s }
-    return [] unless target
-
-    available_attributes_array.select do |attr|
-      attr_type_ids = attr.market_types.map(&:id)
-      attr_type_ids.include?(target.id) && (type_ids & attr_type_ids).size == 1
-    end
+  def scope_available_attributes
+    available_attributes_array
   end
 end

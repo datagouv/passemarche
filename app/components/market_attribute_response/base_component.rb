@@ -16,7 +16,7 @@ class MarketAttributeResponse::BaseComponent < ViewComponent::Base
   def scope_tags_html
     return if @scopes.blank?
 
-    helpers.content_tag(:div, helpers.safe_join(@scopes.map { |scope| scope_tag(scope) }), class: 'market-scope-tags')
+    helpers.content_tag(:span, helpers.safe_join(@scopes.map { |scope| scope_tag(scope) }), class: 'market-scope-tags')
   end
 
   def scope_tag(scope)
@@ -51,6 +51,12 @@ class MarketAttributeResponse::BaseComponent < ViewComponent::Base
 
   def field_label
     market_attribute.resolved_candidate_name
+  end
+
+  def field_label_with_scope
+    return field_label if @scopes.blank?
+
+    helpers.safe_join([field_label, scope_tags_html])
   end
 
   def field_description
