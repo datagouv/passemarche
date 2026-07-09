@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [0, 1, 2, 3]
+        node: [0, 1]
       fail-fast: false
 
     services:
@@ -98,7 +98,8 @@ jobs:
         DATABASE_URL: postgres://voie_rapide:wow*veryrapide@localhost:5432/voie_rapide_test
         CUCUMBER_PUBLISH_QUIET: true
       run: |
-        FEATURES=$(ls features/*.feature | awk "NR % 4 == ${{ matrix.node }}")
+        FEATURES=$(wc -l features/*.feature | grep feature | sort -rn | awk '{print $2}' | \
+          awk -v shard=${{ matrix.node }} '{ if (NR % 2 == shard) print }')
         bundle exec cucumber --tags "not @wip" $FEATURES
 
   deploy-sandbox:
