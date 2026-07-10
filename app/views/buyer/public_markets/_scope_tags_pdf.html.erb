@@ -1,0 +1,5 @@
+<% scopes.each do |scope| %>
+  <span class="fr-badge fr-badge--sm">
+    <%= scope == :commun ? t('buyer.public_markets.form_config.scope_commun_badge') : t("market_types.#{scope}", default: scope.to_s.humanize) %>
+  </span>
+<% end %>

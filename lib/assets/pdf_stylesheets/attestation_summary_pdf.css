@@ -120,6 +120,10 @@ body {
   color: #ce0500;
 }
 
+.fr-text--bold {
+  font-weight: 700;
+}
+
 /* Text Sizes */
 .fr-text--lg {
   font-size: 20px;

@@ -206,6 +206,8 @@ fr:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       documents_package_generation_failed: "Une erreur technique est survenue lors de la génération du package de documents. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
+    public_market:
+      configuration_summary_generation_failed: "Une erreur technique est survenue lors de la génération de la synthèse de configuration. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
 
   home:
     title: "Passe Marché"

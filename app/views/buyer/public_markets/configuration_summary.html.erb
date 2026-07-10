@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html data-context="configuration-summary-pdf">
+<head>
+  <meta charset="utf-8">
+  <style type="text/css">
+    <%= File.read(Rails.root.join('lib/assets/pdf_stylesheets/attestation_summary_pdf.css')) %>
+  </style>
+</head>
+<body>
+  <%= render 'shared/pdf_environment_indicator' %>
+
+  <!-- PDF Header (First page only) -->
+  <div class="pdf-page-header">
+    <div class="pdf-page-header-content">
+      <div class="pdf-page-header-left">
+        <p class="fr-logo">
+          République<br>Française
+        </p>
+      </div>
+      <div class="pdf-page-header-center">
+        <div class="pdf-page-header-title">Synthèse de configuration</div>
+      </div>
+      <div class="pdf-page-header-right">
+        <div class="pdf-page-header-date">
+          Transmise le <%= transmission_time %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-card fr-mb-2w category-card">
+    <%= render 'shared/card_header', title: t('buyer.summary.market_info_title'), background: 'fr-background-alt--grey' do %>
+      <div class="fr-mb-3w">
+        <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.market_name') %></div>
+        <div><%= public_market.name %></div>
+      </div>
+
+      <% if presenter.lots? %>
+        <div class="fr-mb-3w">
+          <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.lot_name') %></div>
+          <% presenter.lots.each do |lot| %>
+            <div class="fr-mb-1w"><%= lot.name %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="fr-mb-3w">
+        <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.deadline_short') %></div>
+        <div><%= l(public_market.deadline, format: '%d/%m/%Y %H:%M') %> (heure de Paris)</div>
+      </div>
+
+      <div class="fr-mb-3w">
+        <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.market_type_short') %></div>
+        <div>
+          <% if public_market.market_type_codes.any? %>
+            <% public_market.market_type_codes.each do |market_type_code| %>
+              <span class="fr-badge fr-badge--sm fr-mr-1w">
+                <%= t("market_types.#{market_type_code}", default: market_type_code.humanize).upcase %>
+              </span>
+            <% end %>
+          <% else %>
+            <p class="fr-text--sm fr-mb-0"><%= t('buyer.shared.no_market_type') %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <div class="fr-text--bold fr-mb-1w"><%= t('buyer.shared.identifier') %></div>
+        <div><%= public_market.identifier %></div>
+      </div>
+    <% end %>
+  </div>
+
+  <% presenter.selected_fields_by_category_and_subcategory.each_with_index do |(category, subcategories), category_index| %>
+    <div class="fr-card fr-mb-2w category-card page-break-before">
+      <%= render 'shared/card_header', title: "#{category_index + 1}. #{category_label(category, role: :buyer)}", background: 'fr-background-alt--grey' do %>
+        <% subcategories.each do |subcategory, field_keys| %>
+          <h4 class="fr-text--md fr-text--bold fr-mb-2w"><%= subcategory_label(subcategory, role: :buyer) %></h4>
+          <% field_keys.each do |field_key| %>
+            <% field = presenter.field_by_key(field_key) %>
+            <% next unless field %>
+            <% field_scopes = presenter.multi_type_lots? ? presenter.scopes_for_attribute(field) : [] %>
+            <div class="field-layout-container">
+              <div class="field-layout-content">
+                <span class="fr-text--md"><%= field.resolved_buyer_name %></span>
+                <% if (description = field.resolved_buyer_description) %>
+                  <br>
+                  <span class="fr-text--sm fr-text--mention-grey"><%= description %></span>
+                <% end %>
+              </div>
+              <div class="field-layout-badge">
+                <%= render 'buyer/public_markets/scope_tags_pdf', scopes: field_scopes %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Official Footer -->
+  <div class="attestation-footer">
+    <p>
+      Document généré automatiquement le <%= transmission_time %><br>
+      Système Passe Marché - République Française
+    </p>
+  </div>
+</body>
+</html>
