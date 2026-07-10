@@ -2,10 +2,12 @@
 
 module Buyer
   class PublicMarketWizardService < ApplicationService
-    def initialize(public_market, step, params = {})
+    def initialize(public_market, step, params = {}, request_host: nil, request_protocol: nil)
       @public_market = public_market
       @step = step
       @params = params
+      @request_host = request_host
+      @request_protocol = request_protocol
     end
 
     def call
@@ -25,7 +27,7 @@ module Buyer
 
     private
 
-    attr_reader :public_market, :step, :params
+    attr_reader :public_market, :step, :params, :request_host, :request_protocol
 
     def handle_lot_config_step
       enabled = params[:lot_limit_enabled] == 'true'
@@ -104,7 +106,7 @@ module Buyer
         sync_status: :sync_pending
       )
 
-      PublicMarketWebhookJob.perform_later(public_market.id)
+      GeneratePublicMarketConfigurationSummaryPdfJob.perform_later(public_market.id, request_host:, request_protocol:)
 
       public_market
     end

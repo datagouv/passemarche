@@ -17,6 +17,7 @@ RSpec.describe Buyer::PublicMarketWizardService do
   before do
     supplies_market_type.market_attributes << [mandatory_attribute, optional_attribute]
     defense_market_type.market_attributes << [mandatory_attribute]
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
   end
 
   describe '.call' do
@@ -197,10 +198,17 @@ RSpec.describe Buyer::PublicMarketWizardService do
         expect(public_market.reload.completed?).to be true
       end
 
-      it 'enqueues webhook sync job' do
+      it 'enqueues the configuration summary PDF generation job' do
         expect do
           described_class.call(public_market, :summary, {})
-        end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
+        end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob)
+          .with(public_market.id, request_host: nil, request_protocol: nil)
+      end
+
+      it 'does not enqueue the webhook sync job directly' do
+        expect do
+          described_class.call(public_market, :summary, {})
+        end.not_to have_enqueued_job(PublicMarketWebhookJob)
       end
 
       context 'when market was already completed (re-submission)' do
@@ -223,10 +231,11 @@ RSpec.describe Buyer::PublicMarketWizardService do
           expect(public_market.reload.sync_status).to eq('sync_pending')
         end
 
-        it 'enqueues a new webhook job' do
+        it 'enqueues a new configuration summary PDF generation job' do
           expect do
             described_class.call(public_market, :summary, {})
-          end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
+          end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob)
+            .with(public_market.id, request_host: nil, request_protocol: nil)
         end
       end
     end

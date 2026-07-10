@@ -28,6 +28,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
   before do
     supplies_type.market_attributes << [mandatory_attr_1, optional_attr_1]
     services_type.market_attributes << [mandatory_attr_2, optional_attr_2]
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
   end
 
   let(:public_market) do
@@ -134,8 +135,10 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         expect(public_market).to be_completed
       end
 
-      it 'enqueues webhook sync job' do
-        expect(PublicMarketWebhookJob).to have_been_enqueued.with(public_market.id)
+      it 'enqueues configuration summary PDF generation job' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).to have_been_enqueued.with(
+          public_market.id, request_host: 'www.example.com', request_protocol: 'http://'
+        )
       end
     end
   end
@@ -223,11 +226,13 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         expect(response).to have_http_status(:redirect)
       end
 
-      it 're-submits summary and enqueues new webhook' do
+      it 're-submits summary and enqueues new configuration summary PDF generation job' do
         patch "/buyer/public_markets/#{completed_market.identifier}/summary"
 
         expect(response).to redirect_to(buyer_sync_status_path(completed_market.identifier))
-        expect(PublicMarketWebhookJob).to have_been_enqueued.with(completed_market.id)
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).to have_been_enqueued.with(
+          completed_market.id, request_host: 'www.example.com', request_protocol: 'http://'
+        )
       end
     end
 
