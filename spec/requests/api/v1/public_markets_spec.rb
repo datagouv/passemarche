@@ -615,4 +615,90 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/public_markets/:identifier/configuration_summary' do
+    let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
+
+    context 'when the configuration summary is attached' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before do
+        public_market.configuration_summary.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: "configuration_summary_#{public_market.identifier}.pdf",
+          content_type: 'application/pdf'
+        )
+        get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary", headers:
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the PDF content type' do
+        expect(response.media_type).to eq('application/pdf')
+      end
+
+      it 'returns the PDF as an attachment' do
+        expect(response.headers['Content-Disposition']).to include('attachment')
+        expect(response.headers['Content-Disposition']).to include("configuration_summary_#{public_market.identifier}.pdf")
+      end
+
+      it 'returns the PDF content' do
+        expect(response.body).to eq('fake pdf content')
+      end
+    end
+
+    context 'when the configuration summary is not attached' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before { get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary", headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns an error message' do
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq('Configuration summary not available')
+      end
+    end
+
+    context 'without OAuth token' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before { get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary" }
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with unknown identifier' do
+      before { get '/api/v1/public_markets/UNKNOWN-ID/configuration_summary', headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'with a market belonging to another editor' do
+      let(:other_editor) do
+        Editor.create!(
+          name: 'Other Editor',
+          client_id: 'other_client_id',
+          client_secret: 'other_client_secret',
+          authorized: true,
+          active: true
+        )
+      end
+      let(:public_market) { create(:public_market, editor: other_editor) }
+
+      before { get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary", headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end

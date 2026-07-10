@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :public_markets, param: :identifier, only: %i[create update] do
         post :publish, on: :member
+        get :configuration_summary, on: :member
         resources :market_applications, only: [:create]
       end
       resources :market_applications, only: [] do
