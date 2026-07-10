@@ -92,6 +92,39 @@ RSpec.describe PublicMarketWebhookJob, type: :job do
       end
     end
 
+    context 'with a configuration summary attached' do
+      before do
+        public_market.configuration_summary.attach(io: StringIO.new('pdf'), filename: 'summary.pdf', content_type: 'application/pdf')
+      end
+
+      it 'includes the configuration summary URL in the payload' do
+        described_class.perform_now(public_market.id, request_host: 'example.com', request_protocol: 'https://')
+
+        expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
+          .with(body: hash_including(
+            'market' => hash_including(
+              'configuration_summary_url' => end_with("/api/v1/public_markets/#{public_market.identifier}/configuration_summary")
+            )
+          ))
+      end
+
+      it 'omits the configuration summary URL when request_host is not provided (retry_sync path)' do
+        described_class.perform_now(public_market.id)
+
+        parsed_body = JSON.parse(WebMock::RequestRegistry.instance.requested_signatures.hash.keys.last.body)
+        expect(parsed_body['market']).not_to have_key('configuration_summary_url')
+      end
+    end
+
+    context 'without a configuration summary attached' do
+      it 'omits the configuration summary URL from the payload even with a request_host' do
+        described_class.perform_now(public_market.id, request_host: 'example.com', request_protocol: 'https://')
+
+        parsed_body = JSON.parse(WebMock::RequestRegistry.instance.requested_signatures.hash.keys.last.body)
+        expect(parsed_body['market']).not_to have_key('configuration_summary_url')
+      end
+    end
+
     context 'when webhook delivery fails' do
       before do
         stub_request(:post, editor.completion_webhook_url)
