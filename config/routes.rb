@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :public_markets, param: :identifier, only: %i[create update] do
+        post :publish, on: :member
         resources :market_applications, only: [:create]
       end
       resources :market_applications, only: [] do
@@ -70,6 +71,7 @@ Rails.application.routes.draw do
     end
 
     resources :sync_status, param: :identifier, only: [:show], path: 'public_markets/:identifier/sync_status'
+    resources :published, param: :identifier, only: [:show], path: 'public_markets/:identifier/published'
   end
 
   namespace :candidate do

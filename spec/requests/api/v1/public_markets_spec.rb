@@ -527,4 +527,92 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
   end
+
+  describe 'POST /api/v1/public_markets/:identifier/publish' do
+    let(:headers) do
+      {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      }
+    end
+
+    context 'with a completed, non-published market' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the identifier and published_at' do
+        json_response = response.parsed_body
+        expect(json_response['identifier']).to eq(public_market.identifier)
+        expect(json_response['published_at']).to be_present
+      end
+
+      it 'sets published_at in the database' do
+        expect(public_market.reload.published_at).to be_present
+      end
+    end
+
+    context 'with a non-completed market' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns an error message' do
+        json_response = response.parsed_body
+        expect(json_response['errors']['base']).to include(I18n.t('api.errors.market_not_completed'))
+      end
+    end
+
+    context 'with an already published market' do
+      let(:public_market) { create(:public_market, :published, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns an error message' do
+        json_response = response.parsed_body
+        expect(json_response['errors']['base']).to include(I18n.t('api.errors.market_already_published'))
+      end
+    end
+
+    context 'without OAuth token' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish" }
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with a market belonging to another editor' do
+      let(:other_editor) do
+        Editor.create!(
+          name: 'Other Editor',
+          client_id: 'other_client_id',
+          client_secret: 'other_client_secret',
+          authorized: true,
+          active: true
+        )
+      end
+      let(:public_market) { create(:public_market, :completed, editor: other_editor) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end

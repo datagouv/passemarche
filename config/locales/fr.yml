@@ -397,9 +397,16 @@ fr:
       success_image_alt: "Synchronisation réussie"
       error_image_alt: "Erreur de synchronisation"
       loading_aria_label: "Synchronisation en cours..."
+    published:
+      title: "Configuration verrouillée"
+      heading: "Vous ne pouvez plus modifier la configuration"
+      explanation: "La consultation a été publiée, vous ne pouvez donc plus modifier la configuration de la candidature."
+      contact_hint: "Pour toutes questions, contactez votre plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
+      image_alt: "Illustration consultation publiée"
     public_markets:
       wizard_completed: "Marché configuré avec succès"
-      market_completed_cannot_edit: "Ce marché a déjà été complété et ne peut plus être modifié."
+      market_published_cannot_edit: "Ce marché a été publié et sa configuration ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
@@ -891,6 +898,8 @@ fr:
   api:
     errors:
       defense_market_not_allowed: "La création de marchés de défense nécessite une autorisation préalable. Veuillez contacter l'administrateur pour activer cette fonctionnalité."
+      market_not_completed: "Le marché n'a pas encore été configuré."
+      market_already_published: "Le marché a déjà été publié."
     insee:
       ess:
         is_ess: "L'entreprise est une ESS - données issues d'une source officielle"

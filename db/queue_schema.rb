@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_15_054753) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_29_114816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -245,6 +245,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_15_054753) do
     t.text "market_type_codes", default: [], array: true
     t.string "name"
     t.string "provider_user_id"
+    t.datetime "published_at"
     t.string "siret", null: false
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false

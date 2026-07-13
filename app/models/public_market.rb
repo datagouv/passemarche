@@ -3,9 +3,10 @@
 class PublicMarket < ApplicationRecord
   include UniqueAssociationValidator
   include Completable
+  include Publishable
   include Syncable
 
-  has_paper_trail on: %i[create update], only: [:deadline]
+  has_paper_trail on: %i[create update]
 
   belongs_to :editor
 

@@ -99,7 +99,10 @@ module Buyer
     end
 
     def complete_market
-      public_market.complete!
+      public_market.update!(
+        completed_at: Time.zone.now,
+        sync_status: :sync_pending
+      )
 
       PublicMarketWebhookJob.perform_later(public_market.id)
 

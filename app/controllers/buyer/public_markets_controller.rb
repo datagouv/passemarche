@@ -7,7 +7,7 @@ module Buyer
     prepend_before_action :set_dynamic_steps, except: [:retry_sync]
     prepend_before_action :initialize_presenter, except: [:retry_sync]
     prepend_before_action :find_public_market
-    before_action :check_market_not_completed, except: [:retry_sync]
+    before_action :check_market_not_published, except: [:retry_sync]
     before_action :set_wizard_steps, except: [:retry_sync]
     skip_before_action :setup_wizard, only: [:retry_sync]
 
@@ -83,11 +83,10 @@ module Buyer
       render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
     end
 
-    def check_market_not_completed
-      return unless @public_market.completed?
+    def check_market_not_published
+      return unless @public_market.published?
 
-      redirect_to buyer_sync_status_path(@public_market.identifier),
-        alert: t('buyer.public_markets.market_completed_cannot_edit')
+      redirect_to buyer_published_path(@public_market.identifier)
     end
 
     def initialize_presenter

@@ -180,6 +180,37 @@ class FakeEditorApp < Sinatra::Base
       erb :'buyer/market_detail'
     end
 
+    post '/markets/:identifier/publish' do
+      current_token = Token.current_token
+
+      unless current_token&.valid?
+        @error = "Token d'accès non valide."
+        redirect "/buyer/markets/#{params[:identifier]}"
+        return
+      end
+
+      market = Market.find_by_identifier(params[:identifier])
+
+      unless market
+        @error = 'Marché non trouvé'
+        redirect '/buyer'
+        return
+      end
+
+      begin
+        @fast_track_client.publish_market(current_token.access_token, params[:identifier])
+        market.mark_published!
+        redirect "/buyer/markets/#{params[:identifier]}"
+      rescue StandardError => e
+        @error = "Erreur lors de la publication : #{e.message}"
+        @market = market
+        @applications = market.applications
+        @current_token = current_token
+        @tab = 'overview'
+        erb :'buyer/market_detail'
+      end
+    end
+
     get '/applications/:identifier' do
       @application = MarketApplication.find_by_identifier(params[:identifier])
 
