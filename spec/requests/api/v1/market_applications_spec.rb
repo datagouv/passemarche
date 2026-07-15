@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:editor) { create(:editor, :authorized_and_active) }
-  let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:public_market) { create(:public_market, :published, editor:) }
   let(:access_token) { oauth_access_token_for(editor) }
 
   describe 'POST /api/v1/public_markets/:public_market_id/market_applications' do
@@ -144,6 +144,30 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
         as: :json
 
       expect(response).to have_http_status(:unauthorized)
+    end
+
+    context 'when public market is not published' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      it 'rejects the application creation' do
+        post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+          params: valid_params,
+          headers: { 'Authorization' => "Bearer #{access_token}" },
+          as: :json
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq(I18n.t('api.errors.market_not_published'))
+      end
+
+      it 'does not create a market application in database' do
+        expect do
+          post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+            params: valid_params,
+            headers: { 'Authorization' => "Bearer #{access_token}" },
+            as: :json
+        end.not_to change(MarketApplication, :count)
+      end
     end
   end
 
