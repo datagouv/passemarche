@@ -104,6 +104,8 @@ end
 Then('the first lot should have market type {string}') do |code|
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   first_lot = public_market.lots.ordered.first
-  expect(page).to have_css("#lot_row_#{first_lot.id}")
+  expected_label = I18n.t("market_types.#{code}").upcase
+
+  expect(page).to have_css("#lot_row_#{first_lot.id}", text: expected_label, wait: Capybara.default_max_wait_time)
   expect(first_lot.reload.market_type&.code).to eq(code)
 end
