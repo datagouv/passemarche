@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Buyer
-  class SyncStatusController < ApplicationController
-    before_action :find_public_market
+  class SyncStatusController < Buyer::ApplicationController
+    prepend_before_action :find_public_market
 
     def show
       respond_to do |format|

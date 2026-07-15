@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Buyer
-  class PublicMarketsController < ApplicationController
+  class PublicMarketsController < Buyer::ApplicationController
     include Wicked::Wizard
 
     prepend_before_action :set_dynamic_steps, except: [:retry_sync]
