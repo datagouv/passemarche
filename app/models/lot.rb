@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Lot < ApplicationRecord
+  has_paper_trail on: %i[create update], ignore: %i[position]
+
   belongs_to :public_market
   belongs_to :platform_market_type, class_name: 'MarketType', optional: true
   belongs_to :market_type, class_name: 'MarketType', optional: true

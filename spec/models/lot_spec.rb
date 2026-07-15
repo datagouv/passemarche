@@ -105,4 +105,22 @@ RSpec.describe Lot, type: :model do
       expect(described_class.ordered.to_a).to eq([lot_a, lot_b])
     end
   end
+
+  describe 'versioning' do
+    it 'creates a version on create' do
+      lot = create(:lot, public_market:)
+      expect(lot.versions.map(&:event)).to eq(['create'])
+    end
+
+    it 'creates a version on update' do
+      lot = create(:lot, public_market:, name: 'Lot initial')
+      lot.update!(name: 'Lot renommé')
+      expect(lot.versions.map(&:event)).to eq(%w[create update])
+    end
+
+    it 'does not create a version when only position changes' do
+      lot = create(:lot, public_market:)
+      expect { lot.update!(position: lot.position + 1) }.not_to(change { lot.versions.count })
+    end
+  end
 end
