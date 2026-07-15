@@ -87,8 +87,10 @@ module Buyer
       keys_to_remove = available_keys - selected_keys
       return if keys_to_remove.empty?
 
-      attributes_to_remove = public_market.market_attributes.where(key: keys_to_remove)
-      public_market.market_attributes.delete(attributes_to_remove)
+      public_market.market_attribute_selections
+        .joins(:market_attribute)
+        .where(market_attribute: { key: keys_to_remove })
+        .destroy_all
     end
 
     def add_new_optional_fields(valid_keys)
