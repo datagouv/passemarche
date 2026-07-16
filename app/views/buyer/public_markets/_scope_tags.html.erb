@@ -1,10 +1,10 @@
 <% scopes.each do |scope| %>
   <% if scope == :commun %>
-    <span class="fr-tag fr-tag--sm">
-      <span class="fr-icon-links-fill fr-icon--xs" aria-hidden="true"></span>
+    <span class="fr-tag fr-tag--sm market-scope-tag">
+      <%= commun_scope_icon_svg %>
       <%= t('buyer.public_markets.form_config.scope_commun_badge') %>
     </span>
   <% else %>
-    <%= market_type_scope_tag(scope) %>
+    <%= market_type_badge_tag(scope.to_s, t("market_types.#{scope}", default: scope.to_s.humanize)) %>
   <% end %>
 <% end %>
