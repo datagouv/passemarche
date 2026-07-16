@@ -17,10 +17,6 @@ class GeneratePublicMarketConfigurationSummaryPdf < ApplicationInteractor
 
   private
 
-  def transmission_time
-    @transmission_time ||= Time.zone.now.strftime('%d/%m/%Y à %H:%M')
-  end
-
   def filename
     "configuration_summary_#{public_market.identifier}.pdf"
   end

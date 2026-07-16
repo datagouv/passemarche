@@ -45,5 +45,5 @@ Then('the configuration summary PDF should have been replaced') do
 end
 
 Then('I should see the download configuration summary button') do
-  expect(page).to have_button(I18n.t('buyer.sync_status.download_configuration_summary'))
+  expect(page).to have_link(I18n.t('buyer.sync_status.download_configuration_summary'))
 end

@@ -28,12 +28,11 @@
             </div>
             <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
               <% if @public_market.configuration_summary.attached? %>
-                <button type="button"
-                        class="fr-btn fr-btn--icon-left"
-                        onclick="window.location.href='<%= rails_blob_path(@public_market.configuration_summary, disposition: 'attachment') %>'">
+                <%= link_to rails_blob_path(@public_market.configuration_summary, disposition: 'attachment'),
+                            class: 'fr-btn fr-btn--icon-left' do %>
                   <span class="fr-icon-download-line" aria-hidden="true"></span>
                   <span class="fr-ml-1w"><%= t('buyer.sync_status.download_configuration_summary') %></span>
-                </button>
+                <% end %>
               <% end %>
               <% if (buyer_url = @public_market.editor.build_buyer_return_url(market: @public_market)) %>
                 <%= link_to t('buyer.sync_status.return_to_editor', editor: @public_market.editor.name),

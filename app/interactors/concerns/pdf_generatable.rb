@@ -38,6 +38,10 @@ module PdfGeneratable
     attachment.attach(io: StringIO.new(pdf_content), filename:, content_type: 'application/pdf')
   end
 
+  def transmission_time
+    @transmission_time ||= Time.zone.now.strftime('%d/%m/%Y à %H:%M')
+  end
+
   def handle_pdf_generation_error(error)
     Rails.logger.error "#{pdf_error_message}: #{error.class} - #{error.message}"
     Rails.logger.error error.backtrace.first(10).join("\n")

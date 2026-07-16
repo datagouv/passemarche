@@ -33,7 +33,7 @@ class PublicMarketWebhookJob < WebhookJob
       completed_at: entity.completed_at.iso8601,
       field_keys: entity.market_attributes.pluck(:key),
       configuration_summary_url: configuration_summary_url_for(entity)
-    }.compact
+    }
   end
 
   def configuration_summary_url_for(entity)
@@ -52,6 +52,6 @@ class PublicMarketWebhookJob < WebhookJob
       name: lot.name,
       cpv_code: lot.cpv_code,
       market_type_code: lot.effective_market_type&.code
-    }.compact
+    }
   end
 end

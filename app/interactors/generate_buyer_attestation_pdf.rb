@@ -19,10 +19,6 @@ class GenerateBuyerAttestationPdf < ApplicationInteractor
 
   private
 
-  def transmission_time
-    @transmission_time ||= Time.zone.now.strftime('%d/%m/%Y à %H:%M')
-  end
-
   def filename
     "buyer_attestation_FT#{market_application.identifier}.pdf"
   end
