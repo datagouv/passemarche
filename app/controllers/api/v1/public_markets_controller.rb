@@ -2,7 +2,8 @@
 
 class Api::V1::PublicMarketsController < Api::V1::BaseController
   before_action :validate_defense_market_permission, only: [:create]
-  before_action :find_public_market, only: %i[update publish]
+  before_action :find_public_market, only: %i[update publish configuration_summary]
+  before_action :validate_configuration_summary_available, only: [:configuration_summary]
 
   def create
     result = CreatePublicMarket.call(editor: current_editor, params: create_params)
@@ -32,10 +33,23 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
     end
   end
 
+  def configuration_summary
+    send_data @public_market.configuration_summary.download,
+      filename: "configuration_summary_#{@public_market.identifier}.pdf",
+      type: 'application/pdf',
+      disposition: 'attachment'
+  end
+
   private
 
   def find_public_market
     @public_market = current_editor.public_markets.find_by!(identifier: params[:identifier])
+  end
+
+  def validate_configuration_summary_available
+    return if @public_market.configuration_summary.attached?
+
+    render json: { error: 'Configuration summary not available' }, status: :not_found
   end
 
   def validate_defense_market_permission

@@ -4,6 +4,12 @@
 class PublicMarketWebhookJob < WebhookJob
   include WebhookSyncable
 
+  def perform(entity_id, request_host: nil, request_protocol: nil)
+    @request_host = request_host
+    @request_protocol = request_protocol
+    super(entity_id)
+  end
+
   private
 
   def find_entity(entity_id)
@@ -25,8 +31,19 @@ class PublicMarketWebhookJob < WebhookJob
       lots: entity.lots.ordered.map { |lot| lot_payload(lot) },
       market_type_codes: entity.market_type_codes,
       completed_at: entity.completed_at.iso8601,
-      field_keys: entity.market_attributes.pluck(:key)
+      field_keys: entity.market_attributes.pluck(:key),
+      configuration_summary_url: configuration_summary_url_for(entity)
     }
+  end
+
+  def configuration_summary_url_for(entity)
+    return nil unless entity.configuration_summary.attached? && @request_host.present?
+
+    Rails.application.routes.url_helpers.configuration_summary_api_v1_public_market_url(
+      entity.identifier,
+      host: @request_host,
+      protocol: @request_protocol
+    )
   end
 
   def lot_payload(lot)
@@ -35,6 +52,6 @@ class PublicMarketWebhookJob < WebhookJob
       name: lot.name,
       cpv_code: lot.cpv_code,
       market_type_code: lot.effective_market_type&.code
-    }.compact
+    }
   end
 end

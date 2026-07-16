@@ -206,6 +206,8 @@ fr:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       documents_package_generation_failed: "Une erreur technique est survenue lors de la génération du package de documents. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
+    public_market:
+      configuration_summary_generation_failed: "Une erreur technique est survenue lors de la génération de la synthèse de configuration. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
 
   home:
     title: "Passe Marché"
@@ -386,6 +388,9 @@ fr:
       success_message: "Nous avons transmis automatiquement la configuration à votre profil acheteur, les entreprises pourront candidater via %{editor}."
       identifier_notice: "Voici l'identifiant du marché à conserver :"
       copy: "Copier"
+      download_configuration_summary: "Télécharger la synthèse de configuration"
+      configuration_summary_missing: "La synthèse de configuration n'a pas pu être générée."
+      configuration_summary_missing_retry: "Réessayer"
       return_to_editor: "Retourner sur %{editor}"
       error_title: "Erreur inattendue"
       error_message: "Désolée, lorem ipsum rencontre un problème, nous n'avons pas réussi à transmettre les informations au profil acheteur."
