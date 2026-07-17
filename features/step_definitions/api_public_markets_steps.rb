@@ -169,7 +169,7 @@ end
 Then('the configuration URL should use the correct host') do
   configuration_url = @response_body['configuration_url']
 
-  expect(configuration_url).to start_with('http://example.org')
+  expect(configuration_url).to start_with('http://example.com')
 end
 
 Then('the configuration URL should point to the buyer configuration page') do

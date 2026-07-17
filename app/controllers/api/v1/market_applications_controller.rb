@@ -77,8 +77,7 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   def application_url_for(market_application)
     Rails.application.routes.url_helpers.step_candidate_market_application_url(
       market_application.identifier,
-      :company_identification,
-      host: request.host_with_port
+      :company_identification
     )
   end
 
