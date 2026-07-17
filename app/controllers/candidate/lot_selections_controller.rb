@@ -57,11 +57,7 @@ module Candidate
     end
 
     def complete_application
-      result = MarketApplicationStepUpdateService.call(
-        @market_application, :summary, {},
-        request_host: request.host_with_port,
-        request_protocol: request.protocol
-      )
+      result = MarketApplicationStepUpdateService.call(@market_application, :summary, {})
 
       return render_submission_error(result[:flash_messages]) unless result[:success]
 

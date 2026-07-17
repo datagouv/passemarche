@@ -3,12 +3,10 @@
 class MarketApplicationStepUpdateService < ApplicationService
   attr_reader :flash_messages
 
-  def initialize(market_application, step, params = {}, request_host: nil, request_protocol: nil)
+  def initialize(market_application, step, params = {})
     @market_application = market_application
     @step = step
     @params = params
-    @request_host = request_host
-    @request_protocol = request_protocol
     @flash_messages = {}
   end
 
@@ -25,7 +23,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   private
 
-  attr_reader :market_application, :step, :params, :request_host, :request_protocol
+  attr_reader :market_application, :step, :params
 
   def handle_navigation_only_step
     build_result(true)
@@ -43,7 +41,7 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def handle_summary_completion
-    result = CompleteMarketApplication.call(market_application:, request_host:, request_protocol:)
+    result = CompleteMarketApplication.call(market_application:)
     result.success? ? build_result(true, redirect: :sync_status) : handle_completion_failure(result.message)
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
     Rails.logger.error "Error completing market application #{market_application.identifier}: #{e.message}"

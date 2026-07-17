@@ -73,9 +73,7 @@ module Candidate
       {
         email: params[:email],
         siret: params[:siret],
-        market_application_id: params[:market_application_id],
-        host: request.host_with_port,
-        protocol: request.protocol
+        market_application_id: params[:market_application_id]
       }
     end
 
