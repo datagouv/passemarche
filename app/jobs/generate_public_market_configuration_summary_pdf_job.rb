@@ -4,7 +4,7 @@ class GeneratePublicMarketConfigurationSummaryPdfJob < ApplicationJob
   queue_as :default
   discard_on ActiveRecord::RecordNotFound
 
-  def perform(public_market_id)
+  def perform(public_market_id, **_deprecated)
     public_market = PublicMarket.find(public_market_id)
 
     GeneratePublicMarketConfigurationSummaryPdf.call(public_market:)

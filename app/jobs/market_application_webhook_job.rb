@@ -4,6 +4,10 @@
 class MarketApplicationWebhookJob < WebhookJob
   include WebhookSyncable
 
+  def perform(entity_id, **_deprecated)
+    super(entity_id)
+  end
+
   private
 
   def find_entity(entity_id)
