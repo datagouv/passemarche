@@ -154,9 +154,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
       end
 
       it 'enqueues configuration summary PDF generation job' do
-        expect(GeneratePublicMarketConfigurationSummaryPdfJob).to have_been_enqueued.with(
-          public_market.id, request_host: 'www.example.com', request_protocol: 'http://'
-        )
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).to have_been_enqueued.with(public_market.id)
       end
     end
   end
@@ -248,9 +246,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         patch "/buyer/public_markets/#{completed_market.identifier}/summary"
 
         expect(response).to redirect_to(buyer_sync_status_path(completed_market.identifier))
-        expect(GeneratePublicMarketConfigurationSummaryPdfJob).to have_been_enqueued.with(
-          completed_market.id, request_host: 'www.example.com', request_protocol: 'http://'
-        )
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).to have_been_enqueued.with(completed_market.id)
       end
     end
 

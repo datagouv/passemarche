@@ -98,7 +98,7 @@ RSpec.describe PublicMarketWebhookJob, type: :job do
       end
 
       it 'includes the configuration summary URL in the payload' do
-        described_class.perform_now(public_market.id, request_host: 'example.com', request_protocol: 'https://')
+        described_class.perform_now(public_market.id)
 
         expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
           .with(body: hash_including(
@@ -107,18 +107,11 @@ RSpec.describe PublicMarketWebhookJob, type: :job do
             )
           ))
       end
-
-      it 'sets the configuration summary URL to nil when request_host is not provided (retry_sync path)' do
-        described_class.perform_now(public_market.id)
-
-        parsed_body = JSON.parse(WebMock::RequestRegistry.instance.requested_signatures.hash.keys.last.body)
-        expect(parsed_body['market']['configuration_summary_url']).to be_nil
-      end
     end
 
     context 'without a configuration summary attached' do
-      it 'sets the configuration summary URL to nil even with a request_host' do
-        described_class.perform_now(public_market.id, request_host: 'example.com', request_protocol: 'https://')
+      it 'sets the configuration summary URL to nil' do
+        described_class.perform_now(public_market.id)
 
         parsed_body = JSON.parse(WebMock::RequestRegistry.instance.requested_signatures.hash.keys.last.body)
         expect(parsed_body['market']['configuration_summary_url']).to be_nil

@@ -4,12 +4,6 @@
 class PublicMarketWebhookJob < WebhookJob
   include WebhookSyncable
 
-  def perform(entity_id, request_host: nil, request_protocol: nil)
-    @request_host = request_host
-    @request_protocol = request_protocol
-    super(entity_id)
-  end
-
   private
 
   def find_entity(entity_id)
@@ -37,13 +31,9 @@ class PublicMarketWebhookJob < WebhookJob
   end
 
   def configuration_summary_url_for(entity)
-    return nil unless entity.configuration_summary.attached? && @request_host.present?
+    return nil unless entity.configuration_summary.attached?
 
-    Rails.application.routes.url_helpers.configuration_summary_api_v1_public_market_url(
-      entity.identifier,
-      host: @request_host,
-      protocol: @request_protocol
-    )
+    Rails.application.routes.url_helpers.configuration_summary_api_v1_public_market_url(entity.identifier)
   end
 
   def lot_payload(lot)

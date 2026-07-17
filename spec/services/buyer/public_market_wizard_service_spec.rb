@@ -201,8 +201,7 @@ RSpec.describe Buyer::PublicMarketWizardService do
       it 'enqueues the configuration summary PDF generation job' do
         expect do
           described_class.call(public_market, :summary, {})
-        end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob)
-          .with(public_market.id, request_host: nil, request_protocol: nil)
+        end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob).with(public_market.id)
       end
 
       it 'does not enqueue the webhook sync job directly' do
@@ -234,8 +233,7 @@ RSpec.describe Buyer::PublicMarketWizardService do
         it 'enqueues a new configuration summary PDF generation job' do
           expect do
             described_class.call(public_market, :summary, {})
-          end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob)
-            .with(public_market.id, request_host: nil, request_protocol: nil)
+          end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob).with(public_market.id)
         end
       end
     end
