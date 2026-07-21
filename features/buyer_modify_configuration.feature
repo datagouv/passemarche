@@ -28,3 +28,11 @@ Feature: Modification de la configuration avant publication
     When I visit the setup page for the published market
     Then I should be redirected to the published page
     And I should see the published market message
+
+  @javascript
+  Scenario: CA-4 - Sur un marché déjà transmis sans champs optionnels sélectionnés, "Non" reste pré-sélectionné
+    Given a completed but non-published market exists for the current editor
+    And this market has an optional field in the "identite_entreprise" category
+    When I visit the category page with optional fields for the completed market
+    Then the "Non" option should be selected
+    And I should see a button "Suivant"

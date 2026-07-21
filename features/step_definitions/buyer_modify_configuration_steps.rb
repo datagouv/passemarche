@@ -20,8 +20,17 @@ Given('a published market exists for the current editor') do
     market_type_codes: [@market_type.code])
 end
 
+Given('this market has an optional field in the {string} category') do |category_key|
+  optional_field = FactoryBot.create(:market_attribute, key: 'optional_test_field', category_key:)
+  @market_type.market_attributes << optional_field unless @market_type.market_attributes.include?(optional_field)
+end
+
 When('I visit the setup page for the completed market') do
   visit step_buyer_public_market_path(identifier: @completed_market.identifier, id: :setup)
+end
+
+When('I visit the category page with optional fields for the completed market') do
+  visit step_buyer_public_market_path(identifier: @completed_market.identifier, id: 'identite_entreprise')
 end
 
 When('I visit the summary page for the completed market') do
@@ -57,4 +66,8 @@ end
 
 Then('I should see the published market message') do
   expect(page).to have_content(I18n.t('buyer.published.heading'))
+end
+
+Then('the {string} option should be selected') do |option_label|
+  expect(page).to have_checked_field(option_label, visible: :all)
 end
