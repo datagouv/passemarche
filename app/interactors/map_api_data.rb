@@ -164,6 +164,7 @@ class MapApiData < ApplicationInteractor
 
   def attach_document_to_response(response, document_hash)
     return unless response.respond_to?(:documents)
+    return unless valid_document_source_metadata?(document_hash)
 
     existing_document = response.documents.find do |doc|
       doc.metadata['api_name'] == context.api_name
@@ -175,6 +176,7 @@ class MapApiData < ApplicationInteractor
 
   def attach_documents_to_response(response, documents_array)
     return unless response.respond_to?(:documents)
+    return unless documents_array.all? { |document_hash| valid_document_source_metadata?(document_hash) }
 
     if documents_have_source_metadata?(documents_array)
       purge_documents_by_source(response, documents_array)
@@ -185,6 +187,17 @@ class MapApiData < ApplicationInteractor
     documents_array.each do |document_hash|
       response.documents.attach(document_hash)
     end
+  end
+
+  def valid_document_source_metadata?(document_hash)
+    source = document_hash.dig(:metadata, :source)
+    return true if source&.start_with?('api_')
+
+    context.fail!(
+      error: "Document hash for api_name=#{context.api_name} is missing metadata[:source] (\"api_...\"); " \
+             'the file would be misidentified as a manual upload.'
+    )
+    false
   end
 
   def documents_have_source_metadata?(document_hashes)
