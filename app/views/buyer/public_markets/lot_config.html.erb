@@ -90,21 +90,25 @@
           <p class="fr-text--md fr-text--bold fr-mb-2w">
             <%= t('buyer.public_markets.lot_config.type_picker_title') %>
           </p>
+          <p class="fr-text--sm fr-mb-2w" data-lot-type-picker-target="helpMessage">
+            <%= t('buyer.public_markets.lot_config.type_picker_no_lot_selected') %>
+          </p>
           <% picker_market_types = @presenter.picker_market_types %>
           <div style="display: flex; gap: 1rem; align-items: stretch; flex-wrap: wrap; margin-bottom: 1.5rem;">
             <% [['works', 'icon-travaux-only.svg'], ['services', 'icon-services-only.svg'], ['supplies', 'icon-fournitures-only.svg']].each do |code, icon| %>
               <% market_type = picker_market_types[code] %>
               <% next unless market_type %>
               <% bg = ApplicationHelper::MARKET_TYPE_CONFIGS.dig(code, :bg) %>
-              <div style="display: flex; align-items: stretch; border: 1px solid var(--border-default-grey); overflow: hidden; flex: 1; min-width: 160px;">
+              <div class="lot-config-type-option" style="display: flex; align-items: stretch; border: 1px solid var(--border-default-grey); overflow: hidden; flex: 1; min-width: 160px;">
                 <label style="display: flex; align-items: center; gap: 0.75rem; padding: 12px 16px; cursor: pointer; background-color: #ffffff; flex: 1;">
                   <%= radio_button_tag :market_type_id, market_type.id, false,
                         id: "market_type_#{code}",
+                        disabled: true,
                         style: 'width: 1.125rem; height: 1.125rem; cursor: pointer; accent-color: var(--blue-france-sun-113-625); flex-shrink: 0;',
                         data: { 'lot-type-picker-target': 'radio' } %>
                   <span style="white-space: nowrap;"><%= t("market_types.#{code}") %></span>
                 </label>
-                <span style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background-color: <%= bg %>; flex-shrink: 0; padding: 16px;">
+                <span class="lot-config-type-option__icon" style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background-color: <%= bg %>; flex-shrink: 0; padding: 16px;">
                   <%= image_tag icon, alt: '', aria: { hidden: true }, width: 24, height: 24 %>
                 </span>
               </div>
@@ -119,7 +123,8 @@
             <%= button_tag t('buyer.public_markets.lot_config.type_picker_apply'),
                   type: 'button',
                   class: 'fr-btn fr-icon-check-line fr-btn--icon-right',
-                  data: { action: 'lot-type-picker#apply' } %>
+                  disabled: true,
+                  data: { action: 'lot-type-picker#apply', 'lot-type-picker-target': 'applyButton' } %>
           </div>
         </div>
       </div>

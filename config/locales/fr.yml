@@ -450,6 +450,7 @@ fr:
         select_all: "Tout sélectionner"
         deselect_all: "Tout désélectionner"
         type_picker_title: "Affecter un type aux lots sélectionnés"
+        type_picker_no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
         type_picker_apply: "Appliquer le nouveau type"
         type_picker_cancel: "Annuler"
       form_config:

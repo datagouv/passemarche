@@ -119,6 +119,22 @@ When('I check the first lot checkbox') do
   first('input[data-action*="lot-type-picker#toggle"]').check
 end
 
+When('I uncheck the first lot checkbox') do
+  first('input[data-action*="lot-type-picker#toggle"]').uncheck
+end
+
+Then('the type options should be disabled') do
+  all('[data-lot-type-picker-target="radio"]', visible: false).each do |radio|
+    expect(radio.disabled?).to be true
+  end
+end
+
+Then('the type options should be enabled') do
+  all('[data-lot-type-picker-target="radio"]', visible: false).each do |radio|
+    expect(radio.disabled?).to be false
+  end
+end
+
 When('I check the lot checkbox for {string}') do |lot_name|
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   lot = public_market.lots.find_by!(name: lot_name)

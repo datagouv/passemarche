@@ -119,6 +119,21 @@ Feature: Buyer Lot Configuration Step
     And the lot checkboxes should be hidden
 
   @buyer_lot_type_picker @javascript
+  Scenario: Tant qu'aucun lot n'est coché, les types sont inactifs et le message d'aide est affiché
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    Then the type options should be disabled
+    And the "Appliquer le nouveau type" button should be disabled
+    And I should see "Vous devez sélectionner au moins un lot pour lui attribuer un type"
+    When I check the first lot checkbox
+    Then the type options should be enabled
+    And the "Appliquer le nouveau type" button should be enabled
+    And I should not see "Vous devez sélectionner au moins un lot pour lui attribuer un type"
+    When I uncheck the first lot checkbox
+    Then the type options should be disabled
+    And the "Appliquer le nouveau type" button should be disabled
+
+  @buyer_lot_type_picker @javascript
   Scenario: Le retrait d'un type de lot décoche automatiquement les exigences associées
     Given I create a public market of typology "works" with lots of type "works" and "services"
     And the market has a mandatory requirement for type "services"

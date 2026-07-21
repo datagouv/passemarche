@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkbox", "checkboxColumn", "panel", "radio", "editButton", "toggleAllButton"]
+  static targets = ["checkbox", "checkboxColumn", "panel", "radio", "editButton", "toggleAllButton", "applyButton", "helpMessage"]
   static values = { updateUrl: String }
 
   enableEdit() {
@@ -9,6 +9,7 @@ export default class extends Controller {
     this.editButtonTarget.style.display = "none"
     this.toggleAllButtonTarget.style.display = ""
     this.panelTarget.style.display = "block"
+    this.#updateSelectionState()
     this.#clearError()
   }
 
@@ -17,6 +18,7 @@ export default class extends Controller {
     this.toggleAllButtonTarget.textContent = allChecked
       ? this.toggleAllButtonTarget.dataset.deselectText
       : this.toggleAllButtonTarget.dataset.selectText
+    this.#updateSelectionState()
   }
 
   toggleAll() {
@@ -33,6 +35,7 @@ export default class extends Controller {
     this.editButtonTarget.style.display = ""
     this.toggleAllButtonTarget.style.display = "none"
     this.toggleAllButtonTarget.textContent = this.toggleAllButtonTarget.dataset.selectText
+    this.#updateSelectionState()
     this.#clearError()
   }
 
@@ -71,5 +74,13 @@ export default class extends Controller {
   #clearError() {
     const errorContainer = document.getElementById("lot_type_error")
     if (errorContainer) errorContainer.innerHTML = ""
+  }
+
+  #updateSelectionState() {
+    const hasSelection = this.checkboxTargets.some(cb => cb.checked)
+    this.radioTargets.forEach(r => { r.disabled = !hasSelection })
+    this.applyButtonTarget.disabled = !hasSelection
+    this.helpMessageTarget.style.display = hasSelection ? "none" : ""
+    if (!hasSelection) this.#resetRadios()
   }
 }
