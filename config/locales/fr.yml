@@ -1393,6 +1393,8 @@ fr:
         invalid: "Les données fournies ne sont pas valides"
       models:
         public_market:
+          same_typology_required: "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+          no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
           attributes:
             name:
               blank: "Le nom du marché ne peut pas être vide"

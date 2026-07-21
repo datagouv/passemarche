@@ -118,3 +118,28 @@ Feature: Buyer Lot Configuration Step
     Then the type picker panel should be hidden
     And the lot checkboxes should be hidden
 
+  @buyer_lot_type_picker @javascript
+  Scenario: Le retrait d'un type de lot décoche automatiquement les exigences associées
+    Given I create a public market of typology "works" with lots of type "works" and "services"
+    And the market has a mandatory requirement for type "services"
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    And I check the lot checkbox for "Prestations SI"
+    And I select the type "Travaux" in the type picker
+    And I click "Appliquer le nouveau type"
+    Then the public market should not have the mandatory requirement anymore
+
+  @buyer_lot_type_picker @javascript
+  Scenario: L'acheteur ne peut pas retirer le dernier lot de la typologie du marché
+    Given I create a public market of typology "works" with a single lot of type "works"
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    And I check the first lot checkbox
+    And I select the type "Services" in the type picker
+    And I click "Appliquer le nouveau type"
+    Then I should see "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+    And the first lot should have market type "works"
+    And the type picker panel should be visible
+    When I click "Annuler"
+    Then I should not see "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+
