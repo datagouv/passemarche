@@ -29,6 +29,7 @@ class CreateMarketAttributeSelections < ActiveRecord::Migration[8.1]
     now = Time.current
     pairs = LegacyMarketAttributesPublicMarket
       .joins('INNER JOIN public_markets ON public_markets.id = market_attributes_public_markets.public_market_id')
+      .joins('INNER JOIN market_attributes ON market_attributes.id = market_attributes_public_markets.market_attribute_id')
       .pluck(:public_market_id, :market_attribute_id)
     return if pairs.empty?
 
