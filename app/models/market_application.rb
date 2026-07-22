@@ -44,13 +44,6 @@ class MarketApplication < ApplicationRecord
     user_id.nil? || user_id == user.id
   end
 
-  def find_authorized_document(attachment_id)
-    market_attribute_responses
-      .select { |r| r.class.file_attachable? }
-      .flat_map(&:documents)
-      .find { |doc| doc.id.to_s == attachment_id.to_s }
-  end
-
   def update_api_status(api_name, status:, fields_filled: 0)
     with_lock do
       updated_status = (api_fetch_status || {}).dup
