@@ -234,14 +234,14 @@ class FakeEditorApp < Sinatra::Base
   namespace '/candidate' do
     get '' do
       @current_token = Token.current_token
-      @markets = Market.where(status: 'completed').order(:created_at).reverse
+      @markets = Market.where(status: %w[completed published]).order(:created_at).reverse
       @my_applications = MarketApplication.order(:created_at).reverse.limit(10)
       erb :'candidate/dashboard'
     end
 
     get '/markets' do
       @current_token = Token.current_token
-      @markets = Market.where(status: 'completed').order(:created_at).reverse
+      @markets = Market.where(status: %w[completed published]).order(:created_at).reverse
       erb :'candidate/markets_list'
     end
 
