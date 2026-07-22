@@ -25,7 +25,7 @@ module Buyer
     end
 
     def update
-      result = Buyer::PublicMarketWizardService.call(@public_market, step, step_params, **request_url_options)
+      result = Buyer::PublicMarketWizardService.call(@public_market, step, step_params)
 
       if step == :summary
         redirect_to buyer_sync_status_path(@public_market.identifier)
@@ -41,7 +41,7 @@ module Buyer
     def retry_sync
       @public_market.update!(sync_status: :sync_pending)
 
-      PublicMarketWebhookJob.perform_later(@public_market.id, **request_url_options)
+      PublicMarketWebhookJob.perform_later(@public_market.id)
 
       redirect_to buyer_sync_status_path(@public_market.identifier),
         notice: t('buyer.public_markets.sync_retry_initiated')
@@ -81,10 +81,6 @@ module Buyer
       @public_market = PublicMarket.find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
-    end
-
-    def request_url_options
-      { request_host: request.host_with_port, request_protocol: request.protocol }
     end
 
     def check_market_not_published

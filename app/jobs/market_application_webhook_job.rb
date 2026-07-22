@@ -4,9 +4,7 @@
 class MarketApplicationWebhookJob < WebhookJob
   include WebhookSyncable
 
-  def perform(entity_id, request_host: nil, request_protocol: nil)
-    @request_host = request_host
-    @request_protocol = request_protocol
+  def perform(entity_id, **_deprecated)
     super(entity_id)
   end
 
@@ -31,18 +29,10 @@ class MarketApplicationWebhookJob < WebhookJob
   end
 
   def attestation_url_for(entity)
-    Rails.application.routes.url_helpers.attestation_api_v1_market_application_url(
-      entity.identifier,
-      host: @request_host,
-      protocol: @request_protocol
-    )
+    Rails.application.routes.url_helpers.attestation_api_v1_market_application_url(entity.identifier)
   end
 
   def documents_package_url_for(entity)
-    Rails.application.routes.url_helpers.documents_package_api_v1_market_application_url(
-      entity.identifier,
-      host: @request_host,
-      protocol: @request_protocol
-    )
+    Rails.application.routes.url_helpers.documents_package_api_v1_market_application_url(entity.identifier)
   end
 end

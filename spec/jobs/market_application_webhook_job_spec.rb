@@ -23,22 +23,14 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
   describe '#perform' do
     context 'with valid parameters' do
       it 'processes the webhook sync successfully' do
-        described_class.perform_now(
-          market_application.id,
-          request_host: 'voie-rapide.test.gouv.fr',
-          request_protocol: 'https'
-        )
+        described_class.perform_now(market_application.id)
 
         market_application.reload
         expect(market_application.sync_status).to eq('sync_completed')
       end
 
       it 'makes webhook request with correct payload' do
-        described_class.perform_now(
-          market_application.id,
-          request_host: 'voie-rapide.test.gouv.fr',
-          request_protocol: 'https'
-        )
+        described_class.perform_now(market_application.id)
 
         expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
           .with(
@@ -48,32 +40,24 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
       end
 
       it 'includes attestation_url in webhook payload' do
-        described_class.perform_now(
-          market_application.id,
-          request_host: 'voie-rapide.test.gouv.fr',
-          request_protocol: 'https'
-        )
+        described_class.perform_now(market_application.id)
 
         expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
           .with { |request|
             payload = JSON.parse(request.body)
             expect(payload.dig('market_application', 'attestation_url'))
-              .to eq("https://voie-rapide.test.gouv.fr/api/v1/market_applications/#{market_application.identifier}/attestation")
+              .to eq("http://example.com/api/v1/market_applications/#{market_application.identifier}/attestation")
           }
       end
 
       it 'includes documents_package_url in webhook payload' do
-        described_class.perform_now(
-          market_application.id,
-          request_host: 'voie-rapide.test.gouv.fr',
-          request_protocol: 'https'
-        )
+        described_class.perform_now(market_application.id)
 
         expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
           .with { |request|
             payload = JSON.parse(request.body)
             expect(payload.dig('market_application', 'documents_package_url'))
-              .to eq("https://voie-rapide.test.gouv.fr/api/v1/market_applications/#{market_application.identifier}/documents_package")
+              .to eq("http://example.com/api/v1/market_applications/#{market_application.identifier}/documents_package")
           }
       end
     end
@@ -85,11 +69,7 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
       end
 
       it 'keeps sync status as processing (will retry)' do
-        described_class.perform_now(
-          market_application.id,
-          request_host: 'voie-rapide.test.gouv.fr',
-          request_protocol: 'https'
-        )
+        described_class.perform_now(market_application.id)
 
         market_application.reload
         expect(market_application.sync_status).to eq('sync_processing')
@@ -100,11 +80,7 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
       before { market_application.update!(sync_status: :sync_completed) }
 
       it 'does not perform sync' do
-        described_class.perform_now(
-          market_application.id,
-          request_host: 'voie-rapide.test.gouv.fr',
-          request_protocol: 'https'
-        )
+        described_class.perform_now(market_application.id)
 
         expect(WebMock).not_to have_requested(:post, editor.completion_webhook_url)
       end
@@ -122,11 +98,7 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
           )
 
         expect do
-          described_class.perform_now(
-            non_existent_id,
-            request_host: 'voie-rapide.test.gouv.fr',
-            request_protocol: 'https'
-          )
+          described_class.perform_now(non_existent_id)
         end.not_to raise_error
       end
     end

@@ -105,8 +105,7 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
 
       it 'calls CompleteMarketApplication organizer' do
-        expect(CompleteMarketApplication).to receive(:call)
-          .with(market_application:, request_host: nil, request_protocol: nil)
+        expect(CompleteMarketApplication).to receive(:call).with(market_application:)
 
         described_class.call(market_application, :summary, {})
       end

@@ -24,13 +24,7 @@ module Candidate
     end
 
     def update
-      result = MarketApplicationStepUpdateService.call(
-        @market_application,
-        step.to_sym,
-        market_application_params,
-        request_host: request.host_with_port,
-        request_protocol: request.protocol
-      )
+      result = MarketApplicationStepUpdateService.call(@market_application, step.to_sym, market_application_params)
 
       handle_service_result(result)
     end

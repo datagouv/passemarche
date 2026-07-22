@@ -18,9 +18,8 @@ RSpec.describe GeneratePublicMarketConfigurationSummaryPdfJob, type: :job do
 
     it 'enqueues the webhook sync job after the PDF is generated' do
       expect do
-        described_class.perform_now(public_market.id, request_host: 'example.com', request_protocol: 'https')
-      end.to have_enqueued_job(PublicMarketWebhookJob)
-        .with(public_market.id, request_host: 'example.com', request_protocol: 'https')
+        described_class.perform_now(public_market.id)
+      end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
     end
 
     context 'when configuration summary PDF generation fails' do
@@ -32,7 +31,7 @@ RSpec.describe GeneratePublicMarketConfigurationSummaryPdfJob, type: :job do
       it 'still enqueues the webhook sync job' do
         expect do
           described_class.perform_now(public_market.id)
-        end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id, request_host: nil, request_protocol: nil)
+        end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
       end
     end
   end

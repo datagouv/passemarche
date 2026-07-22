@@ -2,7 +2,7 @@
 
 module Candidate
   class GenerateAndSendMagicLink < ApplicationInteractor
-    delegate :user, :market_application, :host, :protocol, :reconnection, to: :context
+    delegate :user, :market_application, :reconnection, to: :context
 
     def call
       user.update!(authentication_token_sent_at: Time.current) unless token_still_valid?
@@ -26,9 +26,7 @@ module Candidate
     def build_url(token)
       Rails.application.routes.url_helpers.verify_candidate_sessions_url(
         token:,
-        market_application_id: market_application.identifier,
-        host:,
-        protocol: protocol.delete_suffix('://')
+        market_application_id: market_application.identifier
       )
     end
   end
