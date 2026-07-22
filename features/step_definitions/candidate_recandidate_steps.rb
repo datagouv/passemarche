@@ -3,7 +3,7 @@
 RECANDIDATE_SIRET = '73282932000074'
 
 Given('un marché public ouvert existe avec des attributs') do
-  @public_market = create(:public_market, :completed, editor: @editor, deadline: 1.month.from_now)
+  @public_market = create(:public_market, :published, editor: @editor, deadline: 1.month.from_now)
 
   @manual_attribute = create(:market_attribute, :text_input,
     key: 'recandidate_manual_field',

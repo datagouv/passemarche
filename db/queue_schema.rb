@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_29_114816) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -142,6 +142,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_29_114816) do
     t.index ["market_attribute_id"], name: "index_market_attribute_responses_on_market_attribute_id"
   end
 
+  create_table "market_attribute_selections", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "market_attribute_id", null: false
+    t.bigint "public_market_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["market_attribute_id"], name: "index_market_attribute_selections_on_market_attribute_id"
+    t.index ["public_market_id", "market_attribute_id"], name: "index_market_attribute_selections_on_market_and_attribute", unique: true
+    t.index ["public_market_id"], name: "index_market_attribute_selections_on_public_market_id"
+  end
+
   create_table "market_attributes", force: :cascade do |t|
     t.string "api_key"
     t.string "api_name"
@@ -167,13 +177,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_29_114816) do
     t.index ["mandatory"], name: "index_market_attributes_on_mandatory"
     t.index ["position"], name: "index_market_attributes_on_position"
     t.index ["subcategory_id"], name: "index_market_attributes_on_subcategory_id"
-  end
-
-  create_table "market_attributes_public_markets", id: false, force: :cascade do |t|
-    t.bigint "market_attribute_id", null: false
-    t.bigint "public_market_id", null: false
-    t.index ["market_attribute_id", "public_market_id"], name: "index_market_attributes_public_markets_lookup"
-    t.index ["public_market_id", "market_attribute_id"], name: "index_public_markets_attributes_unique", unique: true
   end
 
   create_table "market_attributes_types", id: false, force: :cascade do |t|
@@ -418,7 +421,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_29_114816) do
     t.string "item_type", null: false
     t.text "object"
     t.text "object_changes"
-    t.bigint "whodunnit"
+    t.string "whodunnit"
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
     t.index ["whodunnit"], name: "index_versions_on_whodunnit"
@@ -435,6 +438,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_29_114816) do
   add_foreign_key "market_applications", "users"
   add_foreign_key "market_attribute_responses", "market_applications"
   add_foreign_key "market_attribute_responses", "market_attributes"
+  add_foreign_key "market_attribute_selections", "market_attributes"
+  add_foreign_key "market_attribute_selections", "public_markets"
   add_foreign_key "market_attributes", "subcategories"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

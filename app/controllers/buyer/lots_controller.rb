@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Buyer
-  class LotsController < ApplicationController
-    before_action :find_public_market
+  class LotsController < Buyer::ApplicationController
+    prepend_before_action :find_public_market
     before_action :check_market_not_published
 
     def update_types

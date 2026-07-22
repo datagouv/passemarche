@@ -905,6 +905,7 @@ fr:
       defense_market_not_allowed: "La création de marchés de défense nécessite une autorisation préalable. Veuillez contacter l'administrateur pour activer cette fonctionnalité."
       market_not_completed: "Le marché n'a pas encore été configuré."
       market_already_published: "Le marché a déjà été publié."
+      market_not_published: "Le marché n'a pas encore été publié, la candidature n'est pas possible."
     insee:
       ess:
         is_ess: "L'entreprise est une ESS - données issues d'une source officielle"

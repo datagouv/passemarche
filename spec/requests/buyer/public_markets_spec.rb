@@ -37,6 +37,24 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
       market_type_codes: [supplies_type.code, services_type.code])
   end
 
+  describe 'versioning author' do
+    let(:public_market) do
+      create(:public_market, :with_provider_user_id,
+        editor:,
+        market_type_codes: [supplies_type.code, services_type.code])
+    end
+
+    before { create(:lot, public_market:) }
+
+    it 'records the market provider_user_id as the version author' do
+      patch "/buyer/public_markets/#{public_market.identifier}/lot_config",
+        params: { lot_limit_enabled: 'true', lot_limit: '1' }
+
+      public_market.reload
+      expect(public_market.versions.last.whodunnit).to eq('editor-user-123')
+    end
+  end
+
   describe 'PATCH /buyer/public_markets/:identifier/setup' do
     context 'when updating from setup step' do
       it 'adds all mandatory attributes from associated market types' do

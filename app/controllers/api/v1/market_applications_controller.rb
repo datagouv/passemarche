@@ -2,6 +2,7 @@
 
 class Api::V1::MarketApplicationsController < Api::V1::BaseController
   before_action :find_public_market, only: %i[create]
+  before_action :validate_public_market_published, only: %i[create]
   before_action :find_market_application, only: %i[attestation documents_package]
   before_action :validate_application_completed, only: %i[attestation documents_package]
   before_action :validate_attestation_available, only: %i[attestation]
@@ -44,6 +45,12 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     return if @public_market
 
     render json: { error: 'Public market not found' }, status: :not_found
+  end
+
+  def validate_public_market_published
+    return if @public_market.published?
+
+    render json: { error: I18n.t('api.errors.market_not_published') }, status: :unprocessable_content
   end
 
   def find_market_application

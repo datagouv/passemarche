@@ -11,7 +11,8 @@ class PublicMarket < ApplicationRecord
   belongs_to :editor
 
   has_one_attached :configuration_summary
-  has_and_belongs_to_many :market_attributes
+  has_many :market_attribute_selections, dependent: :destroy
+  has_many :market_attributes, through: :market_attribute_selections
   has_many :lots, dependent: :destroy
   accepts_nested_attributes_for :lots
   has_many :market_applications, dependent: :destroy
@@ -63,13 +64,6 @@ class PublicMarket < ApplicationRecord
 
   def add_market_attributes(new_attributes)
     all_attributes = (market_attributes.to_a + Array(new_attributes)).uniq
-    self.market_attributes = all_attributes
-    save!
-  end
-
-  def sync_optional_market_attributes(selected_attributes)
-    mandatory_attrs = market_attributes.mandatory
-    all_attributes = (mandatory_attrs + Array(selected_attributes)).uniq
     self.market_attributes = all_attributes
     save!
   end

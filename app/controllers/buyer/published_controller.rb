@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Buyer
-  class PublishedController < ApplicationController
-    before_action :find_public_market
+  class PublishedController < Buyer::ApplicationController
+    prepend_before_action :find_public_market
 
     def show; end
 
