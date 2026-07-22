@@ -116,13 +116,8 @@ class FastTrackClient
     )
 
     unless response.success?
-      error_details = response.parsed_response
-      error_msg = if error_details.is_a?(Hash) && error_details['errors']
-                    "#{response.code} - #{error_details['errors'].join(', ')}"
-                  else
-                    "#{response.code} - #{response.message}"
-                  end
-      raise "Market application creation failed: #{error_msg}"
+      error_msg = extract_error_message(response.parsed_response, response)
+      raise "Market application creation failed: #{response.code} - #{error_msg}"
     end
 
     response.parsed_response
