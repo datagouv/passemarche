@@ -5,6 +5,7 @@ export default class extends Controller {
   static values = { alreadyCompleted: Boolean }
 
   connect() {
+    this._boundHandleCheckboxChange = this._handleCheckboxChange.bind(this)
     this._initializeState()
   }
 
@@ -48,14 +49,14 @@ export default class extends Controller {
   _addCheckboxListeners() {
     const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
     checkboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', this._handleCheckboxChange.bind(this))
+      checkbox.addEventListener('change', this._boundHandleCheckboxChange)
     })
   }
 
   _removeCheckboxListeners() {
     const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
     checkboxes.forEach(checkbox => {
-      checkbox.removeEventListener('change', this._handleCheckboxChange.bind(this))
+      checkbox.removeEventListener('change', this._boundHandleCheckboxChange)
     })
   }
 
