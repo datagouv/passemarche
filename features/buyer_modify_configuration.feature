@@ -35,4 +35,4 @@ Feature: Modification de la configuration avant publication
     And this market has an optional field in the "identite_entreprise" category
     When I visit the category page with optional fields for the completed market
     Then the "Non" option should be selected
-    And I should see a button "Suivant"
+    And I should see an enabled button "Suivant"

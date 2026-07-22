@@ -71,3 +71,7 @@ end
 Then('the {string} option should be selected') do |option_label|
   expect(page).to have_checked_field(option_label, visible: :all)
 end
+
+Then('I should see an enabled button {string}') do |button_text|
+  expect(page).to have_button(button_text, exact: false, disabled: false)
+end
