@@ -27,7 +27,9 @@ class CreateMarketAttributeSelections < ActiveRecord::Migration[8.1]
 
   def migrate_existing_selections
     now = Time.current
-    pairs = LegacyMarketAttributesPublicMarket.pluck(:public_market_id, :market_attribute_id)
+    pairs = LegacyMarketAttributesPublicMarket
+      .joins('INNER JOIN public_markets ON public_markets.id = market_attributes_public_markets.public_market_id')
+      .pluck(:public_market_id, :market_attribute_id)
     return if pairs.empty?
 
     rows = pairs.map do |public_market_id, market_attribute_id|
