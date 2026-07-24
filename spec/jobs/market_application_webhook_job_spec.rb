@@ -62,6 +62,49 @@ RSpec.describe MarketApplicationWebhookJob, type: :job do
       end
     end
 
+    context 'with lots selected by the candidate' do
+      let(:market_type) { create(:market_type, code: 'supplies') }
+      let(:other_market_type) { create(:market_type, code: 'services') }
+
+      it 'includes only the lots selected by the candidate, distinct from the market lots' do
+        selected_lot = create(:lot, public_market:, name: 'Lot 1', platform_market_type: market_type)
+        create(:lot, public_market:, name: 'Lot 2', platform_market_type: other_market_type)
+        create(:market_application_lot, market_application:, lot: selected_lot)
+
+        described_class.perform_now(market_application.id)
+
+        expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
+          .with(body: hash_including(
+            'market_application' => hash_including(
+              'selected_lots' => [hash_including('id' => selected_lot.id, 'name' => 'Lot 1', 'market_type_code' => 'supplies')]
+            )
+          ))
+      end
+
+      it 'reflects the up to date selection after it has been modified' do
+        first_lot = create(:lot, public_market:, name: 'Lot 1', platform_market_type: market_type)
+        new_lot = create(:lot, public_market:, name: 'Lot 4', platform_market_type: market_type)
+        create(:market_application_lot, market_application:, lot: first_lot)
+        market_application.lots = [new_lot]
+
+        described_class.perform_now(market_application.id)
+
+        expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
+          .with(body: hash_including(
+            'market_application' => hash_including(
+              'selected_lots' => [hash_including('id' => new_lot.id, 'name' => 'Lot 4')]
+            )
+          ))
+      end
+
+      it 'sends an empty selected_lots array when the market has no lots' do
+        described_class.perform_now(market_application.id)
+
+        parsed_body = JSON.parse(WebMock::RequestRegistry.instance.requested_signatures.hash.keys.last.body)
+        expect(parsed_body['market_application']['selected_lots']).to eq([])
+      end
+    end
+
     context 'when webhook delivery fails' do
       before do
         stub_request(:post, editor.completion_webhook_url)
