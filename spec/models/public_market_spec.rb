@@ -366,11 +366,25 @@ RSpec.describe PublicMarket, type: :model do
     end
 
     context 'quand un type retiré est ré-ajouté ensuite' do
-      it 'ne restaure pas automatiquement les exigences précédemment sélectionnées' do
+      let(:mandatory_services_attribute) { create(:market_attribute, market_types: [services_type], mandatory: true) }
+      let(:optional_services_attribute) { create(:market_attribute, market_types: [services_type], mandatory: false) }
+
+      before do
+        market.market_attributes << [mandatory_services_attribute, optional_services_attribute]
+      end
+
+      it 'restaure les exigences obligatoires du type retrouvé' do
         market.update_lot_types([lot.id], works_type)
         market.update_lot_types([lot.id], services_type)
 
-        expect(market.reload.market_attributes).not_to include(services_attribute)
+        expect(market.reload.market_attributes).to include(mandatory_services_attribute)
+      end
+
+      it 'ne restaure pas les exigences optionnelles précédemment sélectionnées' do
+        market.update_lot_types([lot.id], works_type)
+        market.update_lot_types([lot.id], services_type)
+
+        expect(market.reload.market_attributes).not_to include(optional_services_attribute, services_attribute)
       end
     end
 

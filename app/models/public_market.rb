@@ -64,7 +64,7 @@ class PublicMarket < ApplicationRecord
         effective_type = lot.platform_market_type == market_type ? nil : market_type
         lot.update!(market_type: effective_type)
       end
-      remove_market_attributes_for_obsolete_types
+      sync_market_attributes_with_current_types
     end
     true
   end
@@ -100,6 +100,11 @@ class PublicMarket < ApplicationRecord
   def reject_lot_type_change(reason)
     errors.add(:base, reason)
     false
+  end
+
+  def sync_market_attributes_with_current_types
+    remove_market_attributes_for_obsolete_types
+    add_market_attributes(MarketAttributeFilteringService.call(self).mandatory)
   end
 
   def remove_market_attributes_for_obsolete_types
