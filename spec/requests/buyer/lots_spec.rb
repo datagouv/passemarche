@@ -9,6 +9,7 @@ RSpec.describe 'Buyer::Lots', type: :request do
   let(:public_market) { create(:public_market, editor:, market_type_codes: [works_type.code]) }
   let!(:lot1) { create(:lot, public_market:, platform_market_type: works_type) }
   let!(:lot2) { create(:lot, public_market:, platform_market_type: works_type) }
+  let!(:lot3) { create(:lot, public_market:, platform_market_type: works_type) }
 
   describe 'PATCH /buyer/public_markets/:identifier/lots' do
     context 'when applying a new type to selected lots' do
@@ -75,6 +76,28 @@ RSpec.describe 'Buyer::Lots', type: :request do
           params: { lot_ids: [lot1.id], market_type_id: 0 },
           headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
+        expect(lot1.reload.market_type).to be_nil
+      end
+    end
+
+    context 'when the change would remove the last lot of the market typology' do
+      it 'returns unprocessable entity and does not change the lot type' do
+        patch buyer_lot_types_path(public_market.identifier),
+          params: { lot_ids: [lot1.id, lot2.id, lot3.id], market_type_id: services_type.id },
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(lot1.reload.market_type).to be_nil
+      end
+    end
+
+    context 'when no lot is selected' do
+      it 'returns unprocessable entity without changing any lot' do
+        patch buyer_lot_types_path(public_market.identifier),
+          params: { lot_ids: [], market_type_id: services_type.id },
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+        expect(response).to have_http_status(:unprocessable_content)
         expect(lot1.reload.market_type).to be_nil
       end
     end

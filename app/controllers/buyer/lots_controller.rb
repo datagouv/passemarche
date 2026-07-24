@@ -7,15 +7,21 @@ module Buyer
 
     def update_types
       market_type = MarketType.find_by(id: params[:market_type_id])
-      update_lot_types(market_type)
-      render turbo_stream: turbo_streams_for_updated_lots
+      @updated_lot_ids = Array(params[:lot_ids]).map(&:to_i)
+
+      if @public_market.update_lot_types(@updated_lot_ids, market_type)
+        render turbo_stream: turbo_streams_for_updated_lots
+      else
+        render turbo_stream: turbo_stream_for_error, status: :unprocessable_content
+      end
     end
 
     private
 
-    def update_lot_types(market_type)
-      @updated_lot_ids = Array(params[:lot_ids]).map(&:to_i)
-      @public_market.update_lot_types(@updated_lot_ids, market_type)
+    def turbo_stream_for_error
+      turbo_stream.replace('lot_type_error',
+        partial: 'buyer/public_markets/lot_type_error',
+        locals: { message: @public_market.errors[:base].first })
     end
 
     def turbo_streams_for_updated_lots

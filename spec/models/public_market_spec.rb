@@ -321,6 +321,166 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '#update_lot_types' do
+    let!(:works_type) { create(:market_type, :works) }
+    let!(:services_type) { create(:market_type, :services) }
+    let(:market) { create(:public_market, :completed, market_type_codes: ['works']) }
+    let!(:kept_works_lot) { create(:lot, public_market: market, market_type: works_type) }
+    let(:lot) { create(:lot, public_market: market, market_type: services_type) }
+    let(:works_attribute) { create(:market_attribute, market_types: [works_type]) }
+    let(:services_attribute) { create(:market_attribute, market_types: [services_type]) }
+    let(:common_attribute) { create(:market_attribute, market_types: [works_type, services_type]) }
+
+    before do
+      market.market_attributes << [works_attribute, services_attribute, common_attribute]
+    end
+
+    context 'quand un lot change vers un type qui retire le dernier lot de son type précédent' do
+      it 'retire les exigences propres au type de lot disparu' do
+        market.update_lot_types([lot.id], works_type)
+
+        expect(market.reload.market_attributes).not_to include(services_attribute)
+      end
+
+      it 'conserve les exigences communes à plusieurs types' do
+        market.update_lot_types([lot.id], works_type)
+
+        expect(market.reload.market_attributes).to include(common_attribute)
+      end
+
+      it 'conserve les exigences du type toujours porté par un autre lot' do
+        market.update_lot_types([lot.id], works_type)
+
+        expect(market.reload.market_attributes).to include(works_attribute)
+      end
+    end
+
+    context 'quand le type retiré reste présent via market_type_codes du marché' do
+      let(:market) { create(:public_market, :completed, market_type_codes: %w[works services]) }
+
+      it 'ne retire pas les exigences de ce type' do
+        market.update_lot_types([lot.id], works_type)
+
+        expect(market.reload.market_attributes).to include(services_attribute)
+      end
+    end
+
+    context 'quand un type retiré est ré-ajouté ensuite' do
+      let(:mandatory_services_attribute) { create(:market_attribute, market_types: [services_type], mandatory: true) }
+      let(:optional_services_attribute) { create(:market_attribute, market_types: [services_type], mandatory: false) }
+
+      before do
+        market.market_attributes << [mandatory_services_attribute, optional_services_attribute]
+      end
+
+      it 'restaure les exigences obligatoires du type retrouvé' do
+        market.update_lot_types([lot.id], works_type)
+        market.update_lot_types([lot.id], services_type)
+
+        expect(market.reload.market_attributes).to include(mandatory_services_attribute)
+      end
+
+      it 'ne restaure pas les exigences optionnelles précédemment sélectionnées' do
+        market.update_lot_types([lot.id], works_type)
+        market.update_lot_types([lot.id], services_type)
+
+        expect(market.reload.market_attributes).not_to include(optional_services_attribute, services_attribute)
+      end
+    end
+
+    context 'quand le type de lot ne change pas' do
+      let(:market) { create(:public_market, :completed, market_type_codes: %w[works services]) }
+
+      it 'ne retire aucune exigence' do
+        market.update_lot_types([lot.id], services_type)
+
+        expect(market.reload.market_attributes).to include(works_attribute, services_attribute, common_attribute)
+      end
+    end
+
+    context 'quand le changement retirerait le dernier lot de la typologie du marché' do
+      it 'refuse la modification' do
+        result = market.update_lot_types([kept_works_lot.id], services_type)
+
+        expect(result).to be false
+      end
+
+      it 'ne modifie pas le type du lot' do
+        market.update_lot_types([kept_works_lot.id], services_type)
+
+        expect(kept_works_lot.reload.effective_market_type).to eq(works_type)
+      end
+
+      it 'ajoute une erreur sur le marché' do
+        market.update_lot_types([kept_works_lot.id], services_type)
+
+        expect(market.errors[:base]).to be_present
+      end
+    end
+
+    context 'quand un autre lot conserve la typologie du marché' do
+      it 'autorise la modification' do
+        result = market.update_lot_types([lot.id], works_type)
+
+        expect(result).to be true
+      end
+    end
+
+    context 'quand le marché a plusieurs typologies déclarées' do
+      let(:market) { create(:public_market, :completed, market_type_codes: %w[works services]) }
+      let!(:other_works_lot) { create(:lot, public_market: market, market_type: works_type) }
+      let!(:kept_services_lot) { create(:lot, public_market: market, market_type: services_type) }
+
+      it 'refuse de retirer le dernier lot de la deuxième typologie' do
+        result = market.update_lot_types([kept_services_lot.id, lot.id], works_type)
+
+        expect(result).to be false
+      end
+
+      it 'ne modifie pas le type du lot pour la deuxième typologie' do
+        market.update_lot_types([kept_services_lot.id, lot.id], works_type)
+
+        expect(kept_services_lot.reload.effective_market_type).to eq(services_type)
+      end
+
+      it 'autorise de retirer un lot qui ne vide aucune des deux typologies' do
+        result = market.update_lot_types([other_works_lot.id], services_type)
+
+        expect(result).to be true
+      end
+    end
+
+    context 'quand aucun lot n\'est sélectionné' do
+      it 'refuse la modification' do
+        result = market.update_lot_types([], services_type)
+
+        expect(result).to be false
+      end
+
+      it 'ajoute une erreur sur le marché' do
+        market.update_lot_types([], services_type)
+
+        expect(market.errors[:base]).to be_present
+      end
+
+      it 'ne modifie aucune exigence' do
+        market.update_lot_types([], services_type)
+
+        expect(market.reload.market_attributes).to include(works_attribute, services_attribute, common_attribute)
+      end
+    end
+
+    context 'quand un premier appel échoue puis un second réussit' do
+      it 'ne conserve pas les erreurs du premier appel' do
+        market.update_lot_types([kept_works_lot.id], services_type)
+        result = market.update_lot_types([lot.id], works_type)
+
+        expect(result).to be true
+        expect(market.errors[:base]).to be_empty
+      end
+    end
+  end
+
   describe '#defense_industry?' do
     it 'returns true when defense is in market_type_codes' do
       public_market = build(:public_market, market_type_codes: %w[supplies defense])

@@ -450,6 +450,7 @@ fr:
         select_all: "Tout sélectionner"
         deselect_all: "Tout désélectionner"
         type_picker_title: "Affecter un type aux lots sélectionnés"
+        type_picker_no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
         type_picker_apply: "Appliquer le nouveau type"
         type_picker_cancel: "Annuler"
       form_config:
@@ -1393,6 +1394,8 @@ fr:
         invalid: "Les données fournies ne sont pas valides"
       models:
         public_market:
+          same_typology_required: "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+          no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
           attributes:
             name:
               blank: "Le nom du marché ne peut pas être vide"

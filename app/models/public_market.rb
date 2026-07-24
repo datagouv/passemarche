@@ -54,12 +54,19 @@ class PublicMarket < ApplicationRecord
   end
 
   def update_lot_types(lot_ids, market_type)
+    errors.clear
+    updated_lots = lots.where(id: lot_ids).includes(:market_type, :platform_market_type).to_a
+    return reject_lot_type_change(:no_lot_selected) if updated_lots.empty?
+    return reject_lot_type_change(:same_typology_required) if removes_last_lot_of_market_typology?(updated_lots, market_type)
+
     transaction do
-      lots.where(id: lot_ids).each do |lot|
+      updated_lots.each do |lot|
         effective_type = lot.platform_market_type == market_type ? nil : market_type
         lot.update!(market_type: effective_type)
       end
+      sync_market_attributes_with_current_types
     end
+    true
   end
 
   def add_market_attributes(new_attributes)
@@ -69,6 +76,46 @@ class PublicMarket < ApplicationRecord
   end
 
   private
+
+  def market_typology_codes
+    market_type_codes.reject { |code| code == 'defense' }
+  end
+
+  def removes_last_lot_of_market_typology?(updated_lots, new_market_type)
+    updated_lot_ids = updated_lots.map(&:id)
+    remaining_lots = lots.where.not(id: updated_lot_ids).includes(:market_type, :platform_market_type).to_a
+
+    market_typology_codes.any? do |typology_code|
+      next false if typology_code == new_market_type&.code
+      next false if any_lot_of_type?(remaining_lots, typology_code)
+
+      any_lot_of_type?(updated_lots, typology_code)
+    end
+  end
+
+  def any_lot_of_type?(lots_array, type_code)
+    lots_array.any? { |lot| lot.effective_market_type&.code == type_code }
+  end
+
+  def reject_lot_type_change(reason)
+    errors.add(:base, reason)
+    false
+  end
+
+  def sync_market_attributes_with_current_types
+    remove_market_attributes_for_obsolete_types
+    add_market_attributes(MarketAttributeFilteringService.call(self).mandatory)
+  end
+
+  def remove_market_attributes_for_obsolete_types
+    current_codes = effective_market_type_codes
+    obsolete_attribute_ids = market_attributes.includes(:market_types).select do |attribute|
+      attribute.market_types.none? { |type| current_codes.include?(type.code) }
+    end.map(&:id)
+    return if obsolete_attribute_ids.empty?
+
+    market_attribute_selections.where(market_attribute_id: obsolete_attribute_ids).destroy_all
+  end
 
   def effective_lot_market_types
     lots.includes(:market_type, :platform_market_type)
