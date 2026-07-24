@@ -347,6 +347,43 @@ RSpec.describe MapApiData, type: :interactor do
         expect(response.source).to eq('auto')
       end
 
+      context 'when document metadata[:source] is missing' do
+        let(:document_hash) do
+          {
+            io: document_io,
+            filename: 'attestation_fiscale_418166096.pdf',
+            content_type: 'application/pdf'
+          }
+        end
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'does not create a response with an attached document' do
+          expect { subject }.not_to change { market_application.market_attribute_responses.count }
+        end
+      end
+
+      context 'when document metadata[:source] does not start with "api_"' do
+        let(:document_hash) do
+          {
+            io: document_io,
+            filename: 'attestation_fiscale_418166096.pdf',
+            content_type: 'application/pdf',
+            metadata: { source: 'manual_upload' }
+          }
+        end
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'does not create a response with an attached document' do
+          expect { subject }.not_to change { market_application.market_attribute_responses.count }
+        end
+      end
+
       context 'when response type does not support documents' do
         let!(:text_attribute) do
           create(:market_attribute, :text_input, :from_api,
@@ -405,7 +442,7 @@ RSpec.describe MapApiData, type: :interactor do
           io: document_io,
           filename: 'attestation.pdf',
           content_type: 'application/pdf',
-          metadata: { source: 'api' }
+          metadata: { source: 'api_insee' }
         }
       end
       let(:resource) { Resource.new(siret: '41816609600069', attestation: document_hash) }
@@ -523,6 +560,24 @@ RSpec.describe MapApiData, type: :interactor do
           response = market_application.market_attribute_responses.find_by(market_attribute: cotisation_retraite_attribute)
           expect(response.documents.count).to eq(1)
           expect(response.documents.first.filename.to_s).to include('cibtp')
+        end
+      end
+
+      context 'when one document in the array is missing metadata[:source]' do
+        let(:cnetp_document) do
+          {
+            io: cnetp_io,
+            filename: 'attestation_cnetp_418166096.pdf',
+            content_type: 'application/pdf'
+          }
+        end
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'does not create a response with an attached document' do
+          expect { subject }.not_to change { market_application.market_attribute_responses.count }
         end
       end
 
