@@ -78,7 +78,7 @@
           </tbody>
         </table>
 
-        <div id="lot_type_error"></div>
+        <div id="lot_type_error" class="fr-mt-4w"></div>
 
         <%= button_tag t('buyer.public_markets.lot_config.edit_lot_types_button'),
               type: 'button',
@@ -86,7 +86,7 @@
               data: { action: 'lot-type-picker#enableEdit', 'lot-type-picker-target': 'editButton' } %>
 
         <div data-lot-type-picker-target="panel"
-             style="display: none; border: 1px solid var(--border-default-grey); padding: 2.5rem; margin-top: 1rem; background-color: #F5F5FE;">
+             style="display: none; border: 1px solid var(--border-default-grey); padding: 2.5rem; margin-top: 2rem; background-color: #F5F5FE;">
           <p class="fr-text--md fr-text--bold fr-mb-2w">
             <%= t('buyer.public_markets.lot_config.type_picker_title') %>
           </p>
