@@ -23,7 +23,8 @@ class MarketApplicationWebhookJob < WebhookJob
         identifier: entity.identifier,
         siret: entity.siret,
         attestation_url: attestation_url_for(entity),
-        documents_package_url: documents_package_url_for(entity)
+        documents_package_url: documents_package_url_for(entity),
+        selected_lots: selected_lots_payload(entity)
       }
     }
   end
@@ -34,5 +35,18 @@ class MarketApplicationWebhookJob < WebhookJob
 
   def documents_package_url_for(entity)
     Rails.application.routes.url_helpers.documents_package_api_v1_market_application_url(entity.identifier)
+  end
+
+  def selected_lots_payload(entity)
+    entity.lots.ordered.map { |lot| lot_payload(lot) }
+  end
+
+  def lot_payload(lot)
+    {
+      id: lot.id,
+      name: lot.name,
+      cpv_code: lot.cpv_code,
+      market_type_code: lot.effective_market_type&.code
+    }
   end
 end
