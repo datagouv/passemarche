@@ -16,11 +16,11 @@ class Api::V1::PublicMarketsController < Api::V1::BaseController
   end
 
   def update
-    if @public_market.update(update_params)
-      render json: { identifier: @public_market.identifier, deadline: @public_market.deadline.utc.iso8601 }
-    else
-      render json: { errors: @public_market.errors.messages }, status: :unprocessable_content
-    end
+    @public_market.update_and_resync_configuration!(update_params)
+
+    render json: { identifier: @public_market.identifier, deadline: @public_market.deadline.utc.iso8601 }
+  rescue ActiveRecord::RecordInvalid
+    render json: { errors: @public_market.errors.messages }, status: :unprocessable_content
   end
 
   def publish

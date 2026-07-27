@@ -13,6 +13,30 @@ Given('I create a public market with lots of multiple types') do
   @market_identifier = public_market.identifier
 end
 
+Given('I create a public market of typology {string} with lots of type {string} and {string}') do |typology, type_a, type_b|
+  market_type_a = MarketType.find_or_create_by!(code: type_a)
+  market_type_b = MarketType.find_or_create_by!(code: type_b)
+  public_market = create(:public_market, editor: @editor, name: 'Marché de test', market_type_codes: [typology])
+  create(:lot, public_market:, name: 'Gros œuvre', market_type: market_type_a)
+  create(:lot, public_market:, name: 'Prestations SI', market_type: market_type_b)
+  @market_identifier = public_market.identifier
+end
+
+Given('I create a public market of typology {string} with a single lot of type {string}') do |typology, type|
+  market_type = MarketType.find_or_create_by!(code: type)
+  public_market = create(:public_market, editor: @editor, name: 'Marché de test', market_type_codes: [typology])
+  create(:lot, public_market:, name: 'Gros œuvre', market_type:)
+  @market_identifier = public_market.identifier
+end
+
+Given('the market has a mandatory requirement for type {string}') do |type|
+  market_type = MarketType.find_or_create_by!(code: type)
+  public_market = PublicMarket.find_by!(identifier: @market_identifier)
+  attribute = create(:market_attribute, :mandatory, market_types: [market_type])
+  public_market.market_attributes << attribute
+  @mandatory_requirement_key = attribute.key
+end
+
 When('I visit the lot_config page for my public market') do
   @market_identifier ||= @last_api_response['identifier']
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :lot_config)
@@ -95,6 +119,28 @@ When('I check the first lot checkbox') do
   first('input[data-action*="lot-type-picker#toggle"]').check
 end
 
+When('I uncheck the first lot checkbox') do
+  first('input[data-action*="lot-type-picker#toggle"]').uncheck
+end
+
+Then('the type options should be disabled') do
+  all('[data-lot-type-picker-target="radio"]', visible: false).each do |radio|
+    expect(radio.disabled?).to be true
+  end
+end
+
+Then('the type options should be enabled') do
+  all('[data-lot-type-picker-target="radio"]', visible: false).each do |radio|
+    expect(radio.disabled?).to be false
+  end
+end
+
+When('I check the lot checkbox for {string}') do |lot_name|
+  public_market = PublicMarket.find_by!(identifier: @market_identifier)
+  lot = public_market.lots.find_by!(name: lot_name)
+  within("#lot_row_#{lot.id}") { find('input[data-action*="lot-type-picker#toggle"]').check }
+end
+
 When('I select the type {string} in the type picker') do |label|
   within('[data-lot-type-picker-target="panel"]') do
     choose label
@@ -108,4 +154,13 @@ Then('the first lot should have market type {string}') do |code|
 
   expect(page).to have_css("#lot_row_#{first_lot.id}", text: expected_label, wait: Capybara.default_max_wait_time)
   expect(first_lot.reload.market_type&.code).to eq(code)
+end
+
+Then('the public market should not have the mandatory requirement anymore') do
+  public_market = PublicMarket.find_by!(identifier: @market_identifier)
+  moved_lot = public_market.lots.find_by!(name: 'Prestations SI')
+  expected_label = I18n.t('market_types.works').upcase
+
+  expect(page).to have_css("#lot_row_#{moved_lot.id}", text: expected_label, wait: Capybara.default_max_wait_time)
+  expect(public_market.market_attributes.pluck(:key)).not_to include(@mandatory_requirement_key)
 end

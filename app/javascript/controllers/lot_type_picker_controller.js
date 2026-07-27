@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkbox", "checkboxColumn", "panel", "radio", "editButton", "toggleAllButton"]
+  static targets = ["checkbox", "checkboxColumn", "panel", "radio", "editButton", "toggleAllButton", "applyButton", "helpMessage"]
   static values = { updateUrl: String }
 
   enableEdit() {
@@ -9,6 +9,8 @@ export default class extends Controller {
     this.editButtonTarget.style.display = "none"
     this.toggleAllButtonTarget.style.display = ""
     this.panelTarget.style.display = "block"
+    this.#updateSelectionState()
+    this.#clearError()
   }
 
   toggle() {
@@ -16,6 +18,7 @@ export default class extends Controller {
     this.toggleAllButtonTarget.textContent = allChecked
       ? this.toggleAllButtonTarget.dataset.deselectText
       : this.toggleAllButtonTarget.dataset.selectText
+    this.#updateSelectionState()
   }
 
   toggleAll() {
@@ -32,6 +35,8 @@ export default class extends Controller {
     this.editButtonTarget.style.display = ""
     this.toggleAllButtonTarget.style.display = "none"
     this.toggleAllButtonTarget.textContent = this.toggleAllButtonTarget.dataset.selectText
+    this.#updateSelectionState()
+    this.#clearError()
   }
 
   async apply() {
@@ -44,6 +49,8 @@ export default class extends Controller {
 
     if (lotIds.length === 0) return
 
+    this.#clearError()
+
     const body = new FormData()
     body.append("market_type_id", selectedRadio.value)
     lotIds.forEach(id => body.append("lot_ids[]", id))
@@ -55,16 +62,25 @@ export default class extends Controller {
       body
     })
 
-    if (response.ok) {
-      const html = await response.text()
-      Turbo.renderStreamMessage(html)
-      this.cancel()
-    } else {
-      this.cancel()
-    }
+    const html = await response.text()
+    Turbo.renderStreamMessage(html)
+    if (response.ok) this.cancel()
   }
 
   #resetRadios() {
     this.radioTargets.forEach(r => { r.checked = false })
+  }
+
+  #clearError() {
+    const errorContainer = document.getElementById("lot_type_error")
+    if (errorContainer) errorContainer.innerHTML = ""
+  }
+
+  #updateSelectionState() {
+    const hasSelection = this.checkboxTargets.some(cb => cb.checked)
+    this.radioTargets.forEach(r => { r.disabled = !hasSelection })
+    this.applyButtonTarget.disabled = !hasSelection
+    this.helpMessageTarget.style.display = hasSelection ? "none" : ""
+    if (!hasSelection) this.#resetRadios()
   }
 }

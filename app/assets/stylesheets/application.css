@@ -788,6 +788,20 @@
   gap: 1rem;
 }
 
+.lot-config-type-option:has(input:disabled) {
+  border-color: var(--border-disabled-grey, #e5e5e5);
+}
+
+.lot-config-type-option:has(input:disabled) label {
+  cursor: not-allowed;
+  color: var(--text-disabled-grey, #929292);
+}
+
+.lot-config-type-option:has(input:disabled) .lot-config-type-option__icon {
+  background-color: var(--background-disabled-grey, #eeeeee) !important;
+  filter: grayscale(100%) opacity(0.5);
+}
+
 /* Market scope tags (type badges on each field) */
 .fr-card__title--with-badges {
   display: flex;
