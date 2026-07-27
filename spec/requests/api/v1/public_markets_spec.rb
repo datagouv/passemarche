@@ -454,6 +454,49 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
         versions = public_market.reload.versions
         expect(versions.map(&:event)).to include('update')
       end
+
+      it 'does not enqueue a configuration summary PDF regeneration for a non-completed market' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).not_to have_been_enqueued
+      end
+    end
+
+    context 'when the market is already completed' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'enqueues a configuration summary PDF regeneration job' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob)
+          .to have_been_enqueued.with(public_market.id)
+      end
+    end
+
+    context 'when the update fails validation on an already completed market' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: '' } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'does not enqueue a configuration summary PDF regeneration job' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).not_to have_been_enqueued
+      end
     end
 
     context 'with missing deadline' do
