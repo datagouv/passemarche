@@ -64,7 +64,7 @@ export default class extends Controller {
 
     const html = await response.text()
     Turbo.renderStreamMessage(html)
-    if (response.ok) this.cancel()
+    this.cancel()
   }
 
   #resetRadios() {
