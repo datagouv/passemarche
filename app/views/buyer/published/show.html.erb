@@ -8,7 +8,7 @@
       <p><%= t('buyer.published.contact_hint') %></p>
 
       <% if (buyer_url = @public_market.editor.build_buyer_return_url(market: @public_market)) %>
-        <div class="fr-btns-group fr-mt-3w">
+        <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
           <%= link_to t('buyer.published.return_to_platform'),
                       buyer_url,
                       class: 'fr-btn' %>
