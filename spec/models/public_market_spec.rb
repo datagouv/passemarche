@@ -175,6 +175,50 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '#update_and_resync_configuration!' do
+    let(:editor) { create(:editor) }
+
+    context 'when the market is already completed' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      it 'updates the given attributes' do
+        new_deadline = 2.months.from_now
+        public_market.update_and_resync_configuration!(deadline: new_deadline)
+
+        expect(public_market.reload.deadline).to be_within(1.second).of(new_deadline)
+      end
+
+      it 'enqueues the configuration summary PDF regeneration job' do
+        expect do
+          public_market.update_and_resync_configuration!(deadline: 2.months.from_now)
+        end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob).with(public_market.id)
+      end
+
+      it 'does not enqueue the configuration summary PDF regeneration job when the update is a no-op' do
+        expect do
+          public_market.update_and_resync_configuration!(deadline: public_market.deadline)
+        end.not_to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob)
+      end
+    end
+
+    context 'when the market is not completed' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      it 'updates the given attributes' do
+        new_deadline = 2.months.from_now
+        public_market.update_and_resync_configuration!(deadline: new_deadline)
+
+        expect(public_market.reload.deadline).to be_within(1.second).of(new_deadline)
+      end
+
+      it 'does not enqueue the configuration summary PDF regeneration job' do
+        expect do
+          public_market.update_and_resync_configuration!(deadline: 2.months.from_now)
+        end.not_to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob)
+      end
+    end
+  end
+
   describe '#complete!' do
     let(:editor) { create(:editor) }
     let(:public_market) { create(:public_market, editor:) }
