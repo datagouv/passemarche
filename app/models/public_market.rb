@@ -75,6 +75,12 @@ class PublicMarket < ApplicationRecord
     save!
   end
 
+  def update_and_resync_configuration!(attributes)
+    was_completed = completed?
+    update!(attributes)
+    GeneratePublicMarketConfigurationSummaryPdfJob.perform_later(id) if was_completed && saved_changes?
+  end
+
   private
 
   def market_typology_codes
