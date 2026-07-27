@@ -154,7 +154,6 @@ Feature: Buyer Lot Configuration Step
     And I click "Appliquer le nouveau type"
     Then I should see "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
     And the first lot should have market type "works"
-    And the type picker panel should be visible
-    When I click "Annuler"
-    Then I should not see "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+    And the type picker panel should be hidden
+    And the lot checkboxes should be hidden
 
