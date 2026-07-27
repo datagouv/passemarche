@@ -431,30 +431,7 @@ Le rapport est généré dans le dossier `coverage/` à la racine du projet. Il 
 
 ## 📚 Documentation
 
-La documentation technique est publiée sur [guides.data.gouv.fr](https://guides.data.gouv.fr/passe-marche). Pour mettre à jour la documentation publique, ouvrir une pull request sur le dépôt [datagouv/guides.data.gouv.fr](https://github.com/datagouv/guides.data.gouv.fr) en copiant les fichiers modifiés dans le répertoire `passemarche/`. Tout nouveau fichier doit également être référencé dans le `SUMMARY.md` de ce dépôt (côté `guides.data.gouv.fr`).
-
-
-### 🚀 Pour les Équipes Techniques
-
-* [**📖 Guide de Démarrage**](docs/00_guide_de_demarrage.md) - Navigation et glossaire de toute la documentation
-* [**🏃‍♂️ Démarrage Rapide**](docs/01_demarrage_rapide.md) - Intégration complète en 30 minutes
-
-### 📋 Documentation Technique Détaillée
-
-#### Authentification et Sécurité
-
-* [**🔐 Authentification OAuth2**](docs/02_authentification_oauth.md) - Flux Client Credentials, gestion tokens, sécurité
-* [**🔔 Webhooks**](docs/07_webhooks.md) - Notifications temps réel, signatures HMAC, retry intelligent
-
-#### Flux Métier
-
-* [**🏢 Flux Acheteur**](docs/03_flux_acheteur.md) - Création et configuration des marchés publics
-* [**👥 Flux Candidat**](docs/04_flux_candidat.md) - Soumission et finalisation des candidatures
-
-#### Références Techniques
-
-* [**⚙️ Référence API**](docs/05_reference_api.md) - Spécifications complètes des endpoints
-* [**🏗️ Schémas d'Intégration**](docs/06_schemas_integration.md) - Architecture et diagrammes techniques
+La documentation technique est sur [guides.data.gouv.fr](https://guides.data.gouv.fr/passe-marche). Source à éditer : [datagouv/guides.data.gouv.fr](https://github.com/datagouv/guides.data.gouv.fr), répertoire `passemarche/docs/`.
 
 ### 💡 Application de Démonstration
 
