@@ -1,0 +1,88 @@
+<% content_for :title, t('candidate.application_modes.title') %>
+
+<div class="fr-container fr-py-6w">
+  <h1 class="fr-h3 fr-mb-3w"><%= t('candidate.application_modes.title') %></h1>
+
+  <% if @errors.present? %>
+    <div class="fr-alert fr-alert--error fr-mb-3w" role="alert">
+      <p class="fr-alert__title"><%= t('candidate.application_modes.title') %></p>
+      <ul>
+        <% @errors.each do |_attribute, messages| %>
+          <% Array(messages).each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @already_mandataire %>
+    <div class="fr-alert fr-alert--warning fr-mb-3w">
+      <p class="fr-alert__title"><%= t('candidate.application_modes.already_mandataire_box.title') %></p>
+      <p><%= t('candidate.application_modes.already_mandataire_box.body') %></p>
+    </div>
+  <% else %>
+    <div class="fr-alert fr-alert--info fr-mb-3w">
+      <p class="fr-alert__title"><%= t('candidate.application_modes.info_box.title') %></p>
+      <p><%= t('candidate.application_modes.info_box.body') %></p>
+    </div>
+  <% end %>
+
+  <%= form_with url: application_mode_candidate_market_application_path(@market_application.identifier),
+                method: :patch,
+                data: { controller: "enable-on-choice" } do |form| %>
+    <fieldset class="fr-fieldset">
+      <legend class="fr-fieldset__legend fr-sr-only"><%= t('candidate.application_modes.title') %></legend>
+
+      <div class="fr-fieldset__content">
+        <div class="fr-radio-group fr-mb-2w">
+          <input type="radio"
+                 id="application_mode_solo"
+                 name="application_mode"
+                 value="solo"
+                 data-enable-on-choice-target="choice"
+                 data-action="change->enable-on-choice#toggle">
+          <label class="fr-label" for="application_mode_solo">
+            <%= t('candidate.application_modes.solo.label') %>
+            <span class="fr-hint-text"><%= t('candidate.application_modes.solo.hint') %></span>
+          </label>
+        </div>
+
+        <div class="fr-radio-group fr-mb-2w">
+          <input type="radio"
+                 id="application_mode_groupement"
+                 name="application_mode"
+                 value="groupement"
+                 <%= "disabled" if @already_mandataire %>
+                 data-enable-on-choice-target="choice"
+                 data-action="change->enable-on-choice#toggle">
+          <label class="fr-label" for="application_mode_groupement">
+            <%= t('candidate.application_modes.groupement.label') %>
+            <span class="fr-hint-text"><%= t('candidate.application_modes.groupement.hint') %></span>
+          </label>
+        </div>
+
+        <div class="fr-radio-group fr-mb-2w">
+          <input type="radio"
+                 id="application_mode_mixte"
+                 name="application_mode"
+                 value="mixte"
+                 <%= "disabled" if @already_mandataire %>
+                 data-enable-on-choice-target="choice"
+                 data-action="change->enable-on-choice#toggle">
+          <label class="fr-label" for="application_mode_mixte">
+            <%= t('candidate.application_modes.mixte.label') %>
+            <span class="fr-hint-text"><%= t('candidate.application_modes.mixte.hint') %></span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="fr-mt-4w" style="text-align: right;">
+      <%= form.submit t('candidate.application_modes.continue'),
+                      class: "fr-btn fr-btn--lg",
+                      disabled: true,
+                      data: { "enable-on-choice-target": "submitButton" } %>
+    </div>
+  <% end %>
+</div>

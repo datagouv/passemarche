@@ -46,6 +46,10 @@ class MarketApplication < ApplicationRecord
     user_id.nil? || user_id == user.id
   end
 
+  def application_mode_choice_required?
+    FeatureFlags::Groupement.enabled? && application_mode.nil?
+  end
+
   def update_api_status(api_name, status:, fields_filled: 0)
     with_lock do
       updated_status = (api_fetch_status || {}).dup

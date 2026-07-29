@@ -75,6 +75,12 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def application_url_for(market_application)
+    if market_application.application_mode_choice_required?
+      return Rails.application.routes.url_helpers.application_mode_candidate_market_application_url(
+        market_application.identifier
+      )
+    end
+
     Rails.application.routes.url_helpers.step_candidate_market_application_url(
       market_application.identifier,
       :company_identification
