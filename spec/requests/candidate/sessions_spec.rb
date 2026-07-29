@@ -12,6 +12,7 @@ RSpec.describe 'Candidate::Sessions', type: :request do
   before do
     allow(SiretValidator).to receive(:valid?).and_call_original
     allow(SiretValidator).to receive(:valid?).with(valid_siret).and_return(true)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
   end
 
   describe 'GET #new' do
@@ -236,6 +237,30 @@ RSpec.describe 'Candidate::Sessions', type: :request do
           params: { token:, market_application_id: market_application.identifier }
 
         expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
+      end
+    end
+
+    context 'when the groupement feature flag is enabled' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'redirects to the application mode choice screen when no mode is chosen yet' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
+      end
+
+      it 'redirects to company_identification when a mode is already chosen (RG5/CA-5)' do
+        market_application.update!(application_mode: :solo)
+
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :company_identification)
+        )
       end
     end
 
