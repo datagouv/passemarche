@@ -118,6 +118,24 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'application_mode' do
+    it 'defaults to nil (no mode chosen yet)' do
+      application = build(:market_application, public_market:)
+      expect(application.application_mode).to be_nil
+    end
+
+    it 'accepts solo, groupement and mixte' do
+      application = build(:market_application, public_market:, application_mode: :solo)
+      expect(application).to be_solo
+
+      application.application_mode = :groupement
+      expect(application).to be_groupement
+
+      application.application_mode = :mixte
+      expect(application).to be_mixte
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)

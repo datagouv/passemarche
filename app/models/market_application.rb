@@ -10,6 +10,8 @@ class MarketApplication < ApplicationRecord
   belongs_to :user, optional: true
   has_one :editor, through: :public_market
 
+  enum :application_mode, { solo: 0, groupement: 1, mixte: 2 }, validate: { allow_nil: true }
+
   has_one_attached :attestation
   has_one_attached :buyer_attestation
   has_one_attached :documents_package

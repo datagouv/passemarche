@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_24_135926) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -110,6 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
 
   create_table "market_applications", force: :cascade do |t|
     t.jsonb "api_fetch_status", default: {}, null: false
+    t.integer "application_mode"
     t.boolean "attests_no_exclusion_motifs", default: false, null: false
     t.datetime "completed_at"
     t.datetime "created_at", null: false
