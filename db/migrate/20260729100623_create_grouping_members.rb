@@ -7,7 +7,7 @@ class CreateGroupingMembers < ActiveRecord::Migration[8.1]
       t.integer :role, null: false
       t.integer :status, null: false, default: 0
       t.string :siret, null: false
-      t.string :email, null: false
+      t.string :email
       t.string :invitation_token
       t.datetime :invitation_token_created_at
 

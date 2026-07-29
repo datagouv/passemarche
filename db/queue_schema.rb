@@ -85,7 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_100623) do
 
   create_table "grouping_members", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email", null: false
+    t.string "email"
     t.bigint "grouping_id", null: false
     t.string "invitation_token"
     t.datetime "invitation_token_created_at"

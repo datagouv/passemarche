@@ -54,6 +54,21 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe 'email' do
+    it 'is required for a co_traitant' do
+      member = build(:grouping_member, :co_traitant, grouping:, email: nil)
+      expect(member).not_to be_valid
+      expect(member.errors[:email]).to be_present
+    end
+
+    it 'is not required for the mandataire' do
+      member = grouping.mandataire_grouping_member
+      member.email = nil
+
+      expect(member).to be_valid
+    end
+  end
+
   describe '#status' do
     it 'moves from invited to to_prepare to in_progress to completed' do
       member = create(:grouping_member, :co_traitant, grouping:)
