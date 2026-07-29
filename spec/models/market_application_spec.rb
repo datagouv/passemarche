@@ -150,6 +150,29 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#application_mode_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled, regardless of mode' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.application_mode_choice_required?).to be false
+    end
+
+    it 'returns true when the flag is enabled and no mode has been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.application_mode_choice_required?).to be true
+    end
+
+    it 'returns false when the flag is enabled but a mode is already set' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.application_mode_choice_required?).to be false
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)

@@ -20,6 +20,8 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
     end
 
     it 'creates market application successfully' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+
       post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
         params: valid_params,
         headers: { 'Authorization' => "Bearer #{access_token}" },
@@ -79,6 +81,34 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       json_response = response.parsed_body
       expect(json_response['errors']).to have_key('provider_user_id')
+    end
+
+    it 'points the application_url to the application mode choice screen when the groupement feature flag is enabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:created)
+      json_response = response.parsed_body
+      expect(json_response['application_url']).to include('/application_mode')
+      expect(json_response['application_url']).not_to include('/company_identification')
+    end
+
+    it 'still points to company_identification when the existing application already has a mode' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      create(:market_application, public_market:, siret: valid_siret, application_mode: :solo)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      expect(json_response['application_url']).to include('/company_identification')
     end
 
     it 'returns error when public market not found' do

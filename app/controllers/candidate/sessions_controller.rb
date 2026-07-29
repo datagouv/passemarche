@@ -51,6 +51,8 @@ module Candidate
         return candidate_sync_status_path(market_application.identifier)
       end
 
+      return application_mode_candidate_market_application_path(market_application.identifier) if market_application.application_mode_choice_required?
+
       company_identification_candidate_market_application_path(market_application.identifier)
     end
 

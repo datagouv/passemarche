@@ -575,6 +575,24 @@ fr:
       download_attestation: "Télécharger l'attestation de candidature"
       not_found: "Candidature introuvable"
       not_accessible: "Cette candidature n'est pas consultable"
+    application_modes:
+      title: "Comment souhaitez-vous candidater ?"
+      continue: "Continuer"
+      info_box:
+        title: "Le co-traitant n'est pas un sous-traitant"
+        body: "Co-traitance ou sous-traitance ? En groupement (co-traitance), chaque membre répond directement à l'acheteur et ses capacités sont évaluées. En sous-traitance, le lien est uniquement avec le titulaire. Si vos partenaires sont des sous-traitants, ils ne sont pas à déclarer ici."
+      already_mandataire_box:
+        title: "Vous êtes déjà mandataire d'un groupement sur ce marché"
+        body: "Vous ne pouvez pas être mandataire de plusieurs groupements à la fois, vous pouvez uniquement candidater seul sur ce marché."
+      solo:
+        label: "Candidater seul"
+        hint: "Je réponds à ce marché en mon nom propre"
+      groupement:
+        label: "Candidater en groupement"
+        hint: "Je suis mandataire du groupement, mon entreprise coordonne un groupement d'opérateurs économiques"
+      mixte:
+        label: "Candidater seul et en groupement"
+        hint: "Je réponds seul sur certains lots et je suis mandataire du groupement sur d'autres"
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez le ou les lots pour lequel/lesquels vous souhaitez soumettre une candidature."

@@ -2,9 +2,12 @@
 
 module Candidate
   class CreateApplicationsForMode < ApplicationInteractor
-    delegate :public_market, :siret, :application_mode, to: :context
+    delegate :market_application, :application_mode, to: :context
 
     def call
+      context.public_market = market_application.public_market
+      context.siret = market_application.siret
+
       ActiveRecord::Base.transaction do
         dispatch_mode
         raise ActiveRecord::Rollback if context.failure?
@@ -17,33 +20,44 @@ module Candidate
 
     def dispatch_mode
       case application_mode.to_s
-      when 'solo' then create_solo
-      when 'groupement' then create_groupement
-      when 'mixte' then create_mixte
+      when 'solo' then set_solo
+      when 'groupement' then set_groupement
+      when 'mixte' then set_mixte
       else context.fail!(errors: { application_mode: [I18n.t('candidate.validations.application_mode_invalid')] })
       end
     end
 
-    def create_solo
-      result = CreateMarketApplication.call(public_market:, siret:, application_mode: :solo)
-      return context.fail!(errors: result.errors) if result.failure?
+    def set_solo
+      return context.fail!(errors: errors_from(market_application)) unless market_application.update(application_mode: :solo)
 
-      context.market_application = result.market_application
+      context.market_application = market_application
     end
 
-    def create_groupement
+    def set_groupement
+      return context.fail!(errors: errors_from(market_application)) unless market_application.update(application_mode: :groupement)
+
+      context.market_application = market_application
+      create_grouping(market_application)
+    end
+
+    def set_mixte
+      return context.fail!(errors: errors_from(market_application)) unless market_application.update(application_mode: :solo)
+
+      create_groupement_counterpart
+    end
+
+    def create_groupement_counterpart
       result = CreateMarketApplication.call(public_market:, siret:, application_mode: :groupement)
       return context.fail!(errors: result.errors) if result.failure?
 
-      context.market_application = result.market_application
-      create_grouping(result.market_application)
+      groupement_application = link_solo_user(result.market_application)
+      context.market_application = groupement_application
+      create_grouping(groupement_application)
     end
 
-    def create_mixte
-      create_solo
-      return if context.failure?
-
-      create_groupement
+    def link_solo_user(groupement_application)
+      groupement_application.update!(user: market_application.user) if market_application.user
+      groupement_application
     end
 
     def create_grouping(mandataire_application)
@@ -73,6 +87,12 @@ module Candidate
 
     def fail_already_mandataire
       context.fail!(errors: { application_mode: [I18n.t('candidate.validations.already_mandataire')] })
+    end
+
+    def errors_from(record)
+      record.errors.each_with_object({}) do |error, hash|
+        (hash[error.attribute] ||= []) << error.message
+      end
     end
   end
 end
