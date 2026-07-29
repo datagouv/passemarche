@@ -125,8 +125,14 @@ RSpec.describe CreateMarketApplication, type: :interactor do
 
       subject { described_class.call(public_market:, siret:) }
 
-      it 'defaults to solo' do
-        expect(subject.market_application).to be_solo
+      it 'leaves the mode unset (not yet chosen by the candidate)' do
+        expect(subject.market_application.application_mode).to be_nil
+      end
+
+      it 'finds an existing application regardless of its solo/nil mode' do
+        existing = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+        expect(subject.market_application).to eq(existing)
       end
     end
 

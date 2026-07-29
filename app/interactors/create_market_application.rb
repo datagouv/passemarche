@@ -15,11 +15,11 @@ class CreateMarketApplication < ApplicationInteractor
   private
 
   def application_mode
-    context.application_mode || :solo
+    context.application_mode
   end
 
   def find_application
-    if application_mode.to_s == 'solo'
+    if application_mode.blank? || application_mode.to_s == 'solo'
       MarketApplication.find_by(public_market:, siret:, application_mode: [nil, :solo])
     else
       MarketApplication.find_by(public_market:, siret:, application_mode:)
