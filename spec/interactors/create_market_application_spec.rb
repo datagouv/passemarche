@@ -120,6 +120,66 @@ RSpec.describe CreateMarketApplication, type: :interactor do
       end
     end
 
+    context 'when application_mode is not specified' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      subject { described_class.call(public_market:, siret:) }
+
+      it 'defaults to solo' do
+        expect(subject.market_application).to be_solo
+      end
+    end
+
+    context 'when a solo application already exists and a groupement application is requested' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+      let!(:solo_application) { create(:market_application, public_market:, siret:, application_mode: :solo) }
+
+      subject { described_class.call(public_market:, siret:, application_mode: :groupement) }
+
+      it 'creates a distinct groupement application' do
+        expect { subject }.to change(MarketApplication, :count).by(1)
+      end
+
+      it 'does not touch the existing solo application' do
+        subject
+        expect(solo_application.reload).to be_solo
+      end
+
+      it 'returns the new groupement application' do
+        expect(subject.market_application).not_to eq(solo_application)
+        expect(subject.market_application).to be_groupement
+      end
+    end
+
+    context 'when a groupement application already exists for the same SIRET/market' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+      let!(:existing) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+
+      subject { described_class.call(public_market:, siret:, application_mode: :groupement) }
+
+      it 'returns the existing application without creating a new one' do
+        expect { subject }.not_to change(MarketApplication, :count)
+        expect(subject.market_application).to eq(existing)
+      end
+    end
+
+    context 'when a completed solo application exists and a groupement application is requested' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+      let!(:completed_solo) { create(:market_application, :completed, public_market:, siret:, application_mode: :solo) }
+
+      subject { described_class.call(public_market:, siret:, application_mode: :groupement) }
+
+      it 'does not reset the completed solo application' do
+        subject
+        expect(completed_solo.reload).to be_completed
+      end
+
+      it 'creates a new groupement application instead' do
+        expect { subject }.to change(MarketApplication, :count).by(1)
+        expect(subject.market_application).not_to eq(completed_solo)
+      end
+    end
+
     context 'when SIRET is missing' do
       let(:public_market) { create(:public_market, :completed, editor:) }
 

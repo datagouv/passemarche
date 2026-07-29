@@ -4,7 +4,7 @@ class CreateMarketApplication < ApplicationInteractor
   delegate :public_market, :siret, :provider_user_id, to: :context
 
   def call
-    current_application = MarketApplication.find_by(public_market:, siret:)
+    current_application = find_application
 
     return create_new_application unless current_application
     return handle_recandidature(current_application) if current_application.completed?
@@ -13,6 +13,18 @@ class CreateMarketApplication < ApplicationInteractor
   end
 
   private
+
+  def application_mode
+    context.application_mode || :solo
+  end
+
+  def find_application
+    if application_mode.to_s == 'solo'
+      MarketApplication.find_by(public_market:, siret:, application_mode: [nil, :solo])
+    else
+      MarketApplication.find_by(public_market:, siret:, application_mode:)
+    end
+  end
 
   def handle_recandidature(application)
     return context.market_application = application unless public_market.open?
@@ -26,7 +38,7 @@ class CreateMarketApplication < ApplicationInteractor
   end
 
   def create_new_application
-    application = MarketApplication.new(public_market:, siret:, provider_user_id:)
+    application = MarketApplication.new(public_market:, siret:, provider_user_id:, application_mode:)
 
     if application.save
       context.market_application = application
