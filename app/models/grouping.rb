@@ -4,6 +4,9 @@ class Grouping < ApplicationRecord
   belongs_to :public_market
   belongs_to :mandataire_market_application, class_name: 'MarketApplication'
 
+  has_many :grouping_members, dependent: :destroy
+  has_many :market_applications, through: :grouping_members
+
   enum :legal_type, { conjoint: 0, solidaire: 1, conjoint_mandataire_solidaire: 2 }, prefix: true
 
   before_validation :set_mandataire_siret
