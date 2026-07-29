@@ -14,12 +14,8 @@ class CreateMarketApplication < ApplicationInteractor
 
   private
 
-  def application_mode
-    context.application_mode || :solo
-  end
-
   def find_application
-    MarketApplication.matching_mode(application_mode).find_by(public_market:, siret:)
+    MarketApplication.matching_mode(context.application_mode).find_by(public_market:, siret:)
   end
 
   def handle_recandidature(application)
@@ -34,7 +30,7 @@ class CreateMarketApplication < ApplicationInteractor
   end
 
   def create_new_application
-    application = MarketApplication.new(public_market:, siret:, provider_user_id:, application_mode:)
+    application = MarketApplication.new(public_market:, siret:, provider_user_id:, application_mode: context.application_mode)
 
     if application.save
       context.market_application = application
