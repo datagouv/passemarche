@@ -737,7 +737,7 @@ fr:
             body: "Les motifs d'exclusion obligatoires s’imposent à l’acheteur. Lorsqu’un candidat se trouve dans l’un de ces cas, l’acheteur est tenu d’écarter sa candidature, sous réserve des mesures d’auto-apurement prévues par le code de la commande publique."
           condamnations_penales:
             title: "Condamnations pénales visées"
-            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive pour :"
+            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive, notamment pour :"
             tags:
               - "Trafic de stupéfiants"
               - "Traite des êtres humains"
@@ -753,10 +753,10 @@ fr:
               - "Association de malfaiteurs"
           situation_entreprise:
             title: "Situation de l'entreprise"
-            body: "Sont également exclus : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
+            body: "Sont également exclus, notamment : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
           manquements_fiscaux:
             title: "Manquements fiscaux"
-            body: "L’exclusion s’applique aussi en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
+            body: "L’exclusion s’applique notamment en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
           presomption_entente:
             title: "Présomption d'entente"
             body: "S’il y a des indices prouvant qu’il y a eu accord entre elle et d’autres opérateurs économiques en vue de fausser la concurrence."
