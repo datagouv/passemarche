@@ -483,6 +483,7 @@ fr:
             box_additional_content_html: "Si ces informations sont disponibles, elles seront récupérées automatiquement."
             optional_fields_title: Les motifs d'exclusion facultative
             optional_fields_description: Vous pouvez sélectionner un ou plusieurs motifs d'exclusion facultative en considération de l'objet du marché ou à ses conditions d'exécution.
+            optional_question: Souhaitez-vous demander d'autres motifs d'exclusion facultative ?
           capacite_economique_financiere:
             title: Les renseignements complémentaires relatifs aux capacités économiques et financières des candidats
             subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
