@@ -373,6 +373,12 @@ fr:
       defense_checked: "Ce marché concerne la défense ou la sécurité"
       defense_hint: "Cette désignation a été définie par %{editor}"
       start_activation: "Débuter l'activation de %{editor}"
+      rc_notice:
+        title: "Votre règlement de consultation et Passe Marché"
+        close: "Fermer"
+        body_p1: "Conformément à l'article L. 2111-1 du code de la commande publique, \"la nature et l'étendue des besoins à satisfaire sont déterminées avec précision avant le lancement de la consultation\"."
+        body_p2: "L'acheteur est seul responsable de la cohérence entre les stipulations de son dossier de consultation des entreprises, les informations publiées sur le profil d'acheteur et les paramètres de la consultation qu'il renseigne dans Passe Marché."
+        body_p3: "Il vous appartient de vérifier que l'ensemble de ces éléments est conforme et exempt de contradiction. Toute ambiguïté ou contradiction est susceptible d'engager sa responsabilité et, le cas échéant, conduire à l'irrégularité de la procédure."
     summary:
       title_suffix: "Synthèse de ma candidature"
       market_info_title: "Informations du marché"
