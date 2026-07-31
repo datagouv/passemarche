@@ -484,9 +484,8 @@ fr:
             optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations complémentaires qui seront demandées aux candidats
           motifs_exclusion:
             title: "Les motifs d'exclusion"
-            box_title: "Motifs d'exclusion obligatoire"
-            box_content_html: "Le candidat attestera sur son honneur ne pas entrer dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique et informera l'acheteur de tout changement de situation sans délai. Sauf pour les marchés de défense et de sécurité, l'acheteur ne pourra exiger que du seul candidat attributaire les justificatifs prouvant sa conformité aux exigences posées par les L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
-            box_additional_content_html: "Si ces informations sont disponibles, elles seront récupérées automatiquement."
+            box_title: "Motifs d'exclusion obligatoires et facultatives"
+            box_content_html: "Conformément à l'article R2144-4 du CCP, \"L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché.\" Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
             optional_fields_title: Les motifs d'exclusion facultative
             optional_fields_description: Vous pouvez sélectionner un ou plusieurs motifs d'exclusion facultative en considération de l'objet du marché ou à ses conditions d'exécution.
             optional_question: Souhaitez-vous demander d'autres motifs d'exclusion facultative ?
