@@ -534,6 +534,8 @@ fr:
         p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
         p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
+        motifs_exclusion_reminder_title: "Rappel concernant les motifs d'exclusion :"
+        motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
 
   candidate:
     deadline_passed:
@@ -686,6 +688,8 @@ fr:
         p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
         p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
+        motifs_exclusion_reminder_title: "Rappel concernant les motifs d'exclusion :"
+        motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
     market_applications:
       form_fields:
         capacite_economique_financiere_assurance_risques_professionnels:
