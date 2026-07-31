@@ -1,0 +1,18 @@
+<dialog data-controller="modal"
+        data-action="click->modal#clickBackdrop"
+        aria-labelledby="rc-notice-modal-title"
+        class="fr-modal-dialog fr-modal-dialog--wide">
+  <div class="fr-modal-dialog__content">
+    <div class="fr-modal-dialog__header">
+      <button type="button"
+              class="fr-link fr-link--close"
+              data-action="modal#close">
+        <%= t('buyer.setup.rc_notice.close') %>
+      </button>
+    </div>
+    <h1 id="rc-notice-modal-title" class="fr-h5 fr-mb-0"><%= t('buyer.setup.rc_notice.title') %></h1>
+    <p class="fr-mb-0"><%= t('buyer.setup.rc_notice.body_p1') %></p>
+    <p class="fr-mb-0"><%= t('buyer.setup.rc_notice.body_p2') %></p>
+    <p class="fr-mb-0"><%= t('buyer.setup.rc_notice.body_p3') %></p>
+  </div>
+</dialog>
