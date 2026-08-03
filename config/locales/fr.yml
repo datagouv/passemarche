@@ -578,6 +578,7 @@ fr:
     application_modes:
       title: "Comment souhaitez-vous candidater ?"
       continue: "Continuer"
+      continue_readonly: "Continuer"
       info_box:
         title: "Le co-traitant n'est pas un sous-traitant"
         body: "Co-traitance ou sous-traitance ? En groupement (co-traitance), chaque membre répond directement à l'acheteur et ses capacités sont évaluées. En sous-traitance, le lien est uniquement avec le titulaire. Si vos partenaires sont des sous-traitants, ils ne sont pas à déclarer ici."
@@ -601,6 +602,7 @@ fr:
       question: "Quel est le type du groupement ?"
       alert: "Lorsque vous aurez validé la composition du groupement, si vous souhaitez modifier le type de groupement alors il vous faudra recommencer une candidature de zéro."
       continue: "Continuer"
+      back: "Précédent"
       most_common_badge: "LE PLUS COURANT"
       conjoint:
         label: "Conjoint"

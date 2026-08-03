@@ -75,6 +75,9 @@
     </fieldset>
 
     <div class="fr-mt-4w grouping-legal-type-actions">
+      <%= link_to t('candidate.grouping_legal_types.back'),
+                  application_mode_candidate_market_application_path(@market_application.identifier, readonly: true),
+                  class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
       <%= form.button t('candidate.grouping_legal_types.continue'),
                       type: "submit",
                       class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",

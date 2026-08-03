@@ -83,3 +83,7 @@ end
 Then('the candidacy mode {string} should be disabled') do |mode|
   expect(page).to have_field(I18n.t("candidate.application_modes.#{mode}.label"), disabled: true)
 end
+
+Then('the candidacy mode {string} should be checked and disabled') do |mode|
+  expect(page).to have_field(I18n.t("candidate.application_modes.#{mode}.label"), checked: true, disabled: true)
+end
