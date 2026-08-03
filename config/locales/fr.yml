@@ -593,6 +593,24 @@ fr:
       mixte:
         label: "Candidater seul et en groupement"
         hint: "Je réponds seul sur certains lots et je suis mandataire du groupement sur d'autres"
+    grouping_legal_types:
+      title: "Le type de groupement"
+      step_current: "Étape 1 sur 3"
+      step_next: "Étape suivante :"
+      step_next_label: "Les membres du groupement"
+      question: "Quel est le type du groupement ?"
+      alert: "Lorsque vous aurez validé la composition du groupement, si vous souhaitez modifier le type de groupement alors il vous faudra recommencer une candidature de zéro."
+      continue: "Continuer"
+      most_common_badge: "LE PLUS COURANT"
+      conjoint:
+        label: "Conjoint"
+        hint: "Votre entreprise réalisera la partie du marché qui lui sera attribuée et sera responsable uniquement de cette partie vis-à-vis de l'acheteur."
+      solidaire:
+        label: "Solidaire"
+        hint: "Votre entreprise sera responsable de l'exécution de la totalité du marché vis-à-vis de l'acheteur. En cas de défaillance d'un membre, les autres membres, y compris votre entreprise, pourront être tenus d'exécuter les obligations du contrat."
+      conjoint_mandataire_solidaire:
+        label: "Conjoint + mandataire solidaire"
+        hint: "Chaque membre est responsable de sa propre part du marché. En revanche, le mandataire est solidaire des autres membres : si l'un d'eux est défaillant, seul le mandataire devra répondre de ses obligations vis-à-vis de l'acheteur."
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez le ou les lots pour lequel/lesquels vous souhaitez soumettre une candidature."
@@ -641,6 +659,8 @@ fr:
       email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
       already_mandataire: "Vous êtes déjà mandataire d'un groupement sur ce marché"
       application_mode_invalid: "Le mode de candidature sélectionné n'est pas valide"
+      grouping_not_found: "Aucun groupement trouvé pour cette candidature"
+      legal_type_invalid: "Le type de groupement sélectionné n'est pas valide"
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
       no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
