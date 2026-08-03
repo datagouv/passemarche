@@ -33,7 +33,7 @@ Feature: Candidate chooses their candidacy mode
   Scenario: Candidate chooses to apply as a groupement
     When I visit the magic link
     And I choose the candidacy mode "groupement"
-    Then I should be on the company identification step
+    Then I should be on the grouping legal type step
     And my application mode should be "groupement"
     And I should be the mandataire of a new groupement
 
@@ -41,7 +41,7 @@ Feature: Candidate chooses their candidacy mode
   Scenario: Candidate chooses to apply both solo and as a groupement
     When I visit the magic link
     And I choose the candidacy mode "mixte"
-    Then I should land on the company identification step of the groupement application
+    Then I should land on the grouping legal type step of the groupement application
     And my application mode should be "solo"
     And a second market application should exist with mode "groupement"
 
