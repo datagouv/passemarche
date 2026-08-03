@@ -10,6 +10,7 @@ module Candidate
 
     def show
       @already_mandataire = already_mandataire_elsewhere?
+      @readonly = @market_application.application_mode.present?
     end
 
     def update
@@ -35,6 +36,7 @@ module Candidate
 
     def redirect_if_mode_already_chosen
       return if @market_application.application_mode.nil?
+      return if action_name == 'show' && params[:readonly].present?
 
       if @market_application.grouping_legal_type_choice_required?
         redirect_to grouping_legal_type_candidate_market_application_path(@market_application.identifier)

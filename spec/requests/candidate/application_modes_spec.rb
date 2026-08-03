@@ -78,6 +78,33 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
       end
     end
 
+    context 'when readonly is requested and the mode is already chosen' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+      end
+
+      it 'renders the screen instead of redirecting' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'disables the fieldset' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        expect(rendered.at_css('fieldset')['disabled']).to eq('disabled')
+      end
+
+      it 'checks the already chosen mode' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        expect(rendered.at_css('#application_mode_groupement')['checked']).to eq('checked')
+      end
+    end
+
     context 'when the application is already completed' do
       let(:market_application) do
         create(:market_application, :completed, public_market:, siret: '73282932000074')

@@ -44,3 +44,11 @@ Feature: Mandataire defines the grouping legal type
     And I choose the candidacy mode "groupement"
     And I visit the magic link
     Then I should be on the grouping legal type step
+
+  @javascript
+  Scenario: Mandataire goes back to see the chosen candidacy mode in read-only
+    When I visit the magic link
+    And I choose the candidacy mode "groupement"
+    And I click on "Précédent"
+    Then I should see "Comment souhaitez-vous candidater ?"
+    And the candidacy mode "groupement" should be checked and disabled
