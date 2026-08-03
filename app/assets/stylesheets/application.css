@@ -381,8 +381,29 @@
 .fr-modal-dialog__header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+.fr-modal-dialog__header .fr-link--close {
+  flex-shrink: 0;
+}
+
+.fr-modal-dialog--wide {
+  max-width: 792px;
+}
+
+.fr-modal-dialog--wide .fr-modal-dialog__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 32px 64px;
+}
+
+.fr-modal-dialog--wide .fr-modal-dialog__header {
+  justify-content: flex-end;
+  margin-bottom: 0;
 }
 
 /* =============================================
@@ -625,31 +646,6 @@
 /* Drag handle */
 [data-drag-handle] {
   cursor: grab;
-}
-
-/* Modal dialog */
-.fr-modal-dialog {
-  border: none;
-  border-radius: 4px;
-  padding: 0;
-  max-width: 600px;
-  width: 90%;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
-
-.fr-modal-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.fr-modal-dialog__content {
-  padding: 2rem;
-}
-
-.fr-modal-dialog__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
 }
 
 /* Security badges - remove DSFR default icons */

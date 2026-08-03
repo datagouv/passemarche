@@ -16,6 +16,7 @@ module Buyer
       when :setup, :summary, :lot_config, :form_config
         render_wizard
       else
+        set_rc_notice_visibility
         @current_category = step.to_s
         @mandatory_fields = @presenter.mandatory_fields_for_category(@current_category)
         @optional_fields = @presenter.optional_fields_for_category(@current_category)
@@ -97,6 +98,11 @@ module Buyer
       return specific_step_template if template_exists?(specific_step_template)
 
       generic_step_template
+    end
+
+    def set_rc_notice_visibility
+      @show_rc_notice = session[:rc_notice_seen].blank?
+      session[:rc_notice_seen] = true
     end
 
     def specific_step_template

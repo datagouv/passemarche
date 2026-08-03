@@ -373,6 +373,12 @@ fr:
       defense_checked: "Ce marché concerne la défense ou la sécurité"
       defense_hint: "Cette désignation a été définie par %{editor}"
       start_activation: "Débuter l'activation de %{editor}"
+      rc_notice:
+        title: "Votre règlement de consultation et Passe Marché"
+        close: "Fermer"
+        body_p1: "Conformément à l'article L. 2111-1 du code de la commande publique, \"la nature et l'étendue des besoins à satisfaire sont déterminées avec précision avant le lancement de la consultation\"."
+        body_p2: "L'acheteur est seul responsable de la cohérence entre les stipulations de son dossier de consultation des entreprises, les informations publiées sur le profil d'acheteur et les paramètres de la consultation qu'il renseigne dans Passe Marché."
+        body_p3: "Il vous appartient de vérifier que l'ensemble de ces éléments est conforme et exempt de contradiction. Toute ambiguïté ou contradiction est susceptible d'engager sa responsabilité et, le cas échéant, conduire à l'irrégularité de la procédure."
     summary:
       title_suffix: "Synthèse de ma candidature"
       market_info_title: "Informations du marché"
@@ -478,11 +484,11 @@ fr:
             optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations complémentaires qui seront demandées aux candidats
           motifs_exclusion:
             title: "Les motifs d'exclusion"
-            box_title: "Motifs d'exclusion obligatoire"
-            box_content_html: "Le candidat attestera sur son honneur ne pas entrer dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique et informera l'acheteur de tout changement de situation sans délai. Sauf pour les marchés de défense et de sécurité, l'acheteur ne pourra exiger que du seul candidat attributaire les justificatifs prouvant sa conformité aux exigences posées par les L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
-            box_additional_content_html: "Si ces informations sont disponibles, elles seront récupérées automatiquement."
+            box_title: "Motifs d'exclusion obligatoires et facultatives"
+            box_content_html: "Conformément à l'article R2144-4 du CCP, \"L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché.\" Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
             optional_fields_title: Les motifs d'exclusion facultative
             optional_fields_description: Vous pouvez sélectionner un ou plusieurs motifs d'exclusion facultative en considération de l'objet du marché ou à ses conditions d'exécution.
+            optional_question: Souhaitez-vous demander d'autres motifs d'exclusion facultative ?
           capacite_economique_financiere:
             title: Les renseignements complémentaires relatifs aux capacités économiques et financières des candidats
             subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
@@ -528,6 +534,8 @@ fr:
         p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
         p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
+        motifs_exclusion_reminder_title: "Rappel concernant les motifs d'exclusion :"
+        motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
 
   candidate:
     deadline_passed:
@@ -680,6 +688,8 @@ fr:
         p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
         p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
+        motifs_exclusion_reminder_title: "Rappel concernant les motifs d'exclusion :"
+        motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
     market_applications:
       form_fields:
         capacite_economique_financiere_assurance_risques_professionnels:
@@ -736,7 +746,7 @@ fr:
             body: "Les motifs d'exclusion obligatoires s’imposent à l’acheteur. Lorsqu’un candidat se trouve dans l’un de ces cas, l’acheteur est tenu d’écarter sa candidature, sous réserve des mesures d’auto-apurement prévues par le code de la commande publique."
           condamnations_penales:
             title: "Condamnations pénales visées"
-            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive pour :"
+            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive, notamment pour :"
             tags:
               - "Trafic de stupéfiants"
               - "Traite des êtres humains"
@@ -752,10 +762,10 @@ fr:
               - "Association de malfaiteurs"
           situation_entreprise:
             title: "Situation de l'entreprise"
-            body: "Sont également exclus : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
+            body: "Sont également exclus, notamment : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
           manquements_fiscaux:
             title: "Manquements fiscaux"
-            body: "L’exclusion s’applique aussi en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
+            body: "L’exclusion s’applique notamment en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
           presomption_entente:
             title: "Présomption d'entente"
             body: "S’il y a des indices prouvant qu’il y a eu accord entre elle et d’autres opérateurs économiques en vue de fausser la concurrence."
