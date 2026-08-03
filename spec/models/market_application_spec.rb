@@ -173,6 +173,39 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#grouping_legal_type_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled, even if a grouping without legal_type exists' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+
+    it 'returns true when the flag is enabled, the mode is groupement and legal_type is missing' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_legal_type_choice_required?).to be true
+    end
+
+    it 'returns false when legal_type is already chosen' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+
+    it 'returns false when the mode is not groupement' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)

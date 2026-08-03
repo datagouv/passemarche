@@ -36,7 +36,11 @@ module Candidate
     def redirect_if_mode_already_chosen
       return if @market_application.application_mode.nil?
 
-      redirect_to company_identification_candidate_market_application_path(@market_application.identifier)
+      if @market_application.grouping_legal_type_choice_required?
+        redirect_to grouping_legal_type_candidate_market_application_path(@market_application.identifier)
+      else
+        redirect_to company_identification_candidate_market_application_path(@market_application.identifier)
+      end
     end
 
     def already_mandataire_elsewhere?
@@ -46,7 +50,11 @@ module Candidate
     end
 
     def handle_success(result)
-      redirect_to company_identification_candidate_market_application_path(result.market_application.identifier)
+      if result.market_application.groupement?
+        redirect_to grouping_legal_type_candidate_market_application_path(result.market_application.identifier)
+      else
+        redirect_to company_identification_candidate_market_application_path(result.market_application.identifier)
+      end
     end
   end
 end
