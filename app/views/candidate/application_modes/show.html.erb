@@ -109,11 +109,11 @@
       <% if @readonly %>
         <%= link_to t('candidate.application_modes.continue_readonly'),
                     grouping_legal_type_candidate_market_application_path(@market_application.identifier),
-                    class: "fr-btn fr-btn--lg fr-icon-arrow-right-line fr-btn--icon-right" %>
+                    class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right" %>
       <% else %>
         <%= form.button t('candidate.application_modes.continue'),
                         type: "submit",
-                        class: "fr-btn fr-btn--lg fr-icon-arrow-right-line fr-btn--icon-right",
+                        class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
                         disabled: true,
                         data: { "enable-on-choice-target": "submitButton" } %>
       <% end %>
