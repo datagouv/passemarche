@@ -88,6 +88,8 @@ Rails.application.routes.draw do
         get 'deadline_passed', to: 'deadline_passed#show', as: :deadline_passed
         get 'application_mode', to: 'application_modes#show', as: :application_mode
         patch 'application_mode', to: 'application_modes#update'
+        get 'grouping_legal_type', to: 'grouping_legal_types#show', as: :grouping_legal_type
+        patch 'grouping_legal_type', to: 'grouping_legal_types#update'
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection
