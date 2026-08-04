@@ -8,6 +8,7 @@ RSpec.feature 'Candidate attestation download', type: :feature do
 
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
     sign_in_as_candidate(user, market_application)
   end
 

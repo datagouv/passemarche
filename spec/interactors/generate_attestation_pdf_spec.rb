@@ -18,6 +18,7 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
 
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
   end
   let(:market_application) { create(:market_application) }
 
@@ -42,8 +43,6 @@ RSpec.describe GenerateAttestationPdf, type: :interactor do
       end
 
       it 'applies the watermark overlay via PdfWatermarkService' do
-        allow(PdfWatermarkService).to receive(:call).and_call_original
-
         subject
 
         expect(PdfWatermarkService).to have_received(:call).with(instance_of(String))

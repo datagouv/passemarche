@@ -176,6 +176,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
     before do
       allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+      allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
       allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))
     end
 

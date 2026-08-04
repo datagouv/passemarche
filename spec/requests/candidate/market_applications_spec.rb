@@ -44,6 +44,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     )
 
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
 
     # Stub ActiveStorage download to prevent file system access in tests
     allow_any_instance_of(ActiveStorage::Blob).to receive(:download).and_return('fake pdf content')
