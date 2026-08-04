@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe GeneratePublicMarketConfigurationSummaryPdf, type: :interactor do
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
   end
 
   let(:public_market) { create(:public_market, :completed) }
