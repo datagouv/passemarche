@@ -1,0 +1,46 @@
+<% content_for :title, t('candidate.grouping_compositions.confirm.title') %>
+
+<div class="fr-container fr-py-6w">
+  <p class="fr-text--sm fr-mb-1w"><%= t('candidate.grouping_compositions.confirm.step_current') %></p>
+  <h1 class="fr-h4 fr-mb-2w"><%= t('candidate.grouping_compositions.confirm.step_next_label') %></h1>
+
+  <div class="grouping-legal-type-stepper fr-mb-5w">
+    <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
+    <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
+    <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
+  </div>
+
+  <h2 class="fr-h1 fr-mb-2w"><%= t('candidate.grouping_compositions.confirm.title') %></h2>
+
+  <% if @errors.present? %>
+    <div class="fr-alert fr-alert--error fr-mb-3w" role="alert">
+      <p class="fr-alert__title"><%= t('candidate.grouping_compositions.confirm.title') %></p>
+      <ul>
+        <% @errors.each do |_attribute, messages| %>
+          <% Array(messages).each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p class="fr-text--xl fr-mb-5w">
+    <%= t('candidate.grouping_compositions.confirm.legal_type_label') %>
+    <span class="fr-badge fr-badge--info fr-badge--no-icon">
+      <%= t("candidate.grouping_legal_types.#{@grouping.legal_type}.label") %>
+    </span>
+  </p>
+
+  <%= render 'members_table', grouping: @grouping, market_application: @market_application, editable: false %>
+
+  <div class="fr-mt-4w grouping-legal-type-actions">
+    <%= link_to t('candidate.grouping_compositions.confirm.modify'),
+                previous_wizard_path,
+                class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
+    <%= button_to t('candidate.grouping_compositions.confirm.submit'),
+                  wizard_path,
+                  method: :patch,
+                  class: "fr-btn fr-icon-send-plane-line fr-btn--icon-right" %>
+  </div>
+</div>
