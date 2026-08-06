@@ -47,7 +47,7 @@
               <td>
                 <% if member.co_traitant? && !member.invitation_sent? %>
                   <%= button_to t('candidate.grouping_compositions.remove_button'),
-                        grouping_wizard_member_candidate_market_application_path(market_application.identifier, member),
+                        grouping_composition_member_candidate_market_application_path(market_application.identifier, member),
                         method: :delete,
                         form: { data: { turbo_stream: true } },
                         class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left" %>

@@ -28,12 +28,12 @@ module Candidate
       render turbo_stream: [
         turbo_stream.replace(
           'grouping_members_table',
-          partial: 'candidate/grouping_wizard/members_table',
+          partial: 'candidate/grouping_compositions/members_table',
           locals: { grouping:, market_application: @market_application, editable: true }
         ),
         turbo_stream.replace(
           'grouping_composition_actions',
-          partial: 'candidate/grouping_wizard/composition_actions',
+          partial: 'candidate/grouping_compositions/composition_actions',
           locals: { grouping: }
         )
       ]
@@ -74,17 +74,17 @@ module Candidate
       [
         turbo_stream.replace(
           'grouping_members_table',
-          partial: 'candidate/grouping_wizard/members_table',
+          partial: 'candidate/grouping_compositions/members_table',
           locals: { grouping:, market_application: @market_application, editable: true }
         ),
         turbo_stream.replace(
           'grouping_member_form',
-          partial: 'candidate/grouping_wizard/member_form',
+          partial: 'candidate/grouping_compositions/member_form',
           locals: { grouping:, market_application: @market_application, grouping_member: @grouping_member, errors: @errors }
         ),
         turbo_stream.replace(
           'grouping_composition_actions',
-          partial: 'candidate/grouping_wizard/composition_actions',
+          partial: 'candidate/grouping_compositions/composition_actions',
           locals: { grouping: }
         )
       ]
