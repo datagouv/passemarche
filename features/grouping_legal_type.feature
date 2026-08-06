@@ -30,7 +30,7 @@ Feature: Mandataire defines the grouping legal type
     When I visit the magic link
     And I choose the candidacy mode "groupement"
     And I choose the grouping legal type "conjoint_mandataire_solidaire"
-    Then I should be on the company identification step
+    Then I should be on the grouping composition step
     And the grouping legal type should be "conjoint_mandataire_solidaire"
 
   Scenario: A candidate who is not mandataire of a grouping cannot access the screen
