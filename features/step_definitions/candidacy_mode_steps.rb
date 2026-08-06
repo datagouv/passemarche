@@ -32,14 +32,14 @@ end
 
 Then('I should be on the grouping legal type step') do
   expect(page).to have_current_path(
-    grouping_legal_type_candidate_market_application_path(@market_application.identifier),
+    grouping_wizard_step_candidate_market_application_path(@market_application.identifier, :grouping_legal_type),
     ignore_query: true
   )
 end
 
 Then('I should be on the candidacy mode choice step') do
   expect(page).to have_current_path(
-    application_mode_candidate_market_application_path(@market_application.identifier),
+    grouping_wizard_step_candidate_market_application_path(@market_application.identifier, :application_mode),
     ignore_query: true
   )
 end
@@ -52,9 +52,9 @@ Then('I should land on the company identification step of the groupement applica
 end
 
 Then('I should land on the grouping legal type step of the groupement application') do
-  expect(page).to have_current_path(%r{/candidate/market_applications/.+/grouping_legal_type})
+  expect(page).to have_current_path(%r{/candidate/market_applications/.+/grouping_wizard/grouping_legal_type})
 
-  landed_identifier = page.current_path[%r{/candidate/market_applications/([^/]+)/grouping_legal_type}, 1]
+  landed_identifier = page.current_path[%r{/candidate/market_applications/([^/]+)/grouping_wizard/grouping_legal_type}, 1]
   expect(landed_identifier).not_to eq(@market_application.identifier)
 
   @groupement_market_application = MarketApplication.find_by!(identifier: landed_identifier)

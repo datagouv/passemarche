@@ -28,9 +28,7 @@
     </div>
   <% end %>
 
-  <%= form_with url: application_mode_candidate_market_application_path(@market_application.identifier),
-                method: :patch,
-                data: { controller: "enable-on-choice" } do |form| %>
+  <%= form_with url: wizard_path, method: :patch, data: { controller: "enable-on-choice" } do |form| %>
     <fieldset class="fr-fieldset" <%= "disabled" if @readonly %>>
       <legend class="fr-fieldset__legend fr-sr-only"><%= t('candidate.application_modes.title') %></legend>
 

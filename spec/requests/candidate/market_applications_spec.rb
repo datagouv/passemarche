@@ -17,6 +17,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
   before do
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
     allow_any_instance_of(Candidate::ApplicationController).to receive(:current_candidate).and_return(candidate_user)
     allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
 
@@ -101,7 +102,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         get "/candidate/market_applications/#{market_application.identifier}/summary"
 
         expect(response).to redirect_to(
-          application_mode_candidate_market_application_path(market_application.identifier)
+          grouping_wizard_step_candidate_market_application_path(market_application.identifier, :application_mode)
         )
       end
     end
@@ -622,7 +623,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         delete candidate_market_application_path(market_application.identifier)
 
         expect(response).not_to redirect_to(
-          application_mode_candidate_market_application_path(market_application.identifier)
+          grouping_wizard_step_candidate_market_application_path(market_application.identifier, :application_mode)
         )
       end
     end

@@ -2,7 +2,7 @@
 
 <div class="fr-container fr-py-6w">
   <p class="fr-text--sm fr-mb-1w"><%= t('candidate.grouping_legal_types.step_current') %></p>
-  <h1 class="fr-h3 fr-mb-2w"><%= t('candidate.grouping_legal_types.title') %></h1>
+  <h1 class="fr-h4 fr-mb-2w"><%= t('candidate.grouping_legal_types.title') %></h1>
 
   <div class="grouping-legal-type-stepper fr-mb-2w">
     <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
@@ -15,7 +15,7 @@
     <%= t('candidate.grouping_legal_types.step_next_label') %>
   </p>
 
-  <h2 class="fr-h4 fr-mb-3w"><%= t('candidate.grouping_legal_types.question') %></h2>
+  <h2 class="fr-h1 fr-mb-1w"><%= t('candidate.grouping_legal_types.question') %></h2>
 
   <% if @errors.present? %>
     <div class="fr-alert fr-alert--error fr-mb-3w" role="alert">
@@ -34,9 +34,7 @@
     <p><%= t('candidate.grouping_legal_types.alert') %></p>
   </div>
 
-  <%= form_with url: grouping_legal_type_candidate_market_application_path(@market_application.identifier),
-                method: :patch,
-                data: { controller: "enable-on-choice" } do |form| %>
+  <%= form_with url: wizard_path, method: :patch, data: { controller: "enable-on-choice" } do |form| %>
     <fieldset class="fr-fieldset">
       <legend class="fr-fieldset__legend fr-sr-only"><%= t('candidate.grouping_legal_types.question') %></legend>
 
@@ -57,7 +55,7 @@
                   <span class="application-mode-choice__title">
                     <%= t("candidate.grouping_legal_types.#{legal_type}.label") %>
                     <% if legal_type == 'conjoint_mandataire_solidaire' %>
-                      <span class="fr-badge fr-badge--info fr-badge--sm">
+                      <span class="fr-badge fr-badge--info fr-badge--no-icon fr-badge--sm">
                         <%= t('candidate.grouping_legal_types.most_common_badge') %>
                       </span>
                     <% end %>
@@ -76,7 +74,7 @@
 
     <div class="fr-mt-4w grouping-legal-type-actions">
       <%= link_to t('candidate.grouping_legal_types.back'),
-                  application_mode_candidate_market_application_path(@market_application.identifier, readonly: true),
+                  previous_wizard_path(readonly: true),
                   class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
       <%= form.button t('candidate.grouping_legal_types.continue'),
                       type: "submit",

@@ -45,16 +45,22 @@ module Candidate
     end
 
     def first_step_path(market_application)
-      if market_application.completed?
-        return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
+      return completed_application_path(market_application) if market_application.completed?
 
-        return candidate_sync_status_path(market_application.identifier)
-      end
+      target, step = market_application.next_required_wizard_step
+      return company_identification_candidate_market_application_path(market_application.identifier) unless target
 
-      return application_mode_candidate_market_application_path(market_application.identifier) if market_application.application_mode_choice_required?
-      return grouping_legal_type_candidate_market_application_path(market_application.identifier) if market_application.grouping_legal_type_choice_required?
+      wizard_step_path(target, step)
+    end
 
-      company_identification_candidate_market_application_path(market_application.identifier)
+    def completed_application_path(market_application)
+      return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
+
+      candidate_sync_status_path(market_application.identifier)
+    end
+
+    def wizard_step_path(market_application, step)
+      grouping_wizard_step_candidate_market_application_path(market_application.identifier, step)
     end
 
     def handle_magic_link_sent(result)

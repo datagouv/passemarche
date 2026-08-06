@@ -206,6 +206,63 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#groupement_counterpart' do
+    let(:siret) { '73282932000074' }
+
+    it 'finds the groupement application for the same SIRET and market when called on the solo one' do
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+
+      expect(solo.groupement_counterpart).to eq(groupement)
+    end
+
+    it 'returns nil when the application is not mixte-related (only a solo exists)' do
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(solo.groupement_counterpart).to be_nil
+    end
+
+    it 'returns nil when the application itself is the groupement one' do
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+
+      expect(groupement.groupement_counterpart).to be_nil
+    end
+
+    it 'returns nil for a solo application that is not part of a mixte pair on another market' do
+      other_market = create(:public_market, :completed, editor:)
+      create(:market_application, public_market: other_market, siret:, application_mode: :groupement)
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(solo.groupement_counterpart).to be_nil
+    end
+  end
+
+  describe '#next_required_wizard_step' do
+    it 'returns application_mode when the mode has not been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.next_required_wizard_step).to eq([application, :application_mode])
+    end
+
+    it 'returns grouping_legal_type on the groupement counterpart for a mixte solo application' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement, legal_type: nil)
+
+      expect(solo.next_required_wizard_step).to eq([groupement, :grouping_legal_type])
+    end
+
+    it 'returns nil once nothing is required' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.next_required_wizard_step).to be_nil
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)

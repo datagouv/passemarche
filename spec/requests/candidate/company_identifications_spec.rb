@@ -45,7 +45,7 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         get company_identification_candidate_market_application_path(market_application.identifier)
 
         expect(response).to redirect_to(
-          application_mode_candidate_market_application_path(market_application.identifier)
+          grouping_wizard_step_candidate_market_application_path(market_application.identifier, :application_mode)
         )
       end
     end
