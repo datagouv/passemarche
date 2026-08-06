@@ -32,14 +32,15 @@
     </span>
   </p>
 
-  <%= render 'members_table', grouping: @grouping, market_application: @market_application, editable: false %>
+  <%= render 'candidate/grouping_compositions/members_table', grouping: @grouping, market_application: @market_application,
+    editable: false %>
 
   <div class="fr-mt-4w grouping-legal-type-actions">
     <%= link_to t('candidate.grouping_compositions.confirm.modify'),
-                previous_wizard_path,
+                grouping_composition_candidate_market_application_path(@market_application.identifier),
                 class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
     <%= button_to t('candidate.grouping_compositions.confirm.submit'),
-                  wizard_path,
+                  grouping_composition_confirmation_candidate_market_application_path(@market_application.identifier),
                   method: :patch,
                   class: "fr-btn fr-icon-send-plane-line fr-btn--icon-right" %>
   </div>

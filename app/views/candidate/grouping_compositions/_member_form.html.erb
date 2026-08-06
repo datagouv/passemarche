@@ -2,7 +2,7 @@
   <div class="grouping-member-form fr-mb-3w">
     <h2 class="fr-h6"><%= t('candidate.grouping_compositions.add_member_title') %></h2>
 
-    <%= form_with url: grouping_wizard_members_candidate_market_application_path(market_application.identifier),
+    <%= form_with url: grouping_composition_members_candidate_market_application_path(market_application.identifier),
                   method: :post,
                   data: { turbo_stream: true, controller: "enable-on-fill" } do |form| %>
       <div class="fr-grid-row fr-grid-row--gutters">

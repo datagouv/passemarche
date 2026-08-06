@@ -1,9 +1,9 @@
 <div id="grouping_composition_actions" class="fr-mt-4w grouping-legal-type-actions">
   <%= link_to t('candidate.grouping_compositions.back'),
-              grouping_wizard_step_candidate_market_application_path(grouping.mandataire_market_application.identifier, :grouping_legal_type),
+              grouping_legal_type_candidate_market_application_path(grouping.mandataire_market_application.identifier),
               class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
   <%= link_to t('candidate.grouping_compositions.continue'),
-              grouping_wizard_step_candidate_market_application_path(grouping.mandataire_market_application.identifier, :grouping_composition_confirmation),
+              grouping_composition_confirmation_candidate_market_application_path(grouping.mandataire_market_application.identifier),
               class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
               "aria-disabled": grouping.grouping_members.co_traitant.none? %>
 </div>
