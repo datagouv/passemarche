@@ -45,6 +45,15 @@ Feature: Candidate chooses their candidacy mode
     And my application mode should be "solo"
     And a second market application should exist with mode "groupement"
 
+  @javascript
+  Scenario: Candidate reconnects from the groupement funnel after choosing mixte
+    When I visit the magic link
+    And I choose the candidacy mode "mixte"
+    Then I should land on the grouping legal type step of the groupement application
+    When I request a new magic link for the groupement application
+    And I click the link from the latest email
+    Then I should land on the grouping legal type step of the groupement application
+
   Scenario: The choice screen is never shown again once a mode is chosen
     Given the candidate application already has the mode "solo"
     When I visit the magic link
