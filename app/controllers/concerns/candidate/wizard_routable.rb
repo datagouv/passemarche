@@ -12,6 +12,8 @@ module Candidate
         application_mode_candidate_market_application_path(market_application.identifier)
       when :grouping_legal_type
         grouping_legal_type_candidate_market_application_path(market_application.identifier)
+      when :grouping_composition
+        grouping_composition_candidate_market_application_path(market_application.identifier)
       end
     end
 

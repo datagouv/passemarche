@@ -1,0 +1,25 @@
+<% content_for :title, t('candidate.grouping_compositions.title') %>
+
+<div class="fr-container fr-py-6w">
+  <p class="fr-text--sm fr-mb-1w"><%= t('candidate.grouping_compositions.step_current') %></p>
+  <h1 class="fr-h4 fr-mb-2w"><%= t('candidate.grouping_compositions.title') %></h1>
+
+  <div class="grouping-legal-type-stepper fr-mb-2w">
+    <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
+    <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
+    <div class="grouping-legal-type-stepper__step"></div>
+  </div>
+
+  <p class="fr-text--sm fr-mb-4w">
+    <strong><%= t('candidate.grouping_compositions.step_next') %></strong>
+    <%= t('candidate.grouping_compositions.step_next_label') %>
+  </p>
+
+  <h2 class="fr-h1 fr-mb-1w"><%= t('candidate.grouping_compositions.title') %></h2>
+  <p class="fr-mb-4w"><%= t('candidate.grouping_compositions.intro') %></p>
+
+  <%= render 'members_table', grouping: @grouping, market_application: @market_application, editable: true %>
+  <%= render 'member_form', grouping: @grouping, market_application: @market_application, grouping_member: @grouping_member, errors: @errors %>
+
+  <%= render 'composition_actions', grouping: @grouping %>
+</div>
