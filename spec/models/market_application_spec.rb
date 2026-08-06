@@ -206,6 +206,49 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#grouping_composition_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+
+    it 'returns false when the legal_type has not been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+
+    it 'returns true when legal_type is chosen but no invitation has been sent yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)
+
+      expect(application.grouping_composition_choice_required?).to be true
+    end
+
+    it 'returns false once at least one invitation has been sent' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+
+    it 'returns false when the mode is not groupement' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+  end
+
   describe '#groupement_counterpart' do
     let(:siret) { '73282932000074' }
 
@@ -253,6 +296,15 @@ RSpec.describe MarketApplication, type: :model do
       create(:grouping, public_market:, mandataire_market_application: groupement, legal_type: nil)
 
       expect(solo.next_required_wizard_step).to eq([groupement, :grouping_legal_type])
+    end
+
+    it 'returns grouping_composition when the legal_type is chosen but no invitation has been sent' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)
+
+      expect(application.next_required_wizard_step).to eq([application, :grouping_composition])
     end
 
     it 'returns nil once nothing is required' do

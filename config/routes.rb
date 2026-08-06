@@ -77,6 +77,7 @@ Rails.application.routes.draw do
 
   namespace :candidate do
     get 'dashboard', to: 'dashboards#index', as: :dashboard
+    get 'grouping_invitations/:token', to: 'grouping_invitations#show', as: :grouping_invitation
 
     resource :sessions, only: %i[new create destroy] do
       get :verify
@@ -88,6 +89,8 @@ Rails.application.routes.draw do
         get 'deadline_passed', to: 'deadline_passed#show', as: :deadline_passed
         get 'grouping_wizard/:id', to: 'grouping_wizard#show', as: :grouping_wizard_step
         patch 'grouping_wizard/:id', to: 'grouping_wizard#update'
+        post 'grouping_wizard/members', to: 'grouping_wizard#create_member', as: :grouping_wizard_members
+        delete 'grouping_wizard/members/:id', to: 'grouping_wizard#destroy_member', as: :grouping_wizard_member
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection

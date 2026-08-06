@@ -57,6 +57,20 @@ class MarketApplication < ApplicationRecord
       Grouping.joins(:mandataire_market_application).exists?(legal_type: nil, market_applications: { id: })
   end
 
+  def grouping_composition_choice_required?
+    return false unless FeatureFlags::Groupement.enabled? && groupement?
+
+    grouping = mandataire_grouping
+    return false if grouping.nil? || grouping.legal_type.nil?
+
+    grouping.grouping_members.co_traitant.none?(&:invitation_sent?)
+  end
+
+  def mandataire_grouping
+    Grouping.joins(:mandataire_grouping_member)
+      .find_by(mandataire_grouping_member: { market_application_id: id })
+  end
+
   def groupement_counterpart
     return nil if groupement?
 
@@ -68,6 +82,7 @@ class MarketApplication < ApplicationRecord
 
     target = groupement_counterpart || self
     return [target, :grouping_legal_type] if target.grouping_legal_type_choice_required?
+    return [target, :grouping_composition] if target.grouping_composition_choice_required?
 
     nil
   end
