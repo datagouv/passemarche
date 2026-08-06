@@ -336,14 +336,13 @@ RSpec.describe 'Candidate::GroupingWizard', type: :request do
       create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil)
     end
 
-    it 'sets the legal_type and redirects to company_identification' do
+    it 'sets the legal_type and redirects to grouping_composition' do
       patch wizard_step_path(market_application, :grouping_legal_type), params: { legal_type: 'conjoint_mandataire_solidaire' }
 
-      expect(Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: market_application.id }).legal_type)
-        .to eq('conjoint_mandataire_solidaire')
-      expect(response).to redirect_to(
-        company_identification_candidate_market_application_path(market_application.identifier)
-      )
+      grouping = Grouping.joins(:mandataire_grouping_member)
+        .find_by(mandataire_grouping_member: { market_application_id: market_application.id })
+      expect(grouping.legal_type).to eq('conjoint_mandataire_solidaire')
+      expect(response).to redirect_to(wizard_step_path(market_application, :grouping_composition))
     end
 
     it 'rejects an invalid legal_type with a 422' do
@@ -352,6 +351,184 @@ RSpec.describe 'Candidate::GroupingWizard', type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       rendered = Nokogiri::HTML(response.body)
       expect(rendered.text).to include(I18n.t('candidate.validations.legal_type_invalid'))
+    end
+  end
+
+  describe 'GET .../grouping_wizard/grouping_composition' do
+    context 'when the market_application is mandataire of a grouping with a legal_type' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+        allow(FetchRaisonSociale).to receive(:call).and_return(OpenStruct.new(success?: true, raison_sociale: 'ATLANTIQUE BÂTIMENT SAS'))
+      end
+
+      it 'renders successfully' do
+        get wizard_step_path(market_application, :grouping_composition)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(I18n.t('candidate.grouping_compositions.title'))
+      end
+    end
+
+    context 'when the mandataire member has no company_name yet' do
+      before { market_application.update!(application_mode: :groupement) }
+
+      let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint) }
+      let!(:mandataire_member) { grouping.mandataire_grouping_member.tap { |m| m.update!(company_name: nil) } }
+
+      before do
+        allow(FetchRaisonSociale).to receive(:call).and_return(
+          OpenStruct.new(success?: true, raison_sociale: 'ATLANTIQUE BÂTIMENT SAS')
+        )
+      end
+
+      it 'resolves and persists the company name' do
+        get wizard_step_path(market_application, :grouping_composition)
+
+        expect(mandataire_member.reload.company_name).to eq('ATLANTIQUE BÂTIMENT SAS')
+      end
+
+      it 'displays the resolved company name' do
+        get wizard_step_path(market_application, :grouping_composition)
+
+        expect(response.body).to include('ATLANTIQUE BÂTIMENT SAS')
+      end
+    end
+
+    context 'when the mandataire member already has a company_name' do
+      before { market_application.update!(application_mode: :groupement) }
+
+      let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint) }
+      let!(:mandataire_member) do
+        grouping.mandataire_grouping_member.tap { |m| m.update!(company_name: 'ATLANTIQUE BÂTIMENT SAS') }
+      end
+
+      it 'does not call the API again' do
+        allow(FetchRaisonSociale).to receive(:call)
+
+        get wizard_step_path(market_application, :grouping_composition)
+
+        expect(FetchRaisonSociale).not_to have_received(:call)
+      end
+    end
+
+    context 'when the market_application is not mandataire of any grouping' do
+      it 'redirects to application_mode' do
+        get wizard_step_path(market_application, :grouping_composition)
+
+        expect(response).to redirect_to(wizard_step_path(market_application, :application_mode))
+      end
+    end
+  end
+
+  describe 'POST .../grouping_wizard/members' do
+    before { market_application.update!(application_mode: :groupement) }
+
+    let!(:grouping) do
+      create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+    end
+
+    before do
+      allow(FetchRaisonSociale).to receive(:call).and_return(
+        OpenStruct.new(success?: true, raison_sociale: 'MENUISERIES DE LOIRE SARL')
+      )
+    end
+
+    it 'creates a co_traitant member and returns a turbo stream response' do
+      post grouping_wizard_members_candidate_market_application_path(market_application.identifier),
+        params: { siret: '80245139600027', email: 'contact@menuiseries-loire.fr' },
+        headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq('text/vnd.turbo-stream.html')
+      expect(grouping.grouping_members.co_traitant.count).to eq(1)
+    end
+
+    it 'renders errors inline without creating a member when the siret is invalid' do
+      allow(SiretValidator).to receive(:valid?).with('0000000000').and_return(false)
+
+      post grouping_wizard_members_candidate_market_application_path(market_application.identifier),
+        params: { siret: '0000000000', email: 'contact@menuiseries-loire.fr' },
+        headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(grouping.grouping_members.co_traitant.count).to eq(0)
+      expect(response.body).to include(I18n.t('candidate.validations.siret_invalid'))
+    end
+  end
+
+  describe 'DELETE .../grouping_wizard/members/:id' do
+    before { market_application.update!(application_mode: :groupement) }
+
+    let!(:grouping) do
+      create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+    end
+    let!(:member) { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
+
+    it 'removes the member and returns a turbo stream response' do
+      delete grouping_wizard_member_candidate_market_application_path(market_application.identifier, member.id),
+        headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+      expect(response).to have_http_status(:ok)
+      expect(GroupingMember.exists?(member.id)).to be false
+    end
+  end
+
+  describe 'GET .../grouping_wizard/grouping_composition_confirmation' do
+    before { market_application.update!(application_mode: :groupement) }
+
+    let!(:grouping) do
+      create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+    end
+
+    it 'renders the summary' do
+      create(:grouping_member, :co_traitant, grouping:)
+
+      get wizard_step_path(market_application, :grouping_composition_confirmation)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t('candidate.grouping_compositions.confirm.title'))
+    end
+
+    it 'redirects back to grouping_composition when there is no co-traitant yet' do
+      get wizard_step_path(market_application, :grouping_composition_confirmation)
+
+      expect(response).to redirect_to(wizard_step_path(market_application, :grouping_composition))
+    end
+  end
+
+  describe 'PATCH .../grouping_wizard/grouping_composition_confirmation' do
+    before { market_application.update!(application_mode: :groupement) }
+
+    let!(:grouping) do
+      create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+    end
+
+    context 'when the grouping has at least one co_traitant' do
+      before { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
+
+      it 'sends invitations and redirects to the dashboard with a success message' do
+        patch wizard_step_path(market_application, :grouping_composition_confirmation)
+
+        expect(response).to redirect_to(candidate_dashboard_path)
+        follow_redirect!
+        expect(response.body).to include(I18n.t('candidate.grouping_compositions.success'))
+      end
+    end
+
+    context 'when the confirmation interactor fails' do
+      before { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
+
+      it 'renders the summary with an error' do
+        allow(Candidate::ConfirmGroupingComposition).to receive(:call).and_return(
+          OpenStruct.new(success?: false, errors: { grouping: [I18n.t('candidate.validations.no_co_traitant')] })
+        )
+
+        patch wizard_step_path(market_application, :grouping_composition_confirmation)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include(I18n.t('candidate.validations.no_co_traitant'))
+      end
     end
   end
 end
