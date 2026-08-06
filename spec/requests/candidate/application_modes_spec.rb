@@ -175,7 +175,7 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
         end.not_to change { market_application.reload.application_mode }
 
         expect(response).to redirect_to(
-          company_identification_candidate_market_application_path(market_application.identifier)
+          grouping_composition_candidate_market_application_path(market_application.identifier)
         )
       end
 

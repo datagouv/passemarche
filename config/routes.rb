@@ -92,7 +92,6 @@ Rails.application.routes.draw do
         get 'grouping_legal_type', to: 'grouping_legal_types#show', as: :grouping_legal_type
         patch 'grouping_legal_type', to: 'grouping_legal_types#update'
         get 'grouping_composition', to: 'grouping_compositions#show', as: :grouping_composition
-        patch 'grouping_composition', to: 'grouping_compositions#update'
         post 'grouping_composition/members', to: 'grouping_compositions#create_member', as: :grouping_composition_members
         delete 'grouping_composition/members/:id', to: 'grouping_compositions#destroy_member', as: :grouping_composition_member
         get 'grouping_composition_confirmation', to: 'grouping_composition_confirmations#show',
