@@ -21,6 +21,8 @@ module Buyer
         @mandatory_fields = @presenter.mandatory_fields_for_category(@current_category)
         @optional_fields = @presenter.optional_fields_for_category(@current_category)
         @has_optional_fields = @presenter.optional_fields_for_category?(@current_category)
+        @optional_category_reviewed = @public_market.completed? ||
+                                      Buyer::RecentOptionalCategoryVisit.visited?(@public_market, @current_category)
         render_wizard nil, template: step_template
       end
     end

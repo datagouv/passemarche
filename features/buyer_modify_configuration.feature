@@ -36,3 +36,13 @@ Feature: Modification de la configuration avant publication
     When I visit the category page with optional fields for the completed market
     Then the "Non" option should be selected
     And I should see an enabled button "Suivant"
+
+  @javascript
+  Scenario: CA-5 - Sur un marché jamais transmis, "Non" reste pré-sélectionné après un premier passage
+    Given a non-completed market exists for the current editor
+    And this market has an optional field in the "identite_entreprise" category
+    When I visit the category page with optional fields for the non-completed market
+    And I choose "Non" and submit
+    And I visit the category page with optional fields for the non-completed market again
+    Then the "Non" option should be selected
+    And I should see an enabled button "Suivant"

@@ -50,7 +50,7 @@
     </div>
 
     <% if @has_optional_fields %>
-      <div data-controller="additional-fields" data-additional-fields-already-completed-value="<%= @public_market.completed? %>">
+      <div data-controller="additional-fields" data-additional-fields-already-completed-value="<%= @optional_category_reviewed %>">
         <div class="fr-mb-4w fr-border-default--grey">
           <div class="fr-p-3w">
             <h3 class="fr-mb-3w fr-text--lg fr-text--bold"><%= t("buyer.public_markets.generic_step.steps.#{step}.optional_question", default: t('buyer.public_markets.generic_step.optional_question')) %></h3>
