@@ -57,6 +57,7 @@ module Buyer
 
     def handle_category_step
       accumulate_optional_fields
+      Buyer::RecentOptionalCategoryVisit.mark_visited(public_market, step)
       public_market
     end
 

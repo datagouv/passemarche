@@ -14,6 +14,12 @@ Given('a completed but non-published market exists for the current editor') do
     market_type_codes: [@market_type.code])
 end
 
+Given('a non-completed market exists for the current editor') do
+  @non_completed_market = FactoryBot.create(:public_market,
+    editor: @editor,
+    market_type_codes: [@market_type.code])
+end
+
 Given('a published market exists for the current editor') do
   @published_market = FactoryBot.create(:public_market, :published,
     editor: @editor,
@@ -31,6 +37,20 @@ end
 
 When('I visit the category page with optional fields for the completed market') do
   visit step_buyer_public_market_path(identifier: @completed_market.identifier, id: 'identite_entreprise')
+end
+
+When('I visit the category page with optional fields for the non-completed market') do
+  visit step_buyer_public_market_path(identifier: @non_completed_market.identifier, id: 'identite_entreprise')
+end
+
+When('I visit the category page with optional fields for the non-completed market again') do
+  click_link I18n.t('buyer.public_markets.navigation.previous')
+end
+
+When('I choose {string} and submit') do |option_label|
+  click_button I18n.t('buyer.setup.rc_notice.close') if page.has_button?(I18n.t('buyer.setup.rc_notice.close'), wait: 1)
+  find(:label, option_label, visible: :all).click
+  click_button I18n.t('buyer.public_markets.navigation.next')
 end
 
 When('I visit the summary page for the completed market') do

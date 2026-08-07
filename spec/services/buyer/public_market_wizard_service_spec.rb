@@ -159,6 +159,27 @@ RSpec.describe Buyer::PublicMarketWizardService do
         expect(public_market.reload.market_attributes).to include(mandatory_attribute, other_category_attr)
         expect(public_market.reload.market_attributes).not_to include(optional_attribute)
       end
+
+      it 'remembers the category was visited with no fields selected' do
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(Buyer::RecentOptionalCategoryVisit.visited?(public_market, :test_category)).to be true
+      end
+
+      it 'remembers the category was visited even when fields are selected' do
+        params = { selected_attribute_keys: [optional_attribute.key] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(Buyer::RecentOptionalCategoryVisit.visited?(public_market, :test_category)).to be true
+      end
+
+      it 'does not mark other categories as visited' do
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(Buyer::RecentOptionalCategoryVisit.visited?(public_market, :other_category)).to be false
+      end
     end
 
     context 'with lot_config step' do
