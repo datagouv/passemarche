@@ -157,6 +157,27 @@ RSpec.describe 'Candidate::GroupingWizard', type: :request do
         )
       end
     end
+
+    context 'when the mode is already chosen' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+      end
+
+      it 'ignores the resubmitted mode and redirects to the current step, without changing application_mode' do
+        expect do
+          patch wizard_step_path(market_application, :application_mode), params: { application_mode: 'solo' }
+        end.not_to change { market_application.reload.application_mode }
+
+        expect(response).to redirect_to(wizard_step_path(market_application, :grouping_legal_type))
+      end
+
+      it 'does not orphan the existing grouping' do
+        expect do
+          patch wizard_step_path(market_application, :application_mode), params: { application_mode: 'solo' }
+        end.not_to change(Grouping, :count)
+      end
+    end
   end
 
   describe 'readonly navigation (application_mode already chosen)' do

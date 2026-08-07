@@ -262,6 +262,22 @@ RSpec.describe 'Candidate::Sessions', type: :request do
           step_candidate_market_application_path(market_application.identifier, :company_identification)
         )
       end
+
+      context 'when the application is the solo side of a mixte candidacy without a user yet' do
+        let!(:groupement_application) do
+          create(:market_application, public_market: market_application.public_market, siret: market_application.siret,
+            application_mode: :groupement)
+        end
+
+        before { market_application.update!(application_mode: :solo) }
+
+        it 'also links the user to the groupement counterpart' do
+          expect do
+            get verify_candidate_sessions_path,
+              params: { token:, market_application_id: market_application.identifier }
+          end.to change { groupement_application.reload.user_id }.from(nil).to(user.id)
+        end
+      end
     end
 
     context 'when market has lots and no lots are selected' do

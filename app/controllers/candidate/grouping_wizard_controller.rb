@@ -93,6 +93,8 @@ module Candidate
     end
 
     def update_application_mode
+      return redirect_to(next_wizard_step_path(:application_mode)) if @market_application.application_mode.present?
+
       result = Candidate::CreateApplicationsForMode.call(
         market_application: @market_application,
         application_mode: params[:application_mode]
