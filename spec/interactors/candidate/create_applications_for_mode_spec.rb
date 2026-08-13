@@ -105,6 +105,30 @@ RSpec.describe Candidate::CreateApplicationsForMode, type: :interactor do
       end
     end
 
+    context 'when mixte mode finds an existing groupement application owned by another user' do
+      subject { described_class.call(market_application:, application_mode: 'mixte') }
+
+      let(:other_user) { create(:user) }
+      let!(:other_groupement_application) do
+        create(:market_application, public_market:, siret:, application_mode: :groupement, user: other_user)
+      end
+
+      before { market_application.update!(user: create(:user)) }
+
+      it 'fails instead of reassigning the existing application to the current user' do
+        expect(subject).to be_failure
+        expect(subject.errors[:application_mode]).to eq([I18n.t('candidate.validations.already_mandataire')])
+      end
+
+      it 'does not change the owner of the existing groupement application' do
+        expect { subject }.not_to change { other_groupement_application.reload.user }
+      end
+
+      it 'does not create a grouping' do
+        expect { subject }.not_to change(Grouping, :count)
+      end
+    end
+
     context 'when the SIRET is already mandataire of a grouping on this market' do
       before do
         other_application = create(:market_application, public_market:, siret:, application_mode: :groupement)
