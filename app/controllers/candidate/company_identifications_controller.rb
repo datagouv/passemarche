@@ -3,6 +3,7 @@
 module Candidate
   class CompanyIdentificationsController < Candidate::ApplicationController
     include Candidate::MarketApplicationGuard
+    include Candidate::ApplicationModeGuard
 
     prepend_before_action :find_market_application
 

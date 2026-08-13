@@ -18,6 +18,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
   before do
     allow_any_instance_of(Candidate::ApplicationController).to receive(:current_candidate).and_return(candidate_user)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
 
     create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [public_market])
     create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [public_market])
@@ -93,6 +94,18 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   end
 
   describe 'GET /candidate/market_applications/:identifier/:step' do
+    context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'redirects to the application mode choice screen instead of rendering the step' do
+        get "/candidate/market_applications/#{market_application.identifier}/summary"
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
+      end
+    end
+
     STEPS.each_with_index do |step, idx|
       context 'when application is not completed' do
         it "redirects correctly after #{step} step" do
@@ -597,6 +610,20 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         it 'enqueues webhook sync job' do
           expect(MarketApplicationWebhookJob).to have_been_enqueued.with(market_application.id)
         end
+      end
+    end
+  end
+
+  describe 'DELETE /candidate/market_applications/:identifier' do
+    context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'still allows deleting the application instead of redirecting to the mode choice screen' do
+        delete candidate_market_application_path(market_application.identifier)
+
+        expect(response).not_to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
       end
     end
   end

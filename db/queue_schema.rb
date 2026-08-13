@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_29_100623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -83,6 +83,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
     t.index ["webhook_secret"], name: "index_editors_on_webhook_secret", unique: true, where: "(webhook_secret IS NOT NULL)"
   end
 
+  create_table "grouping_members", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.bigint "grouping_id", null: false
+    t.string "invitation_token"
+    t.datetime "invitation_token_created_at"
+    t.bigint "market_application_id"
+    t.bigint "public_market_id", null: false
+    t.integer "role", null: false
+    t.string "siret", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["grouping_id", "siret"], name: "index_grouping_members_on_grouping_id_and_siret", unique: true
+    t.index ["grouping_id"], name: "index_grouping_members_on_grouping_id"
+    t.index ["grouping_id"], name: "index_grouping_members_on_grouping_id_single_mandataire", unique: true, where: "(role = 0)"
+    t.index ["invitation_token"], name: "index_grouping_members_on_invitation_token", unique: true
+    t.index ["market_application_id"], name: "index_grouping_members_on_market_application_id"
+    t.index ["public_market_id", "siret"], name: "index_grouping_members_on_market_and_mandataire_siret", unique: true, where: "(role = 0)"
+    t.index ["public_market_id"], name: "index_grouping_members_on_public_market_id"
+  end
+
+  create_table "groupings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "legal_type"
+    t.bigint "public_market_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["public_market_id"], name: "index_groupings_on_public_market_id"
+  end
+
   create_table "lots", force: :cascade do |t|
     t.string "cpv_code"
     t.datetime "created_at", null: false
@@ -110,6 +139,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
 
   create_table "market_applications", force: :cascade do |t|
     t.jsonb "api_fetch_status", default: {}, null: false
+    t.integer "application_mode"
     t.boolean "attests_no_exclusion_motifs", default: false, null: false
     t.datetime "completed_at"
     t.datetime "created_at", null: false
@@ -429,6 +459,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_095835) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "grouping_members", "groupings"
+  add_foreign_key "grouping_members", "market_applications"
+  add_foreign_key "grouping_members", "public_markets"
+  add_foreign_key "groupings", "public_markets"
   add_foreign_key "lots", "market_types"
   add_foreign_key "lots", "market_types", column: "platform_market_type_id"
   add_foreign_key "lots", "public_markets"

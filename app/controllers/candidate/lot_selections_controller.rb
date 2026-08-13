@@ -3,6 +3,7 @@
 module Candidate
   class LotSelectionsController < Candidate::ApplicationController
     include Candidate::MarketApplicationGuard
+    include Candidate::ApplicationModeGuard
 
     prepend_before_action :find_market_application
     before_action :redirect_if_no_lots, only: [:show]

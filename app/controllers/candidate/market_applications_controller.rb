@@ -4,11 +4,13 @@ module Candidate
   class MarketApplicationsController < Candidate::ApplicationController
     include Wicked::Wizard
     include Candidate::MarketApplicationGuard
+    include Candidate::ApplicationModeGuard
 
     prepend_before_action :set_steps
     prepend_before_action :find_market_application
     before_action :set_wizard_steps
     skip_before_action :check_application_not_completed, only: %i[retry_sync destroy]
+    skip_before_action :redirect_to_application_mode_choice, only: %i[destroy]
 
     def show
       if step == :api_data_recovery_status

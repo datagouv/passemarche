@@ -8,7 +8,10 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:user) { create(:user) }
 
-  before { sign_in_as_candidate(user, market_application) }
+  before do
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+    sign_in_as_candidate(user, market_application)
+  end
 
   describe 'GET /candidate/market_applications/:identifier/company_identification' do
     it 'returns ok' do
@@ -32,6 +35,18 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         get company_identification_candidate_market_application_path('unknown-identifier')
 
         expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'redirects to the application mode choice screen instead of rendering the step' do
+        get company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
       end
     end
   end

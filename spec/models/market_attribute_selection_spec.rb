@@ -27,7 +27,7 @@ RSpec.describe MarketAttributeSelection, type: :model do
       selection.destroy!
 
       expect(PaperTrail::Version.where(item_type: 'MarketAttributeSelection', item_id: selection.id)
-        .pluck(:event)).to eq(%w[create destroy])
+        .order(:id).pluck(:event)).to eq(%w[create destroy])
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe MarketAttributeSelection, type: :model do
         .destroy_all
 
       expect(PaperTrail::Version.where(item_type: 'MarketAttributeSelection', item_id: selection.id)
-        .pluck(:event)).to eq(%w[create destroy])
+        .order(:id).pluck(:event)).to eq(%w[create destroy])
     end
 
     it 'does not create a destroy version when deselected via array assignment' do

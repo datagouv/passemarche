@@ -10,6 +10,8 @@ class MarketApplication < ApplicationRecord
   belongs_to :user, optional: true
   has_one :editor, through: :public_market
 
+  enum :application_mode, { solo: 0, groupement: 1, mixte: 2 }, validate: { allow_nil: true }
+
   has_one_attached :attestation
   has_one_attached :buyer_attestation
   has_one_attached :documents_package
@@ -27,6 +29,7 @@ class MarketApplication < ApplicationRecord
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
   validate :market_must_be_completed
   validate :nested_attributes_valid
+  validate :application_mode_immutable, on: :update
 
   before_validation :generate_identifier, on: :create
 
@@ -35,6 +38,7 @@ class MarketApplication < ApplicationRecord
   scope :in_progress, -> { where(completed_at: nil) }
   scope :completed, -> { where.not(completed_at: nil) }
   scope :by_last_modification, -> { order(updated_at: :desc) }
+  scope :matching_mode, ->(mode) { where(application_mode: mode.blank? || mode.to_s == 'solo' ? [nil, :solo] : mode) }
 
   def in_progress?
     !completed?
@@ -42,6 +46,10 @@ class MarketApplication < ApplicationRecord
 
   def accessible_by?(user)
     user_id.nil? || user_id == user.id
+  end
+
+  def application_mode_choice_required?
+    FeatureFlags::Groupement.enabled? && application_mode.nil?
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
@@ -117,6 +125,12 @@ class MarketApplication < ApplicationRecord
     return unless public_market
 
     errors.add(:public_market, 'must be completed') unless public_market.sync_completed?
+  end
+
+  def application_mode_immutable
+    return unless application_mode_in_database.present? && will_save_change_to_application_mode?
+
+    errors.add(:application_mode, :immutable)
   end
 
   def nested_attributes_valid

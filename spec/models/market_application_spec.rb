@@ -118,6 +118,61 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'application_mode' do
+    it 'defaults to nil (no mode chosen yet)' do
+      application = build(:market_application, public_market:)
+      expect(application.application_mode).to be_nil
+    end
+
+    it 'accepts solo, groupement and mixte' do
+      application = build(:market_application, public_market:, application_mode: :solo)
+      expect(application).to be_solo
+
+      application.application_mode = :groupement
+      expect(application).to be_groupement
+
+      application.application_mode = :mixte
+      expect(application).to be_mixte
+    end
+
+    it 'can be set once from nil on an existing record' do
+      application = create(:market_application, public_market:, application_mode: nil)
+
+      expect(application.update(application_mode: :solo)).to be true
+    end
+
+    it 'cannot be changed once set on an existing record' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.update(application_mode: :groupement)).to be false
+      expect(application.errors[:application_mode]).to be_present
+      expect(application.reload).to be_solo
+    end
+  end
+
+  describe '#application_mode_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled, regardless of mode' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.application_mode_choice_required?).to be false
+    end
+
+    it 'returns true when the flag is enabled and no mode has been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.application_mode_choice_required?).to be true
+    end
+
+    it 'returns false when the flag is enabled but a mode is already set' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.application_mode_choice_required?).to be false
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)
