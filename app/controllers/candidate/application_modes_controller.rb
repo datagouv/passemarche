@@ -10,6 +10,8 @@ module Candidate
 
     def show
       @already_mandataire = already_mandataire_elsewhere?
+      @readonly = @market_application.application_mode.present?
+      @readonly_continue_path = next_step_path(@market_application) if @readonly
     end
 
     def update
@@ -35,18 +37,29 @@ module Candidate
 
     def redirect_if_mode_already_chosen
       return if @market_application.application_mode.nil?
+      return if action_name == 'show' && params[:readonly].present?
 
-      redirect_to company_identification_candidate_market_application_path(@market_application.identifier)
+      redirect_to next_step_path(@market_application)
+    end
+
+    def next_step_path(market_application)
+      if market_application.grouping_legal_type_choice_required?
+        grouping_legal_type_candidate_market_application_path(market_application.identifier)
+      else
+        company_identification_candidate_market_application_path(market_application.identifier)
+      end
     end
 
     def already_mandataire_elsewhere?
       Grouping
         .joins(:mandataire_market_application)
-        .exists?(public_market: @market_application.public_market, market_applications: { siret: @market_application.siret })
+        .where(public_market: @market_application.public_market, market_applications: { siret: @market_application.siret })
+        .where.not(market_applications: { id: @market_application.id })
+        .exists?
     end
 
     def handle_success(result)
-      redirect_to company_identification_candidate_market_application_path(result.market_application.identifier)
+      redirect_to next_step_path(result.market_application)
     end
   end
 end

@@ -30,11 +30,34 @@ Then('I should be on the company identification step') do
   )
 end
 
+Then('I should be on the grouping legal type step') do
+  expect(page).to have_current_path(
+    grouping_legal_type_candidate_market_application_path(@market_application.identifier),
+    ignore_query: true
+  )
+end
+
+Then('I should be on the candidacy mode choice step') do
+  expect(page).to have_current_path(
+    application_mode_candidate_market_application_path(@market_application.identifier),
+    ignore_query: true
+  )
+end
+
 Then('I should land on the company identification step of the groupement application') do
   expect(page).to have_current_path(%r{/candidate/market_applications/.+/company_identification})
 
   landed_identifier = page.current_path[%r{/candidate/market_applications/([^/]+)/company_identification}, 1]
   expect(landed_identifier).not_to eq(@market_application.identifier)
+end
+
+Then('I should land on the grouping legal type step of the groupement application') do
+  expect(page).to have_current_path(%r{/candidate/market_applications/.+/grouping_legal_type})
+
+  landed_identifier = page.current_path[%r{/candidate/market_applications/([^/]+)/grouping_legal_type}, 1]
+  expect(landed_identifier).not_to eq(@market_application.identifier)
+
+  @groupement_market_application = MarketApplication.find_by!(identifier: landed_identifier)
 end
 
 Then('my application mode should be {string}') do |mode|
@@ -59,4 +82,8 @@ end
 
 Then('the candidacy mode {string} should be disabled') do |mode|
   expect(page).to have_field(I18n.t("candidate.application_modes.#{mode}.label"), disabled: true)
+end
+
+Then('the candidacy mode {string} should be checked and disabled') do |mode|
+  expect(page).to have_field(I18n.t("candidate.application_modes.#{mode}.label"), checked: true, disabled: true)
 end

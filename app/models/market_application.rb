@@ -52,6 +52,11 @@ class MarketApplication < ApplicationRecord
     FeatureFlags::Groupement.enabled? && application_mode.nil?
   end
 
+  def grouping_legal_type_choice_required?
+    FeatureFlags::Groupement.enabled? && groupement? &&
+      Grouping.joins(:mandataire_market_application).exists?(legal_type: nil, market_applications: { id: })
+  end
+
   def update_api_status(api_name, status:, fields_filled: 0)
     with_lock do
       updated_status = (api_fetch_status || {}).dup

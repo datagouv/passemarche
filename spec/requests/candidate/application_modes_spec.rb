@@ -48,6 +48,93 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
       )
     end
 
+    context 'when the mode is groupement and the legal type is not chosen yet' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil)
+      end
+
+      it 'redirects to grouping_legal_type instead of company_identification' do
+        get application_mode_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          grouping_legal_type_candidate_market_application_path(market_application.identifier)
+        )
+      end
+    end
+
+    context 'when the mode is groupement and the legal type is already chosen' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+      end
+
+      it 'redirects to company_identification' do
+        get application_mode_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          company_identification_candidate_market_application_path(market_application.identifier)
+        )
+      end
+    end
+
+    context 'when readonly is requested and the mode is already chosen' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+      end
+
+      it 'renders the screen instead of redirecting' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'disables the fieldset' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        expect(rendered.at_css('fieldset')['disabled']).to eq('disabled')
+      end
+
+      it 'checks the already chosen mode' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        expect(rendered.at_css('#application_mode_groupement')['checked']).to eq('checked')
+      end
+
+      it 'does not show the already-mandataire-elsewhere callout for its own grouping' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        expect(rendered.text).not_to include(I18n.t('candidate.application_modes.already_mandataire_box.title'))
+      end
+
+      it 'points the continue link to company_identification since the legal type is already chosen' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        link = rendered.at_css('a.fr-icon-arrow-right-line')
+        expect(link['href']).to eq(company_identification_candidate_market_application_path(market_application.identifier))
+      end
+    end
+
+    context 'when readonly is requested and the legal type is not chosen yet' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil)
+      end
+
+      it 'points the continue link to grouping_legal_type' do
+        get application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
+
+        rendered = Nokogiri::HTML(response.body)
+        link = rendered.at_css('a.fr-icon-arrow-right-line')
+        expect(link['href']).to eq(grouping_legal_type_candidate_market_application_path(market_application.identifier))
+      end
+    end
+
     context 'when the application is already completed' do
       let(:market_application) do
         create(:market_application, :completed, public_market:, siret: '73282932000074')
@@ -79,6 +166,9 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
       end.to change(Grouping, :count).by(1)
 
       expect(market_application.reload).to be_groupement
+      expect(response).to redirect_to(
+        grouping_legal_type_candidate_market_application_path(market_application.identifier)
+      )
     end
 
     it 'does not require re-authentication when reaching the next step after choosing groupement' do
@@ -91,11 +181,17 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
       expect(response.body).not_to include(I18n.t('candidate.sessions.new.siret_label'))
     end
 
-    it 'creates two applications when choosing mixte' do
+    it 'creates two applications when choosing mixte and redirects to grouping_legal_type' do
       expect do
         patch application_mode_candidate_market_application_path(market_application.identifier),
           params: { application_mode: 'mixte' }
       end.to change(MarketApplication, :count).by(1)
+
+      groupement_application = MarketApplication.find_by(public_market:, siret: market_application.siret,
+        application_mode: :groupement)
+      expect(response).to redirect_to(
+        grouping_legal_type_candidate_market_application_path(groupement_application.identifier)
+      )
     end
 
     it 'associates the authenticated user to the groupement counterpart created in mixte mode' do
@@ -134,6 +230,18 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
 
         expect(response).to have_http_status(:unprocessable_content)
         expect(market_application.reload.application_mode).to be_nil
+      end
+
+      it 'renders the already-mandataire error message and re-disables groupement/mixte' do
+        patch application_mode_candidate_market_application_path(market_application.identifier),
+          params: { application_mode: 'groupement' }
+
+        rendered = Nokogiri::HTML(response.body)
+        expect(rendered.text).to include(I18n.t('candidate.validations.already_mandataire'))
+        expect(rendered.text).to include(I18n.t('candidate.application_modes.already_mandataire_box.title'))
+
+        expect(rendered.at_css('#application_mode_groupement')['disabled']).to eq('disabled')
+        expect(rendered.at_css('#application_mode_mixte')['disabled']).to eq('disabled')
       end
 
       it 'still allows solo mode' do

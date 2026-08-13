@@ -21,6 +21,6 @@ class GroupingMember < ApplicationRecord
   private
 
   def set_public_market
-    self.public_market_id ||= grouping&.public_market_id
+    self.public_market_id = grouping.public_market_id if grouping
   end
 end

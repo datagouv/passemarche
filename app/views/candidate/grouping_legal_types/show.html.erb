@@ -1,0 +1,88 @@
+<% content_for :title, t('candidate.grouping_legal_types.title') %>
+
+<div class="fr-container fr-py-6w">
+  <p class="fr-text--sm fr-mb-1w"><%= t('candidate.grouping_legal_types.step_current') %></p>
+  <h1 class="fr-h3 fr-mb-2w"><%= t('candidate.grouping_legal_types.title') %></h1>
+
+  <div class="grouping-legal-type-stepper fr-mb-2w">
+    <div class="grouping-legal-type-stepper__step grouping-legal-type-stepper__step--done"></div>
+    <div class="grouping-legal-type-stepper__step"></div>
+    <div class="grouping-legal-type-stepper__step"></div>
+  </div>
+
+  <p class="fr-text--sm fr-mb-4w">
+    <strong><%= t('candidate.grouping_legal_types.step_next') %></strong>
+    <%= t('candidate.grouping_legal_types.step_next_label') %>
+  </p>
+
+  <h2 class="fr-h4 fr-mb-3w"><%= t('candidate.grouping_legal_types.question') %></h2>
+
+  <% if @errors.present? %>
+    <div class="fr-alert fr-alert--error fr-mb-3w" role="alert">
+      <p class="fr-alert__title"><%= t('candidate.grouping_legal_types.title') %></p>
+      <ul>
+        <% @errors.each do |_attribute, messages| %>
+          <% Array(messages).each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="fr-alert fr-alert--warning fr-alert--sm fr-mb-4w" role="alert">
+    <p><%= t('candidate.grouping_legal_types.alert') %></p>
+  </div>
+
+  <%= form_with url: grouping_legal_type_candidate_market_application_path(@market_application.identifier),
+                method: :patch,
+                data: { controller: "enable-on-choice" } do |form| %>
+    <fieldset class="fr-fieldset">
+      <legend class="fr-fieldset__legend fr-sr-only"><%= t('candidate.grouping_legal_types.question') %></legend>
+
+      <div class="fr-fieldset__content application-mode-choices">
+        <% Grouping.legal_types.each_key do |legal_type| %>
+          <div class="application-mode-choice">
+            <input type="radio"
+                   id="legal_type_<%= legal_type %>"
+                   name="legal_type"
+                   value="<%= legal_type %>"
+                   class="application-mode-choice__input"
+                   <%= "checked" if @grouping.legal_type == legal_type %>
+                   data-enable-on-choice-target="choice"
+                   data-action="change->enable-on-choice#toggle">
+            <label class="application-mode-choice__label" for="legal_type_<%= legal_type %>">
+              <span class="application-mode-choice__text">
+                <span class="application-mode-choice__text-content">
+                  <span class="application-mode-choice__title">
+                    <%= t("candidate.grouping_legal_types.#{legal_type}.label") %>
+                    <% if legal_type == 'conjoint_mandataire_solidaire' %>
+                      <span class="fr-badge fr-badge--info fr-badge--sm">
+                        <%= t('candidate.grouping_legal_types.most_common_badge') %>
+                      </span>
+                    <% end %>
+                  </span>
+                  <span class="application-mode-choice__hint"><%= t("candidate.grouping_legal_types.#{legal_type}.hint") %></span>
+                </span>
+              </span>
+              <span class="application-mode-choice__icon">
+                <%= image_tag "icon-legal-type-#{legal_type.dasherize}.svg", alt: "", class: "application-mode-choice__icon-img" %>
+              </span>
+            </label>
+          </div>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <div class="fr-mt-4w grouping-legal-type-actions">
+      <%= link_to t('candidate.grouping_legal_types.back'),
+                  application_mode_candidate_market_application_path(@market_application.identifier, readonly: true),
+                  class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
+      <%= form.button t('candidate.grouping_legal_types.continue'),
+                      type: "submit",
+                      class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
+                      disabled: @grouping.legal_type.blank?,
+                      data: { "enable-on-choice-target": "submitButton" } %>
+    </div>
+  <% end %>
+</div>

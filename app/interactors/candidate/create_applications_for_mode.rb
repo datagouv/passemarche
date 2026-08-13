@@ -50,14 +50,21 @@ module Candidate
       result = CreateMarketApplication.call(public_market:, siret:, application_mode: :groupement)
       return context.fail!(errors: result.errors) if result.failure?
 
-      groupement_application = link_solo_user(result.market_application)
+      groupement_application = result.market_application
+      return fail_already_mandataire if owned_by_another_user?(groupement_application)
+
+      link_solo_user(groupement_application)
       context.market_application = groupement_application
       create_grouping(groupement_application)
     end
 
+    def owned_by_another_user?(groupement_application)
+      market_application.user && groupement_application.user &&
+        groupement_application.user_id != market_application.user_id
+    end
+
     def link_solo_user(groupement_application)
       groupement_application.update!(user: market_application.user) if market_application.user
-      groupement_application
     end
 
     def create_grouping(mandataire_application)
@@ -82,7 +89,7 @@ module Candidate
     end
 
     def uniqueness_error?(member)
-      member.errors[:siret].present? || member.errors[:grouping_id].present?
+      member.errors.of_kind?(:siret, :taken) || member.errors.of_kind?(:grouping_id, :taken)
     end
 
     def fail_already_mandataire

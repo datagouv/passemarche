@@ -52,6 +52,7 @@ module Candidate
       end
 
       return application_mode_candidate_market_application_path(market_application.identifier) if market_application.application_mode_choice_required?
+      return grouping_legal_type_candidate_market_application_path(market_application.identifier) if market_application.grouping_legal_type_choice_required?
 
       company_identification_candidate_market_application_path(market_application.identifier)
     end

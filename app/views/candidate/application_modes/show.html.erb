@@ -31,7 +31,7 @@
   <%= form_with url: application_mode_candidate_market_application_path(@market_application.identifier),
                 method: :patch,
                 data: { controller: "enable-on-choice" } do |form| %>
-    <fieldset class="fr-fieldset">
+    <fieldset class="fr-fieldset" <%= "disabled" if @readonly %>>
       <legend class="fr-fieldset__legend fr-sr-only"><%= t('candidate.application_modes.title') %></legend>
 
       <div class="fr-fieldset__content application-mode-choices">
@@ -41,6 +41,8 @@
                  name="application_mode"
                  value="solo"
                  class="application-mode-choice__input"
+                 <%= "checked" if @market_application.solo? %>
+                 <%= "disabled" if @readonly %>
                  data-enable-on-choice-target="choice"
                  data-action="change->enable-on-choice#toggle">
           <label class="application-mode-choice__label" for="application_mode_solo">
@@ -62,7 +64,8 @@
                  name="application_mode"
                  value="groupement"
                  class="application-mode-choice__input"
-                 <%= "disabled" if @already_mandataire %>
+                 <%= "checked" if @market_application.groupement? %>
+                 <%= "disabled" if @already_mandataire || @readonly %>
                  data-enable-on-choice-target="choice"
                  data-action="change->enable-on-choice#toggle">
           <label class="application-mode-choice__label" for="application_mode_groupement">
@@ -84,7 +87,7 @@
                  name="application_mode"
                  value="mixte"
                  class="application-mode-choice__input"
-                 <%= "disabled" if @already_mandataire %>
+                 <%= "disabled" if @already_mandataire || @readonly %>
                  data-enable-on-choice-target="choice"
                  data-action="change->enable-on-choice#toggle">
           <label class="application-mode-choice__label" for="application_mode_mixte">
@@ -103,11 +106,17 @@
     </fieldset>
 
     <div class="fr-mt-4w" style="text-align: right;">
-      <%= form.button t('candidate.application_modes.continue'),
-                      type: "submit",
-                      class: "fr-btn fr-btn--lg fr-icon-arrow-right-line fr-btn--icon-right",
-                      disabled: true,
-                      data: { "enable-on-choice-target": "submitButton" } %>
+      <% if @readonly %>
+        <%= link_to t('candidate.application_modes.continue_readonly'),
+                    @readonly_continue_path,
+                    class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right" %>
+      <% else %>
+        <%= form.button t('candidate.application_modes.continue'),
+                        type: "submit",
+                        class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
+                        disabled: true,
+                        data: { "enable-on-choice-target": "submitButton" } %>
+      <% end %>
     </div>
   <% end %>
 </div>
