@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe FetchBuyerName::ExtractName, type: :interactor do
+RSpec.describe FetchRaisonSociale::ExtractName, type: :interactor do
   include ApiResponses::InseeResponses
 
   let(:siret) { '13002526500013' }
@@ -24,14 +24,14 @@ RSpec.describe FetchBuyerName::ExtractName, type: :interactor do
     subject { described_class.call(response:) }
 
     context 'when raison_sociale is present' do
-      let(:response) { instance_double(Net::HTTPOK, body: build_response_body(raison_sociale: 'Ville de Paris')) }
+      let(:response) { instance_double(Net::HTTPOK, body: build_response_body(raison_sociale: 'OCTO TECHNOLOGY')) }
 
       it 'succeeds' do
         expect(subject).to be_success
       end
 
-      it 'sets buyer_name in context' do
-        expect(subject.buyer_name).to eq('Ville de Paris')
+      it 'sets raison_sociale in context' do
+        expect(subject.raison_sociale).to eq('OCTO TECHNOLOGY')
       end
     end
 
@@ -42,8 +42,8 @@ RSpec.describe FetchBuyerName::ExtractName, type: :interactor do
         expect(subject).to be_success
       end
 
-      it 'sets buyer_name to nil' do
-        expect(subject.buyer_name).to be_nil
+      it 'sets raison_sociale to nil' do
+        expect(subject.raison_sociale).to be_nil
       end
     end
 

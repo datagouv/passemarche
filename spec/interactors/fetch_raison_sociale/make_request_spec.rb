@@ -2,11 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe FetchBuyerName::MakeRequest, type: :interactor do
+RSpec.describe FetchRaisonSociale::MakeRequest, type: :interactor do
   include ApiResponses::InseeResponses
 
   let(:siret) { '13002526500013' }
-  let(:public_market) { create(:public_market, :completed, siret:) }
   let(:base_url) { 'https://entreprise.api.gouv.fr/' }
   let(:token) { 'test_bearer_token_123' }
   let(:endpoint_url) { "#{base_url}v3/insee/sirene/etablissements/#{siret}" }
@@ -14,7 +13,7 @@ RSpec.describe FetchBuyerName::MakeRequest, type: :interactor do
     {
       'context' => 'Candidature marché public',
       'recipient' => siret,
-      'object' => "Configuration marché: #{public_market.name}"
+      'object' => 'Réponse appel offre'
     }
   end
 
@@ -26,7 +25,7 @@ RSpec.describe FetchBuyerName::MakeRequest, type: :interactor do
   end
 
   describe '.call' do
-    subject { described_class.call(public_market:) }
+    subject { described_class.call(siret:) }
 
     context 'when the API request is successful (HTTP 200)' do
       before do
@@ -47,23 +46,30 @@ RSpec.describe FetchBuyerName::MakeRequest, type: :interactor do
 
       it_behaves_like 'a successful API request'
 
-      it 'uses the public market SIRET in the endpoint URL' do
+      it 'uses the given SIRET in the endpoint URL' do
         subject
         expect(a_request(:get, endpoint_url).with(query: hash_including(query_params))).to have_been_made.once
       end
+    end
 
-      it 'sends the public market SIRET as recipient' do
-        subject
-        expect(
-          a_request(:get, endpoint_url).with(query: hash_including('recipient' => siret))
-        ).to have_been_made.once
+    context 'when a custom request_object is given' do
+      subject { described_class.call(siret:, request_object: 'Configuration marché: Travaux de voirie') }
+
+      before do
+        stub_request(:get, endpoint_url)
+          .with(query: hash_including(query_params.merge('object' => 'Configuration marché: Travaux de voirie')))
+          .to_return(
+            status: 200,
+            body: successful_response_body,
+            headers: { 'Content-Type' => 'application/json' }
+          )
       end
 
-      it 'sends the market name as object' do
+      it 'sends the custom object as audit label' do
         subject
         expect(
           a_request(:get, endpoint_url)
-            .with(query: hash_including('object' => "Configuration marché: #{public_market.name}"))
+            .with(query: hash_including('object' => 'Configuration marché: Travaux de voirie'))
         ).to have_been_made.once
       end
     end

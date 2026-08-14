@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-class FetchBuyerName::MakeRequest < MakeRequest
+class FetchRaisonSociale::MakeRequest < MakeRequest
+  delegate :siret, to: :context
+
   def call
     validate_credentials
     super
   end
 
   def endpoint_url
-    "v3/insee/sirene/etablissements/#{context.public_market.siret}"
+    "v3/insee/sirene/etablissements/#{siret}"
   end
 
   private
@@ -19,10 +21,10 @@ class FetchBuyerName::MakeRequest < MakeRequest
   end
 
   def request_recipient
-    context.public_market.siret
+    siret
   end
 
   def request_object
-    "Configuration marché: #{context.public_market.name}"
+    context.request_object || 'Réponse appel offre'
   end
 end
