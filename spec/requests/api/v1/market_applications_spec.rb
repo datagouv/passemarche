@@ -7,6 +7,8 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:public_market) { create(:public_market, :published, editor:) }
   let(:access_token) { oauth_access_token_for(editor) }
 
+  before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false) }
+
   describe 'POST /api/v1/public_markets/:public_market_id/market_applications' do
     let(:valid_siret) { '73282932000074' }
     let(:invalid_siret) { '12345678901234' }
@@ -109,6 +111,23 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(response).to have_http_status(:ok)
       json_response = response.parsed_body
       expect(json_response['application_url']).to include('/company_identification')
+    end
+
+    it 'points to the groupement counterpart grouping_legal_type step when the existing application is mixte' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      solo_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :solo)
+      groupement_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: nil)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      expect(json_response['identifier']).to eq(solo_application.identifier)
+      expect(json_response['application_url']).to include("/#{groupement_application.identifier}/grouping_legal_type")
     end
 
     it 'returns error when public market not found' do
