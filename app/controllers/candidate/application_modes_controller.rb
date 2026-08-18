@@ -10,8 +10,8 @@ module Candidate
     before_action :redirect_if_mode_already_chosen
 
     def show
-      @already_mandataire = already_mandataire_elsewhere?
-      @readonly = @market_application.application_mode.present?
+      @already_mandataire = presenter.already_mandataire?
+      @readonly = presenter.readonly?
       @readonly_continue_path = next_required_wizard_step_path(@market_application) if @readonly
     end
 
@@ -23,7 +23,7 @@ module Candidate
 
       return handle_success(result) if result.success?
 
-      @already_mandataire = already_mandataire_elsewhere?
+      @already_mandataire = presenter.already_mandataire?
       @errors = result.errors
       render :show, status: :unprocessable_content
     end
@@ -43,12 +43,8 @@ module Candidate
       redirect_to next_required_wizard_step_path(@market_application)
     end
 
-    def already_mandataire_elsewhere?
-      Grouping
-        .joins(:mandataire_market_application)
-        .where(public_market: @market_application.public_market, market_applications: { siret: @market_application.siret })
-        .where.not(market_applications: { id: @market_application.id })
-        .exists?
+    def presenter
+      @presenter ||= Candidate::ApplicationModePresenter.new(@market_application)
     end
 
     def handle_success(result)
