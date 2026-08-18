@@ -57,6 +57,21 @@ class MarketApplication < ApplicationRecord
       Grouping.joins(:mandataire_market_application).exists?(legal_type: nil, market_applications: { id: })
   end
 
+  def groupement_counterpart
+    return nil if groupement?
+
+    MarketApplication.where(public_market:, siret:, application_mode: :groupement, user_id:).where.not(id:).first
+  end
+
+  def next_required_wizard_step
+    return [self, :application_mode] if application_mode_choice_required?
+
+    target = groupement_counterpart || self
+    return [target, :grouping_legal_type] if target.grouping_legal_type_choice_required?
+
+    nil
+  end
+
   def update_api_status(api_name, status:, fields_filled: 0)
     with_lock do
       updated_status = (api_fetch_status || {}).dup

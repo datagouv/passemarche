@@ -3,6 +3,7 @@
 module Candidate
   module ApplicationModeGuard
     extend ActiveSupport::Concern
+    include Candidate::WizardRoutable
 
     included do
       before_action :redirect_to_application_mode_choice
@@ -11,9 +12,9 @@ module Candidate
     private
 
     def redirect_to_application_mode_choice
-      return unless @market_application&.application_mode_choice_required?
+      return unless @market_application
 
-      redirect_to application_mode_candidate_market_application_path(@market_application.identifier)
+      redirect_to next_required_wizard_step_path(@market_application) if @market_application.next_required_wizard_step
     end
   end
 end

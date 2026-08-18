@@ -2,6 +2,8 @@
 
 module Candidate
   class SessionsController < Candidate::ApplicationController
+    include Candidate::WizardRoutable
+
     skip_before_action :require_candidate_authentication
 
     def new
@@ -45,16 +47,15 @@ module Candidate
     end
 
     def first_step_path(market_application)
-      if market_application.completed?
-        return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
+      return completed_application_path(market_application) if market_application.completed?
 
-        return candidate_sync_status_path(market_application.identifier)
-      end
+      next_required_wizard_step_path(market_application)
+    end
 
-      return application_mode_candidate_market_application_path(market_application.identifier) if market_application.application_mode_choice_required?
-      return grouping_legal_type_candidate_market_application_path(market_application.identifier) if market_application.grouping_legal_type_choice_required?
+    def completed_application_path(market_application)
+      return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
 
-      company_identification_candidate_market_application_path(market_application.identifier)
+      candidate_sync_status_path(market_application.identifier)
     end
 
     def handle_magic_link_sent(result)

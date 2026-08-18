@@ -175,7 +175,7 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
       patch application_mode_candidate_market_application_path(market_application.identifier),
         params: { application_mode: 'groupement' }
 
-      get company_identification_candidate_market_application_path(market_application.identifier)
+      get grouping_legal_type_candidate_market_application_path(market_application.identifier)
 
       expect(response).to have_http_status(:ok)
       expect(response.body).not_to include(I18n.t('candidate.sessions.new.siret_label'))
@@ -211,7 +211,7 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
       groupement_application = MarketApplication.where(public_market:, siret: market_application.siret,
         application_mode: :groupement).sole
 
-      get company_identification_candidate_market_application_path(groupement_application.identifier)
+      get grouping_legal_type_candidate_market_application_path(groupement_application.identifier)
 
       expect(response).to have_http_status(:ok)
       expect(response.body).not_to include(I18n.t('candidate.sessions.new.siret_label'))
