@@ -53,6 +53,8 @@ class MarketApplication < ApplicationRecord
   end
 
   def grouping_legal_type_choice_required?
+    return false if completed?
+
     FeatureFlags::Groupement.enabled? && groupement? &&
       Grouping.joins(:mandataire_market_application).exists?(legal_type: nil, market_applications: { id: })
   end
@@ -63,7 +65,14 @@ class MarketApplication < ApplicationRecord
     MarketApplication.where(public_market:, siret:, application_mode: :groupement, user_id:).where.not(id:).first
   end
 
+  def solo_counterpart
+    return nil if solo?
+
+    MarketApplication.where(public_market:, siret:, application_mode: :solo, user_id:).where.not(id:).first
+  end
+
   def next_required_wizard_step
+    return nil unless FeatureFlags::Groupement.enabled?
     return [self, :application_mode] if application_mode_choice_required?
 
     target = groupement_counterpart || self

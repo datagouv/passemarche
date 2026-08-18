@@ -47,7 +47,7 @@ module Candidate
     end
 
     def link_candidate_to_application(user, market_application)
-      counterpart = market_application.groupement_counterpart
+      counterpart = market_application.groupement_counterpart || market_application.solo_counterpart
       market_application.update!(user:)
       counterpart&.update!(user:)
     end
