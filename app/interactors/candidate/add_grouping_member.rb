@@ -34,7 +34,7 @@ module Candidate
       member = grouping.grouping_members.new(role: :co_traitant, siret:, email:, company_name: fetch_company_name)
       return context.grouping_member = member if member.save
 
-      context.fail!(errors: errors_from(member))
+      context.fail!(errors: member.errors.to_hash)
     end
 
     def fetch_company_name
@@ -67,12 +67,6 @@ module Candidate
 
     def fail_email_invalid
       context.fail!(errors: { email: [I18n.t('candidate.validations.email_invalid')] })
-    end
-
-    def errors_from(record)
-      record.errors.each_with_object({}) do |error, hash|
-        (hash[error.attribute] ||= []) << error.message
-      end
     end
   end
 end

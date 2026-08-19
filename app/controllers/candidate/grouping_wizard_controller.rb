@@ -18,6 +18,7 @@ module Candidate
     def show
       case step
       when :application_mode then show_application_mode
+      when :lot_selection_mode then show_lot_selection_mode
       when :grouping_legal_type then show_grouping_legal_type
       when :grouping_composition then show_grouping_composition
       when :grouping_composition_confirmation then show_confirmation
@@ -29,6 +30,7 @@ module Candidate
     def update
       case step
       when :application_mode then update_application_mode
+      when :lot_selection_mode then update_lot_selection_mode
       when :grouping_legal_type then update_grouping_legal_type
       when :grouping_composition_confirmation then update_confirmation
       end
@@ -61,11 +63,14 @@ module Candidate
     private
 
     def set_steps
-      self.steps = if @market_application&.groupement?
-                     %i[application_mode grouping_legal_type grouping_composition grouping_composition_confirmation]
-                   else
-                     %i[application_mode]
-                   end
+      return self.steps = %i[application_mode] unless @market_application&.groupement?
+
+      self.steps = [:application_mode, *lot_selection_mode_step, :grouping_legal_type,
+                    :grouping_composition, :grouping_composition_confirmation]
+    end
+
+    def lot_selection_mode_step
+      @market_application.public_market.lots.any? ? [:lot_selection_mode] : []
     end
 
     def find_market_application
@@ -105,10 +110,8 @@ module Candidate
     end
 
     def counterpart_next_wizard_step_path(counterpart)
-      return wizard_step_path(counterpart, :grouping_legal_type) if counterpart.grouping_legal_type_choice_required?
-      return wizard_step_path(counterpart, :grouping_composition) if counterpart.grouping_composition_choice_required?
-
-      finish_wizard_path
+      _target, step = counterpart.next_required_wizard_step
+      step ? wizard_step_path(counterpart, step) : finish_wizard_path
     end
 
     def wizard_step_path(market_application, step)
@@ -157,6 +160,21 @@ module Candidate
         .where.not(market_applications: { id: @market_application.id })
         .exists?
     end
+
+    # --- lot_selection_mode step ---
+
+    def show_lot_selection_mode = @presenter = Candidate::LotSelectionModePresenter.new(@market_application)
+
+    def update_lot_selection_mode
+      result = Candidate::SetLotSelectionModes.call(market_application: @market_application, lot_modes: lot_modes_param)
+      return redirect_to(next_wizard_step_path(:lot_selection_mode)) if result.success?
+
+      @presenter = Candidate::LotSelectionModePresenter.new(@market_application)
+      @errors = result.errors
+      render_wizard(nil, status: :unprocessable_content)
+    end
+
+    def lot_modes_param = params.fetch(:lot_modes, {}).permit!.to_h
 
     # --- grouping_legal_type step ---
 

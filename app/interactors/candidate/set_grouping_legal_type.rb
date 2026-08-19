@@ -17,7 +17,7 @@ module Candidate
     def update_legal_type
       return if context.grouping.update(legal_type:)
 
-      context.fail!(errors: errors_from(context.grouping))
+      context.fail!(errors: context.grouping.errors.to_hash)
     end
 
     def find_grouping
@@ -34,12 +34,6 @@ module Candidate
 
     def fail_legal_type_invalid
       context.fail!(errors: { legal_type: [I18n.t('candidate.validations.legal_type_invalid')] })
-    end
-
-    def errors_from(record)
-      record.errors.each_with_object({}) do |error, hash|
-        (hash[error.attribute] ||= []) << error.message
-      end
     end
   end
 end

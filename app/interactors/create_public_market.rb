@@ -12,7 +12,7 @@ class CreatePublicMarket < ApplicationInteractor
       context.public_market = market
       FetchPublicMarketBuyerNameJob.perform_later(market.id)
     else
-      context.fail!(errors: errors_from(market))
+      context.fail!(errors: market.errors.to_hash)
     end
   end
 
@@ -35,11 +35,5 @@ class CreatePublicMarket < ApplicationInteractor
   def market_type_for_lot(lot_type_code)
     code = lot_type_code.presence || params[:market_type_codes]&.first
     MarketType.find_by(code:)
-  end
-
-  def errors_from(record)
-    record.errors.each_with_object({}) do |error, hash|
-      (hash[error.attribute] ||= []) << error.message
-    end
   end
 end

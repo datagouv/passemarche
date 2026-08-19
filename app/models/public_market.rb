@@ -36,6 +36,10 @@ class PublicMarket < ApplicationRecord
     effective_lot_market_types.size > 1
   end
 
+  def lots_by_type_sorted
+    lots.ordered.includes(:market_type, :platform_market_type).group_by(&:effective_market_type)
+  end
+
   def effective_market_type_codes
     lot_codes = effective_lot_market_types.map(&:code)
     (market_type_codes + lot_codes).uniq
