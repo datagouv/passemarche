@@ -1,0 +1,120 @@
+<% content_for :title, t('candidate.lot_selection_modes.title') %>
+
+<div class="fr-container fr-py-6w"
+     data-controller="lot-selection-mode"
+     data-lot-selection-mode-requires-both-value="<%= @presenter.requires_solo_and_groupement? %>">
+  <h1 class="fr-h3 fr-mb-1w"><%= t('candidate.lot_selection_modes.title') %></h1>
+  <p class="fr-text--sm fr-text--mention-grey fr-mb-3w">
+    <%= t(@presenter.requires_solo_and_groupement? ? 'candidate.lot_selection_modes.subtitle_mixte' : 'candidate.lot_selection_modes.subtitle_groupement') %>
+  </p>
+
+  <div class="lot-selection-rc-notice fr-mb-4w">
+    <div class="lot-selection-rc-notice__icon">
+      <span class="fr-icon-information-fill" aria-hidden="true"></span>
+    </div>
+    <div class="lot-selection-rc-notice__content">
+      <p class="lot-selection-rc-notice__title"><%= t('candidate.lot_selection_modes.rc_notice_title') %></p>
+      <p class="lot-selection-rc-notice__text">
+        <%= t('candidate.lot_selection_modes.rc_notice_body') %>
+        <%= link_to t('candidate.lot_selection_modes.rc_notice_link'), '#',
+              class: "fr-link fr-link--icon-right fr-icon-external-link-line",
+              target: "_blank", rel: "noopener" %>
+      </p>
+    </div>
+  </div>
+
+  <% if @errors.present? %>
+    <div class="fr-alert fr-alert--error fr-mb-3w" role="alert">
+      <ul class="fr-list">
+        <% @errors.each do |_attribute, messages| %>
+          <% Array(messages).each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with url: wizard_path, method: :patch do %>
+    <% @presenter.lots_by_type_sorted.each do |market_type, type_lots| %>
+      <div class="fr-mb-6w lot-selection-mode-group" data-lot-selection-mode-target="section">
+        <div class="lot-selection-mode-section__header">
+          <div class="lot-selection-mode-group__title">
+            <p class="lot-selection-mode-group__title-text">
+              <%= t('candidate.lot_selection_modes.group_title_prefix') %>
+            </p>
+            <div class="lot-selection-mode-group__badge">
+              <% if market_type %>
+                <%= market_type_badge_tag(market_type.code, t("market_types.#{market_type.code}", default: market_type.code.humanize)) %>
+              <% else %>
+                <%= market_type_badge_tag(nil, t('candidate.lot_selection.lots_count', count: type_lots.size)) %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="lot-selection-mode-bulk">
+            <span class="fr-text--sm fr-mb-0"><%= t('candidate.lot_selection_modes.apply_to_typology') %></span>
+            <select class="lot-selection-mode-bulk__select" data-action="change->lot-selection-mode#applyBulk">
+              <option value=""><%= t('candidate.lot_selection_modes.apply_to_typology_placeholder') %></option>
+              <% if @presenter.requires_solo_and_groupement? %>
+                <option value="solo"><%= t('candidate.lot_selection_modes.solo') %></option>
+              <% end %>
+              <option value="groupement"><%= t('candidate.lot_selection_modes.groupement') %></option>
+              <option value="none"><%= t('candidate.lot_selection_modes.none') %></option>
+            </select>
+          </div>
+        </div>
+
+        <table class="lot-selection-mode-table">
+          <thead>
+            <tr>
+              <th scope="col"><%= t('candidate.lot_selection_modes.lot_column_header') %></th>
+              <th scope="col"><%= t('candidate.lot_selection_modes.name_column_header') %></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% type_lots.each do |lot| %>
+              <tr>
+                <td><%= t('candidate.lot_selection_modes.lot_number', number: lot.position) %></td>
+                <td><%= lot.name %></td>
+                <td>
+                  <div class="lot-mode-choices">
+                    <% %w[solo groupement none].each do |mode| %>
+                      <% next if mode == 'solo' && !@presenter.requires_solo_and_groupement? %>
+                      <span>
+                        <%= radio_button_tag "lot_modes[#{lot.id}]", mode, @presenter.mode_for(lot) == mode,
+                              id: "lot_mode_#{lot.id}_#{mode}",
+                              class: "lot-mode-choice__input",
+                              data: { lot_selection_mode_target: "radio", action: "change->lot-selection-mode#recompute" } %>
+                        <%= label_tag "lot_mode_#{lot.id}_#{mode}", t("candidate.lot_selection_modes.#{mode}"),
+                              class: "lot-mode-choice__label" %>
+                      </span>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <% if @presenter.requires_solo_and_groupement? %>
+      <p class="lot-selection-mode-banner fr-mb-3w">
+        <span class="fr-icon-information-line" aria-hidden="true"></span>
+        <%= t('candidate.lot_selection_modes.banner_text') %>
+      </p>
+    <% end %>
+
+    <div class="fr-mt-4w" style="display: flex; justify-content: space-between;">
+      <%= link_to t('candidate.lot_selection_modes.back'),
+            previous_wizard_path(readonly: true),
+            class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
+      <%= button_tag t('candidate.lot_selection_modes.continue'),
+            type: "submit",
+            class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
+            data: { lot_selection_mode_target: "submitButton" } %>
+    </div>
+  <% end %>
+</div>
