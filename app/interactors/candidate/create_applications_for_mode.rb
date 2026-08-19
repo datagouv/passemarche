@@ -28,20 +28,20 @@ module Candidate
     end
 
     def set_solo
-      return context.fail!(errors: errors_from(market_application)) unless market_application.update(application_mode: :solo)
+      return context.fail!(errors: market_application.errors.to_hash) unless market_application.update(application_mode: :solo)
 
       context.market_application = market_application
     end
 
     def set_groupement
-      return context.fail!(errors: errors_from(market_application)) unless market_application.update(application_mode: :groupement)
+      return context.fail!(errors: market_application.errors.to_hash) unless market_application.update(application_mode: :groupement)
 
       context.market_application = market_application
       create_grouping(market_application)
     end
 
     def set_mixte
-      return context.fail!(errors: errors_from(market_application)) unless market_application.update(application_mode: :solo)
+      return context.fail!(errors: market_application.errors.to_hash) unless market_application.update(application_mode: :solo)
 
       create_groupement_counterpart
     end
@@ -94,12 +94,6 @@ module Candidate
 
     def fail_already_mandataire
       context.fail!(errors: { application_mode: [I18n.t('candidate.validations.already_mandataire')] })
-    end
-
-    def errors_from(record)
-      record.errors.each_with_object({}) do |error, hash|
-        (hash[error.attribute] ||= []) << error.message
-      end
     end
   end
 end

@@ -35,13 +35,7 @@ class CreateMarketApplication < ApplicationInteractor
     if application.save
       context.market_application = application
     else
-      context.fail!(errors: errors_from(application))
-    end
-  end
-
-  def errors_from(record)
-    record.errors.each_with_object({}) do |error, hash|
-      (hash[error.attribute] ||= []) << error.message
+      context.fail!(errors: application.errors.to_hash)
     end
   end
 end
