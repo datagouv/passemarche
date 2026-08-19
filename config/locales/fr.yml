@@ -715,6 +715,9 @@ fr:
       grouping_member_not_found: "Ce co-traitant n'a pas été trouvé dans le groupement"
       grouping_member_already_invited: "Ce co-traitant a déjà reçu son invitation, il ne peut plus être retiré"
       no_co_traitant: "Veuillez ajouter au moins un co-traitant avant de continuer"
+      lot_ids_invalid: "Un ou plusieurs lots sélectionnés n'appartiennent pas à ce marché"
+      lot_selection_mode_incomplete: "Vous devez sélectionner au moins un lot \"Seul\" et un lot \"En groupement\" pour continuer."
+      groupement_application_not_found: "Aucune candidature en groupement trouvée"
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
       no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
