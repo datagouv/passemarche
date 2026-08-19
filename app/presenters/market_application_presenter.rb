@@ -98,9 +98,7 @@ class MarketApplicationPresenter
   end
 
   def lots_by_type_sorted
-    @lots_by_type_sorted ||= public_market.lots.ordered
-      .includes(:market_type, :platform_market_type)
-      .group_by(&:effective_market_type)
+    @lots_by_type_sorted ||= public_market.lots_by_type_sorted
   end
 
   def selected_lots
