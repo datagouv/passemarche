@@ -463,7 +463,7 @@ RSpec.describe 'Candidate::GroupingWizard', type: :request do
     let!(:grouping) do
       create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
     end
-    let!(:member) { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
+    let!(:member) { create(:grouping_member, :co_traitant, grouping:, siret: '80245139600021', invitation_token_created_at: nil) }
 
     it 'removes the member and returns a turbo stream response' do
       delete grouping_wizard_member_candidate_market_application_path(market_application.identifier, member.id),
