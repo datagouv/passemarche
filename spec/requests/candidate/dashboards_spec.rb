@@ -44,6 +44,20 @@ RSpec.describe 'Candidate::Dashboards', type: :request do
 
         expect(response.body).not_to include('Marché confidentiel')
       end
+
+      context 'when the application is a groupement the user is mandataire of' do
+        let(:application) { create(:market_application, public_market:, user:, application_mode: :groupement) }
+
+        before { create(:grouping, public_market:, mandataire_market_application: application) }
+
+        it 'shows a link to the grouping dashboard instead of the edit link' do
+          get candidate_dashboard_path
+
+          expect(response.body).to include(
+            grouping_dashboard_candidate_market_application_path(application.identifier)
+          )
+        end
+      end
     end
   end
 end
