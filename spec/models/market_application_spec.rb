@@ -34,6 +34,21 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'grouping_member association' do
+    it 'finds the grouping_member the application belongs to' do
+      grouping = create(:grouping, public_market:)
+      member = grouping.mandataire_grouping_member
+
+      expect(member.market_application.grouping_member).to eq(member)
+    end
+
+    it 'is nil for a solo application outside any grouping' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.grouping_member).to be_nil
+    end
+  end
+
   describe 'business validations' do
     it 'requires SIRET to be present' do
       application = build(:market_application, public_market:, siret: nil)

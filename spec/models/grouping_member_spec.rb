@@ -84,6 +84,77 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe '#mark_connected!' do
+    it 'moves an invited member to to_prepare' do
+      member = create(:grouping_member, :co_traitant, grouping:)
+
+      member.mark_connected!
+
+      expect(member).to be_status_to_prepare
+    end
+
+    it 'does not move back a member already further along' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :in_progress)
+
+      member.mark_connected!
+
+      expect(member).to be_status_in_progress
+    end
+  end
+
+  describe '#mark_in_progress!' do
+    it 'moves a to_prepare member to in_progress' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :to_prepare)
+
+      member.mark_in_progress!
+
+      expect(member).to be_status_in_progress
+    end
+
+    it 'does not move back a completed member' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :completed)
+
+      member.mark_in_progress!
+
+      expect(member).to be_status_completed
+    end
+
+    it 'does not move an invited member directly to in_progress' do
+      member = create(:grouping_member, :co_traitant, grouping:)
+
+      member.mark_in_progress!
+
+      expect(member).to be_status_invited
+    end
+  end
+
+  describe '#mark_completed!' do
+    it 'moves any non-completed member to completed' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :in_progress)
+
+      member.mark_completed!
+
+      expect(member).to be_status_completed
+    end
+  end
+
+  describe '#declared_lots' do
+    it 'delegates to the member market_application lots' do
+      lot = create(:lot, public_market:)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:market_application_lot, market_application: application, lot:)
+      member = create(:grouping_member, :co_traitant, grouping:, market_application: application)
+
+      expect(member.declared_lots).to contain_exactly(lot)
+    end
+
+    it 'is empty when the member has no market_application yet' do
+      member = create(:grouping_member, :co_traitant, grouping:, market_application: nil)
+
+      expect(member.declared_lots).to be_empty
+    end
+  end
+
   describe 'siret' do
     it 'rejects a co_traitant siret equal to the mandataire siret' do
       member = build(:grouping_member, :co_traitant, grouping:, siret: grouping.mandataire_grouping_member.siret)
