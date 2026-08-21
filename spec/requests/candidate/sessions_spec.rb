@@ -278,6 +278,22 @@ RSpec.describe 'Candidate::Sessions', type: :request do
           end.to change { groupement_application.reload.user_id }.from(nil).to(user.id)
         end
       end
+
+      context 'when the application is the groupement side of a mixte candidacy without a user yet' do
+        let!(:solo_application) do
+          create(:market_application, public_market: market_application.public_market, siret: market_application.siret,
+            application_mode: :solo)
+        end
+
+        before { market_application.update!(application_mode: :groupement) }
+
+        it 'also links the user to the solo counterpart' do
+          expect do
+            get verify_candidate_sessions_path,
+              params: { token:, market_application_id: market_application.identifier }
+          end.to change { solo_application.reload.user_id }.from(nil).to(user.id)
+        end
+      end
     end
 
     context 'when market has lots and no lots are selected' do
@@ -351,6 +367,29 @@ RSpec.describe 'Candidate::Sessions', type: :request do
 
         expect(response).to redirect_to(new_candidate_sessions_path(market_application_id: 'VR-UNKNOWN'))
         expect(flash[:alert]).to eq(I18n.t('candidate.sessions.invalid_token'))
+      end
+    end
+
+    context 'when the application belongs to a grouping member' do
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+      let(:member) { grouping.mandataire_grouping_member }
+
+      before { grouping }
+
+      it 'marks the grouping_member as to_prepare on first connection' do
+        expect do
+          get verify_candidate_sessions_path,
+            params: { token:, market_application_id: market_application.identifier }
+        end.to change { member.reload.status_to_prepare? }.from(false).to(true)
+      end
+
+      it 'does not move back a member already further along' do
+        member.update!(status: :in_progress)
+
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(member.reload).to be_status_in_progress
       end
     end
   end
