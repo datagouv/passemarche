@@ -39,13 +39,14 @@ module Candidate
     def sign_in_candidate(user, market_application)
       reconnection = market_application.user_id.present?
       link_candidate_to_application(user, market_application) unless reconnection
+      market_application.grouping_member&.mark_connected!
       session[:user_id] = user.id
       session[:market_application_identifier] = market_application.identifier
       redirect_to first_step_path(market_application)
     end
 
     def link_candidate_to_application(user, market_application)
-      counterpart = market_application.groupement_counterpart
+      counterpart = market_application.groupement_counterpart || market_application.solo_counterpart
       market_application.update!(user:)
       counterpart&.update!(user:)
     end

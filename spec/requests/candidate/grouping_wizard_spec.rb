@@ -463,7 +463,7 @@ RSpec.describe 'Candidate::GroupingWizard', type: :request do
     let!(:grouping) do
       create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
     end
-    let!(:member) { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
+    let!(:member) { create(:grouping_member, :co_traitant, grouping:, siret: '80245139600021', invitation_token_created_at: nil) }
 
     it 'removes the member and returns a turbo stream response' do
       delete grouping_wizard_member_candidate_market_application_path(market_application.identifier, member.id),
@@ -507,10 +507,12 @@ RSpec.describe 'Candidate::GroupingWizard', type: :request do
     context 'when the grouping has at least one co_traitant' do
       before { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
 
-      it 'sends invitations and redirects to the dashboard with a success message' do
+      it 'sends invitations and redirects to the grouping dashboard with a success message' do
         patch wizard_step_path(market_application, :grouping_composition_confirmation)
 
-        expect(response).to redirect_to(candidate_dashboard_path)
+        expect(response).to redirect_to(
+          grouping_dashboard_candidate_market_application_path(market_application.identifier)
+        )
         follow_redirect!
         expect(response.body).to include(I18n.t('candidate.grouping_compositions.success'))
       end

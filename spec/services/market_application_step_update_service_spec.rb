@@ -57,6 +57,23 @@ RSpec.describe MarketApplicationStepUpdateService do
         described_class.call(market_application, step, {})
       end
 
+      context 'when the application belongs to a grouping member' do
+        let(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+        let(:member) { grouping.mandataire_grouping_member }
+
+        before do
+          allow(SiretValidator).to receive(:valid?).and_return(true)
+          member.update!(status: :to_prepare)
+        end
+
+        it 'marks the grouping_member as in_progress' do
+          market_application.reload
+
+          expect { described_class.call(market_application, step, {}) }
+            .to change { member.reload.status_in_progress? }.from(false).to(true)
+        end
+      end
+
       context 'when a response already exists but form submits with blank id' do
         let(:market_attribute) do
           create(:market_attribute, :radio_with_file_and_text,
@@ -159,6 +176,42 @@ RSpec.describe MarketApplicationStepUpdateService do
           result = described_class.call(market_application, :summary, {})
 
           expect(result[:flash_messages][:alert]).to be_present
+        end
+      end
+    end
+
+    context 'with summary step for a grouping member application' do
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '41816609600069', application_mode: :groupement)
+      end
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        grouping
+      end
+
+      it 'calls Candidate::CompleteGroupingMember instead of CompleteMarketApplication' do
+        expect(Candidate::CompleteGroupingMember).to receive(:call).with(market_application:).and_call_original
+        expect(CompleteMarketApplication).not_to receive(:call)
+
+        described_class.call(market_application, :summary, {})
+      end
+
+      it 'returns success without a sync_status redirect' do
+        result = described_class.call(market_application, :summary, {})
+
+        expect(result[:success]).to be true
+        expect(result[:redirect]).to be_nil
+      end
+
+      context 'when already completed' do
+        before { market_application.complete! }
+
+        it 'returns failure' do
+          result = described_class.call(market_application, :summary, {})
+
+          expect(result[:success]).to be false
         end
       end
     end

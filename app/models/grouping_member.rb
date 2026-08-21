@@ -24,6 +24,22 @@ class GroupingMember < ApplicationRecord
     invitation_token_created_at.present?
   end
 
+  def declared_lots
+    market_application&.lots || Lot.none
+  end
+
+  def mark_connected!
+    status_to_prepare! if status_invited?
+  end
+
+  def mark_in_progress!
+    status_in_progress! if status_to_prepare?
+  end
+
+  def mark_completed!
+    status_completed! unless status_completed?
+  end
+
   private
 
   def set_public_market

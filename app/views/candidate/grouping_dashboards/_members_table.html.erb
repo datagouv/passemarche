@@ -1,0 +1,51 @@
+<section class="fr-mb-3w">
+  <%= render 'section_title_with_edit',
+        title: t('candidate.grouping_dashboard.members_section_title'),
+        edit_path: grouping_wizard_step_candidate_market_application_path(market_application.identifier, :grouping_composition),
+        edit_title: t('candidate.grouping_dashboard.edit_members') %>
+
+  <div class="fr-table fr-mb-3w">
+    <table>
+      <colgroup>
+        <col style="width: 26%">
+        <col style="width: 14%">
+        <col style="width: 14%">
+        <col style="width: 14%">
+        <col style="width: 32%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_company') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_role') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_status') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_declared_lots') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_actions') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% presenter.members.each do |member| %>
+          <tr id="grouping_member_row_<%= member.id %>">
+            <td>
+              <strong><%= member.company_name.presence || member.siret %></strong><br>
+              <span class="fr-text--sm">SIRET <%= member.siret %></span>
+            </td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= member.mandataire? ? 'fr-badge--info fr-badge--no-icon' : '' %>">
+                <%= t("candidate.grouping_dashboard.role_#{member.role}") %>
+              </span>
+            </td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= 'fr-badge--success fr-badge--no-icon' if member.status_completed? %>">
+                <%= t("candidate.grouping_dashboard.status_#{member.status}") %>
+              </span>
+            </td>
+            <td><%= presenter.declared_lots_label(member) %></td>
+            <td>
+              <%= render 'member_actions', member:, market_application:, presenter: %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

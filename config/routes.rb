@@ -96,6 +96,9 @@ Rails.application.routes.draw do
         get 'lots', to: 'lot_selections#show', as: :lot_selection
         patch 'lots', to: 'lot_selections#update'
         get 'consultation', to: 'application_consultations#show', as: :consultation
+        get 'suivi', to: 'grouping_dashboards#show', as: :grouping_dashboard
+        post 'grouping_members/:id/regenerate_invitation_link',
+          to: 'grouping_dashboards#regenerate_invitation_link', as: :regenerate_grouping_dashboard_invitation_link
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'
         patch ':id', to: 'market_applications#update'
@@ -111,6 +114,7 @@ Rails.application.routes.draw do
   mount Lookbook::Engine, at: '/lookbook' if Rails.env.development? || Rails.env.sandbox?
 
   get 'robots.txt', to: 'robots_txt#show', as: :robots_txt
+  get 'favicon.ico', to: proc { [204, {}, []] }
 
   get 'up' => 'rails/health#show', as: :rails_health_check
 
