@@ -1,0 +1,15 @@
+<% public_market = market_application.public_market %>
+
+<div class="fr-background-alt--grey fr-p-3w fr-mb-4w">
+  <h2 class="fr-h6 fr-mb-2w"><%= t('candidate.grouping_dashboard.market_info_title') %></h2>
+  <dl style="display: grid; grid-template-columns: auto 1fr; row-gap: 8px; column-gap: 24px; margin: 0;">
+    <dt class="fr-text--sm fr-text--mention-grey" style="margin: 0;"><%= t('candidate.grouping_dashboard.market_name_label') %></dt>
+    <dd class="fr-text--sm" style="margin: 0;"><%= public_market.name %></dd>
+
+    <dt class="fr-text--sm fr-text--mention-grey" style="margin: 0;"><%= t('candidate.grouping_dashboard.buyer_label') %></dt>
+    <dd class="fr-text--sm" style="margin: 0;"><%= public_market.buyer_display_name %></dd>
+
+    <dt class="fr-text--sm fr-text--mention-grey" style="margin: 0;"><%= t('candidate.grouping_dashboard.deadline_label') %></dt>
+    <dd class="fr-text--sm" style="margin: 0;"><%= l(public_market.deadline, format: '%d/%m/%Y à %H:%M') %> (heure de Paris)</dd>
+  </dl>
+</div>

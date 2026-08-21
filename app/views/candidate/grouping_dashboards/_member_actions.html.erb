@@ -1,0 +1,35 @@
+<div id="grouping_member_actions_<%= member.id %>" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start;">
+  <% presenter.member_actions(member).each do |action| %>
+    <% case action %>
+    <% when :relaunch %>
+      <%= button_to t('candidate.grouping_dashboard.action_relaunch'),
+            regenerate_grouping_dashboard_invitation_link_candidate_market_application_path(market_application.identifier, member),
+            method: :post,
+            params: { notify: true },
+            form: { data: { turbo_stream: true } },
+            class: 'fr-btn fr-btn--sm fr-btn--secondary' %>
+    <% when :edit %>
+      <%= link_to t('candidate.grouping_dashboard.action_edit'),
+            step_candidate_market_application_path(member.market_application.identifier, :summary),
+            class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-edit-line fr-btn--icon-left' %>
+    <% when :consult %>
+      <%= link_to t('candidate.grouping_dashboard.action_consult'),
+            consultation_candidate_market_application_path(member.market_application.identifier),
+            class: 'fr-btn fr-btn--sm fr-btn--secondary' %>
+    <% when :prepare %>
+      <%= link_to t('candidate.grouping_dashboard.action_prepare'),
+            company_identification_candidate_market_application_path(member.market_application.identifier),
+            class: 'fr-btn fr-btn--sm fr-icon-arrow-right-line fr-btn--icon-right' %>
+    <% when :copy_link %>
+      <% if member.invitation_sent? %>
+        <div data-controller="clipboard" class="fr-inline-block">
+          <span class="fr-hidden" data-clipboard-target="text"><%= candidate_grouping_invitation_url(member.invitation_token) %></span>
+          <button type="button" data-clipboard-target="button" data-action="click->clipboard#copy"
+                  class="fr-btn fr-btn--sm fr-btn--secondary fr-icon-clipboard-line fr-btn--icon-left">
+            <%= t('candidate.grouping_dashboard.action_copy_link') %>
+          </button>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

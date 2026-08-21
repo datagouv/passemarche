@@ -1,0 +1,21 @@
+<% content_for :title, t('candidate.grouping_dashboard.title') %>
+
+<div class="fr-container fr-py-6w" style="max-width: 960px;">
+  <h1 class="fr-h2 fr-mb-1w"><%= t('candidate.grouping_dashboard.title') %></h1>
+  <p class="fr-text--sm fr-text--mention-grey fr-mb-4w"><%= t('candidate.grouping_dashboard.subtitle') %></p>
+
+  <%= render 'market_info', market_application: @market_application %>
+
+  <% if @presenter.mixed_scope? %>
+    <%= render 'solo_application_section', solo_application: @presenter.solo_counterpart %>
+  <% end %>
+
+  <%= render layout: 'bordered_block',
+        locals: { icon_class: 'fr-icon-team-fill', title: t('candidate.grouping_dashboard.groupement_application_title') } do %>
+    <div class="fr-px-2w fr-pb-2w">
+      <%= render 'lots_section', market_application: @market_application %>
+      <%= render 'members_table', presenter: @presenter, market_application: @market_application %>
+      <%= render 'submission_section', presenter: @presenter %>
+    </div>
+  <% end %>
+</div>
