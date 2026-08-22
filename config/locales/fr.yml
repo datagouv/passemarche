@@ -33,6 +33,15 @@ fr:
       market_intro: "Vous pouvez accéder au formulaire de candidature pour le marché :"
       cta_intro: "Cliquez sur le bouton ci-dessous pour vous reconnecter et continuer :"
       cta: Poursuivre ma candidature
+
+  grouping_invitation_mailer:
+    invitation:
+      subject: "Vous avez été invité à candidater en groupement"
+      greeting: Bonjour,
+      intro: "Vous avez été invité à rejoindre un groupement en tant que co-traitant pour candidater au marché :"
+      cta_intro: "Cliquez sur le bouton ci-dessous pour rejoindre le groupement :"
+      cta: Rejoindre le groupement
+
   source_types:
     authentic_source:
       label: Récupéré automatiquement
@@ -594,6 +603,9 @@ fr:
       mixte:
         label: "Candidater seul et en groupement"
         hint: "Je réponds seul sur certains lots et je suis mandataire du groupement sur d'autres"
+    grouping_invitations:
+      title: "Invitation au groupement"
+      pending: "Votre invitation est en cours de traitement."
     grouping_legal_types:
       title: "Le type de groupement"
       step_current: "Étape 1 sur 3"
@@ -613,6 +625,41 @@ fr:
       conjoint_mandataire_solidaire:
         label: "Conjoint + mandataire solidaire"
         hint: "Chaque membre est responsable de sa propre part du marché. En revanche, le mandataire est solidaire des autres membres : si l'un d'eux est défaillant, seul le mandataire devra répondre de ses obligations vis-à-vis de l'acheteur."
+    grouping_compositions:
+      title: "Les membres du groupement"
+      step_current: "Étape 2 sur 3"
+      step_next: "Étape suivante :"
+      step_next_label: "Confirmation de la composition"
+      intro: "Ajoutez les co-traitants qui candidateront avec vous. Les invitations ne partiront qu'après confirmation de la composition."
+      table_company: "Entreprise"
+      table_email: "Email"
+      table_role: "Rôle"
+      table_status: "Statut des invitations"
+      company_unknown: "Entreprise"
+      role_mandataire: "MANDATAIRE"
+      role_co_traitant: "CO-TRAITANT"
+      status_not_sent: "NON ENVOYÉ"
+      status_sent: "ENVOYÉ"
+      no_co_traitant_line1: "Aucun co-traitant dans le groupement pour l'instant."
+      no_co_traitant_line2: "Ajoutez au moins un co-traitant ci-dessous pour pouvoir continuer."
+      add_member_title: "Ajouter un co-traitant"
+      siret_label: "Numéro de SIRET"
+      siret_hint: "Consultez"
+      siret_hint_link: "l'annuaire des entreprises"
+      email_label: "Email du contact"
+      email_hint: "Destinataire de l'invitation"
+      add_button: "Ajouter au groupement"
+      remove_button: "Retirer"
+      back: "Précédent"
+      continue: "Continuer"
+      success: "Le groupement a été créé et les invitations ont été envoyées"
+      confirm:
+        title: "Récapitulatif du groupement"
+        step_current: "Étape 3 sur 3"
+        step_next_label: "Confirmation de la composition"
+        legal_type_label: "Type de groupement :"
+        modify: "Modifier la composition"
+        submit: "Confirmer et envoyer les invitations"
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez le ou les lots pour lequel/lesquels vous souhaitez soumettre une candidature."
@@ -657,12 +704,17 @@ fr:
     validations:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"
       siret_invalid: "Le numéro de SIRET saisi est invalide"
+      siret_same_as_mandataire: "Ce numéro de SIRET est celui de votre entreprise, vous faites déjà partie du groupement"
+      siret_already_added: "Ce numéro de SIRET a déjà été ajouté au groupement"
       email_blank: "Veuillez renseigner votre adresse email"
       email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
       already_mandataire: "Vous êtes déjà mandataire d'un groupement sur ce marché"
       application_mode_invalid: "Le mode de candidature sélectionné n'est pas valide"
       grouping_not_found: "Aucun groupement trouvé pour cette candidature"
       legal_type_invalid: "Le type de groupement sélectionné n'est pas valide"
+      grouping_member_not_found: "Ce co-traitant n'a pas été trouvé dans le groupement"
+      grouping_member_already_invited: "Ce co-traitant a déjà reçu son invitation, il ne peut plus être retiré"
+      no_co_traitant: "Veuillez ajouter au moins un co-traitant avant de continuer"
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
       no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
@@ -1414,6 +1466,7 @@ fr:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
         cannot_be_alone: "ne peut pas être seul"
+        same_as_mandataire: "correspond au SIRET du mandataire, vous faites déjà partie du groupement"
         inclusion: "n'est pas inclus dans la liste des valeurs autorisées"
         invalid: "n'est pas valide"
         blank: "ne peut pas être vide"

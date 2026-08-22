@@ -1,0 +1,51 @@
+<div id="grouping_member_form">
+  <div class="grouping-member-form fr-mb-3w">
+    <h2 class="fr-h6"><%= t('candidate.grouping_compositions.add_member_title') %></h2>
+
+    <%= form_with url: grouping_composition_members_candidate_market_application_path(market_application.identifier),
+                  method: :post,
+                  data: { turbo_stream: true, controller: "enable-on-fill" } do |form| %>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-md-6">
+          <div class="fr-input-group <%= 'fr-input-group--error' if errors&.dig(:siret) %>">
+            <label class="fr-label" for="grouping_member_siret">
+              <%= t('candidate.grouping_compositions.siret_label') %>
+              <span class="fr-hint-text">
+                <%= t('candidate.grouping_compositions.siret_hint') %>
+                <%= link_to t('candidate.grouping_compositions.siret_hint_link'),
+                      'https://annuaire-entreprises.data.gouv.fr/', target: "_blank", rel: "noopener" %>
+              </span>
+            </label>
+            <%= form.text_field :siret, value: grouping_member.siret, id: "grouping_member_siret",
+                  class: "fr-input #{'fr-input--error' if errors&.dig(:siret)}",
+                  data: { "enable-on-fill-target": "input", action: "input->enable-on-fill#toggle" } %>
+            <% if errors&.dig(:siret) %>
+              <p class="fr-error-text"><%= Array(errors[:siret]).first %></p>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="fr-col-12 fr-col-md-6">
+          <div class="fr-input-group <%= 'fr-input-group--error' if errors&.dig(:email) %>">
+            <label class="fr-label" for="grouping_member_email">
+              <%= t('candidate.grouping_compositions.email_label') %>
+              <span class="fr-hint-text"><%= t('candidate.grouping_compositions.email_hint') %></span>
+            </label>
+            <%= form.text_field :email, value: grouping_member.email, id: "grouping_member_email",
+                  class: "fr-input #{'fr-input--error' if errors&.dig(:email)}",
+                  data: { "enable-on-fill-target": "input", action: "input->enable-on-fill#toggle" } %>
+            <% if errors&.dig(:email) %>
+              <p class="fr-error-text"><%= Array(errors[:email]).first %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%= form.button t('candidate.grouping_compositions.add_button'),
+            type: "submit",
+            disabled: true,
+            class: "fr-btn fr-icon-user-add-line fr-btn--icon-left fr-mt-3w",
+            data: { "enable-on-fill-target": "submitButton" } %>
+    <% end %>
+  </div>
+</div>

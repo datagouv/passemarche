@@ -77,6 +77,7 @@ Rails.application.routes.draw do
 
   namespace :candidate do
     get 'dashboard', to: 'dashboards#index', as: :dashboard
+    get 'grouping_invitations/:token', to: 'grouping_invitations#show', as: :grouping_invitation
 
     resource :sessions, only: %i[new create destroy] do
       get :verify
@@ -90,6 +91,12 @@ Rails.application.routes.draw do
         patch 'application_mode', to: 'application_modes#update'
         get 'grouping_legal_type', to: 'grouping_legal_types#show', as: :grouping_legal_type
         patch 'grouping_legal_type', to: 'grouping_legal_types#update'
+        get 'grouping_composition', to: 'grouping_compositions#show', as: :grouping_composition
+        post 'grouping_composition/members', to: 'grouping_compositions#create_member', as: :grouping_composition_members
+        delete 'grouping_composition/members/:id', to: 'grouping_compositions#destroy_member', as: :grouping_composition_member
+        get 'grouping_composition_confirmation', to: 'grouping_composition_confirmations#show',
+          as: :grouping_composition_confirmation
+        patch 'grouping_composition_confirmation', to: 'grouping_composition_confirmations#update'
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection
