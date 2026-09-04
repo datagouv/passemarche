@@ -2,6 +2,8 @@
 
 module Candidate
   class SessionsController < Candidate::ApplicationController
+    include Candidate::WizardRoutable
+
     skip_before_action :require_candidate_authentication
 
     def new
@@ -38,23 +40,28 @@ module Candidate
 
     def sign_in_candidate(user, market_application)
       reconnection = market_application.user_id.present?
-      market_application.update!(user:) unless reconnection
+      link_candidate_to_application(user, market_application) unless reconnection
       session[:user_id] = user.id
       session[:market_application_identifier] = market_application.identifier
       redirect_to first_step_path(market_application)
     end
 
+    def link_candidate_to_application(user, market_application)
+      counterpart = market_application.groupement_counterpart || market_application.solo_counterpart
+      market_application.update!(user:)
+      counterpart&.update!(user:)
+    end
+
     def first_step_path(market_application)
-      if market_application.completed?
-        return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
+      return completed_application_path(market_application) if market_application.completed?
 
-        return candidate_sync_status_path(market_application.identifier)
-      end
+      next_required_wizard_step_path(market_application)
+    end
 
-      return application_mode_candidate_market_application_path(market_application.identifier) if market_application.application_mode_choice_required?
-      return grouping_legal_type_candidate_market_application_path(market_application.identifier) if market_application.grouping_legal_type_choice_required?
+    def completed_application_path(market_application)
+      return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
 
-      company_identification_candidate_market_application_path(market_application.identifier)
+      candidate_sync_status_path(market_application.identifier)
     end
 
     def handle_magic_link_sent(result)

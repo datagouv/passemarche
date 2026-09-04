@@ -8,7 +8,9 @@ module Candidate
     prepend_before_action :find_market_application
     before_action :redirect_unless_mandataire
 
-    def show; end
+    def show
+      @grouping = presenter.grouping
+    end
 
     def update
       result = Candidate::SetGroupingLegalType.call(
@@ -18,6 +20,7 @@ module Candidate
 
       return handle_success if result.success?
 
+      @grouping = presenter.grouping
       @errors = result.errors
       render :show, status: :unprocessable_content
     end
@@ -31,10 +34,13 @@ module Candidate
     end
 
     def redirect_unless_mandataire
-      @grouping = Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: @market_application.id })
-      return if @grouping
+      return if presenter.grouping
 
       redirect_to application_mode_candidate_market_application_path(@market_application.identifier)
+    end
+
+    def presenter
+      @presenter ||= Candidate::GroupingLegalTypePresenter.new(@market_application)
     end
 
     def handle_success

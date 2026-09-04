@@ -103,6 +103,16 @@ RSpec.describe Candidate::CreateApplicationsForMode, type: :interactor do
         expect(Grouping.count).to eq(1)
         expect(Grouping.last.mandataire_market_application).to eq(result.market_application)
       end
+
+      context 'when the candidate is already authenticated on the solo application' do
+        let(:user) { create(:user) }
+        let!(:market_application) { create(:market_application, public_market:, siret:, user:) }
+
+        it 'links the groupement counterpart to the same user' do
+          result = subject
+          expect(result.market_application.user).to eq(user)
+        end
+      end
     end
 
     context 'when mixte mode finds an existing groupement application owned by another user' do

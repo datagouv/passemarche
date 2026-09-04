@@ -47,6 +47,19 @@ When('I visit the magic link') do
   )
 end
 
+When('I request a new magic link for the groupement application') do
+  visit new_candidate_sessions_path(market_application_id: @groupement_market_application.identifier)
+  fill_in I18n.t('candidate.sessions.new.email_label'), with: @user.email
+  find_button(I18n.t('candidate.sessions.new.submit'), disabled: false).click
+  expect(page).to have_current_path(sent_candidate_sessions_path, ignore_query: true)
+end
+
+When('I click the link from the latest email') do
+  mail = ActionMailer::Base.deliveries.last
+  url = mail.text_part.body.decoded[%r{https?://\S+}]
+  visit URI(url).request_uri
+end
+
 Then('I should see the authentication form') do
   expect(page).to have_selector('form[action*="candidate/sessions"]')
 end
