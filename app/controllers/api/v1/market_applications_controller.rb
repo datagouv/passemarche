@@ -75,16 +75,22 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def application_url_for(market_application)
-    if market_application.application_mode_choice_required?
-      return Rails.application.routes.url_helpers.application_mode_candidate_market_application_url(
-        market_application.identifier
-      )
-    end
+    target, step = market_application.next_required_wizard_step
+    return wizard_step_url(target, step) if target
 
     Rails.application.routes.url_helpers.step_candidate_market_application_url(
       market_application.identifier,
       :company_identification
     )
+  end
+
+  def wizard_step_url(market_application, step)
+    case step
+    when :application_mode
+      Rails.application.routes.url_helpers.application_mode_candidate_market_application_url(market_application.identifier)
+    when :grouping_legal_type
+      Rails.application.routes.url_helpers.grouping_legal_type_candidate_market_application_url(market_application.identifier)
+    end
   end
 
   def validate_application_completed

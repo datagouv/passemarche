@@ -53,8 +53,40 @@ class MarketApplication < ApplicationRecord
   end
 
   def grouping_legal_type_choice_required?
+    return false if completed?
+
     FeatureFlags::Groupement.enabled? && groupement? &&
       Grouping.joins(:mandataire_market_application).exists?(legal_type: nil, market_applications: { id: })
+  end
+
+  def already_mandataire_elsewhere?
+    Grouping
+      .joins(:mandataire_market_application)
+      .where(public_market:, market_applications: { siret: })
+      .where.not(market_applications: { id: })
+      .exists?
+  end
+
+  def groupement_counterpart
+    return nil if groupement?
+
+    MarketApplication.where(public_market:, siret:, application_mode: :groupement, user_id:).where.not(id:).first
+  end
+
+  def solo_counterpart
+    return nil if solo?
+
+    MarketApplication.where(public_market:, siret:, application_mode: :solo, user_id:).where.not(id:).first
+  end
+
+  def next_required_wizard_step
+    return nil unless FeatureFlags::Groupement.enabled?
+    return [self, :application_mode] if application_mode_choice_required?
+
+    target = groupement_counterpart || self
+    return [target, :grouping_legal_type] if target.grouping_legal_type_choice_required?
+
+    nil
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
