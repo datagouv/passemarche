@@ -59,6 +59,14 @@ class MarketApplication < ApplicationRecord
       Grouping.joins(:mandataire_market_application).exists?(legal_type: nil, market_applications: { id: })
   end
 
+  def already_mandataire_elsewhere?
+    Grouping
+      .joins(:mandataire_market_application)
+      .where(public_market:, market_applications: { siret: })
+      .where.not(market_applications: { id: })
+      .exists?
+  end
+
   def groupement_counterpart
     return nil if groupement?
 

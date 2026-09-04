@@ -7,11 +7,7 @@ module Candidate
     end
 
     def already_mandataire?
-      Grouping
-        .joins(:mandataire_market_application)
-        .where(public_market: market_application.public_market, market_applications: { siret: market_application.siret })
-        .where.not(market_applications: { id: market_application.id })
-        .exists?
+      market_application.already_mandataire_elsewhere?
     end
 
     def readonly?

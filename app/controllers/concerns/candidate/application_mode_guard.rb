@@ -14,7 +14,10 @@ module Candidate
     def redirect_to_application_mode_choice
       return unless @market_application
 
-      redirect_to next_required_wizard_step_path(@market_application) if @market_application.next_required_wizard_step
+      target, step = @market_application.next_required_wizard_step
+      return unless target
+
+      redirect_to wizard_step_path(target, step)
     end
   end
 end

@@ -24,6 +24,13 @@ RSpec.describe 'Candidate::GroupingLegalTypes', type: :request do
   end
 
   describe 'GET .../grouping_legal_type' do
+    it 'returns 404 when the feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+
+      get grouping_legal_type_candidate_market_application_path(market_application.identifier)
+      expect(response).to have_http_status(:not_found)
+    end
+
     context 'when the market_application is mandataire of a grouping' do
       before do
         market_application.update!(application_mode: :groupement)

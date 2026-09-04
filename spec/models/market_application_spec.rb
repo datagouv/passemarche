@@ -214,6 +214,24 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#already_mandataire_elsewhere?' do
+    let(:siret) { '73282932000074' }
+
+    it 'returns true when another application for the same SIRET and market is mandataire of a grouping' do
+      mandataire_application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(application.already_mandataire_elsewhere?).to be true
+    end
+
+    it 'returns false when no other application is mandataire' do
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(application.already_mandataire_elsewhere?).to be false
+    end
+  end
+
   describe '#groupement_counterpart' do
     let(:siret) { '73282932000074' }
 

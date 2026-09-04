@@ -10,22 +10,14 @@ RSpec.describe Candidate::ApplicationModePresenter, type: :presenter do
   before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 
   describe '#already_mandataire?' do
-    it 'returns true when another application for the same SIRET and market is mandataire of a grouping' do
-      mandataire_application = create(:market_application, public_market:, siret:, application_mode: :groupement)
-      create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+    it 'delegates to MarketApplication#already_mandataire_elsewhere?' do
       application = create(:market_application, public_market:, siret:, application_mode: :solo)
+      allow(application).to receive(:already_mandataire_elsewhere?).and_return(true)
 
       presenter = described_class.new(application)
 
       expect(presenter.already_mandataire?).to be true
-    end
-
-    it 'returns false when no other application is mandataire' do
-      application = create(:market_application, public_market:, siret:, application_mode: :solo)
-
-      presenter = described_class.new(application)
-
-      expect(presenter.already_mandataire?).to be false
+      expect(application).to have_received(:already_mandataire_elsewhere?)
     end
   end
 
