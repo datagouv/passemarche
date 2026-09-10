@@ -11,9 +11,17 @@ module Candidate
     before_action :redirect_unless_legal_type_set
 
     def show
-      resolve_mandataire_company_name
+      enqueue_pending_company_name_resolutions
       @grouping = grouping
       @grouping_member = GroupingMember.new
+
+      respond_to do |format|
+        format.html
+        format.json do
+          set_no_cache_headers
+          render json: { company_names_pending: company_names_pending? }
+        end
+      end
     end
 
     def create_member
@@ -60,12 +68,14 @@ module Candidate
       redirect_to grouping_legal_type_candidate_market_application_path(@market_application.identifier)
     end
 
-    def resolve_mandataire_company_name
-      mandataire_member = grouping.grouping_members.mandataire.first
-      return if mandataire_member.nil? || mandataire_member.company_name.present?
+    def enqueue_pending_company_name_resolutions
+      grouping.grouping_members.where(company_name: nil).find_each do |member|
+        ResolveGroupingMemberCompanyNameJob.perform_later(member.id)
+      end
+    end
 
-      result = FetchRaisonSociale.call(siret: mandataire_member.siret)
-      mandataire_member.update(company_name: result.raison_sociale) if result.success?
+    def company_names_pending?
+      grouping.grouping_members.exists?(company_name: nil)
     end
 
     def assign_create_member_result(result)

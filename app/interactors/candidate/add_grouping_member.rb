@@ -12,24 +12,10 @@ module Candidate
 
     def create_member
       member = grouping.grouping_members.new(role: :co_traitant, siret:, email:)
-      return context.fail!(errors: errors_from(member)) unless member.valid?
+      return context.fail!(errors: errors_from(member)) unless member.save
 
-      member.company_name = fetch_company_name
-      save_member(member)
-    end
-
-    def save_member(member)
-      return context.grouping_member = member if member.save
-
-      context.fail!(errors: errors_from(member))
-    end
-
-    def fetch_company_name
-      result = FetchRaisonSociale.call(siret:)
-      result.raison_sociale if result.success?
-    rescue StandardError => e
-      Sentry.capture_exception(e)
-      nil
+      ResolveGroupingMemberCompanyNameJob.perform_later(member.id)
+      context.grouping_member = member
     end
 
     def errors_from(record)

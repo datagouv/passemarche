@@ -23,12 +23,6 @@ RSpec.describe Candidate::AddGroupingMember, type: :interactor do
     let(:email) { 'contact@menuiseries-loire.fr' }
 
     context 'when the SIRET and email are valid and the SIRET is not already in the grouping' do
-      before do
-        allow(FetchRaisonSociale).to receive(:call).and_return(
-          OpenStruct.new(success?: true, raison_sociale: 'MENUISERIES DE LOIRE SARL')
-        )
-      end
-
       it 'succeeds' do
         expect(result).to be_success
       end
@@ -37,44 +31,18 @@ RSpec.describe Candidate::AddGroupingMember, type: :interactor do
         expect { result }.to change { grouping.grouping_members.co_traitant.count }.by(1)
       end
 
-      it 'stores the resolved company name' do
+      it 'does not resolve the company name synchronously' do
         member = result.grouping_member
-        expect(member.company_name).to eq('MENUISERIES DE LOIRE SARL')
+        expect(member.company_name).to be_nil
+      end
+
+      it 'enqueues a job to resolve the company name' do
+        expect { result }.to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
       end
 
       it 'does not send an invitation yet' do
         member = result.grouping_member
         expect(member.invitation_sent?).to be false
-      end
-    end
-
-    context 'when the company name API call fails' do
-      before do
-        allow(FetchRaisonSociale).to receive(:call).and_return(
-          OpenStruct.new(success?: false, raison_sociale: nil)
-        )
-      end
-
-      it 'still succeeds and creates the member without a company name' do
-        expect(result).to be_success
-        expect(result.grouping_member.company_name).to be_nil
-      end
-    end
-
-    context 'when the company name API call raises (network error, WebMock, ...)' do
-      before do
-        allow(FetchRaisonSociale).to receive(:call).and_raise(SocketError, 'connection failed')
-        allow(Sentry).to receive(:capture_exception)
-      end
-
-      it 'still succeeds and creates the member without a company name' do
-        expect(result).to be_success
-        expect(result.grouping_member.company_name).to be_nil
-      end
-
-      it 'reports the exception to Sentry' do
-        result
-        expect(Sentry).to have_received(:capture_exception)
       end
     end
 

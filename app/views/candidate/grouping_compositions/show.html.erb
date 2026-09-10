@@ -18,7 +18,11 @@
   <h2 class="fr-h1 fr-mb-1w"><%= t('candidate.grouping_compositions.title') %></h2>
   <p class="fr-mb-4w"><%= t('candidate.grouping_compositions.intro') %></p>
 
-  <%= render 'members_table', grouping: @grouping, market_application: @market_application, editable: true %>
+  <div data-controller="company-name-resolution"
+       data-company-name-resolution-url-value="<%= grouping_composition_candidate_market_application_path(@market_application.identifier, format: :json) %>"
+       data-company-name-resolution-pending-value="<%= @grouping.grouping_members.exists?(company_name: nil) %>">
+    <%= render 'members_table', grouping: @grouping, market_application: @market_application, editable: true %>
+  </div>
   <%= render 'member_form', grouping: @grouping, market_application: @market_application, grouping_member: @grouping_member, errors: @errors %>
 
   <%= render 'composition_actions', grouping: @grouping %>
