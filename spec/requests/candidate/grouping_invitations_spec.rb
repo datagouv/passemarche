@@ -12,7 +12,10 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
     create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
   end
 
-  before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+  before do
+    allow(SiretValidator).to receive(:valid?).and_return(true)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+  end
 
   describe 'GET /candidate/grouping_invitations/:token' do
     context 'when the token matches an invited grouping member' do
@@ -31,6 +34,21 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
     context 'when the token does not match any grouping member' do
       it 'returns a 404' do
         get candidate_grouping_invitation_path('unknown-token')
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when the groupement feature is disabled' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false) }
+
+      it 'returns a 404 even for a valid token' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
 
         expect(response).to have_http_status(:not_found)
       end
