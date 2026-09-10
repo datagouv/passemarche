@@ -705,7 +705,6 @@ fr:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"
       siret_invalid: "Le numéro de SIRET saisi est invalide"
       siret_same_as_mandataire: "Ce numéro de SIRET est celui de votre entreprise, vous faites déjà partie du groupement"
-      siret_already_added: "Ce numéro de SIRET a déjà été ajouté au groupement"
       email_blank: "Veuillez renseigner votre adresse email"
       email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
       already_mandataire: "Vous êtes déjà mandataire d'un groupement sur ce marché"
@@ -1524,6 +1523,16 @@ fr:
               invalid: "Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie."
             application_mode:
               immutable: "ne peut plus être modifié une fois choisi"
+        grouping_member:
+          attributes:
+            siret:
+              blank: "Veuillez renseigner votre numéro de SIRET"
+              invalid: "Le numéro de SIRET saisi est invalide"
+              same_as_mandataire: "Ce numéro de SIRET est celui de votre entreprise, vous faites déjà partie du groupement"
+              taken: "Ce numéro de SIRET a déjà été ajouté au groupement"
+            email:
+              blank: "Veuillez renseigner votre adresse email"
+              invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
         market_attribute_response:
           attributes:
             documents:
