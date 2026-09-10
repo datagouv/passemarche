@@ -8,6 +8,7 @@ module Candidate
 
     prepend_before_action :find_market_application
     before_action :redirect_unless_mandataire
+    before_action :redirect_unless_legal_type_set
 
     def show
       resolve_mandataire_company_name
@@ -51,6 +52,12 @@ module Candidate
       return if grouping
 
       redirect_to application_mode_candidate_market_application_path(@market_application.identifier)
+    end
+
+    def redirect_unless_legal_type_set
+      return if grouping.legal_type.present?
+
+      redirect_to grouping_legal_type_candidate_market_application_path(@market_application.identifier)
     end
 
     def resolve_mandataire_company_name
