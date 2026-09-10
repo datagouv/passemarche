@@ -18,6 +18,8 @@
   <h2 class="fr-h1 fr-mb-1w"><%= t('candidate.grouping_compositions.title') %></h2>
   <p class="fr-mb-4w"><%= t('candidate.grouping_compositions.intro') %></p>
 
+  <%= render 'removal_errors', errors: nil %>
+
   <div data-controller="company-name-resolution"
        data-company-name-resolution-url-value="<%= grouping_composition_candidate_market_application_path(@market_application.identifier, format: :json) %>"
        data-company-name-resolution-pending-value="<%= @grouping.grouping_members.exists?(company_name: nil) %>">

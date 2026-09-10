@@ -32,20 +32,9 @@ module Candidate
     end
 
     def destroy_member
-      Candidate::RemoveGroupingMember.call(grouping:, grouping_member_id: params[:id])
+      result = Candidate::RemoveGroupingMember.call(grouping:, grouping_member_id: params[:id])
 
-      render turbo_stream: [
-        turbo_stream.replace(
-          'grouping_members_table',
-          partial: 'candidate/grouping_compositions/members_table',
-          locals: { grouping:, market_application: @market_application, editable: true }
-        ),
-        turbo_stream.replace(
-          'grouping_composition_actions',
-          partial: 'candidate/grouping_compositions/composition_actions',
-          locals: { grouping: }
-        )
-      ]
+      render turbo_stream: destroy_member_turbo_streams(result), status: result.success? ? :ok : :unprocessable_content
     end
 
     private
@@ -98,6 +87,26 @@ module Candidate
           'grouping_member_form',
           partial: 'candidate/grouping_compositions/member_form',
           locals: { grouping:, market_application: @market_application, grouping_member: @grouping_member, errors: @errors }
+        ),
+        turbo_stream.replace(
+          'grouping_composition_actions',
+          partial: 'candidate/grouping_compositions/composition_actions',
+          locals: { grouping: }
+        )
+      ]
+    end
+
+    def destroy_member_turbo_streams(result)
+      [
+        turbo_stream.replace(
+          'grouping_member_removal_errors',
+          partial: 'candidate/grouping_compositions/removal_errors',
+          locals: { errors: result.success? ? nil : result.errors }
+        ),
+        turbo_stream.replace(
+          'grouping_members_table',
+          partial: 'candidate/grouping_compositions/members_table',
+          locals: { grouping:, market_application: @market_application, editable: true }
         ),
         turbo_stream.replace(
           'grouping_composition_actions',
