@@ -79,6 +79,19 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
         expect(response).to redirect_to(application_mode_candidate_market_application_path(market_application.identifier))
       end
     end
+
+    context 'when the grouping has no legal_type yet' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil)
+      end
+
+      it 'redirects to grouping_legal_type instead of rendering the composition step' do
+        get grouping_composition_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(grouping_legal_type_candidate_market_application_path(market_application.identifier))
+      end
+    end
   end
 
   describe 'POST .../grouping_composition/members' do
