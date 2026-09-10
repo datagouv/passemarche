@@ -650,6 +650,7 @@ fr:
       email_hint: "Destinataire de l'invitation"
       add_button: "Ajouter au groupement"
       remove_button: "Retirer"
+      removal_error_title: "Impossible de retirer ce co-traitant"
       back: "Précédent"
       continue: "Continuer"
       success: "Le groupement a été créé et les invitations ont été envoyées"

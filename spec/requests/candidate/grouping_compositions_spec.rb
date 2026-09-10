@@ -166,5 +166,28 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
       expect(response).to have_http_status(:ok)
       expect(GroupingMember.exists?(member.id)).to be false
     end
+
+    context 'when the member has already received an invitation' do
+      let!(:member) { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current) }
+
+      it 'does not remove the member and renders an error, with an unprocessable status' do
+        delete grouping_composition_member_candidate_market_application_path(market_application.identifier, member.id),
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(GroupingMember.exists?(member.id)).to be true
+        expect(response.parsed_body).to include(CGI.escapeHTML(I18n.t('candidate.validations.grouping_member_already_invited')))
+      end
+    end
+
+    context 'when the member does not exist' do
+      it 'renders an error with an unprocessable status' do
+        delete grouping_composition_member_candidate_market_application_path(market_application.identifier, -1),
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body).to include(CGI.escapeHTML(I18n.t('candidate.validations.grouping_member_not_found')))
+      end
+    end
   end
 end
