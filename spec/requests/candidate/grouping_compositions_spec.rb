@@ -36,22 +36,16 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
       let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint) }
       let!(:mandataire_member) { grouping.mandataire_grouping_member.tap { |m| m.update!(company_name: nil) } }
 
-      before do
-        allow(FetchRaisonSociale).to receive(:call).and_return(
-          OpenStruct.new(success?: true, raison_sociale: 'ATLANTIQUE BÂTIMENT SAS')
-        )
-      end
-
-      it 'resolves and persists the company name' do
+      it 'does not resolve the company name synchronously' do
         get grouping_composition_candidate_market_application_path(market_application.identifier)
 
-        expect(mandataire_member.reload.company_name).to eq('ATLANTIQUE BÂTIMENT SAS')
+        expect(response).to have_http_status(:ok)
+        expect(mandataire_member.reload.company_name).to be_nil
       end
 
-      it 'displays the resolved company name' do
-        get grouping_composition_candidate_market_application_path(market_application.identifier)
-
-        expect(response.body).to include('ATLANTIQUE BÂTIMENT SAS')
+      it 'enqueues a job to resolve the company name' do
+        expect { get grouping_composition_candidate_market_application_path(market_application.identifier) }
+          .to have_enqueued_job(ResolveGroupingMemberCompanyNameJob).with(mandataire_member.id)
       end
     end
 
@@ -63,12 +57,37 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
         grouping.mandataire_grouping_member.tap { |m| m.update!(company_name: 'ATLANTIQUE BÂTIMENT SAS') }
       end
 
-      it 'does not call the API again' do
-        allow(FetchRaisonSociale).to receive(:call)
-
+      it 'displays the stored company name' do
         get grouping_composition_candidate_market_application_path(market_application.identifier)
 
-        expect(FetchRaisonSociale).not_to have_received(:call)
+        expect(response.body).to include('ATLANTIQUE BÂTIMENT SAS')
+      end
+
+      it 'does not enqueue a resolution job' do
+        expect { get grouping_composition_candidate_market_application_path(market_application.identifier) }
+          .not_to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
+      end
+    end
+
+    context 'when requesting the json format' do
+      before { market_application.update!(application_mode: :groupement) }
+
+      let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint) }
+
+      it 'reports company_names_pending true while the mandataire company_name is unresolved' do
+        grouping.mandataire_grouping_member.update!(company_name: nil)
+
+        get grouping_composition_candidate_market_application_path(market_application.identifier, format: :json)
+
+        expect(response.parsed_body).to eq('company_names_pending' => true)
+      end
+
+      it 'reports company_names_pending false once all company_names are resolved' do
+        grouping.mandataire_grouping_member.update!(company_name: 'ATLANTIQUE BÂTIMENT SAS')
+
+        get grouping_composition_candidate_market_application_path(market_application.identifier, format: :json)
+
+        expect(response.parsed_body).to eq('company_names_pending' => false)
       end
     end
 
@@ -101,12 +120,6 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
       create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
     end
 
-    before do
-      allow(FetchRaisonSociale).to receive(:call).and_return(
-        OpenStruct.new(success?: true, raison_sociale: 'MENUISERIES DE LOIRE SARL')
-      )
-    end
-
     it 'creates a co_traitant member and returns a turbo stream response' do
       post grouping_composition_members_candidate_market_application_path(market_application.identifier),
         params: { siret: '80245139600027', email: 'contact@menuiseries-loire.fr' },
@@ -115,6 +128,14 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.media_type).to eq('text/vnd.turbo-stream.html')
       expect(grouping.grouping_members.co_traitant.count).to eq(1)
+    end
+
+    it 'enqueues a job to resolve the new member company name' do
+      expect do
+        post grouping_composition_members_candidate_market_application_path(market_application.identifier),
+          params: { siret: '80245139600027', email: 'contact@menuiseries-loire.fr' },
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+      end.to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
     end
 
     it 'renders errors inline without creating a member when the siret is invalid' do
