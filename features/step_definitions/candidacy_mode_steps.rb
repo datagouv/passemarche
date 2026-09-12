@@ -37,6 +37,13 @@ Then('I should be on the grouping legal type step') do
   )
 end
 
+Then('I should be on the grouping composition step') do
+  expect(page).to have_current_path(
+    grouping_composition_candidate_market_application_path(@market_application.identifier),
+    ignore_query: true
+  )
+end
+
 Then('I should be on the candidacy mode choice step') do
   expect(page).to have_current_path(
     application_mode_candidate_market_application_path(@market_application.identifier),

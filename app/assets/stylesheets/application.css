@@ -1017,3 +1017,52 @@
   display: flex;
   justify-content: space-between;
 }
+
+.grouping-legal-type-actions .fr-btn[aria-disabled="true"] {
+  background-color: var(--background-disabled-grey);
+  color: var(--text-disabled-grey);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.grouping-member-form {
+  background-color: var(--background-alt-blue-france);
+  border-left: 4px solid var(--border-plain-blue-france);
+  padding: 32px 40px;
+}
+
+#grouping_members_table .fr-table,
+#grouping_members_table .fr-table__wrapper,
+#grouping_members_table .fr-table__container,
+#grouping_members_table .fr-table__content {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  border: none !important;
+}
+
+#grouping_members_table table {
+  display: table !important;
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #ddd) !important;
+}
+
+#grouping_members_table th,
+#grouping_members_table td {
+  border: none !important;
+  background-image: none !important;
+  border-bottom: 1px solid var(--light-decisions-border-border-default-grey, #ddd) !important;
+}
+
+#grouping_members_table thead,
+#grouping_members_table tbody,
+#grouping_members_table tbody::after,
+#grouping_members_table thead::after {
+  background-image: none !important;
+}
+
+#grouping_members_table tbody tr {
+  background-color: var(--background-default-grey, #fff) !important;
+}
