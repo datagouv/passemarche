@@ -10,7 +10,7 @@ Before do
       body: {
         data: {
           unite_legale: {
-            personne_morale_attributs: { raison_sociale: nil }
+            personne_morale_attributs: { raison_sociale: 'Entreprise Test' }
           }
         }
       }.to_json,

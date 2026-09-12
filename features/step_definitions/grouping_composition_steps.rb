@@ -5,7 +5,8 @@ When('I add a co-traitant with SIRET {string} and email {string}') do |siret, em
   fill_in I18n.t('candidate.grouping_compositions.email_label'), with: email
   find_button(I18n.t('candidate.grouping_compositions.add_button'), disabled: false).click
 
-  within('#grouping_members_table') { page.has_content?(siret) } || page.has_css?('.fr-error-text')
+  member_added_or_rejected = within('#grouping_members_table') { page.has_content?(siret) } || page.has_css?('.fr-error-text')
+  expect(member_added_or_rejected).to be true
 end
 
 When('I remove the co-traitant {string}') do |siret|
