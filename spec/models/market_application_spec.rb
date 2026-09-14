@@ -455,6 +455,40 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#step_after_application_mode' do
+    it 'returns company_identification when the mode is solo' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.step_after_application_mode).to eq([application, :company_identification])
+    end
+
+    it 'returns lot_selection_mode on the groupement counterpart when the market has lots' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(solo.step_after_application_mode).to eq([groupement, :lot_selection_mode])
+    end
+
+    it 'returns grouping_legal_type on the groupement counterpart when the market has no lots' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+
+      expect(solo.step_after_application_mode).to eq([groupement, :grouping_legal_type])
+    end
+
+    it 'still returns lot_selection_mode even when the lots have already been assigned' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      lot = create(:lot, public_market:)
+      application.lots << lot
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+
+      expect(application.step_after_application_mode).to eq([application, :lot_selection_mode])
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)
