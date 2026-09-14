@@ -102,7 +102,7 @@ GEM
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bootsnap (1.25.0)
+    bootsnap (1.26.0)
       msgpack (~> 1.5)
     builder (3.3.0)
     byebug (13.0.0)
@@ -292,7 +292,7 @@ GEM
       railties (>= 7.1)
       stimulus-rails
       turbo-rails
-    msgpack (1.8.4)
+    msgpack (1.8.5)
     multi_test (1.1.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
