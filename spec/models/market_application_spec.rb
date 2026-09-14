@@ -275,6 +275,92 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#lot_selection_mode_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    it 'returns false when the mode is not groupement' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    it 'returns false when the public market has no lots' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    it 'returns false when the application is already completed' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, :completed, public_market:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    context 'in groupement-only mode (no solo counterpart)' do
+      it 'returns true when no lot has been assigned yet' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        application = create(:market_application, public_market:, application_mode: :groupement)
+        create(:lot, public_market:)
+
+        expect(application.lot_selection_mode_choice_required?).to be true
+      end
+
+      it 'returns false once at least one lot has been assigned' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        application = create(:market_application, public_market:, application_mode: :groupement)
+        lot = create(:lot, public_market:)
+        application.lots << lot
+
+        expect(application.lot_selection_mode_choice_required?).to be false
+      end
+    end
+
+    context 'in mixte mode (solo counterpart exists)' do
+      let(:siret) { '73282932000074' }
+
+      it 'returns true when the groupement application has no lot assigned yet' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        create(:market_application, public_market:, siret:, application_mode: :solo)
+        application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+        create(:lot, public_market:)
+
+        expect(application.lot_selection_mode_choice_required?).to be true
+      end
+
+      it 'returns true when the solo application has no lot assigned yet, even if the groupement one has' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        create(:market_application, public_market:, siret:, application_mode: :solo)
+        application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+        lot = create(:lot, public_market:)
+        application.lots << lot
+
+        expect(application.lot_selection_mode_choice_required?).to be true
+      end
+
+      it 'returns false once both the solo and groupement applications have at least one lot assigned' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+        application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+        lot1 = create(:lot, public_market:)
+        lot2 = create(:lot, public_market:)
+        solo.lots << lot1
+        application.lots << lot2
+
+        expect(application.lot_selection_mode_choice_required?).to be false
+      end
+    end
+  end
+
   describe '#groupement_counterpart' do
     let(:siret) { '73282932000074' }
 
@@ -322,7 +408,17 @@ RSpec.describe MarketApplication, type: :model do
       expect(application.next_required_wizard_step).to eq([application, :application_mode])
     end
 
-    it 'returns grouping_legal_type on the groupement counterpart for a mixte solo application' do
+    it 'returns lot_selection_mode on the groupement counterpart for a mixte solo application when the market has lots' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(solo.next_required_wizard_step).to eq([groupement, :lot_selection_mode])
+    end
+
+    it 'returns grouping_legal_type on the groupement counterpart when the market has no lots' do
       allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
       siret = '73282932000074'
       solo = create(:market_application, public_market:, siret:, application_mode: :solo)
@@ -330,6 +426,16 @@ RSpec.describe MarketApplication, type: :model do
       create(:grouping, public_market:, mandataire_market_application: groupement, legal_type: nil)
 
       expect(solo.next_required_wizard_step).to eq([groupement, :grouping_legal_type])
+    end
+
+    it 'returns grouping_legal_type once lots have been assigned' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      lot = create(:lot, public_market:)
+      application.lots << lot
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.next_required_wizard_step).to eq([application, :grouping_legal_type])
     end
 
     it 'returns grouping_composition when the legal_type is chosen but no invitation has been sent' do
