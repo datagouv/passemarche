@@ -1,0 +1,18 @@
+<%= render layout: 'bordered_block',
+      locals: { icon_class: 'fr-icon-user-fill', title: t('candidate.grouping_dashboard.solo_application_title') } do %>
+  <div class="fr-p-4w">
+    <span class="fr-badge fr-badge--xs <%= 'fr-badge--success fr-badge--no-icon' if solo_application.completed? %> fr-mb-2w">
+      <%= t("candidate.grouping_dashboard.status_#{solo_application.completed? ? 'completed' : 'to_prepare'}") %>
+    </span>
+    <p class="fr-text--bold fr-mb-1w" style="color: var(--text-action-high-blue-france, #000091);"><%= t('candidate.grouping_dashboard.solo_application_name') %></p>
+    <p class="fr-text--sm fr-text--mention-grey fr-mb-3w">
+      <%= t('candidate.grouping_dashboard.lots_count', count: solo_application.lots.count) %>
+    </p>
+
+    <div style="display: flex; justify-content: flex-end;">
+      <%= link_to t('candidate.grouping_dashboard.prepare_my_application'),
+            company_identification_candidate_market_application_path(solo_application.identifier),
+            class: 'fr-btn fr-btn--sm' %>
+    </div>
+  </div>
+<% end %>

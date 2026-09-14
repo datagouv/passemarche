@@ -78,8 +78,11 @@ class MarketApplication < ApplicationRecord
   end
 
   def mandataire_grouping
-    Grouping.joins(:mandataire_grouping_member)
-      .find_by(mandataire_grouping_member: { market_application_id: id })
+    Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: })
+  end
+
+  def mandataire_of_grouping?
+    groupement? && !!grouping_member&.mandataire?
   end
 
   def lot_selection_mode_choice_required?
