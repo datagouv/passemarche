@@ -18,6 +18,8 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
     case step
     when :application_mode
       application_mode_candidate_market_application_path(market_application.identifier)
+    when :lot_selection_mode
+      lot_selection_mode_candidate_market_application_path(market_application.identifier)
     when :grouping_legal_type
       grouping_legal_type_candidate_market_application_path(market_application.identifier)
     end
@@ -292,14 +294,15 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
         market_application.update!(application_mode: :solo)
         grouping = create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: :conjoint)
         create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+        create(:lot, public_market:)
       end
 
-      it 'points the continue link to its own company_identification step' do
+      it 'points the continue link back to the groupement counterpart lot_selection_mode step, not skipping it' do
         get wizard_step_path(market_application, :application_mode), params: { readonly: true }
 
         rendered = Nokogiri::HTML(response.body)
         link = rendered.at_css('a.fr-icon-arrow-right-line')
-        expect(link['href']).to eq(company_identification_candidate_market_application_path(market_application.identifier))
+        expect(link['href']).to eq(wizard_step_path(groupement_application, :lot_selection_mode))
       end
     end
   end

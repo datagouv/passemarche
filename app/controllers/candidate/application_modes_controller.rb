@@ -12,7 +12,7 @@ module Candidate
     def show
       @already_mandataire = presenter.already_mandataire?
       @readonly = presenter.readonly?
-      @readonly_continue_path = next_required_wizard_step_path(@market_application) if @readonly
+      @readonly_continue_path = wizard_step_path(*@market_application.step_after_application_mode) if @readonly
     end
 
     def update

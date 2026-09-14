@@ -116,6 +116,15 @@ class MarketApplication < ApplicationRecord
     nil
   end
 
+  def step_after_application_mode
+    target = groupement_counterpart || self
+    return [target, :company_identification] unless target.groupement?
+
+    return [target, :lot_selection_mode] if target.public_market.lots.any?
+
+    [target, :grouping_legal_type]
+  end
+
   def update_api_status(api_name, status:, fields_filled: 0)
     with_lock do
       updated_status = (api_fetch_status || {}).dup
