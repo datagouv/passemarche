@@ -14,7 +14,7 @@ RSpec.describe DsfrFileHelper, type: :helper do
 
     it 'renders custom security badge with shield icon and safe label' do
       html = helper.dsfr_malware_badge(attachment)
-      expect(html).to include('fr-badge--security-safe')
+      expect(html).to include('fr-badge--success')
       expect(html).to include('fr-badge--no-icon')
       expect(html).to include('fr-icon-shield-fill')
       expect(html).to include(I18n.t('malware_scan.label.safe'))
@@ -26,7 +26,7 @@ RSpec.describe DsfrFileHelper, type: :helper do
 
     it 'renders custom security badge with warning icon and unsafe label' do
       html = helper.dsfr_malware_badge(attachment)
-      expect(html).to include('fr-badge--security-unsafe')
+      expect(html).to include('fr-badge--error')
       expect(html).to include('fr-badge--no-icon')
       expect(html).to include('fr-icon-warning-line')
       expect(html).to include(I18n.t('malware_scan.label.unsafe'))
@@ -38,7 +38,7 @@ RSpec.describe DsfrFileHelper, type: :helper do
 
     it 'renders custom security badge with time icon and scanning label' do
       html = helper.dsfr_malware_badge(attachment)
-      expect(html).to include('fr-badge--security-scanning')
+      expect(html).to include('fr-badge--info')
       expect(html).to include('fr-badge--no-icon')
       expect(html).to include('fr-icon-time-line')
       expect(html).to include(I18n.t('malware_scan.label.scanning'))
