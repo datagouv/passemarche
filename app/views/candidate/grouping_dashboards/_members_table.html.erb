@@ -26,17 +26,17 @@
         <% presenter.members.each do |member| %>
           <tr id="grouping_member_row_<%= member.id %>">
             <td>
-              <strong><%= member.company_name.presence || member.siret %></strong><br>
+              <strong><%= presenter.member_display_name(member) %></strong><br>
               <span class="fr-text--sm">SIRET <%= member.siret %></span>
             </td>
             <td>
-              <span class="fr-badge fr-badge--sm <%= member.mandataire? ? 'fr-badge--info fr-badge--no-icon' : '' %>">
-                <%= t("candidate.grouping_dashboard.role_#{member.role}") %>
+              <span class="fr-badge fr-badge--sm <%= presenter.member_role_badge_class(member) %>">
+                <%= presenter.member_role_label(member) %>
               </span>
             </td>
             <td>
-              <span class="fr-badge fr-badge--sm <%= 'fr-badge--success fr-badge--no-icon' if member.status_completed? %>">
-                <%= t("candidate.grouping_dashboard.status_#{member.status}") %>
+              <span class="fr-badge fr-badge--sm <%= presenter.member_status_badge_class(member) %>">
+                <%= presenter.member_status_label(member) %>
               </span>
             </td>
             <td><%= presenter.declared_lots_label(member) %></td>

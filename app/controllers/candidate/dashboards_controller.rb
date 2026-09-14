@@ -11,7 +11,7 @@ module Candidate
       @in_progress_count = base_scope.in_progress.count
       @completed_count = base_scope.completed.count
       @pagy, @applications = pagy(
-        base_scope.by_last_modification.includes(:public_market, :lots),
+        base_scope.by_last_modification.includes(:public_market, :lots, :grouping_member),
         limit: 10
       )
     end
