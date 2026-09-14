@@ -1,9 +1,9 @@
-<% lots = market_application.lots.ordered %>
+<% lots = presenter.lots %>
 
 <div class="fr-mb-3w fr-pt-3w">
   <%= render 'section_title_with_edit',
         title: t('candidate.grouping_dashboard.lots_section_title'),
-        edit_path: lot_selection_candidate_market_application_path(market_application.identifier),
+        edit_path: lot_selection_candidate_market_application_path(presenter.identifier),
         edit_title: t('candidate.grouping_dashboard.edit_lots') %>
 
   <button type="button" class="fr-text--sm fr-icon-arrow-down-s-line fr-btn--icon-right"

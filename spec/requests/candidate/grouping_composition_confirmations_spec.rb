@@ -40,10 +40,10 @@ RSpec.describe 'Candidate::GroupingCompositionConfirmations', type: :request do
     context 'when the grouping has at least one co_traitant' do
       before { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
 
-      it 'sends invitations and redirects to the dashboard with a success message' do
+      it 'sends invitations and redirects to the grouping dashboard with a success message' do
         patch grouping_composition_confirmation_candidate_market_application_path(market_application.identifier)
 
-        expect(response).to redirect_to(candidate_dashboard_path)
+        expect(response).to redirect_to(grouping_dashboard_candidate_market_application_path(market_application.identifier))
         follow_redirect!
         expect(response.body).to include(I18n.t('candidate.grouping_compositions.success'))
       end

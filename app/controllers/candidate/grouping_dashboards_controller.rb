@@ -25,7 +25,7 @@ module Candidate
     private
 
     def presenter
-      @presenter ||= Candidate::GroupingDashboardPresenter.new(@market_application)
+      @presenter ||= Candidate::GroupingDashboardPresenter.new(@market_application, grouping:)
     end
   end
 end

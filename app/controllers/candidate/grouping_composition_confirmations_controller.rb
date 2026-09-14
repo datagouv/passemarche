@@ -14,7 +14,10 @@ module Candidate
 
     def update
       result = Candidate::ConfirmGroupingComposition.call(grouping:)
-      return redirect_to candidate_dashboard_path, notice: t('candidate.grouping_compositions.success') if result.success?
+      if result.success?
+        return redirect_to grouping_dashboard_candidate_market_application_path(@market_application.identifier),
+          notice: t('candidate.grouping_compositions.success')
+      end
 
       @grouping = grouping
       @errors = result.errors
