@@ -49,13 +49,23 @@
               <%= t("candidate.dashboard.actions.delete") %>
             </button>
           </li>
-          <li>
-            <%= link_to company_identification_candidate_market_application_path(application.identifier),
-                  class: "fr-btn fr-btn--sm fr-btn--icon-left" do %>
-              <span class="fr-icon-edit-line fr-icon--sm" aria-hidden="true"></span>
-              <%= t("candidate.dashboard.actions.edit") %>
-            <% end %>
-          </li>
+          <% if application.groupement? && application.mandataire_grouping.present? %>
+            <li>
+              <%= link_to grouping_dashboard_candidate_market_application_path(application.identifier),
+                    class: "fr-btn fr-btn--sm fr-btn--icon-left" do %>
+                <span class="fr-icon-eye-line fr-icon--sm" aria-hidden="true"></span>
+                <%= t("candidate.dashboard.actions.follow_up") %>
+              <% end %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to company_identification_candidate_market_application_path(application.identifier),
+                    class: "fr-btn fr-btn--sm fr-btn--icon-left" do %>
+                <span class="fr-icon-edit-line fr-icon--sm" aria-hidden="true"></span>
+                <%= t("candidate.dashboard.actions.edit") %>
+              <% end %>
+            </li>
+          <% end %>
         <% end %>
       </ul>
     </div>
