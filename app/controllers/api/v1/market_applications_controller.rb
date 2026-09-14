@@ -88,6 +88,8 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     case step
     when :application_mode
       Rails.application.routes.url_helpers.application_mode_candidate_market_application_url(market_application.identifier)
+    when :lot_selection_mode
+      Rails.application.routes.url_helpers.lot_selection_mode_candidate_market_application_url(market_application.identifier)
     when :grouping_legal_type
       Rails.application.routes.url_helpers.grouping_legal_type_candidate_market_application_url(market_application.identifier)
     end

@@ -10,6 +10,8 @@ module Candidate
       case step
       when :application_mode
         application_mode_candidate_market_application_path(market_application.identifier)
+      when :lot_selection_mode
+        lot_selection_mode_candidate_market_application_path(market_application.identifier)
       when :grouping_legal_type
         grouping_legal_type_candidate_market_application_path(market_application.identifier)
       when :grouping_composition
