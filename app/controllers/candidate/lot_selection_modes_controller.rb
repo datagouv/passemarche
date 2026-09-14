@@ -5,7 +5,6 @@ module Candidate
     include Candidate::GroupementFeatureGuard
     include Candidate::MarketApplicationGuard
     include Candidate::MandataireGroupingGuard
-    include Candidate::ApplicationModeGuard
 
     before_action :redirect_if_no_lots, only: [:show]
 
