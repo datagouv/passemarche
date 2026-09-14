@@ -9,6 +9,7 @@ class MarketApplication < ApplicationRecord
   belongs_to :public_market
   belongs_to :user, optional: true
   has_one :editor, through: :public_market
+  has_one :grouping_member, inverse_of: :market_application
 
   enum :application_mode, { solo: 0, groupement: 1, mixte: 2 }, validate: { allow_nil: true }
 
