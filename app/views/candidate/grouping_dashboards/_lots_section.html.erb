@@ -1,0 +1,26 @@
+<% lots = market_application.lots.ordered %>
+
+<div class="fr-mb-3w fr-pt-3w">
+  <%= render 'section_title_with_edit',
+        title: t('candidate.grouping_dashboard.lots_section_title'),
+        edit_path: lot_selection_candidate_market_application_path(market_application.identifier),
+        edit_title: t('candidate.grouping_dashboard.edit_lots') %>
+
+  <button type="button" class="fr-text--sm fr-icon-arrow-down-s-line fr-btn--icon-right"
+          style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 0; border-top: 1px solid var(--border-default-grey, #ddd); border-bottom: 1px solid var(--border-default-grey, #ddd); background: none; text-align: left; color: var(--text-action-high-blue-france, #000091); cursor: pointer;"
+          aria-expanded="false" aria-controls="grouping-dashboard-lots" data-fr-js-collapse-button="true">
+    <%= t('candidate.grouping_dashboard.lots_toggle_label') %>
+  </button>
+
+  <div class="fr-collapse fr-mt-2w" id="grouping-dashboard-lots">
+    <% if lots.any? %>
+      <ul class="fr-mb-0" style="list-style: disc; padding-left: 20px;">
+        <% lots.each do |lot| %>
+          <li class="fr-text--sm"><%= lot.name.presence || t('candidate.grouping_dashboard.lot_number', number: lot.position) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="fr-text--sm fr-text--mention-grey"><%= t('candidate.grouping_dashboard.no_lot_selected') %></p>
+    <% end %>
+  </div>
+</div>

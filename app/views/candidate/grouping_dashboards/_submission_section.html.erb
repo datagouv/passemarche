@@ -1,0 +1,31 @@
+<section class="fr-mb-2w">
+  <% if presenter.submission_ready? %>
+    <div class="fr-p-3w fr-mb-3w" style="background-color: var(--background-contrast-success, #e5fff0); border-left: 4px solid var(--border-plain-success, #18753c);">
+      <p class="fr-text--bold fr-mb-1w" style="color: var(--text-title-blue-france, #161616);">
+        <%= t('candidate.grouping_dashboard.submission_ready_title') %>
+      </p>
+      <p class="fr-text--sm fr-mb-0"><%= t('candidate.grouping_dashboard.submission_ready_body') %></p>
+    </div>
+    <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right" style="white-space: nowrap;">
+      <%= t('candidate.grouping_dashboard.submit_full') %>
+    </button>
+  <% else %>
+    <div class="fr-p-3w fr-mb-3w" style="background-color: var(--background-contrast-error, #fef4f4); border-left: 4px solid var(--border-plain-error, #ce0500);">
+      <p class="fr-text--bold fr-mb-1w" style="color: var(--text-default-error, #ce0500);">
+        <%= t('candidate.grouping_dashboard.submission_pending_title') %>
+      </p>
+      <p class="fr-text--sm fr-mb-0"><%= t('candidate.grouping_dashboard.submission_pending_body') %></p>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right" disabled>
+        <%= t('candidate.grouping_dashboard.submit_full') %>
+      </button>
+
+      <% if presenter.partial_submission_available? %>
+        <button type="button" class="fr-btn fr-btn--secondary">
+          <%= t('candidate.grouping_dashboard.submit_partial') %>
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+</section>
