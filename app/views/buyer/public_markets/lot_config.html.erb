@@ -1,4 +1,5 @@
 <% content_for :title, "#{@public_market.editor.name} - #{t('buyer.public_markets.lot_config.title')}" %>
+<% content_for :head, stylesheet_link_tag("lot_config") %>
 
 <h1 class="fr-h1 fr-mb-1w"><%= t('buyer.public_markets.lot_config.title') %></h1>
 <p class="fr-text--lg fr-mb-2w"><%= t('buyer.public_markets.lot_config.subtitle') %></p>

@@ -1,0 +1,57 @@
+/* =============================================
+   Lot Type Configuration Table
+   ============================================= */
+
+.lot-config-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-default-grey);
+}
+
+.lot-config-table thead tr {
+  background: var(--background-alt-grey);
+}
+
+.lot-config-table th,
+.lot-config-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-default-grey);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.lot-config-table th {
+  font-weight: bold;
+}
+
+.lot-config-table__selection-col {
+  width: 3rem;
+  text-align: center;
+  background-color: var(--background-alt-grey);
+  border-right: 1px solid var(--border-default-grey);
+}
+
+.lot-config-table__type-col {
+  min-width: 12rem;
+}
+
+.lot-config-table__type-col-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lot-config-type-option:has(input:disabled) {
+  border-color: var(--border-disabled-grey, #e5e5e5);
+}
+
+.lot-config-type-option:has(input:disabled) label {
+  cursor: not-allowed;
+  color: var(--text-disabled-grey, #929292);
+}
+
+.lot-config-type-option:has(input:disabled) .lot-config-type-option__icon {
+  background-color: var(--background-disabled-grey, #eeeeee) !important;
+  filter: grayscale(100%) opacity(0.5);
+}

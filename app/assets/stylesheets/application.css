@@ -1,13 +1,14 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
+ * Core styles loaded on every page: resets, transverse utilities, and
+ * components shared across multiple sections of the app (header, modals,
+ * dropdowns, badges...).
  *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
+ * Page- or feature-specific styles live in their own file
+ * (homepage.css, grouping.css, lot_config.css...) and are loaded only
+ * where needed via `content_for :head`.
  *
+ * With Propshaft, assets are served efficiently without preprocessing steps.
  * Note: CSS @import does not work with Propshaft's fingerprinted URLs.
- * All styles are inlined below instead.
  */
 
 /* =============================================
@@ -406,243 +407,6 @@
   margin-bottom: 0;
 }
 
-/* =============================================
-   Shared Homepage Styles
-   Common components: stepper, pictograms, screenshots
-   ============================================= */
-
-/* Stepper Component */
-.homepage-step {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.homepage-step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 48px;
-  width: 0;
-  height: calc(100% - 10px);
-  border-left: 2px dashed var(--blue-france-sun-113-625);
-}
-
-.homepage-step__number {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--blue-france-sun-113-625);
-  flex-shrink: 0;
-  background-color: var(--blue-france-925-125);
-}
-
-.homepage-step__content {
-  padding-top: 0.25rem;
-}
-
-.homepage-step__text {
-  margin: 0;
-  color: var(--grey-200-850);
-}
-
-/* Pictogram Sizing */
-.homepage-pictogram {
-  width: 80px;
-  height: 80px;
-}
-
-.homepage-pictogram--sm {
-  width: 48px;
-  height: 48px;
-}
-
-/* Screenshot Styling */
-.homepage-screenshot {
-  max-width: 400px;
-  box-shadow: 0 2px 6px rgba(0, 0, 18, 0.16);
-  border-radius: 4px;
-}
-
-/* =============================================
-   Candidate Homepage
-   ============================================= */
-
-/* Hero Section */
-.candidate-hero {
-  background-color: var(--blue-france-sun-113-625);
-  padding: 4rem 0;
-}
-
-.candidate-hero__title {
-  color: var(--grey-1000-50);
-  font-size: 2.5rem;
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-.candidate-hero__illustration {
-  width: 300px;
-  height: 300px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
-
-/* Value Proposition Badges - Staggered layout matching Figma */
-.candidate-badges-grid {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding-left: 1rem;
-}
-
-.candidate-badges-grid__item {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.875rem;
-  font-weight: 700;
-  background-color: #f6f6f6;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-}
-
-.candidate-badge-icon {
-  color: #18753c !important;
-}
-
-.candidate-badges-grid__item--1 {
-  margin-left: 4rem;
-}
-
-.candidate-badges-grid__item--2 {
-  margin-left: 0;
-}
-
-.candidate-badges-grid__item--3 {
-  margin-left: 6rem;
-}
-
-.candidate-badges-grid__item--4 {
-  margin-left: 2rem;
-}
-
-/* =============================================
-   Buyer Homepage
-   ============================================= */
-
-/* Hero Section - Light blue background matching Figma */
-.buyer-hero {
-  background-color: #F5F5FE;
-  padding: 4rem 0;
-}
-
-.buyer-hero__title {
-  color: #000091;
-  font-size: 2.5rem;
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-.buyer-hero__illustration {
-  width: 300px;
-  height: 300px;
-}
-
-/* Two Cards Component - Value Proposition Section */
-.buyer-cards {
-  display: flex;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.buyer-card {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: var(--grey-1000-50);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid var(--grey-925-125);
-}
-
-.buyer-card__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-}
-
-.buyer-card__badge--green {
-  background-color: #B8FEC9;
-  color: #18753c;
-}
-
-.buyer-card__badge--blue {
-  background-color: #E3E3FD;
-  color: #000091;
-}
-
-.buyer-card__rows {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.buyer-card__row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.buyer-card__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.buyer-card__dot--green {
-  background-color: #18753c;
-}
-
-.buyer-card__dot--blue {
-  background-color: #000091;
-}
-
-.buyer-card__line {
-  height: 6px;
-  background-color: var(--grey-925-125);
-  border-radius: 3px;
-  flex-grow: 1;
-}
-
-/* Data columns for examples section */
-.buyer-data-column {
-  padding: 1.5rem;
-}
-
-.buyer-data-column .fr-list {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-
-.buyer-data-column .fr-list li {
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-}
-
 /* Drag handle */
 [data-drag-handle] {
   cursor: grab;
@@ -653,22 +417,6 @@
 .fr-badge--no-icon::after {
   content: none !important;
   display: none !important;
-}
-
-/* Security badge colors and layout */
-.fr-badge--security-safe {
-  background-color: #B8FEC9 !important;
-  color: #18753C !important;
-}
-
-.fr-badge--security-unsafe {
-  background-color: #FFE9E9 !important;
-  color: #CE0500 !important;
-}
-
-.fr-badge--security-scanning {
-  background-color: #E8EDFF !important;
-  color: #0063CB !important;
 }
 
 /* Environment banner for non-production */
@@ -725,7 +473,6 @@
   font-weight: 700;
 }
 
-
 /* Dashboard summary tiles */
 .fr-dashboard-tile {
   background-color: var(--grey-1000-50, #fff);
@@ -741,61 +488,6 @@
 
 .fr-dashboard-tile--green {
   border-bottom-color: var(--success-main-525, #18753c);
-}
-
-/* Lot type configuration table */
-.lot-config-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid var(--border-default-grey);
-}
-
-.lot-config-table thead tr {
-  background: var(--background-alt-grey);
-}
-
-.lot-config-table th,
-.lot-config-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border-default-grey);
-  text-align: left;
-  vertical-align: middle;
-}
-
-.lot-config-table th {
-  font-weight: bold;
-}
-
-.lot-config-table__selection-col {
-  width: 3rem;
-  text-align: center;
-  background-color: var(--background-alt-grey);
-  border-right: 1px solid var(--border-default-grey);
-}
-
-.lot-config-table__type-col {
-  min-width: 12rem;
-}
-
-.lot-config-table__type-col-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.lot-config-type-option:has(input:disabled) {
-  border-color: var(--border-disabled-grey, #e5e5e5);
-}
-
-.lot-config-type-option:has(input:disabled) label {
-  cursor: not-allowed;
-  color: var(--text-disabled-grey, #929292);
-}
-
-.lot-config-type-option:has(input:disabled) .lot-config-type-option__icon {
-  background-color: var(--background-disabled-grey, #eeeeee) !important;
-  filter: grayscale(100%) opacity(0.5);
 }
 
 /* Market scope tags (type badges on each field) */
@@ -886,6 +578,7 @@
   text-align: center;
 }
 
+/* Application mode choice cards (shared by application_modes and grouping_legal_types) */
 .application-mode-choices {
   display: flex;
   flex-direction: column;
@@ -996,73 +689,4 @@
 
 .application-mode-callout .fr-callout__text {
   margin: 0;
-}
-
-.grouping-legal-type-stepper {
-  display: flex;
-  gap: 8px;
-}
-
-.grouping-legal-type-stepper__step {
-  flex: 1;
-  height: 4px;
-  background-color: var(--border-default-grey);
-}
-
-.grouping-legal-type-stepper__step--done {
-  background-color: var(--background-action-high-blue-france);
-}
-
-.grouping-legal-type-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.grouping-legal-type-actions .fr-btn[aria-disabled="true"] {
-  background-color: var(--background-disabled-grey);
-  color: var(--text-disabled-grey);
-  pointer-events: none;
-  cursor: not-allowed;
-}
-
-.grouping-member-form {
-  background-color: var(--background-alt-blue-france);
-  border-left: 4px solid var(--border-plain-blue-france);
-  padding: 32px 40px;
-}
-
-#grouping_members_table .fr-table,
-#grouping_members_table .fr-table__wrapper,
-#grouping_members_table .fr-table__container,
-#grouping_members_table .fr-table__content {
-  display: block !important;
-  width: 100% !important;
-  max-width: none !important;
-  border: none !important;
-}
-
-#grouping_members_table table {
-  display: table !important;
-  width: 100% !important;
-  table-layout: fixed !important;
-  border-collapse: collapse !important;
-  border: 1px solid var(--light-decisions-border-border-default-grey, #ddd) !important;
-}
-
-#grouping_members_table th,
-#grouping_members_table td {
-  border: none !important;
-  background-image: none !important;
-  border-bottom: 1px solid var(--light-decisions-border-border-default-grey, #ddd) !important;
-}
-
-#grouping_members_table thead,
-#grouping_members_table tbody,
-#grouping_members_table tbody::after,
-#grouping_members_table thead::after {
-  background-image: none !important;
-}
-
-#grouping_members_table tbody tr {
-  background-color: var(--background-default-grey, #fff) !important;
 }
