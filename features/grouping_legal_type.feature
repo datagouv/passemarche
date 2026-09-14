@@ -42,7 +42,8 @@ Feature: Mandataire defines the grouping legal type
   Scenario: Candidate logs in again before choosing the legal type
     When I visit the magic link
     And I choose the candidacy mode "groupement"
-    And I visit the magic link
+    Then I should see "Le type de groupement"
+    When I visit the magic link
     Then I should be on the grouping legal type step
 
   @javascript
