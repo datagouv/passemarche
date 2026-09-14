@@ -10,7 +10,7 @@ module DsfrFileHelper
       'fr-badge',
       'fr-badge--sm',
       'fr-badge--no-icon',
-      "fr-badge--security-#{safety_state}",
+      security_badge_dsfr_class(safety_state),
       options[:class]
     ].compact.join(' ')
 
@@ -38,6 +38,14 @@ module DsfrFileHelper
   end
 
   private
+
+  def security_badge_dsfr_class(safety_state)
+    {
+      'safe' => 'fr-badge--success',
+      'unsafe' => 'fr-badge--error',
+      'scanning' => 'fr-badge--info'
+    }[safety_state]
+  end
 
   def badge_label_with_icon(safety_state)
     icon_classes = {
