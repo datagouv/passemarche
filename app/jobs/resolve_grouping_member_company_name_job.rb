@@ -14,6 +14,8 @@ class ResolveGroupingMemberCompanyNameJob < ApplicationJob
     return unless result.success?
 
     grouping_member.update!(company_name: result.raison_sociale)
+  rescue Net::OpenTimeout, Net::ReadTimeout
+    raise
   rescue StandardError => e
     Sentry.capture_exception(e)
   end

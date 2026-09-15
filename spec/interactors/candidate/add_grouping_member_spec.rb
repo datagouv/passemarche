@@ -37,6 +37,7 @@ RSpec.describe Candidate::AddGroupingMember, type: :interactor do
       end
 
       it 'enqueues a job to resolve the company name' do
+        grouping
         expect { result }.to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
       end
 

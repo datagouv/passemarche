@@ -25,6 +25,6 @@ class FetchRaisonSociale::MakeRequest < MakeRequest
   end
 
   def request_object
-    context.request_object || 'Réponse appel offre'
+    'Réponse appel offre'
   end
 end

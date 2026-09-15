@@ -19,6 +19,7 @@ module Candidate
     end
 
     def fail_not_found
+      context.not_found = true
       context.fail!(errors: { grouping_member: [I18n.t('candidate.validations.grouping_member_not_found')] })
     end
 

@@ -24,7 +24,7 @@ module Candidate
     end
 
     def create_member
-      result = Candidate::AddGroupingMember.call(grouping:, siret: params[:siret], email: params[:email])
+      result = Candidate::AddGroupingMember.call(grouping:, siret: member_params[:siret], email: member_params[:email])
       assign_create_member_result(result)
 
       render turbo_stream: member_form_turbo_streams, status: result.success? ? :ok : :unprocessable_content
@@ -33,15 +33,26 @@ module Candidate
     def destroy_member
       result = Candidate::RemoveGroupingMember.call(grouping:, grouping_member_id: params[:id])
 
-      render turbo_stream: destroy_member_turbo_streams(result), status: result.success? ? :ok : :unprocessable_content
+      render turbo_stream: destroy_member_turbo_streams(result), status: destroy_member_status(result)
     end
 
     private
+
+    def destroy_member_status(result)
+      return :ok if result.success?
+      return :not_found if result.not_found
+
+      :unprocessable_content
+    end
 
     def redirect_unless_legal_type_set
       return if grouping.legal_type.present?
 
       redirect_to grouping_legal_type_candidate_market_application_path(@market_application.identifier)
+    end
+
+    def member_params
+      params.permit(:siret, :email)
     end
 
     def enqueue_pending_company_name_resolutions
@@ -58,7 +69,7 @@ module Candidate
       if result.success?
         @grouping_member = GroupingMember.new
       else
-        @grouping_member = grouping.grouping_members.new(siret: params[:siret], email: params[:email])
+        @grouping_member = grouping.grouping_members.new(siret: member_params[:siret], email: member_params[:email])
         @errors = result.errors
       end
     end
