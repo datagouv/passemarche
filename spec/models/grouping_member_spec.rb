@@ -83,4 +83,49 @@ RSpec.describe GroupingMember, type: :model do
       expect(member).to be_status_completed
     end
   end
+
+  describe 'siret' do
+    it 'rejects a co_traitant siret equal to the mandataire siret' do
+      member = build(:grouping_member, :co_traitant, grouping:, siret: grouping.mandataire_grouping_member.siret)
+
+      expect(member).not_to be_valid
+      expect(member.errors[:siret]).to be_present
+    end
+
+    it 'allows the mandataire own member to have the mandataire siret' do
+      expect(grouping.mandataire_grouping_member).to be_valid
+    end
+
+    it 'is enforced unique within a grouping at the database level' do
+      create(:grouping_member, :co_traitant, grouping:, siret: '80245139600027')
+      duplicate = build(:grouping_member, :co_traitant, grouping:, siret: '80245139600027')
+
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:siret]).to be_present
+    end
+  end
+
+  describe 'company name resolution' do
+    it 'enqueues a job to resolve the company name of a co_traitant on creation' do
+      grouping
+      expect { create(:grouping_member, :co_traitant, grouping:) }
+        .to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
+    end
+
+    it 'does not enqueue a job for the mandataire, resolved separately by the composition step' do
+      expect { grouping }.not_to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
+    end
+  end
+
+  describe '#invitation_sent?' do
+    it 'is false when the invitation has not been sent yet' do
+      member = build(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)
+      expect(member.invitation_sent?).to be false
+    end
+
+    it 'is true once the invitation has been sent' do
+      member = build(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+      expect(member.invitation_sent?).to be true
+    end
+  end
 end

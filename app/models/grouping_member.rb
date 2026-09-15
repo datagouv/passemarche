@@ -11,16 +11,34 @@ class GroupingMember < ApplicationRecord
   scope :mandataire_for, ->(public_market:, siret:) { mandataire.where(public_market:, siret:) }
 
   before_validation :set_public_market
+  after_create_commit :enqueue_company_name_resolution, if: :co_traitant?
 
   validates :siret, presence: true, siret: true
+  validates :siret, uniqueness: { scope: :grouping_id }
   validates :siret, uniqueness: { scope: :public_market_id }, if: :mandataire?
-  validates :email, presence: true, if: :co_traitant?
+  validates :email, presence: true, email: true, if: :co_traitant?
   validates :grouping_id, uniqueness: { scope: :role }, if: :mandataire?
   validates :market_application, presence: true, if: :mandataire?
+  validate :siret_not_mandataire, if: :co_traitant?
+
+  def invitation_sent?
+    invitation_token_created_at.present?
+  end
 
   private
 
   def set_public_market
     self.public_market_id = grouping.public_market_id if grouping
+  end
+
+  def enqueue_company_name_resolution
+    ResolveGroupingMemberCompanyNameJob.perform_later(id)
+  end
+
+  def siret_not_mandataire
+    mandataire_siret = grouping&.mandataire_grouping_member&.siret
+    return if siret != mandataire_siret
+
+    errors.add(:siret, :same_as_mandataire)
   end
 end

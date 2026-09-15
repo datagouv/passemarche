@@ -1,0 +1,70 @@
+<div id="grouping_members_table">
+  <div class="fr-table fr-mb-3w">
+    <table>
+      <colgroup>
+        <col style="width: 32%">
+        <col style="width: 25%">
+        <col style="width: 15%">
+        <col style="width: <%= editable ? '15%' : '28%' %>">
+        <% if editable %>
+          <col style="width: 13%">
+        <% end %>
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col"><%= t('candidate.grouping_compositions.table_company') %></th>
+          <th scope="col"><%= t('candidate.grouping_compositions.table_email') %></th>
+          <th scope="col"><%= t('candidate.grouping_compositions.table_role') %></th>
+          <th scope="col"><%= t('candidate.grouping_compositions.table_status') %></th>
+          <% if editable %>
+            <th scope="col"></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% grouping.grouping_members.order(:role).each do |member| %>
+          <tr>
+            <td>
+              <strong><%= member.company_name.presence || t('candidate.grouping_compositions.company_unknown') %></strong><br>
+              <span class="fr-text--sm"><%= t('candidate.grouping_compositions.siret_label') %> <%= member.siret %></span>
+            </td>
+            <td><%= member.email %></td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= member.mandataire? ? 'fr-badge--info fr-badge--no-icon' : '' %>">
+                <%= t("candidate.grouping_compositions.role_#{member.role}") %>
+              </span>
+            </td>
+            <td>
+              <% if member.mandataire? %>
+                -
+              <% elsif member.invitation_sent? %>
+                <span class="fr-badge fr-badge--sm fr-badge--success"><%= t('candidate.grouping_compositions.status_sent') %></span>
+              <% else %>
+                <span class="fr-badge fr-badge--sm"><%= t('candidate.grouping_compositions.status_not_sent') %></span>
+              <% end %>
+            </td>
+            <% if editable %>
+              <td>
+                <% if member.co_traitant? && !member.invitation_sent? %>
+                  <%= button_to t('candidate.grouping_compositions.remove_button'),
+                        grouping_composition_member_candidate_market_application_path(market_application.identifier, member),
+                        method: :delete,
+                        form: { data: { turbo_stream: true } },
+                        class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left" %>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+        <% if grouping.grouping_members.co_traitant.none? %>
+          <tr>
+            <td colspan="<%= editable ? 5 : 4 %>" style="background-color: var(--background-default-grey, #fff); border-top: 1px solid var(--light-decisions-border-border-default-grey, #ddd); vertical-align: middle; color: var(--light-decisions-text-text-mention-grey, #666); text-align: center; font-family: Marianne; font-size: 14px; font-style: normal; font-weight: 400; line-height: 24px;">
+              <%= t('candidate.grouping_compositions.no_co_traitant_line1') %><br>
+              <%= t('candidate.grouping_compositions.no_co_traitant_line2') %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
