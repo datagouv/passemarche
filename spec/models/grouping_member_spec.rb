@@ -105,6 +105,18 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe 'company name resolution' do
+    it 'enqueues a job to resolve the company name of a co_traitant on creation' do
+      grouping
+      expect { create(:grouping_member, :co_traitant, grouping:) }
+        .to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
+    end
+
+    it 'does not enqueue a job for the mandataire, resolved separately by the composition step' do
+      expect { grouping }.not_to have_enqueued_job(ResolveGroupingMemberCompanyNameJob)
+    end
+  end
+
   describe '#invitation_sent?' do
     it 'is false when the invitation has not been sent yet' do
       member = build(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)

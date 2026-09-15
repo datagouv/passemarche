@@ -11,6 +11,7 @@ class GroupingMember < ApplicationRecord
   scope :mandataire_for, ->(public_market:, siret:) { mandataire.where(public_market:, siret:) }
 
   before_validation :set_public_market
+  after_create_commit :enqueue_company_name_resolution, if: :co_traitant?
 
   validates :siret, presence: true, siret: true
   validates :siret, uniqueness: { scope: :grouping_id }
@@ -28,6 +29,10 @@ class GroupingMember < ApplicationRecord
 
   def set_public_market
     self.public_market_id = grouping.public_market_id if grouping
+  end
+
+  def enqueue_company_name_resolution
+    ResolveGroupingMemberCompanyNameJob.perform_later(id)
   end
 
   def siret_not_mandataire

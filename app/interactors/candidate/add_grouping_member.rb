@@ -14,7 +14,6 @@ module Candidate
       member = grouping.grouping_members.new(role: :co_traitant, siret:, email:)
       return context.fail!(errors: errors_from(member)) unless member.save
 
-      ResolveGroupingMemberCompanyNameJob.perform_later(member.id)
       context.grouping_member = member
     end
 
