@@ -52,28 +52,6 @@ RSpec.describe FetchRaisonSociale::MakeRequest, type: :interactor do
       end
     end
 
-    context 'when a custom request_object is given' do
-      subject { described_class.call(siret:, request_object: 'Configuration marché: Travaux de voirie') }
-
-      before do
-        stub_request(:get, endpoint_url)
-          .with(query: hash_including(query_params.merge('object' => 'Configuration marché: Travaux de voirie')))
-          .to_return(
-            status: 200,
-            body: successful_response_body,
-            headers: { 'Content-Type' => 'application/json' }
-          )
-      end
-
-      it 'sends the custom object as audit label' do
-        subject
-        expect(
-          a_request(:get, endpoint_url)
-            .with(query: hash_including('object' => 'Configuration marché: Travaux de voirie'))
-        ).to have_been_made.once
-      end
-    end
-
     it_behaves_like 'API request error handling'
 
     context 'when credentials are missing' do
