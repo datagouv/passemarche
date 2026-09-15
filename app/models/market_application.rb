@@ -9,6 +9,7 @@ class MarketApplication < ApplicationRecord
   belongs_to :public_market
   belongs_to :user, optional: true
   has_one :editor, through: :public_market
+  has_one :grouping_member, inverse_of: :market_application
 
   enum :application_mode, { solo: 0, groupement: 1, mixte: 2 }, validate: { allow_nil: true }
 
@@ -77,8 +78,11 @@ class MarketApplication < ApplicationRecord
   end
 
   def mandataire_grouping
-    Grouping.joins(:mandataire_grouping_member)
-      .find_by(mandataire_grouping_member: { market_application_id: id })
+    Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: })
+  end
+
+  def mandataire_of_grouping?
+    groupement? && !!grouping_member&.mandataire?
   end
 
   def lot_selection_mode_choice_required?
