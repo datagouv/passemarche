@@ -81,6 +81,17 @@ class MarketApplication < ApplicationRecord
       .find_by(mandataire_grouping_member: { market_application_id: id })
   end
 
+  def lot_selection_mode_choice_required?
+    return false if completed?
+    return false unless FeatureFlags::Groupement.enabled? && groupement?
+    return false if public_market.lots.none?
+
+    solo = solo_counterpart
+    return lot_ids.empty? if solo.nil?
+
+    solo.lot_ids.empty? || lot_ids.empty?
+  end
+
   def groupement_counterpart
     return nil if groupement?
 
@@ -98,10 +109,20 @@ class MarketApplication < ApplicationRecord
     return [self, :application_mode] if application_mode_choice_required?
 
     target = groupement_counterpart || self
+    return [target, :lot_selection_mode] if target.lot_selection_mode_choice_required?
     return [target, :grouping_legal_type] if target.grouping_legal_type_choice_required?
     return [target, :grouping_composition] if target.grouping_composition_choice_required?
 
     nil
+  end
+
+  def step_after_application_mode
+    target = groupement_counterpart || self
+    return [target, :company_identification] unless target.groupement?
+
+    return [target, :lot_selection_mode] if target.public_market.lots.any?
+
+    [target, :grouping_legal_type]
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
