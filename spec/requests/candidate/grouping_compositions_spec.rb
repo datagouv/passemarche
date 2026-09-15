@@ -181,11 +181,11 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
     end
 
     context 'when the member does not exist' do
-      it 'renders an error with an unprocessable status' do
+      it 'renders an error with a not found status' do
         delete grouping_composition_member_candidate_market_application_path(market_application.identifier, -1),
           headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
-        expect(response).to have_http_status(:unprocessable_content)
+        expect(response).to have_http_status(:not_found)
         expect(response.parsed_body).to include(CGI.escapeHTML(I18n.t('candidate.validations.grouping_member_not_found')))
       end
     end
