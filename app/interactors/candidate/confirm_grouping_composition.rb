@@ -5,9 +5,9 @@ module Candidate
     delegate :grouping, to: :context
 
     def call
-      pending_members = grouping.grouping_members.co_traitant.reject(&:invitation_sent?)
       return fail_no_co_traitant if grouping.grouping_members.co_traitant.none?
 
+      pending_members = grouping.grouping_members.co_traitant.reject(&:invitation_sent?)
       pending_members.each { |member| invite(member) }
     end
 
