@@ -34,4 +34,43 @@ RSpec.describe Candidate::ApplicationModePresenter, type: :presenter do
       expect(described_class.new(application).readonly?).to be false
     end
   end
+
+  describe '#mixte?, #solo_selected? and #groupement_selected?' do
+    it 'selects solo when the application is solo only' do
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+      presenter = described_class.new(application)
+
+      expect(presenter.mixte?).to be false
+      expect(presenter.solo_selected?).to be true
+      expect(presenter.groupement_selected?).to be false
+    end
+
+    it 'selects groupement when the application is groupement only' do
+      application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      presenter = described_class.new(application)
+
+      expect(presenter.mixte?).to be false
+      expect(presenter.solo_selected?).to be false
+      expect(presenter.groupement_selected?).to be true
+    end
+
+    it 'detects mixte when both a solo and a groupement counterpart exist' do
+      create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      presenter = described_class.new(groupement)
+
+      expect(presenter.mixte?).to be true
+      expect(presenter.solo_selected?).to be false
+      expect(presenter.groupement_selected?).to be false
+    end
+
+    it 'selects nothing when no mode has been chosen yet' do
+      application = build(:market_application, public_market:, siret:, application_mode: nil)
+      presenter = described_class.new(application)
+
+      expect(presenter.mixte?).to be false
+      expect(presenter.solo_selected?).to be false
+      expect(presenter.groupement_selected?).to be false
+    end
+  end
 end
