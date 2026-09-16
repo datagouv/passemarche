@@ -30,7 +30,7 @@ module GroupementWizardSteps
     grouping = mandataire_grouping
     return false if grouping.nil? || grouping.legal_type.nil?
 
-    grouping.grouping_members.co_traitant.none?(&:invitation_sent?)
+    !grouping.composition_confirmed?
   end
 
   def mandataire_grouping
