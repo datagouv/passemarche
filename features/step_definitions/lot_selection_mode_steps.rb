@@ -30,9 +30,9 @@ end
 
 Then('every lot should be set to {string}') do |label|
   mode = mode_key_for_label(label)
-  page.all("input[name^='lot_modes'][value='#{mode}']").each do |radio|
-    expect(radio).to be_checked
-  end
+  radios = page.all("input[name^='lot_modes'][value='#{mode}']", visible: :all)
+  expect(radios).not_to be_empty
+  radios.each { |radio| expect(radio).to be_checked }
 end
 
 Then('lot {string} should be set to {string}') do |lot_name, label|

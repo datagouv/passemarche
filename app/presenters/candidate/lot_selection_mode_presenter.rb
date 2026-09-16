@@ -2,8 +2,6 @@
 
 module Candidate
   class LotSelectionModePresenter
-    include LotLabelConcern
-
     def initialize(market_application)
       @market_application = market_application
       @solo_application = market_application.solo? ? market_application : market_application.solo_counterpart

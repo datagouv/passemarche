@@ -25,7 +25,7 @@ module Candidate
     private
 
     def lot_modes_param
-      params.fetch(:lot_modes, {}).permit!.to_h
+      params.fetch(:lot_modes, {}).permit!
     end
 
     def redirect_if_no_lots
