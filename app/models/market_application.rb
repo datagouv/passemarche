@@ -4,6 +4,8 @@ class MarketApplication < ApplicationRecord
   include Completable
   include Syncable
 
+  POST_APPLICATION_MODE_STEPS = %i[lot_selection_mode grouping_legal_type grouping_composition].freeze
+
   has_paper_trail on: %i[update], only: [:completed_at]
 
   belongs_to :public_market
@@ -95,10 +97,6 @@ class MarketApplication < ApplicationRecord
     FeatureFlags::Groupement.enabled? && groupement? && public_market.lots.any?
   end
 
-  def grouping_legal_type_applicable?
-    FeatureFlags::Groupement.enabled? && groupement?
-  end
-
   def groupement_counterpart
     return nil if groupement?
 
@@ -110,8 +108,6 @@ class MarketApplication < ApplicationRecord
 
     MarketApplication.where(public_market:, siret:, application_mode: :solo, user_id:).where.not(id:).first
   end
-
-  POST_APPLICATION_MODE_STEPS = %i[lot_selection_mode grouping_legal_type grouping_composition].freeze
 
   def next_required_wizard_step
     return nil unless FeatureFlags::Groupement.enabled?
@@ -125,9 +121,9 @@ class MarketApplication < ApplicationRecord
   def step_after_application_mode
     target = groupement_counterpart || self
     return [target, :company_identification] unless target.groupement?
+    return [target, :lot_selection_mode] if target.public_market.lots.any?
 
-    step = %i[lot_selection_mode grouping_legal_type].find { |candidate| target.public_send(:"#{candidate}_applicable?") }
-    [target, step]
+    [target, :grouping_legal_type]
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
