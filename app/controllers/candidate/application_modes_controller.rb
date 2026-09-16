@@ -12,7 +12,10 @@ module Candidate
     def show
       @already_mandataire = presenter.already_mandataire?
       @readonly = presenter.readonly?
-      @readonly_continue_path = next_required_wizard_step_path(@market_application) if @readonly
+      @readonly_continue_path = wizard_step_path(*@market_application.step_after_application_mode) if @readonly
+      @mixte = presenter.mixte?
+      @solo_selected = presenter.solo_selected?
+      @groupement_selected = presenter.groupement_selected?
     end
 
     def update
@@ -24,6 +27,9 @@ module Candidate
       return handle_success(result) if result.success?
 
       @already_mandataire = presenter.already_mandataire?
+      @mixte = presenter.mixte?
+      @solo_selected = presenter.solo_selected?
+      @groupement_selected = presenter.groupement_selected?
       @errors = result.errors
       render :show, status: :unprocessable_content
     end
