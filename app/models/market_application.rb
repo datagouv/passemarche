@@ -83,13 +83,20 @@ class MarketApplication < ApplicationRecord
 
   def lot_selection_mode_choice_required?
     return false if completed?
-    return false unless FeatureFlags::Groupement.enabled? && groupement?
-    return false if public_market.lots.none?
+    return false unless lot_selection_mode_applicable?
 
     solo = solo_counterpart
     return lot_ids.empty? if solo.nil?
 
     solo.lot_ids.empty? || lot_ids.empty?
+  end
+
+  def lot_selection_mode_applicable?
+    FeatureFlags::Groupement.enabled? && groupement? && public_market.lots.any?
+  end
+
+  def grouping_legal_type_applicable?
+    FeatureFlags::Groupement.enabled? && groupement?
   end
 
   def groupement_counterpart
@@ -104,25 +111,23 @@ class MarketApplication < ApplicationRecord
     MarketApplication.where(public_market:, siret:, application_mode: :solo, user_id:).where.not(id:).first
   end
 
+  POST_APPLICATION_MODE_STEPS = %i[lot_selection_mode grouping_legal_type grouping_composition].freeze
+
   def next_required_wizard_step
     return nil unless FeatureFlags::Groupement.enabled?
     return [self, :application_mode] if application_mode_choice_required?
 
     target = groupement_counterpart || self
-    return [target, :lot_selection_mode] if target.lot_selection_mode_choice_required?
-    return [target, :grouping_legal_type] if target.grouping_legal_type_choice_required?
-    return [target, :grouping_composition] if target.grouping_composition_choice_required?
-
-    nil
+    step = POST_APPLICATION_MODE_STEPS.find { |candidate| target.public_send(:"#{candidate}_choice_required?") }
+    step ? [target, step] : nil
   end
 
   def step_after_application_mode
     target = groupement_counterpart || self
     return [target, :company_identification] unless target.groupement?
 
-    return [target, :lot_selection_mode] if target.public_market.lots.any?
-
-    [target, :grouping_legal_type]
+    step = %i[lot_selection_mode grouping_legal_type].find { |candidate| target.public_send(:"#{candidate}_applicable?") }
+    [target, step]
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
