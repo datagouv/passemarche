@@ -10,10 +10,15 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
   let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
   let(:user) { create(:user, email: 'mandataire@example.com') }
 
+  let(:invited_co_traitant) do
+    create(:grouping_member, :co_traitant, grouping:, siret: '80245139600098', invitation_token: 'seed-token',
+      invitation_token_created_at: Time.current)
+  end
+
   before do
     allow(SiretValidator).to receive(:valid?).and_return(true)
     allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
-    grouping
+    invited_co_traitant
   end
 
   describe 'GET #show' do
@@ -24,6 +29,30 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
 
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the composition has not been confirmed yet (no co_traitant invited)' do
+      let(:grouping_without_composition) do
+        create(:grouping, public_market:, mandataire_market_application: create(
+          :market_application, public_market:, siret: '80245139600099', application_mode: :groupement
+        ))
+      end
+
+      before do
+        sign_in_as_candidate(user, grouping_without_composition.mandataire_market_application)
+      end
+
+      it 'redirects to the application mode choice step' do
+        get grouping_dashboard_candidate_market_application_path(
+          grouping_without_composition.mandataire_market_application.identifier
+        )
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(
+            grouping_without_composition.mandataire_market_application.identifier
+          )
+        )
       end
     end
 
@@ -118,8 +147,8 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
     context 'when all members are completed' do
       before do
         grouping.mandataire_grouping_member.update!(status: :completed)
-        completed_app = create(:market_application, public_market:, application_mode: :groupement)
-        create(:grouping_member, :co_traitant, grouping:, status: :completed, market_application: completed_app)
+        invited_co_traitant.update!(status: :completed,
+          market_application: create(:market_application, public_market:, application_mode: :groupement))
         sign_in_as_candidate(user, mandataire_application)
       end
 

@@ -5,6 +5,8 @@ module Candidate
     include Candidate::GroupementFeatureGuard
     include Candidate::MandataireGroupingGuard
 
+    before_action :redirect_unless_composition_confirmed
+
     def show
       @presenter = presenter
     end
@@ -23,6 +25,12 @@ module Candidate
     end
 
     private
+
+    def redirect_unless_composition_confirmed
+      return if grouping.composition_confirmed?
+
+      redirect_to application_mode_candidate_market_application_path(@market_application.identifier)
+    end
 
     def presenter
       @presenter ||= Candidate::GroupingDashboardPresenter.new(@market_application, grouping:)

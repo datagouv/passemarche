@@ -17,4 +17,8 @@ class Grouping < ApplicationRecord
   def any_member_started?
     grouping_members.exists?(status: %i[in_progress completed])
   end
+
+  def composition_confirmed?
+    grouping_members.co_traitant.any?(&:invitation_sent?)
+  end
 end

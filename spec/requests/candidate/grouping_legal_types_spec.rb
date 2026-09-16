@@ -69,13 +69,24 @@ RSpec.describe 'Candidate::GroupingLegalTypes', type: :request do
       create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil)
     end
 
-    it 'sets the legal_type and redirects to company_identification' do
+    it 'sets the legal_type and redirects to grouping_composition' do
       patch wizard_step_path(market_application, :grouping_legal_type), params: { legal_type: 'conjoint_mandataire_solidaire' }
 
       expect(Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: market_application.id }).legal_type)
         .to eq('conjoint_mandataire_solidaire')
       expect(response).to redirect_to(
-        company_identification_candidate_market_application_path(market_application.identifier)
+        grouping_composition_candidate_market_application_path(market_application.identifier)
+      )
+    end
+
+    it 'still redirects to grouping_composition when the composition is already confirmed' do
+      grouping = Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: market_application.id })
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      patch wizard_step_path(market_application, :grouping_legal_type), params: { legal_type: 'conjoint_mandataire_solidaire' }
+
+      expect(response).to redirect_to(
+        grouping_composition_candidate_market_application_path(market_application.identifier)
       )
     end
 
