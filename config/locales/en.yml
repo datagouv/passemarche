@@ -122,6 +122,7 @@ en:
     service_tagline: "An application tailored to each public tender, made simple"
     logo_alt: "French Republic"
     logo_operator_alt: "Passe Marché logo"
+    language_selector: "Language selection"
     navigation:
       candidate: "I am a candidate"
       buyer: "I am a public buyer"

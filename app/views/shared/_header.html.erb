@@ -30,6 +30,27 @@
         <div class="fr-header__tools">
           <div class="fr-header__tools-links">
             <ul class="fr-btns-group">
+              <li class="fr-translate">
+                <button class="fr-translate__btn fr-btn fr-btn--tertiary" aria-expanded="false" aria-controls="translate-menu" title="<%= t('header.language_selector') %>">
+                  <%= I18n.locale.to_s.upcase %>
+                </button>
+                <div class="fr-collapse fr-translate__menu fr-menu" id="translate-menu">
+                  <ul class="fr-menu__list">
+                    <li>
+                      <%= link_to 'Français', url_for(request.query_parameters.merge(locale: 'fr')),
+                          lang: 'fr', hreflang: 'fr',
+                          class: class_names('fr-translate__language', 'fr-nav__link': true),
+                          aria: { current: I18n.locale.to_s == 'fr' ? 'true' : nil } %>
+                    </li>
+                    <li>
+                      <%= link_to 'English', url_for(request.query_parameters.merge(locale: 'en')),
+                          lang: 'en', hreflang: 'en',
+                          class: class_names('fr-translate__language', 'fr-nav__link': true),
+                          aria: { current: I18n.locale.to_s == 'en' ? 'true' : nil } %>
+                    </li>
+                  </ul>
+                </div>
+              </li>
               <% if current_candidate %>
                 <li>
                   <%= link_to t('header.navigation.my_applications'), candidate_dashboard_path,

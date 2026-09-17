@@ -122,6 +122,7 @@ fr:
     service_tagline: "Un dossier de candidature, adapté à chaque marché public, en toute simplicité"
     logo_alt: "République Française"
     logo_operator_alt: "Logo Passe Marché"
+    language_selector: "Sélection de la langue"
     navigation:
       candidate: "Je suis un candidat"
       buyer: "Je suis un acheteur public"
