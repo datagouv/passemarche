@@ -14,12 +14,12 @@
           <% if component.context == :buyer && component.opqibi_metadata? %>
             <div class="fr-text--xs fr-text--mention-grey fr-mt-1v">
               <% if component.formatted_date_delivrance.present? %>
-                <strong>Date de délivrance :</strong>
+                <strong><%= t('candidate.market_applications.form_fields.inline_url_input.issue_date_label') %></strong>
                 <%= l(component.formatted_date_delivrance, format: :long) %>
                 <br>
               <% end %>
               <% if component.duree_validite_certificat.present? %>
-                <strong>Durée de validité :</strong>
+                <strong><%= t('candidate.market_applications.form_fields.inline_url_input.validity_duration_label') %></strong>
                 <%= component.duree_validite_certificat %>
               <% end %>
             </div>

@@ -16,31 +16,31 @@
                 <div class="fr-card__content">
                   <h6 class="fr-text--sm fr-mb-1w">
                     <span class="fr-icon-user-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                    Personne <%= index + 1 %>
+                    <%= t('candidate.market_applications.form_fields.presentation_intervenants.display.item_title', number: index + 1) %>
                   </h6>
 
                   <% if person['nom'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Nom :</strong> <%= person['nom'] %>
+                      <strong><%= t('candidate.market_applications.form_fields.presentation_intervenants.display.nom_label') %></strong> <%= person['nom'] %>
                     </div>
                   <% end %>
 
                   <% if person['prenoms'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Prénoms :</strong> <%= person['prenoms'] %>
+                      <strong><%= t('candidate.market_applications.form_fields.presentation_intervenants.display.prenoms_label') %></strong> <%= person['prenoms'] %>
                     </div>
                   <% end %>
 
                   <% if person['titres'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Titres :</strong> <%= person['titres'] %>
+                      <strong><%= t('candidate.market_applications.form_fields.presentation_intervenants.display.titres_label') %></strong> <%= person['titres'] %>
                     </div>
                   <% end %>
 
                   <% cv_attachments = component.person_cv_attachment(timestamp) %>
                   <% if cv_attachments.any? %>
                     <div class="fr-mb-1v">
-                      <strong>CV :</strong>
+                      <strong><%= t('candidate.market_applications.form_fields.presentation_intervenants.display.cv_label') %></strong>
                       <% cv_attachments.each do |cv| %>
                         <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(
                           document: cv,
@@ -62,7 +62,7 @@
 
       <% if component.documents_attached? %>
         <div class="fr-mt-3w">
-          <h6 class="fr-text--sm fr-mb-1w">Documents associés</h6>
+          <h6 class="fr-text--sm fr-mb-1w"><%= t('candidate.market_applications.form_fields.presentation_intervenants.display.associated_documents_title') %></h6>
           <div class="fr-text--sm fr-text--mention-grey">
             <% component.documents.each do |doc| %>
               <%= render MarketAttributeResponse::Shared::DocumentItemComponent.new(

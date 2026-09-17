@@ -16,36 +16,36 @@
                 <div class="fr-card__content">
                   <h6 class="fr-text--sm fr-mb-1w">
                     <span class="fr-icon-building-line fr-icon--sm fr-mr-1v" aria-hidden="true"></span>
-                    Réalisation <%= index + 1 %>
+                    <%= t('candidate.market_applications.form_fields.realisations_livraisons.display.item_title', number: index + 1) %>
                   </h6>
 
                   <% if realisation['resume'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Résumé :</strong> <%= realisation['resume'] %>
+                      <strong><%= t('candidate.market_applications.form_fields.realisations_livraisons.display.resume_label') %></strong> <%= realisation['resume'] %>
                     </div>
                   <% end %>
 
                   <% if realisation['date_debut'].present? || realisation['date_fin'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Période :</strong>
+                      <strong><%= t('candidate.market_applications.form_fields.realisations_livraisons.display.period_label') %></strong>
                       <% if realisation['date_debut'].present? %>
-                        Du <%= component.formatted_date(realisation['date_debut']) %>
+                        <%= t('candidate.market_applications.form_fields.realisations_livraisons.display.period_from', date: component.formatted_date(realisation['date_debut'])) %>
                       <% end %>
                       <% if realisation['date_fin'].present? %>
-                        au <%= component.formatted_date(realisation['date_fin']) %>
+                        <%= t('candidate.market_applications.form_fields.realisations_livraisons.display.period_to', date: component.formatted_date(realisation['date_fin'])) %>
                       <% end %>
                     </div>
                   <% end %>
 
                   <% if realisation['montant'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Montant :</strong> <%= component.formatted_montant(realisation['montant']) %> €
+                      <strong><%= t('candidate.market_applications.form_fields.realisations_livraisons.display.montant_label') %></strong> <%= component.formatted_montant(realisation['montant']) %> €
                     </div>
                   <% end %>
 
                   <% if realisation['description'].present? %>
                     <div class="fr-mb-1v">
-                      <strong>Description :</strong><br>
+                      <strong><%= t('candidate.market_applications.form_fields.realisations_livraisons.display.description_label') %></strong><br>
                       <%= simple_format(realisation['description'], class: 'fr-text--sm') %>
                     </div>
                   <% end %>
@@ -53,7 +53,7 @@
                   <% attestations = component.realisation_attestations(timestamp) %>
                   <% if attestations.any? %>
                     <div class="fr-mb-1v">
-                      <strong><%= attestations.size == 1 ? 'Attestation' : 'Attestations' %> :</strong>
+                      <strong><%= t('candidate.market_applications.form_fields.realisations_livraisons.display.attestation_label', count: attestations.size) %></strong>
                       <ul class="fr-text--sm fr-mt-1v">
                         <% attestations.each do |attestation| %>
                           <li>

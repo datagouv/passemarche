@@ -159,6 +159,8 @@ fr:
       not_scanned: "info"
 
   shared:
+    or_separator: "OU"
+    not_provided: "Non renseigné"
     collapsible_lots:
       show_more: "Voir plus"
       show_less: "Voir moins"
@@ -250,6 +252,7 @@ fr:
           description: "Recevez votre attestation de candidature"
 
     candidate:
+      screenshot_alt: "Capture d'écran de l'application Passe Marché"
       hero:
         title: "Votre candidature, adaptée à chaque marché public, en toute simplicité"
 
@@ -287,6 +290,7 @@ fr:
           step_3: "Votre attestation est disponible, votre candidature est terminée !"
 
     buyer:
+      screenshot_alt: "Capture d'écran de l'interface acheteur Passe Marché"
       hero:
         title: "Votre publication et votre analyse de candidatures, en toute simplicité"
 
@@ -760,6 +764,7 @@ fr:
         title: "Vérifiez vos emails"
         message: "Un lien de connexion a été envoyé. Il est valable 30 minutes."
         connection_market_intro: "Ce lien vous permettra de reprendre votre candidature pour le marché :"
+        magic_link_direct_access: "Accéder directement (lien magique)"
       invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
       welcome: "Bienvenue,"
@@ -830,17 +835,80 @@ fr:
             average_staff: "Effectif moyen"
             management_staff: "Personnel d'encadrement"
         realisations_livraisons:
+          new_item_title: "Nouvelle réalisation"
+          item_title: "Réalisation %{number}"
+          delete_button: "cette réalisation"
           labels:
             resume: "Résumé du travail effectué"
             date_debut: "Date de début"
             date_fin: "Date de fin"
-            montant: "Montant (€)"
-            description: "Description détaillée"
-            attestation_bonne_execution: "Attestation de bonne exécution"
+            montant: "Montant (EUR)"
+            description: "Description détaillée de la réalisation"
+            attestation_bonne_execution: "Attestations de bonne exécution"
           hints:
             resume: "Une phrase courte résumant le projet"
-            montant: "Montant en euros"
-            description: "Décrivez en détail la réalisation"
+            description: "Décrivez en détail les travaux effectués, les destinataires, et les résultats obtenus"
+            attestation_bonne_execution: "Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo. Vous pouvez joindre plusieurs fichiers."
+          placeholders:
+            resume: "ex: Construction d'un bâtiment municipal"
+            montant: "ex: 500000"
+            description: "ex: Construction complète d'un bâtiment municipal de 1200m² incluant gros œuvre, second œuvre et finitions."
+          display:
+            item_title: "Réalisation %{number}"
+            resume_label: "Résumé :"
+            period_label: "Période :"
+            period_from: "Du %{date}"
+            period_to: "au %{date}"
+            montant_label: "Montant :"
+            description_label: "Description :"
+            attestation_label:
+              one: "Attestation :"
+              other: "Attestations :"
+        capacites_techniques_professionnelles_outillage_echantillons:
+          new_item_title: "Nouvel échantillon"
+          item_title: "Échantillon %{number}"
+          delete_button: "cet échantillon"
+          labels:
+            description: "Description de l'échantillon"
+            fichiers: "Fichiers (photos, documents)"
+          hints:
+            description: "Décrivez l'échantillon, la photographie ou la fourniture que vous souhaitez présenter"
+            fichiers: "Format accepté : PDF, JPG, PNG. Taille maximale : 10 Mo par fichier. Vous pouvez joindre plusieurs fichiers."
+          placeholders:
+            description: "ex: Échantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, matériau acier inoxydable"
+        presentation_intervenants:
+          new_item_title: "Nouvelle personne"
+          item_title: "Personne %{number}"
+          delete_button: "cette personne"
+          labels:
+            nom: "Nom"
+            prenoms: "Prénoms"
+            titres: "Titres d'études et professionnels"
+            cv_attachment: "Ajouter un CV"
+          hints:
+            titres: "Diplômes, certifications, expériences professionnelles"
+            cv_attachment: "Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo."
+          placeholders:
+            nom: "ex: Dupont"
+            prenoms: "ex: Jean Pierre"
+            titres: "ex: Ingénieur informatique, Master en gestion de projet"
+          display:
+            item_title: "Personne %{number}"
+            nom_label: "Nom :"
+            prenoms_label: "Prénoms :"
+            titres_label: "Titres :"
+            cv_label: "CV :"
+            associated_documents_title: "Documents associés"
+          upload_list_title: "Téléchargez une liste des intervenants"
+        file_or_textarea:
+          default_description: "Description"
+        inline_url_input:
+          url_label: "URL"
+          certificate_help_intro: "Vous pouvez trouver ce certificat via"
+          certificate_help_link: "ce lien"
+          period_label: "Période :"
+          issue_date_label: "Date de délivrance :"
+          validity_duration_label: "Durée de validité :"
       market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       delete_success: "Votre candidature a bien été supprimée."
       delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
@@ -1208,6 +1276,7 @@ fr:
       import_preview:
         title: "Prévisualisation de l'import"
         summary: "%{creates} création(s), %{updates} modification(s), %{deletes} archivage(s)"
+        create_badge: "Création"
         creates_title:
           one: "%{count} création"
           other: "%{count} créations"

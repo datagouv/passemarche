@@ -89,7 +89,7 @@
           <%= response_form.hidden_field :market_attribute_id %>
           <%= response_form.hidden_field :type %>
 
-          <%= response_form.label :text, "URL", class: "fr-hint-text fr-text--md fr-mb-1w", for: component.input_id %>
+          <%= response_form.label :text, t('candidate.market_applications.form_fields.inline_url_input.url_label'), class: "fr-hint-text fr-text--md fr-mb-1w", for: component.input_id %>
           <%= response_form.text_field :text,
               value: component.text_value,
               id: component.input_id,
@@ -105,14 +105,14 @@
         <% if component.opqibi_field? %>
           <span class="fr-text--xs fr-text--blue-france" style="display: flex; align-items: center; gap: 0.25em; margin-top: 16px;">
             <i class="fr-icon--sm fr-icon-info-fill" aria-hidden="true"></i>
-            Vous pouvez trouver ce certificat via
-            <%= link_to "ce lien", component.opqibi_help_url, target: "_blank", rel: "noopener" %>
+            <%= t('candidate.market_applications.form_fields.inline_url_input.certificate_help_intro') %>
+            <%= link_to t('candidate.market_applications.form_fields.inline_url_input.certificate_help_link'), component.opqibi_help_url, target: "_blank", rel: "noopener" %>
           </span>
         <% elsif component.france_competences_field? %>
           <span class="fr-text--xs fr-text--blue-france" style="display: flex; align-items: center; gap: 0.25em; margin-top: 16px;">
             <i class="fr-icon--sm fr-icon-info-fill" aria-hidden="true"></i>
-            Vous pouvez trouver ce certificat via
-            <%= link_to "ce lien", component.france_competences_help_url, target: "_blank", rel: "noopener" %>
+            <%= t('candidate.market_applications.form_fields.inline_url_input.certificate_help_intro') %>
+            <%= link_to t('candidate.market_applications.form_fields.inline_url_input.certificate_help_link'), component.france_competences_help_url, target: "_blank", rel: "noopener" %>
           </span>
         <% end %>
       </div>

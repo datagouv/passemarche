@@ -159,6 +159,8 @@ en:
       not_scanned: "info"
 
   shared:
+    or_separator: "OR"
+    not_provided: "Not provided"
     collapsible_lots:
       show_more: "Show more"
       show_less: "Show less"
@@ -250,6 +252,7 @@ en:
           description: "Receive your application certificate"
 
     candidate:
+      screenshot_alt: "Screenshot of the Passe Marché application"
       hero:
         title: "Your application, tailored to each public tender, made simple"
 
@@ -287,6 +290,7 @@ en:
           step_3: "Your certificate is available, your application is complete!"
 
     buyer:
+      screenshot_alt: "Screenshot of the Passe Marché buyer interface"
       hero:
         title: "Your publication and application review, made simple"
 
@@ -760,6 +764,7 @@ en:
         title: "Check your emails"
         message: "A sign-in link has been sent. It is valid for 30 minutes."
         connection_market_intro: "This link will allow you to resume your application for the following tender:"
+        magic_link_direct_access: "Access directly (magic link)"
       invalid_token: "This sign-in link is invalid or has expired."
     shared:
       welcome: "Welcome,"
@@ -830,17 +835,80 @@ en:
             average_staff: "Average headcount"
             management_staff: "Management staff"
         realisations_livraisons:
+          new_item_title: "New achievement"
+          item_title: "Achievement %{number}"
+          delete_button: "this achievement"
           labels:
             resume: "Summary of work performed"
             date_debut: "Start date"
             date_fin: "End date"
-            montant: "Amount (€)"
-            description: "Detailed description"
-            attestation_bonne_execution: "Certificate of good performance"
+            montant: "Amount (EUR)"
+            description: "Detailed description of the achievement"
+            attestation_bonne_execution: "Certificates of good performance"
           hints:
             resume: "A short sentence summarizing the project"
-            montant: "Amount in euros"
-            description: "Describe the work performed in detail"
+            description: "Describe the work performed, the recipients, and the results obtained in detail"
+            attestation_bonne_execution: "Accepted format: PDF, DOC, DOCX. Maximum size: 10 MB. You can attach several files."
+          placeholders:
+            resume: "e.g.: Construction of a municipal building"
+            montant: "e.g.: 500000"
+            description: "e.g.: Full construction of a 1,200 m² municipal building including structural work, second fix, and finishing."
+          display:
+            item_title: "Achievement %{number}"
+            resume_label: "Summary:"
+            period_label: "Period:"
+            period_from: "From %{date}"
+            period_to: "to %{date}"
+            montant_label: "Amount:"
+            description_label: "Description:"
+            attestation_label:
+              one: "Certificate:"
+              other: "Certificates:"
+        capacites_techniques_professionnelles_outillage_echantillons:
+          new_item_title: "New sample"
+          item_title: "Sample %{number}"
+          delete_button: "this sample"
+          labels:
+            description: "Sample description"
+            fichiers: "Files (photos, documents)"
+          hints:
+            description: "Describe the sample, photograph, or item you wish to present"
+            fichiers: "Accepted format: PDF, JPG, PNG. Maximum size: 10 MB per file. You can attach several files."
+          placeholders:
+            description: "e.g.: Street furniture sample compliant with accessibility standards, dimensions 120x80cm, stainless steel material"
+        presentation_intervenants:
+          new_item_title: "New person"
+          item_title: "Person %{number}"
+          delete_button: "this person"
+          labels:
+            nom: "Last name"
+            prenoms: "First name(s)"
+            titres: "Academic and professional qualifications"
+            cv_attachment: "Add a CV"
+          hints:
+            titres: "Diplomas, certifications, professional experience"
+            cv_attachment: "Accepted format: PDF, DOC, DOCX. Maximum size: 10 MB."
+          placeholders:
+            nom: "e.g.: Smith"
+            prenoms: "e.g.: John Michael"
+            titres: "e.g.: Software engineer, Master's in project management"
+          display:
+            item_title: "Person %{number}"
+            nom_label: "Last name:"
+            prenoms_label: "First name(s):"
+            titres_label: "Qualifications:"
+            cv_label: "CV:"
+            associated_documents_title: "Associated documents"
+          upload_list_title: "Upload a list of participants"
+        file_or_textarea:
+          default_description: "Description"
+        inline_url_input:
+          url_label: "URL"
+          certificate_help_intro: "You can find this certificate via"
+          certificate_help_link: "this link"
+          period_label: "Period:"
+          issue_date_label: "Issue date:"
+          validity_duration_label: "Validity period:"
       market_application_completed_cannot_edit: "Your application has already been completed and can no longer be edited."
       delete_success: "Your application has been successfully deleted."
       delete_failure: "An error occurred; the application could not be deleted."
@@ -1208,6 +1276,7 @@ en:
       import_preview:
         title: "Import preview"
         summary: "%{creates} creation(s), %{updates} update(s), %{deletes} archiving(s)"
+        create_badge: "Creation"
         creates_title:
           one: "%{count} creation"
           other: "%{count} creations"
