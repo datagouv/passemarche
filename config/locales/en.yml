@@ -1,34 +1,116 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
+# frozen_string_literal: true
 
 en:
-  hello: "Hello world"
+  pagy:
+    nav:
+      aria_label: "Pagination"
+      first: "First page"
+      prev: "Previous page"
+      next: "Next page"
+      last: "Last page"
+
+  breadcrumb:
+    home: "Home"
+    aria_label: "you are here:"
+
+  mailer:
+    shared_footer:
+      privacy: Privacy policy
+      legal: Legal notice
+      copyright: "© French Republic - All rights reserved"
+      contact: contact@exemple.gouv.fr
+
+  auth_mailer:
+    magic_link:
+      subject: Your sign-in link for Passe Marché
+      greeting: Hello,
+      intro: "You requested access to Passe Marché to prepare your application for the following tender:"
+      cta_intro: "Click the button below to sign in:"
+      cta: Sign-in link
+      warning: "Warning: this link is valid for 30 minutes and can only be used once."
+    reconnection_magic_link:
+      subject: Resume your application on Passe Marché
+      greeting: "Your application,"
+      intro: "By signing in to Passe Marché with the same SIRET number and email address used at first sign-in, you can edit your application at any time until it has been submitted to the buyer."
+      market_intro: "You can access the application form for the following tender:"
+      cta_intro: "Click the button below to sign back in and continue:"
+      cta: Continue my application
+
+  grouping_invitation_mailer:
+    invitation:
+      subject: "You have been invited to apply as part of a group"
+      greeting: Hello,
+      intro: "You have been invited to join a group as a co-contractor to apply for the following tender:"
+      cta_intro: "Click the button below to join the group:"
+      cta: Join the group
+
+  source_types:
+    authentic_source:
+      label: Retrieved automatically
+      badge_class: fr-badge--success
+    honor_declaration:
+      label: Declared by the candidate
+      badge_class: fr-badge--info
+
+  time:
+    am: "am"
+    pm: "pm"
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%A %d %B %Y at %H:%M"
+      only_date: "%d/%m/%Y"
+
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%A %d %B %Y"
+      day_month_year: "%-d %B %Y"
+    day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+    abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+    month_names:
+      - ~
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    abbr_month_names:
+      - ~
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
 
   application:
     name: "Passe Marché"
@@ -37,17 +119,106 @@ en:
   header:
     home_title: "Home - Passe Marché"
     service_title: "Passe Marché"
-    service_tagline: "Simplify your public procurement applications"
+    service_tagline: "An application tailored to each public tender, made simple"
     logo_alt: "French Republic"
-    logo_operator_alt: "Logo Passe Marché"
+    logo_operator_alt: "Passe Marché logo"
+    navigation:
+      candidate: "I am a candidate"
+      buyer: "I am a public buyer"
+      my_applications: "My applications"
+      logout: "Log out"
 
   footer:
-    description: "Passe Marché facilitates SME access to French public markets."
     links:
       accessibility: "Accessibility: not compliant"
       legal: "Legal notice"
       privacy: "Personal data"
       cookies: "Cookie management"
+      sitemap: "Sitemap"
+      display_settings: "Display settings"
+      license: "etalab-2.0 licence"
+      license_notice: "Unless explicitly stated, intellectual property held by third parties, the content of this site is made available under"
+
+  button:
+    next_step: "Go to next step"
+    previous: "Previous"
+    continue: "Continue"
+    submit_summary: "Submit all my applications"
+
+  malware_scan:
+    label:
+      safe: "File verified"
+      unsafe: "Malware detected"
+      scanning: "Scanning..."
+      not_scanned: "Not verified"
+    badge_class:
+      safe: "success"
+      unsafe: "error"
+      scanning: "info"
+      not_scanned: "info"
+
+  shared:
+    collapsible_lots:
+      show_more: "Show more"
+      show_less: "Show less"
+    subcategory_labels:
+      market_information: "Tender information"
+    source_badge:
+      data_from_api: "Retrieved automatically"
+      declared_by_candidate: "Declared by the candidate"
+    application_summary:
+      market_info_title: "Tender information"
+      market_name: "Tender name"
+      lot_name: "Lot name"
+      deadline: "Submission deadline"
+      market_type: "Tender type"
+      no_market_type: "No tender type defined"
+      no_documents_configured: "No documents configured as required for this tender."
+    application_lots_summary:
+      title: "List of lots covered by the application"
+      lot_number: "Lot %{number}"
+      lot_title_label: "Title:"
+      lot_type_label: "Type:"
+      lot_cpv_label: "CPV:"
+      annex_notice:
+        one: "The lot for which the company is applying appears in the appendix to the application certificate."
+        other: "All %{count} lots for which the company is applying appear in the appendix to the application certificate."
+    application_lots_annex:
+      annex_title: "Appendices"
+      title: "Detailed list of lots covered by the application"
+      column_number: "Lot number"
+      column_name: "Name"
+      column_cpv: "CPV"
+      column_type: "Type"
+      cpv_not_provided: "Not provided"
+      type_not_provided: "Not provided"
+    renamed_documents:
+      title: "Your documents"
+      description: "To make it easier for the buyer to review your application, we renamed some documents:"
+    environment_banner:
+      message: "You are on a test environment (%{env})"
+    pdf_environment_indicator:
+      watermark: "Test certificate"
+
+  activemodel:
+    errors:
+      models:
+        lot_selection_policy:
+          attributes:
+            base:
+              no_lot_selected: "You must select at least one lot"
+              lot_limit_exceeded: "You cannot select more than %{limit} lot(s) (you selected %{count})"
+
+  errors:
+    messages:
+      blank: "must be filled in"
+      invalid: "is not valid"
+    market_application:
+      attestation_generation_failed: "A technical error occurred while generating your certificate. Our technical team has been notified and will fix this issue as soon as possible. Please try again shortly."
+      buyer_attestation_generation_failed: "A technical error occurred while generating the buyer certificate. Our technical team has been notified and will fix this issue as soon as possible. Please try again shortly."
+      documents_package_generation_failed: "A technical error occurred while generating the document package. Our technical team has been notified and will fix this issue as soon as possible. Please try again shortly."
+    public_market:
+      configuration_summary_generation_failed: "A technical error occurred while generating the configuration summary. Our technical team has been notified and will fix this issue as soon as possible. Please try again shortly."
 
   home:
     title: "Passe Marché"
@@ -77,18 +248,1385 @@ en:
           title: "3. Application"
           description: "Receive your application certificate"
 
-  activerecord:
+    candidate:
+      hero:
+        title: "Your application, tailored to each public tender, made simple"
+
+      value_proposition:
+        title: "Applying for public tenders has never been so simple!"
+        description_html: "With Passe Marché, you submit an application that <strong>automatically</strong> adjusts to the tender's requirements: not too much, not too little. You save time, limit errors, and respond in just a few clicks."
+        badges:
+          identity: "My company's identity"
+          certificates: "Certificates"
+          turnover: "Turnover"
+          balance_sheets: "Financial statement excerpts"
+
+      advantages:
+        title: "What are the benefits?"
+        items:
+          simplified_form:
+            title: "A single, simplified form"
+            description: "No unnecessary legal jargon, a clear process accessible to everyone."
+          automatic_recovery:
+            title: "Automatic retrieval of your data"
+            description: "Thanks to your SIRET and public APIs, your information is pre-filled."
+          accurate_info:
+            title: "Accurate, up-to-date information"
+            description: "Without unnecessary manual re-entry, data is verified at the source."
+          secure_transmission:
+            title: "Secure transmission to the buyer"
+            description: "Via an official, traceable channel, your documents are transmitted with confidence."
+
+      how_it_works:
+        title: "How does it work?"
+        subtitle: "A simple 3-step process to submit your application."
+        steps:
+          step_1: "You provide your SIRET number"
+          step_2: "Your company information is retrieved automatically, and you fill in any additional information requested by the buyer"
+          step_3: "Your certificate is available, your application is complete!"
+
+    buyer:
+      hero:
+        title: "Your publication and application review, made simple"
+
+      value_proposition:
+        title: "Saving time on your public tenders has never been so simple!"
+        description_html: "Thanks to our service, you publish your call for tenders on your buyer profile and receive applications that are already <strong>formatted</strong> and <strong>complete</strong>, thanks to the information transmitted by our APIs."
+        details: "You configure your tender for applications with guided support, and gain access to the documents and information required by regulations as well as those most commonly requested by buyers."
+        legend:
+          authentic: "Retrieved via API"
+          declared: "Self-declared"
+          missing: "Missing"
+
+      advantages:
+        title: "What are the benefits?"
+        items:
+          standardized:
+            title: "Standardized applications"
+            description: "All information is structured identically for each application, making comparison easier and speeding up the selection process."
+          time_saving:
+            title: "Time savings"
+            description: "No more endless email exchanges for missing documents; you receive complete applications that meet the requirements you defined."
+          reliability:
+            title: "Increased reliability"
+            description: "Candidate data is pre-filled from official sources. Information that cannot be verified is clearly identified, reducing errors and fraud."
+
+      how_it_works:
+        title: "How does it work?"
+        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        steps:
+          step_1:
+            title: "Configure your tender"
+            description: "Freely define the elements requested in the application, while retaining full flexibility."
+          step_2:
+            title: "Benefit from clear guidance"
+            description: "Easily view mandatory and optional documents."
+          step_3:
+            title: "Receive applications ready to process"
+            description: "Complete, reliable files, directly accessible from your buyer profile."
+
+      data_examples:
+        title: "Some examples of available data"
+        subtitle: "All this data is retrieved directly via API from official sources: automatic, secure, always up-to-date access that guarantees reliability and simplicity for your tenders."
+        legal:
+          title: "Legal and tax obligations"
+          items:
+            - "Total annual turnover"
+            - "Certificate of good social standing"
+            - "Certificate of vigilance"
+            - "OETH - GIP - MDS certificates"
+            - "Notices of judgments, judicial liquidations"
+            - "ProBtp certificate"
+            - "Cibtp, Cnetp contribution certificate"
+        technical:
+          title: "Technical and professional capabilities"
+          items:
+            - "Qualibat certificate"
+            - "Qualifelec certificate"
+            - "RGE certificate"
+            - "ESS company certification"
+            - "CQP TP certificate"
+            - "OPQIBI certification"
+            - "Public works professional card"
+            - "Qualiopi certification and France compétences accreditations"
+
+  market_types:
+    supplies: "Supplies"
+    services: "Services"
+    works: "Works"
+    defense: "Defense and security"
+    source:
+      platform: "Platform"
+
+  buyer:
+    shared:
+      market_info_title: "Tender information"
+      market_name: "Tender name"
+      lot_name: "Lot name"
+      lots_market: "Tender lots"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
+      deadline: "Submission deadline"
+      deadline_short: "Deadline"
+      market_type: "Tender type"
+      market_type_short: "Tender type"
+      no_market_type: "No tender type defined"
+      public_org_siret: "SIRET of the public organization"
+      identifier: "Identifier"
+      previous: "Previous"
+      welcome: "Welcome,"
+      form_logo_alt: "Form logo"
+    setup:
+      title_suffix: "Tender configuration"
+      intro: "%{editor} lets you set up a simplified application process for companies and guarantees that you collect authentic, up-to-date information about the candidate company."
+      defense_checkbox: "Check this box only if your tender relates to defense or security"
+      defense_checked: "This tender relates to defense or security"
+      defense_hint: "This designation was defined by %{editor}"
+      start_activation: "Start activation of %{editor}"
+      rc_notice:
+        title: "Your tender rules and Passe Marché"
+        close: "Close"
+        body_p1: "In accordance with article L. 2111-1 of the French Public Procurement Code, \"the nature and scope of the needs to be met shall be determined precisely before the tender process is launched\"."
+        body_p2: "The buyer is solely responsible for the consistency between the terms of its tender documentation, the information published on its buyer profile, and the tender settings entered in Passe Marché."
+        body_p3: "It is your responsibility to verify that all of these elements are consistent and free of contradiction. Any ambiguity or contradiction may engage the buyer's liability and, where applicable, lead to the irregularity of the procedure."
+    summary:
+      title_suffix: "My tender summary"
+      market_info_title: "Tender information"
+      no_fields_configured: "No fields configured."
+      finalize: "Submit configuration"
+      lot_limit: "Lot limit per candidate"
+      lot_limit_value:
+        one: "%{count} lot maximum"
+        other: "%{count} lots maximum"
+    sync_status:
+      title_suffix: "Synchronization"
+      success_title: "Synchronization successful"
+      success_message: "We have automatically transmitted the configuration to your buyer profile; companies will be able to apply via %{editor}."
+      identifier_notice: "Here is the tender identifier to keep:"
+      copy: "Copy"
+      download_configuration_summary: "Download configuration summary"
+      configuration_summary_missing: "The configuration summary could not be generated."
+      configuration_summary_missing_retry: "Retry"
+      return_to_editor: "Return to %{editor}"
+      error_title: "Unexpected error"
+      error_message: "Sorry, lorem ipsum is experiencing an issue; we were unable to transmit the information to the buyer profile."
+      error_hint: "You can try transmitting the information again by clicking the button below. If you need immediate assistance, please contact us."
+      transmit_form: "Submit the form"
+      contact_us: "Contact us"
+      pending_title: "Synchronization in progress"
+      pending_message: "Your tender is being synchronized with %{editor}. This operation finalizes the configuration and prepares access for candidates."
+      success_image_alt: "Successful synchronization"
+      error_image_alt: "Synchronization error"
+      loading_aria_label: "Synchronization in progress..."
+    published:
+      title: "Configuration locked"
+      heading: "You can no longer edit the configuration"
+      explanation: "The tender has been published, so the application configuration can no longer be edited."
+      contact_hint: "For any questions, contact your tender platform."
+      return_to_platform: "Return to the tender platform"
+      image_alt: "Illustration of a published tender"
+    public_markets:
+      wizard_completed: "Tender configured successfully"
+      market_published_cannot_edit: "This tender has been published and its configuration can no longer be edited."
+      sync_retry_initiated: "Synchronization has been restarted."
+      steps:
+        setup: "Initial configuration"
+        lot_config: "Lot configuration"
+        identite_entreprise: "Information about the company's identity"
+        motifs_exclusion: "Grounds for exclusion"
+        capacite_economique_financiere: Selection of additional information (part 1)
+        capacites_techniques_professionnelles: Selection of additional information (part 2)
+        summary: "Summary"
+      lot_config:
+        title: "Configure your lot types"
+        subtitle: "Review and adjust the type of each lot before configuring supporting documents."
+        lots_section_title: "Review the transmitted types"
+        platform_banner_global_type: "Your procurement platform sent us a tender type for the lots; if a lot's type is incorrect, you can select it to apply the correct type (works, services, supplies)"
+        platform_banner_per_lot_type: "Your procurement platform sent us a tender type for the lots; if a lot's type is incorrect, you can select it to apply the correct type (works, services, supplies)"
+        platform_source: "PLATFORM"
+        lot_number: "Lot %{number}"
+        lot_limit_section_title: "Indicate whether you want to limit the number of lots"
+        lot_limit_section_subtitle: "If you wish, you can adjust the number of lots a company can apply for."
+        lot_limit_question: "Do you want to limit the number of lots?"
+        lot_limit_yes: "Yes"
+        lot_limit_no: "No"
+        lot_limit_label: "Indicate the maximum number of lots a company can apply for:"
+        sidebar_buyer_label: "Buyer"
+        sidebar_typology_label: "Type"
+        how_it_works_title: "How it works"
+        how_it_works_step_1: "Review the types transmitted by the platform"
+        how_it_works_step_2: "Edit lot types if necessary"
+        how_it_works_step_3: "Limit the number of lots if necessary"
+        how_it_works_step_4: "Move on to application configuration"
+        column_lot: "Lot"
+        select_lot: "Select lot %{name}"
+        submit: "Configure applications"
+        edit_lot_types_button: "Edit lot types"
+        checkbox_column_label: "Selection"
+        select_all: "Select all"
+        deselect_all: "Deselect all"
+        type_picker_title: "Assign a type to the selected lots"
+        type_picker_no_lot_selected: "You must select at least one lot to assign it a type"
+        type_picker_apply: "Apply the new type"
+        type_picker_cancel: "Cancel"
+      form_config:
+        title: "Configure the application form"
+        subtitle: "Configure the supporting documents required for your tender application."
+        banner: "You only have a single application form to configure; Passe Marché takes care of transmitting your configuration for the different lots."
+        form_block_title: "Application form to configure"
+        configure_button: "Configure"
+        scope_commun_badge: "Common"
+        lots_section_title: "List of lots"
+        lots_count:
+          one: "1 lot"
+          other: "%{count} lots"
+        edit_lots_label: "Edit lot selection"
+        sidebar_buyer_label: "Buyer"
+        sidebar_typology_label: "Type"
+      generic_step:
+        optional_question: Do you want to request additional information?
+        yes_option: Yes
+        no_option: No
+        steps:
+          identite_entreprise:
+            title: Information about the company's identity
+            optional_fields_title: Additional information about the company's identity
+            optional_fields_description: You can select one or more additional pieces of information to request from candidates
+          motifs_exclusion:
+            title: "Grounds for exclusion"
+            box_title: "Mandatory and optional grounds for exclusion"
+            box_content_html: "In accordance with article R2144-4 of the French Public Procurement Code, \"the buyer may only require the single candidate to whom it plans to award the contract to prove that it is not subject to a ground for exclusion from the awarding procedure.\" Accordingly, verification of these automatically retrieved supporting documents only occurs at the award stage, for the intended awardee alone. At the application stage, the candidate's sworn statement that none of the grounds for exclusion apply is sufficient (article R. 2143-3 of the French Public Procurement Code)."
+            optional_fields_title: Optional grounds for exclusion
+            optional_fields_description: You can select one or more optional grounds for exclusion based on the subject of the tender or its performance conditions.
+            optional_question: Do you want to request other optional grounds for exclusion?
+          capacite_economique_financiere:
+            title: Additional information relating to candidates' economic and financial capacities
+            subtitle: These documents and pieces of information are optional; if you select them, they will be requested from candidates
+            box_title: Note regarding additional information
+            box_content_html: "To promote SME applications, buyers are encouraged to limit additional information requests to what is strictly relevant to the subject of the tender or its performance conditions (article L. 2142-1 of the French Public Procurement Code). <br /> Certain supporting documents (insurance, balance sheets or excerpts thereof, etc.) do not apply to all companies at the application stage. It is the buyer's responsibility to take this into account."
+            optional_fields_title: Candidates' economic and financial capacities
+            optional_fields_description: You can select one or more pieces of information to request from candidates
+          capacites_techniques_professionnelles:
+            title: Additional information relating to candidates' technical and professional capacities
+            subtitle: These documents and pieces of information are optional; if you select them, they will be requested from candidates
+            box_title: Note regarding additional information
+            box_content_html: "To promote SME applications, buyers are encouraged to limit additional information requests to what is strictly relevant to the subject of the tender or its performance conditions (article L. 2142-1 of the French Public Procurement Code). <br /> Certain supporting documents (insurance, balance sheets or excerpts thereof, etc.) do not apply to all companies at the application stage. It is the buyer's responsibility to take this into account."
+            optional_fields_title: Candidates' technical and professional capacities
+            optional_fields_description: You can select one or more pieces of information to request from candidates
+      navigation:
+        previous: "Previous"
+        next: "Next"
+      summary:
+        title: "Summary of application settings"
+        subtitle: "Review your tender's settings before finalizing the configuration."
+      sync:
+        loading: "Synchronization in progress..."
+        processing:
+          title: "Synchronization in progress"
+          message: "Your tender is being synchronized with the public procurement platform. Please wait a few moments."
+        completed:
+          title: "Synchronization complete"
+          message: "Your tender has been synchronized successfully. You can now continue."
+        failed:
+          title: "Synchronization error"
+          message: "An error occurred during synchronization. Our team has been notified. You can contact us if the problem persists."
+        continue: "Continue"
+        contact_support: "Contact support"
+    attestations:
+      motifs_exclusion:
+        candidate_attestation_title: "Candidate certificate"
+        candidate_attestation_confirmed_notice: "I hereby certify that my company is not subject to any of the grounds for exclusion set out in articles L. 2141-1 to L. 2141-5 or articles L. 2141-7 to L. 2141-10 of the French Public Procurement Code, or, in the case of a defense and security tender, articles L. 2341-1 to L. 2341-3 or articles L. 2141-7 to L. 2141-10 of the French Public Procurement Code, and undertake to inform the buyer of any change in situation without delay."
+        candidate_attestation_confirmed: "I hereby certify that my company is not subject to any ground for exclusion."
+        candidate_attestation_not_confirmed_notice: "The candidate may be subject to one of the grounds for exclusion set out in articles L. 2141-1 to L. 2141-5 or articles L. 2141-7 to L. 2141-10 of the French Public Procurement Code, or, in the case of a defense and security tender, articles L. 2341-1 to L. 2341-3 or articles L. 2141-7 to L. 2141-10 of the French Public Procurement Code."
+        candidate_attestation_not_confirmed: "The sworn statement is missing."
+      certification_notice:
+        title: "Certification:"
+        p1: "This certificate confirms that the application referenced above was successfully submitted in the Passe Marché system on the date and at the time indicated. This document constitutes official proof of submission and may be presented to the relevant authorities if necessary."
+        p2: "Automatically retrieved information is up to date as of the certificate's issue date and reflects the state of the source databases. In the event of an inaccuracy, the candidate may request that their data be corrected with the organizations that are the source of this data."
+        p3: "The candidate certifies, on their honor, the accuracy of the corrections they have made and the information entered manually. These may be subject to further verification."
+        motifs_exclusion_reminder_title: "Reminder regarding grounds for exclusion:"
+        motifs_exclusion_reminder_body: "In accordance with article R2144-4 of the French Public Procurement Code, \"the buyer may only require the single candidate to whom it plans to award the contract to prove that it is not subject to a ground for exclusion from the awarding procedure.\" Accordingly, verification of these automatically retrieved supporting documents only occurs at the award stage, for the intended awardee alone. At the application stage, the candidate's sworn statement that none of the grounds for exclusion apply is sufficient (article R. 2143-3 of the French Public Procurement Code)."
+
+  candidate:
+    deadline_passed:
+      title: "Deadline passed"
+      heading: "You can no longer edit your application"
+      explanation: "The application submission deadline has passed, so you can no longer edit your application."
+      contact_hint: "For any questions, contact the tender platform."
+      return_to_platform: "Return to the tender platform"
+      image_alt: "Illustration of a passed deadline"
+    dashboard:
+      title: "My applications"
+      summary:
+        in_progress: "Applications in progress"
+        completed: "Completed applications"
+      application:
+        lots_count:
+          one: "1 lot"
+          other: "%{count} lots"
+        modified_on: "Modified on %{date}"
+        submitted_on: "Submitted on %{date}"
+        status:
+          in_progress: "In progress"
+          submitted: "Submitted"
+        delete_modal:
+          title: "Delete application"
+          body: "You are about to delete this application; all the information you have completed will be lost. Are you sure you want to delete it?"
+          confirm: "Delete"
+          cancel: "Cancel"
+          close: "Close"
+      actions:
+        edit: "Edit"
+        view: "View"
+        delete: "Delete"
+    application_consultations:
+      submitted_on: "Submitted on %{date}"
+      back_to_dashboard: "Back to my applications"
+      download_attestation: "Download application certificate"
+      not_found: "Application not found"
+      not_accessible: "This application cannot be viewed"
+    application_modes:
+      title: "How would you like to apply?"
+      continue: "Continue"
+      continue_readonly: "Continue"
+      info_box:
+        title: "A co-contractor is not a subcontractor"
+        body: "Co-contracting or subcontracting? In a group (co-contracting), each member responds directly to the buyer and their capabilities are assessed. In subcontracting, the relationship is solely with the main contractor. If your partners are subcontractors, they do not need to be declared here."
+      already_mandataire_box:
+        title: "You are already the lead of a group for this tender"
+        body: "You cannot be the lead of several groups at once; you can only apply alone for this tender."
+      solo:
+        label: "Apply alone"
+        hint: "I am responding to this tender on my own behalf"
+      groupement:
+        label: "Apply as a group"
+        hint: "I am the lead of the group; my company coordinates a group of economic operators"
+      mixte:
+        label: "Apply both alone and as a group"
+        hint: "I respond alone on some lots and I am the group lead on others"
+    grouping_invitations:
+      title: "Group invitation"
+      pending: "Your invitation is being processed."
+    grouping_legal_types:
+      title: "Group type"
+      step_current: "Step 1 of 3"
+      step_next: "Next step:"
+      step_next_label: "Group members"
+      question: "What type of group is this?"
+      alert: "Once you have confirmed the group's composition, changing the group type will require you to start a new application from scratch."
+      continue: "Continue"
+      back: "Previous"
+      most_common_badge: "MOST COMMON"
+      conjoint:
+        label: "Joint"
+        hint: "Your company will carry out the part of the tender assigned to it and will be responsible only for that part towards the buyer."
+      solidaire:
+        label: "Joint and several"
+        hint: "Your company will be responsible for the execution of the entire tender towards the buyer. If a member defaults, the other members, including your company, may be required to fulfill the contract's obligations."
+      conjoint_mandataire_solidaire:
+        label: "Joint + joint and several lead"
+        hint: "Each member is responsible for its own share of the tender. However, the lead is jointly and severally liable with the other members: if one of them defaults, only the lead will be required to answer for its obligations towards the buyer."
+    grouping_compositions:
+      title: "Group members"
+      step_current: "Step 2 of 3"
+      step_next: "Next step:"
+      step_next_label: "Confirmation of composition"
+      intro: "Add the co-contractors who will apply with you. Invitations will only be sent after the composition is confirmed."
+      table_company: "Company"
+      table_email: "Email"
+      table_role: "Role"
+      table_status: "Invitation status"
+      company_unknown: "Company"
+      role_mandataire: "LEAD"
+      role_co_traitant: "CO-CONTRACTOR"
+      status_not_sent: "NOT SENT"
+      status_sent: "SENT"
+      no_co_traitant_line1: "No co-contractor in the group yet."
+      no_co_traitant_line2: "Add at least one co-contractor below to continue."
+      add_member_title: "Add a co-contractor"
+      siret_label: "SIRET number"
+      siret_hint: "Check"
+      siret_hint_link: "the business directory"
+      email_label: "Contact email"
+      email_hint: "Recipient of the invitation"
+      add_button: "Add to the group"
+      remove_button: "Remove"
+      removal_error_title: "Unable to remove this co-contractor"
+      back: "Previous"
+      continue: "Continue"
+      success: "The group has been created and invitations have been sent"
+      confirm:
+        title: "Group summary"
+        step_current: "Step 3 of 3"
+        step_next_label: "Confirmation of composition"
+        legal_type_label: "Group type:"
+        modify: "Edit composition"
+        submit: "Confirm and send invitations"
+    lot_selection:
+      title: "Select one or more lot(s)"
+      subtitle: "Select the lot(s) you wish to submit an application for."
+      submit: "Submit my application"
+      next: "Next"
+      market_info_title: "Tender information"
+      buyer_label: "Buyer"
+      market_type_label: "Type"
+      deadline_label: "Deadline"
+      selected_lots_title: "List of selected lots"
+      no_lot_selected: "No lot selected yet"
+      select_all: "Select all"
+      deselect_all: "Deselect all"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
+      available_lots_count:
+        one: "1 lot available"
+        other: "%{count} lots available"
+      lot_number: "Lot %{number}"
+      lot_limit_notice:
+        one: "The buyer has limited the number of lots you can apply for: %{count} lot maximum"
+        other: "The buyer has limited the number of lots you can apply for: %{count} lots maximum"
+      lot_limit_hint:
+        one: "You can select a maximum of %{count} lot."
+        other: "You can select a maximum of %{count} lots."
+      lot_limit_exceeded_notice:
+        one: "You have reached the limit: %{count} lot maximum allowed"
+        other: "You have reached the limit: %{count} lots maximum allowed."
+      prepare_title: "Prepare your application file"
+      prepare_subtitle: "Your file is organized according to the types of lots selected. Complete each section at your own pace."
+      single_form_notice: "You only have a single application form to complete; Passe Marché takes care of transmitting your application for the different lots."
+      lots_list_title: "List of lots"
+      edit_lots: "Edit lots"
+      application_form_title: "Application form"
+      fields_count: "%{filled}/%{total} fields completed"
+      start: "Complete"
+      modify: "Edit"
+      how_it_works_title: "How it works"
+      how_it_works_step_1: "Complete the application form"
+      how_it_works_step_2: "Submit your application (you can submit even if not all information has been completed)"
+    lot_selection_modes:
+      title: "Select the lots for the application"
+      subtitle_mixte: "Select the lots you will apply for alone or as a group."
+      subtitle_groupement: "Select the lots the group will apply for."
+      rc_notice_title: "If in doubt, check the tender rules"
+      rc_notice_body: "Your buyer may have specified rules regarding lot management in the tender rules; check it"
+      rc_notice_link: "via this link"
+      group_title_prefix: "For lots of type"
+      apply_to_typology: "Apply to the entire type:"
+      apply_to_typology_placeholder: "Choose an option"
+      solo: "Alone"
+      groupement: "As a group"
+      none: "Do not respond"
+      lot_column_header: "Lot"
+      name_column_header: "Lot name"
+      lot_number: "Lot %{number}"
+      banner_text: "You must select at least one \"Alone\" lot and one \"As a group\" lot to continue."
+      back: "Previous"
+      continue: "Continue"
+    validations:
+      siret_blank: "Please provide your SIRET number"
+      siret_invalid: "The SIRET number entered is invalid"
+      siret_same_as_mandataire: "This SIRET number belongs to your company; you are already part of the group"
+      email_blank: "Please provide your email address"
+      email_invalid: "The email address must be in a valid format (example@domain.com)"
+      already_mandataire: "You are already the lead of a group for this tender"
+      application_mode_invalid: "The selected application mode is not valid"
+      grouping_not_found: "No group found for this application"
+      legal_type_invalid: "The selected group type is not valid"
+      grouping_member_not_found: "This co-contractor was not found in the group"
+      grouping_member_already_invited: "This co-contractor has already received their invitation and can no longer be removed"
+      no_co_traitant: "Please add at least one co-contractor before continuing"
+      groupement_application_not_found: "No group application found"
+      lot_ids_invalid: "One or more selected lots do not belong to this tender"
+      lot_selection_mode_incomplete: "You must select at least one \"Alone\" lot and one \"As a group\" lot to continue."
+    request_magic_link:
+      no_application_found: "No application found for this SIRET number"
+      no_market_context: "Please access Passe Marché from your public procurement platform"
+      reconnection_email_mismatch: "The email address does not match the one used when the application was created"
+    sessions:
+      new:
+        title: "Welcome,"
+        subtitle: "Passe Marché lets you apply for public tenders."
+        subtitle_with_editor: "%{editor} lets you quickly apply for public tenders."
+        employee_section: "Are you an employee?"
+        siret_label: "Please enter your SIRET number"
+        siret_hint: "This allows us to automatically retrieve information and documents"
+        email_label: "Please enter your email address"
+        submit: "Receive a sign-in link"
+        manager_section: "Are you an executive?"
+        proconnect_cta: "Sign in with ProConnect"
+      sent:
+        title: "Check your emails"
+        message: "A sign-in link has been sent. It is valid for 30 minutes."
+        connection_market_intro: "This link will allow you to resume your application for the following tender:"
+      invalid_token: "This sign-in link is invalid or has expired."
+    shared:
+      welcome: "Welcome,"
+      siret_label: "Your SIRET number"
+      siret_hint: "This number was provided by the public procurement platform and cannot be edited"
+      continue: "Continue"
+      previous: "Previous"
+      next: "Next"
+      form_logo_alt: "Form logo"
+      market_name: "Tender name"
+      lot_name: "Lot name"
+      deadline: "Submission deadline"
+      market_type: "Tender type"
+      no_market_type: "No tender type defined"
+      no_content: "No content available for this step."
+    company_identification:
+      title: "Application - Identification"
+      intro: "%{editor} lets you quickly apply for public tenders."
+    sync_status:
+      title_suffix: "Application synchronization"
+      success_title: "Your application has been submitted!"
+      success_message: "We have automatically transmitted all necessary information to the buyer. You can download your application certificate, which serves as proof of submission."
+      download_attestation: "Download my application certificate"
+      return_to_editor: "Return to %{editor}"
+      error_title: "Unexpected error"
+      error_message: "Sorry, our system is experiencing an issue; we were unable to transmit your application to the tender platform."
+      error_hint: "You can try transmitting the information again by clicking the button below. If you need immediate assistance, please contact us."
+      retry_sync: "Retry submitting my application"
+      contact_us: "Contact us"
+      pending_title: "Synchronization in progress"
+      pending_message: "Your application is being synchronized with %{editor}. This operation ensures your application is transmitted correctly."
+      success_image_alt: "Successful synchronization"
+      error_image_alt: "Synchronization error"
+      loading_aria_label: "Synchronization in progress..."
+    attachments:
+      delete_confirm: "Are you sure you want to delete this file?"
+      delete_success: "File deleted successfully"
+      delete_error: "Error deleting the file"
+      network_error: "Network error while deleting"
+      not_found: "File not found or not authorized"
+      application_not_found: "Application not found"
+    attestations:
+      certification_notice:
+        title: "Certification:"
+        p1: "This certificate confirms that the application referenced above was successfully submitted in the Passe Marché system on the date and at the time indicated. This document constitutes official proof of submission and may be presented to the relevant authorities if necessary."
+        p2: "Automatically retrieved information is up to date as of the certificate's issue date and reflects the state of the source databases. In the event of an inaccuracy, the candidate may request that their data be corrected with the organizations that are the source of this data."
+        p3: "The candidate certifies, on their honor, the accuracy of the corrections they have made and the information entered manually. These may be subject to further verification."
+        motifs_exclusion_reminder_title: "Reminder regarding grounds for exclusion:"
+        motifs_exclusion_reminder_body: "In accordance with article R2144-4 of the French Public Procurement Code, \"the buyer may only require the single candidate to whom it plans to award the contract to prove that it is not subject to a ground for exclusion from the awarding procedure.\" Accordingly, verification of these automatically retrieved supporting documents only occurs at the award stage, for the intended awardee alone. At the application stage, the candidate's sworn statement that none of the grounds for exclusion apply is sufficient (article R. 2143-3 of the French Public Procurement Code)."
+    market_applications:
+      form_fields:
+        capacite_economique_financiere_assurance_risques_professionnels:
+          extra: I certify that my company is up to date with its insurance obligations
+        capacite_economique_financiere_chiffre_affaires_global_annuel:
+          notice: "Some information has been automatically retrieved from government services. This data is pre-filled and cannot be edited."
+          table_headers:
+            year: "Year"
+            turnover: "Turnover"
+            market_percentage: "Percentage"
+            fiscal_year_end: "Fiscal year end"
+          year_labels:
+            year_1: "Fiscal year N-1"
+            year_2: "Fiscal year N-2"
+            year_3: "Fiscal year N-3"
+        capacite_economique_financiere_effectifs_moyens_annuels:
+          table_headers:
+            year: "Year"
+            average_staff: "Average headcount"
+            management_staff: "Management staff"
+        realisations_livraisons:
+          labels:
+            resume: "Summary of work performed"
+            date_debut: "Start date"
+            date_fin: "End date"
+            montant: "Amount (€)"
+            description: "Detailed description"
+            attestation_bonne_execution: "Certificate of good performance"
+          hints:
+            resume: "A short sentence summarizing the project"
+            montant: "Amount in euros"
+            description: "Describe the work performed in detail"
+      market_application_completed_cannot_edit: "Your application has already been completed and can no longer be edited."
+      delete_success: "Your application has been successfully deleted."
+      delete_failure: "An error occurred; the application could not be deleted."
+      sync_retry_initiated: "Synchronization has been restarted."
+      completion_error: "An error occurred while finalizing your application. Please try again."
+      insee_api_error: "Unable to retrieve your company's information: %{error}"
+      rne_api_error: "Unable to retrieve your company's RNE information: %{error}"
+      qualibat_api_error: "Unable to retrieve your company's Qualibat certification: %{error}"
+      urssaf_api_error: "Unable to retrieve the URSSAF certificate of vigilance: %{error}"
+      auto_filled_message: "This information was retrieved automatically and does not require any action on your part."
+      attestation_motifs_exclusion:
+        header_title: "Grounds for exclusion"
+        title: "Sworn statement - Grounds for exclusion"
+        declaration: "The individual candidate declares, on their honor, that they are not subject to a ground for exclusion under the French Public Procurement Code."
+        article_1_label: "Art. L.2141-1 to L.2141-5"
+        article_2_label: "Art. L.2141-7 to L.2141-10"
+        checkbox_label: "I certify, on my honor, that my company is not subject to any of the grounds for exclusion referred to in the articles above."
+        details_title: "Learn more about grounds for exclusion"
+        details:
+          principe:
+            title: "Principle"
+            body: "Mandatory grounds for exclusion are binding on the buyer. When a candidate falls under one of these cases, the buyer must reject their application, subject to the self-remediation measures provided for by the French Public Procurement Code."
+          condamnations_penales:
+            title: "Criminal convictions covered"
+            body: "Your company or one of its executives must not have received a final conviction, notably for:"
+            tags:
+              - "Drug trafficking"
+              - "Human trafficking"
+              - "Fraud"
+              - "Money laundering"
+              - "Acts of terrorism"
+              - "Passive corruption"
+              - "Influence peddling"
+              - "Illegal taking of interest"
+              - "Obstruction of free access to public contracts"
+              - "Obstruction of justice"
+              - "Forgery"
+              - "Criminal conspiracy"
+          situation_entreprise:
+            title: "Company situation"
+            body: "Also excluded, notably: companies in judicial liquidation, executives subject to personal bankruptcy or a management ban, as well as companies convicted of undeclared work, illegal subcontracting, unlawful lending of workers, employment of unauthorized foreign nationals, discrimination, or failure to meet professional equality obligations."
+          manquements_fiscaux:
+            title: "Tax failures"
+            body: "Exclusion applies notably in the event of an administrative penalty on a prior public contract, or a conviction for tax fraud, obstruction of a tax audit, or issuing false tax documents."
+          presomption_entente:
+            title: "Presumption of collusion"
+            body: "If there is evidence of an agreement between the company and other economic operators aimed at distorting competition."
+          conflit_interet:
+            title: "Conflict of interest"
+            body: "Raising doubt about the impartiality of the contract award procedure."
+      motifs_exclusion:
+        provide_additional_info_button: "I would like to provide additional information"
+        motifs_exclusion_fiscales_et_sociales_liquidation_judiciaire:
+          title: "Judicial liquidation proceedings"
+          desc: "If your company is not established in France, you must have an extract from the professional register proving the absence of receivership, judicial liquidation, or any equivalent proceeding."
+          info: "A document concerning your company was sent to us by the administration"
+        motifs_exclusion_fiscales_et_sociales_faillite_interdiction:
+          title: "At-risk executive"
+          desc: "A risk concerning the executive (personal bankruptcy, management ban, etc.) has been detected."
+          info: "A document concerning your company was sent to us by the administration"
+      api_data_recovery_status:
+        title: "We are pre-filling your application file"
+        description: "Our systems verify the integrity and validity of each document and piece of information retrieved. They are then formatted to meet the tender's requirements."
+        benefit_info: "Some information requested by the buyer will need to be completed manually."
+        benefit_locked: "Automatically retrieved documents and information cannot be edited."
+        benefit_accuracy: "Passe Marché aims to save time, avoid data entry errors, and guarantee data accuracy!"
+        apis_list_title: "APIs that will be queried:"
+        blocks_list_title: "We retrieve your documents and information"
+        messages:
+          all_success: "All information and documents have been retrieved"
+          partial_success: "Some information or documents could not be retrieved automatically; we will ask you to complete this information manually"
+        blocks:
+          identite_entreprise:
+            name: "Company identity"
+            description: "General information and legal data about your company"
+            icon: "building-line"
+            order: 1
+            apis:
+              - insee
+              - rne
+          motifs_exclusion:
+            name: "Grounds for exclusion"
+            description: "Certificates relating to tax and social obligations"
+            icon: "shield-check-line"
+            order: 2
+            apis:
+              - bodacc
+              - urssaf_attestation_vigilance
+          capacites_economiques:
+            name: "Economic and financial capacities"
+            description: "Tax certificates and financial data"
+            icon: "money-euro-circle-line"
+            order: 3
+            apis:
+              - attestations_fiscales
+              - probtp
+              - dgfip_chiffres_affaires
+              - actes_bilans
+          capacites_techniques_professionnelles:
+            name: "Technical and professional capacities"
+            description: "Professional certifications and technical qualifications of your company"
+            icon: "award-line"
+            order: 3
+            apis:
+              - qualibat
+              - qualifelec
+              - opqibi
+              - carif_oref
+              - rge
+              - fntp
+      steps:
+        api_data_recovery_status: "Automatic data retrieval"
+        market_and_company_information: "Tender and company information"
+        attestation_motifs_exclusion: "Grounds for exclusion"
+        exclusion_criteria: "Supporting documents relating to mandatory grounds for exclusion"
+        economic_capacities: "Economic and financial capacities"
+        technical_capacities: "Technical and professional capacities"
+        summary: "Application summary"
+
+      manual_subcategories:
+        market_information: "Tender information"
+
+      market_and_company_information:
+        title: "Tender and company information"
+        subtitle: "Lorem ipsum..."
+        subcategories:
+          market_information: "Tender information"
+          company_information: "Company information"
+          contact_information: "Contact information"
+      exclusion_criteria:
+        title: "Supporting documents relating to mandatory grounds for exclusion"
+        subtitle: "Lorem ipsum..."
+      economic_capacities:
+        title: "Economic and financial capacities"
+        subtitle: "Lorem ipsum..."
+        subcategories:
+          annual_turnover: "Turnover"
+          financial_statements: "Financial statements"
+          professional_risk_insurance: "Bank and insurance"
+      technical_capacities:
+        title: "Technical and professional capacities"
+        subtitle: "Lorem ipsum..."
+        subcategories:
+          workforce: "Workforce"
+          professional_certificates: "Certificates"
+          achievements: "Achievements"
+          equipment_quality: "Tools and equipment"
+          quality_environment: "Insurance and quality"
+      summary:
+        title: "Application summary"
+        subtitle: "Below is a summary of the information you have provided for your application. <br /> You can review it and, if necessary, edit it by returning to the previous steps of the form before validation."
+        buyer_additional_info_banner: "Depending on the tender documents, the buyer may require the candidate to provide information relating to its economic, financial, technical, and professional capacities in order to respond to the tender. The buyer may ask the candidate to provide evidence relating to its declarations at any stage of the procedure. In the event of a failure or incomplete response, the buyer may reject the application."
+        missing_mandatory_motifs_exclusion_banner: "The candidate is informed that their application may be rejected by the buyer on the basis of one of these grounds for exclusion. The buyer may ask the tender's awardee to provide supporting documents to prove that they are not subject to one of these grounds for exclusion."
+        submission_disclaimer: "By submitting your application, you certify, on your honor, the accuracy of the information entered manually and confirm that you meet all the requirements set out in the tender documents."
+
+  form_fields:
+    candidate:
+      carif_oref:
+        qualiopi:
+          action_formation: Training action
+          bilan_competences: Skills assessment
+          validation_acquis_experience: VAE (prior learning validation)
+          apprentissage: Apprenticeship
+          obtention_via_unite_legale: Obtained via the legal entity
+          specialites: Specialties
+          certified: Certified company
+          not_certified: Not certified
+        france_competence:
+          code: Code
+          actif: Active
+          inactif: Inactive
+          date_actif: Date
+          date_fin_enregistrement: Registration end date
+          habilitation_pour_former: Accreditation to provide training
+          habilitation_pour_organiser_evaluation: Accreditation to organize assessment
+          siret_organisme_certificateur: SIRET of the certifying body
+      subcategories:
+        market_information: "Tender information"
+      shared:
+        "yes": Yes
+        "no": No
+      fields:
+        capacites_techniques_professionnelles_certificats_ess:
+          radio_yes: Yes, my company is an ESS
+          radio_no: No, my company is not an ESS
+          text_label: Supporting document or details
+          text_hint: If your ESS status could not be determined automatically, you can attach a supporting document or provide details about your situation.
+          display_label: "The company is an ESS:"
+
+  api:
     errors:
+      defense_market_not_allowed: "Creating defense tenders requires prior authorization. Please contact the administrator to enable this feature."
+      market_not_completed: "The tender has not yet been configured."
+      market_already_published: "The tender has already been published."
+      market_not_published: "The tender has not yet been published; you cannot apply for it."
+    insee:
+      ess:
+        is_ess: "The company is an ESS - data from an official source"
+        is_not_ess: "The company is not an ESS - data from an official source"
+
+  admin:
+    authorization:
+      insufficient_permissions: "You do not have the necessary permissions to perform this action."
+    shared:
+      "yes": "Yes"
+      "no": "No"
+      authorized: "Authorized"
+      not_authorized: "Not authorized"
+      actions: "Actions"
+      view: "View"
+      edit: "Edit"
+      delete: "Delete"
+      cancel: "Cancel"
+      create: "Create"
+      update: "Update"
+      back_to_list: "Back to list"
+      errors: "Errors:"
+      confirm_delete: "Are you sure?"
+      name: "Name"
+      active: "Active"
+      show_hide_secret: "Show/Hide secret"
+      show_secret: "Show secret"
+      not_configured: "Not configured"
+    navigation:
+      editors: "procurement platforms"
+      dashboard: "Dashboard"
+      socle_de_base: "Base framework"
+      background_jobs: "Background jobs"
+      logout: "Log out"
+    dashboard:
+      title: "Activity tracking"
+      title_with_editor: "Activity tracking - %{editor_name}"
+      filter:
+        label: "Filter by platform"
+        all_editors: "All procurement platforms"
+      export_button: "Export (CSV)"
+      info_button_title: "More information"
+      cards:
+        editors_total:
+          title: "configured procurement platforms"
+          tooltip: "Total number of procurement platforms registered on the platform"
+        editors_active:
+          title: "active and authorized procurement platforms"
+          tooltip: "Procurement platforms able to create tenders"
+        markets_total:
+          title: "Tenders created"
+          tooltip: "Total number of public tenders created"
+        markets_completed:
+          title: "Completed tenders"
+          tooltip: "Tenders whose configuration is finalized"
+        markets_active:
+          title: "Active tenders"
+          tooltip: "Tenders being configured"
+        applications_total:
+          title: "Total applications"
+          tooltip: "Total number of applications submitted"
+        applications_completed:
+          title: "Completed applications"
+          tooltip: "Applications finalized by companies"
+        documents_transmitted:
+          title: "Documents transmitted"
+          tooltip: "Total number of files submitted by candidates"
+        unique_companies:
+          title: "Companies using the service"
+          tooltip: "Number of unique companies (distinct SIRET numbers)"
+        unique_buyers:
+          title: "Public buyers"
+          tooltip: "Number of unique buyers (distinct SIRET numbers)"
+        avg_completion_time:
+          title: "Average completion time"
+          tooltip: "Average time between the creation and finalization of an application"
+        auto_fill_rate:
+          title: "Automatic fill rate"
+          tooltip: "Percentage of fields filled automatically via APIs"
+      export:
+        filename: "passe-marche-statistics"
+        headers:
+          metric: "Metric"
+          value: "Value"
+          export_date: "Export date"
+          editor: "Editor"
+        all_editors: "All"
+    editors:
+      created: "Editor created successfully."
+      updated: "Editor updated successfully."
+      webhook_secret_generated: "New webhook secret generated successfully"
+      webhook_secret_error: "Error generating the secret"
+      index:
+        title: "Manage procurement platforms"
+        add: "Add a platform"
+        client_id: "Client ID"
+        confirm_delete: "Are you sure?"
+      new:
+        breadcrumb: "New platform"
+        title: "New platform"
+        can_create_defense_markets: "Can create defense and security (MDS) tenders"
+      edit:
+        breadcrumb: "Edit"
+        title: "Edit %{name}"
+        oauth_credentials: "OAuth credentials"
+        client_id: "Client ID"
+        client_secret: "Client Secret"
+        webhook_config: "Webhook configuration"
+        completion_webhook_url: "Completion webhook URL"
+        completion_webhook_hint: "HTTPS URL where tender completion notifications will be sent"
+        buyer_return_url: "Buyer return URL"
+        buyer_return_url_hint: "Return URL to the buyer platform after tender configuration. The market_identifier parameter will be added automatically."
+        candidate_return_url: "Candidate return URL"
+        candidate_return_url_hint: "Return URL to the buyer platform after application submission. The market_identifier and application_identifier parameters will be added automatically."
+        webhook_secret: "Webhook secret"
+        webhook_secret_hint: "Secret used to sign payloads (HMAC-SHA256)"
+        generate_new_secret: "Generate a new secret"
+        generate_secret: "Generate a secret"
+        confirm_regenerate_secret: "Are you sure? This will invalidate the old secret."
+        can_create_defense_markets: "Can create defense and security (MDS) tenders"
+      show:
+        statistics_title: "Statistics"
+        statistics_description: "View detailed statistics for this editor on the dashboard."
+        view_statistics: "View statistics"
+        information: "Information"
+        mds_markets: "MDS tenders:"
+        created_at: "Created on:"
+        oauth_credentials: "OAuth credentials"
+        client_id: "Client ID:"
+        client_secret: "Client Secret:"
+        webhook_config: "Webhook configuration"
+        webhook_url: "Webhook URL:"
+        buyer_return_url: "Buyer return URL:"
+        candidate_return_url: "Candidate return URL:"
+        secret_configured: "Secret configured:"
+        webhook_not_configured: "Webhook not configured"
+        confirm_delete: "Are you sure you want to delete this editor?"
+    webhook_events:
+      retry_queued: "Webhook queued for retry."
+      retry_not_available: "This webhook cannot be retried."
+      deleted: "Editor deleted successfully."
+    socle_de_base:
+      title: "Base framework"
+      manage_button: "Manage base framework"
+      export_button: "Export"
+      new_field_button: "New field"
+      show_button: "View"
+      archive_button: "Archive"
+      archive:
+        confirm: "Are you sure you want to archive this field? It will no longer be visible in the base framework."
+        success: "The field \"%{key}\" has been archived successfully."
+        already_archived: "This field is already archived."
+      actions:
+        import: "Import"
+        export: "Export"
+        new_field: "Create a field"
+        history: "View history"
+      import:
+        title: "Import a configuration"
+        description: "Select a CSV file to import the base framework field configuration."
+        file_label: "CSV file"
+        file_hint: "CSV format only"
+        submit: "Import"
+        cancel: "Cancel"
+        close: "Close"
+        success: "Import successful: %{created} created, %{updated} updated, %{soft_deleted} archived, %{skipped} skipped"
+        no_file: "Please select a CSV file"
+        error: "Error during import: %{message}"
+        expired: "The import file has expired. Please restart the import."
+      import_preview:
+        title: "Import preview"
+        summary: "%{creates} creation(s), %{updates} update(s), %{deletes} archiving(s)"
+        creates_title:
+          one: "%{count} creation"
+          other: "%{count} creations"
+        updates_title:
+          one: "%{count} update"
+          other: "%{count} updates"
+        deletes_title:
+          one: "%{count} archiving"
+          other: "%{count} archivings"
+        key: "Key"
+        name: "Name"
+        changes: "Changes"
+        confirm: "Confirm import"
+        cancel: "Cancel"
+        no_file: "Please select a CSV file"
+      cards:
+        total:
+          title: "Total fields"
+          tooltip: "Total number of fields in the base framework"
+        api:
+          title: "API fields"
+          tooltip: "Fields automatically populated via API"
+        manual:
+          title: "Manual fields"
+          tooltip: "Fields to be filled in manually"
+        mandatory:
+          title: "Default fields"
+          tooltip: "Fields required for any application"
+      badges:
+        mandatory: "Mandatory"
+        optional: "Additional"
+        api: "API %{api_name}"
+        manual: "Manual"
+      accordion:
+        buyer_title: "Buyer"
+        candidate_title: "Candidate"
+      table:
+        headers:
+          category: "Category"
+          subcategory: "Subcategory"
+          field: "Field"
+          market_type: "Tender type"
+          source: "Source"
+          actions: "Actions"
+      filters:
+        search_placeholder: "Search by category, subcategory, or field..."
+        search_button: "Search"
+        market_type: "Tender type"
+        category: "Category"
+        source: "Source"
+        source_api: "API"
+        source_manual: "Manual"
+        no_results: "No field matches your search."
+        reset: "Reset filters"
+      input_type_hints:
+        file_upload: "The candidate uploads one or more files."
+        text_input: "The candidate enters a short, single-line answer."
+        checkbox: "The candidate checks a box to confirm (yes/no)."
+        textarea: "The candidate enters free text over multiple lines."
+        email_input: "The candidate enters an email address."
+        phone_input: "The candidate enters a phone number."
+        checkbox_with_document: "The candidate checks a box and can attach a supporting document."
+        file_or_textarea: "The candidate uploads a file or writes a text response."
+        url_input: "The candidate enters a web address (URL)."
+        radio_with_file_and_text: "The candidate chooses an option and can attach a file and a comment."
+        radio_with_justification_required: "The candidate chooses an option and must provide a justification."
+        radio_with_justification_optional: "The candidate chooses an option and can provide a justification."
+        inline_file_upload: "File upload displayed inline in the form."
+        inline_url_input: "URL entry displayed inline in the form."
+        realisations_livraisons: "The candidate describes past achievements or deliveries (structured table)."
+        presentation_intervenants: "The candidate presents the project's participants."
+        capacite_economique_financiere_chiffre_affaires_global_annuel: "Pre-filled table of annual turnover (API data)."
+        capacite_economique_financiere_effectifs_moyens_annuels: "Pre-filled table of average annual headcount (API data)."
+        capacites_techniques_professionnelles_outillage_echantillons: "The candidate describes their tools, equipment, and technical resources."
+      market_type_badges:
+        works: "T"
+        supplies: "F"
+        services: "S"
+        defense: "D"
+      show:
+        back: "Back to base framework"
+        general_info: "General information"
+        field_type: "Field type"
+        mandatory: "Mandatory field"
+        market_types: "Tender types"
+        description: "Description"
+        buyer_view: "Buyer view"
+        candidate_view: "Candidate view"
+        category: "Category"
+        subcategory: "Subcategory"
+        title_field: "Title"
+        description_field: "Description"
+        configuration: "Configuration"
+        mode: "Mode"
+        mode_api: "API"
+        mode_manual: "Manual"
+        api_source: "API source"
+        api_key: "API key"
+        archive_button: "Archive this field"
+        archive_confirm: "Are you sure you want to archive this field?"
+      new:
+        title: "Create a new field"
+        breadcrumb: "New field"
+      edit:
+        title: "Edit field"
+        submit: "Save"
+        cancel: "Cancel"
+        select_option: "Select..."
+      create:
+        success: "The field was created successfully."
+      update:
+        success: "Field updated successfully"
+      form:
+        general_info:
+          title: "General information"
+          input_type: "Input type"
+          input_type_hint: "Select the type of field to be shown to the candidate"
+          input_type_prompt: "Select an input type"
+          mandatory: "Mandatory field"
+          mandatory_hint: "If checked, this field will be required for any application"
+        configuration:
+          title: "Source configuration"
+          source: "Data source"
+          source_manual: "Manual"
+          source_manual_hint: "The candidate provides this information manually"
+          source_api: "API"
+          source_api_hint: "This information is retrieved automatically via an API"
+          api_name: "API name"
+          api_name_hint: "Name of the data provider (e.g., Insee, Urssaf)"
+          api_key: "API key"
+          api_key_hint: "Technical identifier of the field in the API (e.g., siret, denomination)"
+        descriptions:
+          title: "Buyer / candidate descriptions"
+          category: "Category"
+          category_prompt: "Select a category"
+          subcategory: "Subcategory"
+          subcategory_prompt: "Select a subcategory"
+          buyer_name: "Buyer label"
+          buyer_name_hint: "Name of the field as shown to the buyer"
+          candidate_name: "Candidate label"
+          candidate_name_hint: "Name of the field as shown to the candidate"
+          buyer_description: "Buyer description"
+          buyer_description_hint: "Help text shown to the buyer"
+          candidate_description: "Candidate description"
+          candidate_description_hint: "Help text shown to the candidate"
+        market_types:
+          title: "Tender types"
+          hint: "Select at least one tender type"
+        submit: "Create field"
+        cancel: "Cancel"
+      errors:
+        title: "Errors in the form"
+    categories:
+      title: "Categories and subcategories"
+      back_link: "Back"
+      categories_table:
+        headers:
+          buyer_label: "Buyer category"
+          candidate_label: "Candidate category"
+          actions: "Actions"
+      subcategories_table:
+        headers:
+          buyer_label: "Buyer subcategory"
+          candidate_label: "Candidate subcategory"
+          actions: "Actions"
+      actions:
+        create: "Create"
+        create_category: "Create a new category"
+        create_subcategory: "Create a new subcategory"
+        edit: "Edit"
+      navigation_link: "Categories and subcategories"
+      new:
+        title: "Create a category"
+        buyer_section: "Buyer category"
+        candidate_section: "Candidate category"
+        label_field: "Category name"
+        submit: "Create"
+        cancel: "Cancel"
+        close: "Close"
+      create:
+        success: "Category created successfully"
+      edit:
+        title: "Edit a category"
+        buyer_section: "Buyer category"
+        candidate_section: "Candidate category"
+        label_field: "Category name"
+        submit: "Save"
+        cancel: "Cancel"
+        close: "Close"
+      update:
+        success: "Category updated successfully"
+    subcategories:
+      new:
+        title: "Create a subcategory"
+        buyer_section: "Buyer subcategory"
+        candidate_section: "Candidate subcategory"
+        linked_category: "Linked to category"
+        select_category: "Select a category"
+        label_field: "Subcategory name"
+        submit: "Create"
+        cancel: "Cancel"
+        close: "Close"
+      create:
+        success: "Subcategory created successfully"
+      edit:
+        title: "Edit a subcategory"
+        buyer_section: "Buyer subcategory"
+        candidate_section: "Candidate subcategory"
+        linked_category: "Linked to category"
+        label_field: "Subcategory name"
+        submit: "Save"
+        cancel: "Cancel"
+        close: "Close"
+      update:
+        success: "Subcategory updated successfully"
+    audit_logs:
+      title: "Change history"
+      filters:
+        search_placeholder: "Search by category or content..."
+        date_from: "Start date"
+        date_to: "End date"
+        user: "User"
+        all_users: "All users"
+        submit: "Filter"
+      table:
+        category: "Category"
+        scope: "Scope"
+        action_type: "Change type"
+        user: "User"
+        date: "Date"
+        detail: "View details"
+      events:
+        create: "Creation"
+        update: "Update"
+        destroy: "Deletion"
+        archive: "Archiving"
+      scopes:
+        buyer: "Buyer"
+        candidate: "Candidate"
+        both: "Buyer / Candidate"
+      show:
+        title_create: "Creation details"
+        title_update: "Update details"
+        title_archive: "Archiving details"
+        back: "Back to history"
+        field: "Field"
+        before: "Before"
+        after: "After"
+        trackable: "Item concerned"
+        performed_by: "Performed by"
+        performed_at: "On"
+        buyer_content: "Buyer content"
+        candidate_content: "Candidate content"
+        event: "Action"
+        changed_attributes: "Changed attributes"
+        value: "Value"
+      empty: "No changes recorded"
+      attribute_labels:
+        buyer_name: "Buyer title"
+        buyer_description: "Buyer description"
+        candidate_name: "Candidate title"
+        candidate_description: "Candidate description"
+        mandatory: "Mandatory"
+        input_type: "Field type"
+        api_name: "API name"
+        api_key: "API key"
+        category_key: "Category"
+        subcategory_key: "Subcategory"
+        deleted_at: "Archived"
+        key: "Technical key"
+
+  activerecord:
+    attributes:
+      market_attribute:
+        buyer_name: "Buyer label"
+        candidate_name: "Candidate label"
+        market_types: "Tender types"
+        api_name: "API name"
+        api_key: "API key"
+    errors:
+      messages:
+        record_invalid: "Validation failed: %{errors}"
+        cannot_be_alone: "cannot be alone"
+        same_as_mandataire: "matches the lead's SIRET; you are already part of the group"
+        inclusion: "is not included in the list of allowed values"
+        invalid: "is not valid"
+        blank: "cannot be blank"
+        taken: "is already taken"
+        too_long: "is too long (maximum %{count} characters)"
+        too_short: "is too short (minimum %{count} characters)"
+        wrong_length: "is the wrong length (should be %{count} characters)"
+        not_a_number: "is not a number"
+        greater_than: "must be greater than %{count}"
+        greater_than_or_equal_to: "must be greater than or equal to %{count}"
+        equal_to: "must be equal to %{count}"
+        less_than: "must be less than %{count}"
+        less_than_or_equal_to: "must be less than or equal to %{count}"
+        other_than: "must be other than %{count}"
+        odd: "must be odd"
+        even: "must be even"
+        present: "must be provided"
+        required: "is required"
+        confirmation: "doesn't match confirmation"
+        accepted: "must be accepted"
+        empty: "must be empty"
+        in: "is not included in the list"
+        excluded: "is not available"
+      json_schema:
+        invalid_format: "The format is not valid"
+        too_long: "The content is too long"
+        required: "This field is required"
+        wrong_type: "The data type is not valid"
+        additional_properties: "Unauthorized properties were provided"
+        invalid: "The data provided is not valid"
       models:
         public_market:
+          same_typology_required: "You cannot change the type of this lot; at least one of the lots must be of the same type as the tender."
+          no_lot_selected: "You must select at least one lot to assign it a type"
           attributes:
             name:
-              blank: "can't be blank"
+              blank: "The tender name cannot be blank"
             deadline:
-              blank: "can't be blank"
+              blank: "The deadline cannot be blank"
             market_type:
-              empty: "can't be empty"
+              blank: "The tender type cannot be blank"
+            market_types:
+              blank: "The tender types cannot be blank"
+              cannot_be_alone: "The defense tender type cannot be the only type selected"
+            lot_limit:
+              blank: "Please indicate the maximum number of lots."
+              exceeds_lots_count: "You cannot limit the number of lots to more than the number of lots created."
+            market_type_codes:
+              invalid_codes: "The tender codes contain invalid values: %{codes}"
+            siret:
+              invalid: "The SIRET number entered is invalid or not recognized"
+        market_application:
+          attributes:
+            siret:
+              invalid: "The SIRET number entered is invalid or not recognized; please check your entry."
+            application_mode:
+              immutable: "can no longer be changed once selected"
+        grouping_member:
+          attributes:
+            siret:
+              blank: "Please provide your SIRET number"
+              invalid: "The SIRET number entered is invalid"
+              same_as_mandataire: "This SIRET number belongs to your company; you are already part of the group"
+              taken: "This SIRET number has already been added to the group"
+            email:
+              blank: "Please provide your email address"
+              invalid: "The email address must be in a valid format (example@domain.com)"
+        market_attribute_response:
+          attributes:
+            documents:
+              document_not_allowed_unless_checked: "You can only attach a document if the corresponding box is checked"
+          radio_with_file_and_text:
+            response_label: "Response:"
+            attached_documents_label: "Attached documents:"
+        market_attribute_response/email_input:
+          attributes:
+            text:
+              invalid: "The email address must be in a valid format (example@domain.com)"
+        market_attribute_response/text_input:
+          attributes:
+            text:
+              blank: "This text field cannot be blank"
+              too_long: "This text field is too long (maximum %{count} characters)"
+        market_attribute_response/phone_input:
+          attributes:
+            text:
+              blank: "The phone number cannot be blank"
+              invalid: "The phone number must be in the following format: 01 23 45 67 89 or +33 1 23 45 67 89"
+              too_long: "The phone number is too long (maximum %{count} characters)"
+        market_attribute_response/file_or_textarea:
+          attributes:
+            file_or_textarea_blank: 'You must provide either a file or text in this field'
         market_attribute_response/url_input:
           attributes:
             text:
               invalid_url: "must be a valid URL (e.g., https://..., or www...)"
+              blank: "This field cannot be blank"
+              too_long: "This field is too long (maximum %{count} characters)"
+        lot:
+          attributes:
+            cpv_code:
+              invalid_cpv_code: "must follow the CPV format (e.g., 45000000-3)"
+        editor:
+          attributes:
+            name:
+              taken: "This editor name is already taken"
+            client_id:
+              taken: "This client ID is already taken"
+            completion_webhook_url:
+              invalid_url: "The completion webhook URL is not valid"
+              https_required: "The completion webhook URL must use HTTPS in production"
+            buyer_return_url:
+              invalid_url: "The buyer return URL is not valid"
+              https_required: "The buyer return URL must use HTTPS in production"
+            candidate_return_url:
+              invalid_url: "The candidate return URL is not valid"
+              https_required: "The candidate return URL must use HTTPS in production"
+      attributes:
+        # Generic attribute names that can be used across models
+        name: "name"
+        email: "email address"
+        phone: "phone number"
+        siret: "SIRET number"
+        deadline: "deadline"
+        market_type: "tender type"
+        market_types: "tender types"
+        market_type_codes: "tender codes"
+        text: "text"
+        documents: "documents"
+        client_id: "client ID"
+        client_secret: "client secret"
+        completion_webhook_url: "webhook URL"
+        buyer_return_url: "buyer return URL"
+        candidate_return_url: "candidate return URL"
+        cpv_code: "CPV code"
+        checked: "checkbox"
+        file: "file"
+        value: "value"
+        type: "type"
