@@ -40,6 +40,40 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe 'mandataire uniqueness across the market' do
+    it 'refuses a second grouping mandataire with the same siret on the same market' do
+      mandataire_siret = grouping.mandataire_grouping_member.siret
+      other_application = create(:market_application, public_market:, siret: mandataire_siret, application_mode: :groupement)
+      other_grouping = create(:grouping, public_market:, skip_mandataire: true)
+      duplicate = build(:grouping_member, :mandataire, grouping: other_grouping, public_market:,
+        siret: mandataire_siret, market_application: other_application)
+
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:siret]).to be_present
+    end
+
+    it 'allows a co_traitant siret to become mandataire of another grouping on the same market' do
+      co_traitant_siret = '35600000000048'
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_siret)
+
+      other_application = create(:market_application, public_market:, siret: co_traitant_siret, application_mode: :groupement)
+      other_grouping = create(:grouping, public_market:, skip_mandataire: true)
+      new_mandataire = build(:grouping_member, :mandataire, grouping: other_grouping, public_market:,
+        siret: co_traitant_siret, market_application: other_application)
+
+      expect(new_mandataire).to be_valid
+    end
+
+    it 'allows a co_traitant siret to also apply solo on the same market' do
+      co_traitant_siret = '35600000000048'
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_siret)
+
+      solo_application = build(:market_application, public_market:, siret: co_traitant_siret, application_mode: :solo)
+
+      expect(solo_application).to be_valid
+    end
+  end
+
   describe 'market_application' do
     it 'can be blank until the co-traitant has joined' do
       member = build(:grouping_member, :co_traitant, grouping:, market_application: nil)

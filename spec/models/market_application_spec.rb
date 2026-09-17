@@ -230,6 +230,16 @@ RSpec.describe MarketApplication, type: :model do
 
       expect(application.already_mandataire_elsewhere?).to be false
     end
+
+    it 'returns false for a SIRET that is only co_traitant of a grouping on this market' do
+      mandataire_application = create(:market_application, public_market:, siret: '35600000000048', application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      create(:grouping_member, :co_traitant, grouping:, siret:)
+
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(application.already_mandataire_elsewhere?).to be false
+    end
   end
 
   describe '#grouping_composition_choice_required?' do
