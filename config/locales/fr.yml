@@ -760,6 +760,7 @@ fr:
       declared_lots_not_provided: "Non renseigné"
       declared_lots_all: "Tous les lots"
       action_relaunch: "Relancer"
+      action_relaunch_confirm: "Un nouveau lien va être envoyé au co-traitant. L'ancien lien ne fonctionnera plus. Confirmer la relance ?"
       action_edit: "Modifier"
       action_consult: "Consulter le formulaire"
       action_prepare: "Préparer ma candidature"
