@@ -10,7 +10,7 @@ module Candidate
     end
 
     def regenerate_invitation_link
-      member = grouping.grouping_members.find(params[:id])
+      member = grouping.grouping_members.co_traitant.find(params[:id])
       Candidate::RegenerateInvitationLink.call(grouping_member: member, notify: params[:notify] == 'true')
 
       render turbo_stream: turbo_stream.replace(

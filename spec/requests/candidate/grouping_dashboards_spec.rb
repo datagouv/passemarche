@@ -166,5 +166,13 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
 
       expect(response).to have_http_status(:ok)
     end
+
+    it 'is not found when targeting the mandataire own grouping_member id' do
+      post regenerate_grouping_dashboard_invitation_link_candidate_market_application_path(
+        mandataire_application.identifier, grouping.mandataire_grouping_member
+      )
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 end
