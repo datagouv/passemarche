@@ -82,7 +82,7 @@ RSpec.describe CompleteMarketApplication, type: :organizer do
       end
 
       it 'provides error message' do
-        expect(subject.message).to eq('Application already completed')
+        expect(subject.message).to eq('Candidature déjà complétée')
       end
 
       it 'does not modify existing completed_at' do

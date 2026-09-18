@@ -26,7 +26,7 @@ module Candidate
     private
 
     def handle_success
-      redirect_to company_identification_candidate_market_application_path(@market_application.identifier)
+      redirect_to grouping_composition_candidate_market_application_path(@market_application.identifier)
     end
   end
 end

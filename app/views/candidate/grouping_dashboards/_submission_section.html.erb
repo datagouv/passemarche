@@ -1,0 +1,25 @@
+<section class="fr-mb-2w">
+  <% if presenter.submission_ready? %>
+    <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_ready_title'), color: :success) do %>
+      <%= t('candidate.grouping_dashboard.submission_ready_body') %>
+    <% end %>
+    <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right">
+      <%= t('candidate.grouping_dashboard.submit_full') %>
+    </button>
+  <% else %>
+    <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_pending_title'), color: :warning) do %>
+      <%= t('candidate.grouping_dashboard.submission_pending_body') %>
+    <% end %>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right" disabled>
+        <%= t('candidate.grouping_dashboard.submit_full') %>
+      </button>
+
+      <% if presenter.partial_submission_available? %>
+        <button type="button" class="fr-btn fr-btn--secondary">
+          <%= t('candidate.grouping_dashboard.submit_partial') %>
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+</section>

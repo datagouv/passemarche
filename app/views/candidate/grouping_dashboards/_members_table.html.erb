@@ -1,0 +1,51 @@
+<section class="fr-mb-3w">
+  <%= render 'section_title_with_edit',
+        title: t('candidate.grouping_dashboard.members_section_title'),
+        edit_path: grouping_composition_candidate_market_application_path(market_application.identifier),
+        edit_title: t('candidate.grouping_dashboard.edit_members') %>
+
+  <div class="fr-table fr-table--bordered fr-mb-3w">
+    <table>
+      <colgroup>
+        <col style="width: 26%">
+        <col style="width: 14%">
+        <col style="width: 14%">
+        <col style="width: 14%">
+        <col style="width: 32%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_company') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_role') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_status') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_declared_lots') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_actions') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% presenter.members.each do |member| %>
+          <tr id="grouping_member_row_<%= member.id %>">
+            <td>
+              <strong><%= presenter.member_display_name(member) %></strong><br>
+              <span class="fr-text--sm">SIRET <%= member.siret %></span>
+            </td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= presenter.member_role_badge_class(member) %>">
+                <%= presenter.member_role_label(member) %>
+              </span>
+            </td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= presenter.member_status_badge_class(member) %>">
+                <%= presenter.member_status_label(member) %>
+              </span>
+            </td>
+            <td><%= presenter.declared_lots_label(member) %></td>
+            <td>
+              <%= render 'member_actions', member:, market_application:, presenter: %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

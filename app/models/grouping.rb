@@ -9,4 +9,16 @@ class Grouping < ApplicationRecord
   has_one :mandataire_market_application, through: :mandataire_grouping_member, source: :market_application
 
   enum :legal_type, { conjoint: 0, solidaire: 1, conjoint_mandataire_solidaire: 2 }, prefix: true
+
+  def all_members_completed?
+    grouping_members.where.not(status: :completed).none?
+  end
+
+  def any_member_started?
+    grouping_members.exists?(status: %i[in_progress completed])
+  end
+
+  def composition_confirmed?
+    grouping_members.co_traitant.any?(&:invitation_sent?)
+  end
 end
