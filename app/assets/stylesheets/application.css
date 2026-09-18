@@ -99,6 +99,10 @@
   align-items: center; /* Center only the left column content */
 }
 
+.full-height-grid .fr-col-12:first-child > * {
+  width: 100%; /* Prevent the flex item from shrinking to its content's intrinsic width */
+}
+
 .full-height-grid .fr-background-alt--blue-france {
   display: flex; /* Make right column flex to fill height */
 }

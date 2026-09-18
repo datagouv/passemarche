@@ -1,7 +1,20 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  around_action :switch_locale
+
   private
+
+  def switch_locale(&)
+    locale = extract_locale
+    session[:locale] = locale if params[:locale].present?
+    I18n.with_locale(locale, &)
+  end
+
+  def extract_locale
+    requested_locale = params[:locale].presence || session[:locale]
+    I18n.available_locales.map(&:to_s).include?(requested_locale) ? requested_locale : I18n.default_locale
+  end
 
   def current_candidate
     return @current_candidate if defined?(@current_candidate)

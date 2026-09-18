@@ -34,7 +34,7 @@
 
       <div data-controller="nested-form" data-nested-form-wrapper-selector-value=".nested-form-wrapper">
         <div class="fr-mt-4w">
-          <h6 class="fr-text--sm fr-mb-2w">Téléchargez une liste des intervenants</h6>
+          <h6 class="fr-text--sm fr-mb-2w"><%= t('candidate.market_applications.form_fields.presentation_intervenants.upload_list_title') %></h6>
           <%= render MarketAttributeResponse::Fields::FileUploadFieldComponent.new(
             form: response_form,
             attribute_response: component.market_attribute_response
@@ -45,7 +45,7 @@
 
         <div class="fr-separator fr-mb-2w" style="display: flex; align-items: center;">
           <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
-          <span style="padding: 0 1em; font-weight: bold;">OU</span>
+          <span style="padding: 0 1em; font-weight: bold;"><%= t('shared.or_separator') %></span>
           <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
         </div>
 
