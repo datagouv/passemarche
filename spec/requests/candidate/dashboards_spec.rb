@@ -57,6 +57,12 @@ RSpec.describe 'Candidate::Dashboards', type: :request do
             grouping_dashboard_candidate_market_application_path(application.identifier)
           )
         end
+
+        it 'does not show the delete button' do
+          get candidate_dashboard_path
+
+          expect(response.body).not_to include(I18n.t('candidate.dashboard.actions.delete'))
+        end
       end
     end
   end
