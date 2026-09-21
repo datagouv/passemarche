@@ -4,6 +4,7 @@ module Candidate
   class GroupingDashboardsController < Candidate::ApplicationController
     include Candidate::GroupementFeatureGuard
     include Candidate::MandataireGroupingGuard
+    include Candidate::WizardRoutable
 
     before_action :redirect_unless_composition_confirmed
 
@@ -29,7 +30,7 @@ module Candidate
     def redirect_unless_composition_confirmed
       return if grouping.composition_confirmed?
 
-      redirect_to application_mode_candidate_market_application_path(@market_application.identifier)
+      redirect_to next_required_wizard_step_path(@market_application)
     end
 
     def presenter

@@ -6,9 +6,9 @@ module Candidate
       mandataire: { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:consult] },
       co_traitant: {
         invited: %i[relaunch copy_link],
-        to_prepare: %i[edit copy_link],
-        in_progress: %i[edit copy_link],
-        completed: %i[consult copy_link]
+        to_prepare: %i[relaunch copy_link],
+        in_progress: %i[relaunch copy_link],
+        completed: %i[copy_link]
       }
     }.freeze
 

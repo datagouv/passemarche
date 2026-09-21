@@ -43,13 +43,13 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         sign_in_as_candidate(user, grouping_without_composition.mandataire_market_application)
       end
 
-      it 'redirects to the application mode choice step' do
+      it 'redirects straight to the grouping composition step' do
         get grouping_dashboard_candidate_market_application_path(
           grouping_without_composition.mandataire_market_application.identifier
         )
 
         expect(response).to redirect_to(
-          application_mode_candidate_market_application_path(
+          grouping_composition_candidate_market_application_path(
             grouping_without_composition.mandataire_market_application.identifier
           )
         )

@@ -37,6 +37,14 @@ module GroupementWizardSteps
     Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: })
   end
 
+  def confirmed_mandataire_grouping_application
+    grouping_application = groupement_counterpart || self
+    grouping = grouping_application.mandataire_grouping
+    return nil if grouping.nil? || !grouping.composition_confirmed?
+
+    grouping_application
+  end
+
   def lot_selection_mode_choice_required?
     return false if completed?
     return false unless lot_selection_mode_applicable?

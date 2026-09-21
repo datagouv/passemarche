@@ -30,9 +30,8 @@ module Candidate
     end
 
     def mandataire_dashboard_path(market_application)
-      grouping_application = market_application.groupement_counterpart || market_application
-      grouping = grouping_application.mandataire_grouping
-      return nil if grouping.nil? || !grouping.composition_confirmed?
+      grouping_application = market_application.confirmed_mandataire_grouping_application
+      return nil if grouping_application.nil?
 
       grouping_dashboard_candidate_market_application_path(grouping_application.identifier)
     end
