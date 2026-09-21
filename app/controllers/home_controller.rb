@@ -2,10 +2,16 @@
 
 class HomeController < ApplicationController
   def index
-    render :buyer
+    respond_to do |format|
+      format.html { render :buyer }
+    end
   end
 
-  def buyer; end
+  def buyer
+    respond_to(&:html)
+  end
 
-  def candidate; end
+  def candidate
+    respond_to(&:html)
+  end
 end
