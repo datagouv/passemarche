@@ -1,3 +1,5 @@
+<% mandataire_of_grouping = application.mandataire_of_grouping? %>
+
 <div class="fr-card fr-card--no-arrow fr-card--horizontal fr-mb-2w">
   <div class="fr-card__body">
     <div class="fr-card__content">
@@ -41,15 +43,17 @@
             <% end %>
           </li>
         <% elsif application.in_progress? %>
-          <li>
-            <button class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--tertiary fr-btn--icon-left"
-                    data-fr-opened="false"
-                    aria-controls="deletion-modal-<%= application.identifier %>">
-              <span class="fr-icon-delete-bin-line fr-icon--sm" aria-hidden="true"></span>
-              <%= t("candidate.dashboard.actions.delete") %>
-            </button>
-          </li>
-          <% if application.mandataire_of_grouping? %>
+          <% unless mandataire_of_grouping %>
+            <li>
+              <button class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--tertiary fr-btn--icon-left"
+                      data-fr-opened="false"
+                      aria-controls="deletion-modal-<%= application.identifier %>">
+                <span class="fr-icon-delete-bin-line fr-icon--sm" aria-hidden="true"></span>
+                <%= t("candidate.dashboard.actions.delete") %>
+              </button>
+            </li>
+          <% end %>
+          <% if mandataire_of_grouping %>
             <li>
               <%= link_to grouping_dashboard_candidate_market_application_path(application.identifier),
                     class: "fr-btn fr-btn--sm fr-btn--icon-left" do %>
@@ -72,4 +76,4 @@
   </div>
 </div>
 
-<%= render "delete_modal", application: application if application.in_progress? %>
+<%= render "delete_modal", application: application if application.in_progress? && !mandataire_of_grouping %>
