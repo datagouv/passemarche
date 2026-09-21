@@ -15,7 +15,7 @@ class GroupingMember < ApplicationRecord
 
   validates :siret, presence: true, siret: true
   validates :siret, uniqueness: { scope: :grouping_id }
-  validates :siret, uniqueness: { scope: :public_market_id }, if: :mandataire?
+  validates :siret, uniqueness: { scope: :public_market_id, conditions: -> { mandataire } }, if: :mandataire?
   validates :email, presence: true, email: true, if: :co_traitant?
   validates :grouping_id, uniqueness: { scope: :role }, if: :mandataire?
   validates :market_application, presence: true, if: :mandataire?
