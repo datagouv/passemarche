@@ -26,7 +26,7 @@ module Candidate
     def grouping
       return @grouping if defined?(@grouping)
 
-      @grouping = Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: @market_application.id })
+      @grouping = @market_application.mandataire_grouping
     end
   end
 end

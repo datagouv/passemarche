@@ -78,10 +78,18 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     target, step = market_application.next_required_wizard_step
     return wizard_step_url(target, step) if target
 
-    Rails.application.routes.url_helpers.step_candidate_market_application_url(
-      market_application.identifier,
-      :company_identification
-    )
+    mandataire_dashboard_url_for(market_application) ||
+      Rails.application.routes.url_helpers.step_candidate_market_application_url(
+        market_application.identifier,
+        :company_identification
+      )
+  end
+
+  def mandataire_dashboard_url_for(market_application)
+    grouping_application = market_application.confirmed_mandataire_grouping_application
+    return nil if grouping_application.nil?
+
+    Rails.application.routes.url_helpers.grouping_dashboard_candidate_market_application_url(grouping_application.identifier)
   end
 
   def wizard_step_url(market_application, step)

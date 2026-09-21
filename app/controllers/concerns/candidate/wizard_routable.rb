@@ -23,9 +23,17 @@ module Candidate
 
     def next_required_wizard_step_path(market_application)
       target, step = market_application.next_required_wizard_step
-      return company_identification_candidate_market_application_path(market_application.identifier) unless target
+      return wizard_step_path(target, step) if target
 
-      wizard_step_path(target, step)
+      mandataire_dashboard_path(market_application) ||
+        company_identification_candidate_market_application_path(market_application.identifier)
+    end
+
+    def mandataire_dashboard_path(market_application)
+      grouping_application = market_application.confirmed_mandataire_grouping_application
+      return nil if grouping_application.nil?
+
+      grouping_dashboard_candidate_market_application_path(grouping_application.identifier)
     end
   end
 end

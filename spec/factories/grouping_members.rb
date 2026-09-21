@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :grouping_member do
     grouping
     role { :co_traitant }
-    sequence(:siret) { |n| "7328293200#{n.to_s.rjust(4, '0')}" }
+    sequence(:siret) { |n| "8888888888#{n.to_s.rjust(4, '0')}" }
     sequence(:email) { |n| "member#{n}@example.com" }
 
     trait :mandataire do

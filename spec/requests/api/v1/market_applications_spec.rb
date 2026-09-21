@@ -130,6 +130,25 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(json_response['application_url']).to include("/#{groupement_application.identifier}/grouping_legal_type")
     end
 
+    it 'points to the grouping dashboard when the mandataire composition is confirmed' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      solo_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :solo)
+      groupement_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: :solidaire)
+      create(:grouping_member, :co_traitant, grouping:, siret: '80245139600021', invitation_token: 'token',
+        invitation_token_created_at: Time.current)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      expect(json_response['identifier']).to eq(solo_application.identifier)
+      expect(json_response['application_url']).to include("/#{groupement_application.identifier}/suivi")
+    end
+
     it 'returns error when public market not found' do
       post '/api/v1/public_markets/NONEXISTENT/market_applications',
         params: valid_params,

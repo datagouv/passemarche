@@ -455,6 +455,39 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#confirmed_mandataire_grouping_application' do
+    it 'returns nil when the application is not part of a grouping' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.confirmed_mandataire_grouping_application).to be_nil
+    end
+
+    it 'returns nil when the grouping composition has not been confirmed yet' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application)
+
+      expect(application.confirmed_mandataire_grouping_application).to be_nil
+    end
+
+    it 'returns the mandataire application once the grouping composition is confirmed' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(application.confirmed_mandataire_grouping_application).to eq(application)
+    end
+
+    it 'resolves through the groupement counterpart for a mixed solo application' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: groupement)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(solo.confirmed_mandataire_grouping_application).to eq(groupement)
+    end
+  end
+
   describe '#step_after_application_mode' do
     it 'returns company_identification when the mode is solo' do
       application = create(:market_application, public_market:, application_mode: :solo)
