@@ -171,5 +171,30 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         expect(response.body).to include(I18n.t('candidate.grouping_dashboard.declared_lots_not_provided'))
       end
     end
+
+    context 'when the market_application has lots with a market type' do
+      let(:works_type) { create(:market_type, :works) }
+      let(:lot) { create(:lot, public_market:, name: 'Lot travaux', market_type: works_type) }
+
+      before do
+        mandataire_application.lots << lot
+        sign_in_as_candidate(user, mandataire_application)
+      end
+
+      it 'renders the lots in a table with their typology' do
+        get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
+
+        rendered = Nokogiri::HTML(response.body)
+        headers = rendered.css('.grouping-dashboard-lots-table th').map(&:text)
+
+        expect(headers).to eq([
+          I18n.t('candidate.grouping_dashboard.lots_table_lot'),
+          I18n.t('candidate.grouping_dashboard.lots_table_typology'),
+          I18n.t('candidate.grouping_dashboard.lots_table_name')
+        ])
+        expect(response.body).to include('Lot travaux')
+        expect(response.body).to include(I18n.t('market_types.works'))
+      end
+    end
   end
 end

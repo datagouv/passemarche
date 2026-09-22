@@ -744,6 +744,9 @@ fr:
       lots_count:
         one: "1 lot"
         other: "%{count} lots"
+      lots_table_lot: "Lot"
+      lots_table_typology: "Typologie"
+      lots_table_name: "Nom du lot"
       members_section_title: "Les membres du groupement"
       edit_members: "Modifier les membres"
       table_company: "Entreprise"

@@ -728,6 +728,10 @@ en:
       banner_text: "You must select at least one \"Alone\" lot and one \"As a group\" lot to continue."
       back: "Previous"
       continue: "Continue"
+    grouping_dashboard:
+      lots_table_lot: "Lot"
+      lots_table_typology: "Type"
+      lots_table_name: "Lot name"
     validations:
       siret_blank: "Please provide your SIRET number"
       siret_invalid: "The SIRET number entered is invalid"

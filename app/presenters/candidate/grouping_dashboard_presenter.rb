@@ -45,7 +45,7 @@ module Candidate
     delegate :public_market, :identifier, to: :market_application
 
     def lots
-      market_application.lots.ordered
+      market_application.lots.ordered.includes(:market_type, :platform_market_type)
     end
 
     def declared_lots_label(member)

@@ -16,11 +16,38 @@
       <div class="fr-accordion__body">
         <div class="fr-accordion__inner">
           <% if lots.any? %>
-            <ul class="fr-tags-group fr-mb-0">
-              <% lots.each do |lot| %>
-                <li><span class="fr-tag"><%= lot.name.presence || t('candidate.grouping_dashboard.lot_number', number: lot.position) %></span></li>
-              <% end %>
-            </ul>
+            <div class="fr-table fr-table--bordered fr-table--no-scroll fr-table--layout-fixed fr-mb-0">
+              <table class="grouping-dashboard-lots-table">
+                <colgroup>
+                  <col style="width: 20%">
+                  <col style="width: 30%">
+                  <col style="width: 50%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col"><%= t('candidate.grouping_dashboard.lots_table_lot') %></th>
+                    <th scope="col"><%= t('candidate.grouping_dashboard.lots_table_typology') %></th>
+                    <th scope="col"><%= t('candidate.grouping_dashboard.lots_table_name') %></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% lots.each do |lot| %>
+                    <tr>
+                      <td><%= t('candidate.grouping_dashboard.lot_number', number: lot.position) %></td>
+                      <td>
+                        <% if lot.effective_market_type %>
+                          <%= market_type_badge_tag(lot.effective_market_type.code,
+                                t("market_types.#{lot.effective_market_type.code}", default: lot.effective_market_type.code.humanize)) %>
+                        <% else %>
+                          <%= market_type_badge_tag(nil, t('shared.not_provided')) %>
+                        <% end %>
+                      </td>
+                      <td><%= lot.name %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
           <% else %>
             <p class="fr-text--sm fr-text--mention-grey fr-mb-0"><%= t('candidate.grouping_dashboard.no_lot_selected') %></p>
           <% end %>
