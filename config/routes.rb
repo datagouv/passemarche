@@ -100,8 +100,6 @@ Rails.application.routes.draw do
           as: :grouping_composition_confirmation
         patch 'grouping_composition_confirmation', to: 'grouping_composition_confirmations#update'
         get 'suivi', to: 'grouping_dashboards#show', as: :grouping_dashboard
-        post 'grouping_members/:id/regenerate_invitation_link',
-          to: 'grouping_dashboards#regenerate_invitation_link', as: :regenerate_grouping_dashboard_invitation_link
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection

@@ -1,13 +1,6 @@
 <div id="grouping_member_actions_<%= member.id %>" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start;">
   <% presenter.member_actions(member).each do |action| %>
     <% case action %>
-    <% when :relaunch %>
-      <%= button_to t('candidate.grouping_dashboard.action_relaunch'),
-            regenerate_grouping_dashboard_invitation_link_candidate_market_application_path(market_application.identifier, member),
-            method: :post,
-            params: { notify: true },
-            form: { data: { turbo_stream: true, turbo_confirm: t('candidate.grouping_dashboard.action_relaunch_confirm') } },
-            class: 'fr-btn fr-btn--sm fr-btn--secondary' %>
     <% when :edit %>
       <%= link_to t('candidate.grouping_dashboard.action_edit'),
             step_candidate_market_application_path(presenter.member_application_identifier(member), :summary),

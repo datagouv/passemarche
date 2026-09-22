@@ -22,12 +22,11 @@ Feature: Mandataire follows up and submits the grouping candidacies
     And I should see "Les membres du groupement"
 
   @javascript
-  Scenario: An invited co-traitant offers relaunch and copy link actions
+  Scenario: An invited co-traitant offers the copy link action
     When I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
     And I click on "Continuer"
     And I click on "Confirmer et envoyer les invitations"
     Then the co-traitant "80245139600021" should have status "Invité"
-    And the co-traitant "80245139600021" should have the action "Relancer"
     And the co-traitant "80245139600021" should have the action "Copier le lien"
 
   @javascript

@@ -172,36 +172,4 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
       end
     end
   end
-
-  describe 'POST #regenerate_invitation_link' do
-    let(:co_traitant_member) { create(:grouping_member, :co_traitant, grouping:) }
-
-    before { sign_in_as_candidate(user, mandataire_application) }
-
-    it 'regenerates the invitation token' do
-      co_traitant_member.update!(invitation_token: 'old-token', invitation_token_created_at: 1.day.ago)
-
-      expect do
-        post regenerate_grouping_dashboard_invitation_link_candidate_market_application_path(
-          mandataire_application.identifier, co_traitant_member
-        )
-      end.to change { co_traitant_member.reload.invitation_token }.from('old-token')
-    end
-
-    it 'returns ok' do
-      post regenerate_grouping_dashboard_invitation_link_candidate_market_application_path(
-        mandataire_application.identifier, co_traitant_member
-      )
-
-      expect(response).to have_http_status(:ok)
-    end
-
-    it 'is not found when targeting the mandataire own grouping_member id' do
-      post regenerate_grouping_dashboard_invitation_link_candidate_market_application_path(
-        mandataire_application.identifier, grouping.mandataire_grouping_member
-      )
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
 end
