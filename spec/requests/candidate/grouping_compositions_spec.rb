@@ -151,6 +151,29 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
     end
   end
 
+  describe 'GET .../grouping_composition removal confirmation modal' do
+    before { market_application.update!(application_mode: :groupement) }
+
+    let!(:grouping) do
+      create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+    end
+    let!(:member) { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil) }
+
+    it 'renders a confirmation modal for the co_traitant with the removal button inside it' do
+      get grouping_composition_candidate_market_application_path(market_application.identifier)
+
+      rendered = Nokogiri::HTML(response.body)
+      modal = rendered.at_css("#removal-modal-#{member.id}")
+
+      expected_action = grouping_composition_member_candidate_market_application_path(market_application.identifier, member)
+
+      expect(modal).to be_present
+      expect(modal.text).to include(I18n.t('candidate.grouping_compositions.removal_modal.title'))
+      expect(modal.text).to include(I18n.t('candidate.grouping_compositions.removal_modal.confirm'))
+      expect(modal.css('form').pluck('action')).to include(expected_action)
+    end
+  end
+
   describe 'DELETE .../grouping_composition/members/:id' do
     before { market_application.update!(application_mode: :groupement) }
 
@@ -167,8 +190,24 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
       expect(GroupingMember.exists?(member.id)).to be false
     end
 
-    context 'when the member has already received an invitation' do
-      let!(:member) { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current) }
+    context 'when the member has already received an invitation but has not completed their application' do
+      let!(:member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current, status: :in_progress)
+      end
+
+      it 'removes the member' do
+        delete grouping_composition_member_candidate_market_application_path(market_application.identifier, member.id),
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+        expect(response).to have_http_status(:ok)
+        expect(GroupingMember.exists?(member.id)).to be false
+      end
+    end
+
+    context 'when the member has already completed their application' do
+      let!(:member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current, status: :completed)
+      end
 
       it 'does not remove the member and renders an error, with an unprocessable status' do
         delete grouping_composition_member_candidate_market_application_path(market_application.identifier, member.id),
@@ -176,7 +215,7 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
 
         expect(response).to have_http_status(:unprocessable_content)
         expect(GroupingMember.exists?(member.id)).to be true
-        expect(response.parsed_body).to include(CGI.escapeHTML(I18n.t('candidate.validations.grouping_member_already_invited')))
+        expect(response.parsed_body).to include(CGI.escapeHTML(I18n.t('candidate.validations.grouping_member_already_completed')))
       end
     end
 

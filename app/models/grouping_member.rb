@@ -3,7 +3,7 @@
 class GroupingMember < ApplicationRecord
   belongs_to :grouping
   belongs_to :public_market
-  belongs_to :market_application, optional: true
+  belongs_to :market_application, optional: true, dependent: :destroy
 
   enum :role, { mandataire: 0, co_traitant: 1 }
   enum :status, { invited: 0, to_prepare: 1, in_progress: 2, completed: 3 }, prefix: true
@@ -11,6 +11,7 @@ class GroupingMember < ApplicationRecord
   scope :mandataire_for, ->(public_market:, siret:) { mandataire.where(public_market:, siret:) }
 
   before_validation :set_public_market
+  before_destroy :abort_if_completed
   after_create_commit :enqueue_company_name_resolution, if: :co_traitant?
 
   validates :siret, presence: true, siret: true
@@ -56,5 +57,12 @@ class GroupingMember < ApplicationRecord
     return if siret != mandataire_siret
 
     errors.add(:siret, :same_as_mandataire)
+  end
+
+  def abort_if_completed
+    return unless status_completed?
+
+    errors.add(:base, I18n.t('candidate.validations.grouping_member_already_completed'))
+    throw :abort
   end
 end

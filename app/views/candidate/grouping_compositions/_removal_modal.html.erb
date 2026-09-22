@@ -1,0 +1,46 @@
+<dialog aria-labelledby="removal-modal-title-<%= member.id %>"
+        id="removal-modal-<%= member.id %>"
+        class="fr-modal"
+        role="dialog">
+  <div class="fr-container fr-container--fluid fr-container-md">
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+        <div class="fr-modal__body">
+          <div class="fr-modal__header">
+            <button class="fr-btn--close fr-btn"
+                    title="<%= t('candidate.grouping_compositions.removal_modal.close') %>"
+                    aria-controls="removal-modal-<%= member.id %>">
+              <%= t('candidate.grouping_compositions.removal_modal.close') %>
+            </button>
+          </div>
+          <div class="fr-modal__content">
+            <h1 id="removal-modal-title-<%= member.id %>"
+                class="fr-modal__title">
+              <%= t('candidate.grouping_compositions.removal_modal.title') %>
+            </h1>
+            <%= render 'removal_errors', errors: nil, member_id: member.id %>
+            <p><%= t('candidate.grouping_compositions.removal_modal.body') %></p>
+            <p><%= t('candidate.grouping_compositions.removal_modal.confirm_question') %></p>
+          </div>
+          <div class="fr-modal__footer">
+            <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline fr-btns-group--reverse">
+              <li>
+                <%= button_to t('candidate.grouping_compositions.removal_modal.confirm'),
+                      grouping_composition_member_candidate_market_application_path(market_application.identifier, member),
+                      method: :delete,
+                      form: { data: { turbo_stream: true } },
+                      class: "fr-btn" %>
+              </li>
+              <li>
+                <button class="fr-btn fr-btn--secondary"
+                        aria-controls="removal-modal-<%= member.id %>">
+                  <%= t('candidate.grouping_compositions.removal_modal.cancel') %>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>

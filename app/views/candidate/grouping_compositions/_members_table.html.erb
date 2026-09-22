@@ -45,12 +45,14 @@
             </td>
             <% if editable %>
               <td>
-                <% if member.co_traitant? && !member.invitation_sent? %>
-                  <%= button_to t('candidate.grouping_compositions.remove_button'),
-                        grouping_composition_member_candidate_market_application_path(market_application.identifier, member),
-                        method: :delete,
-                        form: { data: { turbo_stream: true } },
-                        class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left" %>
+                <% if member.co_traitant? && !member.status_completed? %>
+                  <button type="button"
+                          class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
+                          data-fr-opened="false"
+                          aria-controls="removal-modal-<%= member.id %>">
+                    <%= t('candidate.grouping_compositions.remove_button') %>
+                  </button>
+                  <%= render 'removal_modal', member:, market_application: %>
                 <% end %>
               </td>
             <% end %>
