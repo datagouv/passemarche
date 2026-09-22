@@ -36,24 +36,24 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
     context 'when invited' do
       let(:status) { :invited }
 
-      it 'offers relance and copy link' do
-        expect(presenter.member_actions(member)).to eq(%i[relaunch copy_link])
+      it 'offers copy link only' do
+        expect(presenter.member_actions(member)).to eq([:copy_link])
       end
     end
 
     context 'when to_prepare' do
       let(:status) { :to_prepare }
 
-      it 'offers relance and copy link' do
-        expect(presenter.member_actions(member)).to eq(%i[relaunch copy_link])
+      it 'offers copy link only' do
+        expect(presenter.member_actions(member)).to eq([:copy_link])
       end
     end
 
     context 'when in_progress' do
       let(:status) { :in_progress }
 
-      it 'offers relance and copy link' do
-        expect(presenter.member_actions(member)).to eq(%i[relaunch copy_link])
+      it 'offers copy link only' do
+        expect(presenter.member_actions(member)).to eq([:copy_link])
       end
     end
 

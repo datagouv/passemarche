@@ -5,9 +5,9 @@ module Candidate
     MEMBER_ACTIONS = {
       mandataire: { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:consult] },
       co_traitant: {
-        invited: %i[relaunch copy_link],
-        to_prepare: %i[relaunch copy_link],
-        in_progress: %i[relaunch copy_link],
+        invited: %i[copy_link],
+        to_prepare: %i[copy_link],
+        in_progress: %i[copy_link],
         completed: %i[copy_link]
       }
     }.freeze

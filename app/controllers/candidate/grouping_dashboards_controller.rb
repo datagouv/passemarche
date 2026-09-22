@@ -12,19 +12,6 @@ module Candidate
       @presenter = presenter
     end
 
-    def regenerate_invitation_link
-      member = grouping.grouping_members.co_traitant.find(params[:id])
-      Candidate::RegenerateInvitationLink.call(grouping_member: member, notify: params[:notify] == 'true')
-
-      render turbo_stream: turbo_stream.replace(
-        "grouping_member_actions_#{member.id}",
-        partial: 'candidate/grouping_dashboards/member_actions',
-        locals: { member:, market_application: @market_application, presenter: }
-      )
-    rescue ActiveRecord::RecordNotFound
-      render plain: "Le membre du groupement recherché n'a pas été trouvé", status: :not_found
-    end
-
     private
 
     def redirect_unless_composition_confirmed
