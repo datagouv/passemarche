@@ -2,7 +2,10 @@
 
 <div class="fr-container fr-py-6w"
      data-controller="lot-selection-mode"
-     data-lot-selection-mode-requires-both-value="<%= @presenter.requires_solo_and_groupement? %>">
+     data-lot-selection-mode-requires-both-value="<%= @presenter.requires_solo_and_groupement? %>"
+     data-lot-selection-mode-confirm-removal-value="<%= @presenter.confirm_lot_removal? %>"
+     data-lot-selection-mode-title-single-value="<%= t('candidate.lot_selection_modes.removal_modal.title_single') %>"
+     data-lot-selection-mode-title-multiple-value="<%= t('candidate.lot_selection_modes.removal_modal.title_multiple') %>">
   <h1 class="fr-h3 fr-mb-1w"><%= t('candidate.lot_selection_modes.title') %></h1>
   <p class="fr-text--sm fr-text--mention-grey fr-mb-3w">
     <%= t(@presenter.requires_solo_and_groupement? ? 'candidate.lot_selection_modes.subtitle_mixte' : 'candidate.lot_selection_modes.subtitle_groupement') %>
@@ -35,7 +38,8 @@
     </div>
   <% end %>
 
-  <%= form_with url: lot_selection_mode_candidate_market_application_path(@market_application.identifier), method: :patch do %>
+  <%= form_with url: lot_selection_mode_candidate_market_application_path(@market_application.identifier), method: :patch,
+        data: { lot_selection_mode_target: "form", action: "submit->lot-selection-mode#handleSubmit" } do %>
     <% @presenter.lots_by_type_sorted.each do |market_type, type_lots| %>
       <div class="fr-mb-6w lot-selection-mode-group" data-lot-selection-mode-target="section">
         <div class="lot-selection-mode-section__header">
@@ -86,7 +90,9 @@
                         <%= radio_button_tag "lot_modes[#{lot.id}]", mode, @presenter.mode_for(lot) == mode,
                               id: "lot_mode_#{lot.id}_#{mode}",
                               class: "lot-mode-choice__input",
-                              data: { lot_selection_mode_target: "radio", action: "change->lot-selection-mode#recompute" } %>
+                              data: { lot_selection_mode_target: "radio", action: "change->lot-selection-mode#recompute",
+                                       lot_id: lot.id, lot_number: lot.position,
+                                       initially_groupement: @presenter.mode_for(lot) == "groupement" } %>
                         <%= label_tag "lot_mode_#{lot.id}_#{mode}", t("candidate.lot_selection_modes.#{mode}"),
                               class: "lot-mode-choice__label" %>
                       </span>
@@ -117,4 +123,39 @@
             data: { lot_selection_mode_target: "submitButton" } %>
     </div>
   <% end %>
+
+  <dialog class="fr-modal-dialog"
+          id="lot-removal-modal"
+          aria-labelledby="lot-removal-modal-title"
+          data-lot-selection-mode-target="removalModal"
+          data-action="click->lot-selection-mode#clickRemovalModalBackdrop">
+    <div class="fr-modal-dialog__content">
+      <div class="fr-modal-dialog__header">
+        <h1 id="lot-removal-modal-title" class="fr-h5 fr-mb-0" data-lot-selection-mode-target="removalModalTitle"></h1>
+        <button type="button"
+                class="fr-link fr-link--close"
+                data-action="lot-selection-mode#closeRemovalModal">
+          <%= t('candidate.lot_selection_modes.removal_modal.close') %>
+        </button>
+      </div>
+
+      <p>
+        <%= t('candidate.lot_selection_modes.removal_modal.body') %>
+        <strong><%= t('candidate.lot_selection_modes.removal_modal.body_warning') %></strong>
+      </p>
+
+      <div class="fr-btns-group fr-btns-group--inline fr-btns-group--right">
+        <button type="button"
+                class="fr-btn fr-btn--secondary"
+                data-action="lot-selection-mode#closeRemovalModal">
+          <%= t('candidate.lot_selection_modes.removal_modal.cancel') %>
+        </button>
+        <button type="button"
+                class="fr-btn"
+                data-action="lot-selection-mode#confirmRemoval">
+          <%= t('candidate.lot_selection_modes.removal_modal.confirm') %>
+        </button>
+      </div>
+    </div>
+  </dialog>
 </div>

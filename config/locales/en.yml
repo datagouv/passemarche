@@ -735,6 +735,14 @@ en:
       banner_text: "You must select at least one \"Alone\" lot and one \"As a group\" lot to continue."
       back: "Previous"
       continue: "Continue"
+      removal_modal:
+        close: "Close"
+        title_single: "Remove lot %{number} from the group?"
+        title_multiple: "Remove lots %{numbers} from the group?"
+        body: "If you confirm the removal, the co-contractors' applications in progress will be modified to remove the corresponding information."
+        body_warning: "Warning, the removal of the corresponding information is permanent. The removal is not possible if a co-contractor has already submitted their application for this lot."
+        confirm: "Confirm lot removal"
+        cancel: "Cancel"
     grouping_dashboard:
       lots_table_lot: "Lot"
       lots_table_typology: "Type"
@@ -755,6 +763,7 @@ en:
       groupement_application_not_found: "No group application found"
       lot_ids_invalid: "One or more selected lots do not belong to this tender"
       lot_selection_mode_incomplete: "You must select at least one \"Alone\" lot and one \"As a group\" lot to continue."
+      completed_co_traitant_application: "A co-contractor has already submitted their application for a removed lot, this allocation can no longer be changed"
     request_magic_link:
       no_application_found: "No application found for this SIRET number"
       no_market_context: "Please access Passe Marché from your public procurement platform"

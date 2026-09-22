@@ -12,14 +12,51 @@ module Candidate
       return fail_incomplete_selection unless selection_complete?
 
       ActiveRecord::Base.transaction do
-        solo_application&.update!(lot_ids: solo_lot_ids)
-        groupement_application.update!(lot_ids: groupement_lot_ids)
+        locked_co_traitant_applications = co_traitant_applications.each(&:lock!)
+        groupement_application.lock!
+        fail_completed_co_traitant_application if completed_co_traitant_application_affected?(locked_co_traitant_applications)
+
+        update_applications(locked_co_traitant_applications)
       end
     end
 
     private
 
     delegate :solo_application, :groupement_application, to: :context
+
+    def update_applications(co_traitant_applications)
+      previous_groupement_lot_ids = groupement_application.lot_ids
+
+      solo_application&.update!(lot_ids: solo_lot_ids)
+      groupement_application.update!(lot_ids: groupement_lot_ids)
+      remove_lots_from_co_traitants(co_traitant_applications, previous_groupement_lot_ids - groupement_lot_ids)
+    end
+
+    def remove_lots_from_co_traitants(co_traitant_applications, removed_lot_ids)
+      return if removed_lot_ids.empty?
+
+      removed_lots = Lot.where(id: removed_lot_ids)
+
+      co_traitant_applications.each do |co_traitant_application|
+        co_traitant_application.lots.delete(removed_lots)
+      end
+    end
+
+    def completed_co_traitant_application_affected?(co_traitant_applications)
+      removed_lot_ids = groupement_application.lot_ids - groupement_lot_ids
+      return false if removed_lot_ids.empty?
+
+      co_traitant_applications.any? do |co_traitant_application|
+        co_traitant_application.completed? && co_traitant_application.lot_ids.intersect?(removed_lot_ids)
+      end
+    end
+
+    def co_traitant_applications
+      grouping = groupement_application.mandataire_grouping
+      return [] if grouping.nil?
+
+      grouping.grouping_members.co_traitant.includes(:market_application).filter_map(&:market_application)
+    end
 
     def assign_applications
       context.solo_application = market_application.solo? ? market_application : market_application.solo_counterpart
@@ -55,6 +92,10 @@ module Candidate
 
     def fail_incomplete_selection
       context.fail!(errors: { base: [I18n.t('candidate.validations.lot_selection_mode_incomplete')] })
+    end
+
+    def fail_completed_co_traitant_application
+      context.fail!(errors: { base: [I18n.t('candidate.validations.completed_co_traitant_application')] })
     end
   end
 end
