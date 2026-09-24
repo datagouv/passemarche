@@ -88,6 +88,22 @@ RSpec.describe Candidate::SetLotSelectionModes, type: :interactor do
       end
     end
 
+    context 'locking to prevent concurrent lot selection updates' do
+      let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+
+      it 'locks the groupement application before reading its current lots' do
+        expect(groupement_application).to receive(:lock!).ordered.and_call_original
+        expect(groupement_application).to receive(:lot_ids).at_least(:once).ordered.and_call_original
+
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'groupement', lot2.id.to_s => 'none' }
+        )
+
+        expect(result).to be_success
+      end
+    end
+
     context 'in groupement-only mode (no solo counterpart)' do
       let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
 
@@ -109,6 +125,69 @@ RSpec.describe Candidate::SetLotSelectionModes, type: :interactor do
 
         expect(result).to be_failure
         expect(result.errors[:base]).to be_present
+      end
+    end
+
+    context 'when a co-traitant has declared the lot being removed' do
+      let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: groupement_application) }
+      let(:co_traitant_application) do
+        create(:market_application, public_market:, siret: '80245139600027', application_mode: :groupement)
+      end
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        groupement_application.lots << [lot1, lot2]
+        co_traitant_application.lots << lot1
+        create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+          siret: co_traitant_application.siret)
+      end
+
+      it 'removes the lot from the co-traitant application when unselected' do
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'none', lot2.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_success
+        expect(co_traitant_application.reload.lots).to be_empty
+      end
+
+      it 'leaves the co-traitant application untouched when the lot stays in groupement mode' do
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'groupement', lot2.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_success
+        expect(co_traitant_application.reload.lots).to contain_exactly(lot1)
+      end
+
+      context 'when the co-traitant application is already completed' do
+        before { co_traitant_application.complete! }
+
+        it 'fails instead of silently dropping the lot' do
+          result = described_class.call(
+            market_application: groupement_application,
+            lot_modes: { lot1.id.to_s => 'none', lot2.id.to_s => 'groupement' }
+          )
+
+          expect(result).to be_failure
+          expect(result.errors[:base]).to be_present
+          expect(co_traitant_application.reload.lots).to contain_exactly(lot1)
+        end
+
+        it 'succeeds when the completed co-traitant is not affected by the removal' do
+          groupement_application.lots << (lot3 = create(:lot, public_market:))
+
+          result = described_class.call(
+            market_application: groupement_application,
+            lot_modes: { lot1.id.to_s => 'groupement', lot2.id.to_s => 'groupement', lot3.id.to_s => 'none' }
+          )
+
+          expect(result).to be_success
+          expect(co_traitant_application.reload.lots).to contain_exactly(lot1)
+        end
       end
     end
 

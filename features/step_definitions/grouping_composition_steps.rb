@@ -11,8 +11,12 @@ end
 
 When('I remove the co-traitant {string}') do |siret|
   member = GroupingMember.find_by!(siret:)
-  within("form[action='#{grouping_composition_member_candidate_market_application_path(@market_application.identifier, member)}']") do
+  within('#grouping_members_table tr', text: siret) do
     click_button I18n.t('candidate.grouping_compositions.remove_button')
+  end
+
+  within("#removal-modal-#{member.id}") do
+    click_button I18n.t('candidate.grouping_compositions.removal_modal.confirm')
   end
 end
 

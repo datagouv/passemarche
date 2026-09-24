@@ -89,4 +89,34 @@ RSpec.describe Candidate::LotSelectionModePresenter do
       expect(grouped.values.flatten).to contain_exactly(lot1, lot2)
     end
   end
+
+  describe '#confirm_lot_removal?' do
+    let(:market_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+
+    context 'when the market_application is not mandataire of any grouping' do
+      it 'returns false' do
+        expect(presenter.confirm_lot_removal?).to be false
+      end
+    end
+
+    context 'when mandataire of a grouping whose composition is not confirmed yet' do
+      before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      it 'returns false' do
+        expect(presenter.confirm_lot_removal?).to be false
+      end
+    end
+
+    context 'when mandataire of a grouping whose composition is confirmed' do
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      before do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+      end
+
+      it 'returns true' do
+        expect(presenter.confirm_lot_removal?).to be true
+      end
+    end
+  end
 end

@@ -102,3 +102,31 @@ Feature: Mandataire selects lots and their response mode
     Then I should see "Comment souhaitez-vous candidater ?"
     When I click on "Continuer"
     Then I should see "Sélectionnez les lots pour la candidature"
+
+  @javascript
+  Scenario: Mandataire is asked to confirm before removing a lot from an already confirmed groupement
+    Given the grouping composition is already confirmed
+    When I visit the lot selection mode step
+    And I set lot "Lot 1 - Gros œuvre" to "none"
+    And I click on "Continuer"
+    Then I should see "Retirer le lot 1 du groupement ?"
+    When I click on "Confirmer le retrait du lot"
+    Then I should be on the grouping legal type step
+
+  @javascript
+  Scenario: Mandataire can cancel the lot removal confirmation and keep editing
+    Given the grouping composition is already confirmed
+    When I visit the lot selection mode step
+    And I set lot "Lot 1 - Gros œuvre" to "none"
+    And I click on "Continuer"
+    Then I should see "Retirer le lot 1 du groupement ?"
+    When I click on "Annuler"
+    Then I should see "Sélectionnez les lots pour la candidature"
+    And lot "Lot 1 - Gros œuvre" should be set to "Ne pas répondre"
+
+  @javascript
+  Scenario: No confirmation is asked when the composition has not been confirmed yet
+    When I choose the candidacy mode "groupement"
+    And I set lot "Lot 1 - Gros œuvre" to "none"
+    And I click on "Continuer"
+    Then I should not see "Retirer le lot 1 du groupement ?"

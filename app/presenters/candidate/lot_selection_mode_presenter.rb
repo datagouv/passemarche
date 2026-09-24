@@ -22,6 +22,11 @@ module Candidate
       mode_by_lot_id.fetch(lot.id) { default_mode_for }
     end
 
+    def confirm_lot_removal?
+      grouping = market_application.mandataire_grouping
+      !!grouping&.composition_confirmed?
+    end
+
     private
 
     attr_reader :market_application
@@ -34,7 +39,7 @@ module Candidate
       @mode_by_lot_id ||= begin
         modes = {}
         @solo_application&.lot_ids&.each { |id| modes[id] = 'solo' }
-        @groupement_application.lot_ids.each { |id| modes[id] = 'groupement' }
+        @groupement_application&.lot_ids&.each { |id| modes[id] = 'groupement' }
         modes
       end
     end

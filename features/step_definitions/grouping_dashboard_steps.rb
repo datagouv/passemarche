@@ -83,3 +83,16 @@ end
 Then('the co-traitant declared lots column should show {string}') do |lot_name|
   expect(page).to have_selector('table', text: lot_name)
 end
+
+Given('the grouping composition is already confirmed') do
+  @market_application.update!(application_mode: :groupement)
+  @market_application.lots = [@lot_works1, @lot_works2, @lot_services1]
+
+  grouping = create(:grouping, public_market: @multi_public_market, mandataire_market_application: @market_application,
+    legal_type: :conjoint_mandataire_solidaire)
+  create(:grouping_member, :co_traitant, grouping:, siret: VALID_TEST_SIRETS[0], **invitation_sent_attributes)
+end
+
+When('I visit the lot selection mode step') do
+  visit lot_selection_mode_candidate_market_application_path(@market_application.identifier)
+end

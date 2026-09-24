@@ -95,12 +95,9 @@ module Candidate
     end
 
     def destroy_member_turbo_streams(result)
+      return failed_destroy_member_turbo_streams(result) unless result.success?
+
       [
-        turbo_stream.replace(
-          'grouping_member_removal_errors',
-          partial: 'candidate/grouping_compositions/removal_errors',
-          locals: { errors: result.success? ? nil : result.errors }
-        ),
         turbo_stream.replace(
           'grouping_members_table',
           partial: 'candidate/grouping_compositions/members_table',
@@ -110,6 +107,16 @@ module Candidate
           'grouping_composition_actions',
           partial: 'candidate/grouping_compositions/composition_actions',
           locals: { grouping: }
+        )
+      ]
+    end
+
+    def failed_destroy_member_turbo_streams(result)
+      [
+        turbo_stream.replace(
+          "grouping_member_removal_errors_#{params[:id]}",
+          partial: 'candidate/grouping_compositions/removal_errors',
+          locals: { errors: result.errors, member_id: params[:id] }
         )
       ]
     end
