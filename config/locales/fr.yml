@@ -415,7 +415,7 @@ fr:
       configuration_summary_missing_retry: "Réessayer"
       return_to_editor: "Retourner sur %{editor}"
       error_title: "Erreur inattendue"
-      error_message: "Désolée, lorem ipsum rencontre un problème, nous n'avons pas réussi à transmettre les informations au profil acheteur."
+      error_message: "Désolée, Passe Marché rencontre un problème, nous n'avons pas réussi à transmettre les informations au profil acheteur."
       error_hint: "Vous pouvez tenter de transférer à nouveau les informations en cliquant sur le bouton ci-dessous. Si vous avez besoin d'une aide immédiate, merci de nous contacter."
       transmit_form: "Transmettre le formulaire"
       contact_us: "Contactez-nous"
