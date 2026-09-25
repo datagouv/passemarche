@@ -90,14 +90,15 @@ class MarketAttributeResponse::Fields::TextareaFieldComponentPreview < Lookbook:
     public_market = PublicMarket.first || create_public_market
     MarketApplication.create!(
       identifier: 'preview-textarea',
-      public_market:
+      public_market:,
+      siret: '73282932000074',
+      attests_no_exclusion_motifs: false
     )
   end
 
   def create_public_market
     editor = Editor.first || Editor.create!(
-      name: 'Preview Editor',
-      oauth_application_uid: 'preview-uid'
+      name: 'Preview Editor'
     )
     PublicMarket.create!(
       identifier: 'preview-market',

@@ -83,18 +83,25 @@ class MarketAttributeResponse::Shared::DocumentItemComponentPreview < Lookbook::
     public_market = PublicMarket.first || create_public_market
     MarketApplication.create!(
       identifier: 'preview-document-item',
-      public_market:
+      public_market:,
+      siret: '73282932000074',
+      attests_no_exclusion_motifs: false
     )
   end
 
   def create_public_market
     editor = Editor.first || Editor.create!(
-      name: 'Preview Editor',
-      oauth_application_uid: 'preview-uid'
+      name: 'Preview Editor'
     )
     PublicMarket.create!(
       identifier: 'preview-market',
-      editor:
+      editor:,
+      name: 'Marché de preview',
+      deadline: 1.month.from_now,
+      siret: '73282932000074',
+      market_type_codes: [MarketType.find_or_create_by(code: 'works', deleted_at: nil).code],
+      completed_at: Time.zone.now,
+      sync_status: :sync_completed
     )
   end
 

@@ -90,7 +90,9 @@ class MarketAttributeResponse::CheckboxWithDocumentComponentPreview < Lookbook::
 
     market_application = MarketApplication.first_or_create!(
       identifier: 'preview-app',
-      public_market_id: PublicMarket.first&.id || create_public_market.id
+      public_market_id: PublicMarket.first&.id || create_public_market.id,
+      siret: '73282932000074',
+      attests_no_exclusion_motifs: false
     )
 
     response = MarketAttributeResponse::CheckboxWithDocument.find_or_initialize_by(
@@ -117,14 +119,19 @@ class MarketAttributeResponse::CheckboxWithDocumentComponentPreview < Lookbook::
   def create_public_market
     PublicMarket.create!(
       identifier: 'preview-market',
-      editor_id: Editor.first&.id || create_editor.id
+      editor_id: Editor.first&.id || create_editor.id,
+      name: 'Marché de preview',
+      deadline: 1.month.from_now,
+      siret: '73282932000074',
+      market_type_codes: [MarketType.find_or_create_by(code: 'works', deleted_at: nil).code],
+      completed_at: Time.zone.now,
+      sync_status: :sync_completed
     )
   end
 
   def create_editor
     Editor.create!(
-      name: 'Preview Editor',
-      oauth_application_uid: 'preview-uid'
+      name: 'Preview Editor'
     )
   end
 
