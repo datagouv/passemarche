@@ -78,8 +78,7 @@ module Candidate
       [
         turbo_stream.replace(
           'grouping_members_table',
-          partial: 'candidate/grouping_compositions/members_table',
-          locals: { grouping:, market_application: @market_application, editable: true }
+          Grouping::CompositionMembersTableComponent.new(grouping:, market_application: @market_application, editable: true)
         ),
         turbo_stream.replace(
           'grouping_member_form',
@@ -100,8 +99,7 @@ module Candidate
       [
         turbo_stream.replace(
           'grouping_members_table',
-          partial: 'candidate/grouping_compositions/members_table',
-          locals: { grouping:, market_application: @market_application, editable: true }
+          Grouping::CompositionMembersTableComponent.new(grouping:, market_application: @market_application, editable: true)
         ),
         turbo_stream.replace(
           'grouping_composition_actions',
