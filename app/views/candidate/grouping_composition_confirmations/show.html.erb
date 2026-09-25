@@ -32,8 +32,7 @@
     </span>
   </p>
 
-  <%= render 'candidate/grouping_compositions/members_table', grouping: @grouping, market_application: @market_application,
-    editable: false %>
+  <%= render Grouping::CompositionMembersTableComponent.new(grouping: @grouping, market_application: @market_application, editable: false) %>
 
   <div class="fr-mt-4w grouping-legal-type-actions">
     <%= link_to t('candidate.grouping_compositions.confirm.modify'),
