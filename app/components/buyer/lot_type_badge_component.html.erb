@@ -1,0 +1,12 @@
+<% if overridden? %>
+  <span class="fr-badge fr-badge--sm fr-badge--no-icon fr-badge--warning buyer-lot-type-badge--struck-through">
+    <%= platform_source_label(lot.platform_market_type.code) %>
+  </span>
+  <span class="fr-badge fr-badge--sm fr-badge--no-icon fr-badge--blue-cumulus">
+    <%= t("market_types.#{lot.market_type.code}").upcase %>
+  </span>
+<% elsif effective_market_type.present? %>
+  <span class="fr-badge fr-badge--sm fr-badge--no-icon">
+    <%= platform_source_label(effective_market_type.code) %>
+  </span>
+<% end %>

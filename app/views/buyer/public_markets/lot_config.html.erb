@@ -8,26 +8,26 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
   <div class="fr-col-12 fr-col-md-4">
-    <div class="fr-mb-3w fr-background-alt--grey" style="padding: 20px;">
-      <h2 class="fr-text--md fr-text--bold" style="margin-bottom: 0.5rem;">
+    <div class="fr-mb-3w fr-background-alt--grey buyer-lot-config-sidebar-card">
+      <h2 class="fr-text--md fr-text--bold buyer-lot-config-sidebar-card__title">
         <%= t('buyer.shared.market_info_title') %>
       </h2>
-      <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
-      <%= render 'shared/sidebar_market_info',
+      <hr class="buyer-lot-config-sidebar-card__separator">
+      <%= render Shared::MarketInfoSidebarComponent.new(
             buyer_label: t('buyer.public_markets.lot_config.sidebar_buyer_label'),
             market_name: @public_market.buyer_display_name,
             typology_label: t('buyer.public_markets.lot_config.sidebar_typology_label'),
             market_types_label: @public_market.market_type_codes.any? ? @presenter.market_types_label : nil,
             deadline_label: t('buyer.shared.deadline_short'),
-            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
+            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M')) %>
     </div>
 
-    <div class="fr-background-alt--grey" style="padding: 20px;">
-      <h2 class="fr-text--md fr-text--bold" style="margin-bottom: 0.5rem;">
+    <div class="fr-background-alt--grey buyer-lot-config-sidebar-card">
+      <h2 class="fr-text--md fr-text--bold buyer-lot-config-sidebar-card__title">
         <%= t('buyer.public_markets.lot_config.how_it_works_title') %>
       </h2>
-      <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
-      <ol style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem; display: flex; flex-direction: column; gap: 4px;">
+      <hr class="buyer-lot-config-sidebar-card__separator">
+      <ol class="buyer-lot-config-how-it-works-list">
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_1') %></li>
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_2') %></li>
         <li><%= t('buyer.public_markets.lot_config.how_it_works_step_3') %></li>
@@ -73,7 +73,7 @@
                  data-collapsible-rows-show-more-label-value="<%= t('shared.collapsible_lots.show_more') %>"
                  data-collapsible-rows-show-less-label-value="<%= t('shared.collapsible_lots.show_less') %>">
             <% @presenter.lots_for_config.each do |lot| %>
-              <%= render 'buyer/public_markets/lot_row', lot: lot %>
+              <%= render Buyer::LotRowComponent.new(lot:) %>
             <% end %>
           </tbody>
         </table>
@@ -85,48 +85,7 @@
               class: 'fr-btn fr-btn--secondary fr-btn--sm fr-icon-edit-line fr-btn--icon-left fr-mt-2w',
               data: { action: 'lot-type-picker#enableEdit', 'lot-type-picker-target': 'editButton' } %>
 
-        <div data-lot-type-picker-target="panel"
-             style="display: none; border: 1px solid var(--border-default-grey); padding: 2.5rem; margin-top: 2rem; background-color: #F5F5FE;">
-          <p class="fr-text--md fr-text--bold fr-mb-2w">
-            <%= t('buyer.public_markets.lot_config.type_picker_title') %>
-          </p>
-          <p class="fr-text--sm fr-mb-2w" data-lot-type-picker-target="helpMessage">
-            <%= t('buyer.public_markets.lot_config.type_picker_no_lot_selected') %>
-          </p>
-          <% picker_market_types = @presenter.picker_market_types %>
-          <div style="display: flex; gap: 1rem; align-items: stretch; flex-wrap: wrap; margin-bottom: 1.5rem;">
-            <% [['works', 'icon-travaux-only.svg'], ['services', 'icon-services-only.svg'], ['supplies', 'icon-fournitures-only.svg']].each do |code, icon| %>
-              <% market_type = picker_market_types[code] %>
-              <% next unless market_type %>
-              <% bg = ApplicationHelper::MARKET_TYPE_CONFIGS.dig(code, :bg) %>
-              <div class="lot-config-type-option" style="display: flex; align-items: stretch; border: 1px solid var(--border-default-grey); overflow: hidden; flex: 1; min-width: 160px;">
-                <label style="display: flex; align-items: center; gap: 0.75rem; padding: 12px 16px; cursor: pointer; background-color: #ffffff; flex: 1;">
-                  <%= radio_button_tag :market_type_id, market_type.id, false,
-                        id: "market_type_#{code}",
-                        disabled: true,
-                        style: 'width: 1.125rem; height: 1.125rem; cursor: pointer; accent-color: var(--blue-france-sun-113-625); flex-shrink: 0;',
-                        data: { 'lot-type-picker-target': 'radio' } %>
-                  <span style="white-space: nowrap;"><%= t("market_types.#{code}") %></span>
-                </label>
-                <span class="lot-config-type-option__icon" style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background-color: <%= bg %>; flex-shrink: 0; padding: 16px;">
-                  <%= image_tag icon, alt: '', aria: { hidden: true }, width: 24, height: 24 %>
-                </span>
-              </div>
-            <% end %>
-          </div>
-          <div style="display: flex; justify-content: flex-end; gap: 1rem;">
-            <%= button_tag t('buyer.public_markets.lot_config.type_picker_cancel'),
-                  type: 'button',
-                  class: 'fr-btn fr-btn--secondary',
-                  style: 'background-color: #ffffff;',
-                  data: { action: 'lot-type-picker#cancel' } %>
-            <%= button_tag t('buyer.public_markets.lot_config.type_picker_apply'),
-                  type: 'button',
-                  class: 'fr-btn fr-icon-check-line fr-btn--icon-right',
-                  disabled: true,
-                  data: { action: 'lot-type-picker#apply', 'lot-type-picker-target': 'applyButton' } %>
-          </div>
-        </div>
+        <%= render Buyer::LotTypePickerPanelComponent.new(picker_market_types: @presenter.picker_market_types) %>
       </div>
 
       <div class="fr-mb-5w" data-controller="radio-toggle">
@@ -168,10 +127,9 @@
                   class: 'fr-label' %>
             <%= number_field_tag :lot_limit,
                   @public_market.lot_limit,
-                  class: "fr-input #{'fr-input--error' if lot_limit_errors.any?}",
+                  class: "fr-input buyer-lot-config-lot-limit-input #{'fr-input--error' if lot_limit_errors.any?}",
                   min: 1,
                   max: @public_market.lots.size,
-                  style: 'width: 250px;',
                   aria: (lot_limit_errors.any? ? { describedby: 'lot-limit-error' } : {}) %>
             <% if lot_limit_errors.any? %>
               <p id="lot-limit-error" class="fr-error-text"><%= lot_limit_errors.first %></p>
@@ -179,7 +137,7 @@
           </div>
         </div>
       </div>
-      <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right" style="width: 100%; justify-content: center;">
+      <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right buyer-lot-config-submit-button">
         <%= t('buyer.public_markets.lot_config.submit') %>
       </button>
     <% end %>
