@@ -1,17 +1,17 @@
 <section class="fr-mb-3w">
-  <%= render 'section_title_with_edit',
+  <%= render Grouping::SectionTitleWithEditComponent.new(
         title: t('candidate.grouping_dashboard.members_section_title'),
         edit_path: grouping_composition_candidate_market_application_path(market_application.identifier),
-        edit_title: t('candidate.grouping_dashboard.edit_members') %>
+        edit_title: t('candidate.grouping_dashboard.edit_members')) %>
 
   <div class="fr-table fr-table--bordered fr-mb-3w">
-    <table>
+    <table class="grouping-dashboard-members-table">
       <colgroup>
-        <col style="width: 26%">
-        <col style="width: 14%">
-        <col style="width: 14%">
-        <col style="width: 14%">
-        <col style="width: 32%">
+        <col class="grouping-dashboard-members-table__col--company">
+        <col class="grouping-dashboard-members-table__col--role">
+        <col class="grouping-dashboard-members-table__col--status">
+        <col class="grouping-dashboard-members-table__col--lots">
+        <col class="grouping-dashboard-members-table__col--actions">
       </colgroup>
       <thead>
         <tr>
@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        <% presenter.members.each do |member| %>
+        <% members.each do |member| %>
           <tr id="grouping_member_row_<%= member.id %>">
             <td>
               <strong><%= presenter.member_display_name(member) %></strong><br>
@@ -41,7 +41,7 @@
             </td>
             <td><%= presenter.declared_lots_label(member) %></td>
             <td>
-              <%= render 'member_actions', member:, market_application:, presenter: %>
+              <%= render Grouping::MemberActionsComponent.new(member:, market_application:, presenter:) %>
             </td>
           </tr>
         <% end %>

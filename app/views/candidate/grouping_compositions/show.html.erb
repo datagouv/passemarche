@@ -21,7 +21,7 @@
   <div data-controller="company-name-resolution"
        data-company-name-resolution-url-value="<%= grouping_composition_candidate_market_application_path(@market_application.identifier, format: :json) %>"
        data-company-name-resolution-pending-value="<%= @grouping.grouping_members.exists?(company_name: nil) %>">
-    <%= render 'members_table', grouping: @grouping, market_application: @market_application, editable: true %>
+    <%= render Grouping::CompositionMembersTableComponent.new(grouping: @grouping, market_application: @market_application, editable: true) %>
   </div>
   <%= render 'member_form', grouping: @grouping, market_application: @market_application, grouping_member: @grouping_member, errors: @errors %>
 
