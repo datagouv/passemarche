@@ -29,9 +29,7 @@ module Buyer
         .includes(:platform_market_type, :market_type)
         .where(id: @updated_lot_ids)
         .map do |lot|
-          turbo_stream.replace("lot_row_#{lot.id}",
-            partial: 'buyer/public_markets/lot_row',
-            locals: { lot: })
+          turbo_stream.replace("lot_row_#{lot.id}", Buyer::LotRowComponent.new(lot:))
         end
     end
 
