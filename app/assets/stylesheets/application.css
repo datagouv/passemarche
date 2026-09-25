@@ -1237,3 +1237,107 @@
 .lot-selection-mode-table td:last-child {
   text-align: right;
 }
+
+/* =============================================
+   Grouping components
+   ============================================= */
+
+.grouping-dashboard-container {
+  max-width: 960px;
+}
+
+.grouping-bordered-block__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-default-grey, #ddd);
+}
+
+.grouping-section-title-with-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grouping-member-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.grouping-solo-application-section__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.grouping-submission-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.grouping-dashboard-lots-table__col--number {
+  width: 20%;
+}
+
+.grouping-dashboard-lots-table__col--typology {
+  width: 30%;
+}
+
+.grouping-dashboard-lots-table__col--name {
+  width: 50%;
+}
+
+/* Dashboard members table */
+.grouping-dashboard-members-table__col--company {
+  width: 26%;
+}
+
+.grouping-dashboard-members-table__col--role,
+.grouping-dashboard-members-table__col--status,
+.grouping-dashboard-members-table__col--lots {
+  width: 14%;
+}
+
+.grouping-dashboard-members-table__col--actions {
+  width: 32%;
+}
+
+/* Composition members table */
+.grouping-composition-members-table__col--company {
+  width: 32%;
+}
+
+.grouping-composition-members-table__col--email {
+  width: 25%;
+}
+
+.grouping-composition-members-table__col--role {
+  width: 15%;
+}
+
+.grouping-composition-members-table__col--status {
+  width: 28%;
+}
+
+.grouping-composition-members-table__col--status-editable {
+  width: 15%;
+}
+
+.grouping-composition-members-table__col--actions {
+  width: 13%;
+}
+
+.grouping-composition-members-table__empty-row {
+  background-color: var(--background-default-grey, #fff);
+  border-top: 1px solid var(--light-decisions-border-border-default-grey, #ddd);
+  vertical-align: middle;
+  color: var(--light-decisions-text-text-mention-grey, #666);
+  text-align: center;
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
