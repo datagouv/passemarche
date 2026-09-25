@@ -1237,3 +1237,137 @@
 .lot-selection-mode-table td:last-child {
   text-align: right;
 }
+
+/* =============================================
+   Buyer lot config components
+   ============================================= */
+
+.buyer-market-info-sidebar {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.buyer-market-info-sidebar__row {
+  display: flex;
+  gap: 8px;
+}
+
+.buyer-market-info-sidebar__term,
+.buyer-market-info-sidebar__description {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.buyer-lot-config-sidebar-card {
+  padding: 20px;
+}
+
+.buyer-lot-config-sidebar-card__title {
+  margin-bottom: 0.5rem;
+}
+
+.buyer-lot-config-sidebar-card__separator {
+  border: none;
+  border-top: 1px solid var(--border-default-grey);
+  margin: 0;
+}
+
+.buyer-lot-config-how-it-works-list {
+  margin: 0;
+  padding-left: 1.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.buyer-lot-config-lot-limit-input {
+  width: 250px;
+}
+
+.buyer-lot-config-submit-button {
+  width: 100%;
+  justify-content: center;
+}
+
+.buyer-lot-type-picker__checkbox {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: var(--blue-france-sun-113-625);
+  flex-shrink: 0;
+}
+
+.buyer-lot-type-badge--struck-through {
+  text-decoration: line-through;
+}
+
+.buyer-lot-type-picker-panel {
+  display: none;
+  border: 1px solid var(--border-default-grey);
+  padding: 2.5rem;
+  margin-top: 2rem;
+  background-color: #F5F5FE;
+}
+
+.buyer-lot-type-picker-panel__options {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.buyer-lot-type-picker-panel__option {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--border-default-grey);
+  overflow: hidden;
+  flex: 1;
+  min-width: 160px;
+}
+
+.buyer-lot-type-picker-panel__option-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: #ffffff;
+  flex: 1;
+}
+
+.buyer-lot-type-picker-panel__option-radio {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: var(--blue-france-sun-113-625);
+  flex-shrink: 0;
+}
+
+.buyer-lot-type-picker-panel__option-label-text {
+  white-space: nowrap;
+}
+
+.buyer-lot-type-picker-panel__option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  padding: 16px;
+}
+
+.buyer-lot-type-picker-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.buyer-lot-type-picker-panel__cancel-button {
+  background-color: #ffffff;
+}
