@@ -7,9 +7,9 @@
     <% end %>
     <%= check_box_tag 'selected_lot_ids[]', lot.id, false,
           id: "lot_#{lot.id}",
-          data: { action: 'change->lot-type-picker#toggle', 'lot-type-picker-target': 'checkbox' },
-          style: 'width: 1.125rem; height: 1.125rem; cursor: pointer; accent-color: var(--blue-france-sun-113-625);' %>
+          class: 'buyer-lot-type-picker__checkbox',
+          data: { action: 'change->lot-type-picker#toggle', 'lot-type-picker-target': 'checkbox' } %>
   </td>
   <td><%= t('buyer.public_markets.lot_config.lot_number', number: lot.position) %> - <%= lot.name %></td>
-  <td><%= render 'buyer/public_markets/lot_type_badge', lot: lot %></td>
+  <td><%= render Buyer::LotTypeBadgeComponent.new(lot:) %></td>
 </tr>
