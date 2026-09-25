@@ -85,6 +85,9 @@ Rails.application.configure do
   config.import_upload_dir = Rails.root.join('tmp/imports')
 
   # Configure ViewComponent preview paths for Lookbook
-  config.view_component.preview_paths = [Rails.root.join('test/components/previews').to_s]
+  config.view_component.previews.paths = [
+    Rails.root.join('test/components/previews').to_s,
+    Rails.root.join('spec/components/previews').to_s
+  ]
 end
 # rubocop:enable Metrics/BlockLength
