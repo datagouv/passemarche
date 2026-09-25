@@ -41,5 +41,12 @@ module VoieRapide
     # Configure Mission Control Jobs
     config.mission_control.jobs.base_controller_class = 'Admin::ApplicationController'
     config.mission_control.jobs.http_basic_auth_enabled = false
+
+    # Configure ViewComponent preview paths for Lookbook, mounted in both
+    # development and sandbox (config/routes.rb) — shared here so both pick it up.
+    config.view_component.previews.paths = [
+      Rails.root.join('test/components/previews').to_s,
+      Rails.root.join('spec/components/previews').to_s
+    ]
   end
 end
