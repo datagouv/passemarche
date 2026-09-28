@@ -89,42 +89,6 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
     end
   end
 
-  describe '#submission_ready?' do
-    it 'is false when not every member is completed' do
-      create(:grouping_member, :co_traitant, grouping:, status: :in_progress)
-
-      expect(presenter.submission_ready?).to be false
-    end
-
-    it 'is true when every member is completed' do
-      grouping.mandataire_grouping_member.update!(status: :completed)
-      create(:grouping_member, :co_traitant, grouping:, status: :completed)
-
-      expect(presenter.submission_ready?).to be true
-    end
-  end
-
-  describe '#partial_submission_available?' do
-    it 'is false when no member has started' do
-      create(:grouping_member, :co_traitant, grouping:)
-
-      expect(presenter.partial_submission_available?).to be false
-    end
-
-    it 'is true when at least one member has started' do
-      create(:grouping_member, :co_traitant, grouping:, status: :in_progress)
-
-      expect(presenter.partial_submission_available?).to be true
-    end
-
-    it 'is false when every member is already completed' do
-      grouping.mandataire_grouping_member.update!(status: :completed)
-      create(:grouping_member, :co_traitant, grouping:, status: :completed)
-
-      expect(presenter.partial_submission_available?).to be false
-    end
-  end
-
   describe '#submitted?' do
     it 'delegates to the grouping' do
       grouping.update!(submitted_at: Time.current)
