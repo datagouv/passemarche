@@ -31,14 +31,6 @@ module Candidate
 
     delegate :submitted?, :submittable?, :partially_submittable?, to: :grouping
 
-    def submission_ready?
-      grouping.all_members_completed?
-    end
-
-    def partial_submission_available?
-      grouping.any_member_started? && !grouping.all_members_completed?
-    end
-
     def mixed_scope?
       solo_counterpart.present?
     end
