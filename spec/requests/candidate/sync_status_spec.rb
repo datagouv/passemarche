@@ -103,5 +103,23 @@ RSpec.describe 'Candidate::SyncStatus', type: :request do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context 'when the market_application belongs to a grouping member' do
+      let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      before { get sync_status_path }
+
+      it 'does not enter the polling loop (no sync-status controller wired)' do
+        expect(response.body).not_to include('data-controller="sync-status"')
+      end
+
+      it 'shows the transmitted confirmation title' do
+        expect(response.body).to include(I18n.t('candidate.sync_status.grouping_member_title'))
+      end
+
+      it 'does not offer an attestation download' do
+        expect(response.body).not_to include(I18n.t('candidate.sync_status.download_attestation'))
+      end
+    end
   end
 end
