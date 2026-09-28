@@ -26,6 +26,12 @@ class GroupingMember < ApplicationRecord
     invitation_token_created_at.present?
   end
 
+  def invitation_expired?
+    return false unless invitation_sent?
+
+    market_application&.completed? || grouping.submitted? || !public_market.open?
+  end
+
   def declared_lots
     market_application&.lots || Lot.none
   end

@@ -217,6 +217,43 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe '#invitation_expired?' do
+    it 'is false when the invitation is still pending and nothing has changed' do
+      member = create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(member.invitation_expired?).to be false
+    end
+
+    it 'is false when the invitation has not been sent yet' do
+      member = build(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)
+
+      expect(member.invitation_expired?).to be false
+    end
+
+    it 'is true when the member own application is completed and submitted' do
+      application = create(:market_application, :completed, public_market:, application_mode: :groupement)
+      member = create(:grouping_member, :co_traitant, grouping:, market_application: application,
+        invitation_token_created_at: Time.current)
+
+      expect(member.invitation_expired?).to be true
+    end
+
+    it 'is true when the grouping has already submitted all its applications' do
+      member = create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+      grouping.update!(submitted_at: Time.current)
+
+      expect(member.invitation_expired?).to be true
+    end
+
+    it 'is true when the market deadline has passed' do
+      expired_market = create(:public_market, :completed, editor:, deadline: 1.day.ago)
+      expired_grouping = create(:grouping, public_market: expired_market)
+      member = create(:grouping_member, :co_traitant, grouping: expired_grouping, invitation_token_created_at: Time.current)
+
+      expect(member.invitation_expired?).to be true
+    end
+  end
+
   describe '#declared_lots' do
     it 'delegates to the member market_application lots' do
       lot = create(:lot, public_market:)
