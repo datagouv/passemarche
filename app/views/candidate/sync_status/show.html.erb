@@ -1,48 +1,57 @@
 <% content_for :title, "#{@market_application.editor.name} - #{t('candidate.sync_status.title_suffix')}" %>
 
-<div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
-  <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
-    <div class="fr-mb-4w"
-         data-controller="sync-status"
-         data-sync-status-url-value="<%= candidate_sync_status_path(@market_application.identifier, format: :json) %>"
-         data-status="<%= @market_application.sync_status %>">
+<% if @market_application.grouping_member %>
+  <div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
+    <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
+      <div class="fr-mb-4w">
+        <h3 class="fr-h3"><%= t('candidate.sync_status.grouping_member_title') %></h3>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
+    <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
+      <div class="fr-mb-4w"
+           data-controller="sync-status"
+           data-sync-status-url-value="<%= candidate_sync_status_path(@market_application.identifier, format: :json) %>"
+           data-status="<%= @market_application.sync_status %>">
 
-      <div id="sync-status-content">
-        <% if @market_application.sync_completed? %>
-          <div>
-            <h3 class="fr-h3"><%= t('candidate.sync_status.success_title') %></h3>
-            <p>
-              <%= t('candidate.sync_status.success_message') %>
-            </p>
-            <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
-              <% if @market_application.attestation.attached? %>
-                <button type="button"
-                        class="fr-btn fr-btn--icon-left"
-                        onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
-                  <span class="fr-icon-download-line" aria-hidden="true"></span>
-                  <span class="fr-ml-1w"><%= t('candidate.sync_status.download_attestation') %></span>
-                </button>
-              <% end %>
-              <% if (candidate_url = @market_application.editor.build_candidate_return_url(
-                market: @market_application.public_market,
-                application: @market_application
-              )) %>
-                <%= link_to t('candidate.sync_status.return_to_editor', editor: @market_application.editor.name),
-                            candidate_url,
-                            class: 'fr-btn' %>
-              <% end %>
+        <div id="sync-status-content">
+          <% if @market_application.sync_completed? %>
+            <div>
+              <h3 class="fr-h3"><%= t('candidate.sync_status.success_title') %></h3>
+              <p>
+                <%= t('candidate.sync_status.success_message') %>
+              </p>
+              <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
+                <% if @market_application.attestation.attached? %>
+                  <button type="button"
+                          class="fr-btn fr-btn--icon-left"
+                          onclick="window.location.href='<%= rails_blob_path(@market_application.attestation, disposition: 'attachment') %>'">
+                    <span class="fr-icon-download-line" aria-hidden="true"></span>
+                    <span class="fr-ml-1w"><%= t('candidate.sync_status.download_attestation') %></span>
+                  </button>
+                <% end %>
+                <% if (candidate_url = @market_application.editor.build_candidate_return_url(
+                  market: @market_application.public_market,
+                  application: @market_application
+                )) %>
+                  <%= link_to t('candidate.sync_status.return_to_editor', editor: @market_application.editor.name),
+                              candidate_url,
+                              class: 'fr-btn' %>
+                <% end %>
+              </div>
             </div>
-          </div>
 
-        <% elsif @market_application.sync_failed? %>
-          <div>
-            <h3 class="fr-h3"><%= t('candidate.sync_status.error_title') %></h3>
-            <p>
-              <%= t('candidate.sync_status.error_message') %>
-            </p>
-            <p class="fr-text--sm">
-              <%= t('candidate.sync_status.error_hint') %>
-            </p>
+          <% elsif @market_application.sync_failed? %>
+            <div>
+              <h3 class="fr-h3"><%= t('candidate.sync_status.error_title') %></h3>
+              <p>
+                <%= t('candidate.sync_status.error_message') %>
+              </p>
+              <p class="fr-text--sm">
+                <%= t('candidate.sync_status.error_hint') %>
+              </p>
               <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left">
                 <%= button_to retry_sync_candidate_market_application_path(@market_application.identifier),
                               method: :post,
@@ -74,34 +83,35 @@
                   ) %>
                 </div>
               </div>
-          </div>
+            </div>
+          <% else %>
+            <div>
+              <h3 class="fr-h3"><%= t('candidate.sync_status.pending_title') %></h3>
+              <p>
+                <%= t('candidate.sync_status.pending_message', editor: @market_application.editor.name) %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-col-12 fr-col-lg-1"></div>
+
+    <div class="fr-col-12 fr-col-lg-4" style="display: flex; align-items: center; justify-content: center;">
+      <div class="center-content">
+        <% if @market_application.sync_completed? %>
+          <%= image_tag "sync_status_success.png", alt: t('candidate.sync_status.success_image_alt') %>
+        <% elsif @market_application.sync_failed? %>
+          <%= image_tag "sync_status_error.png", alt: t('candidate.sync_status.error_image_alt') %>
         <% else %>
-          <div>
-            <h3 class="fr-h3"><%= t('candidate.sync_status.pending_title') %></h3>
-            <p>
-              <%= t('candidate.sync_status.pending_message', editor: @market_application.editor.name) %>
-            </p>
+          <div class="sync-loader"
+               role="img"
+               aria-label="<%= t('candidate.sync_status.loading_aria_label') %>"
+               data-sync-status-target="loader">
           </div>
         <% end %>
       </div>
     </div>
   </div>
-
-  <div class="fr-col-12 fr-col-lg-1"></div>
-
-  <div class="fr-col-12 fr-col-lg-4" style="display: flex; align-items: center; justify-content: center;">
-    <div class="center-content">
-      <% if @market_application.sync_completed? %>
-        <%= image_tag "sync_status_success.png", alt: t('candidate.sync_status.success_image_alt') %>
-      <% elsif @market_application.sync_failed? %>
-        <%= image_tag "sync_status_error.png", alt: t('candidate.sync_status.error_image_alt') %>
-      <% else %>
-        <div class="sync-loader"
-             role="img"
-             aria-label="<%= t('candidate.sync_status.loading_aria_label') %>"
-             data-sync-status-target="loader">
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
+<% end %>

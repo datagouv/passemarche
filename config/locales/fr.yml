@@ -880,6 +880,7 @@ fr:
       success_image_alt: "Synchronisation réussie"
       error_image_alt: "Erreur de synchronisation"
       loading_aria_label: "Synchronisation en cours..."
+      grouping_member_title: "Votre candidature a été transmise !"
     attachments:
       delete_confirm: "Êtes-vous sûr de vouloir supprimer ce fichier ?"
       delete_success: "Fichier supprimé avec succès"

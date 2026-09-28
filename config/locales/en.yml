@@ -880,6 +880,7 @@ en:
       success_image_alt: "Successful synchronization"
       error_image_alt: "Synchronization error"
       loading_aria_label: "Synchronization in progress..."
+      grouping_member_title: "Your application has been submitted!"
     attachments:
       delete_confirm: "Are you sure you want to delete this file?"
       delete_success: "File deleted successfully"
