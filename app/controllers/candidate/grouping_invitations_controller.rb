@@ -6,7 +6,9 @@ module Candidate
 
     def show
       @grouping_member = GroupingMember.find_by(invitation_token: params[:token])
-      render plain: "Cette invitation n'a pas été trouvée", status: :not_found if @grouping_member.nil?
+      return render plain: "Cette invitation n'a pas été trouvée", status: :not_found if @grouping_member.nil?
+
+      render :expired, status: :gone if @grouping_member.invitation_expired?
     end
   end
 end
