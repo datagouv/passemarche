@@ -352,6 +352,27 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       end
     end
 
+    context 'when the market_application is completed and belongs to a mandataire of a confirmed grouping' do
+      let(:grouping) { create(:grouping, mandataire_market_application: market_application) }
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'sometoken',
+          invitation_token_created_at: Time.current)
+        market_application.update!(user:)
+        market_application.complete!
+      end
+
+      it 'redirects to the grouping dashboard instead of sync status' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          grouping_dashboard_candidate_market_application_path(market_application.identifier)
+        )
+      end
+    end
+
     context 'when token is invalid' do
       it 'redirects to sessions new with alert' do
         get verify_candidate_sessions_path, params: { token: 'invalid_token', market_application_id: market_application.identifier }
