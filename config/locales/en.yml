@@ -787,12 +787,27 @@ en:
       submission_pending_body: "Some co-contractors have not yet completed their application. You can submit the group's application, but this may affect your chances of being selected."
       submission_ready_title: "All members have completed their application"
       submission_ready_body: "You can submit the group's application."
+      submission_done_title: "The group's application has been submitted"
+      submission_done_body: "You can view the application certificate from the confirmation screen."
       submit_full: "Submit application"
       submit_partial: "Submit without all applications"
       solo_application_title: "Individual application"
       solo_application_name: "My individual application"
       groupement_application_title: "Group application"
       prepare_my_application: "Prepare my application"
+    grouping_submissions:
+      partial_modal:
+        title: "Submit without all co-contractors' applications?"
+        body_html: "One or more members of the group have not completed the information or provided the documents concerning them. As the lead contractor, you may choose to submit the application as it stands, or wait until all members have completed their file.<br><br>This decision is your responsibility. An incomplete application may be declared inadmissible, meaning your group could be systematically excluded by the buyer, in accordance with article R. 2144-7 of the French public procurement code."
+        cancel: "Cancel"
+        confirm: "Confirm submission"
+        close: "Close"
+      confirmation:
+        title: "The application has been submitted!"
+        body_html: "We have automatically transmitted all the necessary information to the buyer. You can download your application certificate as proof of submission.<br><br>Co-contractors have also been notified by email of the group's application submission."
+        download_attestation: "Download the application certificate"
+        back_to_editor: "Return to my procurement platform"
+      submission_failed: "The group's application submission failed"
     validations:
       siret_blank: "Please provide your SIRET number"
       siret_invalid: "The SIRET number entered is invalid"

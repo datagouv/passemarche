@@ -1,0 +1,30 @@
+<% content_for :title, t('candidate.grouping_submissions.confirmation.title') %>
+
+<div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
+  <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
+    <div class="fr-mb-4w">
+      <h3 class="fr-h3"><%= t('candidate.grouping_submissions.confirmation.title') %></h3>
+      <p><%= t('candidate.grouping_submissions.confirmation.body_html').html_safe %></p>
+
+      <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
+        <% if @grouping.attestation.attached? %>
+          <button type="button"
+                  class="fr-btn fr-btn--icon-left"
+                  onclick="window.location.href='<%= rails_blob_path(@grouping.attestation, disposition: 'attachment') %>'">
+            <span class="fr-icon-download-line" aria-hidden="true"></span>
+            <span class="fr-ml-1w"><%= t('candidate.grouping_submissions.confirmation.download_attestation') %></span>
+          </button>
+        <% end %>
+
+        <% if (candidate_url = @market_application.public_market.editor.build_candidate_return_url(
+          market: @market_application.public_market,
+          application: @market_application
+        )) %>
+          <%= link_to t('candidate.grouping_submissions.confirmation.back_to_editor'),
+                candidate_url,
+                class: 'fr-btn fr-btn--secondary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

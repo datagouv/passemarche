@@ -30,6 +30,19 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
 
         expect(response).to have_http_status(:ok)
       end
+
+      it "links the mandataire's edit action to the first wizard step, not the summary" do
+        grouping.mandataire_grouping_member.update!(status: :in_progress)
+
+        get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
+
+        expect(response.body).to include(
+          company_identification_candidate_market_application_path(mandataire_application.identifier)
+        )
+        expect(response.body).not_to include(
+          step_candidate_market_application_path(mandataire_application.identifier, :summary)
+        )
+      end
     end
 
     context 'when the composition has not been confirmed yet (no co_traitant invited)' do
@@ -156,6 +169,23 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
 
         expect(response.body).to include(I18n.t('candidate.grouping_dashboard.submission_ready_title'))
+      end
+    end
+
+    context 'when the grouping is already submitted' do
+      before do
+        grouping.mandataire_grouping_member.update!(status: :completed)
+        invited_co_traitant.update!(status: :completed,
+          market_application: create(:market_application, public_market:, application_mode: :groupement))
+        grouping.submit!(mode: :full)
+        sign_in_as_candidate(user, mandataire_application)
+      end
+
+      it 'shows the submitted banner instead of a submit button' do
+        get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
+
+        expect(response.body).to include(I18n.t('candidate.grouping_dashboard.submission_done_title'))
+        expect(response.body).not_to include(I18n.t('candidate.grouping_dashboard.submit_full'))
       end
     end
 

@@ -1,11 +1,16 @@
 <section class="fr-mb-2w">
-  <% if presenter.submission_ready? %>
+  <% if presenter.submitted? %>
+    <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_done_title'), color: :success) do %>
+      <%= t('candidate.grouping_dashboard.submission_done_body') %>
+    <% end %>
+  <% elsif presenter.submittable? %>
     <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_ready_title'), color: :success) do %>
       <%= t('candidate.grouping_dashboard.submission_ready_body') %>
     <% end %>
-    <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right">
-      <%= t('candidate.grouping_dashboard.submit_full') %>
-    </button>
+    <%= button_to t('candidate.grouping_dashboard.submit_full'),
+          grouping_submission_candidate_market_application_path(presenter.identifier),
+          params: { submission_mode: 'full' },
+          class: "fr-btn fr-icon-send-plane-line fr-btn--icon-right" %>
   <% else %>
     <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_pending_title'), color: :warning) do %>
       <%= t('candidate.grouping_dashboard.submission_pending_body') %>
@@ -15,10 +20,14 @@
         <%= t('candidate.grouping_dashboard.submit_full') %>
       </button>
 
-      <% if presenter.partial_submission_available? %>
-        <button type="button" class="fr-btn fr-btn--secondary">
+      <% if presenter.partially_submittable? %>
+        <button type="button"
+                class="fr-btn fr-btn--secondary"
+                data-fr-opened="false"
+                aria-controls="partial-submission-modal">
           <%= t('candidate.grouping_dashboard.submit_partial') %>
         </button>
+        <%= render 'partial_submission_modal', identifier: presenter.identifier %>
       <% end %>
     </div>
   <% end %>
