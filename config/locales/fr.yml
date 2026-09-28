@@ -787,12 +787,27 @@ fr:
       submission_pending_body: "Des co-traitants n'ont pas encore complétés leur candidature, vous pouvez soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenus."
       submission_ready_title: "Tous les membres ont complété leur candidature"
       submission_ready_body: "Vous pouvez soumettre la candidature du groupement."
+      submission_done_title: "La candidature du groupement a été transmise"
+      submission_done_body: "Vous pouvez consulter l'attestation de candidature depuis l'écran de confirmation."
       submit_full: "Soumettre la candidature"
       submit_partial: "Soumettre sans la totalité des candidatures"
       solo_application_title: "Candidature individuelle"
       solo_application_name: "Ma candidature individuelle"
       groupement_application_title: "Candidature en groupement"
       prepare_my_application: "Préparer ma candidature"
+    grouping_submissions:
+      partial_modal:
+        title: "Soumettre sans la candidature de tous les co-traitants ?"
+        body_html: "Un ou plusieurs membres du groupement n'ont pas complété les renseignements ou fourni les documents qui les concernent. En tant que mandataire, vous pouvez choisir de transmettre la candidature en l'état ou de ne pas la transmettre tant que tous les membres n'ont pas complété leur dossier.<br><br>Cette décision relève de votre responsabilité. En effet, une candidature incomplète est susceptible d'être déclarée irrecevable, c'est-à-dire que votre groupement pourra être systématiquement éliminé par l'acheteur, conformément à l'article R. 2144-7 du code de la commande publique."
+        cancel: "Annuler"
+        confirm: "Confirmer la soumission"
+        close: "Fermer"
+      confirmation:
+        title: "La candidature a été transmise !"
+        body_html: "Nous avons transmis automatiquement toutes les informations nécessaires à l'acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
+        download_attestation: "Télécharger l'attestation de candidature"
+        back_to_editor: "Revenir sur ma plateforme de marché"
+      submission_failed: "La soumission de la candidature du groupement a échoué"
     validations:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"
       siret_invalid: "Le numéro de SIRET saisi est invalide"

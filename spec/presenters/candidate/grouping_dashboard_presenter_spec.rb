@@ -116,6 +116,38 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
 
       expect(presenter.partial_submission_available?).to be true
     end
+
+    it 'is false when every member is already completed' do
+      grouping.mandataire_grouping_member.update!(status: :completed)
+      create(:grouping_member, :co_traitant, grouping:, status: :completed)
+
+      expect(presenter.partial_submission_available?).to be false
+    end
+  end
+
+  describe '#submitted?' do
+    it 'delegates to the grouping' do
+      grouping.update!(submitted_at: Time.current)
+
+      expect(presenter.submitted?).to be true
+    end
+  end
+
+  describe '#submittable?' do
+    it 'delegates to the grouping' do
+      grouping.mandataire_grouping_member.update!(status: :completed)
+      create(:grouping_member, :co_traitant, grouping:, status: :completed, invitation_token_created_at: Time.current)
+
+      expect(presenter.submittable?).to be true
+    end
+  end
+
+  describe '#partially_submittable?' do
+    it 'delegates to the grouping' do
+      create(:grouping_member, :co_traitant, grouping:, status: :in_progress, invitation_token_created_at: Time.current)
+
+      expect(presenter.partially_submittable?).to be true
+    end
   end
 
   describe '#mixed_scope?' do

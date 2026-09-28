@@ -1,0 +1,10 @@
+<%= render 'candidate/shared/confirmation_modal',
+      id: 'partial-submission-modal',
+      title: t('candidate.grouping_submissions.partial_modal.title'),
+      confirm_path: grouping_submission_candidate_market_application_path(identifier),
+      confirm_params: { submission_mode: 'partial' },
+      confirm_label: t('candidate.grouping_submissions.partial_modal.confirm'),
+      cancel_label: t('candidate.grouping_submissions.partial_modal.cancel'),
+      close_label: t('candidate.grouping_submissions.partial_modal.close') do %>
+  <p><%= t('candidate.grouping_submissions.partial_modal.body_html').html_safe %></p>
+<% end %>
