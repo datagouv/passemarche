@@ -84,6 +84,14 @@ Then('the co-traitant declared lots column should show {string}') do |lot_name|
   expect(page).to have_selector('table', text: lot_name)
 end
 
+Then('the grouping should not be submitted') do
+  expect(mandataire_grouping.reload).not_to be_submitted
+end
+
+Then('the grouping should be submitted') do
+  expect(mandataire_grouping.reload).to be_submitted
+end
+
 Given('the grouping composition is already confirmed') do
   @market_application.update!(application_mode: :groupement)
   @market_application.lots = [@lot_works1, @lot_works2, @lot_services1]
