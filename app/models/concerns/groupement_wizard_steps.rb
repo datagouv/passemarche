@@ -54,6 +54,7 @@ module GroupementWizardSteps
 
   def lot_selection_mode_choice_required?
     return false if completed?
+    return false if grouping_member&.co_traitant?
     return false unless lot_selection_mode_applicable?
 
     solo = solo_counterpart
