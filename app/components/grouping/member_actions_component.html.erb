@@ -3,7 +3,7 @@
     <% case action %>
     <% when :edit %>
       <%= link_to t('candidate.grouping_dashboard.action_edit'),
-            step_candidate_market_application_path(member_application_identifier, :summary),
+            company_identification_candidate_market_application_path(member_application_identifier),
             class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-edit-line fr-btn--icon-left' %>
     <% when :consult %>
       <%= link_to t('candidate.grouping_dashboard.action_consult'),

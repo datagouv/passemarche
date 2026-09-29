@@ -29,13 +29,7 @@ module Candidate
       MEMBER_ACTIONS.dig(member.mandataire? ? :mandataire : :co_traitant, member.status.to_sym)
     end
 
-    def submission_ready?
-      grouping.all_members_completed?
-    end
-
-    def partial_submission_available?
-      grouping.any_member_started?
-    end
+    delegate :submitted?, :submittable?, :partially_submittable?, to: :grouping
 
     def mixed_scope?
       solo_counterpart.present?

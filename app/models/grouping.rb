@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class Grouping < ApplicationRecord
+  include Syncable
+
+  class AlreadySubmittedError < StandardError; end
+
   belongs_to :public_market
+
+  has_one_attached :attestation
 
   has_many :grouping_members, dependent: :destroy
   has_many :market_applications, through: :grouping_members
@@ -9,6 +15,7 @@ class Grouping < ApplicationRecord
   has_one :mandataire_market_application, through: :mandataire_grouping_member, source: :market_application
 
   enum :legal_type, { conjoint: 0, solidaire: 1, conjoint_mandataire_solidaire: 2 }, prefix: true
+  enum :submission_mode, { full: 0, partial: 1 }, prefix: true, validate: { allow_nil: true }
 
   def all_members_completed?
     grouping_members.where.not(status: :completed).none?
@@ -20,5 +27,23 @@ class Grouping < ApplicationRecord
 
   def composition_confirmed?
     grouping_members.co_traitant.any?(&:invitation_sent?)
+  end
+
+  def submitted?
+    submitted_at.present?
+  end
+
+  def submittable?
+    !submitted? && composition_confirmed? && all_members_completed?
+  end
+
+  def partially_submittable?
+    !submitted? && composition_confirmed? && any_member_started? && !all_members_completed?
+  end
+
+  def submit!(mode:)
+    raise AlreadySubmittedError if submitted?
+
+    update!(submitted_at: Time.zone.now, submission_mode: mode)
   end
 end

@@ -84,6 +84,19 @@ Then('the co-traitant declared lots column should show {string}') do |lot_name|
   expect(page).to have_selector('table', text: lot_name)
 end
 
+Given('the editor has a working webhook configured') do
+  @editor.update!(completion_webhook_url: 'https://editor.example.com/webhook')
+  stub_request(:post, @editor.completion_webhook_url).to_return(status: 200, body: 'OK')
+end
+
+Then('the grouping should not be submitted') do
+  expect(mandataire_grouping.reload).not_to be_submitted
+end
+
+Then('the grouping should be submitted') do
+  expect(mandataire_grouping.reload).to be_submitted
+end
+
 Given('the grouping composition is already confirmed') do
   @market_application.update!(application_mode: :groupement)
   @market_application.lots = [@lot_works1, @lot_works2, @lot_services1]

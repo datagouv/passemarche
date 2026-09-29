@@ -53,5 +53,26 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context 'when the invitation is expired' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before { grouping.update!(submitted_at: Time.current) }
+
+      it 'returns a gone status' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response).to have_http_status(:gone)
+      end
+
+      it 'renders the expired invitation page' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.expired.heading'))
+      end
+    end
   end
 end
