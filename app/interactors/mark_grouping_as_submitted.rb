@@ -10,10 +10,10 @@ class MarkGroupingAsSubmitted < ApplicationInteractor
     validate_submittable_for_mode
 
     grouping.with_lock do
-      context.fail!(message: 'Groupement déjà soumis') if grouping.submitted?
-
       grouping.submit!(mode: submission_mode)
     end
+  rescue Grouping::AlreadySubmittedError
+    context.fail!(message: 'Groupement déjà soumis')
   end
 
   private
