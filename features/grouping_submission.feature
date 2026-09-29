@@ -7,6 +7,7 @@ Feature: Mandataire submits the grouping candidacy
   Background:
     Given the groupement feature flag is enabled
     And a public market exists
+    And the editor has a working webhook configured
     And a candidate application exists for SIRET "73282932000074"
     And a candidate "candidat@example.com" has a valid magic link token
     And I visit the magic link
