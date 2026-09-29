@@ -1,7 +1,9 @@
 <%= t('grouping_invitation_mailer.invitation.greeting') %>
 
-<%= t('grouping_invitation_mailer.invitation.intro') %>
-<%= @market_name %>
+<%= t('grouping_invitation_mailer.invitation.intro', mandataire_name: @mandataire_name) %>
+"<%= @market_name %>".
+
+<%= t('grouping_invitation_mailer.invitation.role_explanation') %>
 
 <%= t('grouping_invitation_mailer.invitation.cta_intro') %>
 <%= @url %>

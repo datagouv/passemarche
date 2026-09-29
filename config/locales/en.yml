@@ -38,9 +38,10 @@ en:
 
   grouping_invitation_mailer:
     invitation:
-      subject: "You have been invited to apply as part of a group"
+      subject: "You have been invited to join a group"
       greeting: Hello,
-      intro: "You have been invited to join a group as a co-contractor to apply for the following tender:"
+      intro: "%{mandataire_name} invites you to join a group application for the tender:"
+      role_explanation: "As a co-contractor, you will need to fill in an application form covering your capacities for the lots you handle. You can edit your form at any time, as long as the application has not been submitted to the buyer."
       cta_intro: "Click the button below to join the group:"
       cta: Join the group
 
