@@ -55,7 +55,7 @@ module Candidate
     end
 
     def first_step_path(market_application)
-      dashboard_path = mandataire_dashboard_path(market_application)
+      dashboard_path = confirmed_grouping_dashboard_path(market_application)
       return dashboard_path if dashboard_path
 
       return completed_application_path(market_application) if market_application.completed?

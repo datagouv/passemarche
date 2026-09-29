@@ -25,15 +25,16 @@ module Candidate
       target, step = market_application.next_required_wizard_step
       return wizard_step_path(target, step) if target
 
-      mandataire_dashboard_path(market_application) ||
+      confirmed_grouping_dashboard_path(market_application) ||
         company_identification_candidate_market_application_path(market_application.identifier)
     end
 
-    def mandataire_dashboard_path(market_application)
-      grouping_application = market_application.confirmed_mandataire_grouping_application
-      return nil if grouping_application.nil?
+    def confirmed_grouping_dashboard_path(market_application)
+      dashboard_application = market_application.confirmed_mandataire_grouping_application ||
+                              market_application.confirmed_co_traitant_grouping_application
+      return nil if dashboard_application.nil?
 
-      grouping_dashboard_candidate_market_application_path(grouping_application.identifier)
+      grouping_dashboard_candidate_market_application_path(dashboard_application.identifier)
     end
   end
 end

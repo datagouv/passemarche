@@ -45,6 +45,13 @@ module GroupementWizardSteps
     grouping_application
   end
 
+  def confirmed_co_traitant_grouping_application
+    grouping = grouping_member&.grouping
+    return nil if grouping.nil? || !grouping.composition_confirmed?
+
+    self
+  end
+
   def lot_selection_mode_choice_required?
     return false if completed?
     return false unless lot_selection_mode_applicable?
