@@ -36,5 +36,17 @@ RSpec.describe GroupingInvitationMailer, type: :mailer do
     it 'includes the market name in the html body' do
       expect(mail.html_part.body.decoded).to include('Marché test informatique')
     end
+
+    it 'includes the mandataire company name in the html body' do
+      grouping.mandataire_grouping_member.update!(company_name: 'Menuiseries de Loire SARL')
+
+      expect(mail.html_part.body.decoded).to include('Menuiseries de Loire SARL')
+    end
+
+    it 'falls back to the mandataire siret when no company name is set' do
+      grouping.mandataire_grouping_member.update!(company_name: nil)
+
+      expect(mail.html_part.body.decoded).to include(grouping.mandataire_grouping_member.siret)
+    end
   end
 end
