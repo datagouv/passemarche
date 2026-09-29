@@ -13,11 +13,27 @@ module Candidate
         return
       end
 
+      return if validate_grouping_member_email(application) == :failed
+
       context.market_application = application
-      handle_reconnection(application)
+
+      if application.grouping_member.present?
+        context.reconnection = false
+      else
+        handle_reconnection(application)
+      end
     end
 
     private
+
+    def validate_grouping_member_email(application)
+      grouping_member = application.grouping_member
+      return unless grouping_member
+      return if grouping_member.email.casecmp(email).zero?
+
+      context.fail!(errors: { email: [I18n.t('candidate.request_magic_link.reconnection_email_mismatch')] })
+      :failed
+    end
 
     def handle_reconnection(application)
       existing_application = find_existing_application_for_reconnection(application)

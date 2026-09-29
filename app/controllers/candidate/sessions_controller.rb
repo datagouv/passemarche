@@ -3,6 +3,7 @@
 module Candidate
   class SessionsController < Candidate::ApplicationController
     include Candidate::WizardRoutable
+    include Candidate::MagicLinkSession
 
     skip_before_action :require_candidate_authentication
 
@@ -71,7 +72,7 @@ module Candidate
     def handle_magic_link_sent(result)
       clear_candidate_authentication_session
       store_reconnection_context(result)
-      store_magic_link_url(result)
+      store_magic_link_url(result.magic_link_url)
       redirect_to sent_candidate_sessions_path
     end
 
@@ -95,12 +96,6 @@ module Candidate
       return unless result.reconnection
 
       session[:reconnection_market_name] = result.market_application.public_market.name
-    end
-
-    def store_magic_link_url(result)
-      return unless Rails.env.sandbox? || Rails.env.development? || Rails.env.staging?
-
-      session[:magic_link_url] = result.magic_link_url
     end
 
     def invalid_token
