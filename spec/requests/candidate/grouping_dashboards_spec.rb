@@ -95,12 +95,22 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
 
       before { sign_in_as_candidate(co_traitant_user, co_traitant_application) }
 
-      it 'redirects to the application mode choice step' do
+      it 'returns ok' do
         get grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier)
 
-        expect(response).to redirect_to(
-          application_mode_candidate_market_application_path(co_traitant_application.identifier)
-        )
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'does not offer editing the composition' do
+        get grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier)
+
+        expect(response.body).not_to include(I18n.t('candidate.grouping_dashboard.edit_members'))
+      end
+
+      it 'does not offer submission actions' do
+        get grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier)
+
+        expect(response.body).not_to include(I18n.t('candidate.grouping_dashboard.submit_full'))
       end
     end
 

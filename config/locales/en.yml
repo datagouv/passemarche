@@ -776,6 +776,8 @@ en:
       table_actions: "Actions"
       role_mandataire: "LEAD"
       role_co_traitant: "CO-CONTRACTOR"
+      role_self_mandataire: "YOU: LEAD"
+      role_self_co_traitant: "YOU: CO-CONTRACTOR"
       status_invited: "Invited"
       status_to_prepare: "To prepare"
       status_in_progress: "In progress"

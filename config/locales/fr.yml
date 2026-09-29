@@ -776,6 +776,8 @@ fr:
       table_actions: "Actions"
       role_mandataire: "MANDATAIRE"
       role_co_traitant: "CO-TRAITANT"
+      role_self_mandataire: "VOUS : MANDATAIRE"
+      role_self_co_traitant: "VOUS : CO-TRAITANT"
       status_invited: "Invité"
       status_to_prepare: "À préparer"
       status_in_progress: "En cours"
