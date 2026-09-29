@@ -196,5 +196,41 @@ RSpec.describe Candidate::RequestMagicLink, type: :interactor do
         end
       end
     end
+
+    context 'when the market_application belongs to a grouping_member with no user yet (co_traitant invitation)' do
+      let(:mandataire_application) { create(:market_application, public_market:, siret: '80245139600098', application_mode: :groupement) }
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: valid_siret, email: 'co-traitant@example.com',
+          market_application:)
+      end
+
+      before do
+        allow(SiretValidator).to receive(:valid?).with('80245139600098').and_return(true)
+        grouping_member
+      end
+
+      it 'fails when the submitted email does not match the grouping_member email' do
+        result = described_class.call(email: 'attacker@example.com', siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
+
+        expect(result).to be_failure
+        expect(result.errors[:email]).to be_present
+      end
+
+      it 'does not send a magic link when the submitted email does not match' do
+        expect do
+          described_class.call(email: 'attacker@example.com', siret: valid_siret,
+            market_application_id: valid_market_application_id, host:, protocol:)
+        end.not_to have_enqueued_mail(AuthMailer, :magic_link)
+      end
+
+      it 'succeeds when the submitted email matches the grouping_member email' do
+        result = described_class.call(email: 'co-traitant@example.com', siret: valid_siret,
+          market_application_id: valid_market_application_id, host:, protocol:)
+
+        expect(result).to be_success
+      end
+    end
   end
 end
