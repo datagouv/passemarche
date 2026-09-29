@@ -2,12 +2,12 @@
   <div class="fr-table fr-table--bordered fr-mb-3w">
     <table>
       <colgroup>
-        <col style="width: 32%">
-        <col style="width: 25%">
-        <col style="width: 15%">
-        <col style="width: <%= editable ? '15%' : '28%' %>">
-        <% if editable %>
-          <col style="width: 13%">
+        <col class="grouping-composition-members-table__col--company">
+        <col class="grouping-composition-members-table__col--email">
+        <col class="grouping-composition-members-table__col--role">
+        <col class="<%= editable? ? 'grouping-composition-members-table__col--status-editable' : 'grouping-composition-members-table__col--status' %>">
+        <% if editable? %>
+          <col class="grouping-composition-members-table__col--actions">
         <% end %>
       </colgroup>
       <thead>
@@ -16,13 +16,13 @@
           <th scope="col"><%= t('candidate.grouping_compositions.table_email') %></th>
           <th scope="col"><%= t('candidate.grouping_compositions.table_role') %></th>
           <th scope="col"><%= t('candidate.grouping_compositions.table_status') %></th>
-          <% if editable %>
+          <% if editable? %>
             <th scope="col"></th>
           <% end %>
         </tr>
       </thead>
       <tbody>
-        <% grouping.grouping_members.order(:role).each do |member| %>
+        <% members.each do |member| %>
           <tr>
             <td>
               <strong><%= member.company_name.presence || t('candidate.grouping_compositions.company_unknown') %></strong><br>
@@ -43,24 +43,24 @@
                 <span class="fr-badge fr-badge--sm"><%= t('candidate.grouping_compositions.status_not_sent') %></span>
               <% end %>
             </td>
-            <% if editable %>
+            <% if editable? %>
               <td>
-                <% if member.co_traitant? && !member.status_completed? %>
+                <% if removable?(member) %>
                   <button type="button"
                           class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-delete-line fr-btn--icon-left"
                           data-fr-opened="false"
                           aria-controls="removal-modal-<%= member.id %>">
                     <%= t('candidate.grouping_compositions.remove_button') %>
                   </button>
-                  <%= render 'removal_modal', member:, market_application: %>
+                  <%= render 'candidate/grouping_compositions/removal_modal', member:, market_application: %>
                 <% end %>
               </td>
             <% end %>
           </tr>
         <% end %>
-        <% if grouping.grouping_members.co_traitant.none? %>
+        <% if members.co_traitant.none? %>
           <tr>
-            <td colspan="<%= editable ? 5 : 4 %>" style="background-color: var(--background-default-grey, #fff); border-top: 1px solid var(--light-decisions-border-border-default-grey, #ddd); vertical-align: middle; color: var(--light-decisions-text-text-mention-grey, #666); text-align: center; font-family: Marianne; font-size: 14px; font-style: normal; font-weight: 400; line-height: 24px;">
+            <td colspan="<%= editable? ? 5 : 4 %>" class="grouping-composition-members-table__empty-row">
               <%= t('candidate.grouping_compositions.no_co_traitant_line1') %><br>
               <%= t('candidate.grouping_compositions.no_co_traitant_line2') %>
             </td>

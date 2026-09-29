@@ -10,7 +10,7 @@
     <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_pending_title'), color: :warning) do %>
       <%= t('candidate.grouping_dashboard.submission_pending_body') %>
     <% end %>
-    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+    <div class="grouping-submission-section__actions">
       <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right" disabled>
         <%= t('candidate.grouping_dashboard.submit_full') %>
       </button>
