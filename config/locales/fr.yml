@@ -810,6 +810,9 @@ fr:
         body_html: "Nous avons transmis automatiquement toutes les informations nécessaires à l'acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
         download_attestation: "Télécharger l'attestation de candidature"
         back_to_editor: "Revenir sur ma plateforme de marché"
+        sync_failed:
+          title: "La transmission à l'acheteur a échoué"
+          body_html: "Votre candidature a bien été soumise, mais sa transmission automatique à l'acheteur a échoué. Notre équipe a été alertée et va y remédier."
       submission_failed: "La soumission de la candidature du groupement a échoué"
     validations:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"

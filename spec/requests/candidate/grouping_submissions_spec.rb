@@ -133,6 +133,17 @@ RSpec.describe 'Candidate::GroupingSubmissions', type: :request do
       end
     end
 
+    context 'when the submission webhook failed to sync' do
+      before { grouping.update!(submitted_at: Time.current, submission_mode: :full, sync_status: :sync_failed) }
+
+      it 'renders the sync failure message instead of the success confirmation' do
+        get grouping_submission_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).to include(CGI.escapeHTML(I18n.t('candidate.grouping_submissions.confirmation.sync_failed.title')))
+        expect(response.body).not_to include(CGI.escapeHTML(I18n.t('candidate.grouping_submissions.confirmation.title')))
+      end
+    end
+
     context 'when the groupement feature flag is disabled' do
       before do
         grouping.update!(submitted_at: Time.current, submission_mode: :full)

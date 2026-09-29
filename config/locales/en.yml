@@ -810,6 +810,9 @@ en:
         body_html: "We have automatically transmitted all the necessary information to the buyer. You can download your application certificate as proof of submission."
         download_attestation: "Download the application certificate"
         back_to_editor: "Return to my procurement platform"
+        sync_failed:
+          title: "Transmission to the buyer failed"
+          body_html: "Your application was successfully submitted, but its automatic transmission to the buyer failed. Our team has been alerted and will fix it."
       submission_failed: "The group's application submission failed"
     validations:
       siret_blank: "Please provide your SIRET number"

@@ -1,10 +1,16 @@
-<% content_for :title, t('candidate.grouping_submissions.confirmation.title') %>
+<% sync_failed = @grouping.sync_failed? %>
+<% content_for :title, t(sync_failed ? 'candidate.grouping_submissions.confirmation.sync_failed.title' : 'candidate.grouping_submissions.confirmation.title') %>
 
 <div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
   <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
     <div class="fr-mb-4w">
-      <h3 class="fr-h3"><%= t('candidate.grouping_submissions.confirmation.title') %></h3>
-      <p><%= t('candidate.grouping_submissions.confirmation.body_html').html_safe %></p>
+      <% if sync_failed %>
+        <h3 class="fr-h3"><%= t('candidate.grouping_submissions.confirmation.sync_failed.title') %></h3>
+        <p><%= t('candidate.grouping_submissions.confirmation.sync_failed.body_html').html_safe %></p>
+      <% else %>
+        <h3 class="fr-h3"><%= t('candidate.grouping_submissions.confirmation.title') %></h3>
+        <p><%= t('candidate.grouping_submissions.confirmation.body_html').html_safe %></p>
+      <% end %>
 
       <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
         <% if @grouping.attestation.attached? %>
