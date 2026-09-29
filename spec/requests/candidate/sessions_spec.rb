@@ -294,6 +294,33 @@ RSpec.describe 'Candidate::Sessions', type: :request do
           end.to change { solo_application.reload.user_id }.from(nil).to(user.id)
         end
       end
+
+      context 'when the application belongs to a co_traitant of a confirmed grouping' do
+        let(:mandataire_application) do
+          create(:market_application, public_market: market_application.public_market, siret: '80245139600098',
+            application_mode: :groupement)
+        end
+        let(:grouping) do
+          create(:grouping, public_market: market_application.public_market, mandataire_market_application: mandataire_application,
+            legal_type: :conjoint)
+        end
+
+        before do
+          allow(SiretValidator).to receive(:valid?).with('80245139600098').and_return(true)
+          market_application.update!(application_mode: :groupement)
+          create(:grouping_member, :co_traitant, grouping:, siret: market_application.siret,
+            market_application:, invitation_token: 'seed-token', invitation_token_created_at: Time.current)
+        end
+
+        it 'redirects straight to the shared grouping dashboard' do
+          get verify_candidate_sessions_path,
+            params: { token:, market_application_id: market_application.identifier }
+
+          expect(response).to redirect_to(
+            grouping_dashboard_candidate_market_application_path(market_application.identifier)
+          )
+        end
+      end
     end
 
     context 'when market has lots and no lots are selected' do
