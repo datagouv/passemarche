@@ -999,7 +999,6 @@ fr:
           period_label: "Période :"
           issue_date_label: "Date de délivrance :"
           validity_duration_label: "Durée de validité :"
-      market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       delete_success: "Votre candidature a bien été supprimée."
       delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
       sync_retry_initiated: "La synchronisation a été relancée."

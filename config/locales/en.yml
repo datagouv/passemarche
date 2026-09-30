@@ -999,7 +999,6 @@ en:
           period_label: "Period:"
           issue_date_label: "Issue date:"
           validity_duration_label: "Validity period:"
-      market_application_completed_cannot_edit: "Your application has already been completed and can no longer be edited."
       delete_success: "Your application has been successfully deleted."
       delete_failure: "An error occurred; the application could not be deleted."
       sync_retry_initiated: "Synchronization has been restarted."
