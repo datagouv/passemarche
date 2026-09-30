@@ -6,10 +6,16 @@ class Grouping::PreviewData
 
   class << self
     def grouping
-      ::Grouping.find_or_create_by!(public_market:, legal_type: :conjoint_mandataire_solidaire) do |g|
-        g.grouping_members.build(role: :mandataire, siret: MANDATAIRE_SIRET, email: 'mandataire@example.com',
-          company_name: 'Menuiseries Loire', market_application: mandataire_market_application, status: :in_progress)
-      end
+      grouping = ::Grouping.find_or_create_by!(public_market:, legal_type: :conjoint_mandataire_solidaire)
+      grouping.grouping_members.mandataire.first || grouping.grouping_members.create!(
+        role: :mandataire,
+        siret: MANDATAIRE_SIRET,
+        email: 'mandataire@example.com',
+        company_name: 'Menuiseries Loire',
+        market_application: mandataire_market_application,
+        status: :in_progress
+      )
+      grouping
     end
 
     def mandataire_market_application
