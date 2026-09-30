@@ -617,6 +617,8 @@ en:
       expired:
         heading: "This invitation is no longer valid"
         explanation: "This invitation has expired, the group application is already finalized or the submission deadline has passed."
+      not_found:
+        heading: "This invitation link is no longer valid"
     grouping_legal_types:
       title: "Group type"
       step_current: "Step 1 of 3"

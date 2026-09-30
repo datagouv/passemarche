@@ -617,6 +617,8 @@ fr:
       expired:
         heading: "Cette invitation n'est plus valable"
         explanation: "Cette invitation a expiré, la candidature du groupement est déjà finalisée ou la date limite de remise des offres est dépassée."
+      not_found:
+        heading: "Ce lien d'invitation n'est plus valable"
     grouping_legal_types:
       title: "Le type de groupement"
       step_current: "Étape 1 sur 3"
