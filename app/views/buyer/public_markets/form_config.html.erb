@@ -12,13 +12,13 @@
         <%= t('buyer.shared.market_info_title') %>
       </h2>
       <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0;">
-      <%= render 'shared/sidebar_market_info',
+      <%= render Shared::MarketInfoSidebarComponent.new(
             buyer_label: t('buyer.public_markets.form_config.sidebar_buyer_label'),
             market_name: @public_market.buyer_display_name,
             typology_label: t('buyer.public_markets.form_config.sidebar_typology_label'),
             market_types_label: @public_market.market_type_codes.any? ? @presenter.market_types_label : nil,
             deadline_label: t('buyer.shared.deadline_short'),
-            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M') %>
+            deadline: l(@public_market.deadline, format: '%d/%m/%Y %H:%M')) %>
     </div>
 
     <div class="fr-background-alt--grey" style="padding: 20px;">
