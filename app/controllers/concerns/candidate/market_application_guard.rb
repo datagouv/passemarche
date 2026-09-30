@@ -14,8 +14,7 @@ module Candidate
       return unless @market_application&.completed?
 
       if @market_application.public_market.open?
-        redirect_to candidate_sync_status_path(@market_application.identifier),
-          alert: t('candidate.market_applications.market_application_completed_cannot_edit')
+        redirect_to candidate_sync_status_path(@market_application.identifier)
       else
         redirect_to deadline_passed_candidate_market_application_path(@market_application.identifier)
       end

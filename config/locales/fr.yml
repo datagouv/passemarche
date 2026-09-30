@@ -617,6 +617,8 @@ fr:
       expired:
         heading: "Cette invitation n'est plus valable"
         explanation: "Cette invitation a expiré, la candidature du groupement est déjà finalisée ou la date limite de remise des offres est dépassée."
+      not_found:
+        heading: "Ce lien d'invitation n'est plus valable"
     grouping_legal_types:
       title: "Le type de groupement"
       step_current: "Étape 1 sur 3"
@@ -997,7 +999,6 @@ fr:
           period_label: "Période :"
           issue_date_label: "Date de délivrance :"
           validity_duration_label: "Durée de validité :"
-      market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
       delete_success: "Votre candidature a bien été supprimée."
       delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
       sync_retry_initiated: "La synchronisation a été relancée."

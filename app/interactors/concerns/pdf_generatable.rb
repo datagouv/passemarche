@@ -39,7 +39,7 @@ module PdfGeneratable
   end
 
   def transmission_time
-    @transmission_time ||= Time.zone.now.strftime('%d/%m/%Y à %H:%M')
+    @transmission_time ||= Time.zone.now.strftime('%d/%m/%Y à %H:%M').force_encoding(Encoding::UTF_8)
   end
 
   def handle_pdf_generation_error(error)

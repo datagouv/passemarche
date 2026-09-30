@@ -60,7 +60,8 @@ class MarketApplicationPresenter
   end
 
   def market_attribute_response_for(market_attribute)
-    responses_by_attribute_id[market_attribute.id] ||= @market_application.market_attribute_responses.build(
+    responses_by_attribute_id[market_attribute.id] ||= MarketAttributeResponse.new(
+      market_application: @market_application,
       market_attribute:,
       type: MarketAttributeResponse.type_from_input_type(market_attribute.input_type)
     )
