@@ -28,6 +28,18 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
 
       expect(presenter.members.first).to eq(grouping.mandataire_grouping_member)
     end
+
+    context 'when viewing as a co_traitant' do
+      it 'orders the current member first' do
+        other_member = create(:grouping_member, :co_traitant, grouping:)
+        current_application = create(:market_application, public_market:, application_mode: :groupement)
+        current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application)
+        co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+        expect(co_traitant_presenter.members.first).to eq(current_member)
+        expect(co_traitant_presenter.members).to include(other_member)
+      end
+    end
   end
 
   describe '#member_actions' do
@@ -87,6 +99,51 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
         expect(presenter.member_actions(member)).to eq([:consult])
       end
     end
+
+    context 'when viewing as a co_traitant' do
+      it 'offers prepare on its own row when to_prepare' do
+        current_application = create(:market_application, public_market:, application_mode: :groupement)
+        current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application,
+          status: :to_prepare)
+        co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+        expect(co_traitant_presenter.member_actions(current_member)).to eq([:prepare])
+      end
+
+      it 'offers no action on other members rows' do
+        current_application = create(:market_application, public_market:, application_mode: :groupement)
+        current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application)
+        co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+        expect(co_traitant_presenter.member_actions(grouping.mandataire_grouping_member)).to eq([])
+      end
+    end
+  end
+
+  describe '#viewing_as_co_traitant?' do
+    it 'is false for the mandataire' do
+      expect(presenter.viewing_as_co_traitant?).to be false
+    end
+
+    it 'is true for a co_traitant' do
+      current_application = create(:market_application, public_market:, application_mode: :groupement)
+      current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application)
+      co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+      expect(co_traitant_presenter.viewing_as_co_traitant?).to be true
+    end
+  end
+
+  describe '#member_role_label' do
+    it 'labels the current member with a self marker' do
+      expect(presenter.member_role_label(grouping.mandataire_grouping_member)).to eq(I18n.t('candidate.grouping_dashboard.role_self_mandataire'))
+    end
+
+    it 'labels other members without a self marker' do
+      other_member = create(:grouping_member, :co_traitant, grouping:)
+
+      expect(presenter.member_role_label(other_member)).to eq(I18n.t('candidate.grouping_dashboard.role_co_traitant'))
+    end
   end
 
   describe '#submitted?' do
@@ -123,6 +180,25 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
       create(:market_application, public_market:, siret:, application_mode: :solo)
 
       expect(presenter.mixed_scope?).to be true
+    end
+  end
+
+  describe '#lots' do
+    it 'returns the mandataire market_application lots when viewed by the mandataire' do
+      lot = create(:lot, public_market:)
+      mandataire_application.lots << lot
+
+      expect(presenter.lots).to contain_exactly(lot)
+    end
+
+    it 'returns the mandataire market_application lots when viewed by a co_traitant, not the co_traitant own lots' do
+      lot = create(:lot, public_market:)
+      mandataire_application.lots << lot
+      current_application = create(:market_application, public_market:, application_mode: :groupement)
+      current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application)
+      co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+      expect(co_traitant_presenter.lots).to contain_exactly(lot)
     end
   end
 

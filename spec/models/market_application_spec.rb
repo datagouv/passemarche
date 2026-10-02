@@ -325,6 +325,16 @@ RSpec.describe MarketApplication, type: :model do
         expect(application.lot_selection_mode_choice_required?).to be true
       end
 
+      it 'returns false for a co_traitant member, even without any lot assigned' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        application = create(:market_application, public_market:, siret: '13002526500013', application_mode: :groupement)
+        create(:lot, public_market:)
+        grouping = create(:grouping, public_market:)
+        create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+
+        expect(application.lot_selection_mode_choice_required?).to be false
+      end
+
       it 'returns false once at least one lot has been assigned' do
         allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
         application = create(:market_application, public_market:, application_mode: :groupement)

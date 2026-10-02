@@ -3,7 +3,7 @@
 module Candidate
   class GroupingDashboardsController < Candidate::ApplicationController
     include Candidate::GroupementFeatureGuard
-    include Candidate::MandataireGroupingGuard
+    include Candidate::GroupingMemberGuard
     include Candidate::WizardRoutable
 
     before_action :redirect_unless_composition_confirmed
@@ -21,7 +21,7 @@ module Candidate
     end
 
     def presenter
-      @presenter ||= Candidate::GroupingDashboardPresenter.new(@market_application, grouping:)
+      @presenter ||= Candidate::GroupingDashboardPresenter.new(@market_application, grouping:, current_member: current_grouping_member)
     end
   end
 end
