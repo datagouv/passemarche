@@ -17,14 +17,14 @@ Feature: Synchronisation webhook candidat
   Scenario: Page de succès après synchronisation sans URL de retour candidat configurée
     Given la candidature a été synchronisée avec succès
     When je visite la page de statut de synchronisation candidat
-    Then je vois "Votre candidature a été transmise !"
+    Then je vois "Votre candidature a été transmise à la plateforme de marché !"
     And je ne vois pas de lien de retour candidat
 
   Scenario: Page de succès après synchronisation avec URL de retour candidat configurée
     Given l'éditeur a une URL de retour candidat "https://editeur.example.com/candidatures"
     And la candidature a été synchronisée avec succès
     When je visite la page de statut de synchronisation candidat
-    Then je vois "Votre candidature a été transmise !"
+    Then je vois "Votre candidature a été transmise à la plateforme de marché !"
     And je vois un lien de retour candidat vers "https://editeur.example.com/candidatures"
 
   Scenario: Page d'erreur en cas d'échec de synchronisation
@@ -39,4 +39,4 @@ Feature: Synchronisation webhook candidat
     And le webhook de l'éditeur répond avec succès
     When je visite la page de statut de synchronisation candidat
     And je clique sur "Retenter de transmettre ma candidature"
-    Then je vois "Votre candidature a été transmise !"
+    Then je vois "Votre candidature a été transmise à la plateforme de marché !"

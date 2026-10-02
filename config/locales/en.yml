@@ -574,7 +574,7 @@ en:
         submitted_on: "Submitted on %{date}"
         status:
           in_progress: "In progress"
-          submitted: "Submitted"
+          submitted: "Submitted to platform"
         delete_modal:
           title: "Delete application"
           body: "You are about to delete this application; all the information you have completed will be lost. Are you sure you want to delete it?"
@@ -792,8 +792,8 @@ en:
       submission_pending_body: "Some co-contractors have not yet completed their application. You can submit the group's application, but this may affect your chances of being selected."
       submission_ready_title: "All members have completed their application"
       submission_ready_body: "You can submit the group's application."
-      submission_done_title: "The group's application has been submitted"
-      submission_done_body: "You can view the application certificate from the confirmation screen."
+      submission_done_title: "The group's application has been submitted to the procurement platform"
+      submission_done_body: "To finalize your submission, please return to your procurement platform. You can view the application certificate from the confirmation screen."
       submit_full: "Submit application"
       submit_partial: "Submit without all applications"
       solo_application_title: "Individual application"
@@ -808,8 +808,8 @@ en:
         confirm: "Confirm submission"
         close: "Close"
       confirmation:
-        title: "The application has been submitted!"
-        body_html: "We have automatically transmitted all the necessary information to the buyer. You can download your application certificate as proof of submission."
+        title: "The application has been submitted to the procurement platform!"
+        body_html: "We have automatically transmitted all the necessary information to your procurement platform. To finalize your submission, please return to your procurement platform. You can download your application certificate as proof of submission."
         download_attestation: "Download the application certificate"
         back_to_editor: "Return to my procurement platform"
         sync_failed:
@@ -874,8 +874,8 @@ en:
       intro: "%{editor} lets you quickly apply for public tenders."
     sync_status:
       title_suffix: "Application synchronization"
-      success_title: "Your application has been submitted!"
-      success_message: "We have automatically transmitted all necessary information to the buyer. You can download your application certificate, which serves as proof of submission."
+      success_title: "Your application has been submitted to the procurement platform!"
+      success_message: "We have automatically transmitted all necessary information to your procurement platform. To finalize your submission, please return to your procurement platform. You can download your application certificate, which serves as proof of submission."
       download_attestation: "Download my application certificate"
       return_to_editor: "Return to %{editor}"
       error_title: "Unexpected error"
@@ -888,7 +888,7 @@ en:
       success_image_alt: "Successful synchronization"
       error_image_alt: "Synchronization error"
       loading_aria_label: "Synchronization in progress..."
-      grouping_member_title: "Your application has been submitted!"
+      grouping_member_title: "Your application has been submitted to the procurement platform!"
     attachments:
       delete_confirm: "Are you sure you want to delete this file?"
       delete_success: "File deleted successfully"
