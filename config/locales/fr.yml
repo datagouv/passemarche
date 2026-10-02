@@ -789,7 +789,7 @@ fr:
       copy_link_success: "Lien copié"
       submission_section_title: "Soumission des candidatures"
       submission_pending_title: "Co-traitants en attente"
-      submission_pending_body: "Des co-traitants n'ont pas encore complétés leur candidature, vous pouvez soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenus."
+      submission_pending_body: "Des co-traitants n'ont pas encore complété leur candidature, vous pouvez soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenu."
       submission_ready_title: "Tous les membres ont complété leur candidature"
       submission_ready_body: "Vous pouvez soumettre la candidature du groupement."
       submission_done_title: "La candidature du groupement a été transmise"
