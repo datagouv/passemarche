@@ -32,7 +32,7 @@ Feature: Mandataire submits the grouping candidacy
     Given every member of the grouping is completed
     When I visit the grouping dashboard
     And I click on "Soumettre la candidature"
-    Then I should see "La candidature a été transmise !"
+    Then I should see "La candidature a été transmise à la plateforme de marché !"
 
   @javascript
   Scenario: Partial submission modal shows the DAJ wording and can be cancelled
@@ -50,7 +50,7 @@ Feature: Mandataire submits the grouping candidacy
     When I visit the grouping dashboard
     And I click on "Soumettre sans la totalité des candidatures"
     And I click on "Confirmer la soumission"
-    Then I should see "La candidature a été transmise !"
+    Then I should see "La candidature a été transmise à la plateforme de marché !"
     And the grouping should be submitted
 
   # L'email "Candidature transmise à l'acheteur" à chaque co-traitant est reporté à FAS-582 :

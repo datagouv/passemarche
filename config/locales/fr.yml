@@ -574,7 +574,7 @@ fr:
         submitted_on: "Déposée le %{date}"
         status:
           in_progress: "En cours"
-          submitted: "Transmise"
+          submitted: "Transmise à la plateforme"
         delete_modal:
           title: "Supprimer la candidature"
           body: "Vous êtes sur le point de supprimer cette candidature, l'ensemble des éléments que vous avez complétés seront perdus. Êtes-vous sûr de vouloir la supprimer ?"
@@ -792,8 +792,8 @@ fr:
       submission_pending_body: "Des co-traitants n'ont pas encore complété leur candidature, vous pouvez soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenu."
       submission_ready_title: "Tous les membres ont complété leur candidature"
       submission_ready_body: "Vous pouvez soumettre la candidature du groupement."
-      submission_done_title: "La candidature du groupement a été transmise"
-      submission_done_body: "Vous pouvez consulter l'attestation de candidature depuis l'écran de confirmation."
+      submission_done_title: "La candidature du groupement a été transmise à la plateforme de marché"
+      submission_done_body: "Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez consulter l'attestation de candidature depuis l'écran de confirmation."
       submit_full: "Soumettre la candidature"
       submit_partial: "Soumettre sans la totalité des candidatures"
       solo_application_title: "Candidature individuelle"
@@ -808,8 +808,8 @@ fr:
         confirm: "Confirmer la soumission"
         close: "Fermer"
       confirmation:
-        title: "La candidature a été transmise !"
-        body_html: "Nous avons transmis automatiquement toutes les informations nécessaires à l'acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
+        title: "La candidature a été transmise à la plateforme de marché !"
+        body_html: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
         download_attestation: "Télécharger l'attestation de candidature"
         back_to_editor: "Revenir sur ma plateforme de marché"
         sync_failed:
@@ -874,8 +874,8 @@ fr:
       intro: "%{editor} vous permet de candidater rapidement aux marchés publics."
     sync_status:
       title_suffix: "Synchronisation de la candidature"
-      success_title: "Votre candidature a été transmise !"
-      success_message: "Nous avons transmis automatiquement toutes les informations nécessaires à l'acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
+      success_title: "Votre candidature a été transmise à la plateforme de marché !"
+      success_message: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
       download_attestation: "Télécharger mon attestation de candidature"
       return_to_editor: "Retourner sur %{editor}"
       error_title: "Erreur inattendue"
@@ -888,7 +888,7 @@ fr:
       success_image_alt: "Synchronisation réussie"
       error_image_alt: "Erreur de synchronisation"
       loading_aria_label: "Synchronisation en cours..."
-      grouping_member_title: "Votre candidature a été transmise !"
+      grouping_member_title: "Votre candidature a été transmise à la plateforme de marché !"
     attachments:
       delete_confirm: "Êtes-vous sûr de vouloir supprimer ce fichier ?"
       delete_success: "Fichier supprimé avec succès"
