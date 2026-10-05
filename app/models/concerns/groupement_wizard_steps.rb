@@ -72,6 +72,14 @@ module GroupementWizardSteps
     mandataire_application&.lots || Lot.none
   end
 
+  def assign_groupement_scope_lots!
+    update!(lot_ids: groupement_scope_lots.ids)
+  end
+
+  def solidaire_co_traitant?
+    !!grouping_member&.co_traitant? && grouping_member.grouping.legal_type_solidaire?
+  end
+
   def next_required_wizard_step
     return nil unless FeatureFlags::Groupement.enabled?
     return [self, :application_mode] if application_mode_choice_required?
