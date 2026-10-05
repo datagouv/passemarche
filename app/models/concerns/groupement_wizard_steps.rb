@@ -67,6 +67,11 @@ module GroupementWizardSteps
     FeatureFlags::Groupement.enabled? && groupement? && public_market.lots.any?
   end
 
+  def groupement_scope_lots
+    mandataire_application = grouping_member&.grouping&.mandataire_market_application
+    mandataire_application&.lots || Lot.none
+  end
+
   def next_required_wizard_step
     return nil unless FeatureFlags::Groupement.enabled?
     return [self, :application_mode] if application_mode_choice_required?
