@@ -212,6 +212,7 @@ fr:
             base:
               no_lot_selected: "Vous devez sélectionner au moins un lot"
               lot_limit_exceeded: "Vous ne pouvez pas sélectionner plus de %{limit} lot(s) (vous en avez sélectionné %{count})"
+              lot_outside_groupement_scope: "Vous ne pouvez sélectionner que des lots pré-sélectionnés par le mandataire du groupement"
 
   errors:
     messages:
@@ -685,6 +686,13 @@ fr:
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
       subtitle: "Sélectionnez le ou les lots pour lequel/lesquels vous souhaitez soumettre une candidature."
+      co_traitant_title: "Sélectionnez les lots de votre candidature"
+      co_traitant_subtitle: "Le mandataire a pré-sélectionné les lots proposés au groupement. Choisissez parmi eux ceux sur lesquels vous souhaitez vous engager."
+      co_traitant_how_it_works_step_1: "Le mandataire a pré-sélectionné les lots auxquels le groupement va répondre"
+      co_traitant_how_it_works_step_2: "Sélectionnez les lots pour lesquels vous souhaitez soumettre une candidature"
+      co_traitant_how_it_works_step_3: "Complétez les informations spécifiques au type de lot"
+      co_traitant_how_it_works_step_4: "Soumettez votre candidature, le mandataire est informé par email (vous pouvez soumettre votre candidature même si toutes les informations n'ont pas été complétées)"
+      co_traitant_how_it_works_step_5: "Le mandataire se charge de transmettre la candidature du groupement"
       submit: "Transmettre ma candidature"
       next: "Suivant"
       market_info_title: "Informations du marché"

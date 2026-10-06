@@ -212,6 +212,7 @@ en:
             base:
               no_lot_selected: "You must select at least one lot"
               lot_limit_exceeded: "You cannot select more than %{limit} lot(s) (you selected %{count})"
+              lot_outside_groupement_scope: "You can only select lots pre-selected by the grouping's mandataire"
 
   errors:
     messages:
@@ -685,6 +686,13 @@ en:
     lot_selection:
       title: "Select one or more lot(s)"
       subtitle: "Select the lot(s) you wish to submit an application for."
+      co_traitant_title: "Select the lots for your application"
+      co_traitant_subtitle: "The mandataire has pre-selected the lots proposed to the grouping. Choose among them the ones you wish to commit to."
+      co_traitant_how_it_works_step_1: "The mandataire has pre-selected the lots the grouping will respond to"
+      co_traitant_how_it_works_step_2: "Select the lots you wish to submit an application for"
+      co_traitant_how_it_works_step_3: "Complete the information specific to the lot type"
+      co_traitant_how_it_works_step_4: "Submit your application, the mandataire is notified by email (you can submit even if not all information has been completed)"
+      co_traitant_how_it_works_step_5: "The mandataire takes care of submitting the grouping's application"
       submit: "Submit my application"
       next: "Next"
       market_info_title: "Tender information"
