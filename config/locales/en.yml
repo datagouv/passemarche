@@ -839,6 +839,7 @@ en:
     request_magic_link:
       no_application_found: "No application found for this SIRET number"
       no_market_context: "Please access Passe Marché from your public procurement platform"
+      invitation_not_found: "This invitation could not be found"
       reconnection_email_mismatch: "The email address does not match the one used when the application was created"
     sessions:
       new:

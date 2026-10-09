@@ -81,6 +81,8 @@ module Candidate
       @submitted_siret = params[:siret]
       @submitted_email = params[:email]
       @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
+      @grouping_member = GroupingMember.find_by(invitation_token: params[:invitation_token])
+      @invitation_token = params[:invitation_token]
       render 'candidate/sessions/new', status: :unprocessable_content
     end
 
@@ -88,7 +90,8 @@ module Candidate
       {
         email: params[:email],
         siret: params[:siret],
-        market_application_id: params[:market_application_id]
+        market_application_id: params[:market_application_id],
+        invitation_token: params[:invitation_token]
       }
     end
 

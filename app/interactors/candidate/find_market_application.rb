@@ -2,33 +2,50 @@
 
 module Candidate
   class FindMarketApplication < ApplicationInteractor
-    delegate :siret, :email, :market_application_id, to: :context
+    delegate :siret, :email, :market_application_id, :invitation_token, to: :context
 
     def call
+      return call_from_invitation if invitation_token.present?
+
       application = find_application
-
-      unless application
-        error_key = market_application_id.present? ? :no_application_found : :no_market_context
-        context.fail!(errors: { base: [I18n.t("candidate.request_magic_link.#{error_key}")] })
-        return
-      end
-
-      return if validate_grouping_member_email(application) == :failed
+      return fail_no_application unless application
+      return if validate_grouping_member_email(application.grouping_member) == :failed
 
       context.market_application = application
-
-      if application.grouping_member.present?
-        context.reconnection = false
-      else
-        handle_reconnection(application)
-      end
+      application.grouping_member.present? ? handle_existing_grouping_member(application) : handle_reconnection(application)
     end
 
     private
 
-    def validate_grouping_member_email(application)
-      grouping_member = application.grouping_member
-      return unless grouping_member
+    def handle_existing_grouping_member(application)
+      context.reconnection = application.user_id.present?
+    end
+
+    def call_from_invitation
+      grouping_member = find_invited_grouping_member
+      return fail_no_application(:invitation_not_found) unless grouping_member
+      return if validate_grouping_member_email(grouping_member) == :failed
+
+      result = Candidate::SetUpGroupingMemberApplication.call(grouping_member:)
+      return context.fail!(errors: result.errors) if result.failure?
+
+      context.market_application = result.market_application
+      context.reconnection = false
+    end
+
+    def find_invited_grouping_member
+      grouping_member = GroupingMember.find_by(invitation_token:)
+      return if grouping_member.nil? || grouping_member.invitation_expired?
+
+      grouping_member
+    end
+
+    def fail_no_application(error_key = market_application_id.present? ? :no_application_found : :no_market_context)
+      context.fail!(errors: { base: [I18n.t("candidate.request_magic_link.#{error_key}")] })
+    end
+
+    def validate_grouping_member_email(grouping_member)
+      return if grouping_member.blank? || grouping_member.email.blank?
       return if grouping_member.email.casecmp(email).zero?
 
       context.fail!(errors: { email: [I18n.t('candidate.request_magic_link.reconnection_email_mismatch')] })

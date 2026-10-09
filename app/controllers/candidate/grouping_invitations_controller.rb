@@ -9,10 +9,8 @@ module Candidate
       return render :not_found, status: :not_found if @grouping_member.nil?
       return render :expired, status: :gone if @grouping_member.invitation_expired?
 
-      result = Candidate::SetUpGroupingMemberApplication.call(grouping_member: @grouping_member)
-      return render plain: "Cette invitation n'a pas été trouvée", status: :not_found if result.failure?
-
-      @market_application = result.market_application
+      @invitation_token = @grouping_member.invitation_token
+      @market_application = @grouping_member.market_application
       render 'candidate/sessions/new'
     end
   end

@@ -36,22 +36,18 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
         expect(response.body).to include(grouping_member.siret)
       end
 
-      it 'creates a market application for the member siret and public market' do
+      it 'does not create a market application yet' do
         token = grouping_member.invitation_token
 
         expect do
           get candidate_grouping_invitation_path(token)
-        end.to change(MarketApplication, :count).by(1)
-
-        application = MarketApplication.last
-        expect(application.siret).to eq(grouping_member.siret)
-        expect(application.public_market).to eq(public_market)
+        end.not_to change(MarketApplication, :count)
       end
 
-      it 'links the created market application to the grouping member' do
+      it 'carries the invitation token in the identification form' do
         get candidate_grouping_invitation_path(grouping_member.invitation_token)
 
-        expect(grouping_member.reload.market_application).to eq(MarketApplication.last)
+        expect(response.body).to include(grouping_member.invitation_token)
       end
     end
 

@@ -185,6 +185,21 @@ RSpec.describe Candidate::FindMarketApplication, type: :interactor do
           expect(result.market_application).to eq(market_application)
         end
       end
+
+      context 'when the grouping member already has a user linked to their application (reconnection)' do
+        let(:user) { create(:user, email: 'cotraitant@example.com') }
+
+        before { market_application.update!(user:) }
+
+        it 'sets reconnection to true so the user receives the reconnection email' do
+          result = described_class.call(siret:, email: 'cotraitant@example.com',
+            market_application_id: market_application.identifier)
+
+          expect(result).to be_success
+          expect(result.reconnection).to be true
+          expect(result.market_application).to eq(market_application)
+        end
+      end
     end
 
     context 'when another application for the same SIRET on a different market already has a user' do
