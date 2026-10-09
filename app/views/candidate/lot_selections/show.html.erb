@@ -9,7 +9,7 @@
 <% if @editing %>
   <div class="fr-container fr-py-6w"
        data-controller="lot-selection"
-       data-lot-selection-limit-value="<%= public_market.lot_limit.to_i %>"
+       data-lot-selection-limit-value="<%= FeatureFlags::LotLimit.enabled? ? public_market.lot_limit.to_i : 0 %>"
        data-lot-selection-storage-key-value="lot-selection-<%= @market_application.identifier %>"
        data-lot-selection-show-more-label="<%= t('shared.collapsible_lots.show_more') %>"
        data-lot-selection-show-less-label="<%= t('shared.collapsible_lots.show_less') %>">
@@ -55,7 +55,7 @@
                       id: "lot-selection-form",
                       data: { turbo: false } do %>
 
-          <% if public_market.lot_limit.present? %>
+          <% if FeatureFlags::LotLimit.enabled? && public_market.lot_limit.present? %>
             <div class="fr-mb-2w">
               <p class="fr-text--sm fr-mb-0" style="color: var(--text-default-error);">
                 <%= t('candidate.lot_selection.lot_limit_notice', count: public_market.lot_limit) %>

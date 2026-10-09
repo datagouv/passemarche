@@ -35,7 +35,7 @@
               <% end %>
               <%= collapsible_toggle_button(align: :left) %>
             </div>
-            <% if @public_market.lot_limit.present? %>
+            <% if FeatureFlags::LotLimit.enabled? && @public_market.lot_limit.present? %>
               <div class="fr-mb-3w">
                 <div class="fr-text--bold fr-mb-1w"><%= t('buyer.summary.lot_limit') %></div>
                 <div><%= t('buyer.summary.lot_limit_value', count: @public_market.lot_limit) %></div>
