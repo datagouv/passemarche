@@ -143,6 +143,65 @@ RSpec.describe Candidate::FindMarketApplication, type: :interactor do
       end
     end
 
+    context 'when the application belongs to a grouping member' do
+      let(:mandataire_application) { create(:market_application, public_market:, siret: '39393926500045', application_mode: :groupement) }
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, public_market:, siret:, email: 'cotraitant@example.com')
+      end
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        grouping_member.update!(market_application:)
+      end
+
+      it 'fails when the email does not match the grouping member email' do
+        result = described_class.call(siret:, email: 'wrong@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_failure
+        expect(result.errors[:email]).to be_present
+      end
+
+      it 'succeeds and targets the invited application when the email matches' do
+        result = described_class.call(siret:, email: 'cotraitant@example.com',
+          market_application_id: market_application.identifier)
+
+        expect(result).to be_success
+        expect(result.reconnection).to be false
+        expect(result.market_application).to eq(market_application)
+      end
+
+      context 'when another application for the same SIRET and market already has a user' do
+        let(:user) { create(:user, email: 'original@example.com') }
+        let!(:other_application) { create(:market_application, public_market:, siret:, user:) }
+
+        it 'still targets the invited grouping member application, not the unrelated linked one' do
+          result = described_class.call(siret:, email: 'cotraitant@example.com',
+            market_application_id: market_application.identifier)
+
+          expect(result).to be_success
+          expect(result.reconnection).to be false
+          expect(result.market_application).to eq(market_application)
+        end
+      end
+
+      context 'when the grouping member already has a user linked to their application (reconnection)' do
+        let(:user) { create(:user, email: 'cotraitant@example.com') }
+
+        before { market_application.update!(user:) }
+
+        it 'sets reconnection to true so the user receives the reconnection email' do
+          result = described_class.call(siret:, email: 'cotraitant@example.com',
+            market_application_id: market_application.identifier)
+
+          expect(result).to be_success
+          expect(result.reconnection).to be true
+          expect(result.market_application).to eq(market_application)
+        end
+      end
+    end
+
     context 'when another application for the same SIRET on a different market already has a user' do
       let(:other_public_market) { create(:public_market, :completed, editor:) }
       let(:other_application) { create(:market_application, public_market: other_public_market, siret:) }

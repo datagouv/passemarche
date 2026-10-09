@@ -2,31 +2,38 @@
 
 module Candidate
   class GroupingDashboardPresenter
-    MEMBER_ACTIONS = {
-      mandataire: { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:consult] },
-      co_traitant: {
-        invited: %i[copy_link],
-        to_prepare: %i[copy_link],
-        in_progress: %i[copy_link],
-        completed: %i[copy_link]
-      }
+    OWN_ACTIONS = { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:consult] }.freeze
+    OTHER_MEMBER_ACTIONS_BY_VIEWER = {
+      mandataire: %i[copy_link],
+      co_traitant: []
     }.freeze
 
-    def initialize(market_application, grouping: nil)
+    def initialize(market_application, grouping: nil, current_member: nil)
       @market_application = market_application
       @grouping = grouping
+      @current_member = current_member
     end
 
     def grouping
       @grouping ||= market_application.mandataire_grouping
     end
 
+    def current_member
+      @current_member ||= grouping.mandataire_grouping_member
+    end
+
     def members
-      grouping.grouping_members.includes(market_application: :lots).order(:role)
+      grouping.grouping_members.includes(market_application: :lots).order(:role).sort_by { |member| member == current_member ? 0 : 1 }
     end
 
     def member_actions(member)
-      MEMBER_ACTIONS.dig(member.mandataire? ? :mandataire : :co_traitant, member.status.to_sym)
+      return OWN_ACTIONS.fetch(member.status.to_sym) if member == current_member
+
+      OTHER_MEMBER_ACTIONS_BY_VIEWER.fetch(current_member.role.to_sym)
+    end
+
+    def viewing_as_co_traitant?
+      current_member.co_traitant?
     end
 
     delegate :submitted?, :submittable?, :partially_submittable?, to: :grouping
@@ -39,7 +46,7 @@ module Candidate
     delegate :public_market, :identifier, to: :market_application
 
     def lots
-      market_application.lots.ordered.includes(:market_type, :platform_market_type)
+      grouping.mandataire_market_application.lots.ordered.includes(:market_type, :platform_market_type)
     end
 
     def declared_lots_label(member)
@@ -56,10 +63,14 @@ module Candidate
     end
 
     def member_role_label(member)
+      return I18n.t("candidate.grouping_dashboard.role_self_#{member.role}") if member == current_member
+
       I18n.t("candidate.grouping_dashboard.role_#{member.role}")
     end
 
     def member_role_badge_class(member)
+      return 'fr-badge--new fr-badge--no-icon' if member == current_member
+
       'fr-badge--info fr-badge--no-icon' if member.mandataire?
     end
 

@@ -14,7 +14,7 @@
     <div class="fr-px-2w fr-pb-2w">
       <%= render 'lots_section', presenter: @presenter %>
       <%= render Grouping::DashboardMembersTableComponent.new(presenter: @presenter, market_application: @market_application) %>
-      <%= render 'submission_section', presenter: @presenter %>
+      <%= render 'submission_section', presenter: @presenter unless @presenter.viewing_as_co_traitant? %>
     </div>
   <% end %>
 </div>

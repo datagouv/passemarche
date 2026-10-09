@@ -3,6 +3,7 @@
 module Candidate
   class SessionsController < Candidate::ApplicationController
     include Candidate::WizardRoutable
+    include Candidate::MagicLinkSession
 
     skip_before_action :require_candidate_authentication
 
@@ -54,7 +55,7 @@ module Candidate
     end
 
     def first_step_path(market_application)
-      dashboard_path = mandataire_dashboard_path(market_application)
+      dashboard_path = confirmed_grouping_dashboard_path(market_application)
       return dashboard_path if dashboard_path
 
       return completed_application_path(market_application) if market_application.completed?
@@ -71,7 +72,7 @@ module Candidate
     def handle_magic_link_sent(result)
       clear_candidate_authentication_session
       store_reconnection_context(result)
-      store_magic_link_url(result)
+      store_magic_link_url(result.magic_link_url)
       redirect_to sent_candidate_sessions_path
     end
 
@@ -80,6 +81,8 @@ module Candidate
       @submitted_siret = params[:siret]
       @submitted_email = params[:email]
       @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
+      @grouping_member = GroupingMember.find_by(invitation_token: params[:invitation_token])
+      @invitation_token = params[:invitation_token]
       render 'candidate/sessions/new', status: :unprocessable_content
     end
 
@@ -87,7 +90,8 @@ module Candidate
       {
         email: params[:email],
         siret: params[:siret],
-        market_application_id: params[:market_application_id]
+        market_application_id: params[:market_application_id],
+        invitation_token: params[:invitation_token]
       }
     end
 
@@ -95,12 +99,6 @@ module Candidate
       return unless result.reconnection
 
       session[:reconnection_market_name] = result.market_application.public_market.name
-    end
-
-    def store_magic_link_url(result)
-      return unless Rails.env.sandbox? || Rails.env.development? || Rails.env.staging?
-
-      session[:magic_link_url] = result.magic_link_url
     end
 
     def invalid_token

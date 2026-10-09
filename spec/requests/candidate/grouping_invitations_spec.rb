@@ -20,14 +20,50 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
   describe 'GET /candidate/grouping_invitations/:token' do
     context 'when the token matches an invited grouping member' do
       let(:grouping_member) do
-        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
-          invitation_token_created_at: Time.current)
+        create(:grouping_member, :co_traitant, grouping:, siret: '13002526500013', email: 'co-traitant@example.com',
+          invitation_token: 'valid-token-123', invitation_token_created_at: Time.current)
       end
 
       it 'returns a successful response' do
         get candidate_grouping_invitation_path(grouping_member.invitation_token)
 
         expect(response).to have_http_status(:ok)
+      end
+
+      it 'displays the member siret as read-only information' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response.body).to include(grouping_member.siret)
+      end
+
+      it 'does not create a market application yet' do
+        token = grouping_member.invitation_token
+
+        expect do
+          get candidate_grouping_invitation_path(token)
+        end.not_to change(MarketApplication, :count)
+      end
+
+      it 'carries the invitation token in the identification form' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response.body).to include(grouping_member.invitation_token)
+      end
+    end
+
+    context 'when the member already has a market application' do
+      let(:existing_application) { create(:market_application, public_market:, siret: '13002526500013', application_mode: :groupement) }
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: '13002526500013', email: 'co-traitant@example.com',
+          market_application: existing_application, invitation_token: 'valid-token-123', invitation_token_created_at: Time.current)
+      end
+
+      it 'reuses the existing market application' do
+        token = grouping_member.invitation_token
+
+        expect do
+          get candidate_grouping_invitation_path(token)
+        end.not_to change(MarketApplication, :count)
       end
     end
 
