@@ -42,7 +42,7 @@ When('I navigate through all category steps to summary') do
 
   if presenter.wizard_steps.include?(:lot_config) &&
      page.current_path == step_buyer_public_market_path(@market_identifier, :lot_config)
-    find("input[name='lot_limit_enabled'][value='false']").click
+    find("input[name='lot_limit_enabled'][value='false']").click if page.has_selector?("input[name='lot_limit_enabled'][value='false']")
     find('button[type="submit"]').click
   end
 

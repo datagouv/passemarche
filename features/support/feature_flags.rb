@@ -6,10 +6,15 @@
 # scenarios that test the groupement flow enable it explicitly.
 Before do
   FeatureFlags::Groupement.define_singleton_method(:enabled?) { false }
+  FeatureFlags::LotLimit.define_singleton_method(:enabled?) { false }
 end
 
 After do
   FeatureFlags::Groupement.define_singleton_method(:enabled?) do
     Rails.application.credentials.dig(:groupement, :enabled) == true
+  end
+
+  FeatureFlags::LotLimit.define_singleton_method(:enabled?) do
+    Rails.application.credentials.dig(:lot_limit, :enabled) == true
   end
 end

@@ -16,7 +16,10 @@ Feature: Buyer Lot Configuration Step
     And I should see "Lot 1"
     And I should see "Lot 2"
     And I should see "Lot 3"
-    And I should see "Souhaitez-vous limiter le nombre de lots ?"
+
+  Scenario: La question de limitation des lots n'apparaît pas tant que la fonctionnalité est désactivée
+    When I visit the lot_config page for my public market
+    Then I should not see "Souhaitez-vous limiter le nombre de lots ?"
 
   Scenario: La page lot_config apparaît dans le wizard après le setup
     When I visit the setup page for my public market
@@ -24,45 +27,58 @@ Feature: Buyer Lot Configuration Step
     Then I should be on the lot_config page
     And I should see "Configurez le type de vos lots"
 
+  Scenario: La limite de lots n'apparaît pas dans le résumé si non définie
+    When I visit the summary page for my public market
+    Then the lot limit section should not be visible
+
+  Scenario: Navigation complète du wizard avec lots
+    When I visit the setup page for my public market
+    And I click on "Débuter l'activation de"
+    Then I should be on the lot_config page
+    When I submit the lot_config form
+    Then I should be on the form_config page
+    And I should see "Configurez le formulaire de candidature"
+
+  @lot_limit
+  Scenario: L'acheteur accède à la page de configuration des lots quand la fonctionnalité est activée
+    Given the lot_limit feature flag is enabled
+    When I visit the lot_config page for my public market
+    Then I should see "Souhaitez-vous limiter le nombre de lots ?"
+
+  @lot_limit
   Scenario: L'acheteur choisit de ne pas limiter les lots
+    Given the lot_limit feature flag is enabled
     When I visit the lot_config page for my public market
     And I choose "Non" for lot limit
     And I submit the lot_config form
     Then the public market should have no lot limit
 
+  @lot_limit
   Scenario: L'acheteur choisit de limiter les lots
+    Given the lot_limit feature flag is enabled
     When I visit the lot_config page for my public market
     And I choose "Oui" for lot limit
     And I set the lot limit to 2
     And I submit the lot_config form
     Then the public market should have a lot limit of 2
 
+  @lot_limit
   Scenario: La limite de lots apparaît dans le résumé
-    Given the buyer lot config public market has a lot limit of 2
+    Given the lot_limit feature flag is enabled
+    And the buyer lot config public market has a lot limit of 2
     When I visit the summary page for my public market
     Then I should see "Limite de lots par candidat"
     And I should see "2 lots maximum"
 
-  Scenario: La limite de lots n'apparaît pas dans le résumé si non définie
-    When I visit the summary page for my public market
-    Then the lot limit section should not be visible
-
+  @lot_limit
   Scenario: L'acheteur soumet sans renseigner le nombre de lots (Oui + champ vide)
+    Given the lot_limit feature flag is enabled
     When I visit the lot_config page for my public market
     And I choose "Oui" for lot limit
     And I submit the lot_config form
     Then I should be on the lot_config page
     And I should see "Veuillez indiquer le nombre maximum de lots."
     And the public market should have no lot limit
-
-  Scenario: Navigation complète du wizard avec lots
-    When I visit the setup page for my public market
-    And I click on "Débuter l'activation de"
-    Then I should be on the lot_config page
-    When I choose "Non" for lot limit
-    And I submit the lot_config form
-    Then I should be on the form_config page
-    And I should see "Configurez le formulaire de candidature"
 
   Scenario: La page form_config affiche la liste des lots et le bouton Configurer
     When I visit the form_config page for my public market
