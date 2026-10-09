@@ -381,6 +381,101 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#groupement_scope_lots' do
+    it 'returns an empty relation when the application has no grouping_member' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.groupement_scope_lots).to be_empty
+    end
+
+    it "returns the mandataire's lots for a co_traitant member" do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      lot1 = create(:lot, public_market:)
+      lot2 = create(:lot, public_market:)
+      mandataire_application.lots << lot1 << lot2
+
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.groupement_scope_lots).to contain_exactly(lot1, lot2)
+    end
+
+    it 'does not include lots assigned to other co_traitants' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      lot = create(:lot, public_market:)
+      mandataire_application.lots << lot
+
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      other_co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: other_co_traitant_application)
+      other_co_traitant_application.lots << create(:lot, public_market:)
+
+      expect(co_traitant_application.groupement_scope_lots).to contain_exactly(lot)
+    end
+  end
+
+  describe '#assign_groupement_scope_lots!' do
+    it "persists all of the mandataire's groupement lots on the co_traitant application" do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      lot1 = create(:lot, public_market:)
+      lot2 = create(:lot, public_market:)
+      mandataire_application.lots << lot1 << lot2
+
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      co_traitant_application.assign_groupement_scope_lots!
+
+      expect(co_traitant_application.reload.lots).to contain_exactly(lot1, lot2)
+    end
+
+    it 'assigns no lot when the application has no grouping_member' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      application.assign_groupement_scope_lots!
+
+      expect(application.reload.lots).to be_empty
+    end
+  end
+
+  describe '#solidaire_co_traitant?' do
+    it 'returns true for a co_traitant of a solidaire grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.solidaire_co_traitant?).to be true
+    end
+
+    it 'returns false for a co_traitant of a conjoint grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.solidaire_co_traitant?).to be false
+    end
+
+    it 'returns false for the mandataire member, even in a solidaire grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+
+      expect(mandataire_application.solidaire_co_traitant?).to be false
+    end
+
+    it 'returns false when the application has no grouping_member' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.solidaire_co_traitant?).to be false
+    end
+  end
+
   describe '#groupement_counterpart' do
     let(:siret) { '73282932000074' }
 

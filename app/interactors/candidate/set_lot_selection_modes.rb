@@ -29,16 +29,16 @@ module Candidate
 
       solo_application&.update!(lot_ids: solo_lot_ids)
       groupement_application.update!(lot_ids: groupement_lot_ids)
-      remove_lots_from_co_traitants(co_traitant_applications, previous_groupement_lot_ids - groupement_lot_ids)
+      sync_co_traitant_lots(co_traitant_applications, previous_groupement_lot_ids)
     end
 
-    def remove_lots_from_co_traitants(co_traitant_applications, removed_lot_ids)
-      return if removed_lot_ids.empty?
-
-      removed_lots = Lot.where(id: removed_lot_ids)
+    def sync_co_traitant_lots(co_traitant_applications, previous_groupement_lot_ids)
+      removed_lots = Lot.where(id: previous_groupement_lot_ids - groupement_lot_ids)
+      added_lots = Lot.where(id: groupement_lot_ids - previous_groupement_lot_ids)
 
       co_traitant_applications.each do |co_traitant_application|
         co_traitant_application.lots.delete(removed_lots)
+        co_traitant_application.lots << added_lots if co_traitant_application.solidaire_co_traitant?
       end
     end
 

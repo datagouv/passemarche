@@ -1,0 +1,18 @@
+<div class="fr-background-alt--grey fr-border-default--grey fr-px-3w fr-py-2w">
+  <h2 class="fr-text--bold fr-text--md fr-mb-0">
+    <%= t('candidate.lot_selection.how_it_works_title') %>
+  </h2>
+  <hr class="fr-hr fr-my-1w">
+  <ol class="fr-text--sm fr-pl-3w fr-mb-0">
+    <% if presenter.co_traitant? %>
+      <li><%= t('candidate.lot_selection.co_traitant_how_it_works_step_1') %></li>
+      <li class="fr-mt-1w"><%= t('candidate.lot_selection.co_traitant_how_it_works_step_2') %></li>
+      <li class="fr-mt-1w"><%= t('candidate.lot_selection.co_traitant_how_it_works_step_3') %></li>
+      <li class="fr-mt-1w"><%= t('candidate.lot_selection.co_traitant_how_it_works_step_4') %></li>
+      <li class="fr-mt-1w"><%= t('candidate.lot_selection.co_traitant_how_it_works_step_5') %></li>
+    <% else %>
+      <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
+      <li class="fr-mt-1w"><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
+    <% end %>
+  </ol>
+</div>

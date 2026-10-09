@@ -99,5 +99,67 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
       end
     end
+
+    context 'when the co_traitant belongs to a solidaire grouping' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+      let(:lot1) { create(:lot, public_market:) }
+      let(:lot2) { create(:lot, public_market:) }
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << lot1 << lot2
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'skips the lot selection screen and redirects to api_data_recovery_status' do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :api_data_recovery_status)
+        )
+      end
+
+      it "assigns all the mandataire's lots to the co_traitant application" do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(market_application.reload.lots).to contain_exactly(lot1, lot2)
+      end
+    end
+
+    context 'when the co_traitant belongs to a conjoint grouping' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << create(:lot, public_market:)
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'redirects to lot selection like a regular groupement member' do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          lot_selection_candidate_market_application_path(market_application.identifier)
+        )
+      end
+
+      it 'does not pre-assign any lot' do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(market_application.reload.lots).to be_empty
+      end
+    end
   end
 end

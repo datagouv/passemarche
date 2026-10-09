@@ -191,6 +191,60 @@ RSpec.describe Candidate::SetLotSelectionModes, type: :interactor do
       end
     end
 
+    context 'when a lot is added to a solidaire grouping scope' do
+      let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: :solidaire)
+      end
+      let(:co_traitant_application) do
+        create(:market_application, public_market:, siret: '80245139600027', application_mode: :groupement)
+      end
+
+      before do
+        groupement_application.lots << lot1
+        co_traitant_application.lots << lot1
+        create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+          siret: co_traitant_application.siret)
+      end
+
+      it 'assigns the new lot to the solidaire co-traitant application' do
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'groupement', lot2.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_success
+        expect(co_traitant_application.reload.lots).to contain_exactly(lot1, lot2)
+      end
+    end
+
+    context 'when a lot is added to a conjoint grouping scope' do
+      let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: :conjoint)
+      end
+      let(:co_traitant_application) do
+        create(:market_application, public_market:, siret: '80245139600027', application_mode: :groupement)
+      end
+
+      before do
+        groupement_application.lots << lot1
+        co_traitant_application.lots << lot1
+        create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+          siret: co_traitant_application.siret)
+      end
+
+      it 'does not assign the new lot to the conjoint co-traitant application' do
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'groupement', lot2.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_success
+        expect(co_traitant_application.reload.lots).to contain_exactly(lot1)
+      end
+    end
+
     context 'when called on a solo application with no groupement counterpart' do
       let!(:solo_application) { create(:market_application, public_market:, siret:, application_mode: :solo) }
 

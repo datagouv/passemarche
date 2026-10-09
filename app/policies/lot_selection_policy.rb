@@ -6,6 +6,7 @@ class LotSelectionPolicy
   attr_reader :market_application, :lot_ids
 
   validate :at_least_one_lot_selected
+  validate :lots_within_groupement_scope
   validate :lot_limit_respected
 
   def initialize(market_application, lot_ids)
@@ -24,5 +25,12 @@ class LotSelectionPolicy
     return unless limit
 
     errors.add(:base, :lot_limit_exceeded, limit:, count: lot_ids.size) if lot_ids.size > limit
+  end
+
+  def lots_within_groupement_scope
+    return unless market_application.grouping_member&.co_traitant?
+
+    allowed_ids = market_application.groupement_scope_lots.ids
+    errors.add(:base, :lot_outside_groupement_scope) unless lot_ids.all? { |id| allowed_ids.include?(id) }
   end
 end
