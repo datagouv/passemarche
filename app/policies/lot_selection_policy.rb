@@ -20,6 +20,8 @@ class LotSelectionPolicy
   end
 
   def lot_limit_respected
+    return unless FeatureFlags::LotLimit.enabled?
+
     limit = market_application.public_market.lot_limit
     return unless limit
 
