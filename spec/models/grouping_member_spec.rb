@@ -313,4 +313,36 @@ RSpec.describe GroupingMember, type: :model do
       expect(described_class.digest_invitation_token(nil)).to be_nil
     end
   end
+
+  describe '.removed_with_invitation_token' do
+    let!(:member) do
+      create(:grouping_member, :co_traitant, grouping:, email: 'contact@menuiseries-loire.fr',
+        invitation_token: 'removed_token-abc', invitation_token_created_at: Time.current)
+    end
+
+    it 'rebuilds the removed member from its history' do
+      member.destroy!
+
+      removed_member = described_class.removed_with_invitation_token('removed_token-abc')
+
+      expect(removed_member.email).to eq('contact@menuiseries-loire.fr')
+      expect(removed_member.grouping).to eq(grouping)
+    end
+
+    it 'returns nil while the member is still in the grouping' do
+      expect(described_class.removed_with_invitation_token('removed_token-abc')).to be_nil
+    end
+
+    it 'returns nil for an unknown token' do
+      member.destroy!
+
+      expect(described_class.removed_with_invitation_token('unknown')).to be_nil
+    end
+
+    it 'returns nil for a blank token' do
+      member.destroy!
+
+      expect(described_class.removed_with_invitation_token('')).to be_nil
+    end
+  end
 end

@@ -637,6 +637,10 @@ fr:
         explanation: "Cette invitation a expiré, la candidature du groupement est déjà finalisée ou la date limite de remise des offres est dépassée."
       not_found:
         heading: "Ce lien d'invitation n'est plus valable"
+        explanation: "Ce groupement n'existe plus. Pour toute question, contactez le mandataire."
+      removed:
+        heading: "Ce lien d'invitation n'est plus valable"
+        explanation: "Vous ne faites plus partie de ce groupement. Pour toute question, contactez le mandataire."
     grouping_legal_types:
       title: "Le type de groupement"
       step_current: "Étape 1 sur 3"

@@ -637,6 +637,10 @@ en:
         explanation: "This invitation has expired, the group application is already finalized or the submission deadline has passed."
       not_found:
         heading: "This invitation link is no longer valid"
+        explanation: "This group no longer exists. For any question, contact the lead contractor."
+      removed:
+        heading: "This invitation link is no longer valid"
+        explanation: "You are no longer part of this group. For any question, contact the lead contractor."
     grouping_legal_types:
       title: "Group type"
       step_current: "Step 1 of 3"

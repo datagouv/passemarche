@@ -98,6 +98,22 @@ Feature: Mandataire composes the grouping and sends invitations
     Then I should see "Le groupement a été créé et les invitations ont été envoyées"
     And an invitation email should have been sent for the co-traitant "80245139600021"
 
+  @javascript
+  Scenario: Mandataire removes an invited co-traitant who is notified and can no longer join
+    When I visit the magic link
+    And I choose the candidacy mode "groupement"
+    And I choose the grouping legal type "conjoint_mandataire_solidaire"
+    And I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
+    And I click on "Continuer"
+    And I click on "Confirmer et envoyer les invitations"
+    And I visit the grouping composition step directly
+    And I remove the co-traitant "80245139600021"
+    Then I should not see "80245139600021" in the members table
+    And an email should have been sent to "contact@menuiseries-loire.fr"
+    And the latest email subject should be "Vous avez été retiré du groupement"
+    When I visit the invitation link previously received by "contact@menuiseries-loire.fr"
+    Then I should see "Vous ne faites plus partie de ce groupement"
+
   Scenario: A candidate who is not mandataire of a grouping cannot access the composition screen
     Given I am authenticated for my application
     When I visit the grouping composition step directly
