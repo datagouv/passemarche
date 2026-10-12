@@ -26,32 +26,31 @@ en:
     magic_link:
       subject: Your sign-in link for Passe Marché
       greeting: Hello,
-      intro: "You requested access to Passe Marché to prepare your application for the following tender:"
+      intro: "You requested access to Passe Marché to prepare your application for the tender: %{market_name}."
       cta_intro: "Click the button below to sign in:"
       cta: Sign-in link
       warning: "Warning: this link is valid for 30 minutes and can only be used once."
     reconnection_magic_link:
       subject: Resume your application on Passe Marché
       greeting: "Your application,"
-      intro: "By signing in to Passe Marché with the same SIRET number and email address used at first sign-in, you can edit your application at any time until it has been submitted to the buyer."
-      market_intro: "You can access the application form for the following tender:"
+      intro: "By signing in to Passe Marché with the same SIRET number and email address used at first sign-in, you can edit your application at any time until it has been submitted to the procurement platform."
+      market_intro: "You can access the application form for the tender: %{market_name}."
       cta_intro: "Click the button below to sign back in and continue:"
       cta: Continue my application
 
   grouping_invitation_mailer:
     invitation:
-      subject: "You have been invited to join a group"
-      greeting: Hello,
-      intro: "%{mandataire_name} invites you to join a group application for the tender:"
-      role_explanation: "As a co-contractor, you will need to fill in an application form covering your capacities for the lots you handle. You can edit your form at any time, as long as the application has not been submitted to the buyer."
-      cta_intro: "Click the button below to join the group:"
+      subject: "You are invited to join a group"
+      intro: "%{mandataire_name} invites you to join a group application for the tender: %{market_name}."
+      role_explanation: "As a co-contractor, you will need to fill in an application form covering your capacities for the lots you handle."
+      edit_notice: "You can edit your form at any time, as long as the application has not been submitted to the procurement platform."
       cta: Join the group
 
   grouping_submission_mailer:
     submitted:
       subject: "Application submitted to the procurement platform"
-      greeting: "Your application has been taken into account"
-      intro: "%{mandataire_name} has submitted the group's application for the contract:"
+      title: "Your application has been taken into account"
+      intro: "%{mandataire_name} has submitted the group's application for the tender: %{market_name}."
       inclusion: "Your application has been included in the application submitted for the group."
       locked_notice: "You can no longer edit your application form"
 
