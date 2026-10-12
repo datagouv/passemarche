@@ -54,6 +54,13 @@ fr:
       inclusion: "Votre candidature a été incluse dans la candidature soumise pour le groupement."
       locked_notice: "Vous ne pouvez plus modifier votre formulaire de candidature"
 
+  grouping_member_removal_mailer:
+    removed:
+      subject: "Vous avez été retiré du groupement"
+      title: "Vous avez été retiré du groupement"
+      intro: "%{mandataire_name} vous a retiré du groupement pour le marché : %{market_name}. Aucune action n’est attendue de votre part, vous n’apparaîtrez pas dans la candidature du groupement."
+      contact: "Vous pouvez contacter directement le mandataire pour plus d’informations."
+
   source_types:
     authentic_source:
       label: Récupéré automatiquement
