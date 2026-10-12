@@ -3,6 +3,8 @@
 class Grouping < ApplicationRecord
   include Syncable
 
+  has_paper_trail
+
   class AlreadySubmittedError < StandardError; end
 
   belongs_to :public_market
