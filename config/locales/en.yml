@@ -828,8 +828,10 @@ en:
         confirm: "Confirm submission"
         close: "Close"
       confirmation:
-        title: "The application has been submitted to the procurement platform!"
-        body_html: "We have automatically transmitted all the necessary information to your procurement platform. To finalize your submission, please return to your procurement platform. You can download your application certificate as proof of submission."
+        title: "The application has been submitted!"
+        body: "We have automatically transmitted all the necessary information to your procurement platform. To finalize your submission, please return to your procurement platform."
+        attestation_hint: "You can download your application certificate as proof of submission."
+        co_traitants_notified: "The co-contractors have also been notified by email of the group's application submission."
         download_attestation: "Download the application certificate"
         back_to_editor: "Return to my procurement platform"
         sync_failed:

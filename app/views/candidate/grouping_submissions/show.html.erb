@@ -1,36 +1,43 @@
 <% sync_failed = @grouping.sync_failed? %>
 <% content_for :title, t(sync_failed ? 'candidate.grouping_submissions.confirmation.sync_failed.title' : 'candidate.grouping_submissions.confirmation.title') %>
 
-<div class="fr-grid-row fr-grid-row--gutters" style="min-height: 70vh;">
-  <div class="fr-col-12 fr-col-lg-7" style="display: flex; align-items: center;">
-    <div class="fr-mb-4w">
-      <% if sync_failed %>
-        <h3 class="fr-h3"><%= t('candidate.grouping_submissions.confirmation.sync_failed.title') %></h3>
-        <p><%= t('candidate.grouping_submissions.confirmation.sync_failed.body_html').html_safe %></p>
-      <% else %>
-        <h3 class="fr-h3"><%= t('candidate.grouping_submissions.confirmation.title') %></h3>
-        <p><%= t('candidate.grouping_submissions.confirmation.body_html').html_safe %></p>
+<%= render Shared::ConfirmationLayoutComponent.new do |layout| %>
+  <% layout.with_illustration do %>
+    <% if sync_failed %>
+      <%= image_tag "sync_status_error.png", alt: "" %>
+    <% else %>
+      <%= image_tag "sync_status_success.png", alt: "" %>
+    <% end %>
+  <% end %>
+
+  <% if sync_failed %>
+    <h1 class="fr-h1 fr-mb-3w"><%= t('candidate.grouping_submissions.confirmation.sync_failed.title') %></h1>
+    <p class="fr-text--lead"><%= t('candidate.grouping_submissions.confirmation.sync_failed.body_html').html_safe %></p>
+  <% else %>
+    <h1 class="fr-h1 fr-mb-3w"><%= t('candidate.grouping_submissions.confirmation.title') %></h1>
+    <p class="fr-text--lead">
+      <%= t('candidate.grouping_submissions.confirmation.body') %>
+      <% if @grouping.attestation.attached? %>
+        <%= t('candidate.grouping_submissions.confirmation.attestation_hint') %>
       <% end %>
+    </p>
+    <p class="fr-text--lead fr-mb-0"><%= t('candidate.grouping_submissions.confirmation.co_traitants_notified') %></p>
+  <% end %>
 
-      <div class="fr-btns-group fr-btns-group--inline fr-btns-group--icon-left fr-mt-3w">
-        <% if @grouping.attestation.attached? %>
-          <button type="button"
-                  class="fr-btn fr-btn--icon-left"
-                  onclick="window.location.href='<%= rails_blob_path(@grouping.attestation, disposition: 'attachment') %>'">
-            <span class="fr-icon-download-line" aria-hidden="true"></span>
-            <span class="fr-ml-1w"><%= t('candidate.grouping_submissions.confirmation.download_attestation') %></span>
-          </button>
-        <% end %>
+  <div class="confirmation-actions fr-mt-5w">
+    <% if @grouping.attestation.attached? %>
+      <%= link_to t('candidate.grouping_submissions.confirmation.download_attestation'),
+            rails_blob_path(@grouping.attestation, disposition: 'attachment'),
+            class: 'fr-btn fr-icon-download-line fr-btn--icon-left' %>
+    <% end %>
 
-        <% if (candidate_url = @market_application.public_market.editor.build_candidate_return_url(
-          market: @market_application.public_market,
-          application: @market_application
-        )) %>
-          <%= link_to t('candidate.grouping_submissions.confirmation.back_to_editor'),
-                candidate_url,
-                class: 'fr-btn fr-btn--secondary' %>
-        <% end %>
-      </div>
-    </div>
+    <% if (candidate_url = @market_application.public_market.editor.build_candidate_return_url(
+      market: @market_application.public_market,
+      application: @market_application
+    )) %>
+      <%= link_to t('candidate.grouping_submissions.confirmation.back_to_editor'),
+            candidate_url,
+            class: 'fr-btn fr-btn--secondary' %>
+    <% end %>
   </div>
-</div>
+<% end %>

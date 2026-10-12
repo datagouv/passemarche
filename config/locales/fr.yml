@@ -828,8 +828,10 @@ fr:
         confirm: "Confirmer la soumission"
         close: "Fermer"
       confirmation:
-        title: "La candidature a été transmise à la plateforme de marché !"
-        body_html: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
+        title: "La candidature a été transmise !"
+        body: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché."
+        attestation_hint: "Vous pouvez télécharger votre attestation de candidature qui vous servira de preuve de dépôt."
+        co_traitants_notified: "Les co-traitants ont également été informés par email de la soumission de la candidature du groupement."
         download_attestation: "Télécharger l'attestation de candidature"
         back_to_editor: "Revenir sur ma plateforme de marché"
         sync_failed:
