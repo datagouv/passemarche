@@ -54,6 +54,14 @@ en:
       inclusion: "Your application has been included in the application submitted for the group."
       locked_notice: "You can no longer edit your application form"
 
+  grouping_member_completion_mailer:
+    completed:
+      subject: "A co-contractor has completed their form"
+      title: "A co-contractor has completed their form"
+      intro: "%{co_traitant_name} has completed their application form for the tender: %{market_name}."
+      dashboard_explanation: "Check your dashboard to follow the status of your group and submit your application once all your co-contractors are ready."
+      cta: "View my dashboard"
+
   grouping_member_removal_mailer:
     removed:
       subject: "You have been removed from the group"

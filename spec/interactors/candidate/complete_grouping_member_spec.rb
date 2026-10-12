@@ -37,6 +37,22 @@ RSpec.describe Candidate::CompleteGroupingMember, type: :interactor do
       end
     end
 
+    context 'when the application belongs to a co_traitant' do
+      let(:grouping) { create(:grouping, public_market:) }
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+      end
+
+      before do
+        grouping.mandataire_market_application.update!(user: create(:user))
+        create(:grouping_member, :co_traitant, grouping:, siret: market_application.siret, market_application:)
+      end
+
+      it 'notifies the mandataire' do
+        expect { result }.to have_enqueued_mail(GroupingMemberCompletionMailer, :completed)
+      end
+    end
+
     context 'when the application is not linked to any grouping member (solo)' do
       let(:market_application) { create(:market_application, public_market:, application_mode: :solo) }
 
