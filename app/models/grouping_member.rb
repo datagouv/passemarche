@@ -31,6 +31,15 @@ class GroupingMember < ApplicationRecord
     OpenSSL::Digest::SHA256.hexdigest(invitation_token)
   end
 
+  def self.removed_with_invitation_token(invitation_token)
+    return if invitation_token.blank?
+
+    PaperTrail::Version
+      .where(item_type: name, event: 'destroy', invitation_token_digest: digest_invitation_token(invitation_token))
+      .order(:id)
+      .last&.reify
+  end
+
   def invitation_sent?
     invitation_token_created_at.present?
   end

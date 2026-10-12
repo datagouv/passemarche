@@ -30,3 +30,14 @@ end
 Then('the SIRET field should be pre-filled with {string} and locked') do |siret|
   expect(page).to have_field(I18n.t('candidate.sessions.new.siret_label'), with: siret, readonly: true)
 end
+
+When('I visit the invitation link previously received by {string}') do |email|
+  invitation = ActionMailer::Base.deliveries.reverse.find do |mail|
+    mail.to.include?(email) && mail.subject == I18n.t('grouping_invitation_mailer.invitation.subject')
+  end
+  visit invitation.text_part.body.decoded[%r{/candidate/grouping_invitations/[^\s"<]+}]
+end
+
+Then('the latest email subject should be {string}') do |subject|
+  expect(ActionMailer::Base.deliveries.last&.subject).to eq(subject)
+end
