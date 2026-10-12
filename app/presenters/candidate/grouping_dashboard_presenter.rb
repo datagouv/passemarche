@@ -7,6 +7,10 @@ module Candidate
       mandataire: %i[copy_link],
       co_traitant: []
     }.freeze
+    STATUS_BADGE_CLASSES = {
+      in_progress: 'fr-badge--info fr-badge--no-icon',
+      completed: 'fr-badge--success fr-badge--no-icon'
+    }.freeze
 
     def initialize(market_application, grouping: nil, current_member: nil)
       @market_application = market_application
@@ -79,7 +83,7 @@ module Candidate
     end
 
     def member_status_badge_class(member)
-      'fr-badge--success fr-badge--no-icon' if member.status_completed?
+      STATUS_BADGE_CLASSES[member.status.to_sym]
     end
 
     def member_application_identifier(member)

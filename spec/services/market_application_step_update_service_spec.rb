@@ -42,6 +42,18 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
     end
 
+    context 'with market_information step for a grouping member' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+      before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      it 'marks the member as in progress' do
+        described_class.call(market_application, :market_information, {})
+
+        expect(market_application.grouping_member.reload).to be_status_in_progress
+      end
+    end
+
     context 'with generic step' do
       let(:step) { :contact }
 

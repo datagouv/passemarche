@@ -31,13 +31,13 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it "links the mandataire's edit action to the first wizard step, not the summary" do
+      it "links the mandataire's edit action to the first form step, not the summary" do
         grouping.mandataire_grouping_member.update!(status: :in_progress)
 
         get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
 
         expect(response.body).to include(
-          company_identification_candidate_market_application_path(mandataire_application.identifier)
+          step_candidate_market_application_path(mandataire_application.identifier, :market_information)
         )
         expect(response.body).not_to include(
           step_candidate_market_application_path(mandataire_application.identifier, :summary)

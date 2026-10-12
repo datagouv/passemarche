@@ -63,3 +63,18 @@ Feature: Mandataire submits the grouping candidacy
     And I click on "Confirmer et envoyer les invitations"
     Then I should not see "Soumettre sans la totalité des candidatures"
     And the "Soumettre la candidature" button should be disabled
+
+  @javascript
+  Scenario: Partial submission modal is reachable once the mandataire starts their own application
+    When I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
+    And I click on "Continuer"
+    And I click on "Confirmer et envoyer les invitations"
+    And I navigate to the "exclusion_criteria" step
+    And I submit the form
+    And I should see "Étape 3 sur 5"
+    And I visit the grouping dashboard
+    And I click on "Soumettre sans la totalité des candidatures"
+    Then I should see "Soumettre sans la candidature de tous les co-traitants ?"
+    When I click on "Confirmer la soumission"
+    Then I should see "La candidature a été transmise !"
+    And the grouping should be submitted

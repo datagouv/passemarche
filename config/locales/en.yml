@@ -793,7 +793,7 @@ en:
       status_completed: "Completed"
       declared_lots_not_provided: "Not provided"
       declared_lots_all: "All lots"
-      action_edit: "Edit"
+      action_edit: "Edit my application"
       action_consult: "View form"
       action_prepare: "Prepare my application"
       action_copy_link: "Copy link"

@@ -6,7 +6,7 @@ RSpec.describe Grouping::BorderedBlockComponent, type: :component do
   it 'renders the title next to the given icon' do
     render_inline(described_class.new(icon_class: 'fr-icon-team-fill', title: 'Composition du groupement'))
 
-    expect(page).to have_css('h2.fr-h6 span.fr-icon-team-fill')
+    expect(page).to have_css('h2.fr-h3 span.fr-icon-team-fill')
     expect(page).to have_text('Composition du groupement')
   end
 

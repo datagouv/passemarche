@@ -41,7 +41,7 @@ class GroupingMember < ApplicationRecord
   end
 
   def mark_in_progress!
-    status_in_progress! if status_to_prepare?
+    status_in_progress! if status_invited? || status_to_prepare?
   end
 
   def mark_completed!
