@@ -9,7 +9,8 @@ module Candidate
     }.freeze
     STATUS_BADGE_CLASSES = {
       in_progress: 'fr-badge--info fr-badge--no-icon',
-      completed: 'fr-badge--success fr-badge--no-icon'
+      completed: 'fr-badge--success fr-badge--no-icon',
+      submitted: 'fr-badge--success fr-badge--no-icon'
     }.freeze
 
     def initialize(market_application, grouping: nil, current_member: nil)
@@ -31,6 +32,7 @@ module Candidate
     end
 
     def member_actions(member)
+      return submitted_member_actions(member) if grouping.submitted?
       return OWN_ACTIONS.fetch(member.status.to_sym) if member == current_member
 
       OTHER_MEMBER_ACTIONS_BY_VIEWER.fetch(current_member.role.to_sym)
@@ -79,11 +81,11 @@ module Candidate
     end
 
     def member_status_label(member)
-      I18n.t("candidate.grouping_dashboard.status_#{member.status}")
+      I18n.t("candidate.grouping_dashboard.status_#{displayed_status(member)}")
     end
 
     def member_status_badge_class(member)
-      STATUS_BADGE_CLASSES[member.status.to_sym]
+      STATUS_BADGE_CLASSES[displayed_status(member)]
     end
 
     def member_application_identifier(member)
@@ -101,5 +103,15 @@ module Candidate
     private
 
     attr_reader :market_application
+
+    def submitted_member_actions(member)
+      return [] unless member == current_member && member.status_completed?
+
+      [:consult]
+    end
+
+    def displayed_status(member)
+      grouping.submitted? ? :submitted : member.status.to_sym
+    end
   end
 end

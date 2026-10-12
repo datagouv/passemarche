@@ -54,6 +54,14 @@ class MarketApplication < ApplicationRecord
     groupement? && !!grouping_member&.mandataire?
   end
 
+  def grouping_submitted?
+    !!grouping_member&.grouping&.submitted?
+  end
+
+  def locked?
+    completed? || grouping_submitted?
+  end
+
   def groupement_counterpart
     return nil if groupement?
 

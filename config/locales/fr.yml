@@ -791,6 +791,7 @@ fr:
       status_to_prepare: "À préparer"
       status_in_progress: "En cours"
       status_completed: "Complété"
+      status_submitted: "Transmise"
       declared_lots_not_provided: "Non renseigné"
       declared_lots_all: "Tous les lots"
       action_edit: "Modifier ma candidature"

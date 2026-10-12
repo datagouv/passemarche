@@ -62,7 +62,7 @@ module Candidate
 
       return render_submission_error(result[:flash_messages]) unless result[:success]
 
-      redirect_to candidate_sync_status_path(@market_application.identifier)
+      redirect_to locked_application_redirect_path
     end
 
     def render_submission_error(flash_messages)

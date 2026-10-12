@@ -791,6 +791,7 @@ en:
       status_to_prepare: "To prepare"
       status_in_progress: "In progress"
       status_completed: "Completed"
+      status_submitted: "Submitted"
       declared_lots_not_provided: "Not provided"
       declared_lots_all: "All lots"
       action_edit: "Edit my application"
