@@ -45,6 +45,14 @@ en:
       cta_intro: "Click the button below to join the group:"
       cta: Join the group
 
+  grouping_submission_mailer:
+    submitted:
+      subject: "Application submitted to the procurement platform"
+      greeting: "Your application has been taken into account"
+      intro: "%{mandataire_name} has submitted the group's application for the contract:"
+      inclusion: "Your application has been included in the application submitted for the group."
+      locked_notice: "You can no longer edit your application form"
+
   source_types:
     authentic_source:
       label: Retrieved automatically

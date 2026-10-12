@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class EmailComponent < ViewComponent::Base
-  Content = Data.define(:title, :greeting, :intro, :cta_intro, :cta_label, :url, :warning) do
-    def initialize(warning: nil, **rest)
+  Content = Data.define(:title, :greeting, :intro, :cta_intro, :cta_label, :url, :warning, :notice) do
+    def initialize(cta_intro: nil, cta_label: nil, url: nil, warning: nil, notice: nil, **rest)
       super
     end
   end
@@ -15,6 +15,7 @@ class EmailComponent < ViewComponent::Base
     @cta_label = email_content.cta_label
     @url = email_content.url
     @warning = email_content.warning
+    @notice = email_content.notice
   end
 
   private
