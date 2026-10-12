@@ -52,7 +52,7 @@ class MarketApplicationStepUpdateService < ApplicationService
     return handle_grouping_member_completion if market_application.grouping_member
 
     result = CompleteMarketApplication.call(market_application:)
-    result.success? ? build_result(true, redirect: :sync_status) : handle_completion_failure(result.message)
+    result.success? ? build_result(true, completed: true) : handle_completion_failure(result.message)
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
     Rails.logger.error "Error completing market application #{market_application.identifier}: #{e.message}"
     handle_completion_failure(I18n.t('candidate.market_applications.completion_error'))
@@ -60,7 +60,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   def handle_grouping_member_completion
     result = Candidate::CompleteGroupingMember.call(market_application:)
-    result.success? ? build_result(true) : handle_completion_failure(result.message)
+    result.success? ? build_result(true, completed: true) : handle_completion_failure(result.message)
   end
 
   def handle_completion_failure(message)
