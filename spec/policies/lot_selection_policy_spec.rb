@@ -44,12 +44,13 @@ RSpec.describe LotSelectionPolicy do
       end
     end
 
-    context 'when lot_limit is set' do
+    context 'when lot_limit is set and the feature flag is enabled' do
       before do
         lot1
         lot2
         lot3
         public_market.update!(lot_limit: 2)
+        allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(true)
       end
 
       it 'is valid when selected lots count equals the limit' do
@@ -71,6 +72,22 @@ RSpec.describe LotSelectionPolicy do
         expect(policy.errors[:base]).to include(
           I18n.t('activemodel.errors.models.lot_selection_policy.attributes.base.lot_limit_exceeded', limit: 2, count: 3)
         )
+      end
+    end
+
+    context 'when lot_limit is set but the feature flag is disabled' do
+      before do
+        lot1
+        lot2
+        lot3
+        public_market.update!(lot_limit: 2)
+        allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(false)
+      end
+
+      it 'is valid even when selected lots count exceeds the limit' do
+        policy = described_class.new(market_application, [lot1.id, lot2.id, lot3.id])
+
+        expect(policy.valid?).to be(true)
       end
     end
   end

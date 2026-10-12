@@ -32,13 +32,22 @@ Feature: Candidate lot selection
     Then the candidate should see an error about selecting at least one lot
     And the candidate should remain on the lot selection step
 
-  Scenario: Candidate cannot exceed lot_limit
-    Given the public market has a lot limit of 1
+  @lot_limit
+  Scenario: Candidate cannot exceed lot_limit when the feature flag is enabled
+    Given the lot_limit feature flag is enabled
+    And the public market has a lot limit of 1
     When the candidate visits the lot selection step
     And the candidate selects all available lots
     And the candidate submits the lot selection step without selecting any lot
     Then the candidate should see an error about the lot limit
     And the candidate should remain on the lot selection step
+
+  Scenario: Candidate can exceed lot_limit when the feature flag is disabled
+    Given the public market has a lot limit of 1
+    When the candidate visits the lot selection step
+    And the candidate selects all available lots
+    And the candidate clicks Suivant
+    Then the candidate should see the preparation page
 
   Scenario: Preparation page shows Commencer when form not started
     When the candidate visits the lot selection step

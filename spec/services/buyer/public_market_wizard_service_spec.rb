@@ -192,20 +192,26 @@ RSpec.describe Buyer::PublicMarketWizardService do
         expect(public_market.reload.lot_limit).to be_nil
       end
 
-      it 'sets lot_limit when enabled with a value' do
-        create(:lot, public_market:)
-        result = described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '1' })
+      context 'when the lot_limit feature flag is enabled' do
+        before do
+          allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(true)
+        end
 
-        expect(result).to eq(public_market)
-        expect(public_market.reload.lot_limit).to eq(1)
-      end
+        it 'sets lot_limit when enabled with a value' do
+          create(:lot, public_market:)
+          result = described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '1' })
 
-      it 'raises RecordInvalid when enabled but lot_limit is blank' do
-        expect do
-          described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '' })
-        end.to raise_error(ActiveRecord::RecordInvalid)
+          expect(result).to eq(public_market)
+          expect(public_market.reload.lot_limit).to eq(1)
+        end
 
-        expect(public_market.errors[:lot_limit]).to include('Veuillez indiquer le nombre maximum de lots.')
+        it 'raises RecordInvalid when enabled but lot_limit is blank' do
+          expect do
+            described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '' })
+          end.to raise_error(ActiveRecord::RecordInvalid)
+
+          expect(public_market.errors[:lot_limit]).to include('Veuillez indiquer le nombre maximum de lots.')
+        end
       end
     end
 

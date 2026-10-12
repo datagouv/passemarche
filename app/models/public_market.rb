@@ -25,7 +25,7 @@ class PublicMarket < ApplicationRecord
   validates :siret, presence: true, siret: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
-  validates :lot_limit, presence: true, if: :lot_limit_enabled
+  validates :lot_limit, presence: true, if: -> { FeatureFlags::LotLimit.enabled? && lot_limit_enabled }
   validate :must_have_valid_market_type_codes
   validate :lot_limit_cannot_exceed_lots_count
   validates_uniqueness_of_association :market_attributes
@@ -147,6 +147,7 @@ class PublicMarket < ApplicationRecord
   end
 
   def lot_limit_cannot_exceed_lots_count
+    return unless FeatureFlags::LotLimit.enabled?
     return if lot_limit.nil?
     return if lot_limit <= lots.size
 

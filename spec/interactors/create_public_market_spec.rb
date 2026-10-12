@@ -181,7 +181,11 @@ RSpec.describe CreatePublicMarket, type: :interactor do
       end
     end
 
-    context 'with lot_limit exceeding the number of lots' do
+    context 'with lot_limit exceeding the number of lots and the feature flag enabled' do
+      before do
+        allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(true)
+      end
+
       let(:params_with_limit) do
         valid_params.merge(
           lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }],
@@ -201,6 +205,25 @@ RSpec.describe CreatePublicMarket, type: :interactor do
 
       it 'does not create the market' do
         expect { subject }.not_to change(PublicMarket, :count)
+      end
+    end
+
+    context 'with lot_limit exceeding the number of lots and the feature flag disabled' do
+      let(:params_with_limit) do
+        valid_params.merge(
+          lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }],
+          lot_limit: 5
+        )
+      end
+
+      subject { described_class.call(editor:, params: params_with_limit) }
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates the market without applying the limit' do
+        expect { subject }.to change(PublicMarket, :count).by(1)
       end
     end
 

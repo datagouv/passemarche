@@ -88,6 +88,7 @@
         <%= render Buyer::LotTypePickerPanelComponent.new(picker_market_types: @presenter.picker_market_types) %>
       </div>
 
+      <% if FeatureFlags::LotLimit.enabled? %>
       <div class="fr-mb-5w" data-controller="radio-toggle">
         <h2 class="fr-h5 fr-mb-1w"><%= t('buyer.public_markets.lot_config.lot_limit_section_title') %></h2>
         <p class="fr-text--sm fr-text--mention fr-mb-3w">
@@ -137,6 +138,7 @@
           </div>
         </div>
       </div>
+      <% end %>
       <button type="submit" class="fr-btn fr-icon-arrow-right-line fr-btn--icon-right buyer-lot-config-submit-button">
         <%= t('buyer.public_markets.lot_config.submit') %>
       </button>

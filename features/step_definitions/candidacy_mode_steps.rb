@@ -8,6 +8,14 @@ Given('the groupement feature flag is disabled') do
   FeatureFlags::Groupement.define_singleton_method(:enabled?) { false }
 end
 
+Given('the lot_limit feature flag is enabled') do
+  FeatureFlags::LotLimit.define_singleton_method(:enabled?) { true }
+end
+
+Given('the lot_limit feature flag is disabled') do
+  FeatureFlags::LotLimit.define_singleton_method(:enabled?) { false }
+end
+
 Given('the candidate application already has the mode {string}') do |mode|
   @market_application.update!(application_mode: mode)
 end
