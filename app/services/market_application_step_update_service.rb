@@ -12,8 +12,10 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   def call
     case step
-    when :api_data_recovery_status, :market_information
+    when :api_data_recovery_status
       handle_navigation_only_step
+    when :market_information
+      handle_market_information_step
     when :summary
       handle_summary_completion
     else
@@ -26,6 +28,11 @@ class MarketApplicationStepUpdateService < ApplicationService
   attr_reader :market_application, :step, :params
 
   def handle_navigation_only_step
+    build_result(true)
+  end
+
+  def handle_market_information_step
+    market_application.grouping_member&.mark_in_progress!
     build_result(true)
   end
 

@@ -146,6 +146,20 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
     end
   end
 
+  describe '#member_status_badge_class' do
+    it 'renders an in progress member with the blue info badge' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :in_progress)
+
+      expect(presenter.member_status_badge_class(member)).to eq('fr-badge--info fr-badge--no-icon')
+    end
+
+    it 'renders a completed member with the green success badge' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :completed)
+
+      expect(presenter.member_status_badge_class(member)).to eq('fr-badge--success fr-badge--no-icon')
+    end
+  end
+
   describe '#submitted?' do
     it 'delegates to the grouping' do
       grouping.update!(submitted_at: Time.current)

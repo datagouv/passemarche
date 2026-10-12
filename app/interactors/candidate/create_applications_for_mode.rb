@@ -85,7 +85,13 @@ module Candidate
     end
 
     def mandataire_member_attributes(mandataire_application)
-      { role: :mandataire, siret:, email: mandataire_application.user&.email, market_application: mandataire_application }
+      {
+        role: :mandataire,
+        status: :to_prepare,
+        siret:,
+        email: mandataire_application.user&.email,
+        market_application: mandataire_application
+      }
     end
 
     def uniqueness_error?(member)
