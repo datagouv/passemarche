@@ -330,7 +330,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    pagy (43.6.3)
+    pagy (43.7.0)
       json
       uri
       yaml
@@ -543,7 +543,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
-    uri (1.1.1)
+    uri (1.1.2)
     useragent (0.16.11)
     view_component (4.15.0)
       actionview (>= 7.1.0)
@@ -609,7 +609,7 @@ DEPENDENCIES
   letter_opener
   lookbook
   mission_control-jobs
-  pagy (~> 43.6)
+  pagy (~> 43.7)
   paper_trail (~> 17.0)
   pg (>= 1.1)
   propshaft
