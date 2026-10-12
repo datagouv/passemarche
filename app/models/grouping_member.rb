@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class GroupingMember < ApplicationRecord
+  has_paper_trail skip: %i[invitation_token],
+    meta: { invitation_token_digest: ->(member) { digest_invitation_token(member.invitation_token) } }
+
   belongs_to :grouping
   belongs_to :public_market
   belongs_to :market_application, optional: true, dependent: :destroy
@@ -21,6 +24,12 @@ class GroupingMember < ApplicationRecord
   validates :grouping_id, uniqueness: { scope: :role }, if: :mandataire?
   validates :market_application, presence: true, if: :mandataire?
   validate :siret_not_mandataire, if: :co_traitant?
+
+  def self.digest_invitation_token(invitation_token)
+    return if invitation_token.blank?
+
+    OpenSSL::Digest::SHA256.hexdigest(invitation_token)
+  end
 
   def invitation_sent?
     invitation_token_created_at.present?
