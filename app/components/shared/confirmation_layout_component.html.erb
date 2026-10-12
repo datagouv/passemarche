@@ -1,0 +1,17 @@
+<div class="fr-grid-row fr-grid-row--center fr-py-12w">
+  <div class="fr-col-12 fr-col-lg-10">
+    <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+      <div class="fr-col-12 fr-col-lg-7">
+        <%= content %>
+      </div>
+
+      <% if illustration? %>
+        <div class="fr-col-12 fr-col-lg-4 fr-col-offset-lg-1">
+          <div class="center-content">
+            <%= illustration %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
