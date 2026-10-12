@@ -61,6 +61,17 @@ RSpec.describe GroupingInvitationMailer, type: :mailer do
       expect(body).not_to include('acheteur')
     end
 
+    it 'embeds the logo as an inline attachment referenced by the html body' do
+      logo = mail.attachments['passe-marche-logo-email.png']
+
+      expect(logo).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{logo.cid}")
+    end
+
+    it 'does not attach the warning icon it does not display' do
+      expect(mail.attachments['icon-email-warning.png']).to be_nil
+    end
+
     it 'shows a single join call to action' do
       expect(mail.html_part.body.decoded).to include('Rejoindre le groupement').once
     end
