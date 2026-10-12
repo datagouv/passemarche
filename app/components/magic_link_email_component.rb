@@ -26,13 +26,13 @@ class MagicLinkEmailComponent < ViewComponent::Base
   end
 
   def intro
+    market_name = "<strong>#{ERB::Util.html_escape(@market_name)}</strong>"
+
     if reconnection?
       "#{t('auth_mailer.reconnection_magic_link.intro')}<br>" \
-      "#{t('auth_mailer.reconnection_magic_link.market_intro')} " \
-      "&ldquo;<strong>#{ERB::Util.html_escape(@market_name)}</strong>&rdquo;".html_safe
+      "#{t('auth_mailer.reconnection_magic_link.market_intro', market_name:)}".html_safe
     else
-      "#{t('auth_mailer.magic_link.intro')} " \
-      "&ldquo;<strong>#{ERB::Util.html_escape(@market_name)}</strong>&rdquo;".html_safe
+      t('auth_mailer.magic_link.intro', market_name:).html_safe
     end
   end
 end
