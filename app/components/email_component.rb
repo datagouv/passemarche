@@ -2,7 +2,7 @@
 
 class EmailComponent < ViewComponent::Base
   Content = Data.define(:title, :greeting, :intro, :cta_intro, :cta_label, :url, :warning, :notice) do
-    def initialize(cta_intro: nil, cta_label: nil, url: nil, warning: nil, notice: nil, **rest)
+    def initialize(greeting: nil, cta_intro: nil, cta_label: nil, url: nil, warning: nil, notice: nil, **rest)
       super
     end
   end
@@ -20,9 +20,8 @@ class EmailComponent < ViewComponent::Base
 
   private
 
-  def logo_data_uri
-    image_path = Rails.root.join('app/assets/images/passe-marche-logo-email.jpg')
-    base64 = Base64.strict_encode64(File.binread(image_path))
-    "data:image/jpeg;base64,#{base64}"
+  def image_data_uri(filename)
+    base64 = Base64.strict_encode64(Rails.root.join('app/assets/images', filename).binread)
+    "data:image/png;base64,#{base64}"
   end
 end
