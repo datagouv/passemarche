@@ -20,8 +20,9 @@ class EmailComponent < ViewComponent::Base
 
   private
 
-  def image_data_uri(filename)
-    base64 = Base64.strict_encode64(Rails.root.join('app/assets/images', filename).binread)
-    "data:image/png;base64,#{base64}"
+  def inline_image_url(filename)
+    return helpers.image_url(filename) unless helpers.respond_to?(:attachments)
+
+    helpers.attachments[filename].url
   end
 end

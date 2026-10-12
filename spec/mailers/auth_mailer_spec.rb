@@ -33,6 +33,13 @@ RSpec.describe AuthMailer, type: :mailer do
     it 'shows the market name without surrounding quotes' do
       expect(mail.html_part.body.decoded).not_to include('&ldquo;')
     end
+
+    it 'embeds the logo as an inline attachment referenced by the html body' do
+      logo = mail.attachments['passe-marche-logo-email.png']
+
+      expect(logo).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{logo.cid}")
+    end
   end
 
   describe '#magic_link with reconnection' do

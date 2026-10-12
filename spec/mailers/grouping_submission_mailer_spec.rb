@@ -40,6 +40,20 @@ RSpec.describe GroupingSubmissionMailer, type: :mailer do
       expect(body).not_to include('&ldquo;')
     end
 
+    it 'embeds the logo as an inline attachment referenced by the html body' do
+      logo = mail.attachments['passe-marche-logo-email.png']
+
+      expect(logo).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{logo.cid}")
+    end
+
+    it 'embeds the warning icon as an inline attachment referenced by the html body' do
+      icon = mail.attachments['icon-email-warning.png']
+
+      expect(icon).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{icon.cid}")
+    end
+
     it 'has no call to action' do
       expect(mail.html_part.body.decoded).not_to include('<a href="http')
     end
