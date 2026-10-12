@@ -9,6 +9,7 @@ module Candidate
       return fail_not_found unless context.grouping_member
 
       destroy_member_and_application
+      notify_removed_member if context.grouping_member.invitation_sent?
     end
 
     private
@@ -20,6 +21,11 @@ module Candidate
 
         fail_already_completed unless context.grouping_member.destroy
       end
+    end
+
+    def notify_removed_member
+      removal = context.grouping_member.versions.where(event: 'destroy').last
+      GroupingMemberRemovalMailer.removed(removal).deliver_later
     end
 
     def find_member
