@@ -54,6 +54,14 @@ fr:
       inclusion: "Votre candidature a été incluse dans la candidature soumise pour le groupement."
       locked_notice: "Vous ne pouvez plus modifier votre formulaire de candidature"
 
+  grouping_member_completion_mailer:
+    completed:
+      subject: "Un co-traitant a complété son formulaire"
+      title: "Un co-traitant a complété son formulaire"
+      intro: "%{co_traitant_name} a complété son formulaire de candidature pour le marché : %{market_name}."
+      dashboard_explanation: "Consultez votre tableau de bord pour suivre l'état de votre groupement et soumettre votre candidature quand tous vos co-traitants sont prêts."
+      cta: "Voir mon tableau de bord"
+
   grouping_member_removal_mailer:
     removed:
       subject: "Vous avez été retiré du groupement"
