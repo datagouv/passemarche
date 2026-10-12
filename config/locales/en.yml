@@ -169,6 +169,7 @@ en:
     next_step: "Go to next step"
     previous: "Previous"
     continue: "Continue"
+    submit_to_mandataire: "Application complete - Send to the lead contractor"
     submit_summary: "Submit all my applications"
 
   malware_scan:
@@ -891,6 +892,7 @@ en:
         magic_link_direct_access: "Access directly (magic link)"
       invalid_token: "This sign-in link is invalid or has expired."
     shared:
+      save_draft: "Save as draft"
       welcome: "Welcome,"
       siret_label: "Your SIRET number"
       siret_hint: "This number was provided by the public procurement platform and cannot be edited"
@@ -924,6 +926,9 @@ en:
       error_image_alt: "Synchronization error"
       loading_aria_label: "Synchronization in progress..."
       grouping_member_title: "Your application has been submitted to the procurement platform!"
+      co_traitant_title: "Your application has been submitted!"
+      co_traitant_message: "We have automatically sent all the necessary information to the lead contractor."
+      back_to_grouping_dashboard: "Back to the group follow-up"
     attachments:
       delete_confirm: "Are you sure you want to delete this file?"
       delete_success: "File deleted successfully"
@@ -1038,6 +1043,8 @@ en:
       delete_failure: "An error occurred; the application could not be deleted."
       sync_retry_initiated: "Synchronization has been restarted."
       completion_error: "An error occurred while finalizing your application. Please try again."
+      draft_saved: "Your draft has been saved."
+      draft_failed: "Your draft could not be saved, please fix the errors below."
       insee_api_error: "Unable to retrieve your company's information: %{error}"
       rne_api_error: "Unable to retrieve your company's RNE information: %{error}"
       qualibat_api_error: "Unable to retrieve your company's Qualibat certification: %{error}"

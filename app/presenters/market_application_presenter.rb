@@ -9,7 +9,7 @@ class MarketApplicationPresenter
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
-  delegate :multi_type_selected_lots?, to: :@market_application
+  delegate :multi_type_selected_lots?, :part_of_grouping?, :co_traitant_of_grouping?, to: :@market_application
 
   INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary

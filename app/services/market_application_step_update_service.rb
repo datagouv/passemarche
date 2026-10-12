@@ -3,14 +3,17 @@
 class MarketApplicationStepUpdateService < ApplicationService
   attr_reader :flash_messages
 
-  def initialize(market_application, step, params = {})
+  def initialize(market_application, step, params = {}, draft: false)
     @market_application = market_application
     @step = step
     @params = params
+    @draft = draft
     @flash_messages = {}
   end
 
   def call
+    return build_result(true) if draft && step == :summary
+
     case step
     when :api_data_recovery_status
       handle_navigation_only_step
@@ -25,7 +28,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   private
 
-  attr_reader :market_application, :step, :params
+  attr_reader :market_application, :step, :params, :draft
 
   def handle_navigation_only_step
     build_result(true)
@@ -44,8 +47,13 @@ class MarketApplicationStepUpdateService < ApplicationService
       market_application.grouping_member&.mark_in_progress!
       build_result(true)
     else
-      build_result(false)
+      handle_step_failure
     end
+  end
+
+  def handle_step_failure
+    @flash_messages[:alert] = I18n.t('candidate.market_applications.draft_failed') if draft
+    build_result(false)
   end
 
   def handle_summary_completion
@@ -86,10 +94,8 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def build_result(success, additional_data = {})
-    {
-      success:,
-      market_application:,
-      flash_messages:
-    }.merge(additional_data)
+    result = { success:, market_application:, flash_messages: }
+    result[:draft] = true if draft
+    result.merge(additional_data)
   end
 end

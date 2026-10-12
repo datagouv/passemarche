@@ -149,6 +149,14 @@
   height: 0;
 }
 
+.wizard-nav__default-submit {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .badge--no-background {
   background-color: transparent;
   padding: 0;

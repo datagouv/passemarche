@@ -48,4 +48,49 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
       end.not_to have_enqueued_job(FetchApiDataCoordinatorJob)
     end
   end
+
+  describe 'final submission from the lots recap' do
+    before { market_application.lots << lot }
+
+    it 'offers the final submission to a solo candidate' do
+      get lot_selection_candidate_market_application_path(market_application.identifier)
+
+      expect(response.body).to include('name="final_submit"')
+    end
+
+    context 'when the candidate is a co_traitant' do
+      let(:co_traitant_application) do
+        create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+      end
+      let(:mandataire_application) do
+        create(:market_application, public_market:, siret: '80245139600099', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+        create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+          market_application: co_traitant_application, invitation_token_created_at: Time.current)
+        co_traitant_application.lots << lot
+        sign_in_as_candidate(user, co_traitant_application)
+      end
+
+      it 'does not offer the final submission' do
+        get lot_selection_candidate_market_application_path(co_traitant_application.identifier)
+
+        expect(response.body).not_to include('name="final_submit"')
+        expect(response.body).not_to include(I18n.t('candidate.lot_selection.submit'))
+      end
+
+      it 'ignores a forged final submission and keeps the lots' do
+        patch lot_selection_candidate_market_application_path(co_traitant_application.identifier),
+          params: { final_submit: '1' }
+
+        expect(response).to redirect_to(lot_selection_candidate_market_application_path(co_traitant_application.identifier))
+        expect(co_traitant_application.reload).not_to be_completed
+        expect(co_traitant_application.lot_ids).to eq([lot.id])
+      end
+    end
+  end
 end

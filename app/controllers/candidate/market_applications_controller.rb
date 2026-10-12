@@ -26,7 +26,9 @@ module Candidate
     end
 
     def update
-      result = MarketApplicationStepUpdateService.call(@market_application, step.to_sym, market_application_params)
+      result = MarketApplicationStepUpdateService.call(
+        @market_application, step.to_sym, market_application_params, draft: draft_requested?
+      )
 
       handle_service_result(result)
     end
@@ -66,15 +68,35 @@ module Candidate
         flash.now[key] = value
       end
 
-      return redirect_to locked_application_redirect_path if result[:completed]
+      return redirect_to completion_redirect_path if result[:completed]
+      return redirect_after_draft if result[:draft] && result[:success]
 
-      if result[:success]
+      render_step_result(result[:success])
+    end
+
+    def render_step_result(success)
+      if success
         render_wizard(@market_application)
       elsif custom_view_exists?
         render_wizard(nil, status: :unprocessable_entity)
       else
         render 'generic_step', locals: { step: }, status: :unprocessable_content
       end
+    end
+
+    def completion_redirect_path
+      return candidate_sync_status_path(@market_application.identifier) if @market_application.co_traitant_of_grouping?
+
+      locked_application_redirect_path
+    end
+
+    def draft_requested?
+      params[:draft].present? && @market_application.part_of_grouping?
+    end
+
+    def redirect_after_draft
+      redirect_to grouping_member_dashboard_path(@market_application) || wizard_path,
+        notice: t('candidate.market_applications.draft_saved')
     end
 
     def set_wizard_steps
