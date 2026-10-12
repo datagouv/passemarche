@@ -81,5 +81,10 @@ RSpec.describe GroupingInvitationMailer, type: :mailer do
 
       expect(mail.html_part.body.decoded).to include(grouping.mandataire_grouping_member.siret)
     end
+
+    it 'shows the Passe Marché contact address in the footer' do
+      expect(mail.html_part.body.decoded).to include('passemarche@data.gouv.fr')
+      expect(mail.text_part.body.decoded).to include('passemarche@data.gouv.fr')
+    end
   end
 end

@@ -20,7 +20,7 @@ en:
       privacy: Privacy policy
       legal: Legal notice
       copyright: "© French Republic - All rights reserved"
-      contact: contact@exemple.gouv.fr
+      contact: passemarche@data.gouv.fr
 
   auth_mailer:
     magic_link:
