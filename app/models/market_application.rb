@@ -54,6 +54,14 @@ class MarketApplication < ApplicationRecord
     groupement? && !!grouping_member&.mandataire?
   end
 
+  def part_of_grouping?
+    grouping_member.present?
+  end
+
+  def co_traitant_of_grouping?
+    !!grouping_member&.co_traitant?
+  end
+
   def grouping_submitted?
     !!grouping_member&.grouping&.submitted?
   end

@@ -54,6 +54,38 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
     end
 
+    context 'when saving as draft' do
+      context 'when the application belongs to a grouping member' do
+        let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+        before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+        it 'saves a generic step and flags the result as draft' do
+          result = described_class.call(market_application, :contact, {}, draft: true)
+
+          expect(result[:success]).to be true
+          expect(result[:draft]).to be true
+        end
+
+        it 'warns that the draft could not be saved when the step is invalid' do
+          allow(market_application).to receive(:save).and_return(false)
+
+          result = described_class.call(market_application, :contact, {}, draft: true)
+
+          expect(result[:success]).to be false
+          expect(result[:flash_messages][:alert]).to eq(I18n.t('candidate.market_applications.draft_failed'))
+        end
+
+        it 'does not complete the application from the summary' do
+          result = described_class.call(market_application, :summary, {}, draft: true)
+
+          expect(result[:draft]).to be true
+          expect(result[:completed]).to be_nil
+          expect(market_application.reload).not_to be_completed
+        end
+      end
+    end
+
     context 'with generic step' do
       let(:step) { :contact }
 

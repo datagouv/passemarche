@@ -14,7 +14,7 @@ module Candidate
     end
 
     def update
-      return complete_application if params[:final_submit].present?
+      return handle_final_submit if params[:final_submit].present?
       return redirect_to_lot_selection if @market_application.solidaire_co_traitant?
 
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
@@ -60,6 +60,12 @@ module Candidate
       @presenter = MarketApplicationPresenter.new(@market_application)
       @editing = !@presenter.solidaire_co_traitant?
       render :show, status: :unprocessable_content
+    end
+
+    def handle_final_submit
+      return redirect_to_lot_selection if @market_application.co_traitant_of_grouping?
+
+      complete_application
     end
 
     def complete_application

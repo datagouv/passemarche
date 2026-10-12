@@ -169,6 +169,7 @@ fr:
     next_step: "Passer à l'étape suivante"
     previous: "Précédent"
     continue: "Continuer"
+    submit_to_mandataire: "Candidature terminée - Transmettre au mandataire"
     submit_summary: "Transmettre l'ensemble de mes candidatures"
 
   malware_scan:
@@ -901,6 +902,7 @@ fr:
         magic_link_direct_access: "Accéder directement (lien magique)"
       invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
+      save_draft: "Sauvegarder en brouillon"
       welcome: "Bienvenue,"
       siret_label: "Votre numéro de SIRET"
       siret_hint: "Ce numéro a été fourni par la plateforme de marchés publics et ne peut pas être modifié"
@@ -934,6 +936,9 @@ fr:
       error_image_alt: "Erreur de synchronisation"
       loading_aria_label: "Synchronisation en cours..."
       grouping_member_title: "Votre candidature a été transmise à la plateforme de marché !"
+      co_traitant_title: "Votre candidature a été transmise !"
+      co_traitant_message: "Nous avons transmis automatiquement toutes les informations nécessaires au mandataire."
+      back_to_grouping_dashboard: "Revenir sur le suivi du groupement"
     attachments:
       delete_confirm: "Êtes-vous sûr de vouloir supprimer ce fichier ?"
       delete_success: "Fichier supprimé avec succès"
@@ -1048,6 +1053,8 @@ fr:
       delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
+      draft_saved: "Votre brouillon a été sauvegardé."
+      draft_failed: "Votre brouillon n’a pas pu être sauvegardé, veuillez corriger les erreurs ci-dessous."
       insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"
       rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       qualibat_api_error: "Impossible de récupérer la certification Qualibat de votre entreprise : %{error}"
