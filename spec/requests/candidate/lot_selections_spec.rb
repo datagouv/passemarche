@@ -56,6 +56,22 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
         expect(response.body).to include(I18n.t('candidate.lot_selection.co_traitant_title'))
         expect(response.body).to include(I18n.t('candidate.lot_selection.co_traitant_subtitle'))
       end
+
+      it 'shows the groupement-specific how it works steps on first display, before any lot is saved' do
+        get lot_selection_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).to include(I18n.t('candidate.lot_selection.co_traitant_how_it_works_step_1'))
+      end
+
+      context 'when lots are already saved' do
+        before { market_application.lots << lot }
+
+        it 'still shows the groupement-specific how it works steps on the recap screen' do
+          get lot_selection_candidate_market_application_path(market_application.identifier)
+
+          expect(response.body).to include(I18n.t('candidate.lot_selection.co_traitant_how_it_works_step_1'))
+        end
+      end
     end
 
     context 'when the market_application belongs to a co_traitant of a solidaire grouping' do

@@ -26,7 +26,7 @@
       <div class="fr-col-12 fr-col-md-5">
         <%= render 'market_info_card', public_market: public_market, presenter: @presenter %>
 
-        <div class="fr-background-alt--grey" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
+        <div class="fr-background-alt--grey fr-mb-2w" style="border: 1px solid var(--border-default-grey); padding: 20px 16px;">
           <h2 class="fr-text--bold fr-mb-0" style="font-size: 1rem;">
             <%= t('candidate.lot_selection.selected_lots_title') %>
             <span data-lot-selection-target="selectedLotsCount" style="font-weight: normal; color: var(--text-mention-grey);"></span>
@@ -37,6 +37,8 @@
           </p>
           <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" data-lot-selection-target="selectedLotsTags"></div>
         </div>
+
+        <%= render 'how_it_works_card', presenter: @presenter %>
       </div>
 
       <%# Colonne droite : formulaire de sélection %>
@@ -200,16 +202,7 @@
           </div>
         </div>
 
-        <div class="fr-background-alt--grey fr-border-default--grey fr-px-3w fr-py-2w">
-          <h2 class="fr-text--bold fr-text--md fr-mb-0">
-            <%= t('candidate.lot_selection.how_it_works_title') %>
-          </h2>
-          <hr class="fr-hr fr-my-1w">
-          <ol class="fr-text--sm fr-pl-3w fr-mb-0">
-            <li><%= t('candidate.lot_selection.how_it_works_step_1') %></li>
-            <li class="fr-mt-1w"><%= t('candidate.lot_selection.how_it_works_step_2') %></li>
-          </ol>
-        </div>
+        <%= render 'how_it_works_card', presenter: @presenter %>
       </div>
 
       <%# Colonne droite : dossier de candidature %>
