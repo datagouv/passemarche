@@ -99,7 +99,8 @@ class MarketApplicationPresenter
   end
 
   def lots_by_type_sorted
-    @lots_by_type_sorted ||= public_market.lots.ordered
+    scope = co_traitant? ? @market_application.groupement_scope_lots : public_market.lots
+    @lots_by_type_sorted ||= scope.ordered
       .includes(:market_type, :platform_market_type)
       .group_by(&:effective_market_type)
   end
@@ -108,11 +109,11 @@ class MarketApplicationPresenter
     @selected_lots ||= @market_application.lots.includes(:market_type, :platform_market_type).sort_by(&:position)
   end
 
-  def public_market_lots
-    @public_market_lots ||= public_market.lots.ordered.to_a
-  end
+  def public_market_lots = @public_market_lots ||= public_market.lots.ordered.to_a
 
   def public_market_has_lots? = public_market_lots.any?
+
+  def co_traitant? = @market_application.grouping_member&.co_traitant? || false
 
   # === RESPONSE METHODS (with hidden filtering) ===
 
