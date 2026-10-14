@@ -212,6 +212,7 @@ fr:
             base:
               no_lot_selected: "Vous devez sélectionner au moins un lot"
               lot_limit_exceeded: "Vous ne pouvez pas sélectionner plus de %{limit} lot(s) (vous en avez sélectionné %{count})"
+              lot_outside_groupement_scope: "Vous ne pouvez sélectionner que des lots pré-sélectionnés par le mandataire du groupement"
 
   errors:
     messages:

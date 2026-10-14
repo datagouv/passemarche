@@ -212,6 +212,7 @@ en:
             base:
               no_lot_selected: "You must select at least one lot"
               lot_limit_exceeded: "You cannot select more than %{limit} lot(s) (you selected %{count})"
+              lot_outside_groupement_scope: "You can only select lots pre-selected by the grouping's mandataire"
 
   errors:
     messages:

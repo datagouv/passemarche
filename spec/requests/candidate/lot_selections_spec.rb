@@ -69,5 +69,44 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
           params: { market_application: { lot_ids: [lot.id] } }
       end.not_to have_enqueued_job(FetchApiDataCoordinatorJob)
     end
+
+    context 'when the market_application belongs to a co_traitant' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+      let!(:other_lot) { create(:lot, public_market:, name: 'Lot hors périmètre') }
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << lot
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'accepts a lot within the groupement scope' do
+        patch lot_selection_candidate_market_application_path(market_application.identifier),
+          params: { market_application: { lot_ids: [lot.id] } }
+
+        expect(market_application.reload.lot_ids).to contain_exactly(lot.id)
+      end
+
+      it 'redirects to the lot selection recap screen, like solo and mandataire applications' do
+        patch lot_selection_candidate_market_application_path(market_application.identifier),
+          params: { market_application: { lot_ids: [lot.id] } }
+
+        expect(response).to redirect_to(
+          lot_selection_candidate_market_application_path(market_application.identifier)
+        )
+      end
+
+      it 'rejects a lot outside the groupement scope' do
+        patch lot_selection_candidate_market_application_path(market_application.identifier),
+          params: { market_application: { lot_ids: [other_lot.id] } }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(market_application.reload.lot_ids).to be_empty
+      end
+    end
   end
 end
