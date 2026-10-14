@@ -72,6 +72,10 @@ module GroupementWizardSteps
     mandataire_application&.lots || Lot.none
   end
 
+  def declared_lots
+    solidaire_co_traitant? ? groupement_scope_lots : lots
+  end
+
   def solidaire_co_traitant?
     !!grouping_member&.co_traitant? && grouping_member.grouping.legal_type_solidaire?
   end

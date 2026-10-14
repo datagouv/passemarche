@@ -50,6 +50,29 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
         expect(response.body).not_to include(other_lot.name)
       end
     end
+
+    context 'when the market_application belongs to a co_traitant of a solidaire grouping' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << lot
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it "shows the recap with the mandataire's lots" do
+        get lot_selection_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).to include(I18n.t('candidate.lot_selection.lots_list_title'))
+        expect(response.body).to include(lot.name)
+      end
+    end
   end
 
   describe 'PATCH /candidate/market_applications/:identifier/lot_selection' do

@@ -418,6 +418,44 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#declared_lots' do
+    let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+    let(:scope_lots) { create_list(:lot, 2, public_market:) }
+    let(:co_traitant_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+    before { mandataire_application.lots << scope_lots }
+
+    it "returns the mandataire's lots for a co_traitant of a solidaire grouping" do
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.declared_lots).to match_array(scope_lots)
+    end
+
+    it 'returns the lots chosen by a co_traitant of a conjoint grouping' do
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+      co_traitant_application.lots << scope_lots.first
+
+      expect(co_traitant_application.declared_lots).to contain_exactly(scope_lots.first)
+    end
+
+    it 'keeps the lots chosen by a co_traitant when the grouping turns solidaire then back to conjoint' do
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+      co_traitant_application.lots << scope_lots.first
+
+      grouping.update!(legal_type: :solidaire)
+      grouping.update!(legal_type: :conjoint)
+
+      expect(co_traitant_application.reload.declared_lots).to contain_exactly(scope_lots.first)
+    end
+
+    it "returns the application's own lots outside a grouping" do
+      expect(mandataire_application.declared_lots).to match_array(scope_lots)
+    end
+  end
+
   describe '#solidaire_co_traitant?' do
     it 'returns true for a co_traitant of a solidaire grouping' do
       mandataire_application = create(:market_application, public_market:, application_mode: :groupement)

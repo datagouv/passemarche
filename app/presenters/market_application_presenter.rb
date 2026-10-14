@@ -106,7 +106,7 @@ class MarketApplicationPresenter
   end
 
   def selected_lots
-    @selected_lots ||= @market_application.lots.includes(:market_type, :platform_market_type).sort_by(&:position)
+    @selected_lots ||= @market_application.declared_lots.includes(:market_type, :platform_market_type).sort_by(&:position)
   end
 
   def public_market_lots = @public_market_lots ||= public_market.lots.ordered.to_a

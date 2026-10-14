@@ -33,7 +33,7 @@ class GroupingMember < ApplicationRecord
   end
 
   def declared_lots
-    market_application&.lots || Lot.none
+    market_application&.declared_lots || Lot.none
   end
 
   def mark_connected!
