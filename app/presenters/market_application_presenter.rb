@@ -7,7 +7,7 @@ class MarketApplicationPresenter
   include MultiTypeLotConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
-  delegate :attestation, to: :@market_application
+  delegate :attestation, :solidaire_co_traitant?, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
   delegate :multi_type_selected_lots?, to: :@market_application
 

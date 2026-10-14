@@ -72,6 +72,18 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
         expect(response.body).to include(I18n.t('candidate.lot_selection.lots_list_title'))
         expect(response.body).to include(lot.name)
       end
+
+      it 'does not offer to edit the lots' do
+        get lot_selection_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).not_to include(I18n.t('candidate.lot_selection.edit_lots'))
+      end
+
+      it 'keeps the recap when the edit screen is requested' do
+        get lot_selection_candidate_market_application_path(market_application.identifier, edit: 1)
+
+        expect(response.body).not_to include('market_application[lot_ids][]')
+      end
     end
   end
 
@@ -128,6 +140,30 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
           params: { market_application: { lot_ids: [other_lot.id] } }
 
         expect(response).to have_http_status(:unprocessable_content)
+        expect(market_application.reload.lot_ids).to be_empty
+      end
+    end
+
+    context 'when the market_application belongs to a co_traitant of a solidaire grouping' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << lot
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'redirects to the recap without saving any lot' do
+        patch lot_selection_candidate_market_application_path(market_application.identifier),
+          params: { market_application: { lot_ids: [lot.id] } }
+
+        expect(response).to redirect_to(lot_selection_candidate_market_application_path(market_application.identifier))
         expect(market_application.reload.lot_ids).to be_empty
       end
     end

@@ -10,11 +10,12 @@ module Candidate
 
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
-      @editing = !@presenter.lots_saved? || params[:edit].present?
+      @editing = !@presenter.solidaire_co_traitant? && (!@presenter.lots_saved? || params[:edit].present?)
     end
 
     def update
       return complete_application if params[:final_submit].present?
+      return redirect_to_lot_selection if @market_application.solidaire_co_traitant?
 
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
 
@@ -24,7 +25,7 @@ module Candidate
       end
 
       @market_application.lot_ids = lot_ids_param
-      redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
+      redirect_to_lot_selection
     end
 
     private
@@ -50,10 +51,14 @@ module Candidate
       params.fetch(:market_application, {}).permit(lot_ids: [])[:lot_ids]&.map(&:to_i)&.reject(&:zero?) || []
     end
 
+    def redirect_to_lot_selection
+      redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
+    end
+
     def render_lot_selection_error(errors)
       @errors = errors
-      @editing = true
       @presenter = MarketApplicationPresenter.new(@market_application)
+      @editing = !@presenter.solidaire_co_traitant?
       render :show, status: :unprocessable_content
     end
 

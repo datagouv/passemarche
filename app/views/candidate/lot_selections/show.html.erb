@@ -175,10 +175,12 @@
               <%= t('candidate.lot_selection.lots_list_title') %>
               <span style="font-weight: normal; color: var(--text-mention-grey);">(<%= @presenter.selected_lots.size %>)</span>
             </h2>
-            <%= link_to lot_selection_candidate_market_application_path(@market_application.identifier, edit: 1),
-                  class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-fill",
-                  title: t('candidate.lot_selection.edit_lots'),
-                  aria: { label: t('candidate.lot_selection.edit_lots') } do %>
+            <% unless @presenter.solidaire_co_traitant? %>
+              <%= link_to lot_selection_candidate_market_application_path(@market_application.identifier, edit: 1),
+                    class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-fill",
+                    title: t('candidate.lot_selection.edit_lots'),
+                    aria: { label: t('candidate.lot_selection.edit_lots') } do %>
+              <% end %>
             <% end %>
           </div>
           <hr class="fr-hr fr-my-1w">
