@@ -49,6 +49,13 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
         expect(response.body).to include(lot.name)
         expect(response.body).not_to include(other_lot.name)
       end
+
+      it 'uses the co_traitant specific wording' do
+        get lot_selection_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).to include(I18n.t('candidate.lot_selection.co_traitant_title'))
+        expect(response.body).to include(I18n.t('candidate.lot_selection.co_traitant_subtitle'))
+      end
     end
 
     context 'when the market_application belongs to a co_traitant of a solidaire grouping' do

@@ -686,6 +686,8 @@ en:
     lot_selection:
       title: "Select one or more lot(s)"
       subtitle: "Select the lot(s) you wish to submit an application for."
+      co_traitant_title: "Select the lots for your application"
+      co_traitant_subtitle: "The mandataire has pre-selected the lots proposed to the grouping. Choose among them the ones you wish to commit to."
       submit: "Submit my application"
       next: "Next"
       market_info_title: "Tender information"

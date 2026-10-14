@@ -1,4 +1,4 @@
-<% content_for :title, t('candidate.lot_selection.title') %>
+<% content_for :title, t(@presenter.co_traitant? ? 'candidate.lot_selection.co_traitant_title' : 'candidate.lot_selection.title') %>
 <% content_for :head do %>
   <meta name="turbo-cache-control" content="no-cache">
 <% end %>
@@ -13,9 +13,11 @@
        data-lot-selection-storage-key-value="lot-selection-<%= @market_application.identifier %>"
        data-lot-selection-show-more-label="<%= t('shared.collapsible_lots.show_more') %>"
        data-lot-selection-show-less-label="<%= t('shared.collapsible_lots.show_less') %>">
-    <h1 class="fr-h3 fr-mb-1w"><%= t('candidate.lot_selection.title') %></h1>
+    <h1 class="fr-h3 fr-mb-1w">
+      <%= t(@presenter.co_traitant? ? 'candidate.lot_selection.co_traitant_title' : 'candidate.lot_selection.title') %>
+    </h1>
     <p class="fr-text--sm fr-text--mention-grey fr-mb-3w">
-      <%= t('candidate.lot_selection.subtitle') %>
+      <%= t(@presenter.co_traitant? ? 'candidate.lot_selection.co_traitant_subtitle' : 'candidate.lot_selection.subtitle') %>
     </p>
 
     <div class="fr-grid-row fr-grid-row--gutters">
