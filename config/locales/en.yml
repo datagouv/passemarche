@@ -629,6 +629,7 @@ en:
       question: "What type of group is this?"
       alert: "Once you have confirmed the group's composition, changing the group type will require you to start a new application from scratch."
       continue: "Continue"
+      continue_readonly: "Continue"
       back: "Previous"
       most_common_badge: "MOST COMMON"
       conjoint:
@@ -837,6 +838,7 @@ en:
       application_mode_invalid: "The selected application mode is not valid"
       grouping_not_found: "No group found for this application"
       legal_type_invalid: "The selected group type is not valid"
+      legal_type_locked: "The grouping type can no longer be changed once the invitations have been sent to the co-contractors"
       grouping_member_not_found: "This co-contractor was not found in the group"
       grouping_member_already_completed: "This co-contractor has already submitted their application and can no longer be removed"
       no_co_traitant: "Please add at least one co-contractor before continuing"

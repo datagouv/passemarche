@@ -629,6 +629,7 @@ fr:
       question: "Quel est le type du groupement ?"
       alert: "Lorsque vous aurez validé la composition du groupement, si vous souhaitez modifier le type de groupement alors il vous faudra recommencer une candidature de zéro."
       continue: "Continuer"
+      continue_readonly: "Continuer"
       back: "Précédent"
       most_common_badge: "LE PLUS COURANT"
       conjoint:
@@ -837,6 +838,7 @@ fr:
       application_mode_invalid: "Le mode de candidature sélectionné n'est pas valide"
       grouping_not_found: "Aucun groupement trouvé pour cette candidature"
       legal_type_invalid: "Le type de groupement sélectionné n'est pas valide"
+      legal_type_locked: "Le type de groupement ne peut plus être modifié une fois les invitations envoyées aux co-traitants"
       grouping_member_not_found: "Ce co-traitant n'a pas été trouvé dans le groupement"
       grouping_member_already_completed: "Ce co-traitant a déjà soumis sa candidature, il ne peut plus être retiré"
       no_co_traitant: "Veuillez ajouter au moins un co-traitant avant de continuer"
