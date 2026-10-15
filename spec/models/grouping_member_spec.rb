@@ -270,4 +270,79 @@ RSpec.describe GroupingMember, type: :model do
       expect(member.declared_lots).to be_empty
     end
   end
+
+  describe 'history' do
+    it 'records the creation, updates and destruction of the member' do
+      member = create(:grouping_member, :co_traitant, grouping:)
+      member.mark_connected!
+      member.destroy!
+
+      expect(PaperTrail::Version.where(item_type: 'GroupingMember', item_id: member.id)
+        .order(:id).pluck(:event)).to eq(%w[create update destroy])
+    end
+
+    it 'never stores the invitation token, which grants access to the invitation flow' do
+      member = create(:grouping_member, :co_traitant, grouping:)
+      member.update!(invitation_token: 'secret-invitation-token', invitation_token_created_at: Time.current)
+      member.destroy!
+
+      versions = PaperTrail::Version.where(item_type: 'GroupingMember', item_id: member.id)
+      expect(versions.pluck(:object, :object_changes).flatten.compact.join).not_to include('secret-invitation-token')
+    end
+
+    it 'keeps a digest of the invitation token on the destroy version' do
+      member = create(:grouping_member, :co_traitant, grouping:)
+      member.update!(invitation_token: 'secret-invitation-token', invitation_token_created_at: Time.current)
+      member.destroy!
+
+      removal = PaperTrail::Version.find_by(item_type: 'GroupingMember', item_id: member.id, event: 'destroy')
+      expect(removal.invitation_token_digest)
+        .to eq(GroupingMember.digest_invitation_token('secret-invitation-token'))
+    end
+  end
+
+  describe '.digest_invitation_token' do
+    it 'returns a SHA256 digest that differs from the token' do
+      digest = described_class.digest_invitation_token('secret-invitation-token')
+
+      expect(digest).to match(/\A\h{64}\z/)
+      expect(digest).not_to include('secret-invitation-token')
+    end
+
+    it 'returns nil for a blank token' do
+      expect(described_class.digest_invitation_token(nil)).to be_nil
+    end
+  end
+
+  describe '.removed_with_invitation_token' do
+    let!(:member) do
+      create(:grouping_member, :co_traitant, grouping:, email: 'contact@menuiseries-loire.fr',
+        invitation_token: 'removed_token-abc', invitation_token_created_at: Time.current)
+    end
+
+    it 'rebuilds the removed member from its history' do
+      member.destroy!
+
+      removed_member = described_class.removed_with_invitation_token('removed_token-abc')
+
+      expect(removed_member.email).to eq('contact@menuiseries-loire.fr')
+      expect(removed_member.grouping).to eq(grouping)
+    end
+
+    it 'returns nil while the member is still in the grouping' do
+      expect(described_class.removed_with_invitation_token('removed_token-abc')).to be_nil
+    end
+
+    it 'returns nil for an unknown token' do
+      member.destroy!
+
+      expect(described_class.removed_with_invitation_token('unknown')).to be_nil
+    end
+
+    it 'returns nil for a blank token' do
+      member.destroy!
+
+      expect(described_class.removed_with_invitation_token('')).to be_nil
+    end
+  end
 end

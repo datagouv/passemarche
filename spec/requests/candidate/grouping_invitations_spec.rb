@@ -73,6 +73,52 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
 
         expect(response).to have_http_status(:not_found)
       end
+
+      it 'tells the visitor the grouping no longer exists' do
+        get candidate_grouping_invitation_path('unknown-token')
+
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.not_found.explanation'))
+      end
+    end
+
+    context 'when the member has been removed from the grouping' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'removed-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before { grouping_member.destroy! }
+
+      it 'returns a gone status' do
+        get candidate_grouping_invitation_path('removed-token-123')
+
+        expect(response).to have_http_status(:gone)
+      end
+
+      it 'tells the visitor they are no longer part of the grouping' do
+        get candidate_grouping_invitation_path('removed-token-123')
+
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.removed.explanation'))
+      end
+    end
+
+    context 'when the grouping of the removed member has been deleted' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'removed-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before do
+        grouping_member.destroy!
+        grouping.destroy!
+      end
+
+      it 'tells the visitor the grouping no longer exists' do
+        get candidate_grouping_invitation_path('removed-token-123')
+
+        expect(response).to have_http_status(:not_found)
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.not_found.explanation'))
+      end
     end
 
     context 'when the groupement feature is disabled' do

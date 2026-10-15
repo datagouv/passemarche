@@ -30,6 +30,10 @@ RSpec.describe Candidate::RemoveGroupingMember, type: :interactor do
       it 'destroys the member' do
         expect { result }.to change(GroupingMember, :count).by(-1)
       end
+
+      it 'does not notify the member, who never heard of the grouping' do
+        expect { result }.not_to have_enqueued_mail(GroupingMemberRemovalMailer, :removed)
+      end
     end
 
     context 'when the member has already been invited but has not completed their application' do
@@ -44,6 +48,15 @@ RSpec.describe Candidate::RemoveGroupingMember, type: :interactor do
 
       it 'destroys the member' do
         expect { result }.to change(GroupingMember, :count).by(-1)
+      end
+
+      it 'notifies the member of their removal with the removal history' do
+        removal_version = lambda do |removal|
+          removal.item_type == 'GroupingMember' && removal.item_id == member.id && removal.event == 'destroy'
+        end
+
+        expect { result }.to have_enqueued_mail(GroupingMemberRemovalMailer, :removed)
+          .with(satisfy(&removal_version))
       end
     end
 
@@ -75,6 +88,10 @@ RSpec.describe Candidate::RemoveGroupingMember, type: :interactor do
 
       it 'does not destroy the member' do
         expect { result }.not_to change(GroupingMember, :count)
+      end
+
+      it 'does not notify the member' do
+        expect { result }.not_to have_enqueued_mail(GroupingMemberRemovalMailer, :removed)
       end
     end
 
