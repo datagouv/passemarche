@@ -7,7 +7,7 @@ class MarketApplicationPresenter
   include MultiTypeLotConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
-  delegate :attestation, to: :@market_application
+  delegate :attestation, :solidaire_co_traitant?, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
   delegate :multi_type_selected_lots?, to: :@market_application
 
@@ -99,20 +99,21 @@ class MarketApplicationPresenter
   end
 
   def lots_by_type_sorted
-    @lots_by_type_sorted ||= public_market.lots.ordered
+    scope = co_traitant? ? @market_application.groupement_scope_lots : public_market.lots
+    @lots_by_type_sorted ||= scope.ordered
       .includes(:market_type, :platform_market_type)
       .group_by(&:effective_market_type)
   end
 
   def selected_lots
-    @selected_lots ||= @market_application.lots.includes(:market_type, :platform_market_type).sort_by(&:position)
+    @selected_lots ||= @market_application.declared_lots.includes(:market_type, :platform_market_type).sort_by(&:position)
   end
 
-  def public_market_lots
-    @public_market_lots ||= public_market.lots.ordered.to_a
-  end
+  def public_market_lots = @public_market_lots ||= public_market.lots.ordered.to_a
 
   def public_market_has_lots? = public_market_lots.any?
+
+  def co_traitant? = @market_application.grouping_member&.co_traitant? || false
 
   # === RESPONSE METHODS (with hidden filtering) ===
 

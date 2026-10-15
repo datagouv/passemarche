@@ -27,6 +27,22 @@ RSpec.describe Candidate::SetGroupingLegalType, type: :interactor do
       end
     end
 
+    context 'when the invitations have already been sent' do
+      let!(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+      end
+
+      before { create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current) }
+
+      it 'fails and keeps the current legal_type' do
+        result = described_class.call(market_application:, legal_type: 'solidaire')
+
+        expect(result).to be_failure
+        expect(result.errors[:legal_type]).to include(I18n.t('candidate.validations.legal_type_locked'))
+        expect(grouping.reload.legal_type).to eq('conjoint')
+      end
+    end
+
     context 'when legal_type is not a recognized value' do
       before { create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil) }
 

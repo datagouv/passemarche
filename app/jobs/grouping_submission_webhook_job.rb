@@ -6,7 +6,8 @@ class GroupingSubmissionWebhookJob < WebhookJob
   private
 
   def find_entity(entity_id)
-    Grouping.includes(grouping_members: { market_application: { lots: %i[market_type platform_market_type] } })
+    lots_preload = { lots: %i[market_type platform_market_type] }
+    Grouping.includes(mandataire_market_application: lots_preload, grouping_members: { market_application: lots_preload })
       .find(entity_id)
   end
 
@@ -61,7 +62,7 @@ class GroupingSubmissionWebhookJob < WebhookJob
   end
 
   def selected_lots_payload(market_application)
-    market_application.lots.sort_by(&:position).map { |lot| lot_payload(lot) }
+    market_application.declared_lots.sort_by(&:position).map { |lot| lot_payload(lot) }
   end
 
   def lot_payload(lot)

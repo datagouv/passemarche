@@ -53,3 +53,17 @@ Feature: Mandataire defines the grouping legal type
     And I click on "Précédent"
     Then I should see "Comment souhaitez-vous candidater ?"
     And the candidacy mode "groupement" should be checked and disabled
+
+  @javascript
+  Scenario: The legal type is read-only once the invitations have been sent
+    When I visit the magic link
+    And I choose the candidacy mode "groupement"
+    And I choose the grouping legal type "conjoint"
+    And I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
+    And I click on "Continuer"
+    And I click on "Confirmer et envoyer les invitations"
+    Then I should be on the grouping dashboard
+    When I visit the grouping legal type step directly
+    Then the grouping legal type choices should be disabled
+    When I click on "Continuer"
+    Then the grouping legal type should be "conjoint"
