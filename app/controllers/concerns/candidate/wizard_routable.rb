@@ -29,6 +29,12 @@ module Candidate
         company_identification_candidate_market_application_path(market_application.identifier)
     end
 
+    def grouping_member_dashboard_path(market_application)
+      return nil unless market_application.grouping_member
+
+      confirmed_grouping_dashboard_path(market_application)
+    end
+
     def confirmed_grouping_dashboard_path(market_application)
       dashboard_application = market_application.confirmed_mandataire_grouping_application ||
                               market_application.confirmed_co_traitant_grouping_application

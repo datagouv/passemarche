@@ -77,6 +77,12 @@ RSpec.describe Candidate::CreateApplicationsForMode, type: :interactor do
         expect(member.siret).to eq(siret)
         expect(member.market_application).to eq(market_application)
       end
+
+      it 'marks the mandataire member as to_prepare since the candidate is already connected' do
+        subject
+
+        expect(Grouping.last.grouping_members.sole).to be_status_to_prepare
+      end
     end
 
     context 'when application_mode is mixte' do
