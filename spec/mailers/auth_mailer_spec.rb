@@ -29,5 +29,37 @@ RSpec.describe AuthMailer, type: :mailer do
     it 'includes the market name in the html body' do
       expect(mail.html_part.body.decoded).to include('Marché test informatique')
     end
+
+    it 'shows the market name without surrounding quotes' do
+      expect(mail.html_part.body.decoded).not_to include('&ldquo;')
+    end
+
+    it 'embeds the logo as an inline attachment referenced by the html body' do
+      logo = mail.attachments['passe-marche-logo-email.png']
+
+      expect(logo).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{logo.cid}")
+    end
+  end
+
+  describe '#magic_link with reconnection' do
+    let(:mail) { described_class.magic_link(user, url, public_market.name, reconnection: true) }
+
+    it 'refers to the procurement platform rather than the buyer' do
+      body = mail.html_part.body.decoded
+
+      expect(body).to include('transmise à la plateforme de marché')
+      expect(body).not_to include('acheteur')
+    end
+
+    it 'uses the reconnection copy in the text body' do
+      body = mail.text_part.body.decoded
+
+      expect(body).to include('Votre candidature,')
+      expect(body).to include('Vous pouvez accéder au formulaire de candidature')
+      expect(body).to include('Marché test informatique')
+      expect(body).to include('vous reconnecter et continuer')
+      expect(body).not_to include('valable pendant 30 minutes')
+    end
   end
 end

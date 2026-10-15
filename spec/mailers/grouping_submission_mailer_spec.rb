@@ -33,6 +33,31 @@ RSpec.describe GroupingSubmissionMailer, type: :mailer do
       expect(body).to include('Marché test informatique')
     end
 
+    it 'shows the market name without surrounding quotes' do
+      body = mail.html_part.body.decoded
+
+      expect(body).to include('pour le marché : Marché test informatique.')
+      expect(body).not_to include('&ldquo;')
+    end
+
+    it 'embeds the logo as an inline attachment referenced by the html body' do
+      logo = mail.attachments['passe-marche-logo-email.png']
+
+      expect(logo).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{logo.cid}")
+    end
+
+    it 'embeds the warning icon as an inline attachment referenced by the html body' do
+      icon = mail.attachments['icon-email-warning.png']
+
+      expect(icon).to be_inline
+      expect(mail.html_part.body.decoded).to include("cid:#{icon.cid}")
+    end
+
+    it 'has no call to action' do
+      expect(mail.html_part.body.decoded).not_to include('<a href="http')
+    end
+
     it 'tells the co-traitant their form is now locked' do
       expect(mail.text_part.body.decoded).to include('Vous ne pouvez plus modifier votre formulaire de candidature')
     end

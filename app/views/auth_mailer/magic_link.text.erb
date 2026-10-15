@@ -1,12 +1,21 @@
+<% if @reconnection %>
+<%= t('auth_mailer.reconnection_magic_link.greeting') %>
+
+<%= t('auth_mailer.reconnection_magic_link.intro') %>
+<%= t('auth_mailer.reconnection_magic_link.market_intro', market_name: @market_name) %>
+
+<%= t('auth_mailer.reconnection_magic_link.cta_intro') %>
+<%= @url %>
+<% else %>
 <%= t('auth_mailer.magic_link.greeting') %>
 
-<%= t('auth_mailer.magic_link.intro') %>
-<%= @market_name %>
+<%= t('auth_mailer.magic_link.intro', market_name: @market_name) %>
 
 <%= t('auth_mailer.magic_link.cta_intro') %>
 <%= @url %>
 
 <%= t('auth_mailer.magic_link.warning') %>
+<% end %>
 
 <%= t('mailer.shared_footer.copyright') %>
 <%= t('mailer.shared_footer.contact') %>
