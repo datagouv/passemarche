@@ -9,6 +9,8 @@ module Candidate
         MarkApplicationAsCompleted.call!(context)
         market_application.grouping_member&.mark_completed!
       end
+
+      NotifyMandataireOfCoTraitantCompletion.call!(context)
     end
   end
 end

@@ -28,6 +28,58 @@ RSpec.describe 'Candidate access control', type: :request do
     expect(response.body).not_to include(login_form_marker)
   end
 
+  describe 'grouping members isolation' do
+    let(:mandataire_user) { create(:user) }
+    let(:mandataire_application) do
+      create(:market_application, public_market: market_a, siret: siret_a, application_mode: :groupement,
+        user: mandataire_user)
+    end
+    let(:grouping) { create(:grouping, public_market: market_a, mandataire_market_application: mandataire_application) }
+    let(:co_traitant_user) { create(:user) }
+    let(:co_traitant_application) do
+      create(:market_application, public_market: market_a, siret: siret_b, application_mode: :groupement,
+        user: co_traitant_user)
+    end
+    let(:other_co_traitant_application) do
+      create(:market_application, public_market: market_a, siret: '80245139600021', application_mode: :groupement,
+        user: create(:user))
+    end
+
+    before do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      create(:grouping_member, :co_traitant, grouping:, siret: siret_b, market_application: co_traitant_application,
+        invitation_token_created_at: Time.current)
+      create(:grouping_member, :co_traitant, grouping:, siret: other_co_traitant_application.siret,
+        market_application: other_co_traitant_application, invitation_token_created_at: Time.current)
+      sign_in_as_candidate(co_traitant_user, co_traitant_application)
+    end
+
+    it 'grants the co_traitant access to its own summary' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+      grants_access
+    end
+
+    it "does not let the co_traitant open the mandataire's form" do
+      get step_candidate_market_application_path(mandataire_application.identifier, :summary)
+      shows_login_form
+    end
+
+    it "does not let the co_traitant open another co_traitant's form" do
+      get step_candidate_market_application_path(other_co_traitant_application.identifier, :summary)
+      shows_login_form
+    end
+
+    it "does not let the co_traitant open the mandataire's confirmation" do
+      get candidate_sync_status_path(mandataire_application.identifier)
+      shows_login_form
+    end
+
+    it "does not let the co_traitant open the mandataire's grouping dashboard" do
+      get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
+      shows_login_form
+    end
+  end
+
   describe 'CompanyIdentificationsController' do
     let(:path) { company_identification_candidate_market_application_path(app_a.identifier) }
 

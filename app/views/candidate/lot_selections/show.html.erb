@@ -235,18 +235,20 @@
           </div>
         </div>
 
-        <%= form_with url: lot_selection_candidate_market_application_path(@market_application.identifier),
-                      method: :patch,
-                      local: true,
-                      data: { turbo: false } do %>
-          <button type="submit"
-                  name="final_submit"
-                  value="1"
-                  class="fr-btn fr-icon-send-plane-fill fr-btn--icon-right"
-                  style="width: 100%; justify-content: center;"
-                  <%= 'disabled' unless @presenter.form_started? %>>
-            <%= t('candidate.lot_selection.submit') %>
-          </button>
+        <% unless @presenter.co_traitant_of_grouping? %>
+          <%= form_with url: lot_selection_candidate_market_application_path(@market_application.identifier),
+                        method: :patch,
+                        local: true,
+                        data: { turbo: false } do %>
+            <button type="submit"
+                    name="final_submit"
+                    value="1"
+                    class="fr-btn fr-icon-send-plane-fill fr-btn--icon-right"
+                    style="width: 100%; justify-content: center;"
+                    <%= 'disabled' unless @presenter.form_started? %>>
+              <%= t('candidate.lot_selection.submit') %>
+            </button>
+          <% end %>
         <% end %>
       </div>
 

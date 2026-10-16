@@ -565,6 +565,36 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'grouping roles' do
+    let(:public_market) { create(:public_market, :completed) }
+    let(:mandataire_application) do
+      create(:market_application, public_market:, siret: '73282932000074', application_mode: :groupement)
+    end
+    let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+    let(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+    end
+    let(:solo_application) { create(:market_application, public_market:, siret: '41816609600069') }
+
+    before do
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application)
+    end
+
+    it 'identifies members of a grouping' do
+      expect(mandataire_application.reload).to be_part_of_grouping
+      expect(co_traitant_application.reload).to be_part_of_grouping
+      expect(solo_application).not_to be_part_of_grouping
+    end
+
+    it 'identifies the co_traitant only' do
+      expect(co_traitant_application.reload).to be_co_traitant_of_grouping
+      expect(mandataire_application.reload).not_to be_co_traitant_of_grouping
+      expect(solo_application).not_to be_co_traitant_of_grouping
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)
