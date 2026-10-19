@@ -198,12 +198,12 @@ RSpec.describe GroupingMember, type: :model do
       expect(member).to be_status_completed
     end
 
-    it 'does not move an invited member directly to in_progress' do
+    it 'moves an invited member to in_progress' do
       member = create(:grouping_member, :co_traitant, grouping:)
 
       member.mark_in_progress!
 
-      expect(member).to be_status_invited
+      expect(member).to be_status_in_progress
     end
   end
 

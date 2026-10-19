@@ -2,5 +2,6 @@
 
 class SubmitGrouping < ApplicationOrganizer
   organize MarkGroupingAsSubmitted,
-    QueueGroupingSubmissionWebhook
+    QueueGroupingSubmissionWebhook,
+    NotifyCoTraitantsOfGroupingSubmission
 end

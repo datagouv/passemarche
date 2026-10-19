@@ -650,6 +650,29 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#locked?' do
+    let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is false for an application still being filled' do
+      expect(market_application).not_to be_locked
+    end
+
+    it 'is true once the application is completed' do
+      market_application.complete!
+
+      expect(market_application).to be_locked
+    end
+
+    it 'is true once the grouping it belongs to has been submitted' do
+      grouping = create(:grouping, public_market:, mandataire_market_application: market_application)
+      grouping.update!(submitted_at: Time.current, submission_mode: :partial)
+
+      expect(market_application.reload).to be_locked
+    end
+  end
+
   describe '#in_progress?' do
     it 'returns true when not completed' do
       application = build(:market_application, public_market:)

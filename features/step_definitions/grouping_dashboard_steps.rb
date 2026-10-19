@@ -97,6 +97,15 @@ Then('the grouping should be submitted') do
   expect(mandataire_grouping.reload).to be_submitted
 end
 
+Given('the grouping has been submitted by the mandataire') do
+  SubmitGrouping.call!(grouping: mandataire_grouping, submission_mode: :partial)
+end
+
+Then('the grouping submission email should have been sent to {string}') do |email|
+  subject = I18n.t('grouping_submission_mailer.submitted.subject')
+  expect(ActionMailer::Base.deliveries).to include(have_attributes(to: [email], subject:))
+end
+
 Given('the grouping composition is already confirmed') do
   @market_application.update!(application_mode: :groupement)
   @market_application.lots = [@lot_works1, @lot_works2, @lot_services1]

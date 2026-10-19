@@ -28,6 +28,12 @@ RSpec.describe SubmitGrouping, type: :organizer do
       expect { result }.to have_enqueued_job(GroupingSubmissionWebhookJob).with(grouping.id)
     end
 
+    it 'notifies each co-traitant by email' do
+      co_traitant = grouping.grouping_members.co_traitant.sole
+
+      expect { result }.to have_enqueued_mail(GroupingSubmissionMailer, :submitted).with(co_traitant)
+    end
+
     context 'when the grouping is not submittable for the given mode' do
       subject(:result) { described_class.call(grouping:, submission_mode: :partial) }
 

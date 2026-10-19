@@ -45,6 +45,14 @@ en:
       cta_intro: "Click the button below to join the group:"
       cta: Join the group
 
+  grouping_submission_mailer:
+    submitted:
+      subject: "Application submitted to the procurement platform"
+      greeting: "Your application has been taken into account"
+      intro: "%{mandataire_name} has submitted the group's application for the contract:"
+      inclusion: "Your application has been included in the application submitted for the group."
+      locked_notice: "You can no longer edit your application form"
+
   source_types:
     authentic_source:
       label: Retrieved automatically
@@ -792,9 +800,10 @@ en:
       status_to_prepare: "To prepare"
       status_in_progress: "In progress"
       status_completed: "Completed"
+      status_submitted: "Submitted"
       declared_lots_not_provided: "Not provided"
       declared_lots_all: "All lots"
-      action_edit: "Edit"
+      action_edit: "Edit my application"
       action_consult: "View form"
       action_prepare: "Prepare my application"
       action_copy_link: "Copy link"
@@ -820,8 +829,10 @@ en:
         confirm: "Confirm submission"
         close: "Close"
       confirmation:
-        title: "The application has been submitted to the procurement platform!"
-        body_html: "We have automatically transmitted all the necessary information to your procurement platform. To finalize your submission, please return to your procurement platform. You can download your application certificate as proof of submission."
+        title: "The application has been submitted!"
+        body: "We have automatically transmitted all the necessary information to your procurement platform. To finalize your submission, please return to your procurement platform."
+        attestation_hint: "You can download your application certificate as proof of submission."
+        co_traitants_notified: "The co-contractors have also been notified by email of the group's application submission."
         download_attestation: "Download the application certificate"
         back_to_editor: "Return to my procurement platform"
         sync_failed:

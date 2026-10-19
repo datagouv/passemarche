@@ -120,6 +120,28 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
     end
   end
 
+  describe '#member_actions once the grouping is submitted' do
+    before { grouping.update!(submitted_at: Time.current, submission_mode: :partial) }
+
+    it 'only lets a completed member consult their own application' do
+      grouping.mandataire_grouping_member.update!(status: :completed)
+
+      expect(presenter.member_actions(grouping.mandataire_grouping_member)).to eq([:consult])
+    end
+
+    it 'offers no action to a member who had not completed their application' do
+      grouping.mandataire_grouping_member.update!(status: :in_progress)
+
+      expect(presenter.member_actions(grouping.mandataire_grouping_member)).to eq([])
+    end
+
+    it 'no longer offers to copy the invitation link of other members' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :invited)
+
+      expect(presenter.member_actions(member)).to eq([])
+    end
+  end
+
   describe '#viewing_as_co_traitant?' do
     it 'is false for the mandataire' do
       expect(presenter.viewing_as_co_traitant?).to be false
@@ -143,6 +165,34 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
       other_member = create(:grouping_member, :co_traitant, grouping:)
 
       expect(presenter.member_role_label(other_member)).to eq(I18n.t('candidate.grouping_dashboard.role_co_traitant'))
+    end
+  end
+
+  describe '#member_status_badge_class' do
+    it 'renders an in progress member with the blue info badge' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :in_progress)
+
+      expect(presenter.member_status_badge_class(member)).to eq('fr-badge--info fr-badge--no-icon')
+    end
+
+    it 'renders a completed member with the green success badge' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :completed)
+
+      expect(presenter.member_status_badge_class(member)).to eq('fr-badge--success fr-badge--no-icon')
+    end
+  end
+
+  describe 'member status once the grouping is submitted' do
+    let(:member) { create(:grouping_member, :co_traitant, grouping:, status: :in_progress) }
+
+    before { grouping.update!(submitted_at: Time.current, submission_mode: :partial) }
+
+    it 'labels every member as submitted' do
+      expect(presenter.member_status_label(member)).to eq(I18n.t('candidate.grouping_dashboard.status_submitted'))
+    end
+
+    it 'renders every member with the green success badge' do
+      expect(presenter.member_status_badge_class(member)).to eq('fr-badge--success fr-badge--no-icon')
     end
   end
 

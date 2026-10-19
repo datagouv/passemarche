@@ -45,6 +45,14 @@ fr:
       cta_intro: "Cliquez sur le bouton ci-dessous pour rejoindre le groupement :"
       cta: Rejoindre le groupement
 
+  grouping_submission_mailer:
+    submitted:
+      subject: "Candidature transmise à la plateforme de marché"
+      greeting: "Votre candidature a bien été prise en compte"
+      intro: "%{mandataire_name} a transmis la candidature du groupement pour le marché :"
+      inclusion: "Votre candidature a été incluse dans la candidature soumise pour le groupement."
+      locked_notice: "Vous ne pouvez plus modifier votre formulaire de candidature"
+
   source_types:
     authentic_source:
       label: Récupéré automatiquement
@@ -792,16 +800,17 @@ fr:
       status_to_prepare: "À préparer"
       status_in_progress: "En cours"
       status_completed: "Complété"
+      status_submitted: "Transmise"
       declared_lots_not_provided: "Non renseigné"
       declared_lots_all: "Tous les lots"
-      action_edit: "Modifier"
+      action_edit: "Modifier ma candidature"
       action_consult: "Consulter le formulaire"
       action_prepare: "Préparer ma candidature"
       action_copy_link: "Copier le lien"
       copy_link_success: "Lien copié"
       submission_section_title: "Soumission des candidatures"
       submission_pending_title: "Co-traitants en attente"
-      submission_pending_body: "Des co-traitants n'ont pas encore complété leur candidature, vous pouvez soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenu."
+      submission_pending_body: "Des co-traitants n'ont pas encore complété leur candidature, vous pouvez soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenus."
       submission_ready_title: "Tous les membres ont complété leur candidature"
       submission_ready_body: "Vous pouvez soumettre la candidature du groupement."
       submission_done_title: "La candidature du groupement a été transmise à la plateforme de marché"
@@ -820,8 +829,10 @@ fr:
         confirm: "Confirmer la soumission"
         close: "Fermer"
       confirmation:
-        title: "La candidature a été transmise à la plateforme de marché !"
-        body_html: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
+        title: "La candidature a été transmise !"
+        body: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché."
+        attestation_hint: "Vous pouvez télécharger votre attestation de candidature qui vous servira de preuve de dépôt."
+        co_traitants_notified: "Les co-traitants ont également été informés par email de la soumission de la candidature du groupement."
         download_attestation: "Télécharger l'attestation de candidature"
         back_to_editor: "Revenir sur ma plateforme de marché"
         sync_failed:

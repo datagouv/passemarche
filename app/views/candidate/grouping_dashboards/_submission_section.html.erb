@@ -10,19 +10,19 @@
     <%= button_to t('candidate.grouping_dashboard.submit_full'),
           grouping_submission_candidate_market_application_path(presenter.identifier),
           params: { submission_mode: 'full' },
-          class: "fr-btn fr-icon-send-plane-line fr-btn--icon-right" %>
+          class: "fr-btn fr-btn--lg fr-icon-send-plane-line fr-btn--icon-right" %>
   <% else %>
     <%= render StatusNoticeComponent.new(title: t('candidate.grouping_dashboard.submission_pending_title'), color: :warning) do %>
       <%= t('candidate.grouping_dashboard.submission_pending_body') %>
     <% end %>
     <div class="grouping-submission-section__actions">
-      <button type="button" class="fr-btn fr-icon-send-plane-line fr-btn--icon-right" disabled>
+      <button type="button" class="fr-btn fr-btn--lg fr-icon-send-plane-line fr-btn--icon-right" disabled>
         <%= t('candidate.grouping_dashboard.submit_full') %>
       </button>
 
       <% if presenter.partially_submittable? %>
         <button type="button"
-                class="fr-btn fr-btn--secondary"
+                class="fr-btn fr-btn--lg fr-btn--secondary"
                 data-fr-opened="false"
                 aria-controls="partial-submission-modal">
           <%= t('candidate.grouping_dashboard.submit_partial') %>

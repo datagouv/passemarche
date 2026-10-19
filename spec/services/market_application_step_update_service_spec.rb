@@ -42,6 +42,18 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
     end
 
+    context 'with market_information step for a grouping member' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+      before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      it 'marks the member as in progress' do
+        described_class.call(market_application, :market_information, {})
+
+        expect(market_application.grouping_member.reload).to be_status_in_progress
+      end
+    end
+
     context 'with generic step' do
       let(:step) { :contact }
 
@@ -110,11 +122,24 @@ RSpec.describe MarketApplicationStepUpdateService do
         described_class.call(market_application, :summary, {})
       end
 
-      it 'returns success with redirect' do
+      it 'returns a completed success' do
         result = described_class.call(market_application, :summary, {})
 
         expect(result[:success]).to be true
-        expect(result[:redirect]).to eq(:sync_status)
+        expect(result[:completed]).to be true
+      end
+
+      context 'when the application belongs to a grouping member' do
+        let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+        before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+        it 'completes the application and its grouping member' do
+          result = described_class.call(market_application, :summary, {})
+
+          expect(result[:completed]).to be true
+          expect(market_application.grouping_member.reload).to be_status_completed
+        end
       end
 
       context 'when completion fails' do

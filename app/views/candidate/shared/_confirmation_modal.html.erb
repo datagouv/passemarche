@@ -4,7 +4,7 @@
         role="dialog">
   <div class="fr-container fr-container--fluid fr-container-md">
     <div class="fr-grid-row fr-grid-row--center">
-      <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+      <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
         <div class="fr-modal__body">
           <div class="fr-modal__header">
             <button class="fr-btn--close fr-btn"
@@ -21,7 +21,13 @@
             <%= yield if block_given? %>
           </div>
           <div class="fr-modal__footer">
-            <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline fr-btns-group--reverse">
+            <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline">
+              <li>
+                <button class="fr-btn fr-btn--secondary"
+                        aria-controls="<%= id %>">
+                  <%= cancel_label %>
+                </button>
+              </li>
               <li>
                 <%= button_to confirm_label,
                       confirm_path,
@@ -29,12 +35,6 @@
                       params: local_assigns.fetch(:confirm_params, {}),
                       form: local_assigns.fetch(:confirm_form, {}),
                       class: "fr-btn" %>
-              </li>
-              <li>
-                <button class="fr-btn fr-btn--secondary"
-                        aria-controls="<%= id %>">
-                  <%= cancel_label %>
-                </button>
               </li>
             </ul>
           </div>

@@ -51,3 +51,8 @@ When('I visit the grouping dashboard as the co-traitant with SIRET {string}') do
   identifier = member.market_application.identifier
   visit grouping_dashboard_candidate_market_application_path(identifier)
 end
+
+When('I navigate to the {string} step as the co-traitant with SIRET {string}') do |step, siret|
+  member = GroupingMember.find_by!(siret:)
+  visit step_candidate_market_application_path(member.market_application.identifier, step)
+end

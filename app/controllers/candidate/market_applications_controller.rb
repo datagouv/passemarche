@@ -9,7 +9,7 @@ module Candidate
     prepend_before_action :set_steps
     prepend_before_action :find_market_application
     before_action :set_wizard_steps
-    skip_before_action :check_application_not_completed, only: %i[retry_sync destroy]
+    skip_before_action :check_application_editable, only: %i[retry_sync destroy]
     skip_before_action :redirect_to_application_mode_choice, only: %i[destroy]
 
     def show
@@ -66,9 +66,9 @@ module Candidate
         flash.now[key] = value
       end
 
-      if result[:redirect] == :sync_status
-        redirect_to candidate_sync_status_path(@market_application.identifier)
-      elsif result[:success]
+      return redirect_to locked_application_redirect_path if result[:completed]
+
+      if result[:success]
         render_wizard(@market_application)
       elsif custom_view_exists?
         render_wizard(nil, status: :unprocessable_entity)
