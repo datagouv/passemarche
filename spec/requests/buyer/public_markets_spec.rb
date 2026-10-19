@@ -51,7 +51,7 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
         params: { lot_limit_enabled: 'true', lot_limit: '1' }
 
       public_market.reload
-      expect(public_market.versions.last.whodunnit).to eq('editor-user-123')
+      expect(public_market.versions.last.whodunnit).to eq('buyer_editor-user-123')
     end
   end
 

@@ -11,7 +11,7 @@ module Candidate
     private
 
     def user_for_paper_trail
-      "candidate:#{current_candidate.id}" if current_candidate
+      ActionView::RecordIdentifier.dom_id(current_candidate) if current_candidate
     end
   end
 end

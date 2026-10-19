@@ -29,7 +29,8 @@ module Admin::AuditLogsHelper
   def version_admin_user(version)
     return '-' if version.whodunnit.blank?
 
-    AdminUser.find_by(id: version.whodunnit)&.email || "Utilisateur ##{version.whodunnit}"
+    admin_user_id = version.whodunnit.delete_prefix('admin_user_')
+    AdminUser.find_by(id: admin_user_id)&.email || "Utilisateur ##{admin_user_id}"
   end
 
   def version_scope_badge(version)

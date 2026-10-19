@@ -195,7 +195,7 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
         headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
       removal = PaperTrail::Version.find_by(item_type: 'GroupingMember', item_id: member.id, event: 'destroy')
-      expect(removal.whodunnit).to eq("candidate:#{user.id}")
+      expect(removal.whodunnit).to eq("user_#{user.id}")
     end
 
     context 'when the member has already received an invitation but has not completed their application' do
