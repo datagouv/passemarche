@@ -90,6 +90,45 @@ RSpec.describe GroupingSubmissionWebhookJob, type: :job do
     end
   end
 
+  describe '#perform with a solidaire grouping' do
+    let(:co_traitant_application) { create(:market_application, public_market:, siret: '39822709000032') }
+    let(:scope_lots) { create_list(:lot, 2, public_market:) }
+
+    before do
+      grouping.update!(legal_type: :solidaire)
+      grouping.mandataire_market_application.lots << scope_lots
+      create(:grouping_member, :co_traitant, grouping:, status: :completed, company_name: 'SOLIDAIRE',
+        market_application: co_traitant_application)
+    end
+
+    it "declares the mandataire's lots for the co_traitant" do
+      described_class.perform_now(grouping.id)
+
+      expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
+        .with { |request|
+          payload = JSON.parse(request.body)
+          member = payload.dig('grouping', 'members').find { |m| m['company_name'] == 'SOLIDAIRE' }
+          expect(member.dig('market_application', 'selected_lots').pluck('id')).to match_array(scope_lots.map(&:id))
+        }
+    end
+
+    it "does not reload the mandataire's lots for each co_traitant" do
+      create(:grouping_member, :co_traitant, grouping:, status: :completed, company_name: 'SOLIDAIRE 2',
+        market_application: create(:market_application, public_market:, siret: '41816609600069'))
+      lazy_lots_queries = 0
+
+      counter = lambda { |_name, _started, _finished, _id, payload|
+        lazy_lots_queries += 1 if payload[:sql].include?('SELECT "lots".* FROM "lots" INNER JOIN "market_application_lots"')
+      }
+
+      ActiveSupport::Notifications.subscribed(counter, 'sql.active_record') do
+        described_class.perform_now(grouping.id)
+      end
+
+      expect(lazy_lots_queries).to eq(0)
+    end
+  end
+
   describe '#perform with an incomplete member application' do
     let(:incomplete_application) { create(:market_application, public_market:, siret: '39822709000032') }
 

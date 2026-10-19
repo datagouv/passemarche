@@ -44,6 +44,28 @@ RSpec.describe 'Candidate::GroupingLegalTypes', type: :request do
       end
     end
 
+    context 'when the invitations have already been sent' do
+      before do
+        market_application.update!(application_mode: :groupement)
+        grouping = create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint)
+        create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+      end
+
+      it 'shows the legal type read-only' do
+        get wizard_step_path(market_application, :grouping_legal_type)
+
+        expect(response.body).to include('<fieldset class="fr-fieldset" disabled')
+        expect(response.body).not_to include('data-enable-on-choice-target="submitButton"')
+      end
+
+      it 'lets the mandataire continue to the grouping composition' do
+        get wizard_step_path(market_application, :grouping_legal_type)
+
+        expect(response.body).to include(grouping_composition_candidate_market_application_path(market_application.identifier))
+        expect(response.body).to include(I18n.t('candidate.grouping_legal_types.continue_readonly'))
+      end
+    end
+
     context 'when the market_application is not mandataire of any grouping (mode not chosen)' do
       it 'redirects to application_mode' do
         get wizard_step_path(market_application, :grouping_legal_type)
@@ -69,22 +91,26 @@ RSpec.describe 'Candidate::GroupingLegalTypes', type: :request do
       create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: nil)
     end
 
+    context 'when the invitations have already been sent' do
+      before do
+        grouping = Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: market_application.id })
+        grouping.update!(legal_type: :conjoint)
+        create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+      end
+
+      it 'refuses to change the legal_type' do
+        patch wizard_step_path(market_application, :grouping_legal_type), params: { legal_type: 'solidaire' }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(market_application.mandataire_grouping.reload.legal_type).to eq('conjoint')
+      end
+    end
+
     it 'sets the legal_type and redirects to grouping_composition' do
       patch wizard_step_path(market_application, :grouping_legal_type), params: { legal_type: 'conjoint_mandataire_solidaire' }
 
       expect(Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: market_application.id }).legal_type)
         .to eq('conjoint_mandataire_solidaire')
-      expect(response).to redirect_to(
-        grouping_composition_candidate_market_application_path(market_application.identifier)
-      )
-    end
-
-    it 'still redirects to grouping_composition when the composition is already confirmed' do
-      grouping = Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: market_application.id })
-      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
-
-      patch wizard_step_path(market_application, :grouping_legal_type), params: { legal_type: 'conjoint_mandataire_solidaire' }
-
       expect(response).to redirect_to(
         grouping_composition_candidate_market_application_path(market_application.identifier)
       )

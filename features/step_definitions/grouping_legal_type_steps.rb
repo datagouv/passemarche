@@ -13,3 +13,9 @@ Then('the grouping legal type should be {string}') do |legal_type|
   grouping = Grouping.joins(:mandataire_market_application).find_by(market_applications: { id: @market_application.id })
   expect(grouping.legal_type).to eq(legal_type)
 end
+
+Then('the grouping legal type choices should be disabled') do
+  Grouping.legal_types.each_key do |legal_type|
+    expect(page).to have_field("legal_type_#{legal_type}", disabled: true, visible: :all)
+  end
+end

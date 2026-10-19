@@ -8,6 +8,7 @@ module Candidate
 
     def show
       @grouping = grouping
+      @readonly = grouping.composition_confirmed?
     end
 
     def update
@@ -19,6 +20,7 @@ module Candidate
       return handle_success if result.success?
 
       @grouping = grouping
+      @readonly = grouping.composition_confirmed?
       @errors = result.errors
       render :show, status: :unprocessable_content
     end

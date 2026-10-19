@@ -35,7 +35,7 @@
   </div>
 
   <%= form_with url: grouping_legal_type_candidate_market_application_path(@market_application.identifier), method: :patch, data: { controller: "enable-on-choice" } do |form| %>
-    <fieldset class="fr-fieldset">
+    <fieldset class="fr-fieldset" <%= "disabled" if @readonly %>>
       <legend class="fr-fieldset__legend fr-sr-only"><%= t('candidate.grouping_legal_types.question') %></legend>
 
       <div class="fr-fieldset__content application-mode-choices">
@@ -47,6 +47,7 @@
                    value="<%= legal_type %>"
                    class="application-mode-choice__input"
                    <%= "checked" if @grouping.legal_type == legal_type %>
+                   <%= "disabled" if @readonly %>
                    data-enable-on-choice-target="choice"
                    data-action="change->enable-on-choice#toggle">
             <label class="application-mode-choice__label" for="legal_type_<%= legal_type %>">
@@ -80,11 +81,17 @@
                     application_mode_candidate_market_application_path(@market_application.identifier, readonly: true)
                   end,
                   class: "fr-btn fr-btn--secondary fr-icon-arrow-left-line fr-btn--icon-left" %>
-      <%= form.button t('candidate.grouping_legal_types.continue'),
-                      type: "submit",
-                      class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
-                      disabled: @grouping.legal_type.blank?,
-                      data: { "enable-on-choice-target": "submitButton" } %>
+      <% if @readonly %>
+        <%= link_to t('candidate.grouping_legal_types.continue_readonly'),
+                    grouping_composition_candidate_market_application_path(@market_application.identifier),
+                    class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right" %>
+      <% else %>
+        <%= form.button t('candidate.grouping_legal_types.continue'),
+                        type: "submit",
+                        class: "fr-btn fr-icon-arrow-right-line fr-btn--icon-right",
+                        disabled: @grouping.legal_type.blank?,
+                        data: { "enable-on-choice-target": "submitButton" } %>
+      <% end %>
     </div>
   <% end %>
 </div>

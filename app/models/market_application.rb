@@ -107,7 +107,7 @@ class MarketApplication < ApplicationRecord
   end
 
   def selected_lot_types
-    lots.includes(:market_type, :platform_market_type)
+    declared_lots.includes(:market_type, :platform_market_type)
       .filter_map(&:effective_market_type)
       .uniq
   end

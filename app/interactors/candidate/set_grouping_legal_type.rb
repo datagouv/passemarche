@@ -6,8 +6,9 @@ module Candidate
 
     def call
       context.grouping = find_grouping
-      return fail_grouping_not_found unless context.grouping
-      return fail_legal_type_invalid unless valid_legal_type?
+      return fail_with(:grouping, :grouping_not_found) unless context.grouping
+      return fail_with(:legal_type, :legal_type_locked) if context.grouping.composition_confirmed?
+      return fail_with(:legal_type, :legal_type_invalid) unless valid_legal_type?
 
       update_legal_type
     end
@@ -28,12 +29,8 @@ module Candidate
       legal_type.to_s.in?(Grouping.legal_types.keys)
     end
 
-    def fail_grouping_not_found
-      context.fail!(errors: { grouping: [I18n.t('candidate.validations.grouping_not_found')] })
-    end
-
-    def fail_legal_type_invalid
-      context.fail!(errors: { legal_type: [I18n.t('candidate.validations.legal_type_invalid')] })
+    def fail_with(attribute, message_key)
+      context.fail!(errors: { attribute => [I18n.t("candidate.validations.#{message_key}")] })
     end
 
     def errors_from(record)
