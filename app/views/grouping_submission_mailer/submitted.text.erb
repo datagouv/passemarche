@@ -1,7 +1,6 @@
-<%= t('grouping_submission_mailer.submitted.greeting') %>
+<%= t('grouping_submission_mailer.submitted.title') %>
 
-<%= t('grouping_submission_mailer.submitted.intro', mandataire_name: @mandataire_name) %>
-"<%= @market_name %>".
+<%= t('grouping_submission_mailer.submitted.intro', mandataire_name: @mandataire_name, market_name: @market_name) %>
 
 <%= t('grouping_submission_mailer.submitted.inclusion') %>
 

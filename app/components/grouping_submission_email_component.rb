@@ -8,8 +8,7 @@ class GroupingSubmissionEmailComponent < ViewComponent::Base
 
   def call
     render EmailComponent.new(EmailComponent::Content.new(
-      title: t('grouping_submission_mailer.submitted.subject'),
-      greeting: t('grouping_submission_mailer.submitted.greeting'),
+      title: t('grouping_submission_mailer.submitted.title'),
       intro:,
       notice: t('grouping_submission_mailer.submitted.locked_notice')
     ))
@@ -18,8 +17,13 @@ class GroupingSubmissionEmailComponent < ViewComponent::Base
   private
 
   def intro
-    "#{t('grouping_submission_mailer.submitted.intro', mandataire_name: "<strong>#{ERB::Util.html_escape(@mandataire_name)}</strong>".html_safe)} " \
-    "&ldquo;<strong>#{ERB::Util.html_escape(@market_name)}</strong>&rdquo;.<br><br>" \
+    "#{market_introduction}<br><br>" \
     "#{t('grouping_submission_mailer.submitted.inclusion')}".html_safe
+  end
+
+  def market_introduction
+    t('grouping_submission_mailer.submitted.intro',
+      mandataire_name: "<strong>#{ERB::Util.html_escape(@mandataire_name)}</strong>",
+      market_name: ERB::Util.html_escape(@market_name))
   end
 end
