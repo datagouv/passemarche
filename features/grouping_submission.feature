@@ -53,9 +53,6 @@ Feature: Mandataire submits the grouping candidacy
     Then I should see "La candidature a été transmise !"
     And the grouping should be submitted
 
-  # L'email "Candidature transmise à l'acheteur" à chaque co-traitant est reporté à FAS-582 :
-  # aucun mailer de soumission groupement n'existe encore, hors scope de FAS-574.
-
   @javascript
   Scenario: Partial submission is not proposed until at least one member has started
     When I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
@@ -78,6 +75,7 @@ Feature: Mandataire submits the grouping candidacy
     When I click on "Confirmer la soumission"
     Then I should see "La candidature a été transmise !"
     And the grouping should be submitted
+    And the grouping submission email should have been sent to "contact@menuiseries-loire.fr"
 
   @javascript
   Scenario: The mandataire comes back to the grouping dashboard after completing their application
@@ -105,4 +103,23 @@ Feature: Mandataire submits the grouping candidacy
     And I should see "La candidature a été transmise !"
     When I navigate to the "exclusion_criteria" step
     Then I should be on the grouping dashboard
+    And I should not see "Modifier ma candidature"
+
+  @javascript
+  Scenario: A co-traitant can no longer edit their application once the grouping is submitted
+    When I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
+    And I click on "Continuer"
+    And I click on "Confirmer et envoyer les invitations"
+    And I navigate to the "exclusion_criteria" step
+    And I submit the form
+    And I should see "Étape 3 sur 5"
+    And I visit the co-traitant invitation link for SIRET "80245139600021"
+    And I fill in "Veuillez saisir votre adresse email" with "contact@menuiseries-loire.fr"
+    And I click on "Recevoir un lien de connexion"
+    And I should be on the sent sessions page
+    And I click the link from the latest email
+    And I should be on the co-traitant grouping dashboard
+    And the grouping has been submitted by the mandataire
+    When I navigate to the "exclusion_criteria" step as the co-traitant with SIRET "80245139600021"
+    Then I should be on the co-traitant grouping dashboard
     And I should not see "Modifier ma candidature"
