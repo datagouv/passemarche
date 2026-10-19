@@ -68,7 +68,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 8.0'
   gem 'simplecov', require: false
-  gem 'webmock', '~> 3.26'
+  gem 'webmock', '~> 3.34'
 end
 
 gem "combine_pdf", "~> 1.0"
