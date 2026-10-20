@@ -614,6 +614,82 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     end
   end
 
+  describe 'co_traitant wizard' do
+    let(:mandataire_application) do
+      create(:market_application, public_market:, siret: '80245139600099', application_mode: :groupement)
+    end
+    let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+    let(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+    end
+    let(:dashboard_path) { grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier) }
+
+    before do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application, invitation_token: 'draft-token',
+        invitation_token_created_at: Time.current)
+    end
+
+    it 'redirects to the grouping dashboard with a notice after saving a step' do
+      patch step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria),
+        params: { draft: '1' }
+
+      expect(response).to redirect_to(dashboard_path)
+      expect(flash[:notice]).to eq(I18n.t('candidate.market_applications.draft_saved'))
+    end
+
+    it 'leaves the application uncompleted when saving the summary as draft' do
+      patch step_candidate_market_application_path(co_traitant_application.identifier, :summary),
+        params: { draft: '1' }
+
+      expect(response).to redirect_to(dashboard_path)
+      expect(co_traitant_application.reload).not_to be_completed
+    end
+
+    it 'offers the draft button on the form steps' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria)
+
+      expect(response.body).to include(I18n.t('candidate.shared.save_draft'))
+    end
+
+    it 'puts a default submit before the draft button so that Enter does not save a draft' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria)
+
+      expect(response.body.index('wizard-nav__default-submit')).to be < response.body.index('name="draft"')
+    end
+
+    it 'redirects to the transmission confirmation after completing the summary' do
+      patch step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+
+      expect(response).to redirect_to(candidate_sync_status_path(co_traitant_application.identifier))
+      expect(co_traitant_application.reload).to be_completed
+    end
+
+    it 'labels the summary submission as a transmission to the mandataire' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+
+      expect(response.body).to include(I18n.t('button.submit_to_mandataire'))
+    end
+  end
+
+  describe 'draft for a solo application' do
+    it 'ignores a draft request and follows the normal wizard' do
+      patch step_candidate_market_application_path(market_application.identifier, :exclusion_criteria),
+        params: { draft: '1' }
+
+      expect(response).not_to redirect_to(grouping_dashboard_candidate_market_application_path(market_application.identifier))
+      expect(flash[:notice]).not_to eq(I18n.t('candidate.market_applications.draft_saved'))
+    end
+
+    it 'is not offered' do
+      get step_candidate_market_application_path(market_application.identifier, :exclusion_criteria)
+
+      expect(response.body).not_to include(I18n.t('candidate.shared.save_draft'))
+    end
+  end
+
   describe 'DELETE /candidate/market_applications/:identifier' do
     context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
       before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }

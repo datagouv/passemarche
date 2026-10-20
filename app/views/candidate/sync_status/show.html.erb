@@ -1,6 +1,8 @@
 <% content_for :title, "#{@market_application.editor.name} - #{t('candidate.sync_status.title_suffix')}" %>
 
-<% if @market_application.grouping_member %>
+<% if @presenter.co_traitant_of_grouping? %>
+  <%= render 'co_traitant_confirmation' %>
+<% elsif @market_application.grouping_member %>
   <%= render Shared::ConfirmationLayoutComponent.new do %>
     <div class="fr-mb-4w">
       <h3 class="fr-h3"><%= t('candidate.sync_status.grouping_member_title') %></h3>
