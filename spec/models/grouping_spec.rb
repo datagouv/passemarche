@@ -166,4 +166,15 @@ RSpec.describe Grouping, type: :model do
       expect { grouping.submit!(mode: :full) }.to raise_error(Grouping::AlreadySubmittedError)
     end
   end
+
+  describe 'history' do
+    it 'records the creation, updates and destruction of the grouping' do
+      grouping = create(:grouping, public_market:)
+      grouping.update!(legal_type: :solidaire)
+      grouping.destroy!
+
+      expect(PaperTrail::Version.where(item_type: 'Grouping', item_id: grouping.id)
+        .order(:id).pluck(:event)).to eq(%w[create update destroy])
+    end
+  end
 end

@@ -9,6 +9,6 @@ class Admin::ApplicationController < ApplicationController
   private
 
   def user_for_paper_trail
-    current_admin_user&.id
+    ActionView::RecordIdentifier.dom_id(current_admin_user) if current_admin_user
   end
 end

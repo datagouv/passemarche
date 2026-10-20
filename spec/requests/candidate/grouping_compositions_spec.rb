@@ -190,6 +190,14 @@ RSpec.describe 'Candidate::GroupingCompositions', type: :request do
       expect(GroupingMember.exists?(member.id)).to be false
     end
 
+    it 'records the candidate who removed the member in the history' do
+      delete grouping_composition_member_candidate_market_application_path(market_application.identifier, member.id),
+        headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+
+      removal = PaperTrail::Version.find_by(item_type: 'GroupingMember', item_id: member.id, event: 'destroy')
+      expect(removal.whodunnit).to eq("user_#{user.id}")
+    end
+
     context 'when the member has already received an invitation but has not completed their application' do
       let!(:member) do
         create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current, status: :in_progress)

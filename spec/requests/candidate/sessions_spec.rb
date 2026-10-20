@@ -385,6 +385,33 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       end
     end
 
+    context 'when another candidate is already signed in and opens a co_traitant magic link' do
+      let(:other_user) { create(:user) }
+      let(:other_application) { create(:market_application, public_market:, siret: '80245139600098') }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: other_application, legal_type: :conjoint)
+      end
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: market_application.siret, market_application:,
+          invitation_token: 'co-traitant-token', invitation_token_created_at: Time.current, status: :invited)
+      end
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        grouping_member
+        sign_in_as_candidate(other_user, other_application)
+      end
+
+      it 'attributes the co_traitant connection to the co_traitant in the history' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        connection = grouping_member.versions.where(event: 'update').last
+        expect(connection.changeset['status']).to eq(%w[invited to_prepare])
+        expect(connection.whodunnit).to eq("user_#{user.id}")
+      end
+    end
+
     context 'when market has lots and no lots are selected' do
       let(:market_with_lots) { create(:public_market, :completed, editor:) }
       let(:application_with_lots) { create(:market_application, public_market: market_with_lots, siret: '73282932000074') }

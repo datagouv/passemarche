@@ -6,6 +6,7 @@ module Candidate
     include Candidate::MagicLinkSession
 
     skip_before_action :require_candidate_authentication
+    skip_before_action :set_paper_trail_whodunnit
 
     def new
       @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
@@ -40,9 +41,11 @@ module Candidate
     private
 
     def sign_in_candidate(user, market_application)
-      reconnection = market_application.user_id.present?
-      link_candidate_to_application(user, market_application) unless reconnection
-      market_application.grouping_member&.mark_connected!
+      PaperTrail.request(whodunnit: ActionView::RecordIdentifier.dom_id(user)) do
+        reconnection = market_application.user_id.present?
+        link_candidate_to_application(user, market_application) unless reconnection
+        market_application.grouping_member&.mark_connected!
+      end
       session[:user_id] = user.id
       session[:market_application_identifier] = market_application.identifier
       redirect_to first_step_path(market_application)

@@ -7,7 +7,8 @@ module Buyer
     private
 
     def user_for_paper_trail
-      @public_market&.provider_user_id
+      provider_user_id = @public_market&.provider_user_id
+      "buyer_#{provider_user_id}" if provider_user_id.present?
     end
   end
 end
