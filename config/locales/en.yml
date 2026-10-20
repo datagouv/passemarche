@@ -49,7 +49,7 @@ en:
   grouping_submission_mailer:
     submitted:
       subject: "Application submitted to the procurement platform"
-      title: "Your application has been taken into account"
+      title: "Your application has been submitted to the procurement platform"
       intro: "%{mandataire_name} has submitted the group's application for the tender: %{market_name}."
       inclusion: "Your application has been included in the application submitted for the group."
       locked_notice: "You can no longer edit your application form"

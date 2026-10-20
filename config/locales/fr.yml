@@ -49,7 +49,7 @@ fr:
   grouping_submission_mailer:
     submitted:
       subject: "Candidature transmise à la plateforme de marché"
-      title: "Votre candidature a bien été prise en compte"
+      title: "Votre candidature a été transmise à la plateforme de marché"
       intro: "%{mandataire_name} a transmis la candidature du groupement pour le marché : %{market_name}."
       inclusion: "Votre candidature a été incluse dans la candidature soumise pour le groupement."
       locked_notice: "Vous ne pouvez plus modifier votre formulaire de candidature"
