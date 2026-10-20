@@ -54,6 +54,13 @@ en:
       inclusion: "Your application has been included in the application submitted for the group."
       locked_notice: "You can no longer edit your application form"
 
+  grouping_member_removal_mailer:
+    removed:
+      subject: "You have been removed from the group"
+      title: "You have been removed from the group"
+      intro: "%{mandataire_name} has removed you from the group for the tender: %{market_name}. No action is required on your part, you will not appear in the group's application."
+      contact: "You can contact the lead contractor directly for more information."
+
   source_types:
     authentic_source:
       label: Retrieved automatically
@@ -630,6 +637,10 @@ en:
         explanation: "This invitation has expired, the group application is already finalized or the submission deadline has passed."
       not_found:
         heading: "This invitation link is no longer valid"
+        explanation: "This group no longer exists. For any questions, contact the lead contractor."
+      removed:
+        heading: "This invitation link is no longer valid"
+        explanation: "You are no longer part of this group. For any questions, contact the lead contractor."
     grouping_legal_types:
       title: "Group type"
       step_current: "Step 1 of 3"
