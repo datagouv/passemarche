@@ -585,6 +585,12 @@ fr:
         motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
 
   candidate:
+    locked_applications:
+      title: "Candidature verrouillée"
+      heading: "Vous ne pouvez plus modifier votre candidature"
+      explanation: "Le mandataire a transmis la candidature du groupement, vous ne pouvez donc plus modifier votre candidature. Seul le mandataire peut vous permettre de la modifier."
+      contact_hint: "Pour toutes questions, contactez le mandataire ou la plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
     deadline_passed:
       title: "Date limite dépassée"
       heading: "Vous ne pouvez plus modifier votre candidature"

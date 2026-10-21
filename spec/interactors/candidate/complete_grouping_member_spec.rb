@@ -51,6 +51,34 @@ RSpec.describe Candidate::CompleteGroupingMember, type: :interactor do
       it 'notifies the mandataire' do
         expect { result }.to have_enqueued_mail(GroupingMemberCompletionMailer, :completed)
       end
+
+      context 'when the co_traitant transmits again after editing its application' do
+        before do
+          market_application.complete!
+          market_application.grouping_member.mark_completed!
+          market_application.grouping_member.mark_in_progress!
+        end
+
+        it 'marks the grouping_member as completed again' do
+          expect { result }.to change { market_application.grouping_member.reload.status_completed? }.from(false).to(true)
+        end
+
+        it 'succeeds without changing the transmission date' do
+          expect { result }.not_to(change { market_application.reload.completed_at })
+          expect(result).to be_success
+        end
+
+        it 'notifies the mandataire of the modification' do
+          expect { result }.to have_enqueued_mail(GroupingMemberCompletionMailer, :modified)
+        end
+
+        it 'refuses to transmit again an application that is no longer valid' do
+          allow(market_application).to receive(:valid?).and_return(false)
+
+          expect(result).to be_failure
+          expect(market_application.grouping_member.reload).to be_status_in_progress
+        end
+      end
     end
 
     context 'when the application is not linked to any grouping member (solo)' do

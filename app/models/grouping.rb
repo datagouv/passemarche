@@ -35,6 +35,10 @@ class Grouping < ApplicationRecord
     submitted_at.present?
   end
 
+  def locked?
+    submitted? || !public_market.open?
+  end
+
   def submittable?
     !submitted? && composition_confirmed? && all_members_completed?
   end

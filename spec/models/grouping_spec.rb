@@ -70,6 +70,27 @@ RSpec.describe Grouping, type: :model do
     end
   end
 
+  describe '#locked?' do
+    it 'is false while the grouping is being prepared before the deadline' do
+      grouping = create(:grouping, public_market:)
+
+      expect(grouping).not_to be_locked
+    end
+
+    it 'is true once the grouping has been submitted' do
+      grouping = create(:grouping, public_market:, submitted_at: Time.current)
+
+      expect(grouping).to be_locked
+    end
+
+    it 'is true once the market deadline is over' do
+      grouping = create(:grouping, public_market:)
+      public_market.update_column(:deadline, 1.day.ago)
+
+      expect(grouping).to be_locked
+    end
+  end
+
   describe '#submittable?' do
     it 'is false when not every member is completed' do
       grouping = create(:grouping, public_market:)

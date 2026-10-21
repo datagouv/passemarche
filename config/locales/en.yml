@@ -585,6 +585,12 @@ en:
         motifs_exclusion_reminder_body: "In accordance with article R2144-4 of the French Public Procurement Code, \"the buyer may only require the single candidate to whom it plans to award the contract to prove that it is not subject to a ground for exclusion from the awarding procedure.\" Accordingly, verification of these automatically retrieved supporting documents only occurs at the award stage, for the intended awardee alone. At the application stage, the candidate's sworn statement that none of the grounds for exclusion apply is sufficient (article R. 2143-3 of the French Public Procurement Code)."
 
   candidate:
+    locked_applications:
+      title: "Application locked"
+      heading: "You can no longer edit your application"
+      explanation: "The lead contractor has submitted the group's application, so you can no longer edit your application. Only the lead contractor can allow you to edit it."
+      contact_hint: "For any questions, contact the lead contractor or the tender platform."
+      return_to_platform: "Return to the tender platform"
     deadline_passed:
       title: "Deadline passed"
       heading: "You can no longer edit your application"

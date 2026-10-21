@@ -24,11 +24,18 @@ module Candidate
         return
       end
 
-      @market_application.lot_ids = lot_ids_param
+      save_lot_selection
       redirect_to_lot_selection
     end
 
     private
+
+    def save_lot_selection
+      @market_application.transaction do
+        @market_application.grouping_member&.mark_in_progress!
+        @market_application.lot_ids = lot_ids_param
+      end
+    end
 
     def find_market_application
       @market_application = MarketApplication
