@@ -4,10 +4,7 @@
   heading: t('candidate.deadline_passed.heading'),
   paragraphs: [t('candidate.deadline_passed.explanation'), t('candidate.deadline_passed.contact_hint')]
 ) do |error_page| %>
-  <% if (candidate_url = @market_application.public_market.editor.build_candidate_return_url(
-    market: @market_application.public_market,
-    application: @market_application
-  )) %>
+  <% if (candidate_url = platform_return_url(@market_application)) %>
     <% error_page.with_action do %>
       <%= link_to t('candidate.deadline_passed.return_to_platform'), candidate_url, class: 'fr-btn' %>
     <% end %>
