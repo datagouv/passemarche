@@ -19,6 +19,12 @@ class Grouping::MemberActionsComponent < ViewComponent::Base
     presenter.member_application_identifier(member)
   end
 
+  def edit_path
+    return lot_selection_candidate_market_application_path(member_application_identifier) if presenter.market_with_lots?
+
+    step_candidate_market_application_path(member_application_identifier, :market_information)
+  end
+
   def invitation_sent?
     presenter.member_invitation_sent?(member)
   end

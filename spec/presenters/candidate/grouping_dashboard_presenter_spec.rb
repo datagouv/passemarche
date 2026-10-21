@@ -110,6 +110,15 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
         expect(co_traitant_presenter.member_actions(current_member)).to eq([:prepare])
       end
 
+      it 'still offers to edit its own application once transmitted to the mandataire' do
+        current_application = create(:market_application, public_market:, application_mode: :groupement)
+        current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application,
+          status: :completed)
+        co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+        expect(co_traitant_presenter.member_actions(current_member)).to eq([:edit])
+      end
+
       it 'offers no action on other members rows' do
         current_application = create(:market_application, public_market:, application_mode: :groupement)
         current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application)
@@ -117,6 +126,55 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
 
         expect(co_traitant_presenter.member_actions(grouping.mandataire_grouping_member)).to eq([])
       end
+    end
+  end
+
+  describe '#member_actions once the market deadline is over' do
+    before { public_market.update_column(:deadline, 1.day.ago) }
+
+    it 'only lets a co_traitant who transmitted their form consult it' do
+      current_application = create(:market_application, public_market:, application_mode: :groupement)
+      current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application,
+        status: :completed)
+      co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+      expect(co_traitant_presenter.member_actions(current_member)).to eq([:consult])
+    end
+
+    it 'no longer offers to copy the invitation link of other members' do
+      member = create(:grouping_member, :co_traitant, grouping:, status: :invited)
+
+      expect(presenter.member_actions(member)).to eq([])
+    end
+  end
+
+  describe '#member_actions for a co_traitant who edited again after transmitting, once the grouping is locked' do
+    it 'still lets them consult their form' do
+      current_application = create(:market_application, :completed, public_market:, application_mode: :groupement)
+      current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application,
+        status: :in_progress)
+      grouping.update!(submitted_at: Time.current, submission_mode: :partial)
+      co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+      expect(co_traitant_presenter.member_actions(current_member)).to eq([:consult])
+    end
+  end
+
+  describe '#co_traitant_lock_notice' do
+    it 'is nil while the grouping can still be edited' do
+      expect(presenter.co_traitant_lock_notice).to be_nil
+    end
+
+    it 'announces the transmission once the grouping is submitted' do
+      grouping.update!(submitted_at: Time.current, submission_mode: :full)
+
+      expect(presenter.co_traitant_lock_notice).to eq(key: 'co_traitant_submission_done', color: :success)
+    end
+
+    it 'announces the deadline when it passed before the grouping was submitted' do
+      public_market.update_column(:deadline, 1.day.ago)
+
+      expect(presenter.co_traitant_lock_notice).to eq(key: 'co_traitant_deadline_passed', color: :warning)
     end
   end
 
@@ -133,6 +191,15 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
       grouping.mandataire_grouping_member.update!(status: :in_progress)
 
       expect(presenter.member_actions(grouping.mandataire_grouping_member)).to eq([])
+    end
+
+    it 'only lets a co_traitant who transmitted their form consult it' do
+      current_application = create(:market_application, public_market:, application_mode: :groupement)
+      current_member = create(:grouping_member, :co_traitant, grouping:, market_application: current_application,
+        status: :completed)
+      co_traitant_presenter = described_class.new(current_application, grouping:, current_member:)
+
+      expect(co_traitant_presenter.member_actions(current_member)).to eq([:consult])
     end
 
     it 'no longer offers to copy the invitation link of other members' do

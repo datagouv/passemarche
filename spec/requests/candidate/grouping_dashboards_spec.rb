@@ -31,7 +31,21 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it "links the mandataire's edit action to the first form step, not the summary" do
+      it "links the mandataire's edit action to the lot selection when the market has lots" do
+        create(:lot, public_market:)
+        grouping.mandataire_grouping_member.update!(status: :in_progress)
+
+        get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
+
+        expect(response.body).to include(
+          lot_selection_candidate_market_application_path(mandataire_application.identifier)
+        )
+        expect(response.body).not_to include(
+          step_candidate_market_application_path(mandataire_application.identifier, :summary)
+        )
+      end
+
+      it "links the mandataire's edit action to the first form step when the market has no lots" do
         grouping.mandataire_grouping_member.update!(status: :in_progress)
 
         get grouping_dashboard_candidate_market_application_path(mandataire_application.identifier)
@@ -40,7 +54,7 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
           step_candidate_market_application_path(mandataire_application.identifier, :market_information)
         )
         expect(response.body).not_to include(
-          step_candidate_market_application_path(mandataire_application.identifier, :summary)
+          lot_selection_candidate_market_application_path(mandataire_application.identifier)
         )
       end
     end
@@ -111,6 +125,21 @@ RSpec.describe 'Candidate::GroupingDashboards', type: :request do
         get grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier)
 
         expect(response.body).not_to include(I18n.t('candidate.grouping_dashboard.submit_full'))
+      end
+
+      context 'once the mandataire has submitted the grouping' do
+        before do
+          co_traitant_application.complete!
+          co_traitant_member.update!(status: :completed)
+          grouping.update!(submitted_at: Time.current, submission_mode: :full)
+        end
+
+        it 'tells the co_traitant that its application has been submitted, without any attestation' do
+          get grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier)
+
+          expect(response.body).to include(I18n.t('candidate.grouping_dashboard.co_traitant_submission_done_title'))
+          expect(response.body).not_to include('ttestation')
+        end
       end
     end
 
