@@ -718,6 +718,61 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
       expect(response.body).to include(I18n.t('button.submit_to_mandataire'))
     end
+
+    context 'once the co_traitant has transmitted its application to the mandataire' do
+      before do
+        co_traitant_application.complete!
+        co_traitant_application.grouping_member.mark_completed!
+        mandataire_application.update!(user: create(:user, email: 'mandataire@example.com'))
+      end
+
+      it 'can still open its form to edit it' do
+        get step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'moves the co_traitant back to in progress as soon as it saves a step' do
+        patch step_candidate_market_application_path(co_traitant_application.identifier, :market_information)
+
+        expect(co_traitant_application.grouping_member.reload).to be_status_in_progress
+      end
+
+      it 'notifies the mandataire of the modification when transmitting again' do
+        expect do
+          patch step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+        end.to have_enqueued_mail(GroupingMemberCompletionMailer, :modified)
+
+        expect(response).to redirect_to(candidate_sync_status_path(co_traitant_application.identifier))
+      end
+    end
+
+    context 'once the mandataire has submitted the grouping' do
+      before { grouping.update!(submitted_at: Time.current, submission_mode: :partial) }
+
+      it 'redirects to the locked screen instead of the form' do
+        get step_candidate_market_application_path(co_traitant_application.identifier, :market_information)
+
+        expect(response).to redirect_to(locked_candidate_market_application_path(co_traitant_application.identifier))
+      end
+
+      it 'refuses any modification of the form' do
+        patch step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria),
+          params: { draft: '1' }
+
+        expect(response).to redirect_to(locked_candidate_market_application_path(co_traitant_application.identifier))
+      end
+    end
+  end
+
+  describe 'once the market deadline is over' do
+    before { public_market.update_column(:deadline, 1.day.ago) }
+
+    it 'redirects an application still being filled to the deadline passed screen' do
+      get step_candidate_market_application_path(market_application.identifier, :exclusion_criteria)
+
+      expect(response).to redirect_to(deadline_passed_candidate_market_application_path(market_application.identifier))
+    end
   end
 
   describe 'draft for a solo application' do

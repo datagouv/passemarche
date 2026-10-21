@@ -5,11 +5,11 @@ class MarkGroupingAsSubmitted < ApplicationInteractor
 
   def call
     validate_submission_mode
-    validate_not_already_submitted
-    validate_market_still_open
-    validate_submittable_for_mode
 
     grouping.with_lock do
+      validate_not_already_submitted
+      validate_market_still_open
+      validate_submittable_for_mode
       grouping.submit!(mode: submission_mode)
     end
   rescue Grouping::AlreadySubmittedError

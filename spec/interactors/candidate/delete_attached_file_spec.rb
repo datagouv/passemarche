@@ -61,6 +61,28 @@ RSpec.describe Candidate::DeleteAttachedFile, type: :interactor do
 
         expect(result.deleted).to be true
       end
+
+      context 'when the application belongs to a co_traitant who had transmitted it' do
+        let(:mandataire_application) do
+          create(:market_application, public_market: market_application.public_market, siret: '80245139600099',
+            application_mode: :groupement)
+        end
+        let(:grouping) do
+          create(:grouping, public_market: market_application.public_market, mandataire_market_application: mandataire_application)
+        end
+
+        before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+        let!(:grouping_member) do
+          create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret,
+            status: :completed)
+        end
+
+        it 'moves the co_traitant back to in progress' do
+          described_class.call(signed_id:, market_application:)
+
+          expect(grouping_member.reload).to be_status_in_progress
+        end
+      end
     end
 
     context 'when signed_id is invalid' do

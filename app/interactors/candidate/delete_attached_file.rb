@@ -41,6 +41,7 @@ module Candidate
       return unless context.attachment
 
       context.attachment.purge_later
+      market_application.grouping_member&.mark_in_progress!
       context.deleted = true
     end
   end

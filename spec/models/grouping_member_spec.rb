@@ -198,12 +198,12 @@ RSpec.describe GroupingMember, type: :model do
       expect(member).to be_status_in_progress
     end
 
-    it 'does not move back a completed member' do
+    it 'moves a completed member back to in_progress when they edit their transmitted form' do
       member = create(:grouping_member, :co_traitant, grouping:, status: :completed)
 
       member.mark_in_progress!
 
-      expect(member).to be_status_completed
+      expect(member).to be_status_in_progress
     end
 
     it 'moves an invited member to in_progress' do
@@ -238,12 +238,12 @@ RSpec.describe GroupingMember, type: :model do
       expect(member.invitation_expired?).to be false
     end
 
-    it 'is true when the member own application is completed and submitted' do
+    it 'is false when the co_traitant transmitted their form but the grouping is not submitted yet' do
       application = create(:market_application, :completed, public_market:, application_mode: :groupement)
       member = create(:grouping_member, :co_traitant, grouping:, market_application: application,
         invitation_token_created_at: Time.current)
 
-      expect(member.invitation_expired?).to be true
+      expect(member.invitation_expired?).to be false
     end
 
     it 'is true when the grouping has already submitted all its applications' do
