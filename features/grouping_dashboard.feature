@@ -34,7 +34,7 @@ Feature: Mandataire follows up and submits the grouping candidacies
     When I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
     And I click on "Continuer"
     And I click on "Confirmer et envoyer les invitations"
-    Then I should see "Co-traitants en attente"
+    Then I should see "Des candidatures sont incomplètes"
 
   @javascript
   Scenario: The submission section becomes ready once every member is completed
