@@ -30,6 +30,14 @@ RSpec.describe Candidate::NotifyMandataireOfCoTraitantCompletion, type: :interac
 
         expect { result }.to have_enqueued_mail(GroupingMemberCompletionMailer, :completed).with(co_traitant, 'mandataire@example.com', dashboard_url)
       end
+
+      context 'when the co_traitant had already transmitted its application' do
+        subject(:result) { described_class.call(market_application:, already_transmitted: true) }
+
+        it 'notifies the mandataire of the modification' do
+          expect { result }.to have_enqueued_mail(GroupingMemberCompletionMailer, :modified)
+        end
+      end
     end
 
     context 'when the mandataire has no known user' do
