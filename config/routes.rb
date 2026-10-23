@@ -87,6 +87,7 @@ Rails.application.routes.draw do
     resources :market_applications, param: :identifier, only: [:destroy] do
       member do
         get 'deadline_passed', to: 'deadline_passed#show', as: :deadline_passed
+        get 'locked', to: 'locked_applications#show', as: :locked
         get 'application_mode', to: 'application_modes#show', as: :application_mode
         patch 'application_mode', to: 'application_modes#update'
         get 'lot_selection_mode', to: 'lot_selection_modes#show', as: :lot_selection_mode

@@ -664,26 +664,56 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
-  describe '#locked?' do
+  describe '#lock_reason' do
     let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
 
     before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 
-    it 'is false for an application still being filled' do
+    it 'is nil for an application still being filled' do
+      expect(market_application.lock_reason).to be_nil
       expect(market_application).not_to be_locked
     end
 
-    it 'is true once the application is completed' do
-      market_application.complete!
+    it 'is :completed once a solo application is completed' do
+      solo_application = create(:market_application, :completed, public_market:)
 
-      expect(market_application).to be_locked
+      expect(solo_application.lock_reason).to eq(:completed)
+      expect(solo_application).to be_locked
     end
 
-    it 'is true once the grouping it belongs to has been submitted' do
+    it 'is :grouping_submitted once the grouping it belongs to has been submitted' do
       grouping = create(:grouping, public_market:, mandataire_market_application: market_application)
       grouping.update!(submitted_at: Time.current, submission_mode: :partial)
 
-      expect(market_application.reload).to be_locked
+      expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
+    end
+
+    it 'is :deadline_passed once the market deadline is over, even while the application is being filled' do
+      public_market.update_column(:deadline, 1.day.ago)
+
+      expect(market_application.lock_reason).to eq(:deadline_passed)
+    end
+
+    context 'when the application belongs to a co-traitant' do
+      let(:mandataire_application) do
+        create(:market_application, public_market:, siret: '73282932000074', application_mode: :groupement)
+      end
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+
+      before { create(:grouping_member, :co_traitant, grouping:, market_application:) }
+
+      it 'stays editable once the co-traitant has transmitted it to the mandataire' do
+        market_application.complete!
+
+        expect(market_application.reload.lock_reason).to be_nil
+      end
+
+      it 'is :grouping_submitted once the mandataire has submitted the grouping' do
+        market_application.complete!
+        grouping.update!(submitted_at: Time.current, submission_mode: :full)
+
+        expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
+      end
     end
   end
 

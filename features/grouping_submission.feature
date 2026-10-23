@@ -121,5 +121,4 @@ Feature: Mandataire submits the grouping candidacy
     And I should be on the co-traitant grouping dashboard
     And the grouping has been submitted by the mandataire
     When I navigate to the "exclusion_criteria" step as the co-traitant with SIRET "80245139600021"
-    Then I should be on the co-traitant grouping dashboard
-    And I should not see "Modifier ma candidature"
+    Then I should see "Vous ne pouvez plus modifier votre candidature"

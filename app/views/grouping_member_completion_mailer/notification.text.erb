@@ -1,0 +1,10 @@
+<%= t("grouping_member_completion_mailer.#{@event}.title") %>
+
+<%= t("grouping_member_completion_mailer.#{@event}.intro", co_traitant_name: @co_traitant_name, market_name: @market_name) %>
+
+<%= t('grouping_member_completion_mailer.dashboard_explanation') %>
+
+<%= t('grouping_member_completion_mailer.cta') %> : <%= @dashboard_url %>
+
+<%= t('mailer.shared_footer.copyright') %>
+<%= t('mailer.shared_footer.contact') %>

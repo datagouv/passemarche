@@ -13,11 +13,15 @@ module Candidate
       return log_missing_recipient(grouping_member) if mandataire_email.blank?
 
       GroupingMemberCompletionMailer
-        .completed(grouping_member, mandataire_email, dashboard_url(mandataire_application))
+        .public_send(mail_action, grouping_member, mandataire_email, dashboard_url(mandataire_application))
         .deliver_later
     end
 
     private
+
+    def mail_action
+      context.already_transmitted ? :modified : :completed
+    end
 
     def dashboard_url(mandataire_application)
       Rails.application.routes.url_helpers.grouping_dashboard_candidate_market_application_url(

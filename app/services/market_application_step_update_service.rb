@@ -42,12 +42,18 @@ class MarketApplicationStepUpdateService < ApplicationService
   def handle_generic_step
     market_application.assign_attributes(assign_existing_response_ids(params))
 
-    if market_application.save(context: step)
+    if save_step
       market_application.market_attribute_responses.reload
-      market_application.grouping_member&.mark_in_progress!
       build_result(true)
     else
       handle_step_failure
+    end
+  end
+
+  def save_step
+    market_application.transaction do
+      market_application.grouping_member&.mark_in_progress!
+      market_application.save(context: step) || raise(ActiveRecord::Rollback)
     end
   end
 

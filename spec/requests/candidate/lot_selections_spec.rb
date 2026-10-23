@@ -165,6 +165,16 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
         expect(response).to have_http_status(:unprocessable_content)
         expect(market_application.reload.lot_ids).to be_empty
       end
+
+      it 'moves a co_traitant who had transmitted their form back to in progress' do
+        market_application.complete!
+        market_application.grouping_member.mark_completed!
+
+        patch lot_selection_candidate_market_application_path(market_application.identifier),
+          params: { market_application: { lot_ids: [lot.id] } }
+
+        expect(market_application.grouping_member.reload).to be_status_in_progress
+      end
     end
 
     context 'when the market_application belongs to a co_traitant of a solidaire grouping' do

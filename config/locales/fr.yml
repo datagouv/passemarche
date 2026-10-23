@@ -55,12 +55,16 @@ fr:
       locked_notice: "Vous ne pouvez plus modifier votre formulaire de candidature"
 
   grouping_member_completion_mailer:
+    dashboard_explanation: "Consultez votre tableau de bord pour suivre l'état de votre groupement et soumettre votre candidature quand tous vos co-traitants sont prêts."
+    cta: "Voir mon tableau de bord"
     completed:
       subject: "Un co-traitant a complété son formulaire"
       title: "Un co-traitant a complété son formulaire"
       intro: "%{co_traitant_name} a complété son formulaire de candidature pour le marché : %{market_name}."
-      dashboard_explanation: "Consultez votre tableau de bord pour suivre l'état de votre groupement et soumettre votre candidature quand tous vos co-traitants sont prêts."
-      cta: "Voir mon tableau de bord"
+    modified:
+      subject: "Un co-traitant a fait des modifications"
+      title: "Un co-traitant a fait des modifications"
+      intro: "%{co_traitant_name} a modifié son formulaire de candidature pour le marché : %{market_name}."
 
   grouping_member_removal_mailer:
     removed:
@@ -581,6 +585,12 @@ fr:
         motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
 
   candidate:
+    locked_applications:
+      title: "Candidature verrouillée"
+      heading: "Vous ne pouvez plus modifier votre candidature"
+      explanation: "Le mandataire a transmis la candidature du groupement, vous ne pouvez donc plus modifier votre candidature. Seul le mandataire peut vous permettre de la modifier."
+      contact_hint: "Pour toutes questions, contactez le mandataire ou la plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
     deadline_passed:
       title: "Date limite dépassée"
       heading: "Vous ne pouvez plus modifier votre candidature"
@@ -836,6 +846,10 @@ fr:
       submission_ready_body: "Vous pouvez soumettre la candidature du groupement."
       submission_done_title: "La candidature du groupement a été transmise à la plateforme de marché"
       submission_done_body: "Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez consulter l'attestation de candidature depuis l'écran de confirmation."
+      co_traitant_submission_done_title: "Votre candidature a été transmise"
+      co_traitant_submission_done_body: "Le mandataire a transmis la candidature du groupement à la plateforme de marché. Vous ne pouvez plus modifier votre candidature."
+      co_traitant_deadline_passed_title: "Date limite dépassée"
+      co_traitant_deadline_passed_body: "La date limite de réception des candidatures est dépassée, vous ne pouvez donc plus modifier votre candidature. Pour toutes questions, contactez le mandataire."
       submit_full: "Soumettre la candidature"
       submit_partial: "Soumettre sans la totalité des candidatures"
       solo_application_title: "Candidature individuelle"

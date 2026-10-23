@@ -33,6 +33,25 @@ RSpec.describe MarkGroupingAsSubmitted, type: :interactor do
       end
     end
 
+    context 'when a co_traitant goes back to in progress after the grouping was loaded' do
+      let(:submission_mode) { :full }
+      let(:grouping) { create(:grouping, public_market:) }
+      let!(:co_traitant) do
+        create(:grouping_member, :co_traitant, grouping:, status: :completed, invitation_token_created_at: Time.current)
+      end
+
+      before do
+        grouping.mandataire_grouping_member.update!(status: :completed)
+        grouping.grouping_members.load
+        GroupingMember.find(co_traitant.id).update!(status: :in_progress)
+      end
+
+      it 'checks the members again under the lock and refuses the full submission' do
+        expect(result).to be_failure
+        expect(grouping.reload.submitted_at).to be_nil
+      end
+    end
+
     context 'when submission_mode is full but not every member is completed' do
       let(:submission_mode) { :full }
       let(:grouping) { create(:grouping, public_market:) }

@@ -46,4 +46,28 @@ RSpec.describe GroupingMemberCompletionMailer, type: :mailer do
       end
     end
   end
+
+  describe '#modified' do
+    let(:mail) { described_class.modified(co_traitant, 'mandataire@atlantique-batiment.fr', dashboard_url) }
+
+    it 'sends to the mandataire email' do
+      expect(mail.to).to eq(['mandataire@atlantique-batiment.fr'])
+    end
+
+    it 'uses the modification subject' do
+      expect(mail.subject).to eq('Un co-traitant a fait des modifications')
+    end
+
+    it 'names the co-traitant and the market' do
+      body = mail.html_part.body.decoded
+
+      expect(body).to include('<strong>Menuiseries de Loire SARL</strong> a modifié son formulaire')
+      expect(body).to include('pour le marché : Marché test informatique.')
+    end
+
+    it 'links to the mandataire dashboard' do
+      expect(mail.html_part.body.decoded).to include(dashboard_url)
+      expect(mail.text_part.body.decoded).to include("Voir mon tableau de bord : #{dashboard_url}")
+    end
+  end
 end
