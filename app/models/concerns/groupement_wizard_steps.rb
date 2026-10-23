@@ -98,7 +98,7 @@ module GroupementWizardSteps
   end
 
   def company_identification_required?
-    !co_traitant_of_grouping?
+    !groupement?
   end
 
   def step_after_company_identification

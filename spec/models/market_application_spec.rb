@@ -673,11 +673,20 @@ RSpec.describe MarketApplication, type: :model do
       expect(application.company_identification_required?).to be(true)
     end
 
-    it 'is true for the mandataire of a grouping' do
+    it 'is true for the solo counterpart of a mixed application' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement)
+
+      expect(solo.company_identification_required?).to be(true)
+    end
+
+    it 'is false for the mandataire of a grouping' do
       application = create(:market_application, public_market:, application_mode: :groupement)
       create(:grouping, public_market:, mandataire_market_application: application)
 
-      expect(application.company_identification_required?).to be(true)
+      expect(application.company_identification_required?).to be(false)
     end
 
     it 'is false for a co_traitant whose identity was confirmed by the invitation' do
