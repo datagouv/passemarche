@@ -32,7 +32,7 @@ module Candidate
     def find_market_application
       @market_application = MarketApplication.find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
-      render plain: 'La candidature recherché n\'a pas été trouvé', status: :not_found
+      render_market_application_not_found
     end
   end
 end

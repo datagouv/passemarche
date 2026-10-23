@@ -131,7 +131,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       get '/candidate/market_applications/NONEXISTENT/company_identification'
 
       expect(response).to have_http_status(:not_found)
-      expect(response.body).to include('La candidature recherchée n\'a pas été trouvée')
+      expect(response.body).to include('<h1 class="fr-h3">La candidature recherchée n&#39;a pas été trouvée</h1>')
     end
 
     it 'displays company_identification step' do

@@ -38,7 +38,7 @@ module Candidate
         )
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
-      render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
+      render_market_application_not_found
     end
 
     def redirect_if_no_lots

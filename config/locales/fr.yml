@@ -409,6 +409,9 @@ fr:
       previous: "Précédent"
       welcome: "Bienvenue,"
       form_logo_alt: "Logo de formulaire"
+      public_market_not_found:
+        heading: "Le marché recherché n'a pas été trouvé"
+        explanation: "Le lien que vous avez utilisé est incorrect ou ce marché n'existe plus. Pour reprendre la configuration du marché, repassez par la plateforme de marchés publics."
     setup:
       title_suffix: "Configuration de marché"
       intro: "%{editor} vous permet de mettre en place une candidature simplifiée pour les entreprises et vous apporte la garantie de recueillir des informations authentiques et à jour sur l'entreprise candidate."
@@ -916,6 +919,9 @@ fr:
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
       no_content: "Aucun contenu disponible pour cette étape."
+      market_application_not_found:
+        heading: "La candidature recherchée n'a pas été trouvée"
+        explanation: "Le lien que vous avez utilisé est incorrect ou cette candidature n'existe plus. Pour reprendre votre candidature, repassez par la plateforme de marchés publics."
     company_identification:
       title: "Candidature - Identification"
       intro: "%{editor} vous permet de candidater rapidement aux marchés publics."

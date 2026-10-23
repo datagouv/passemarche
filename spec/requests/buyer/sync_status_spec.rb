@@ -97,6 +97,10 @@ RSpec.describe 'Buyer::SyncStatus', type: :request do
       it 'returns not found' do
         expect(response).to have_http_status(:not_found)
       end
+
+      it 'renders the not found page' do
+        expect(response.body).to include('<h1 class="fr-h3">Le marché recherché n&#39;a pas été trouvé</h1>')
+      end
     end
   end
 end

@@ -27,7 +27,7 @@ module Candidate
         .includes(public_market: :lots)
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
-      render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
+      render_market_application_not_found
     end
 
     def enqueue_api_data_fetch_if_needed

@@ -10,6 +10,10 @@ module Candidate
 
     private
 
+    def render_market_application_not_found
+      render 'candidate/shared/market_application_not_found', status: :not_found
+    end
+
     def user_for_paper_trail
       ActionView::RecordIdentifier.dom_id(current_candidate) if current_candidate
     end
