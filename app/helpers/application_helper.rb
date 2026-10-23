@@ -5,6 +5,10 @@ module ApplicationHelper
     User.find_by(id: session[:user_id]) if respond_to?(:session, true)
   end
 
+  def locale_switch_path(locale)
+    "#{request.path}?#{request.query_parameters.merge('locale' => locale).to_query}"
+  end
+
   def format_paris_time(datetime, format = '%d/%m/%Y à %H:%M')
     return '-' if datetime.nil?
 
