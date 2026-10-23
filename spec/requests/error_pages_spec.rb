@@ -48,4 +48,26 @@ RSpec.describe 'Error pages', type: :request do
       expect(CGI.unescapeHTML(response.body)).to include(heading(:not_found))
     end
   end
+
+  context 'when the public market is already published' do
+    let(:public_market) { create(:public_market, :published) }
+
+    it 'renders the published market page' do
+      patch buyer_lot_types_path(public_market.identifier), params: { lot_ids: [] }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(CGI.unescapeHTML(response.body)).to include(heading(:public_market_published))
+    end
+  end
+
+  context 'when the groupement feature is disabled' do
+    before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false) }
+
+    it 'renders the generic not found page' do
+      get candidate_grouping_invitation_path('any-token')
+
+      expect(response).to have_http_status(:not_found)
+      expect(CGI.unescapeHTML(response.body)).to include(heading(:not_found))
+    end
+  end
 end
