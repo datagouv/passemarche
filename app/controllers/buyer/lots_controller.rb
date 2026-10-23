@@ -40,7 +40,7 @@ module Buyer
     def check_market_not_published
       return unless @public_market.published?
 
-      render plain: t('buyer.public_markets.market_published_cannot_edit'), status: :unprocessable_content
+      render_error_page(:public_market_published, status: :unprocessable_content)
     end
   end
 end
