@@ -232,6 +232,17 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         )
         expect(response.body).not_to include(company_identification_candidate_market_application_path(market_application.identifier))
       end
+
+      it 'points the previous button to the grouping dashboard even when the market has lots' do
+        mandataire_application.lots << create(:lot, public_market:)
+
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response.body).to include(
+          %(href="#{grouping_dashboard_candidate_market_application_path(market_application.identifier)}")
+        )
+        expect(response.body).not_to include(lot_selection_candidate_market_application_path(market_application.identifier))
+      end
     end
   end
 

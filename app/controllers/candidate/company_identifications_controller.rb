@@ -19,7 +19,7 @@ module Candidate
 
     def find_market_application
       @market_application = MarketApplication
-        .includes(public_market: :lots)
+        .includes(public_market: :lots, grouping_member: :grouping)
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
