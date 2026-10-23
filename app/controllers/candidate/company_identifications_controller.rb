@@ -10,14 +10,8 @@ module Candidate
     def show; end
 
     def update
-      if @market_application.solidaire_co_traitant?
-        redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
-      elsif @market_application.public_market.lots.any?
-        redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
-      else
-        enqueue_api_data_fetch_if_needed
-        redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
-      end
+      enqueue_api_data_fetch_if_needed
+      redirect_to step_after_company_identification_path(@market_application)
     end
 
     private
@@ -31,6 +25,8 @@ module Candidate
     end
 
     def enqueue_api_data_fetch_if_needed
+      return unless @market_application.step_after_company_identification == :api_data_recovery_status
+
       Candidate::EnqueueApiDataFetch.call(market_application: @market_application)
     end
   end

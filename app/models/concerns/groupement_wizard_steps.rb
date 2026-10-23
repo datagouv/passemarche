@@ -96,4 +96,11 @@ module GroupementWizardSteps
 
     [target, :grouping_legal_type]
   end
+
+  def step_after_company_identification
+    return :api_data_recovery_status if solidaire_co_traitant?
+    return :lot_selection if public_market.lots.any?
+
+    :api_data_recovery_status
+  end
 end
