@@ -664,6 +664,69 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#company_identification_required?' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is true for a solo application' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.company_identification_required?).to be(true)
+    end
+
+    it 'is true for the solo counterpart of a mixed application' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement)
+
+      expect(solo.company_identification_required?).to be(true)
+    end
+
+    it 'is false for the mandataire of a grouping' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application)
+
+      expect(application.company_identification_required?).to be(false)
+    end
+
+    it 'is false for a co_traitant whose identity was confirmed by the invitation' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      application = create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+
+      expect(application.company_identification_required?).to be(false)
+    end
+  end
+
+  describe '#step_after_company_identification' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'returns api_data_recovery_status when the market has no lots' do
+      application = create(:market_application, public_market:)
+
+      expect(application.step_after_company_identification).to eq(:api_data_recovery_status)
+    end
+
+    it 'returns lot_selection when the market has lots' do
+      application = create(:market_application, public_market:)
+      create(:lot, public_market:)
+
+      expect(application.step_after_company_identification).to eq(:lot_selection)
+    end
+
+    it 'returns api_data_recovery_status for a solidaire co_traitant even when the market has lots' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application,
+        legal_type: :solidaire)
+      application = create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+      create(:lot, public_market:)
+
+      expect(application.step_after_company_identification).to eq(:api_data_recovery_status)
+    end
+  end
+
   describe '#locked?' do
     let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
 

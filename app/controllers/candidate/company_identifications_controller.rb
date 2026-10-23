@@ -6,31 +6,34 @@ module Candidate
     include Candidate::ApplicationModeGuard
 
     prepend_before_action :find_market_application
+    before_action :skip_when_identity_already_confirmed
 
     def show; end
 
     def update
-      if @market_application.solidaire_co_traitant?
-        redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
-      elsif @market_application.public_market.lots.any?
-        redirect_to lot_selection_candidate_market_application_path(@market_application.identifier)
-      else
-        enqueue_api_data_fetch_if_needed
-        redirect_to step_candidate_market_application_path(@market_application.identifier, :api_data_recovery_status)
-      end
+      enqueue_api_data_fetch_if_needed
+      redirect_to step_after_company_identification_path(@market_application)
     end
 
     private
 
     def find_market_application
       @market_application = MarketApplication
-        .includes(public_market: :lots)
+        .includes(public_market: :lots, grouping_member: :grouping)
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
     end
 
+    def skip_when_identity_already_confirmed
+      return if @market_application.company_identification_required?
+
+      redirect_to step_after_company_identification_path(@market_application)
+    end
+
     def enqueue_api_data_fetch_if_needed
+      return unless @market_application.step_after_company_identification == :api_data_recovery_status
+
       Candidate::EnqueueApiDataFetch.call(market_application: @market_application)
     end
   end

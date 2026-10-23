@@ -30,8 +30,8 @@ Feature: Co-traitant declares their lots
     And I click the link from the latest email
     Then I should be on the co-traitant grouping dashboard
     When I click on "Préparer ma candidature"
-    And I click on "Continuer"
-    Then I should see "Lot 1"
+    Then I should not see "Votre numéro de SIRET"
+    And I should see "Lot 1"
     And I should see "Lot 2"
     And I should not see "Lot 3"
 
@@ -50,7 +50,6 @@ Feature: Co-traitant declares their lots
     And I click the link from the latest email
     Then I should be on the co-traitant grouping dashboard
     And I click on "Préparer ma candidature"
-    And I click on "Continuer"
     Then the lot selection submit button should be disabled
     When I check the lot "Lot 1"
     Then the lot selection submit button should be enabled
@@ -70,7 +69,6 @@ Feature: Co-traitant declares their lots
     And I click the link from the latest email
     Then I should be on the co-traitant grouping dashboard
     And I click on "Préparer ma candidature"
-    And I click on "Continuer"
     Then the side panel should show the public market name
     And the selected lots panel should be empty
     And I should see "Le mandataire a pré-sélectionné les lots auxquels le groupement va répondre"
@@ -93,7 +91,6 @@ Feature: Co-traitant declares their lots
     And I click the link from the latest email
     Then I should be on the co-traitant grouping dashboard
     And I click on "Préparer ma candidature"
-    And I click on "Continuer"
     When I check the lot "Lot 1"
     And I submit the lot selection
     Then I should see "Préparez votre dossier de candidature"
@@ -115,7 +112,6 @@ Feature: Co-traitant declares their lots
     And I click the link from the latest email
     Then I should be on the co-traitant grouping dashboard
     When I click on "Préparer ma candidature"
-    And I click on "Continuer"
     Then the candidate should be on the api data recovery status step
     When I visit the grouping dashboard as the co-traitant with SIRET "80245139600021"
     Then the co-traitant declared lots column should show "Tous les lots"

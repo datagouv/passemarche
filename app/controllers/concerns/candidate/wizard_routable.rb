@@ -4,21 +4,27 @@ module Candidate
   module WizardRoutable
     extend ActiveSupport::Concern
 
+    DEDICATED_STEP_ROUTES = %i[
+      application_mode lot_selection_mode grouping_legal_type grouping_composition company_identification lot_selection
+    ].freeze
+
     private
 
     def wizard_step_path(market_application, step)
-      case step
-      when :application_mode
-        application_mode_candidate_market_application_path(market_application.identifier)
-      when :lot_selection_mode
-        lot_selection_mode_candidate_market_application_path(market_application.identifier)
-      when :grouping_legal_type
-        grouping_legal_type_candidate_market_application_path(market_application.identifier)
-      when :grouping_composition
-        grouping_composition_candidate_market_application_path(market_application.identifier)
-      when :company_identification
-        company_identification_candidate_market_application_path(market_application.identifier)
-      end
+      identifier = market_application.identifier
+      return public_send(:"#{step}_candidate_market_application_path", identifier) if DEDICATED_STEP_ROUTES.include?(step)
+
+      step_candidate_market_application_path(identifier, step)
+    end
+
+    def step_after_company_identification_path(market_application)
+      wizard_step_path(market_application, market_application.step_after_company_identification)
+    end
+
+    def form_hub_path(market_application)
+      return wizard_step_path(market_application, :company_identification) if market_application.company_identification_required?
+
+      confirmed_grouping_dashboard_path(market_application) || candidate_dashboard_path
     end
 
     def next_required_wizard_step_path(market_application)
