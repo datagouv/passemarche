@@ -664,6 +664,32 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#company_identification_required?' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is true for a solo application' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.company_identification_required?).to be(true)
+    end
+
+    it 'is true for the mandataire of a grouping' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application)
+
+      expect(application.company_identification_required?).to be(true)
+    end
+
+    it 'is false for a co_traitant whose identity was confirmed by the invitation' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      application = create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+
+      expect(application.company_identification_required?).to be(false)
+    end
+  end
+
   describe '#step_after_company_identification' do
     before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 

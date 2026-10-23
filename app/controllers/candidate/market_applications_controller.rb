@@ -147,11 +147,9 @@ module Candidate
     end
 
     def back_path_before_wizard
-      if @market_application.public_market.lots.any?
-        lot_selection_candidate_market_application_path(@market_application.identifier)
-      else
-        company_identification_candidate_market_application_path(@market_application.identifier)
-      end
+      return wizard_step_path(@market_application, :lot_selection) if @market_application.step_after_company_identification == :lot_selection
+
+      form_hub_path(@market_application)
     end
 
     def finish_wizard_path

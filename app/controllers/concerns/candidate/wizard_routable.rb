@@ -21,6 +21,12 @@ module Candidate
       wizard_step_path(market_application, market_application.step_after_company_identification)
     end
 
+    def form_hub_path(market_application)
+      return wizard_step_path(market_application, :company_identification) if market_application.company_identification_required?
+
+      confirmed_grouping_dashboard_path(market_application)
+    end
+
     def next_required_wizard_step_path(market_application)
       target, step = market_application.next_required_wizard_step
       return wizard_step_path(target, step) if target

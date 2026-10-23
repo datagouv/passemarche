@@ -207,6 +207,32 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
       end.not_to have_enqueued_job(FetchApiDataCoordinatorJob)
     end
+
+    context 'when the application belongs to a co_traitant' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret,
+          invitation_token_created_at: Time.current)
+      end
+
+      it 'points the previous button to the grouping dashboard instead of the company identification page' do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response.body).to include(
+          %(href="#{grouping_dashboard_candidate_market_application_path(market_application.identifier)}")
+        )
+        expect(response.body).not_to include(company_identification_candidate_market_application_path(market_application.identifier))
+      end
+    end
   end
 
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do

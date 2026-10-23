@@ -6,6 +6,7 @@ module Candidate
     include Candidate::ApplicationModeGuard
 
     prepend_before_action :find_market_application
+    before_action :skip_when_identity_already_confirmed
 
     def show; end
 
@@ -22,6 +23,12 @@ module Candidate
         .find_by!(identifier: params[:identifier])
     rescue ActiveRecord::RecordNotFound
       render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
+    end
+
+    def skip_when_identity_already_confirmed
+      return if @market_application.company_identification_required?
+
+      redirect_to step_after_company_identification_path(@market_application)
     end
 
     def enqueue_api_data_fetch_if_needed

@@ -117,6 +117,14 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
       end
 
+      it 'skips the company identification page since the invitation already confirmed the SIRET' do
+        get company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :api_data_recovery_status)
+        )
+      end
+
       it 'skips the lot selection screen and redirects to api_data_recovery_status' do
         patch company_identification_candidate_market_application_path(market_application.identifier)
 
@@ -145,6 +153,14 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
         mandataire_application.lots << create(:lot, public_market:)
         create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'skips the company identification page and goes straight to lot selection' do
+        get company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          lot_selection_candidate_market_application_path(market_application.identifier)
+        )
       end
 
       it 'redirects to lot selection like a regular groupement member' do
