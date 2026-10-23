@@ -1,6 +1,6 @@
 # Passe Marché
 
-[![Ruby](https://img.shields.io/badge/Ruby-3.4.5-red.svg)](https://www.ruby-lang.org/) [![Rails](https://img.shields.io/badge/Rails-8.0.2-red.svg)](https://rubyonrails.org/) [![DSFR](https://img.shields.io/badge/DSFR-1.13.0-blue.svg)](https://www.systeme-de-design.gouv.fr/)
+[![Ruby](https://img.shields.io/badge/Ruby-4.0.9-red.svg)](https://www.ruby-lang.org/) [![Rails](https://img.shields.io/badge/Rails-8.0.2-red.svg)](https://rubyonrails.org/) [![DSFR](https://img.shields.io/badge/DSFR-1.13.0-blue.svg)](https://www.systeme-de-design.gouv.fr/)
 
 **Passe Marché** est une application Rails 8 qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Le projet vise à transformer les procédures d'appel d'offres complexes en un processus rationalisé et convivial, intégré aux plateformes d'achat existantes.
 
@@ -58,7 +58,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ### Requirements
 
-* ruby 3.4.5
+* ruby 4.0.9
 * postrgresql >= 15
 
 ### Backend
@@ -84,7 +84,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ## 📋 Prérequis
 
-* Ruby 3.4.5
+* Ruby 4.0.9
 * PostgreSQL 12+
 * Git
 
