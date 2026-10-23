@@ -1741,6 +1741,7 @@ fr:
               blank: "Le nom du marché ne peut pas être vide"
             deadline:
               blank: "La date limite ne peut pas être vide"
+              out_of_range: "La date limite doit être comprise entre 2000 et 2099"
             market_type:
               blank: "Le type de marché ne peut pas être vide"
             market_types:

@@ -6,6 +6,8 @@ class PublicMarket < ApplicationRecord
   include Publishable
   include Syncable
 
+  SUPPORTED_DEADLINE_RANGE = (Time.utc(2000)...Time.utc(2100))
+
   has_paper_trail on: %i[create update]
 
   belongs_to :editor
@@ -30,6 +32,7 @@ class PublicMarket < ApplicationRecord
   validates :lot_limit, presence: true, if: -> { FeatureFlags::LotLimit.enabled? && lot_limit_enabled }
   validate :must_have_valid_market_type_codes
   validate :lot_limit_cannot_exceed_lots_count
+  validate :deadline_within_supported_range
   validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
@@ -84,6 +87,12 @@ class PublicMarket < ApplicationRecord
   end
 
   private
+
+  def deadline_within_supported_range
+    return if deadline.blank? || SUPPORTED_DEADLINE_RANGE.cover?(deadline)
+
+    errors.add(:deadline, :out_of_range)
+  end
 
   def market_typology_codes
     market_type_codes.reject { |code| code == 'defense' }
