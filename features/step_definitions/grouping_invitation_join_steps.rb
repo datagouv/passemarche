@@ -32,7 +32,7 @@ Then('the SIRET field should be pre-filled with {string} and locked') do |siret|
 end
 
 When('I visit the invitation link previously received by {string}') do |email|
-  invitation = ActionMailer::Base.deliveries.reverse.find do |mail|
+  invitation = ActionMailer::Base.deliveries.rfind do |mail|
     mail.to.include?(email) && mail.subject == I18n.t('grouping_invitation_mailer.invitation.subject')
   end
   visit invitation.text_part.body.decoded[%r{/candidate/grouping_invitations/[^\s"<]+}]

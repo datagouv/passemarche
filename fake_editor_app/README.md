@@ -20,7 +20,7 @@ Fournir un exemple concret d'intégration OAuth2 avec Passe Marché, incluant :
 
 ## 📋 Prérequis
 
-- Ruby 3.4.5
+- Ruby 4.0.9
 - Passe Marché en cours d'exécution sur http://localhost:3000
 - Éditeur demo configuré dans Passe Marché
 
