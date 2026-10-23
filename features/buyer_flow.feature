@@ -30,6 +30,13 @@ Feature: Buyer Configuration Flow
     And I should see "Informations du marché"
     And I should see a button "Transmettre la configuration"
 
+  Scenario: Une étape inconnue affiche une page introuvable
+    When I visit the step "setup&locale=en" of my public market
+    Then I should see the page not found
+
+    When I visit the step "true" of my public market
+    Then I should see the page not found
+
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market
     When I click on "Précédent"

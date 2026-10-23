@@ -3,6 +3,7 @@
 module Candidate
   class MarketApplicationsController < Candidate::ApplicationController
     include Wicked::Wizard
+    include WizardInvalidStepNotFound
     include Candidate::MarketApplicationGuard
     include Candidate::ApplicationModeGuard
 

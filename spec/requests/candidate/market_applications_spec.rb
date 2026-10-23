@@ -106,6 +106,14 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       end
     end
 
+    context 'when the step is unknown' do
+      it 'responds with not found' do
+        get "/candidate/market_applications/#{market_application.identifier}/true"
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
     STEPS.each_with_index do |step, idx|
       context 'when application is not completed' do
         it "redirects correctly after #{step} step" do
