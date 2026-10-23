@@ -3,6 +3,7 @@
 module Buyer
   class PublicMarketsController < Buyer::ApplicationController
     include Wicked::Wizard
+    include WizardInvalidStepNotFound
 
     prepend_before_action :set_dynamic_steps, except: [:retry_sync]
     prepend_before_action :initialize_presenter, except: [:retry_sync]
