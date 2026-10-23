@@ -240,6 +240,19 @@ en:
               lot_outside_groupement_scope: "You can only select lots pre-selected by the grouping's mandataire"
 
   errors:
+    pages:
+      not_found:
+        heading: "The page you are looking for was not found"
+        paragraphs:
+          - "The link you used is incorrect or this page no longer exists."
+      market_application_not_found:
+        heading: "The application you are looking for was not found"
+        paragraphs:
+          - "The link you used is incorrect or this application no longer exists. To resume your application, go back through the public procurement platform."
+      public_market_not_found:
+        heading: "The tender you are looking for was not found"
+        paragraphs:
+          - "The link you used is incorrect or this tender no longer exists. To resume the tender configuration, go back through the public procurement platform."
     messages:
       blank: "must be filled in"
       invalid: "is not valid"
