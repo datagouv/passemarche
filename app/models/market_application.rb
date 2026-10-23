@@ -25,6 +25,8 @@ class MarketApplication < ApplicationRecord
 
   attr_accessor :current_validation_step
 
+  normalizes :siret, with: ->(siret) { siret.strip }
+
   validates :identifier, presence: true, uniqueness: true
   validates :siret, presence: true, siret: true
   validates :attests_no_exclusion_motifs, inclusion: { in: [true, false] }, allow_nil: false

@@ -11,6 +11,14 @@ RSpec.describe GroupingMember, type: :model do
     allow(SiretValidator).to receive(:valid?).and_return(true)
   end
 
+  describe 'siret normalization' do
+    it 'stores the siret without surrounding whitespace' do
+      member = create(:grouping_member, :co_traitant, grouping:, siret: ' 35600000000048 ')
+
+      expect(member.reload.siret).to eq('35600000000048')
+    end
+  end
+
   describe 'default status' do
     it 'starts as invited' do
       member = create(:grouping_member, :co_traitant, grouping:)

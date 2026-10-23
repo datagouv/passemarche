@@ -68,7 +68,7 @@ module ApiFetchable
       .where(source: :auto)
 
     api_responses.find_each do |response|
-      response.text = nil
+      response.text = nil if response.respond_to?(:text=)
       response.documents.purge if response.respond_to?(:documents)
       response.save!
     end

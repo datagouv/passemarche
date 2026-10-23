@@ -17,6 +17,8 @@ class GroupingMember < ApplicationRecord
   before_destroy :abort_if_completed
   after_create_commit :enqueue_company_name_resolution, if: :co_traitant?
 
+  normalizes :siret, with: ->(siret) { siret.strip }
+
   validates :siret, presence: true, siret: true
   validates :siret, uniqueness: { scope: :grouping_id }
   validates :siret, uniqueness: { scope: :public_market_id, conditions: -> { mandataire } }, if: :mandataire?
