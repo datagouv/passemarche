@@ -34,6 +34,20 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'siret normalization' do
+    it 'stores the siret without surrounding whitespace' do
+      application = create(:market_application, public_market:, siret: " 41816609600069 \n")
+
+      expect(application.reload.siret).to eq('41816609600069')
+    end
+
+    it 'finds applications by siret given with surrounding whitespace' do
+      application = create(:market_application, public_market:, siret: '41816609600069')
+
+      expect(described_class.for_siret('41816609600069 ')).to contain_exactly(application)
+    end
+  end
+
   describe 'business validations' do
     it 'requires SIRET to be present' do
       application = build(:market_application, public_market:, siret: nil)

@@ -19,6 +19,8 @@ class PublicMarket < ApplicationRecord
 
   attr_accessor :lot_limit_enabled
 
+  normalizes :siret, with: ->(siret) { siret.strip }
+
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
   validates :deadline, presence: true

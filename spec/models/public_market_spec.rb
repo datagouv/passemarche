@@ -71,6 +71,12 @@ RSpec.describe PublicMarket, type: :model do
         expect(public_market).to be_valid
       end
 
+      it 'stores the siret without surrounding whitespace' do
+        public_market = create(:public_market, editor:, siret: ' 13002526500013 ')
+
+        expect(public_market.reload.siret).to eq('13002526500013')
+      end
+
       it 'rejects non-numeric SIRET' do
         public_market = build(:public_market, editor:, siret: 'ABCD1234567890')
         expect(public_market).not_to be_valid
