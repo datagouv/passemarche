@@ -240,6 +240,19 @@ fr:
               lot_outside_groupement_scope: "Vous ne pouvez sélectionner que des lots pré-sélectionnés par le mandataire du groupement"
 
   errors:
+    pages:
+      not_found:
+        heading: "La page recherchée n'a pas été trouvée"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou cette page n'existe plus."
+      market_application_not_found:
+        heading: "La candidature recherchée n'a pas été trouvée"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou cette candidature n'existe plus. Pour reprendre votre candidature, repassez par la plateforme de marchés publics."
+      public_market_not_found:
+        heading: "Le marché recherché n'a pas été trouvé"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou ce marché n'existe plus. Pour reprendre la configuration du marché, repassez par la plateforme de marchés publics."
     messages:
       blank: "doit être rempli(e)"
       invalid: "n'est pas valide"

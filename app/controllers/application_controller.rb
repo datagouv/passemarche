@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include ErrorPages
+
   around_action :switch_locale
 
   private
