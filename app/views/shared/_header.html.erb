@@ -37,13 +37,13 @@
                 <div class="fr-collapse fr-translate__menu fr-menu" id="translate-menu">
                   <ul class="fr-menu__list">
                     <li>
-                      <%= link_to 'Français', url_for(request.query_parameters.merge(locale: 'fr')),
+                      <%= link_to 'Français', locale_switch_path('fr'),
                           lang: 'fr', hreflang: 'fr',
                           class: class_names('fr-translate__language', 'fr-nav__link': true),
                           aria: { current: I18n.locale.to_s == 'fr' ? 'true' : nil } %>
                     </li>
                     <li>
-                      <%= link_to 'English', url_for(request.query_parameters.merge(locale: 'en')),
+                      <%= link_to 'English', locale_switch_path('en'),
                           lang: 'en', hreflang: 'en',
                           class: class_names('fr-translate__language', 'fr-nav__link': true),
                           aria: { current: I18n.locale.to_s == 'en' ? 'true' : nil } %>
