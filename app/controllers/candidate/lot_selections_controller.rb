@@ -37,8 +37,6 @@ module Candidate
           public_market: { lots: %i[market_type platform_market_type] }
         )
         .find_by!(identifier: params[:identifier])
-    rescue ActiveRecord::RecordNotFound
-      render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
     end
 
     def redirect_if_no_lots

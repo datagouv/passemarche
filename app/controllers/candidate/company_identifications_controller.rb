@@ -21,8 +21,6 @@ module Candidate
       @market_application = MarketApplication
         .includes(public_market: :lots, grouping_member: :grouping)
         .find_by!(identifier: params[:identifier])
-    rescue ActiveRecord::RecordNotFound
-      render plain: "La candidature recherchée n'a pas été trouvée", status: :not_found
     end
 
     def skip_when_identity_already_confirmed

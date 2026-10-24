@@ -240,6 +240,35 @@ en:
               lot_outside_groupement_scope: "You can only select lots pre-selected by the grouping's mandataire"
 
   errors:
+    pages:
+      not_found:
+        heading: "The page you are looking for was not found"
+        paragraphs:
+          - "The link you used is incorrect or this page no longer exists."
+      market_application_not_found:
+        heading: "The application you are looking for was not found"
+        paragraphs:
+          - "The link you used is incorrect or this application no longer exists. To resume your application, go back through the public procurement platform."
+      public_market_not_found:
+        heading: "The tender you are looking for was not found"
+        paragraphs:
+          - "The link you used is incorrect or this tender no longer exists. To resume the tender configuration, go back through the public procurement platform."
+      public_market_published:
+        heading: "This tender can no longer be edited"
+        paragraphs:
+          - "This tender has been published and its configuration can no longer be edited."
+      grouping_invitation_expired:
+        heading: "This invitation is no longer valid"
+        paragraphs:
+          - "This invitation has expired, the group application is already finalized or the submission deadline has passed."
+      grouping_invitation_not_found:
+        heading: "This invitation link is no longer valid"
+        paragraphs:
+          - "This group no longer exists. For any questions, contact the lead contractor."
+      grouping_invitation_removed:
+        heading: "This invitation link is no longer valid"
+        paragraphs:
+          - "You are no longer part of this group. For any questions, contact the lead contractor."
     messages:
       blank: "must be filled in"
       invalid: "is not valid"
@@ -460,7 +489,6 @@ en:
       image_alt: "Illustration of a published tender"
     public_markets:
       wizard_completed: "Tender configured successfully"
-      market_published_cannot_edit: "This tender has been published and its configuration can no longer be edited."
       sync_retry_initiated: "Synchronization has been restarted."
       steps:
         setup: "Initial configuration"
@@ -587,7 +615,6 @@ en:
       explanation: "The application submission deadline has passed, so you can no longer edit your application."
       contact_hint: "For any questions, contact the tender platform."
       return_to_platform: "Return to the tender platform"
-      image_alt: "Illustration of a passed deadline"
     dashboard:
       title: "My applications"
       summary:
@@ -641,15 +668,6 @@ en:
     grouping_invitations:
       title: "Group invitation"
       pending: "Your invitation is being processed."
-      expired:
-        heading: "This invitation is no longer valid"
-        explanation: "This invitation has expired, the group application is already finalized or the submission deadline has passed."
-      not_found:
-        heading: "This invitation link is no longer valid"
-        explanation: "This group no longer exists. For any questions, contact the lead contractor."
-      removed:
-        heading: "This invitation link is no longer valid"
-        explanation: "You are no longer part of this group. For any questions, contact the lead contractor."
     grouping_legal_types:
       title: "Group type"
       step_current: "Step 1 of 3"

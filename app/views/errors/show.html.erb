@@ -1,0 +1,6 @@
+<% content_for :title, t("errors.pages.#{error_page}.heading") %>
+
+<%= render Shared::ErrorPageComponent.new(
+  heading: t("errors.pages.#{error_page}.heading"),
+  paragraphs: t("errors.pages.#{error_page}.paragraphs")
+) %>

@@ -240,6 +240,35 @@ fr:
               lot_outside_groupement_scope: "Vous ne pouvez sélectionner que des lots pré-sélectionnés par le mandataire du groupement"
 
   errors:
+    pages:
+      not_found:
+        heading: "La page recherchée n'a pas été trouvée"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou cette page n'existe plus."
+      market_application_not_found:
+        heading: "La candidature recherchée n'a pas été trouvée"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou cette candidature n'existe plus. Pour reprendre votre candidature, repassez par la plateforme de marchés publics."
+      public_market_not_found:
+        heading: "Le marché recherché n'a pas été trouvé"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou ce marché n'existe plus. Pour reprendre la configuration du marché, repassez par la plateforme de marchés publics."
+      public_market_published:
+        heading: "Ce marché ne peut plus être modifié"
+        paragraphs:
+          - "Ce marché a été publié et sa configuration ne peut plus être modifiée."
+      grouping_invitation_expired:
+        heading: "Cette invitation n'est plus valable"
+        paragraphs:
+          - "Cette invitation a expiré, la candidature du groupement est déjà finalisée ou la date limite de remise des offres est dépassée."
+      grouping_invitation_not_found:
+        heading: "Ce lien d'invitation n'est plus valable"
+        paragraphs:
+          - "Ce groupement n'existe plus. Pour toute question, contactez le mandataire."
+      grouping_invitation_removed:
+        heading: "Ce lien d'invitation n'est plus valable"
+        paragraphs:
+          - "Vous ne faites plus partie de ce groupement. Pour toute question, contactez le mandataire."
     messages:
       blank: "doit être rempli(e)"
       invalid: "n'est pas valide"
@@ -460,7 +489,6 @@ fr:
       image_alt: "Illustration consultation publiée"
     public_markets:
       wizard_completed: "Marché configuré avec succès"
-      market_published_cannot_edit: "Ce marché a été publié et sa configuration ne peut plus être modifiée."
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
@@ -587,7 +615,6 @@ fr:
       explanation: "La date limite de réception des candidatures est dépassée, vous ne pouvez donc plus modifier votre candidature."
       contact_hint: "Pour toutes questions, contactez la plateforme de marché."
       return_to_platform: "Revenir sur la plateforme de marché"
-      image_alt: "Illustration date limite dépassée"
     dashboard:
       title: "Mes candidatures"
       summary:
@@ -641,15 +668,6 @@ fr:
     grouping_invitations:
       title: "Invitation au groupement"
       pending: "Votre invitation est en cours de traitement."
-      expired:
-        heading: "Cette invitation n'est plus valable"
-        explanation: "Cette invitation a expiré, la candidature du groupement est déjà finalisée ou la date limite de remise des offres est dépassée."
-      not_found:
-        heading: "Ce lien d'invitation n'est plus valable"
-        explanation: "Ce groupement n'existe plus. Pour toute question, contactez le mandataire."
-      removed:
-        heading: "Ce lien d'invitation n'est plus valable"
-        explanation: "Vous ne faites plus partie de ce groupement. Pour toute question, contactez le mandataire."
     grouping_legal_types:
       title: "Le type de groupement"
       step_current: "Étape 1 sur 3"
