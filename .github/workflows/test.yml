@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   rspec:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     services:
       postgres:
@@ -50,7 +50,7 @@ jobs:
         bundle exec rspec
 
   cucumber:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [0, 1]
@@ -105,7 +105,7 @@ jobs:
   deploy-sandbox:
     needs: [rspec, cucumber]
     if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       matrix:
