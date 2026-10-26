@@ -77,4 +77,4 @@
   </div>
 </div>
 
-<%= render "delete_modal", application: application if application.in_progress? && !part_of_grouping %>
+<%= helpers.render "candidate/dashboards/delete_modal", application: application if application.in_progress? && !part_of_grouping %>
