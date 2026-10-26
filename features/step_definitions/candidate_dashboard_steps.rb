@@ -78,3 +78,7 @@ Then('the market card should list {string} then {string}') do |first_kind, secon
   kinds = all('.dashboard-application-row h3').map(&:text)
   expect(kinds).to eq([first_kind, second_kind])
 end
+
+Then('I should not see my application market name') do
+  expect(page).not_to have_text(@market_application.public_market.name)
+end

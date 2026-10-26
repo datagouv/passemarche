@@ -41,6 +41,10 @@ module Candidate
                 end
     end
 
+    def show_kind?
+      FeatureFlags::Groupement.enabled?
+    end
+
     def kind_label
       I18n.t("candidate.dashboard.application.kind.#{kind}")
     end

@@ -1,8 +1,10 @@
 <div class="dashboard-application-row fr-py-3w">
   <div class="dashboard-application-row__content">
     <div class="dashboard-application-row__heading fr-mb-1w">
-      <span class="<%= application.kind_icon_class %> fr-icon--sm fr-text-action-high--blue-france" aria-hidden="true"></span>
-      <h3 class="fr-text--md fr-text--bold fr-mb-0"><%= application.kind_label %></h3>
+      <% if application.show_kind? %>
+        <span class="<%= application.kind_icon_class %> fr-icon--sm fr-text-action-high--blue-france" aria-hidden="true"></span>
+        <h3 class="fr-text--md fr-text--bold fr-mb-0"><%= application.kind_label %></h3>
+      <% end %>
       <p class="fr-badge fr-badge--sm <%= application.status_badge_class %>"><%= application.status_label %></p>
     </div>
 

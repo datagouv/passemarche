@@ -120,6 +120,27 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '.outside_grouping' do
+    let(:public_market) { create(:public_market, :completed) }
+    let!(:solo_application) { create(:market_application, public_market:, application_mode: :solo) }
+    let!(:application_without_mode) { create(:market_application, public_market:, application_mode: nil) }
+    let!(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+    let!(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '41816609600069', application_mode: :groupement)
+    end
+
+    before do
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+        siret: co_traitant_application.siret)
+    end
+
+    it 'keeps only the applications that do not belong to a grouping' do
+      expect(described_class.outside_grouping).to contain_exactly(solo_application, application_without_mode)
+    end
+  end
+
   describe '#complete!' do
     let(:editor) { create(:editor) }
     let(:application) { create(:market_application, public_market:, siret: '12345678901234', identifier: nil) }

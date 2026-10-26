@@ -52,24 +52,28 @@ Feature: Candidate dashboard
     Then I should see "Ville de Paris"
 
   Scenario: Dashboard shows an individual application
+    Given the groupement feature flag is enabled
     When I visit the dashboard
     Then I should see "Candidature individuelle"
 
   Scenario: Dashboard shows a co-traitant application
-    Given my application is a co-traitant of a grouping
+    Given the groupement feature flag is enabled
+    And my application is a co-traitant of a grouping
     When I visit the dashboard
     Then I should see "Candidature en groupement · Co-traitant"
     And I should see "Modifier"
     And I should see "Mandataire : 41816609600069"
 
   Scenario: Dashboard shows a co-traitant application as transmitted once the grouping is submitted
-    Given my application is a co-traitant of a grouping
+    Given the groupement feature flag is enabled
+    And my application is a co-traitant of a grouping
     And the grouping has been submitted
     When I visit the dashboard
     Then I should see "Transmise à la plateforme"
 
   Scenario: Dashboard groups individual and grouping applications of the same market
-    Given I also apply as mandataire of a grouping on the same market
+    Given the groupement feature flag is enabled
+    And I also apply as mandataire of a grouping on the same market
     When I visit the dashboard
     Then I should see a single card for my application market
     And the market card should list "Candidature en groupement · Mandataire" then "Candidature individuelle"
@@ -80,3 +84,12 @@ Feature: Candidate dashboard
     When I visit the dashboard
     Then I should see "Date limite dépassée"
     And I should not see "Modifier"
+
+  Scenario: Dashboard hides the application kind when the groupement feature is disabled
+    When I visit the dashboard
+    Then I should not see "Candidature individuelle"
+
+  Scenario: Dashboard hides grouping applications when the groupement feature is disabled
+    Given my application is a co-traitant of a grouping
+    When I visit the dashboard
+    Then I should not see my application market name

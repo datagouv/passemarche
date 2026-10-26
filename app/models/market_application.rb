@@ -42,6 +42,7 @@ class MarketApplication < ApplicationRecord
   scope :in_progress, -> { where(completed_at: nil) }
   scope :completed, -> { where.not(completed_at: nil) }
   scope :by_last_modification, -> { order(updated_at: :desc) }
+  scope :outside_grouping, -> { where.missing(:grouping_member).where(application_mode: [nil, :solo, :mixte]) }
   scope :matching_mode, ->(mode) { where(application_mode: mode.blank? || mode.to_s == 'solo' ? [nil, :solo] : mode) }
 
   def in_progress?

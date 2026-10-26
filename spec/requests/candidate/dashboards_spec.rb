@@ -48,7 +48,10 @@ RSpec.describe 'Candidate::Dashboards', type: :request do
       context 'when the application is a groupement the user is mandataire of' do
         let(:application) { create(:market_application, public_market:, user:, application_mode: :groupement) }
 
-        before { create(:grouping, public_market:, mandataire_market_application: application) }
+        before do
+          allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+          create(:grouping, public_market:, mandataire_market_application: application)
+        end
 
         it 'shows a link to the grouping dashboard instead of the edit link' do
           get candidate_dashboard_path
@@ -69,6 +72,7 @@ RSpec.describe 'Candidate::Dashboards', type: :request do
         let(:application) { create(:market_application, public_market:, user:, application_mode: :groupement) }
 
         before do
+          allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
           mandataire_application = create(:market_application, public_market:, siret: '41816609600069',
             application_mode: :groupement)
           grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
@@ -87,6 +91,29 @@ RSpec.describe 'Candidate::Dashboards', type: :request do
           get candidate_dashboard_path
 
           expect(response.body).not_to include(I18n.t('candidate.dashboard.actions.delete'))
+        end
+      end
+
+      context 'when the groupement feature is disabled' do
+        let(:application) { create(:market_application, public_market:, user:, application_mode: :groupement) }
+
+        before do
+          allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+          create(:grouping, public_market:, mandataire_market_application: application)
+          create(:market_application, public_market: create(:public_market, :completed, name: 'Marché individuel'),
+            user:, siret: application.siret, application_mode: :solo)
+        end
+
+        it 'hides the grouping applications' do
+          get candidate_dashboard_path
+
+          expect(response.body).not_to include(public_market.name)
+        end
+
+        it 'keeps the individual applications' do
+          get candidate_dashboard_path
+
+          expect(response.body).to include('Marché individuel')
         end
       end
 

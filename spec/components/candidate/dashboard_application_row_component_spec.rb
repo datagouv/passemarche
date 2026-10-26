@@ -6,7 +6,10 @@ RSpec.describe Candidate::DashboardApplicationRowComponent, type: :component do
   let(:public_market) { create(:public_market, :completed) }
   let(:application) { Candidate::DashboardApplicationPresenter.new(market_application, public_market:) }
 
-  before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+  before do
+    allow(SiretValidator).to receive(:valid?).and_return(true)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+  end
 
   context 'when the application is individual and in progress' do
     let(:market_application) { create(:market_application, public_market:, application_mode: :solo) }
@@ -63,6 +66,19 @@ RSpec.describe Candidate::DashboardApplicationRowComponent, type: :component do
     it 'renders the view link only' do
       expect(page).to have_link('Consulter')
       expect(page).to have_no_link('Modifier')
+    end
+  end
+
+  context 'when the groupement feature is disabled' do
+    let(:market_application) { create(:market_application, public_market:, application_mode: :solo) }
+
+    before do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      render_inline(described_class.new(application:))
+    end
+
+    it 'hides the application kind' do
+      expect(page).to have_no_css('h3')
     end
   end
 end

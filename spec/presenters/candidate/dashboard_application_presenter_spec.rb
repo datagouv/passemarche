@@ -24,6 +24,18 @@ RSpec.describe Candidate::DashboardApplicationPresenter do
       expect(presenter.kind_icon_class).to eq('fr-icon-user-fill')
     end
 
+    it 'shows its kind when the groupement feature is enabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+
+      expect(presenter).to be_show_kind
+    end
+
+    it 'hides its kind when the groupement feature is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+
+      expect(presenter).not_to be_show_kind
+    end
+
     it 'does not name any mandataire' do
       expect(presenter.mandataire_label).to be_nil
     end

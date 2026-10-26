@@ -8,6 +8,7 @@ module Candidate
       base_scope = MarketApplication
         .for_user(current_candidate)
         .for_siret(session_siret)
+      base_scope = base_scope.outside_grouping unless FeatureFlags::Groupement.enabled?
       status_counts = Candidate::DashboardApplicationPresenter.status_counts(base_scope)
       @in_progress_count = status_counts[:in_progress]
       @completed_count = status_counts[:completed]
