@@ -5,6 +5,15 @@ When('I visit the setup page for my public market') do
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :setup)
 end
 
+When('I visit the step {string} of my public market') do |step_name|
+  @market_identifier ||= @last_api_response['identifier']
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: step_name)
+end
+
+Then('I should see the page not found') do
+  expect(page.status_code).to eq(404)
+end
+
 When('I visit the first category page for my public market') do
   @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by!(identifier: @market_identifier)

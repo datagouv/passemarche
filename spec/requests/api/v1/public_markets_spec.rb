@@ -175,6 +175,22 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
 
+    context 'with an out of range deadline' do
+      before do
+        post '/api/v1/public_markets',
+          params: market_params.deep_merge(public_market: { deadline: '99999-01-01T00:00:00Z' }).to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status with a deadline error' do
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body['errors']).to have_key('deadline')
+      end
+    end
+
     context 'with missing required fields' do
       let(:invalid_params) do
         {
@@ -516,6 +532,22 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       it 'returns deadline validation error' do
         json_response = response.parsed_body
         expect(json_response['errors']).to have_key('deadline')
+      end
+    end
+
+    context 'with an out of range deadline' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: '-5225-09-30T23:50:39Z' } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status with a deadline error' do
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body['errors']).to have_key('deadline')
       end
     end
 

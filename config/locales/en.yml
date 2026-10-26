@@ -1741,6 +1741,7 @@ en:
               blank: "The tender name cannot be blank"
             deadline:
               blank: "The deadline cannot be blank"
+              out_of_range: "The deadline must be between 2000 and 2099"
             market_type:
               blank: "The tender type cannot be blank"
             market_types:
