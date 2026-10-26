@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Candidate::DashboardApplicationRowComponent < ViewComponent::Base
-  with_collection_parameter :application
-
   def initialize(application:)
     @application = application
   end
@@ -10,4 +8,12 @@ class Candidate::DashboardApplicationRowComponent < ViewComponent::Base
   private
 
   attr_reader :application
+
+  def actions
+    @actions ||= application.actions
+  end
+
+  def mandataire_label
+    @mandataire_label ||= application.mandataire_label
+  end
 end

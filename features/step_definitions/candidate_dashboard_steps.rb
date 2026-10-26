@@ -58,3 +58,23 @@ Given('my application is a co-traitant of a grouping') do
   @grouping_member = create(:grouping_member, :co_traitant, grouping:, market_application: @market_application,
     siret: @market_application.siret)
 end
+
+Given('the grouping has been submitted') do
+  @grouping_member.grouping.update!(submitted_at: Time.zone.now, submission_mode: :partial)
+end
+
+Given('I also apply as mandataire of a grouping on the same market') do
+  @market_application.reload.update!(application_mode: :solo)
+  groupement_application = create(:market_application, public_market: @public_market, siret: @market_application.siret,
+    user: @market_application.user, application_mode: :groupement)
+  create(:grouping, public_market: @public_market, mandataire_market_application: groupement_application)
+end
+
+Then('I should see a single card for my application market') do
+  expect(page).to have_css('.fr-card h2', text: @public_market.name, count: 1)
+end
+
+Then('the market card should list {string} then {string}') do |first_kind, second_kind|
+  kinds = all('.dashboard-application-row h3').map(&:text)
+  expect(kinds).to eq([first_kind, second_kind])
+end

@@ -21,13 +21,13 @@ Feature: Candidate dashboard
   Scenario: Dashboard shows in-progress application
     When I visit the dashboard
     Then I should see my application market name
-    And I should see "EN COURS"
+    And I should see "En cours"
 
   Scenario: Dashboard shows completed application
     Given my application has been submitted
     When I visit the dashboard
     Then I should see my application market name
-    And I should see "TRANSMISE"
+    And I should see "Transmise à la plateforme"
 
   Scenario: Dashboard only shows the candidate's own applications
     Given another application exists for a different candidate
@@ -50,3 +50,33 @@ Feature: Candidate dashboard
     Given the public market has a buyer name "Ville de Paris"
     When I visit the dashboard
     Then I should see "Ville de Paris"
+
+  Scenario: Dashboard shows an individual application
+    When I visit the dashboard
+    Then I should see "Candidature individuelle"
+
+  Scenario: Dashboard shows a co-traitant application
+    Given my application is a co-traitant of a grouping
+    When I visit the dashboard
+    Then I should see "Candidature en groupement · Co-traitant"
+    And I should see "Modifier"
+    And I should see "Mandataire : 41816609600069"
+
+  Scenario: Dashboard shows a co-traitant application as transmitted once the grouping is submitted
+    Given my application is a co-traitant of a grouping
+    And the grouping has been submitted
+    When I visit the dashboard
+    Then I should see "Transmise à la plateforme"
+
+  Scenario: Dashboard groups individual and grouping applications of the same market
+    Given I also apply as mandataire of a grouping on the same market
+    When I visit the dashboard
+    Then I should see a single card for my application market
+    And the market card should list "Candidature en groupement · Mandataire" then "Candidature individuelle"
+    And I should see "2" for in-progress count
+
+  Scenario: Dashboard shows an application whose deadline has passed before transmission
+    Given la date limite du marché est dépassée
+    When I visit the dashboard
+    Then I should see "Date limite dépassée"
+    And I should not see "Modifier"

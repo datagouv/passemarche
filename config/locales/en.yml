@@ -621,14 +621,22 @@ en:
         in_progress: "Applications in progress"
         completed: "Completed applications"
       application:
+        kind:
+          mandataire: "Group application · Lead"
+          co_traitant: "Group application · Co-contractor"
+          individual: "Individual application"
+        mandataire: "Lead: %{name}"
         lots_count:
           one: "1 lot"
           other: "%{count} lots"
         modified_on: "Modified on %{date}"
         submitted_on: "Submitted on %{date}"
+        sent_to_mandataire_on: "Sent on %{date}"
         status:
           in_progress: "In progress"
           submitted: "Submitted to platform"
+          sent_to_mandataire: "Sent to the lead"
+          deadline_passed: "Deadline passed"
         delete_modal:
           title: "Delete application"
           body: "You are about to delete this application; all the information you have completed will be lost. Are you sure you want to delete it?"

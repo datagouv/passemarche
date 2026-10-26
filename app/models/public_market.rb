@@ -19,6 +19,13 @@ class PublicMarket < ApplicationRecord
   accepts_nested_attributes_for :lots
   has_many :market_applications, dependent: :destroy
 
+  scope :by_latest_application_among, lambda { |market_applications|
+    joins(:market_applications)
+      .merge(market_applications)
+      .group(:id)
+      .order(MarketApplication.arel_table[:updated_at].maximum.desc, :id)
+  }
+
   attr_accessor :lot_limit_enabled
 
   normalizes :siret, with: ->(siret) { siret.strip }
