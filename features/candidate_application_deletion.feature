@@ -39,3 +39,8 @@ Feature: Candidate application deletion
     Then my application should no longer exist
     And I should be on the home page
     And I should see "Votre candidature a bien été supprimée."
+
+  Scenario: Delete button is not visible for a co-traitant application
+    Given my application is a co-traitant of a grouping
+    When I visit the dashboard
+    Then I should not see the delete button for my application

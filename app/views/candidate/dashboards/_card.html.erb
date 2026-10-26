@@ -1,4 +1,5 @@
 <% mandataire_of_grouping = application.mandataire_of_grouping? %>
+<% part_of_grouping = application.part_of_grouping? %>
 
 <div class="fr-card fr-card--no-arrow fr-card--horizontal fr-mb-2w">
   <div class="fr-card__body">
@@ -43,7 +44,7 @@
             <% end %>
           </li>
         <% elsif application.in_progress? %>
-          <% unless mandataire_of_grouping %>
+          <% unless part_of_grouping %>
             <li>
               <button class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--tertiary fr-btn--icon-left"
                       data-fr-opened="false"
@@ -76,4 +77,4 @@
   </div>
 </div>
 
-<%= render "delete_modal", application: application if application.in_progress? && !mandataire_of_grouping %>
+<%= render "delete_modal", application: application if application.in_progress? && !part_of_grouping %>

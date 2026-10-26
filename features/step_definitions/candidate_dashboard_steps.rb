@@ -49,3 +49,12 @@ end
 Given('the public market has a buyer name {string}') do |buyer_name|
   @public_market.update!(buyer_name:)
 end
+
+Given('my application is a co-traitant of a grouping') do
+  @market_application.reload.update!(application_mode: :groupement)
+  mandataire_application = create(:market_application, public_market: @public_market, siret: '41816609600069',
+    application_mode: :groupement)
+  grouping = create(:grouping, public_market: @public_market, mandataire_market_application: mandataire_application)
+  @grouping_member = create(:grouping_member, :co_traitant, grouping:, market_application: @market_application,
+    siret: @market_application.siret)
+end
