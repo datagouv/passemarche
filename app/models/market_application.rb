@@ -156,8 +156,13 @@ class MarketApplication < ApplicationRecord
     end
   end
 
+  def applicable_market_attribute_responses
+    applicable_ids = applicable_market_attributes.map(&:id)
+    market_attribute_responses.select { |response| applicable_ids.include?(response.market_attribute_id) }
+  end
+
   def all_security_scans_complete?
-    file_responses = market_attribute_responses
+    file_responses = applicable_market_attribute_responses
       .select { |r| r.respond_to?(:documents) && r.documents.attached? }
 
     return true if file_responses.empty?
@@ -201,7 +206,7 @@ class MarketApplication < ApplicationRecord
 
   def responses_for_context(context)
     if context.blank? || context.to_s == 'summary'
-      market_attribute_responses.to_a
+      applicable_market_attribute_responses
     else
       responses_for_step(context)
     end
@@ -222,9 +227,9 @@ class MarketApplication < ApplicationRecord
   end
 
   def responses_for_subcategory(subcategory_key)
-    attribute_ids = public_market.market_attributes
-      .where(subcategory_key: subcategory_key.to_s)
-      .pluck(:id)
+    attribute_ids = applicable_market_attributes
+      .select { |market_attribute| market_attribute.subcategory_key == subcategory_key.to_s }
+      .map(&:id)
 
     market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
   end

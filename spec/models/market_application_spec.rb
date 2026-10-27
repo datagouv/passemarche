@@ -814,6 +814,16 @@ RSpec.describe MarketApplication, type: :model do
       expect(market_application.applicable_market_attributes)
         .to contain_exactly(services_attribute, untyped_attribute)
     end
+
+    it 'ignores the responses of non applicable attributes when validating the summary' do
+      works_email_attribute = create(:market_attribute, :email, public_markets: [public_market],
+        market_types: [works_type])
+      MarketAttributeResponse::EmailInput.new(market_application:, market_attribute: works_email_attribute,
+        text: 'pas-un-email').save!(validate: false)
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+
+      expect(market_application.reload.valid?(:summary)).to be true
+    end
   end
 
   describe '#locked?' do
