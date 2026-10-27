@@ -27,6 +27,31 @@ Given('the market asks for a text field {string} in the {string} step') do |key,
     public_markets: [@public_market])
 end
 
+Given('the market has a works lot and a services lot') do
+  @public_market.update!(market_type_codes: %w[works services])
+  @works_lot = create(:lot, public_market: @public_market, market_type: MarketType.find_or_create_by!(code: 'works'))
+  @services_lot = create(:lot, public_market: @public_market,
+    market_type: MarketType.find_or_create_by!(code: 'services'))
+end
+
+Given('the market asks for a {word} text field {string} in the {string} step') do |type_code, key, step|
+  @draft_attributes ||= {}
+  @draft_attributes[key] = create(:market_attribute, :text_input, key:, category_key: step, subcategory_key: step,
+    public_markets: [@public_market], market_types: [MarketType.find_by!(code: type_code)])
+end
+
+Given('I declared only the services lot') do
+  @co_traitant_application.lots = [@services_lot]
+end
+
+Then('I should see the {string} field') do |key|
+  expect(page).to have_css(market_attribute_id_field_selector(key), visible: false)
+end
+
+Then('I should not see the {string} field') do |key|
+  expect(page).to have_no_css(market_attribute_id_field_selector(key), visible: false)
+end
+
 When('I fill in the {string} field with {string}') do |key, value|
   find(draft_text_field_selector(key)).set(value)
 end
@@ -36,7 +61,10 @@ Then('the {string} field should contain {string}') do |key, value|
 end
 
 def draft_text_field_selector(key)
-  market_attribute_id = @draft_attributes.fetch(key).id
-  hidden_field = find("input[type=hidden][name$='[market_attribute_id]'][value='#{market_attribute_id}']", visible: false)
+  hidden_field = find(market_attribute_id_field_selector(key), visible: false)
   "input[name='#{hidden_field[:name].sub('[market_attribute_id]', '[text]')}']"
+end
+
+def market_attribute_id_field_selector(key)
+  "input[type=hidden][name$='[market_attribute_id]'][value='#{@draft_attributes.fetch(key).id}']"
 end
