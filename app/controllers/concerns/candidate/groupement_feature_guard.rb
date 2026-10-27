@@ -11,7 +11,7 @@ module Candidate
     private
 
     def ensure_groupement_feature_enabled
-      head :not_found unless FeatureFlags::Groupement.enabled?
+      render_error_page(:not_found, status: :not_found) unless FeatureFlags::Groupement.enabled?
     end
   end
 end

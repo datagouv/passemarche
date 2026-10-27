@@ -3,7 +3,6 @@
 module Buyer
   class PublicMarketsController < Buyer::ApplicationController
     include Wicked::Wizard
-    include WizardInvalidStepNotFound
 
     prepend_before_action :set_dynamic_steps, except: [:retry_sync]
     prepend_before_action :initialize_presenter, except: [:retry_sync]
@@ -83,8 +82,6 @@ module Buyer
 
     def find_public_market
       @public_market = PublicMarket.find_by!(identifier: params[:identifier])
-    rescue ActiveRecord::RecordNotFound
-      render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
     end
 
     def check_market_not_published

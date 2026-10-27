@@ -77,7 +77,7 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
       it 'tells the visitor the grouping no longer exists' do
         get candidate_grouping_invitation_path('unknown-token')
 
-        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.not_found.explanation'))
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_not_found.paragraphs').first)
       end
     end
 
@@ -98,7 +98,7 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
       it 'tells the visitor they are no longer part of the grouping' do
         get candidate_grouping_invitation_path('removed-token-123')
 
-        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.removed.explanation'))
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_removed.paragraphs').first)
       end
     end
 
@@ -117,7 +117,7 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
         get candidate_grouping_invitation_path('removed-token-123')
 
         expect(response).to have_http_status(:not_found)
-        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.not_found.explanation'))
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_not_found.paragraphs').first)
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
       it 'renders the expired invitation page' do
         get candidate_grouping_invitation_path(grouping_member.invitation_token)
 
-        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.grouping_invitations.expired.heading'))
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_expired.heading'))
       end
     end
   end

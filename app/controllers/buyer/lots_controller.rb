@@ -35,14 +35,12 @@ module Buyer
 
     def find_public_market
       @public_market = PublicMarket.find_by!(identifier: params[:identifier])
-    rescue ActiveRecord::RecordNotFound
-      render plain: 'Le marché recherché n\'a pas été trouvé', status: :not_found
     end
 
     def check_market_not_published
       return unless @public_market.published?
 
-      render plain: t('buyer.public_markets.market_published_cannot_edit'), status: :unprocessable_content
+      render_error_page(:public_market_published, status: :unprocessable_content)
     end
   end
 end

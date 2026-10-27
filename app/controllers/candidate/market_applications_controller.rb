@@ -3,7 +3,6 @@
 module Candidate
   class MarketApplicationsController < Candidate::ApplicationController
     include Wicked::Wizard
-    include WizardInvalidStepNotFound
     include Candidate::MarketApplicationGuard
     include Candidate::ApplicationModeGuard
 
@@ -116,9 +115,6 @@ module Candidate
           market_attribute_responses: :market_attribute
         )
         .find_by!(identifier: params[:identifier])
-    rescue ActiveRecord::RecordNotFound
-      @market_application = nil
-      render plain: 'La candidature recherchée n\'a pas été trouvée', status: :not_found
     end
 
     def presenter

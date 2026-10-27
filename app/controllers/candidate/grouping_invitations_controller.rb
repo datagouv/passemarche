@@ -7,7 +7,7 @@ module Candidate
     def show
       @grouping_member = GroupingMember.find_by(invitation_token: params[:token])
       return render_missing_member if @grouping_member.nil?
-      return render :expired, status: :gone if @grouping_member.invitation_expired?
+      return render_error_page(:grouping_invitation_expired, status: :gone) if @grouping_member.invitation_expired?
 
       @invitation_token = @grouping_member.invitation_token
       @market_application = @grouping_member.market_application
@@ -18,9 +18,9 @@ module Candidate
 
     def render_missing_member
       removed_member = GroupingMember.removed_with_invitation_token(params[:token])
-      return render :removed, status: :gone if removed_member&.grouping
+      return render_error_page(:grouping_invitation_removed, status: :gone) if removed_member&.grouping
 
-      render :not_found, status: :not_found
+      render_error_page(:grouping_invitation_not_found, status: :not_found)
     end
   end
 end
