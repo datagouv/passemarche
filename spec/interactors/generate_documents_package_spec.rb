@@ -376,6 +376,46 @@ RSpec.describe GenerateDocumentsPackage, type: :interactor do
       end
     end
 
+    context 'when a document belongs to a lot type the candidate did not declare' do
+      let(:public_market) { create(:public_market, :completed) }
+      let(:market_application) { create(:market_application, public_market:) }
+      let(:works_type) { create(:market_type, :works) }
+      let(:services_type) { create(:market_type, :services) }
+      let(:works_attribute) do
+        create(:market_attribute, :file_upload,
+          key: 'references_travaux',
+          market_types: [works_type],
+          public_markets: [public_market])
+      end
+
+      before do
+        create(:lot, public_market:, market_type: works_type)
+        market_application.lots << create(:lot, public_market:, market_type: services_type)
+
+        market_application.buyer_attestation.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: "buyer_attestation_FT#{market_application.identifier}.pdf",
+          content_type: 'application/pdf'
+        )
+
+        response = MarketAttributeResponse.build_for_attribute(works_attribute, market_application:)
+        response.documents.attach(io: StringIO.new('Works PDF'), filename: 'references_travaux.pdf', content_type: 'application/pdf')
+        response.save!
+      end
+
+      it 'leaves the document out of the package' do
+        zip_stream = double('zip_stream')
+        allow(zip_stream).to receive(:put_next_entry)
+        allow(zip_stream).to receive(:write)
+
+        allow(Zip::OutputStream).to receive(:write_buffer).and_yield(zip_stream).and_return(double('zip_buffer', string: 'fake zip content'))
+
+        subject
+
+        expect(zip_stream).not_to have_received(:put_next_entry).with(/references_travaux/)
+      end
+    end
+
     context 'when attribute is shared across multiple types (CA-3 — RG6)' do
       let(:public_market) { create(:public_market, :completed) }
       let(:market_application) { create(:market_application, public_market:) }
