@@ -38,6 +38,32 @@ RSpec.describe 'Error pages', type: :request do
     end
   end
 
+  context 'when the buyer wizard step does not exist' do
+    let(:public_market) { create(:public_market) }
+
+    it 'renders the generic not found page' do
+      get step_buyer_public_market_path(public_market.identifier, 'unknown_step')
+
+      expect(response).to have_http_status(:not_found)
+      expect(CGI.unescapeHTML(response.body)).to include(heading(:not_found))
+    end
+  end
+
+  context 'when the candidate wizard step does not exist' do
+    let(:market_application) { create(:market_application, public_market: create(:public_market, :completed)) }
+
+    before do
+      allow_any_instance_of(Candidate::ApplicationController).to receive(:current_candidate).and_return(create(:user))
+    end
+
+    it 'renders the generic not found page' do
+      get step_candidate_market_application_path(market_application.identifier, 'unknown_step')
+
+      expect(response).to have_http_status(:not_found)
+      expect(CGI.unescapeHTML(response.body)).to include(heading(:not_found))
+    end
+  end
+
   context 'when the missing record has no dedicated page' do
     before { sign_in create(:admin_user), scope: :admin_user }
 
