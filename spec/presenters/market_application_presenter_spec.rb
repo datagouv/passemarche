@@ -319,6 +319,28 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
       end
     end
 
+    context 'when the mandatory motifs_exclusion attribute belongs to a lot type the candidate did not declare' do
+      let!(:services_type) { MarketType.find_or_create_by!(code: 'services') }
+      let!(:works_type) { MarketType.find_or_create_by!(code: 'works') }
+
+      before do
+        motifs_market.update!(market_type_codes: %w[works services])
+        motifs_application.lots = [create(:lot, public_market: motifs_market, market_type: services_type)]
+        create(:market_attribute,
+          key: 'motifs_exclusion_works_only',
+          mandatory: true,
+          category_key: 'motifs_exclusion',
+          subcategory_key: 'motifs_exclusion_fiscales',
+          input_type: :file_upload,
+          public_markets: [motifs_market],
+          market_types: [works_type])
+      end
+
+      it 'returns false' do
+        expect(motifs_presenter.missing_mandatory_motifs_exclusion?).to be false
+      end
+    end
+
     context 'when there are no motifs_exclusion attributes at all' do
       let(:no_motifs_market) { create(:public_market, :completed, editor:) }
       let(:no_motifs_application) { create(:market_application, public_market: no_motifs_market) }
@@ -595,6 +617,46 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
         single_app.lots = [lot_works]
         presenter = described_class.new(single_app)
         expect(presenter.multi_type_selected_lots?).to be false
+      end
+    end
+
+    describe 'filtering attributes by declared lot types' do
+      let(:services_application) do
+        app = create(:market_application, public_market: multi_type_market)
+        app.lots = [lot_services]
+        app
+      end
+
+      let(:services_presenter) { described_class.new(services_application) }
+
+      it 'hides the attributes of lot types the candidate did not declare' do
+        fields = services_presenter.fields_by_category_and_subcategory
+
+        expect(fields.keys).to include('services_cat')
+        expect(fields.keys).not_to include('works_cat')
+      end
+
+      it 'keeps the attributes shared with a declared lot type' do
+        expect(services_presenter.responses_for_category('common_cat').map(&:market_attribute))
+          .to contain_exactly(common_attr)
+      end
+
+      it 'removes the steps of lot types the candidate did not declare' do
+        expect(services_presenter.wizard_steps).to include(:services_sub)
+        expect(services_presenter.wizard_steps).not_to include(:works_sub)
+      end
+
+      it 'ignores optional attributes of lot types the candidate did not declare' do
+        works_attr.update!(mandatory: false)
+        services_attr.update!(mandatory: true)
+        common_attr.update!(mandatory: true)
+
+        expect(services_presenter.optional_market_attributes?).to be false
+      end
+
+      it 'keeps every attribute when lots of each type are declared' do
+        expect(multi_presenter.fields_by_category_and_subcategory.keys)
+          .to include('common_cat', 'works_cat', 'services_cat')
       end
     end
 

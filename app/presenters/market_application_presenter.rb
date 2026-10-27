@@ -196,7 +196,7 @@ class MarketApplicationPresenter
   # === VALIDATION METHODS ===
 
   def optional_market_attributes?
-    public_market.market_attributes.exists?(mandatory: false)
+    all_market_attributes.any? { |attr| !attr.mandatory? }
   end
 
   def missing_mandatory_motifs_exclusion?
@@ -225,9 +225,7 @@ class MarketApplicationPresenter
   end
 
   def mandatory_motifs_exclusion_attributes
-    public_market.market_attributes
-      .where(mandatory: true)
-      .where('category_key LIKE ?', 'motifs_exclusion%')
+    all_market_attributes.select { |attr| attr.mandatory? && attr.category_key.to_s.start_with?('motifs_exclusion') }
   end
 
   def response_has_data?(response)
@@ -244,7 +242,7 @@ class MarketApplicationPresenter
   end
 
   def all_market_attributes
-    @all_market_attributes ||= public_market.market_attributes.includes(:market_types).sort_by(&:position)
+    @all_market_attributes ||= @market_application.applicable_market_attributes.sort_by(&:position)
   end
 
   def hidden_attr_ids

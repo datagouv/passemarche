@@ -748,6 +748,74 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#applicable_market_type_codes' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_lot) { public_market.lots.find_by!(name: 'Gros œuvre') }
+    let(:services_lot) { public_market.lots.find_by!(name: 'Prestations SI') }
+    let(:market_application) { create(:market_application, public_market:) }
+
+    it 'returns the types of the declared lots only' do
+      market_application.lots = [services_lot]
+
+      expect(market_application.applicable_market_type_codes).to contain_exactly('services')
+    end
+
+    it 'returns every declared lot type when lots of several types are declared' do
+      market_application.lots = [works_lot, services_lot]
+
+      expect(market_application.applicable_market_type_codes).to contain_exactly('works', 'services')
+    end
+
+    it 'keeps the defense code of the market' do
+      create(:market_type, :defense)
+      public_market.update!(market_type_codes: %w[works services defense])
+      market_application.lots = [services_lot]
+
+      expect(market_application.applicable_market_type_codes).to contain_exactly('services', 'defense')
+    end
+
+    it 'falls back to every market type when no lot is declared' do
+      expect(market_application.applicable_market_type_codes).to match_array(public_market.effective_market_type_codes)
+    end
+
+    it 'falls back to every market type when a declared lot has no type' do
+      untyped_lot = create(:lot, public_market:)
+      market_application.lots = [services_lot, untyped_lot]
+
+      expect(market_application.applicable_market_type_codes).to match_array(public_market.effective_market_type_codes)
+    end
+
+    it 'uses the lots of the grouping for a solidaire co-traitant' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      mandataire_application.lots = [works_lot]
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application,
+        legal_type: :solidaire)
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.reload.applicable_market_type_codes).to contain_exactly('works')
+    end
+  end
+
+  describe '#applicable_market_attributes' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_type) { MarketType.find_by!(code: 'works') }
+    let(:services_type) { MarketType.find_by!(code: 'services') }
+    let(:market_application) { create(:market_application, public_market:) }
+    let!(:works_attribute) { create(:market_attribute, public_markets: [public_market], market_types: [works_type]) }
+    let!(:services_attribute) do
+      create(:market_attribute, public_markets: [public_market], market_types: [services_type])
+    end
+    let!(:untyped_attribute) { create(:market_attribute, public_markets: [public_market]) }
+
+    it 'keeps the attributes of the declared lot types and the untyped ones' do
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+
+      expect(market_application.applicable_market_attributes)
+        .to contain_exactly(services_attribute, untyped_attribute)
+    end
+  end
+
   describe '#locked?' do
     let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
 
