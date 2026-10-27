@@ -94,8 +94,8 @@ module ApiFetchable
   end
 
   def mark_api_attributes_as_manual_after_failure(market_application)
-    api_attributes = market_application.public_market.market_attributes
-      .where(api_name: self.class.api_name)
+    api_attributes = market_application.applicable_market_attributes
+      .select { |market_attribute| market_attribute.api_name == self.class.api_name }
 
     api_attributes.each do |attribute|
       response = market_application.market_attribute_responses

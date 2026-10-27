@@ -106,10 +106,7 @@ class MarketApplication < ApplicationRecord
   end
 
   def api_names_to_fetch
-    public_market.market_attributes
-      .where.not(api_name: nil)
-      .distinct
-      .pluck(:api_name)
+    applicable_market_attributes.filter_map(&:api_name).uniq
   end
 
   def valid?(context = nil)

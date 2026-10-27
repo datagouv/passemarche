@@ -815,6 +815,14 @@ RSpec.describe MarketApplication, type: :model do
         .to contain_exactly(services_attribute, untyped_attribute)
     end
 
+    it 'only fetches the APIs of the applicable attributes' do
+      works_attribute.update!(api_name: 'probtp', api_key: 'probtp_key')
+      services_attribute.update!(api_name: 'insee', api_key: 'insee_key')
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+
+      expect(market_application.api_names_to_fetch).to contain_exactly('insee')
+    end
+
     it 'ignores the responses of non applicable attributes when validating the summary' do
       works_email_attribute = create(:market_attribute, :email, public_markets: [public_market],
         market_types: [works_type])
