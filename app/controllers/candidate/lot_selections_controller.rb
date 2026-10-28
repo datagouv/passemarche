@@ -31,8 +31,7 @@ module Candidate
     private
 
     def save_lot_selection
-      @market_application.transaction do
-        @market_application.grouping_member&.mark_in_progress!
+      @market_application.with_grouping_edit_lock do
         @market_application.update_declared_lots!(lot_ids_param)
       end
     end

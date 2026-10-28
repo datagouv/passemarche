@@ -215,6 +215,38 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe '#with_edit_lock' do
+    let(:member) { create(:grouping_member, :co_traitant, grouping:, status: :completed) }
+
+    it 'moves the member back to in_progress and runs the edit' do
+      edited = false
+
+      result = member.with_edit_lock { edited = true }
+
+      expect(result).to be true
+      expect(edited).to be true
+      expect(member.reload).to be_status_in_progress
+    end
+
+    it 'refuses the edit once the grouping has been submitted' do
+      member
+      grouping.update!(submitted_at: Time.current)
+      edited = false
+
+      result = member.with_edit_lock { edited = true }
+
+      expect(result).to be false
+      expect(edited).to be false
+      expect(member.reload).to be_status_completed
+    end
+
+    it 'rolls back the status change when the edit fails' do
+      member.with_edit_lock { raise ActiveRecord::Rollback }
+
+      expect(member.reload).to be_status_completed
+    end
+  end
+
   describe '#mark_completed!' do
     it 'moves any non-completed member to completed' do
       member = create(:grouping_member, :co_traitant, grouping:, status: :in_progress)

@@ -76,6 +76,15 @@ RSpec.describe MarketApplicationStepUpdateService do
           expect(result[:flash_messages][:alert]).to eq(I18n.t('candidate.market_applications.draft_failed'))
         end
 
+        it 'refuses to save the step once the grouping has been submitted' do
+          market_application.grouping_member.grouping.update!(submitted_at: Time.current)
+
+          result = described_class.call(market_application, :contact, {}, draft: true)
+
+          expect(result[:success]).to be false
+          expect(market_application.grouping_member.reload).not_to be_status_in_progress
+        end
+
         it 'does not complete the application from the summary' do
           result = described_class.call(market_application, :summary, {}, draft: true)
 

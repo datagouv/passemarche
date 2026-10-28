@@ -64,6 +64,15 @@ class GroupingMember < ApplicationRecord
     status_in_progress! unless status_in_progress?
   end
 
+  def with_edit_lock
+    grouping.with_lock do
+      next false if grouping.locked?
+
+      mark_in_progress!
+      yield
+    end
+  end
+
   def mark_completed!
     status_completed! unless status_completed?
   end

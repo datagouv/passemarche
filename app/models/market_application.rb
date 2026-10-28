@@ -88,6 +88,12 @@ class MarketApplication < ApplicationRecord
     !completed? && !groupement? && !part_of_grouping?
   end
 
+  def with_grouping_edit_lock(&)
+    return transaction(&) unless grouping_member
+
+    grouping_member.with_edit_lock(&)
+  end
+
   def groupement_counterpart
     return nil if groupement?
 

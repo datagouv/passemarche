@@ -35,7 +35,7 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def handle_market_information_step
-    market_application.grouping_member&.mark_in_progress!
+    market_application.with_grouping_edit_lock { true }
     build_result(true)
   end
 
@@ -51,8 +51,7 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def save_step
-    market_application.transaction do
-      market_application.grouping_member&.mark_in_progress!
+    market_application.with_grouping_edit_lock do
       market_application.save(context: step) || raise(ActiveRecord::Rollback)
     end
   end

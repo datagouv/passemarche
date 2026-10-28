@@ -82,6 +82,16 @@ RSpec.describe Candidate::DeleteAttachedFile, type: :interactor do
 
           expect(grouping_member.reload).to be_status_in_progress
         end
+
+        it 'keeps the document once the grouping has been submitted' do
+          grouping.update!(submitted_at: Time.current)
+
+          result = described_class.call(signed_id:, market_application:)
+
+          expect(result).to be_failure
+          expect(ActiveStorage::Attachment.exists?(blob:)).to be true
+          expect(grouping_member.reload).to be_status_completed
+        end
       end
     end
 
