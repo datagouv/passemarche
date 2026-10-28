@@ -85,6 +85,46 @@ RSpec.describe MarketApplicationStepUpdateService do
           expect(market_application.grouping_member.reload).not_to be_status_in_progress
         end
 
+        context 'when a transmitted member adds a file to a step that fails validation' do
+          let(:market_attribute) do
+            create(:market_attribute, :file_upload, subcategory_key: 'contact', public_markets: [public_market])
+          end
+          let!(:response) do
+            create(:market_attribute_response_file_upload, market_application:, market_attribute:)
+          end
+          let(:blob) do
+            ActiveStorage::Blob.create_and_upload!(
+              io: StringIO.new('test content'),
+              filename: 'test.pdf',
+              content_type: 'application/pdf'
+            )
+          end
+          let(:params) do
+            ActionController::Parameters.new(
+              market_attribute_responses_attributes: {
+                '0' => {
+                  'id' => response.id.to_s,
+                  'market_attribute_id' => market_attribute.id.to_s,
+                  'type' => 'FileUpload',
+                  'files' => [blob.signed_id]
+                }
+              }
+            ).permit!
+          end
+
+          before do
+            market_application.grouping_member.update!(status: :completed)
+            allow(market_application).to receive(:save).and_return(false)
+          end
+
+          it 'keeps neither the new file nor the status change' do
+            described_class.call(market_application, :contact, params, draft: true)
+
+            expect(response.reload.documents).to be_empty
+            expect(market_application.grouping_member.reload).to be_status_completed
+          end
+        end
+
         it 'does not complete the application from the summary' do
           result = described_class.call(market_application, :summary, {}, draft: true)
 

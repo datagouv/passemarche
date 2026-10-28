@@ -40,8 +40,6 @@ class MarketApplicationStepUpdateService < ApplicationService
   end
 
   def handle_generic_step
-    market_application.assign_attributes(assign_existing_response_ids(params))
-
     if save_step
       market_application.market_attribute_responses.reload
       build_result(true)
@@ -52,6 +50,7 @@ class MarketApplicationStepUpdateService < ApplicationService
 
   def save_step
     market_application.with_grouping_edit_lock do
+      market_application.assign_attributes(assign_existing_response_ids(params))
       market_application.save(context: step) || raise(ActiveRecord::Rollback)
     end
   end
