@@ -78,15 +78,18 @@ Feature: Mandataire submits the grouping candidacy
     And the grouping submission email should have been sent to "contact@menuiseries-loire.fr"
 
   @javascript
-  Scenario: The mandataire comes back to the grouping dashboard after completing their application
+  Scenario: The mandataire can still edit their application after transmitting it
     When I add a co-traitant with SIRET "80245139600021" and email "contact@menuiseries-loire.fr"
     And I click on "Continuer"
     And I click on "Confirmer et envoyer les invitations"
     And I navigate to the "summary" step
     And I complete the application on summary step
     Then I should be on the grouping dashboard
-    And I should see "Consulter le formulaire"
+    And I should see "Modifier ma candidature"
+    And I should not see "Consulter le formulaire"
     When I navigate to the "summary" step
+    Then I should be on the "summary" step
+    When I complete the application on summary step
     Then I should be on the grouping dashboard
 
   @javascript

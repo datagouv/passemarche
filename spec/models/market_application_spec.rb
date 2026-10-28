@@ -913,6 +913,13 @@ RSpec.describe MarketApplication, type: :model do
       expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
     end
 
+    it 'stays editable once the mandataire has transmitted its own part' do
+      create(:grouping, public_market:, mandataire_market_application: market_application)
+      market_application.complete!
+
+      expect(market_application.reload.lock_reason).to be_nil
+    end
+
     it 'is :deadline_passed once the market deadline is over, even while the application is being filled' do
       public_market.update_column(:deadline, 1.day.ago)
 

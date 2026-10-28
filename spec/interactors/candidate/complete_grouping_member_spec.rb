@@ -90,14 +90,23 @@ RSpec.describe Candidate::CompleteGroupingMember, type: :interactor do
       end
     end
 
-    context 'when the application is already completed' do
+    context 'when the mandataire transmits again after editing its application' do
       let(:grouping) { create(:grouping, public_market:) }
       let(:market_application) { grouping.mandataire_market_application }
 
-      before { market_application.complete! }
+      before do
+        market_application.complete!
+        grouping.mandataire_grouping_member.mark_in_progress!
+      end
 
-      it 'fails' do
-        expect(result).to be_failure
+      it 'marks the grouping_member as completed again without changing the transmission date' do
+        expect { result }.not_to(change { market_application.reload.completed_at })
+        expect(result).to be_success
+        expect(grouping.mandataire_grouping_member.reload).to be_status_completed
+      end
+
+      it 'does not send any notification' do
+        expect { result }.not_to have_enqueued_mail(GroupingMemberCompletionMailer)
       end
     end
   end

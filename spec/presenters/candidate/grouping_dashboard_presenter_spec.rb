@@ -92,11 +92,11 @@ RSpec.describe Candidate::GroupingDashboardPresenter do
         expect(presenter.member_actions(member)).to eq([:edit])
       end
 
-      it 'offers consult when completed' do
+      it 'offers edit when completed' do
         member = grouping.mandataire_grouping_member
         member.update!(status: :completed)
 
-        expect(presenter.member_actions(member)).to eq([:consult])
+        expect(presenter.member_actions(member)).to eq([:edit])
       end
     end
 

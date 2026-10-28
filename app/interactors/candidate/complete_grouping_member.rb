@@ -5,7 +5,7 @@ module Candidate
     delegate :market_application, to: :context
 
     def call
-      context.already_transmitted = market_application.completed? && market_application.co_traitant_of_grouping?
+      context.already_transmitted = market_application.completed?
       complete_application
 
       NotifyMandataireOfCoTraitantCompletion.call!(context)

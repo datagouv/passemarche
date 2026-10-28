@@ -67,7 +67,7 @@ class MarketApplication < ApplicationRecord
     return :deadline_passed unless public_market.open?
     return :grouping_submitted if grouping_submitted?
 
-    :completed if completed? && !co_traitant_of_grouping?
+    :completed if completed? && !part_of_grouping?
   end
 
   def locked?

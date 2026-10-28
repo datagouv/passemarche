@@ -2,8 +2,7 @@
 
 module Candidate
   class GroupingDashboardPresenter
-    OWN_ACTIONS = { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:consult] }.freeze
-    CO_TRAITANT_OWN_ACTIONS = OWN_ACTIONS.merge(completed: [:edit]).freeze
+    OWN_ACTIONS = { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:edit] }.freeze
     OTHER_MEMBER_ACTIONS_BY_VIEWER = {
       mandataire: %i[copy_link],
       co_traitant: []
@@ -124,7 +123,6 @@ module Candidate
     def own_actions
       status = current_member.status.to_sym
       return transmitted_once? ? [:consult] : [] if grouping.locked?
-      return CO_TRAITANT_OWN_ACTIONS.fetch(status) if viewing_as_co_traitant?
 
       OWN_ACTIONS.fetch(status)
     end

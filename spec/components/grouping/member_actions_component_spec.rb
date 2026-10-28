@@ -34,13 +34,13 @@ RSpec.describe Grouping::MemberActionsComponent, type: :component do
     expect(page).to have_css('a.fr-icon-edit-line')
   end
 
-  it 'renders a consult link for the mandataire once completed' do
+  it 'renders an edit link for the mandataire once completed' do
     member = grouping.grouping_members.mandataire.first
     member.update!(status: :completed)
 
     render_inline(described_class.new(member:, market_application: grouping.mandataire_market_application, presenter:))
 
-    expect(page).to have_link('Consulter le formulaire')
+    expect(page).to have_css('a.fr-icon-edit-line')
   end
 
   it 'wraps the actions in a per-member container id' do
