@@ -874,6 +874,13 @@ RSpec.describe MarketApplication, type: :model do
       expect(market_application.reload.api_fetch_status.keys).to contain_exactly('insee')
     end
 
+    it 'purges when the declared lots are updated' do
+      market_application.update_declared_lots!([public_market.lots.find_by!(name: 'Prestations SI').id])
+
+      expect(market_application.market_attribute_responses.map(&:market_attribute))
+        .to contain_exactly(services_attribute, untyped_attribute)
+    end
+
     it 'keeps everything when every lot type is declared again' do
       market_application.lots = public_market.lots
 

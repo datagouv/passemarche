@@ -40,11 +40,18 @@ module ApplicableMarketAttributes
     market_attribute_responses.select { |response| applicable_ids.include?(response.market_attribute_id) }
   end
 
+  def update_declared_lots!(lot_ids)
+    transaction do
+      self.lot_ids = lot_ids
+      purge_inapplicable_data!
+    end
+  end
+
   def purge_inapplicable_data!
     market_attribute_responses.where.not(market_attribute_id: applicable_market_attribute_ids).destroy_all
     market_attribute_responses.reset
 
-    applicable_api_fetch_status = (api_fetch_status || {}).slice(*api_names_to_fetch)
+    applicable_api_fetch_status = api_fetch_status.slice(*api_names_to_fetch)
     update!(api_fetch_status: applicable_api_fetch_status) if applicable_api_fetch_status != api_fetch_status
   end
 
