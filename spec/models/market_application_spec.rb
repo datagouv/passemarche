@@ -946,6 +946,13 @@ RSpec.describe MarketApplication, type: :model do
 
         expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
       end
+
+      it 'stays :grouping_submitted once the deadline is over, like the grouping dashboard' do
+        grouping.update!(submitted_at: Time.current, submission_mode: :full)
+        public_market.update_column(:deadline, 1.day.ago)
+
+        expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
+      end
     end
   end
 
