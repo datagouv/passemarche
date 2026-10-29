@@ -229,5 +229,26 @@ RSpec.describe Candidate::DashboardApplicationPresenter do
     it 'counts applications by displayed status' do
       expect(described_class.status_counts(market_applications)).to eq(in_progress: 1, completed: 2)
     end
+
+    it 'counts a co-traitant part sent to the mandataire as completed' do
+      mandataire_application = create(:market_application, public_market: create(:public_market, :completed),
+        siret: '41816609600069', application_mode: :groupement)
+      grouping = create(:grouping, public_market: mandataire_application.public_market,
+        mandataire_market_application: mandataire_application)
+      co_traitant_application = create(:market_application, public_market: mandataire_application.public_market,
+        user:, application_mode: :groupement, completed_at: Time.zone.now)
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application)
+
+      expect(described_class.status_counts(market_applications)).to eq(in_progress: 1, completed: 3)
+    end
+
+    it 'counts an application whose deadline passed before its submission in neither count' do
+      expired_market = create(:public_market, :completed)
+      create(:market_application, public_market: expired_market, user:)
+      expired_market.update_column(:deadline, 1.day.ago)
+
+      expect(described_class.status_counts(market_applications)).to eq(in_progress: 1, completed: 2)
+    end
   end
 end

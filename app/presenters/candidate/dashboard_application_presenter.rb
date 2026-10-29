@@ -13,6 +13,7 @@ module Candidate
       submitted: 'fr-badge--success',
       deadline_passed: 'fr-badge--warning'
     }.freeze
+    COMPLETED_STATUSES = %i[sent_to_mandataire submitted].freeze
 
     attr_reader :market_application
 
@@ -23,7 +24,7 @@ module Candidate
         new(market_application, public_market: market_application.public_market).status
       end
 
-      { in_progress: statuses.count(:in_progress), completed: statuses.count { |status| status != :in_progress } }
+      { in_progress: statuses.count(:in_progress), completed: statuses.count { |status| COMPLETED_STATUSES.include?(status) } }
     end
 
     def initialize(market_application, public_market:)
@@ -65,7 +66,7 @@ module Candidate
     end
 
     def status
-      @status ||= if submitted_to_platform?
+      @status ||= if market_application.submitted_to_platform?
                     :submitted
                   elsif kind == :co_traitant && market_application.completed?
                     :sent_to_mandataire
@@ -111,13 +112,9 @@ module Candidate
       market_application.grouping_member&.grouping
     end
 
-    def submitted_to_platform?
-      grouping ? grouping.submitted? : market_application.completed?
-    end
-
     def status_date
       case status
-      when :submitted then grouping ? grouping.submitted_at : market_application.completed_at
+      when :submitted then market_application.submitted_to_platform_at
       when :sent_to_mandataire then market_application.completed_at
       end
     end
@@ -135,9 +132,13 @@ module Candidate
     def individual_actions
       case status
       when :submitted then %i[view]
-      when :deadline_passed then %i[delete]
-      else %i[delete edit]
+      when :deadline_passed then deletion_actions
+      else deletion_actions + %i[edit]
       end
+    end
+
+    def deletion_actions
+      market_application.deletable? ? %i[delete] : []
     end
   end
 end

@@ -45,6 +45,19 @@ RSpec.describe DeleteMarketApplication, type: :interactor do
       end
     end
 
+    context 'when market application is a grouping application whose grouping is not created yet' do
+      let(:market_application) { create(:market_application, application_mode: :groupement) }
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'does not destroy the market application' do
+        market_application
+        expect { subject }.not_to change(MarketApplication, :count)
+      end
+    end
+
     context 'when market application belongs to a grouping' do
       before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 

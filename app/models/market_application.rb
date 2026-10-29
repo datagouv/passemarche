@@ -39,9 +39,6 @@ class MarketApplication < ApplicationRecord
 
   scope :for_user, ->(user) { where(user:) }
   scope :for_siret, ->(siret) { where(siret:) }
-  scope :in_progress, -> { where(completed_at: nil) }
-  scope :completed, -> { where.not(completed_at: nil) }
-  scope :by_last_modification, -> { order(updated_at: :desc) }
   scope :outside_grouping, -> { where.missing(:grouping_member).where(application_mode: [nil, :solo, :mixte]) }
   scope :matching_mode, ->(mode) { where(application_mode: mode.blank? || mode.to_s == 'solo' ? [nil, :solo] : mode) }
 
@@ -51,10 +48,6 @@ class MarketApplication < ApplicationRecord
 
   def accessible_by?(user)
     user_id.nil? || user_id == user.id
-  end
-
-  def mandataire_of_grouping?
-    groupement? && !!grouping_member&.mandataire?
   end
 
   def part_of_grouping?
@@ -71,6 +64,20 @@ class MarketApplication < ApplicationRecord
 
   def locked?
     completed? || grouping_submitted?
+  end
+
+  def submitted_to_platform?
+    part_of_grouping? ? grouping_submitted? : completed?
+  end
+
+  def submitted_to_platform_at
+    return unless submitted_to_platform?
+
+    part_of_grouping? ? grouping_member.grouping.submitted_at : completed_at
+  end
+
+  def deletable?
+    !completed? && !groupement? && !part_of_grouping?
   end
 
   def groupement_counterpart
