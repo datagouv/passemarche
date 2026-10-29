@@ -153,9 +153,21 @@ class MarketApplication < ApplicationRecord
     end
   end
 
+  def applicable_market_attribute_ids
+    applicable_market_attributes.map(&:id)
+  end
+
   def applicable_market_attribute_responses
-    applicable_ids = applicable_market_attributes.map(&:id)
+    applicable_ids = applicable_market_attribute_ids
     market_attribute_responses.select { |response| applicable_ids.include?(response.market_attribute_id) }
+  end
+
+  def purge_inapplicable_data!
+    market_attribute_responses.where.not(market_attribute_id: applicable_market_attribute_ids).destroy_all
+    market_attribute_responses.reset
+
+    applicable_api_fetch_status = (api_fetch_status || {}).slice(*api_names_to_fetch)
+    update!(api_fetch_status: applicable_api_fetch_status) if applicable_api_fetch_status != api_fetch_status
   end
 
   def all_security_scans_complete?

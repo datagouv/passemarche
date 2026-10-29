@@ -24,11 +24,18 @@ module Candidate
         return
       end
 
-      @market_application.lot_ids = lot_ids_param
+      update_declared_lots
       redirect_to_lot_selection
     end
 
     private
+
+    def update_declared_lots
+      @market_application.transaction do
+        @market_application.lot_ids = lot_ids_param
+        @market_application.purge_inapplicable_data!
+      end
+    end
 
     def find_market_application
       @market_application = MarketApplication

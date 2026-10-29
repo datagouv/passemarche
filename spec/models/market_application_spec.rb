@@ -834,6 +834,54 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#purge_inapplicable_data!' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_type) { MarketType.find_by!(code: 'works') }
+    let(:services_type) { MarketType.find_by!(code: 'services') }
+    let(:market_application) { create(:market_application, public_market:) }
+    let!(:works_attribute) do
+      create(:market_attribute, :file_upload, public_markets: [public_market], market_types: [works_type],
+        api_name: 'qualibat', api_key: 'qualibat_key')
+    end
+    let!(:services_attribute) do
+      create(:market_attribute, :file_upload, public_markets: [public_market], market_types: [services_type])
+    end
+    let!(:untyped_attribute) do
+      create(:market_attribute, :file_upload, public_markets: [public_market], api_name: 'insee', api_key: 'siret')
+    end
+
+    before do
+      [works_attribute, services_attribute, untyped_attribute].each do |attribute|
+        MarketAttributeResponse.build_for_attribute(attribute, market_application:).save!
+      end
+      market_application.update!(api_fetch_status: {
+        'qualibat' => { 'status' => 'completed' },
+        'insee' => { 'status' => 'completed' }
+      })
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+    end
+
+    it 'destroys the responses of the attributes no longer applicable' do
+      market_application.purge_inapplicable_data!
+
+      expect(market_application.market_attribute_responses.map(&:market_attribute))
+        .to contain_exactly(services_attribute, untyped_attribute)
+    end
+
+    it 'forgets the fetch status of the APIs no longer needed so they are fetched again if needed' do
+      market_application.purge_inapplicable_data!
+
+      expect(market_application.reload.api_fetch_status.keys).to contain_exactly('insee')
+    end
+
+    it 'keeps everything when every lot type is declared again' do
+      market_application.lots = public_market.lots
+
+      expect { market_application.purge_inapplicable_data! }
+        .not_to(change { market_application.market_attribute_responses.count })
+    end
+  end
+
   describe '#locked?' do
     let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
 

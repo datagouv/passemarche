@@ -30,6 +30,8 @@ module Candidate
       solo_application&.update!(lot_ids: solo_lot_ids)
       groupement_application.update!(lot_ids: groupement_lot_ids)
       remove_lots_from_co_traitants(co_traitant_applications, previous_groupement_lot_ids - groupement_lot_ids)
+
+      [solo_application, groupement_application, *co_traitant_applications].compact.each(&:purge_inapplicable_data!)
     end
 
     def remove_lots_from_co_traitants(co_traitant_applications, removed_lot_ids)
