@@ -204,6 +204,24 @@ RSpec.describe PublicMarket, type: :model do
     end
   end
 
+  describe '.by_latest_application_among' do
+    let(:user) { create(:user) }
+    let(:market_applications) { MarketApplication.for_user(user) }
+    let(:older_market) { create(:public_market, :completed) }
+    let(:recent_market) { create(:public_market, :completed) }
+
+    before do
+      create(:market_application, public_market: older_market, user:, updated_at: 3.days.ago)
+      create(:market_application, public_market: older_market, user:, updated_at: 2.days.ago)
+      create(:market_application, public_market: recent_market, user:, updated_at: 1.day.ago)
+      create(:market_application, public_market: create(:public_market, :completed))
+    end
+
+    it 'lists each market once, most recently modified application first' do
+      expect(described_class.by_latest_application_among(market_applications).to_a).to eq([recent_market, older_market])
+    end
+  end
+
   describe '#update_and_resync_configuration!' do
     let(:editor) { create(:editor) }
 

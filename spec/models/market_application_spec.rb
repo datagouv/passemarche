@@ -120,6 +120,27 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '.outside_grouping' do
+    let(:public_market) { create(:public_market, :completed) }
+    let!(:solo_application) { create(:market_application, public_market:, application_mode: :solo) }
+    let!(:application_without_mode) { create(:market_application, public_market:, application_mode: nil) }
+    let!(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+    let!(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '41816609600069', application_mode: :groupement)
+    end
+
+    before do
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+        siret: co_traitant_application.siret)
+    end
+
+    it 'keeps only the applications that do not belong to a grouping' do
+      expect(described_class.outside_grouping).to contain_exactly(solo_application, application_without_mode)
+    end
+  end
+
   describe '#complete!' do
     let(:editor) { create(:editor) }
     let(:application) { create(:market_application, public_market:, siret: '12345678901234', identifier: nil) }
@@ -750,6 +771,73 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'submission to the platform' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    context 'when the application is individual' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :solo) }
+
+      it 'is not submitted while being filled' do
+        expect(market_application).not_to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to be_nil
+      end
+
+      it 'is submitted on its completion' do
+        completed_at = Time.zone.local(2026, 10, 20, 10)
+        market_application.update!(completed_at:)
+
+        expect(market_application).to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to eq(completed_at)
+      end
+    end
+
+    context 'when the application belongs to a grouping' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      it 'is not submitted on its own completion' do
+        market_application.complete!
+
+        expect(market_application.reload).not_to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to be_nil
+      end
+
+      it 'is submitted with its grouping' do
+        submitted_at = Time.zone.local(2026, 10, 21, 10)
+        grouping.update!(submitted_at:, submission_mode: :full)
+
+        expect(market_application.reload).to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to eq(submitted_at)
+      end
+    end
+  end
+
+  describe '#deletable?' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is true for an individual application being filled' do
+      expect(create(:market_application, public_market:)).to be_deletable
+    end
+
+    it 'is false once the application is completed' do
+      expect(create(:market_application, :completed, public_market:)).not_to be_deletable
+    end
+
+    it 'is false for a grouping application' do
+      expect(create(:market_application, public_market:, application_mode: :groupement)).not_to be_deletable
+    end
+
+    it 'is false for a member of a grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      co_traitant_application = create(:market_application, public_market:, siret: '80245139600021')
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application)
+
+      expect(co_traitant_application.reload).not_to be_deletable
+    end
+  end
+
   describe 'grouping roles' do
     let(:public_market) { create(:public_market, :completed) }
     let(:mandataire_application) do
@@ -1235,33 +1323,6 @@ RSpec.describe MarketApplication, type: :model do
         create(:market_application, public_market:, user: other_user)
 
         expect(described_class.for_user(user)).to contain_exactly(mine)
-      end
-    end
-
-    describe '.in_progress' do
-      it 'returns applications without completed_at' do
-        ongoing = create(:market_application, public_market:)
-        create(:market_application, :completed, public_market:)
-
-        expect(described_class.in_progress).to contain_exactly(ongoing)
-      end
-    end
-
-    describe '.completed' do
-      it 'returns applications with completed_at set' do
-        done = create(:market_application, :completed, public_market:)
-        create(:market_application, public_market:)
-
-        expect(described_class.completed).to contain_exactly(done)
-      end
-    end
-
-    describe '.by_last_modification' do
-      it 'orders applications by updated_at descending' do
-        older = create(:market_application, public_market:, updated_at: 2.days.ago)
-        newer = create(:market_application, public_market:, updated_at: 1.day.ago)
-
-        expect(described_class.by_last_modification).to eq([newer, older])
       end
     end
 

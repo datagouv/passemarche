@@ -1,0 +1,32 @@
+/*
+ * Styles for the candidate dashboard: one card per market, one row per
+ * application.
+ */
+
+.dashboard-application-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid var(--border-default-grey);
+}
+
+.dashboard-application-row:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.dashboard-application-row__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboard-application-row__heading .fr-badge {
+  margin-bottom: 0 !important;
+}
+
+.dashboard-application-row .fr-btns-group {
+  margin-bottom: 0;
+}

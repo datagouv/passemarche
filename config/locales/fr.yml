@@ -621,14 +621,22 @@ fr:
         in_progress: "Candidatures en cours"
         completed: "Candidatures terminées"
       application:
+        kind:
+          mandataire: "Candidature en groupement · Mandataire"
+          co_traitant: "Candidature en groupement · Co-traitant"
+          individual: "Candidature individuelle"
+        mandataire: "Mandataire : %{name}"
         lots_count:
           one: "1 lot"
           other: "%{count} lots"
         modified_on: "Modifiée le %{date}"
         submitted_on: "Déposée le %{date}"
+        sent_to_mandataire_on: "Transmise le %{date}"
         status:
           in_progress: "En cours"
           submitted: "Transmise à la plateforme"
+          sent_to_mandataire: "Transmise au mandataire"
+          deadline_passed: "Date limite dépassée"
         delete_modal:
           title: "Supprimer la candidature"
           body: "Vous êtes sur le point de supprimer cette candidature, l'ensemble des éléments que vous avez complétés seront perdus. Êtes-vous sûr de vouloir la supprimer ?"

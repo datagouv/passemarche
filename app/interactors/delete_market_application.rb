@@ -4,7 +4,7 @@ class DeleteMarketApplication < ApplicationInteractor
   delegate :market_application, to: :context
 
   def call
-    context.fail! if market_application.completed?
+    context.fail! unless market_application.deletable?
     context.fail! unless market_application.destroy
 
     context.next_application = next_application_for_user

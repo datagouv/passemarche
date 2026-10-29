@@ -45,6 +45,59 @@ RSpec.describe DeleteMarketApplication, type: :interactor do
       end
     end
 
+    context 'when market application is a grouping application whose grouping is not created yet' do
+      let(:market_application) { create(:market_application, application_mode: :groupement) }
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'does not destroy the market application' do
+        market_application
+        expect { subject }.not_to change(MarketApplication, :count)
+      end
+    end
+
+    context 'when market application belongs to a grouping' do
+      before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+      let(:public_market) { create(:public_market, :completed) }
+      let(:mandataire_application) do
+        create(:market_application, public_market:, siret: '41816609600069', application_mode: :groupement)
+      end
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+
+      context 'when the candidate is co-traitant' do
+        let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+        before do
+          create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+        end
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'does not destroy the market application' do
+          expect { subject }.not_to change(MarketApplication, :count)
+        end
+      end
+
+      context 'when the candidate is mandataire' do
+        let(:market_application) { mandataire_application }
+
+        before { grouping }
+
+        it 'fails' do
+          expect(subject).to be_failure
+        end
+
+        it 'does not destroy the market application' do
+          expect { subject }.not_to change(MarketApplication, :count)
+        end
+      end
+    end
+
     context 'when market application is completed (transmitted)' do
       let(:market_application) { create(:market_application, :completed) }
 
