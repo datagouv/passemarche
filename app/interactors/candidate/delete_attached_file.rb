@@ -40,7 +40,12 @@ module Candidate
     def delete_attachment
       return unless context.attachment
 
-      context.attachment.purge_later
+      deleted = market_application.with_grouping_edit_lock do
+        context.attachment.purge_later
+        true
+      end
+      context.fail!(message: 'locked') unless deleted
+
       context.deleted = true
     end
   end

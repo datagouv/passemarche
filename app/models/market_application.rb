@@ -63,8 +63,15 @@ class MarketApplication < ApplicationRecord
     !!grouping_member&.grouping&.submitted?
   end
 
+  def lock_reason
+    return :grouping_submitted if grouping_submitted?
+    return :deadline_passed unless public_market.open?
+
+    :completed if completed? && !part_of_grouping?
+  end
+
   def locked?
-    completed? || grouping_submitted?
+    lock_reason.present?
   end
 
   def submitted_to_platform?
@@ -79,6 +86,18 @@ class MarketApplication < ApplicationRecord
 
   def deletable?
     !completed? && !groupement? && !part_of_grouping?
+  end
+
+  def with_grouping_edit_lock(&)
+    return transaction(&) unless grouping_member
+
+    grouping_member.with_edit_lock(&)
+  end
+
+  def with_grouping_lock(&)
+    return transaction(&) unless grouping_member
+
+    grouping_member.with_grouping_lock(&)
   end
 
   def groupement_counterpart

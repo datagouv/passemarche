@@ -31,10 +31,7 @@
             class: 'fr-btn fr-icon-download-line fr-btn--icon-left' %>
     <% end %>
 
-    <% if (candidate_url = @market_application.public_market.editor.build_candidate_return_url(
-      market: @market_application.public_market,
-      application: @market_application
-    )) %>
+    <% if (candidate_url = platform_return_url(@market_application)) %>
       <%= link_to t('candidate.grouping_submissions.confirmation.back_to_editor'),
             candidate_url,
             class: 'fr-btn fr-btn--secondary' %>

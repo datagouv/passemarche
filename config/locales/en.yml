@@ -55,12 +55,16 @@ en:
       locked_notice: "You can no longer edit your application form"
 
   grouping_member_completion_mailer:
+    dashboard_explanation: "Check your dashboard to follow the status of your group and submit your application once all your co-contractors are ready."
+    cta: "View my dashboard"
     completed:
       subject: "A co-contractor has completed their form"
       title: "A co-contractor has completed their form"
       intro: "%{co_traitant_name} has completed their application form for the tender: %{market_name}."
-      dashboard_explanation: "Check your dashboard to follow the status of your group and submit your application once all your co-contractors are ready."
-      cta: "View my dashboard"
+    modified:
+      subject: "A co-contractor has made changes"
+      title: "A co-contractor has made changes"
+      intro: "%{co_traitant_name} has modified their application form for the tender: %{market_name}."
 
   grouping_member_removal_mailer:
     removed:
@@ -609,6 +613,12 @@ en:
         motifs_exclusion_reminder_body: "In accordance with article R2144-4 of the French Public Procurement Code, \"the buyer may only require the single candidate to whom it plans to award the contract to prove that it is not subject to a ground for exclusion from the awarding procedure.\" Accordingly, verification of these automatically retrieved supporting documents only occurs at the award stage, for the intended awardee alone. At the application stage, the candidate's sworn statement that none of the grounds for exclusion apply is sufficient (article R. 2143-3 of the French Public Procurement Code)."
 
   candidate:
+    locked_applications:
+      title: "Application locked"
+      heading: "You can no longer edit your application"
+      explanation: "The lead contractor has submitted the group's application, so you can no longer edit your application. Only the lead contractor can allow you to edit it."
+      contact_hint: "For any questions, contact the lead contractor or the tender platform."
+      return_to_platform: "Return to the tender platform"
     deadline_passed:
       title: "Deadline passed"
       heading: "You can no longer edit your application"
@@ -862,6 +872,10 @@ en:
       submission_ready_body: "You can submit the group's application."
       submission_done_title: "The group's application has been submitted to the procurement platform"
       submission_done_body: "To finalize your submission, please return to your procurement platform. You can view the application certificate from the confirmation screen."
+      co_traitant_submission_done_title: "Your application has been submitted"
+      co_traitant_submission_done_body: "The lead contractor has submitted the group's application to the procurement platform. You can no longer edit your application."
+      co_traitant_deadline_passed_title: "Deadline passed"
+      co_traitant_deadline_passed_body: "The application deadline has passed, so you can no longer edit your application. For any questions, contact the lead contractor."
       submit_full: "Submit application"
       submit_partial: "Submit without all applications"
       solo_application_title: "Individual application"
@@ -1079,6 +1093,7 @@ en:
       delete_failure: "An error occurred; the application could not be deleted."
       sync_retry_initiated: "Synchronization has been restarted."
       completion_error: "An error occurred while finalizing your application. Please try again."
+      grouping_locked_error: "The grouping application has already been submitted or the deadline has passed: your part can no longer be edited or transmitted."
       draft_saved: "Your draft has been saved."
       draft_failed: "Your draft could not be saved, please fix the errors below."
       insee_api_error: "Unable to retrieve your company's information: %{error}"

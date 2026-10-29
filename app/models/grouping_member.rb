@@ -49,7 +49,7 @@ class GroupingMember < ApplicationRecord
   def invitation_expired?
     return false unless invitation_sent?
 
-    market_application&.completed? || grouping.submitted? || !public_market.open?
+    grouping.locked?
   end
 
   def declared_lots
@@ -61,7 +61,22 @@ class GroupingMember < ApplicationRecord
   end
 
   def mark_in_progress!
-    status_in_progress! if status_invited? || status_to_prepare?
+    status_in_progress! unless status_in_progress?
+  end
+
+  def with_edit_lock
+    with_grouping_lock do
+      mark_in_progress!
+      yield
+    end
+  end
+
+  def with_grouping_lock
+    grouping.with_lock do
+      next false if grouping.locked?
+
+      yield
+    end
   end
 
   def mark_completed!

@@ -2,10 +2,14 @@
 
 module Candidate
   class GroupingDashboardPresenter
-    OWN_ACTIONS = { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:consult] }.freeze
+    OWN_ACTIONS = { invited: [:prepare], to_prepare: [:prepare], in_progress: [:edit], completed: [:edit] }.freeze
     OTHER_MEMBER_ACTIONS_BY_VIEWER = {
       mandataire: %i[copy_link],
       co_traitant: []
+    }.freeze
+    CO_TRAITANT_LOCK_NOTICES = {
+      submitted: { key: 'co_traitant_submission_done', color: :success },
+      deadline_passed: { key: 'co_traitant_deadline_passed', color: :warning }
     }.freeze
     STATUS_BADGE_CLASSES = {
       in_progress: 'fr-badge--info fr-badge--no-icon',
@@ -32,8 +36,8 @@ module Candidate
     end
 
     def member_actions(member)
-      return submitted_member_actions(member) if grouping.submitted?
-      return OWN_ACTIONS.fetch(member.status.to_sym) if member == current_member
+      return own_actions if member == current_member
+      return [] if grouping.locked?
 
       OTHER_MEMBER_ACTIONS_BY_VIEWER.fetch(current_member.role.to_sym)
     end
@@ -44,12 +48,24 @@ module Candidate
 
     delegate :submitted?, :submittable?, :partially_submittable?, to: :grouping
 
+    def co_traitant_lock_notice
+      return CO_TRAITANT_LOCK_NOTICES[:submitted] if grouping.submitted?
+
+      CO_TRAITANT_LOCK_NOTICES[:deadline_passed] if grouping.locked?
+    end
+
     def mixed_scope?
       solo_counterpart.present?
     end
 
     delegate :solo_counterpart, to: :market_application
     delegate :public_market, :identifier, to: :market_application
+
+    def market_with_lots?
+      return @market_with_lots if defined?(@market_with_lots)
+
+      @market_with_lots = public_market.lots.exists?
+    end
 
     def lots
       grouping.mandataire_market_application.lots.ordered.includes(:market_type, :platform_market_type)
@@ -104,10 +120,15 @@ module Candidate
 
     attr_reader :market_application
 
-    def submitted_member_actions(member)
-      return [] unless member == current_member && member.status_completed?
+    def own_actions
+      status = current_member.status.to_sym
+      return transmitted_once? ? [:consult] : [] if grouping.locked?
 
-      [:consult]
+      OWN_ACTIONS.fetch(status)
+    end
+
+    def transmitted_once?
+      current_member.status_completed? || current_member.market_application&.completed?
     end
 
     def displayed_status(member)

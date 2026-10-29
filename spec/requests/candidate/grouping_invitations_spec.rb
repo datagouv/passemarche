@@ -156,5 +156,20 @@ RSpec.describe 'Candidate::GroupingInvitations', type: :request do
         expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_expired.heading'))
       end
     end
+
+    context 'when the co_traitant transmitted their form but the grouping is not submitted yet' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
+          invitation_token_created_at: Time.current, status: :completed,
+          market_application: create(:market_application, :completed, public_market:, application_mode: :groupement))
+      end
+
+      it 'still renders the login form' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response).to have_http_status(:ok)
+        expect(CGI.unescapeHTML(response.body)).not_to include(I18n.t('candidate.grouping_invitations.expired.heading'))
+      end
+    end
   end
 end

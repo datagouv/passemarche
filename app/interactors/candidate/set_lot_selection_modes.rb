@@ -11,18 +11,21 @@ module Candidate
       return fail_invalid_lot_ids unless valid_lot_ids?
       return fail_incomplete_selection unless selection_complete?
 
-      ActiveRecord::Base.transaction do
-        locked_co_traitant_applications = co_traitant_applications.each(&:lock!)
-        groupement_application.lock!
-        fail_completed_co_traitant_application if completed_co_traitant_application_affected?(locked_co_traitant_applications)
-
-        update_applications(locked_co_traitant_applications)
-      end
+      fail_grouping_locked unless groupement_application.with_grouping_edit_lock { update_locked_applications }
     end
 
     private
 
     delegate :solo_application, :groupement_application, to: :context
+
+    def update_locked_applications
+      locked_co_traitant_applications = co_traitant_applications.each(&:lock!)
+      groupement_application.lock!
+      fail_completed_co_traitant_application if completed_co_traitant_application_affected?(locked_co_traitant_applications)
+
+      update_applications(locked_co_traitant_applications)
+      true
+    end
 
     def update_applications(co_traitant_applications)
       previous_groupement_lot_ids = groupement_application.lot_ids
@@ -94,6 +97,10 @@ module Candidate
 
     def fail_incomplete_selection
       context.fail!(errors: { base: [I18n.t('candidate.validations.lot_selection_mode_incomplete')] })
+    end
+
+    def fail_grouping_locked
+      context.fail!(errors: { base: [I18n.t('candidate.market_applications.grouping_locked_error')] })
     end
 
     def fail_completed_co_traitant_application

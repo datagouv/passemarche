@@ -68,3 +68,16 @@ end
 def market_attribute_id_field_selector(key)
   "input[type=hidden][name$='[market_attribute_id]'][value='#{@draft_attributes.fetch(key).id}']"
 end
+
+Given('I have transmitted my form to the mandataire') do
+  @co_traitant_application.complete!
+  @co_traitant_application.grouping_member.mark_completed!
+end
+
+Given('the mandataire has submitted the grouping') do
+  mandataire_grouping.update!(submitted_at: Time.current, submission_mode: :partial)
+end
+
+When('I visit my co-traitant grouping dashboard') do
+  visit grouping_dashboard_candidate_market_application_path(@co_traitant_application.identifier)
+end

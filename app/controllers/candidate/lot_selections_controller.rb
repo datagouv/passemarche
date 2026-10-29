@@ -24,11 +24,17 @@ module Candidate
         return
       end
 
-      @market_application.update_declared_lots!(lot_ids_param)
+      save_lot_selection
       redirect_to_lot_selection
     end
 
     private
+
+    def save_lot_selection
+      @market_application.with_grouping_edit_lock do
+        @market_application.update_declared_lots!(lot_ids_param)
+      end
+    end
 
     def find_market_application
       @market_application = MarketApplication
