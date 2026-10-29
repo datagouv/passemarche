@@ -201,11 +201,12 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
 
   describe 'GET /candidate/market_applications/:identifier/api_data_recovery_status' do
     it 'enqueues FetchApiDataCoordinatorJob when api_fetch_status is empty' do
+      public_market.market_attributes << create(:market_attribute, api_name: 'insee', api_key: 'siret')
       market_application.update!(api_fetch_status: {})
 
       expect do
         get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
-      end.to have_enqueued_job(FetchApiDataCoordinatorJob).with(market_application.id)
+      end.to have_enqueued_job(FetchApiDataCoordinatorJob).with(market_application.id, %w[insee])
     end
 
     it 'does not enqueue FetchApiDataCoordinatorJob when api_fetch_status is already present' do
