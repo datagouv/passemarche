@@ -25,9 +25,8 @@ class MapApiData < ApplicationInteractor
   end
 
   def api_attributes
-    context.market_application.public_market.market_attributes
-      .where(api_name: context.api_name)
-      .where.not(api_name: nil)
+    context.market_application.applicable_market_attributes
+      .select { |market_attribute| market_attribute.api_name.present? && market_attribute.api_name == context.api_name }
   end
 
   def create_or_update_response(market_attribute)

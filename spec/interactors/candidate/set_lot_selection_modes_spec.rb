@@ -220,5 +220,51 @@ RSpec.describe Candidate::SetLotSelectionModes, type: :interactor do
         expect(result.errors[:lot_ids]).to be_present
       end
     end
+
+    context 'when a lot type leaves the groupement' do
+      let(:public_market) { create(:public_market, :completed, :multi_type, editor:) }
+      let(:works_lot) { public_market.lots.find_by!(name: 'Gros œuvre') }
+      let(:services_lot) { public_market.lots.find_by!(name: 'Prestations SI') }
+      let(:works_attribute) do
+        create(:market_attribute, public_markets: [public_market], market_types: [MarketType.find_by!(code: 'works')])
+      end
+      let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: :solidaire)
+      end
+      let(:co_traitant_application) do
+        create(:market_application, public_market:, siret: '80245139600027', application_mode: :groupement)
+      end
+
+      before do
+        groupement_application.lots << [works_lot, services_lot]
+        create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+          siret: co_traitant_application.siret)
+        [groupement_application, co_traitant_application].each do |application|
+          MarketAttributeResponse.build_for_attribute(works_attribute, market_application: application).save!
+        end
+      end
+
+      it 'destroys the responses to the pieces of that type for the mandataire and the solidaire co-traitants' do
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { works_lot.id.to_s => 'none', services_lot.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_success
+        expect(groupement_application.market_attribute_responses.reload).to be_empty
+        expect(co_traitant_application.market_attribute_responses.reload).to be_empty
+      end
+
+      it 'keeps the responses when the lot type stays in the groupement' do
+        described_class.call(
+          market_application: groupement_application,
+          lot_modes: { works_lot.id.to_s => 'groupement', services_lot.id.to_s => 'none' }
+        )
+
+        expect(co_traitant_application.market_attribute_responses.reload.map(&:market_attribute))
+          .to contain_exactly(works_attribute)
+      end
+    end
   end
 end

@@ -24,7 +24,7 @@ module Candidate
         return
       end
 
-      @market_application.lot_ids = lot_ids_param
+      @market_application.update_declared_lots!(lot_ids_param)
       redirect_to_lot_selection
     end
 

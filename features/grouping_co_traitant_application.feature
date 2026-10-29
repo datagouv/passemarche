@@ -35,3 +35,12 @@ Feature: Co-traitant fills in and transmits their part
     When I click on "Revenir sur le suivi du groupement"
     Then I should be on the co-traitant grouping dashboard
     And the co-traitant "80245139601003" should have status "Complété"
+
+  Scenario: The co-traitant only sees the documents of the lot types they declared
+    Given the market has a works lot and a services lot
+    And the market asks for a works text field "certificat_qualibat" in the "economic_capacities" step
+    And the market asks for a services text field "certificat_qualiopi" in the "economic_capacities" step
+    And I declared only the services lot
+    When I visit my co-traitant form step "economic_capacities"
+    Then I should see the "certificat_qualiopi" field
+    And I should not see the "certificat_qualibat" field

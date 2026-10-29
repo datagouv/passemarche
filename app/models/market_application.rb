@@ -4,6 +4,7 @@ class MarketApplication < ApplicationRecord
   include Completable
   include Syncable
   include GroupementWizardSteps
+  include ApplicableMarketAttributes
 
   has_paper_trail on: %i[update], only: [:completed_at]
 
@@ -105,13 +106,6 @@ class MarketApplication < ApplicationRecord
     end
   end
 
-  def api_names_to_fetch
-    public_market.market_attributes
-      .where.not(api_name: nil)
-      .distinct
-      .pluck(:api_name)
-  end
-
   def valid?(context = nil)
     self.current_validation_step = context
     super
@@ -132,18 +126,16 @@ class MarketApplication < ApplicationRecord
     end
   end
 
-  def selected_lot_types
-    declared_lots.includes(:market_type, :platform_market_type)
-      .filter_map(&:effective_market_type)
-      .uniq
-  end
-
-  def multi_type_selected_lots?
-    selected_lot_types.size > 1
+  def preloaded_market_attribute_responses
+    responses = market_attribute_responses.to_a
+    ActiveRecord::Associations::Preloader.new(records: responses, associations: :market_attribute).call
+    file_responses = responses.select { |response| response.respond_to?(:documents) }
+    ActiveRecord::Associations::Preloader.new(records: file_responses, associations: { documents_attachments: :blob }).call
+    responses
   end
 
   def all_security_scans_complete?
-    file_responses = market_attribute_responses
+    file_responses = applicable_market_attribute_responses
       .select { |r| r.respond_to?(:documents) && r.documents.attached? }
 
     return true if file_responses.empty?
@@ -187,7 +179,7 @@ class MarketApplication < ApplicationRecord
 
   def responses_for_context(context)
     if context.blank? || context.to_s == 'summary'
-      market_attribute_responses.to_a
+      applicable_market_attribute_responses
     else
       responses_for_step(context)
     end
@@ -208,9 +200,9 @@ class MarketApplication < ApplicationRecord
   end
 
   def responses_for_subcategory(subcategory_key)
-    attribute_ids = public_market.market_attributes
-      .where(subcategory_key: subcategory_key.to_s)
-      .pluck(:id)
+    attribute_ids = applicable_market_attributes
+      .select { |market_attribute| market_attribute.subcategory_key == subcategory_key.to_s }
+      .map(&:id)
 
     market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
   end

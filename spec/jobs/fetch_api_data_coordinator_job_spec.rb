@@ -71,6 +71,20 @@ RSpec.describe FetchApiDataCoordinatorJob, type: :job do
       end
     end
 
+    context 'with an explicit list of APIs' do
+      it 'only spawns the jobs of the given APIs' do
+        public_market.market_attributes << [
+          create(:market_attribute, api_name: 'insee', api_key: 'siret'),
+          create(:market_attribute, api_name: 'qualibat', api_key: 'qualibat')
+        ]
+
+        expect(FetchQualibatDataJob).to receive(:perform_later).with(market_application.id)
+        expect(FetchInseeDataJob).not_to receive(:perform_later)
+
+        described_class.perform_now(market_application.id, %w[qualibat])
+      end
+    end
+
     context 'with market that has no API attributes' do
       it 'does not spawn any API jobs' do
         # Market only has manual fields (no api_name)

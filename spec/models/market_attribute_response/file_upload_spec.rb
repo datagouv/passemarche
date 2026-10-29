@@ -2,7 +2,9 @@ require 'rails_helper'
 
 RSpec.describe MarketAttributeResponse::FileUpload, type: :model do
   let(:market_application) { create(:market_application) }
-  let(:market_attribute) { create(:market_attribute, input_type: 'file_upload') }
+  let(:market_attribute) do
+    create(:market_attribute, input_type: 'file_upload', public_markets: [market_application.public_market])
+  end
   let(:file_response) { build(:market_attribute_response_file_upload) }
 
   describe 'configuration' do

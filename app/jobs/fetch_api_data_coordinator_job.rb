@@ -21,10 +21,10 @@ class FetchApiDataCoordinatorJob < ApplicationJob
     FetchActesBilansDataJob
   ].freeze
 
-  def perform(market_application_id)
+  def perform(market_application_id, api_names = nil)
     market_application = MarketApplication.find(market_application_id)
 
-    spawn_relevant_api_jobs(market_application, market_application_id)
+    spawn_relevant_api_jobs(api_names || market_application.api_names_to_fetch, market_application_id)
   rescue ActiveRecord::RecordNotFound => e
     log_coordinator_error(market_application_id, e)
     raise
@@ -32,9 +32,7 @@ class FetchApiDataCoordinatorJob < ApplicationJob
 
   private
 
-  def spawn_relevant_api_jobs(market_application, market_application_id)
-    api_names = market_application.api_names_to_fetch
-
+  def spawn_relevant_api_jobs(api_names, market_application_id)
     API_JOBS.each do |job_class|
       job_class.perform_later(market_application_id) if api_names.include?(job_class.api_name)
     end

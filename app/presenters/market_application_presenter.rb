@@ -9,7 +9,7 @@ class MarketApplicationPresenter
   delegate :name, :siret, to: :public_market, prefix: :market
   delegate :attestation, :solidaire_co_traitant?, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
-  delegate :multi_type_selected_lots?, :part_of_grouping?, :co_traitant_of_grouping?, to: :@market_application
+  delegate :part_of_grouping?, :co_traitant_of_grouping?, to: :@market_application
 
   INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary
@@ -97,6 +97,8 @@ class MarketApplicationPresenter
   def selected_lot_types
     @selected_lot_types ||= @market_application.selected_lot_types
   end
+
+  def multi_type_selected_lots? = selected_lot_types.size > 1
 
   def lots_by_type_sorted
     scope = co_traitant? ? @market_application.groupement_scope_lots : public_market.lots
@@ -196,7 +198,7 @@ class MarketApplicationPresenter
   # === VALIDATION METHODS ===
 
   def optional_market_attributes?
-    public_market.market_attributes.exists?(mandatory: false)
+    all_market_attributes.any? { |attr| !attr.mandatory? }
   end
 
   def missing_mandatory_motifs_exclusion?
@@ -225,9 +227,7 @@ class MarketApplicationPresenter
   end
 
   def mandatory_motifs_exclusion_attributes
-    public_market.market_attributes
-      .where(mandatory: true)
-      .where('category_key LIKE ?', 'motifs_exclusion%')
+    all_market_attributes.select { |attr| attr.mandatory? && attr.category_key.to_s.start_with?('motifs_exclusion') }
   end
 
   def response_has_data?(response)
@@ -240,11 +240,12 @@ class MarketApplicationPresenter
   end
 
   def responses_by_attribute_id
-    @responses_by_attribute_id ||= @market_application.market_attribute_responses.index_by(&:market_attribute_id)
+    @responses_by_attribute_id ||= @market_application.preloaded_market_attribute_responses
+      .index_by(&:market_attribute_id)
   end
 
   def all_market_attributes
-    @all_market_attributes ||= public_market.market_attributes.includes(:market_types).sort_by(&:position)
+    @all_market_attributes ||= @market_application.applicable_market_attributes.sort_by(&:position)
   end
 
   def hidden_attr_ids
