@@ -28,7 +28,8 @@ Feature: Co-traitant fills in and transmits their part
 
   Scenario: The co-traitant transmits their form to the mandataire
     When I visit my co-traitant form step "summary"
-    And I click on "Candidature terminée - Transmettre au mandataire"
+    Then I should see "Précédent"
+    When I click on "Candidature terminée - Transmettre au mandataire"
     Then I should see "Votre candidature a été transmise !"
     And I should not see "attestation"
     And "mandataire@example.com" should receive the email "Un co-traitant a complété son formulaire"
