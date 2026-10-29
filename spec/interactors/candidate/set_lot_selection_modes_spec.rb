@@ -221,6 +221,41 @@ RSpec.describe Candidate::SetLotSelectionModes, type: :interactor do
       end
     end
 
+    context 'when the mandataire has already transmitted its part' do
+      let!(:groupement_application) { create(:market_application, public_market:, siret:, application_mode: :groupement) }
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: groupement_application) }
+
+      before do
+        groupement_application.lots << lot1
+        groupement_application.complete!
+        grouping.mandataire_grouping_member.mark_completed!
+      end
+
+      it 'moves the mandataire back to in progress when the lots change' do
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'groupement', lot2.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_success
+        expect(grouping.mandataire_grouping_member.reload).to be_status_in_progress
+      end
+
+      it 'refuses the change once the grouping has been submitted' do
+        grouping.update!(submitted_at: Time.current, submission_mode: :partial)
+
+        result = described_class.call(
+          market_application: groupement_application,
+          lot_modes: { lot1.id.to_s => 'none', lot2.id.to_s => 'groupement' }
+        )
+
+        expect(result).to be_failure
+        expect(result.errors[:base]).to eq([I18n.t('candidate.market_applications.grouping_locked_error')])
+        expect(groupement_application.reload.lots).to contain_exactly(lot1)
+        expect(grouping.mandataire_grouping_member.reload).to be_status_completed
+      end
+    end
+
     context 'when a lot type leaves the groupement' do
       let(:public_market) { create(:public_market, :completed, :multi_type, editor:) }
       let(:works_lot) { public_market.lots.find_by!(name: 'Gros œuvre') }
