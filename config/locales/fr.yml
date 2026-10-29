@@ -1093,6 +1093,7 @@ fr:
       delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
+      grouping_locked_error: "La candidature du groupement a déjà été soumise ou la date limite est dépassée : votre partie ne peut plus être modifiée ni transmise."
       draft_saved: "Votre brouillon a été sauvegardé."
       draft_failed: "Votre brouillon n’a pas pu être sauvegardé, veuillez corriger les erreurs ci-dessous."
       insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"

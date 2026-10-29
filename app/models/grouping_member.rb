@@ -65,10 +65,16 @@ class GroupingMember < ApplicationRecord
   end
 
   def with_edit_lock
+    with_grouping_lock do
+      mark_in_progress!
+      yield
+    end
+  end
+
+  def with_grouping_lock
     grouping.with_lock do
       next false if grouping.locked?
 
-      mark_in_progress!
       yield
     end
   end

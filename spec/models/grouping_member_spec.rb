@@ -247,6 +247,28 @@ RSpec.describe GroupingMember, type: :model do
     end
   end
 
+  describe '#with_grouping_lock' do
+    let(:member) { create(:grouping_member, :co_traitant, grouping:, status: :completed) }
+
+    it 'runs the block without changing the member status' do
+      result = member.with_grouping_lock { :done }
+
+      expect(result).to eq(:done)
+      expect(member.reload).to be_status_completed
+    end
+
+    it 'refuses to run the block once the grouping has been submitted' do
+      member
+      grouping.update!(submitted_at: Time.current)
+      ran = false
+
+      result = member.with_grouping_lock { ran = true }
+
+      expect(result).to be false
+      expect(ran).to be false
+    end
+  end
+
   describe '#mark_completed!' do
     it 'moves any non-completed member to completed' do
       member = create(:grouping_member, :co_traitant, grouping:, status: :in_progress)

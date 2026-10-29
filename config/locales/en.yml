@@ -1093,6 +1093,7 @@ en:
       delete_failure: "An error occurred; the application could not be deleted."
       sync_retry_initiated: "Synchronization has been restarted."
       completion_error: "An error occurred while finalizing your application. Please try again."
+      grouping_locked_error: "The grouping application has already been submitted or the deadline has passed: your part can no longer be edited or transmitted."
       draft_saved: "Your draft has been saved."
       draft_failed: "Your draft could not be saved, please fix the errors below."
       insee_api_error: "Unable to retrieve your company's information: %{error}"

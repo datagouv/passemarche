@@ -109,5 +109,29 @@ RSpec.describe Candidate::CompleteGroupingMember, type: :interactor do
         expect { result }.not_to have_enqueued_mail(GroupingMemberCompletionMailer)
       end
     end
+
+    context 'when the grouping has been submitted meanwhile' do
+      let(:grouping) { create(:grouping, public_market:) }
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+      end
+
+      before do
+        grouping.mandataire_market_application.update!(user: create(:user))
+        create(:grouping_member, :co_traitant, grouping:, siret: market_application.siret, market_application:)
+        grouping.update!(submitted_at: Time.current, submission_mode: :partial)
+      end
+
+      it 'refuses the transmission' do
+        expect(result).to be_failure
+        expect(result.message).to eq(I18n.t('candidate.market_applications.grouping_locked_error'))
+        expect(market_application.reload).not_to be_completed
+        expect(market_application.grouping_member.reload).not_to be_status_completed
+      end
+
+      it 'does not notify the mandataire' do
+        expect { result }.not_to have_enqueued_mail(GroupingMemberCompletionMailer)
+      end
+    end
   end
 end
