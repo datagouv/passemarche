@@ -250,5 +250,13 @@ RSpec.describe Candidate::DashboardApplicationPresenter do
 
       expect(described_class.status_counts(market_applications)).to eq(in_progress: 1, completed: 2)
     end
+
+    it 'still counts an application submitted before the deadline as completed' do
+      expired_market = create(:public_market, :completed)
+      create(:market_application, public_market: expired_market, user:, completed_at: 2.days.ago)
+      expired_market.update_column(:deadline, 1.day.ago)
+
+      expect(described_class.status_counts(market_applications)).to eq(in_progress: 1, completed: 3)
+    end
   end
 end
