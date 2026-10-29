@@ -162,6 +162,14 @@ class MarketApplication < ApplicationRecord
     market_attribute_responses.select { |response| applicable_ids.include?(response.market_attribute_id) }
   end
 
+  def preloaded_market_attribute_responses
+    responses = market_attribute_responses.to_a
+    ActiveRecord::Associations::Preloader.new(records: responses, associations: :market_attribute).call
+    file_responses = responses.select { |response| response.respond_to?(:documents) }
+    ActiveRecord::Associations::Preloader.new(records: file_responses, associations: { documents_attachments: :blob }).call
+    responses
+  end
+
   def purge_inapplicable_data!
     market_attribute_responses.where.not(market_attribute_id: applicable_market_attribute_ids).destroy_all
     market_attribute_responses.reset

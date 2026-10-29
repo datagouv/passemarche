@@ -15,7 +15,7 @@ class ApiBlockStatusPresenter
   def blocks
     @blocks ||= begin
       all_blocks = blocks_config.map do |block_config|
-        ApiBlock.new(block_config, @market_application)
+        ApiBlock.new(block_config, @market_application, market_api_names)
       end
       all_blocks.reject { |block| block.apis.empty? }
     end
@@ -59,6 +59,10 @@ class ApiBlockStatusPresenter
     'Récupération en cours, veuillez patienter...'
   end
 
+  def market_api_names
+    @market_api_names ||= @market_application.api_names_to_fetch.map(&:downcase)
+  end
+
   def blocks_config
     I18n.t('candidate.market_applications.api_data_recovery_status.blocks')
       .transform_values(&:symbolize_keys)
@@ -69,12 +73,12 @@ class ApiBlockStatusPresenter
   class ApiBlock
     attr_reader :name, :description, :icon, :apis
 
-    def initialize(block_config, market_application)
+    def initialize(block_config, market_application, market_api_names)
       @name = block_config[:name]
       @description = block_config[:description]
       @icon = block_config[:icon]
       @market_application = market_application
-      @apis = filter_relevant_apis(block_config[:apis])
+      @apis = block_config[:apis].select { |api| market_api_names.include?(api.downcase) }
     end
 
     def status
@@ -176,11 +180,6 @@ class ApiBlockStatusPresenter
 
     def default_api_status
       { 'status' => 'pending', 'fields_filled' => 0 }
-    end
-
-    def filter_relevant_apis(configured_apis)
-      market_apis = @market_application.api_names_to_fetch.map(&:downcase)
-      configured_apis.select { |api| market_apis.include?(api.downcase) }
     end
   end
 end
