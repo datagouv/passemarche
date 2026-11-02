@@ -134,7 +134,7 @@ GEM
       addressable
       base64
       ssrf_filter (~> 1.5)
-    csv (3.3.6)
+    csv (3.3.7)
     cucumber (11.1.1)
       base64 (~> 0.2)
       builder (~> 3.2)
