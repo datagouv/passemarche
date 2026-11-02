@@ -68,3 +68,10 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
+Around('not @javascript') do |_scenario, block|
+  ActiveRecord::Base.connection_pool.pin_connection!(false)
+  block.call
+ensure
+  ActiveRecord::Base.connection_pool.unpin_connection!
+end
