@@ -7,20 +7,24 @@ module Candidate
     end
 
     def call
-      return if market_application.api_fetch_status.present?
+      api_names = api_names_not_yet_fetched
+      return if api_names.empty?
 
-      api_names = market_application.api_names_to_fetch
-      FetchApiDataCoordinatorJob::API_JOBS.each do |job_class|
-        next unless api_names.include?(job_class.api_name)
-
-        market_application.update_api_status(job_class.api_name, status: 'pending', fields_filled: 0)
+      api_names.each do |api_name|
+        market_application.update_api_status(api_name, status: 'pending', fields_filled: 0)
       end
 
-      FetchApiDataCoordinatorJob.perform_later(market_application.id)
+      FetchApiDataCoordinatorJob.perform_later(market_application.id, api_names)
     end
 
     private
 
     attr_reader :market_application
+
+    def api_names_not_yet_fetched
+      fetchable_api_names = FetchApiDataCoordinatorJob::API_JOBS.map(&:api_name)
+
+      (market_application.api_names_to_fetch & fetchable_api_names) - market_application.api_fetch_status.keys
+    end
   end
 end

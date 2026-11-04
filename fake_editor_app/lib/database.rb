@@ -146,6 +146,10 @@ class Market < Sequel::Model(DB[:markets])
     )
   end
 
+  def mark_published!
+    update(status: 'published')
+  end
+
   def store_webhook_payload!(webhook_data)
     update(
       webhook_payload: webhook_data.to_json,
@@ -192,7 +196,8 @@ class Market < Sequel::Model(DB[:markets])
   def status_label
     case status
     when 'created' then 'En attente de configuration'
-    when 'completed' then 'Prêt pour candidatures'
+    when 'completed' then 'Configuré — non publié'
+    when 'published' then 'Publié (verrouillé)'
     else status
     end
   end
@@ -201,6 +206,7 @@ class Market < Sequel::Model(DB[:markets])
     case status
     when 'created' then '⏳'
     when 'completed' then '✅'
+    when 'published' then '🔒'
     else '❓'
     end
   end
@@ -209,6 +215,7 @@ class Market < Sequel::Model(DB[:markets])
     case status
     when 'created' then 'info'
     when 'completed' then 'success'
+    when 'published' then 'warning'
     else 'new'
     end
   end

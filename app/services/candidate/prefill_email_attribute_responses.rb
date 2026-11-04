@@ -24,7 +24,7 @@ module Candidate
     attr_reader :market_application, :candidate_email
 
     def email_attributes
-      market_application.public_market.market_attributes.select(&:email_input?)
+      market_application.applicable_market_attributes.select(&:email_input?)
     end
 
     def build_email_response(attribute)

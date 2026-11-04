@@ -1,0 +1,7 @@
+<%# locals: (application:, size: nil) %>
+<% badge_class = application.completed_at? ? "fr-badge--success" : "fr-badge--info" %>
+<% size_class = size ? " fr-badge--#{size}" : "" %>
+<% i18n_key = application.completed_at? ? "submitted" : "in_progress" %>
+<p class="fr-badge <%= badge_class %><%= size_class %> fr-mb-2w">
+  <%= t("candidate.dashboard.application.status.#{i18n_key}").upcase %>
+</p>

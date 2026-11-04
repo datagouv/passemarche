@@ -3,7 +3,7 @@
     <div class="fr-col-12">
       <%= render 'admin/shared/navigation' %>
 
-      <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+      <nav role="navigation" class="fr-breadcrumb" aria-label="<%= t('breadcrumb.aria_label') %>">
         <ol class="fr-breadcrumb__list">
           <li>
             <%= link_to t('admin.navigation.editors'), admin_editors_path, class: "fr-breadcrumb__link" %>
@@ -108,7 +108,8 @@
               <div class="fr-card__content">
                 <% if @editor.webhook_configured? %>
                   <p><strong><%= t('admin.editors.show.webhook_url') %></strong> <%= @editor.completion_webhook_url %></p>
-                  <p><strong><%= t('admin.editors.show.redirect_url') %></strong> <%= @editor.redirect_url || t('admin.shared.not_configured') %></p>
+                  <p><strong><%= t('admin.editors.show.buyer_return_url') %></strong> <%= @editor.buyer_return_url || t('admin.shared.not_configured') %></p>
+                  <p><strong><%= t('admin.editors.show.candidate_return_url') %></strong> <%= @editor.candidate_return_url || t('admin.shared.not_configured') %></p>
                   <p><strong><%= t('admin.editors.show.secret_configured') %></strong>
                     <% if @editor.webhook_secret.present? %>
                       <span class="fr-badge fr-badge--success"><%= t('admin.shared.yes') %></span>

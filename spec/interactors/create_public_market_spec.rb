@@ -35,6 +35,10 @@ RSpec.describe CreatePublicMarket, type: :interactor do
         expect(result.public_market.name).to eq('Test Market')
         expect(result.public_market.editor).to eq(editor)
       end
+
+      it 'enqueues FetchPublicMarketBuyerNameJob' do
+        expect { subject }.to have_enqueued_job(FetchPublicMarketBuyerNameJob)
+      end
     end
 
     context 'with nil editor' do
@@ -137,6 +141,31 @@ RSpec.describe CreatePublicMarket, type: :interactor do
         result = subject
         expect(result.public_market.lots.ordered.map(&:position)).to eq([1, 2])
       end
+
+      it 'assigns platform_market_type from global market type when no per-lot type' do
+        result = subject
+        supplies = MarketType.find_by(code: 'supplies')
+        expect(result.public_market.lots.map(&:platform_market_type)).to all(eq(supplies))
+      end
+    end
+
+    context 'with lots having a per-lot type' do
+      before { MarketType.find_or_create_by(code: 'works') }
+
+      let(:params_with_per_lot_type) do
+        valid_params.merge(lots: [
+          { name: 'Lot 1', lot_type_code: 'supplies' },
+          { name: 'Lot 2', lot_type_code: 'works' }
+        ])
+      end
+
+      subject { described_class.call(editor:, params: params_with_per_lot_type) }
+
+      it 'assigns each lot its own platform_market_type' do
+        result = subject
+        types = result.public_market.lots.ordered.map { |l| l.platform_market_type.code }
+        expect(types).to eq(%w[supplies works])
+      end
     end
 
     context 'with lots having cpv_code' do
@@ -152,7 +181,11 @@ RSpec.describe CreatePublicMarket, type: :interactor do
       end
     end
 
-    context 'with lot_limit exceeding the number of lots' do
+    context 'with lot_limit exceeding the number of lots and the feature flag enabled' do
+      before do
+        allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(true)
+      end
+
       let(:params_with_limit) do
         valid_params.merge(
           lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }],
@@ -172,6 +205,25 @@ RSpec.describe CreatePublicMarket, type: :interactor do
 
       it 'does not create the market' do
         expect { subject }.not_to change(PublicMarket, :count)
+      end
+    end
+
+    context 'with lot_limit exceeding the number of lots and the feature flag disabled' do
+      let(:params_with_limit) do
+        valid_params.merge(
+          lots: [{ name: 'Lot 1' }, { name: 'Lot 2' }],
+          lot_limit: 5
+        )
+      end
+
+      subject { described_class.call(editor:, params: params_with_limit) }
+
+      it 'succeeds' do
+        expect(subject).to be_success
+      end
+
+      it 'creates the market without applying the limit' do
+        expect { subject }.to change(PublicMarket, :count).by(1)
       end
     end
 

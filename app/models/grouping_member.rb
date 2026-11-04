@@ -1,0 +1,109 @@
+# frozen_string_literal: true
+
+class GroupingMember < ApplicationRecord
+  has_paper_trail skip: %i[invitation_token],
+    meta: { invitation_token_digest: ->(member) { digest_invitation_token(member.invitation_token) } }
+
+  belongs_to :grouping
+  belongs_to :public_market
+  belongs_to :market_application, optional: true, dependent: :destroy
+
+  enum :role, { mandataire: 0, co_traitant: 1 }
+  enum :status, { invited: 0, to_prepare: 1, in_progress: 2, completed: 3 }, prefix: true
+
+  scope :mandataire_for, ->(public_market:, siret:) { mandataire.where(public_market:, siret:) }
+
+  before_validation :set_public_market
+  before_destroy :abort_if_completed
+  after_create_commit :enqueue_company_name_resolution, if: :co_traitant?
+
+  normalizes :siret, with: ->(siret) { siret.strip }
+
+  validates :siret, presence: true, siret: true
+  validates :siret, uniqueness: { scope: :grouping_id }
+  validates :siret, uniqueness: { scope: :public_market_id, conditions: -> { mandataire } }, if: :mandataire?
+  validates :email, presence: true, email: true, if: :co_traitant?
+  validates :grouping_id, uniqueness: { scope: :role }, if: :mandataire?
+  validates :market_application, presence: true, if: :mandataire?
+  validate :siret_not_mandataire, if: :co_traitant?
+
+  def self.digest_invitation_token(invitation_token)
+    return if invitation_token.blank?
+
+    OpenSSL::Digest::SHA256.hexdigest(invitation_token)
+  end
+
+  def self.removed_with_invitation_token(invitation_token)
+    return if invitation_token.blank?
+
+    PaperTrail::Version
+      .where(item_type: name, event: 'destroy', invitation_token_digest: digest_invitation_token(invitation_token))
+      .order(:id)
+      .last&.reify
+  end
+
+  def invitation_sent?
+    invitation_token_created_at.present?
+  end
+
+  def invitation_expired?
+    return false unless invitation_sent?
+
+    grouping.locked?
+  end
+
+  def declared_lots
+    market_application&.declared_lots || Lot.none
+  end
+
+  def mark_connected!
+    status_to_prepare! if status_invited?
+  end
+
+  def mark_in_progress!
+    status_in_progress! unless status_in_progress?
+  end
+
+  def with_edit_lock
+    with_grouping_lock do
+      mark_in_progress!
+      yield
+    end
+  end
+
+  def with_grouping_lock
+    grouping.with_lock do
+      next false if grouping.locked?
+
+      yield
+    end
+  end
+
+  def mark_completed!
+    status_completed! unless status_completed?
+  end
+
+  private
+
+  def set_public_market
+    self.public_market_id = grouping.public_market_id if grouping
+  end
+
+  def enqueue_company_name_resolution
+    ResolveGroupingMemberCompanyNameJob.perform_later(id)
+  end
+
+  def siret_not_mandataire
+    mandataire_siret = grouping&.mandataire_grouping_member&.siret
+    return if siret != mandataire_siret
+
+    errors.add(:siret, :same_as_mandataire)
+  end
+
+  def abort_if_completed
+    return unless status_completed?
+
+    errors.add(:base, I18n.t('candidate.validations.grouping_member_already_completed'))
+    throw :abort
+  end
+end

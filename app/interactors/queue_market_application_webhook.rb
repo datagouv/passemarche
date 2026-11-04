@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 class QueueMarketApplicationWebhook < ApplicationInteractor
-  delegate :market_application, :request_host, :request_protocol, to: :context
+  delegate :market_application, to: :context
 
   def call
-    MarketApplicationWebhookJob.perform_later(
-      market_application.id,
-      request_host:,
-      request_protocol:
-    )
+    MarketApplicationWebhookJob.perform_later(market_application.id)
   end
 end

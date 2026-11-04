@@ -50,7 +50,7 @@ class MakeRequest < ApplicationInteractor
   end
 
   def request_recipient
-    context.market_application.public_market.siret
+    context.market_application&.public_market&.siret || context.params&.dig(:siret)
   end
 
   def request_object

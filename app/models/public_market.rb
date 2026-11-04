@@ -3,16 +3,32 @@
 class PublicMarket < ApplicationRecord
   include UniqueAssociationValidator
   include Completable
+  include Publishable
   include Syncable
+
+  SUPPORTED_DEADLINE_RANGE = (Time.utc(2000)...Time.utc(2100))
+
+  has_paper_trail on: %i[create update]
 
   belongs_to :editor
 
-  has_and_belongs_to_many :market_attributes
+  has_one_attached :configuration_summary
+  has_many :market_attribute_selections, dependent: :destroy
+  has_many :market_attributes, through: :market_attribute_selections
   has_many :lots, dependent: :destroy
   accepts_nested_attributes_for :lots
   has_many :market_applications, dependent: :destroy
 
+  scope :by_latest_application_among, lambda { |market_applications|
+    joins(:market_applications)
+      .merge(market_applications)
+      .group(:id)
+      .order(MarketApplication.arel_table[:updated_at].maximum.desc, :id)
+  }
+
   attr_accessor :lot_limit_enabled
+
+  normalizes :siret, with: ->(siret) { siret.strip }
 
   validates :identifier, presence: true, uniqueness: true
   validates :name, presence: true
@@ -20,15 +36,49 @@ class PublicMarket < ApplicationRecord
   validates :siret, presence: true, siret: true
   validates :market_type_codes, presence: true, length: { minimum: 1 }
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
-  validates :lot_limit, presence: true, if: :lot_limit_enabled
+  validates :lot_limit, presence: true, if: -> { FeatureFlags::LotLimit.enabled? && lot_limit_enabled }
   validate :must_have_valid_market_type_codes
   validate :lot_limit_cannot_exceed_lots_count
+  validate :deadline_within_supported_range
   validates_uniqueness_of_association :market_attributes
 
   before_validation :generate_identifier, on: :create
 
+  def multi_type_lots?
+    effective_lot_market_types.size > 1
+  end
+
+  def effective_market_type_codes
+    lot_codes = effective_lot_market_types.map(&:code)
+    (market_type_codes + lot_codes).uniq
+  end
+
+  def open?
+    deadline.present? && deadline > Time.zone.now
+  end
+
+  def buyer_display_name
+    buyer_name.presence || siret
+  end
+
   def defense_industry?
     market_type_codes.any?('defense')
+  end
+
+  def update_lot_types(lot_ids, market_type)
+    errors.clear
+    updated_lots = lots.where(id: lot_ids).includes(:market_type, :platform_market_type).to_a
+    return reject_lot_type_change(:no_lot_selected) if updated_lots.empty?
+    return reject_lot_type_change(:same_typology_required) if removes_last_lot_of_market_typology?(updated_lots, market_type)
+
+    transaction do
+      updated_lots.each do |lot|
+        effective_type = lot.platform_market_type == market_type ? nil : market_type
+        lot.update!(market_type: effective_type)
+      end
+      sync_market_attributes_with_current_types
+    end
+    true
   end
 
   def add_market_attributes(new_attributes)
@@ -37,14 +87,65 @@ class PublicMarket < ApplicationRecord
     save!
   end
 
-  def sync_optional_market_attributes(selected_attributes)
-    mandatory_attrs = market_attributes.mandatory
-    all_attributes = (mandatory_attrs + Array(selected_attributes)).uniq
-    self.market_attributes = all_attributes
-    save!
+  def update_and_resync_configuration!(attributes)
+    was_completed = completed?
+    update!(attributes)
+    GeneratePublicMarketConfigurationSummaryPdfJob.perform_later(id) if was_completed && saved_changes?
   end
 
   private
+
+  def deadline_within_supported_range
+    return if deadline.blank? || SUPPORTED_DEADLINE_RANGE.cover?(deadline)
+
+    errors.add(:deadline, :out_of_range)
+  end
+
+  def market_typology_codes
+    market_type_codes.reject { |code| code == 'defense' }
+  end
+
+  def removes_last_lot_of_market_typology?(updated_lots, new_market_type)
+    updated_lot_ids = updated_lots.map(&:id)
+    remaining_lots = lots.where.not(id: updated_lot_ids).includes(:market_type, :platform_market_type).to_a
+
+    market_typology_codes.any? do |typology_code|
+      next false if typology_code == new_market_type&.code
+      next false if any_lot_of_type?(remaining_lots, typology_code)
+
+      any_lot_of_type?(updated_lots, typology_code)
+    end
+  end
+
+  def any_lot_of_type?(lots_array, type_code)
+    lots_array.any? { |lot| lot.effective_market_type&.code == type_code }
+  end
+
+  def reject_lot_type_change(reason)
+    errors.add(:base, reason)
+    false
+  end
+
+  def sync_market_attributes_with_current_types
+    remove_market_attributes_for_obsolete_types
+    add_market_attributes(MarketAttributeFilteringService.call(self).mandatory)
+  end
+
+  def remove_market_attributes_for_obsolete_types
+    current_codes = effective_market_type_codes
+    obsolete_attribute_ids = market_attributes.includes(:market_types).select do |attribute|
+      attribute.market_types.none? { |type| current_codes.include?(type.code) }
+    end.map(&:id)
+    return if obsolete_attribute_ids.empty?
+
+    market_attribute_selections.where(market_attribute_id: obsolete_attribute_ids).destroy_all
+  end
+
+  def effective_lot_market_types
+    lots.includes(:market_type, :platform_market_type)
+      .filter_map(&:effective_market_type)
+      .uniq
+  end
 
   def must_have_valid_market_type_codes
     check_valid_market_type_codes
@@ -64,6 +165,7 @@ class PublicMarket < ApplicationRecord
   end
 
   def lot_limit_cannot_exceed_lots_count
+    return unless FeatureFlags::LotLimit.enabled?
     return if lot_limit.nil?
     return if lot_limit <= lots.size
 

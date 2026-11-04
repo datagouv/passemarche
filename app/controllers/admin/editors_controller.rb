@@ -46,7 +46,7 @@ class Admin::EditorsController < Admin::ApplicationController
   def editor_params
     params.expect(editor: %i[
       name authorized active
-      completion_webhook_url redirect_url
+      completion_webhook_url buyer_return_url candidate_return_url
       can_create_defense_markets
     ])
   end

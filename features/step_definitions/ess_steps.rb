@@ -3,38 +3,11 @@
 require 'webmock/cucumber'
 
 Given('a public market with ESS field exists') do
-  @editor = create(:editor)
-  @public_market = create(:public_market, :completed, editor: @editor)
-
-  @ess_attribute = create(
-    :market_attribute,
-    key: 'capacites_techniques_professionnelles_certificats_ess',
-    input_type: 'radio_with_file_and_text',
-    api_name: 'insee',
-    api_key: 'ess',
-    category_key: 'capacites_techniques_professionnelles',
-    subcategory_key: 'capacites_techniques_professionnelles_certificats'
-  )
-  @ess_attribute.public_markets << @public_market
-
-  # Add contact attribute so we can pass through steps
-  @contact_attribute = create(
-    :market_attribute,
-    key: 'identite_entreprise_contact_email',
-    input_type: 'email_input',
-    category_key: 'identite_entreprise',
-    subcategory_key: 'identite_entreprise_contact'
-  )
-  @contact_attribute.public_markets << @public_market
-
-  @contact_phone_attribute = create(
-    :market_attribute,
-    key: 'identite_entreprise_contact_telephone',
-    input_type: 'phone_input',
-    category_key: 'identite_entreprise',
-    subcategory_key: 'identite_entreprise_contact'
-  )
-  @contact_phone_attribute.public_markets << @public_market
+  @ess_attribute, = setup_market_with_attributes([
+    { key: 'capacites_techniques_professionnelles_certificats_ess', input_type: 'radio_with_file_and_text', api_name: 'insee', api_key: 'ess', category_key: 'capacites_techniques_professionnelles', subcategory_key: 'capacites_techniques_professionnelles_certificats' },
+    { key: 'identite_entreprise_contact_email', input_type: 'email_input', category_key: 'identite_entreprise', subcategory_key: 'identite_entreprise_contact' },
+    { key: 'identite_entreprise_contact_telephone', input_type: 'phone_input', category_key: 'identite_entreprise', subcategory_key: 'identite_entreprise_contact' }
+  ])
 end
 
 Given('the INSEE API returns ESS true') do
@@ -63,12 +36,7 @@ Given('the INSEE API returns an error') do
 end
 
 When('I start an application for the ESS market') do
-  @market_application = create(
-    :market_application,
-    public_market: @public_market,
-    siret: '41816609600069'
-  )
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application(siret: '41816609600069')
 end
 
 When('all APIs complete for ESS') do

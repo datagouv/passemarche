@@ -1,0 +1,17 @@
+<% content_for :title, t('candidate.locked_applications.title') %>
+
+<%= render Shared::ConfirmationLayoutComponent.new do |layout| %>
+  <% layout.with_illustration do %>
+    <%= image_tag 'application_locked.svg', alt: '', width: 282, height: 319 %>
+  <% end %>
+
+  <h1 class="fr-h1"><%= t('candidate.locked_applications.heading') %></h1>
+  <p class="fr-text--lead"><%= t('candidate.locked_applications.explanation') %></p>
+  <p class="fr-text--lead"><%= t('candidate.locked_applications.contact_hint') %></p>
+
+  <% if (candidate_url = platform_return_url(@market_application)) %>
+    <div class="fr-btns-group fr-btns-group--inline fr-mt-5w">
+      <%= link_to t('candidate.locked_applications.return_to_platform'), candidate_url, class: 'fr-btn' %>
+    </div>
+  <% end %>
+<% end %>

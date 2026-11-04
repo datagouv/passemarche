@@ -185,4 +185,45 @@ RSpec.describe ApiFetchable do
       expect(response.reload.source).to eq('manual_after_api_failure')
     end
   end
+
+  describe 'API response cleanup with file responses' do
+    let(:job) { dummy_job_class.new }
+    let(:market_attribute) do
+      create(:market_attribute, :inline_file_upload, api_name: 'dummy_api', api_key: 'dummy_file').tap do |attr|
+        attr.public_markets << public_market
+      end
+    end
+    let!(:file_response) do
+      create(:market_attribute_response_inline_file_upload,
+        market_application:,
+        market_attribute:,
+        source: :auto)
+    end
+
+    context 'when API call fails' do
+      before do
+        allow(dummy_api_service).to receive(:call).and_return(instance_double('Interactor::Context', success?: false))
+      end
+
+      it 'updates status to failed and marks responses as manual_after_api_failure' do
+        job.perform(market_application.id)
+
+        expect(market_application.reload.api_fetch_status['dummy_api']['status']).to eq('failed')
+        expect(file_response.reload.source).to eq('manual_after_api_failure')
+      end
+    end
+
+    context 'when API call raises an error' do
+      before do
+        allow(dummy_api_service).to receive(:call).and_raise(Faraday::Error.new('API Error'))
+        allow(Rails.logger).to receive(:error)
+      end
+
+      it 're-raises the original error and updates status to failed' do
+        expect { job.perform(market_application.id) }.to raise_error(Faraday::Error, 'API Error')
+
+        expect(market_application.reload.api_fetch_status['dummy_api']['status']).to eq('failed')
+      end
+    end
+  end
 end

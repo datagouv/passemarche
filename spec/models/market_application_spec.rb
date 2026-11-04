@@ -34,6 +34,20 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe 'siret normalization' do
+    it 'stores the siret without surrounding whitespace' do
+      application = create(:market_application, public_market:, siret: " 41816609600069 \n")
+
+      expect(application.reload.siret).to eq('41816609600069')
+    end
+
+    it 'finds applications by siret given with surrounding whitespace' do
+      application = create(:market_application, public_market:, siret: '41816609600069')
+
+      expect(described_class.for_siret('41816609600069 ')).to contain_exactly(application)
+    end
+  end
+
   describe 'business validations' do
     it 'requires SIRET to be present' do
       application = build(:market_application, public_market:, siret: nil)
@@ -106,6 +120,27 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '.outside_grouping' do
+    let(:public_market) { create(:public_market, :completed) }
+    let!(:solo_application) { create(:market_application, public_market:, application_mode: :solo) }
+    let!(:application_without_mode) { create(:market_application, public_market:, application_mode: nil) }
+    let!(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+    let!(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '41816609600069', application_mode: :groupement)
+    end
+
+    before do
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application,
+        siret: co_traitant_application.siret)
+    end
+
+    it 'keeps only the applications that do not belong to a grouping' do
+      expect(described_class.outside_grouping).to contain_exactly(solo_application, application_without_mode)
+    end
+  end
+
   describe '#complete!' do
     let(:editor) { create(:editor) }
     let(:application) { create(:market_application, public_market:, siret: '12345678901234', identifier: nil) }
@@ -115,6 +150,918 @@ RSpec.describe MarketApplication, type: :model do
         application.complete!
         expect(application.completed_at).to eq(Time.zone.now)
       end
+    end
+  end
+
+  describe 'application_mode' do
+    it 'defaults to nil (no mode chosen yet)' do
+      application = build(:market_application, public_market:)
+      expect(application.application_mode).to be_nil
+    end
+
+    it 'accepts solo, groupement and mixte' do
+      application = build(:market_application, public_market:, application_mode: :solo)
+      expect(application).to be_solo
+
+      application.application_mode = :groupement
+      expect(application).to be_groupement
+
+      application.application_mode = :mixte
+      expect(application).to be_mixte
+    end
+
+    it 'can be set once from nil on an existing record' do
+      application = create(:market_application, public_market:, application_mode: nil)
+
+      expect(application.update(application_mode: :solo)).to be true
+    end
+
+    it 'cannot be changed once set on an existing record' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.update(application_mode: :groupement)).to be false
+      expect(application.errors[:application_mode]).to be_present
+      expect(application.reload).to be_solo
+    end
+  end
+
+  describe '#application_mode_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled, regardless of mode' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.application_mode_choice_required?).to be false
+    end
+
+    it 'returns true when the flag is enabled and no mode has been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.application_mode_choice_required?).to be true
+    end
+
+    it 'returns false when the flag is enabled but a mode is already set' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.application_mode_choice_required?).to be false
+    end
+  end
+
+  describe '#grouping_legal_type_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled, even if a grouping without legal_type exists' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+
+    it 'returns true when the flag is enabled, the mode is groupement and legal_type is missing' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_legal_type_choice_required?).to be true
+    end
+
+    it 'returns false when legal_type is already chosen' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+
+    it 'returns false when the mode is not groupement' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+
+    it 'returns false when the application is already completed, even without a legal_type' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, :completed, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_legal_type_choice_required?).to be false
+    end
+  end
+
+  describe '#already_mandataire_elsewhere?' do
+    let(:siret) { '73282932000074' }
+
+    it 'returns true when another application for the same SIRET and market is mandataire of a grouping' do
+      mandataire_application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(application.already_mandataire_elsewhere?).to be true
+    end
+
+    it 'returns false when no other application is mandataire' do
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(application.already_mandataire_elsewhere?).to be false
+    end
+
+    it 'returns false for a SIRET that is only co_traitant of a grouping on this market' do
+      mandataire_application = create(:market_application, public_market:, siret: '35600000000048', application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      create(:grouping_member, :co_traitant, grouping:, siret:)
+
+      application = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(application.already_mandataire_elsewhere?).to be false
+    end
+  end
+
+  describe '#grouping_composition_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+
+    it 'returns false when the legal_type has not been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+
+    it 'returns true when legal_type is chosen but no invitation has been sent yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)
+
+      expect(application.grouping_composition_choice_required?).to be true
+    end
+
+    it 'returns false once at least one invitation has been sent' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+
+    it 'returns false when the mode is not groupement' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.grouping_composition_choice_required?).to be false
+    end
+  end
+
+  describe '#lot_selection_mode_choice_required?' do
+    it 'returns false when the groupement feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    it 'returns false when the mode is not groupement' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    it 'returns false when the public market has no lots' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    it 'returns false when the application is already completed' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, :completed, public_market:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(application.lot_selection_mode_choice_required?).to be false
+    end
+
+    context 'in groupement-only mode (no solo counterpart)' do
+      it 'returns true when no lot has been assigned yet' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        application = create(:market_application, public_market:, application_mode: :groupement)
+        create(:lot, public_market:)
+
+        expect(application.lot_selection_mode_choice_required?).to be true
+      end
+
+      it 'returns false for a co_traitant member, even without any lot assigned' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        application = create(:market_application, public_market:, siret: '13002526500013', application_mode: :groupement)
+        create(:lot, public_market:)
+        grouping = create(:grouping, public_market:)
+        create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+
+        expect(application.lot_selection_mode_choice_required?).to be false
+      end
+
+      it 'returns false once at least one lot has been assigned' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        application = create(:market_application, public_market:, application_mode: :groupement)
+        lot = create(:lot, public_market:)
+        application.lots << lot
+
+        expect(application.lot_selection_mode_choice_required?).to be false
+      end
+    end
+
+    context 'in mixte mode (solo counterpart exists)' do
+      let(:siret) { '73282932000074' }
+
+      it 'returns true when the groupement application has no lot assigned yet' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        create(:market_application, public_market:, siret:, application_mode: :solo)
+        application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+        create(:lot, public_market:)
+
+        expect(application.lot_selection_mode_choice_required?).to be true
+      end
+
+      it 'returns true when the solo application has no lot assigned yet, even if the groupement one has' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        create(:market_application, public_market:, siret:, application_mode: :solo)
+        application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+        lot = create(:lot, public_market:)
+        application.lots << lot
+
+        expect(application.lot_selection_mode_choice_required?).to be true
+      end
+
+      it 'returns false once both the solo and groupement applications have at least one lot assigned' do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+        application = create(:market_application, public_market:, siret:, application_mode: :groupement)
+        lot1 = create(:lot, public_market:)
+        lot2 = create(:lot, public_market:)
+        solo.lots << lot1
+        application.lots << lot2
+
+        expect(application.lot_selection_mode_choice_required?).to be false
+      end
+    end
+  end
+
+  describe '#groupement_scope_lots' do
+    it 'returns an empty relation when the application has no grouping_member' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.groupement_scope_lots).to be_empty
+    end
+
+    it "returns the mandataire's lots for a co_traitant member" do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      lot1 = create(:lot, public_market:)
+      lot2 = create(:lot, public_market:)
+      mandataire_application.lots << lot1 << lot2
+
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.groupement_scope_lots).to contain_exactly(lot1, lot2)
+    end
+
+    it 'does not include lots assigned to other co_traitants' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      lot = create(:lot, public_market:)
+      mandataire_application.lots << lot
+
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      other_co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: other_co_traitant_application)
+      other_co_traitant_application.lots << create(:lot, public_market:)
+
+      expect(co_traitant_application.groupement_scope_lots).to contain_exactly(lot)
+    end
+  end
+
+  describe '#declared_lots' do
+    let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+    let(:scope_lots) { create_list(:lot, 2, public_market:) }
+    let(:co_traitant_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+    before { mandataire_application.lots << scope_lots }
+
+    it "returns the mandataire's lots for a co_traitant of a solidaire grouping" do
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.declared_lots).to match_array(scope_lots)
+    end
+
+    it 'returns the lots chosen by a co_traitant of a conjoint grouping' do
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+      co_traitant_application.lots << scope_lots.first
+
+      expect(co_traitant_application.declared_lots).to contain_exactly(scope_lots.first)
+    end
+
+    it 'keeps the lots chosen by a co_traitant when the grouping turns solidaire then back to conjoint' do
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+      co_traitant_application.lots << scope_lots.first
+
+      grouping.update!(legal_type: :solidaire)
+      grouping.update!(legal_type: :conjoint)
+
+      expect(co_traitant_application.reload.declared_lots).to contain_exactly(scope_lots.first)
+    end
+
+    it "returns the application's own lots outside a grouping" do
+      expect(mandataire_application.declared_lots).to match_array(scope_lots)
+    end
+  end
+
+  describe '#solidaire_co_traitant?' do
+    it 'returns true for a co_traitant of a solidaire grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.solidaire_co_traitant?).to be true
+    end
+
+    it 'returns false for a co_traitant of a conjoint grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.solidaire_co_traitant?).to be false
+    end
+
+    it 'returns false for the mandataire member, even in a solidaire grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+
+      expect(mandataire_application.solidaire_co_traitant?).to be false
+    end
+
+    it 'returns false when the application has no grouping_member' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.solidaire_co_traitant?).to be false
+    end
+  end
+
+  describe '#groupement_counterpart' do
+    let(:siret) { '73282932000074' }
+
+    it 'finds the groupement application for the same SIRET and market when called on the solo one' do
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+
+      expect(solo.groupement_counterpart).to eq(groupement)
+    end
+
+    it 'returns nil when the application is not mixte-related (only a solo exists)' do
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(solo.groupement_counterpart).to be_nil
+    end
+
+    it 'returns nil when the application itself is the groupement one' do
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+
+      expect(groupement.groupement_counterpart).to be_nil
+    end
+
+    it 'returns nil for a solo application that is not part of a mixte pair on another market' do
+      other_market = create(:public_market, :completed, editor:)
+      create(:market_application, public_market: other_market, siret:, application_mode: :groupement)
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+
+      expect(solo.groupement_counterpart).to be_nil
+    end
+  end
+
+  describe '#next_required_wizard_step' do
+    it 'does not query for a groupement_counterpart when the feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application).not_to receive(:groupement_counterpart)
+      expect(application.next_required_wizard_step).to be_nil
+    end
+
+    it 'returns application_mode when the mode has not been chosen yet' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = build(:market_application, public_market:, application_mode: nil)
+
+      expect(application.next_required_wizard_step).to eq([application, :application_mode])
+    end
+
+    it 'returns lot_selection_mode on the groupement counterpart for a mixte solo application when the market has lots' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(solo.next_required_wizard_step).to eq([groupement, :lot_selection_mode])
+    end
+
+    it 'returns grouping_legal_type on the groupement counterpart when the market has no lots' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement, legal_type: nil)
+
+      expect(solo.next_required_wizard_step).to eq([groupement, :grouping_legal_type])
+    end
+
+    it 'returns grouping_legal_type once lots have been assigned' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      lot = create(:lot, public_market:)
+      application.lots << lot
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: nil)
+
+      expect(application.next_required_wizard_step).to eq([application, :grouping_legal_type])
+    end
+
+    it 'returns grouping_composition when the legal_type is chosen but no invitation has been sent' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: nil)
+
+      expect(application.next_required_wizard_step).to eq([application, :grouping_composition])
+    end
+
+    it 'returns nil once nothing is required' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.next_required_wizard_step).to be_nil
+    end
+  end
+
+  describe '#confirmed_mandataire_grouping_application' do
+    it 'returns nil when the application is not part of a grouping' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.confirmed_mandataire_grouping_application).to be_nil
+    end
+
+    it 'returns nil when the grouping composition has not been confirmed yet' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application)
+
+      expect(application.confirmed_mandataire_grouping_application).to be_nil
+    end
+
+    it 'returns the mandataire application once the grouping composition is confirmed' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: application)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(application.confirmed_mandataire_grouping_application).to eq(application)
+    end
+
+    it 'resolves through the groupement counterpart for a mixed solo application' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: groupement)
+      create(:grouping_member, :co_traitant, grouping:, invitation_token_created_at: Time.current)
+
+      expect(solo.confirmed_mandataire_grouping_application).to eq(groupement)
+    end
+  end
+
+  describe '#step_after_application_mode' do
+    it 'returns company_identification when the mode is solo' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.step_after_application_mode).to eq([application, :company_identification])
+    end
+
+    it 'returns lot_selection_mode on the groupement counterpart when the market has lots' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:lot, public_market:)
+
+      expect(solo.step_after_application_mode).to eq([groupement, :lot_selection_mode])
+    end
+
+    it 'returns grouping_legal_type on the groupement counterpart when the market has no lots' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+
+      expect(solo.step_after_application_mode).to eq([groupement, :grouping_legal_type])
+    end
+
+    it 'still returns lot_selection_mode even when the lots have already been assigned' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      lot = create(:lot, public_market:)
+      application.lots << lot
+      create(:grouping, public_market:, mandataire_market_application: application, legal_type: :conjoint)
+
+      expect(application.step_after_application_mode).to eq([application, :lot_selection_mode])
+    end
+  end
+
+  describe '#company_identification_required?' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is true for a solo application' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.company_identification_required?).to be(true)
+    end
+
+    it 'is true for the solo counterpart of a mixed application' do
+      siret = '73282932000074'
+      solo = create(:market_application, public_market:, siret:, application_mode: :solo)
+      groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement)
+
+      expect(solo.company_identification_required?).to be(true)
+    end
+
+    it 'is false for the mandataire of a grouping' do
+      application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: application)
+
+      expect(application.company_identification_required?).to be(false)
+    end
+
+    it 'is false for a co_traitant whose identity was confirmed by the invitation' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      application = create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+
+      expect(application.company_identification_required?).to be(false)
+    end
+  end
+
+  describe '#step_after_company_identification' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'returns api_data_recovery_status when the market has no lots' do
+      application = create(:market_application, public_market:)
+
+      expect(application.step_after_company_identification).to eq(:api_data_recovery_status)
+    end
+
+    it 'returns lot_selection when the market has lots' do
+      application = create(:market_application, public_market:)
+      create(:lot, public_market:)
+
+      expect(application.step_after_company_identification).to eq(:lot_selection)
+    end
+
+    it 'returns api_data_recovery_status for a solidaire co_traitant even when the market has lots' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application,
+        legal_type: :solidaire)
+      application = create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+      create(:lot, public_market:)
+
+      expect(application.step_after_company_identification).to eq(:api_data_recovery_status)
+    end
+  end
+
+  describe '#applicable_market_type_codes' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_lot) { public_market.lots.find_by!(name: 'Gros œuvre') }
+    let(:services_lot) { public_market.lots.find_by!(name: 'Prestations SI') }
+    let(:market_application) { create(:market_application, public_market:) }
+
+    it 'returns the types of the declared lots only' do
+      market_application.lots = [services_lot]
+
+      expect(market_application.applicable_market_type_codes).to contain_exactly('services')
+    end
+
+    it 'returns every declared lot type when lots of several types are declared' do
+      market_application.lots = [works_lot, services_lot]
+
+      expect(market_application.applicable_market_type_codes).to contain_exactly('works', 'services')
+    end
+
+    it 'keeps the defense code of the market' do
+      create(:market_type, :defense)
+      public_market.update!(market_type_codes: %w[works services defense])
+      market_application.lots = [services_lot]
+
+      expect(market_application.applicable_market_type_codes).to contain_exactly('services', 'defense')
+    end
+
+    it 'falls back to every market type when no lot is declared' do
+      expect(market_application.applicable_market_type_codes).to match_array(public_market.effective_market_type_codes)
+    end
+
+    it 'falls back to every market type when a declared lot has no type' do
+      untyped_lot = create(:lot, public_market:)
+      market_application.lots = [services_lot, untyped_lot]
+
+      expect(market_application.applicable_market_type_codes).to match_array(public_market.effective_market_type_codes)
+    end
+
+    it 'uses the lots of the grouping for a solidaire co-traitant' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      mandataire_application.lots = [works_lot]
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application,
+        legal_type: :solidaire)
+      co_traitant_application = create(:market_application, public_market:, application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: co_traitant_application)
+
+      expect(co_traitant_application.reload.applicable_market_type_codes).to contain_exactly('works')
+    end
+  end
+
+  describe '#applicable_market_attributes' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_type) { MarketType.find_by!(code: 'works') }
+    let(:services_type) { MarketType.find_by!(code: 'services') }
+    let(:market_application) { create(:market_application, public_market:) }
+    let!(:works_attribute) { create(:market_attribute, public_markets: [public_market], market_types: [works_type]) }
+    let!(:services_attribute) do
+      create(:market_attribute, public_markets: [public_market], market_types: [services_type])
+    end
+    let!(:untyped_attribute) { create(:market_attribute, public_markets: [public_market]) }
+
+    it 'keeps the attributes of the declared lot types and the untyped ones' do
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+
+      expect(market_application.applicable_market_attributes)
+        .to contain_exactly(services_attribute, untyped_attribute)
+    end
+
+    it 'only fetches the APIs of the applicable attributes' do
+      works_attribute.update!(api_name: 'probtp', api_key: 'probtp_key')
+      services_attribute.update!(api_name: 'insee', api_key: 'insee_key')
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+
+      expect(market_application.api_names_to_fetch).to contain_exactly('insee')
+    end
+
+    it 'ignores the responses of non applicable attributes when validating the summary' do
+      works_email_attribute = create(:market_attribute, :email, public_markets: [public_market],
+        market_types: [works_type])
+      MarketAttributeResponse::EmailInput.new(market_application:, market_attribute: works_email_attribute,
+        text: 'pas-un-email').save!(validate: false)
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+
+      expect(market_application.reload.valid?(:summary)).to be true
+    end
+  end
+
+  describe '#purge_inapplicable_data!' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_type) { MarketType.find_by!(code: 'works') }
+    let(:services_type) { MarketType.find_by!(code: 'services') }
+    let(:market_application) { create(:market_application, public_market:) }
+    let!(:works_attribute) do
+      create(:market_attribute, :file_upload, public_markets: [public_market], market_types: [works_type],
+        api_name: 'qualibat', api_key: 'qualibat_key')
+    end
+    let!(:services_attribute) do
+      create(:market_attribute, :file_upload, public_markets: [public_market], market_types: [services_type])
+    end
+    let!(:untyped_attribute) do
+      create(:market_attribute, :file_upload, public_markets: [public_market], api_name: 'insee', api_key: 'siret')
+    end
+
+    before do
+      [works_attribute, services_attribute, untyped_attribute].each do |attribute|
+        MarketAttributeResponse.build_for_attribute(attribute, market_application:).save!
+      end
+      market_application.update!(api_fetch_status: {
+        'qualibat' => { 'status' => 'completed' },
+        'insee' => { 'status' => 'completed' }
+      })
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+    end
+
+    it 'destroys the responses of the attributes no longer applicable' do
+      market_application.purge_inapplicable_data!
+
+      expect(market_application.market_attribute_responses.map(&:market_attribute))
+        .to contain_exactly(services_attribute, untyped_attribute)
+    end
+
+    it 'forgets the fetch status of the APIs no longer needed so they are fetched again if needed' do
+      market_application.purge_inapplicable_data!
+
+      expect(market_application.reload.api_fetch_status.keys).to contain_exactly('insee')
+    end
+
+    it 'purges when the declared lots are updated' do
+      market_application.update_declared_lots!([public_market.lots.find_by!(name: 'Prestations SI').id])
+
+      expect(market_application.market_attribute_responses.map(&:market_attribute))
+        .to contain_exactly(services_attribute, untyped_attribute)
+    end
+
+    it 'keeps everything when every lot type is declared again' do
+      market_application.lots = public_market.lots
+
+      expect { market_application.purge_inapplicable_data! }
+        .not_to(change { market_application.market_attribute_responses.count })
+    end
+  end
+
+  describe '#lock_reason' do
+    let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is nil for an application still being filled' do
+      expect(market_application.lock_reason).to be_nil
+      expect(market_application).not_to be_locked
+    end
+
+    it 'is :completed once a solo application is completed' do
+      solo_application = create(:market_application, :completed, public_market:)
+
+      expect(solo_application.lock_reason).to eq(:completed)
+      expect(solo_application).to be_locked
+    end
+
+    it 'is :grouping_submitted once the grouping it belongs to has been submitted' do
+      grouping = create(:grouping, public_market:, mandataire_market_application: market_application)
+      grouping.update!(submitted_at: Time.current, submission_mode: :partial)
+
+      expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
+    end
+
+    it 'stays editable once the mandataire has transmitted its own part' do
+      create(:grouping, public_market:, mandataire_market_application: market_application)
+      market_application.complete!
+
+      expect(market_application.reload.lock_reason).to be_nil
+    end
+
+    it 'is :deadline_passed once the market deadline is over, even while the application is being filled' do
+      public_market.update_column(:deadline, 1.day.ago)
+
+      expect(market_application.lock_reason).to eq(:deadline_passed)
+    end
+
+    context 'when the application belongs to a co-traitant' do
+      let(:mandataire_application) do
+        create(:market_application, public_market:, siret: '73282932000074', application_mode: :groupement)
+      end
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+
+      before { create(:grouping_member, :co_traitant, grouping:, market_application:) }
+
+      it 'stays editable once the co-traitant has transmitted it to the mandataire' do
+        market_application.complete!
+
+        expect(market_application.reload.lock_reason).to be_nil
+      end
+
+      it 'is :grouping_submitted once the mandataire has submitted the grouping' do
+        market_application.complete!
+        grouping.update!(submitted_at: Time.current, submission_mode: :full)
+
+        expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
+      end
+
+      it 'stays :grouping_submitted once the deadline is over, like the grouping dashboard' do
+        grouping.update!(submitted_at: Time.current, submission_mode: :full)
+        public_market.update_column(:deadline, 1.day.ago)
+
+        expect(market_application.reload.lock_reason).to eq(:grouping_submitted)
+      end
+    end
+  end
+
+  describe 'submission to the platform' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    context 'when the application is individual' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :solo) }
+
+      it 'is not submitted while being filled' do
+        expect(market_application).not_to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to be_nil
+      end
+
+      it 'is submitted on its completion' do
+        completed_at = Time.zone.local(2026, 10, 20, 10)
+        market_application.update!(completed_at:)
+
+        expect(market_application).to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to eq(completed_at)
+      end
+    end
+
+    context 'when the application belongs to a grouping' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let!(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      it 'is not submitted on its own completion' do
+        market_application.complete!
+
+        expect(market_application.reload).not_to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to be_nil
+      end
+
+      it 'is submitted with its grouping' do
+        submitted_at = Time.zone.local(2026, 10, 21, 10)
+        grouping.update!(submitted_at:, submission_mode: :full)
+
+        expect(market_application.reload).to be_submitted_to_platform
+        expect(market_application.submitted_to_platform_at).to eq(submitted_at)
+      end
+    end
+  end
+
+  describe '#deletable?' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'is true for an individual application being filled' do
+      expect(create(:market_application, public_market:)).to be_deletable
+    end
+
+    it 'is false once the application is completed' do
+      expect(create(:market_application, :completed, public_market:)).not_to be_deletable
+    end
+
+    it 'is false for a grouping application' do
+      expect(create(:market_application, public_market:, application_mode: :groupement)).not_to be_deletable
+    end
+
+    it 'is false for a member of a grouping' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application)
+      co_traitant_application = create(:market_application, public_market:, siret: '80245139600021')
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application)
+
+      expect(co_traitant_application.reload).not_to be_deletable
+    end
+  end
+
+  describe 'grouping roles' do
+    let(:public_market) { create(:public_market, :completed) }
+    let(:mandataire_application) do
+      create(:market_application, public_market:, siret: '73282932000074', application_mode: :groupement)
+    end
+    let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+    let(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+    end
+    let(:solo_application) { create(:market_application, public_market:, siret: '41816609600069') }
+
+    before do
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application)
+    end
+
+    it 'identifies members of a grouping' do
+      expect(mandataire_application.reload).to be_part_of_grouping
+      expect(co_traitant_application.reload).to be_part_of_grouping
+      expect(solo_application).not_to be_part_of_grouping
+    end
+
+    it 'identifies the co_traitant only' do
+      expect(co_traitant_application.reload).to be_co_traitant_of_grouping
+      expect(mandataire_application.reload).not_to be_co_traitant_of_grouping
+      expect(solo_application).not_to be_co_traitant_of_grouping
+    end
+  end
+
+  describe '#in_progress?' do
+    it 'returns true when not completed' do
+      application = build(:market_application, public_market:)
+      expect(application.in_progress?).to be true
+    end
+
+    it 'returns false when completed' do
+      application = build(:market_application, :completed, public_market:)
+      expect(application.in_progress?).to be false
     end
   end
 
@@ -548,6 +1495,29 @@ RSpec.describe MarketApplication, type: :model do
 
       # Response B should NOT be validated (belongs to subcategory_b, even though same category)
       expect(response_b.should_validate_for_current_step?).to be false
+    end
+  end
+
+  describe 'scopes' do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user, email: 'other@example.com') }
+
+    describe '.for_user' do
+      it 'returns only applications belonging to the given user' do
+        mine = create(:market_application, public_market:, user:)
+        create(:market_application, public_market:, user: other_user)
+
+        expect(described_class.for_user(user)).to contain_exactly(mine)
+      end
+    end
+
+    describe '.for_siret' do
+      it 'returns only applications matching the given SIRET' do
+        matching = create(:market_application, public_market:, siret: '73282932000074')
+        create(:market_application, public_market:, siret: '41816609600069')
+
+        expect(described_class.for_siret('73282932000074')).to contain_exactly(matching)
+      end
     end
   end
 end

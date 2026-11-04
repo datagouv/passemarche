@@ -8,7 +8,7 @@
 
   <div class="fr-mb-2w">
     <label class="fr-label">
-      <%= component.field_label %>
+      <%= component.field_label_with_scope %>
       <%= render component.source_badge_component %>
     </label>
     <p class="fr-text--sm fr-text--mention-grey">
@@ -24,7 +24,7 @@
     <%= response_form.hidden_field :type %>
 
     <h6 class="fr-mb-2w fr-text--md">
-      <%= component.field_label %>
+      <%= component.field_label_with_scope %>
     </h6>
 
     <% if component.field_description.present? %>
@@ -33,7 +33,7 @@
       </span>
     <% else %>
       <span class="fr-hint-text fr-mb-2w fr-text--sm">
-        Description
+        <%= t('candidate.market_applications.form_fields.file_or_textarea.default_description') %>
       </span>
     <% end %>
 
@@ -48,7 +48,7 @@
 
     <div class="fr-separator fr-mb-2w" style="display: flex; align-items: center;">
       <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
-      <span style="padding: 0 1em; font-weight: bold;">OU</span>
+      <span style="padding: 0 1em; font-weight: bold;"><%= t('shared.or_separator') %></span>
       <hr class="fr-hr" style="flex: 1; border: none; border-top: 1px solid var(--border-default-grey); padding: 0;">
     </div>
 

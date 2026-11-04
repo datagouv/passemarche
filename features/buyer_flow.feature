@@ -19,16 +19,23 @@ Feature: Buyer Configuration Flow
     When I visit the setup page for my public market
     Then I should see "Bienvenue,"
     And I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    And I should see "1 lot"
 
     When I click on "Débuter l'activation de"
-    Then I should see "Configurer le type de vos lots"
+    Then I should see "Configurez le type de vos lots"
 
     When I navigate through all category steps to summary
     Then I should be on the summary page
     And I should see "Synthèse des paramètres de la candidature"
     And I should see "Informations du marché"
-    And I should see a button "Finaliser la configuration"
+    And I should see a button "Transmettre la configuration"
+
+  Scenario: Une étape inconnue affiche une page introuvable
+    When I visit the step "setup&locale=en" of my public market
+    Then I should see the page not found
+
+    When I visit the step "true" of my public market
+    Then I should see the page not found
 
   Scenario: Navigation arrière avec les boutons Précédent
     Given I am on the summary page for my public market
@@ -39,7 +46,7 @@ Feature: Buyer Configuration Flow
   Scenario: Vérification de la cohérence des informations du marché à travers les étapes
     When I visit the setup page for my public market
     Then I should see "Fourniture de matériel informatique"
-    And I should see "Lot 1 - Ordinateurs portables"
+    And I should see "1 lot"
     And I should see "Fournitures"
 
     When I click on "Débuter l'activation de"
@@ -48,7 +55,7 @@ Feature: Buyer Configuration Flow
     When I navigate through all category steps to summary
     Then I should see "Fourniture de matériel informatique"
     And I should see "Lot 1 - Ordinateurs portables"
-    And I should see "Fournitures"
+    And I should see "FOURNITURES"
 
   Scenario: Stepper indique correctement l'étape courante
     When I visit the first category page for my public market

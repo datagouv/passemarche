@@ -12,7 +12,7 @@ class Editor < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :client_id, presence: true, uniqueness: true
   validates :client_secret, presence: true
-  validate :validate_webhook_urls
+  validate :validate_url_fields
 
   scope :authorized, -> { where(authorized: true) }
   scope :active, -> { where(active: true) }
@@ -56,15 +56,16 @@ class Editor < ApplicationRecord
     OpenSSL::HMAC.hexdigest('SHA256', webhook_secret, payload)
   end
 
-  def build_redirect_url(market:, application: nil)
-    return nil if redirect_url.blank?
+  def build_buyer_return_url(market:)
+    return nil if buyer_return_url.blank?
 
-    uri = URI.parse(redirect_url)
-    params = Rack::Utils.parse_nested_query(uri.query)
-    params['market_identifier'] = market.identifier
-    params['application_identifier'] = application.identifier if application
-    uri.query = Rack::Utils.build_nested_query(params)
-    uri.to_s
+    append_identifiers(buyer_return_url, market:)
+  end
+
+  def build_candidate_return_url(market:, application:)
+    return nil if candidate_return_url.blank?
+
+    append_identifiers(candidate_return_url, market:, application:)
   end
 
   private
@@ -81,9 +82,23 @@ class Editor < ApplicationRecord
     self.client_secret = SecureRandom.hex(32)
   end
 
-  def validate_webhook_urls
-    validate_url_format(:completion_webhook_url) if completion_webhook_url.present?
-    validate_url_format(:redirect_url) if redirect_url.present?
+  def validate_url_fields
+    %i[
+      completion_webhook_url
+      buyer_return_url
+      candidate_return_url
+    ].each do |attribute|
+      validate_url_format(attribute) if public_send(attribute).present?
+    end
+  end
+
+  def append_identifiers(base_url, market:, application: nil)
+    uri = URI.parse(base_url)
+    params = Rack::Utils.parse_nested_query(uri.query)
+    params['market_identifier'] = market.identifier
+    params['application_identifier'] = application.identifier if application
+    uri.query = Rack::Utils.build_nested_query(params)
+    uri.to_s
   end
 
   def validate_url_format(attribute)

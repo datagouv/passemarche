@@ -27,7 +27,8 @@ RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
     {
       io: document_io,
       filename: 'attestation.pdf',
-      content_type: 'application/pdf'
+      content_type: 'application/pdf',
+      metadata: { source: 'api_urssaf_attestation_vigilance', api_name: 'urssaf_attestation_vigilance' }
     }
   end
 
@@ -54,6 +55,16 @@ RSpec.describe Urssaf::MapUrssafApiData, type: :interactor do
     responses.each do |response|
       expect(response.documents.attached?).to be true
       expect(response.source).to eq('auto')
+    end
+  end
+
+  it 'preserves document metadata so the file is recognized as API-sourced' do
+    described_class.call(context)
+    responses = market_application.market_attribute_responses.where(
+      market_attribute: [market_attribute1, market_attribute2]
+    )
+    responses.each do |response|
+      expect(response.documents.first.metadata['source']).to eq('api_urssaf_attestation_vigilance')
     end
   end
 end

@@ -48,6 +48,7 @@ class DocumentNamingService
 
   def load_file_attachable_responses
     market_application.market_attribute_responses
+      .where(market_attribute_id: market_application.applicable_market_attribute_ids)
       .with_file_attachments
       .includes(:market_attribute, documents_attachments: :blob)
       .order(:id)

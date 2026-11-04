@@ -5,16 +5,16 @@
         <div class="fr-col-8" style="display: flex; align-items: center;">
           <h6 class="fr-text--sm fr-mb-0" style="margin-bottom: 0;">
             <% if display_number %>
-              Personne <%= display_number %>
+              <%= t('candidate.market_applications.form_fields.presentation_intervenants.item_title', number: display_number) %>
             <% else %>
-              Nouvelle personne
+              <%= t('candidate.market_applications.form_fields.presentation_intervenants.new_item_title') %>
             <% end %>
           </h6>
         </div>
         <div class="fr-col-4" style="display: flex; align-items: center; justify-content: flex-end;">
           <%= response_form.hidden_field "person_#{index}__destroy", value: '0' %>
           <div class="fr-mt-0">
-            <%= nested_form_delete_button("cette personne") %>
+            <%= nested_form_delete_button(t('candidate.market_applications.form_fields.presentation_intervenants.delete_button')) %>
           </div>
         </div>
       </div>
@@ -22,20 +22,20 @@
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-6">
           <div class="fr-input-group">
-            <%= response_form.label "person_#{index}_nom", "Nom", class: "fr-label" %>
+            <%= response_form.label "person_#{index}_nom", t('candidate.market_applications.form_fields.presentation_intervenants.labels.nom'), class: "fr-label" %>
             <%= response_form.text_field "person_#{index}_nom",
                   value: index == 'NEW_RECORD' ? '' : component.get_item_field(index, 'nom'),
                   class: "fr-input",
-                  placeholder: "ex: Dupont" %>
+                  placeholder: t('candidate.market_applications.form_fields.presentation_intervenants.placeholders.nom') %>
           </div>
         </div>
         <div class="fr-col-6">
           <div class="fr-input-group">
-            <%= response_form.label "person_#{index}_prenoms", "Prénoms", class: "fr-label" %>
+            <%= response_form.label "person_#{index}_prenoms", t('candidate.market_applications.form_fields.presentation_intervenants.labels.prenoms'), class: "fr-label" %>
             <%= response_form.text_field "person_#{index}_prenoms",
                   value: index == 'NEW_RECORD' ? '' : component.get_item_field(index, 'prenoms'),
                   class: "fr-input",
-                  placeholder: "ex: Jean Pierre" %>
+                  placeholder: t('candidate.market_applications.form_fields.presentation_intervenants.placeholders.prenoms') %>
           </div>
         </div>
       </div>
@@ -43,12 +43,12 @@
       <div class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div class="fr-col-12">
           <div class="fr-input-group">
-            <%= response_form.label "person_#{index}_titres", "Titres d'études et professionnels", class: "fr-label" %>
-            <span class="fr-hint-text">Diplômes, certifications, expériences professionnelles</span>
+            <%= response_form.label "person_#{index}_titres", t('candidate.market_applications.form_fields.presentation_intervenants.labels.titres'), class: "fr-label" %>
+            <span class="fr-hint-text"><%= t('candidate.market_applications.form_fields.presentation_intervenants.hints.titres') %></span>
             <%= response_form.text_area "person_#{index}_titres",
                   value: index == 'NEW_RECORD' ? '' : component.get_item_field(index, 'titres'),
                   class: "fr-input",
-                  placeholder: "ex: Ingénieur informatique, Master en gestion de projet",
+                  placeholder: t('candidate.market_applications.form_fields.presentation_intervenants.placeholders.titres'),
                   rows: 3 %>
           </div>
         </div>
@@ -62,8 +62,8 @@
                                   deletable: true,
                                   form: response_form,
                                   field_name: "person_#{index}_cv_attachment_id" do %>
-            <%= response_form.label "person_#{index}_cv_attachment_id", "Ajouter un CV", class: "fr-label" %>
-            <span class="fr-hint-text">Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo.</span>
+            <%= response_form.label "person_#{index}_cv_attachment_id", t('candidate.market_applications.form_fields.presentation_intervenants.labels.cv_attachment'), class: "fr-label" %>
+            <span class="fr-hint-text"><%= t('candidate.market_applications.form_fields.presentation_intervenants.hints.cv_attachment') %></span>
             <%= response_form.file_field "person_#{index}_cv_attachment_id",
                   class: "fr-upload",
                   direct_upload: true,

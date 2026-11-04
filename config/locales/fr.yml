@@ -1,26 +1,78 @@
 # frozen_string_literal: true
 
 fr:
+  pagy:
+    nav:
+      aria_label: "Pagination"
+      first: "Première page"
+      prev: "Page précédente"
+      next: "Page suivante"
+      last: "Dernière page"
+
+  breadcrumb:
+    home: "Accueil"
+    aria_label: "vous êtes ici :"
+
+  mailer:
+    shared_header:
+      logo_alt: "Passe Marché - Simplifier la commande publique"
+    shared_footer:
+      privacy: Politique de confidentialité
+      legal: Mentions légales
+      copyright: "© République Française - Tous droits réservés"
+      contact: passemarche@data.gouv.fr
+
   auth_mailer:
     magic_link:
       subject: Votre lien de connexion à Passe Marché
       greeting: Bonjour,
-      intro: "Vous avez demandé à accéder à Passe Marché pour préparer votre candidature pour le marché :"
+      intro: "Vous avez demandé à accéder à Passe Marché pour préparer votre candidature pour le marché : %{market_name}."
       cta_intro: "Cliquez sur le bouton ci-dessous pour vous connecter :"
       cta: Lien de connexion
       warning: "Attention, ce lien est valable pendant 30 minutes et ne peut être utilisé qu'une fois."
-      footer:
-        privacy: Politique de confidentialité
-        legal: Mentions légales
-        copyright: "© République Française - Tous droits réservés"
-        contact: contact@exemple.gouv.fr
     reconnection_magic_link:
       subject: Reprenez votre candidature sur Passe Marché
       greeting: "Votre candidature,"
-      intro: "En vous connectant à Passe Marché, avec le même numéro de SIRET et la même adresse email qu'à la première connexion, vous pouvez modifier votre candidature à tout moment tant qu'elle n'a pas été transmise à l'acheteur."
-      market_intro: "Vous pouvez accéder au formulaire de candidature pour le marché :"
+      intro: "En vous connectant à Passe Marché, avec le même numéro de SIRET et la même adresse email qu'à la première connexion, vous pouvez modifier votre candidature à tout moment tant qu'elle n'a pas été transmise à la plateforme de marché."
+      market_intro: "Vous pouvez accéder au formulaire de candidature pour le marché : %{market_name}."
       cta_intro: "Cliquez sur le bouton ci-dessous pour vous reconnecter et continuer :"
       cta: Poursuivre ma candidature
+
+  grouping_invitation_mailer:
+    invitation:
+      subject: "Vous êtes invité à rejoindre un groupement"
+      intro: "%{mandataire_name} vous invite à rejoindre un groupement de candidature pour le marché : %{market_name}."
+      role_explanation: "En tant que co-traitant, vous devrez remplir un formulaire de candidature relatif à vos capacités pour les lots que vous couvrez."
+      edit_notice: "Vous pouvez modifier votre formulaire à tout moment, tant que la candidature n'a pas été transmise à la plateforme de marché."
+      cta: Rejoindre le groupement
+
+  grouping_submission_mailer:
+    submitted:
+      subject: "Candidature transmise à la plateforme de marché"
+      title: "Votre candidature a été transmise à la plateforme de marché"
+      intro: "%{mandataire_name} a transmis la candidature du groupement pour le marché : %{market_name}."
+      inclusion: "Votre candidature a été incluse dans la candidature soumise pour le groupement."
+      locked_notice: "Vous ne pouvez plus modifier votre formulaire de candidature"
+
+  grouping_member_completion_mailer:
+    dashboard_explanation: "Consultez votre tableau de bord pour suivre l'état de votre groupement et soumettre votre candidature quand tous vos co-traitants sont prêts."
+    cta: "Voir mon tableau de bord"
+    completed:
+      subject: "Un co-traitant a complété son formulaire"
+      title: "Un co-traitant a complété son formulaire"
+      intro: "%{co_traitant_name} a complété son formulaire de candidature pour le marché : %{market_name}."
+    modified:
+      subject: "Un co-traitant a fait des modifications"
+      title: "Un co-traitant a fait des modifications"
+      intro: "%{co_traitant_name} a modifié son formulaire de candidature pour le marché : %{market_name}."
+
+  grouping_member_removal_mailer:
+    removed:
+      subject: "Vous avez été retiré du groupement"
+      title: "Vous avez été retiré du groupement"
+      intro: "%{mandataire_name} vous a retiré du groupement pour le marché : %{market_name}. Aucune action n’est attendue de votre part, vous n’apparaîtrez pas dans la candidature du groupement."
+      contact: "Vous pouvez contacter directement le mandataire pour plus d’informations."
+
   source_types:
     authentic_source:
       label: Récupéré automatiquement
@@ -43,6 +95,7 @@ fr:
       default: "%d/%m/%Y"
       short: "%d %b"
       long: "%A %d %B %Y"
+      day_month_year: "%-d %B %Y"
     day_names:
       - dimanche
       - lundi
@@ -98,9 +151,12 @@ fr:
     service_tagline: "Un dossier de candidature, adapté à chaque marché public, en toute simplicité"
     logo_alt: "République Française"
     logo_operator_alt: "Logo Passe Marché"
+    language_selector: "Sélection de la langue"
     navigation:
       candidate: "Je suis un candidat"
       buyer: "Je suis un acheteur public"
+      my_applications: "Mes candidatures"
+      logout: "Me déconnecter"
 
   footer:
     links:
@@ -117,6 +173,7 @@ fr:
     next_step: "Passer à l'étape suivante"
     previous: "Précédent"
     continue: "Continuer"
+    submit_to_mandataire: "Candidature terminée - Transmettre au mandataire"
     submit_summary: "Transmettre l'ensemble de mes candidatures"
 
   malware_scan:
@@ -132,6 +189,11 @@ fr:
       not_scanned: "info"
 
   shared:
+    or_separator: "OU"
+    not_provided: "Non renseigné"
+    collapsible_lots:
+      show_more: "Voir plus"
+      show_less: "Voir moins"
     subcategory_labels:
       market_information: "Informations du marché"
     source_badge:
@@ -151,6 +213,18 @@ fr:
       lot_title_label: "Titre :"
       lot_type_label: "Type :"
       lot_cpv_label: "CPV :"
+      annex_notice:
+        one: "Le lot pour lequel l'entreprise candidate s'engage figure en annexe de l'attestation de candidature."
+        other: "L'ensemble des %{count} lots pour lesquels l'entreprise candidate s'engage figure en annexe de l'attestation de candidature."
+    application_lots_annex:
+      annex_title: "Annexes"
+      title: "Liste détaillée des lots concernés par la candidature"
+      column_number: "Numéro du lot"
+      column_name: "Nom"
+      column_cpv: "CPV"
+      column_type: "Type"
+      cpv_not_provided: "Non renseigné"
+      type_not_provided: "Non renseigné"
     renamed_documents:
       title: "Vos documents"
       description: "Afin de faciliter l'étude de votre candidature par l'acheteur, nous avons renommé certains documents :"
@@ -167,8 +241,38 @@ fr:
             base:
               no_lot_selected: "Vous devez sélectionner au moins un lot"
               lot_limit_exceeded: "Vous ne pouvez pas sélectionner plus de %{limit} lot(s) (vous en avez sélectionné %{count})"
+              lot_outside_groupement_scope: "Vous ne pouvez sélectionner que des lots pré-sélectionnés par le mandataire du groupement"
 
   errors:
+    pages:
+      not_found:
+        heading: "La page recherchée n'a pas été trouvée"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou cette page n'existe plus."
+      market_application_not_found:
+        heading: "La candidature recherchée n'a pas été trouvée"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou cette candidature n'existe plus. Pour reprendre votre candidature, repassez par la plateforme de marchés publics."
+      public_market_not_found:
+        heading: "Le marché recherché n'a pas été trouvé"
+        paragraphs:
+          - "Le lien que vous avez utilisé est incorrect ou ce marché n'existe plus. Pour reprendre la configuration du marché, repassez par la plateforme de marchés publics."
+      public_market_published:
+        heading: "Ce marché ne peut plus être modifié"
+        paragraphs:
+          - "Ce marché a été publié et sa configuration ne peut plus être modifiée."
+      grouping_invitation_expired:
+        heading: "Cette invitation n'est plus valable"
+        paragraphs:
+          - "Cette invitation a expiré, la candidature du groupement est déjà finalisée ou la date limite de remise des offres est dépassée."
+      grouping_invitation_not_found:
+        heading: "Ce lien d'invitation n'est plus valable"
+        paragraphs:
+          - "Ce groupement n'existe plus. Pour toute question, contactez le mandataire."
+      grouping_invitation_removed:
+        heading: "Ce lien d'invitation n'est plus valable"
+        paragraphs:
+          - "Vous ne faites plus partie de ce groupement. Pour toute question, contactez le mandataire."
     messages:
       blank: "doit être rempli(e)"
       invalid: "n'est pas valide"
@@ -176,6 +280,8 @@ fr:
       attestation_generation_failed: "Une erreur technique est survenue lors de la génération de votre attestation. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       buyer_attestation_generation_failed: "Une erreur technique est survenue lors de la génération de l'attestation acheteur. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
       documents_package_generation_failed: "Une erreur technique est survenue lors de la génération du package de documents. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
+    public_market:
+      configuration_summary_generation_failed: "Une erreur technique est survenue lors de la génération de la synthèse de configuration. Notre équipe technique a été notifiée et va corriger ce problème dans les plus brefs délais. Veuillez réessayer dans quelques instants."
 
   home:
     title: "Passe Marché"
@@ -206,6 +312,7 @@ fr:
           description: "Recevez votre attestation de candidature"
 
     candidate:
+      screenshot_alt: "Capture d'écran de l'application Passe Marché"
       hero:
         title: "Votre candidature, adaptée à chaque marché public, en toute simplicité"
 
@@ -243,6 +350,7 @@ fr:
           step_3: "Votre attestation est disponible, votre candidature est terminée !"
 
     buyer:
+      screenshot_alt: "Capture d'écran de l'interface acheteur Passe Marché"
       hero:
         title: "Votre publication et votre analyse de candidatures, en toute simplicité"
 
@@ -320,6 +428,10 @@ fr:
       market_info_title: "Les informations du marché"
       market_name: "Nom du marché"
       lot_name: "Nom des lots"
+      lots_market: "Les lots du marché"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
       deadline: "Date et heure limite de remise des plis"
       deadline_short: "Date limite"
       market_type: "Typologie de marché"
@@ -337,11 +449,17 @@ fr:
       defense_checked: "Ce marché concerne la défense ou la sécurité"
       defense_hint: "Cette désignation a été définie par %{editor}"
       start_activation: "Débuter l'activation de %{editor}"
+      rc_notice:
+        title: "Votre règlement de consultation et Passe Marché"
+        close: "Fermer"
+        body_p1: "Conformément à l'article L. 2111-1 du code de la commande publique, \"la nature et l'étendue des besoins à satisfaire sont déterminées avec précision avant le lancement de la consultation\"."
+        body_p2: "L'acheteur est seul responsable de la cohérence entre les stipulations de son dossier de consultation des entreprises, les informations publiées sur le profil d'acheteur et les paramètres de la consultation qu'il renseigne dans Passe Marché."
+        body_p3: "Il vous appartient de vérifier que l'ensemble de ces éléments est conforme et exempt de contradiction. Toute ambiguïté ou contradiction est susceptible d'engager sa responsabilité et, le cas échéant, conduire à l'irrégularité de la procédure."
     summary:
       title_suffix: "Synthèse de ma candidature"
       market_info_title: "Informations du marché"
       no_fields_configured: "Aucun champ configuré."
-      finalize: "Finaliser la configuration"
+      finalize: "Transmettre la configuration"
       lot_limit: "Limite de lots par candidat"
       lot_limit_value:
         one: "%{count} lot maximum"
@@ -352,9 +470,12 @@ fr:
       success_message: "Nous avons transmis automatiquement la configuration à votre profil acheteur, les entreprises pourront candidater via %{editor}."
       identifier_notice: "Voici l'identifiant du marché à conserver :"
       copy: "Copier"
+      download_configuration_summary: "Télécharger la synthèse de configuration"
+      configuration_summary_missing: "La synthèse de configuration n'a pas pu être générée."
+      configuration_summary_missing_retry: "Réessayer"
       return_to_editor: "Retourner sur %{editor}"
       error_title: "Erreur inattendue"
-      error_message: "Désolée, lorem ipsum rencontre un problème, nous n'avons pas réussi à transmettre les informations au profil acheteur."
+      error_message: "Désolée, Passe Marché rencontre un problème, nous n'avons pas réussi à transmettre les informations au profil acheteur."
       error_hint: "Vous pouvez tenter de transférer à nouveau les informations en cliquant sur le bouton ci-dessous. Si vous avez besoin d'une aide immédiate, merci de nous contacter."
       transmit_form: "Transmettre le formulaire"
       contact_us: "Contactez-nous"
@@ -363,9 +484,15 @@ fr:
       success_image_alt: "Synchronisation réussie"
       error_image_alt: "Erreur de synchronisation"
       loading_aria_label: "Synchronisation en cours..."
+    published:
+      title: "Configuration verrouillée"
+      heading: "Vous ne pouvez plus modifier la configuration"
+      explanation: "La consultation a été publiée, vous ne pouvez donc plus modifier la configuration de la candidature."
+      contact_hint: "Pour toutes questions, contactez votre plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
+      image_alt: "Illustration consultation publiée"
     public_markets:
       wizard_completed: "Marché configuré avec succès"
-      market_completed_cannot_edit: "Ce marché a déjà été complété et ne peut plus être modifié."
       sync_retry_initiated: "La synchronisation a été relancée."
       steps:
         setup: "Configuration initiale"
@@ -376,10 +503,12 @@ fr:
         capacites_techniques_professionnelles: Sélections des renseignements complémentaires (partie 2)
         summary: "Synthèse"
       lot_config:
-        title: "Configurer le type de vos lots"
+        title: "Configurez le type de vos lots"
         subtitle: "Vérifiez et ajustez le type de chaque lot avant de configurer les pièces justificatives."
         lots_section_title: "Vérifiez les types transmis"
-        lots_section_subtitle: "Assurez-vous que les types transmis par la plateforme de marché sont exacts."
+        platform_banner_global_type: "Votre plateforme d'achat nous a transmis une typologie de marché pour les lots, si le type d'un lot est erroné vous pouvez le sélectionner pour lui appliquer la bonne typologie (travaux, services, fournitures)"
+        platform_banner_per_lot_type: "Votre plateforme d'achat nous a transmis une typologie de marché pour les lots, si le type d'un lot est erroné vous pouvez le sélectionner pour lui appliquer la bonne typologie (travaux, services, fournitures)"
+        platform_source: "PLATEFORME"
         lot_number: "Lot %{number}"
         lot_limit_section_title: "Indiquez si vous souhaitez limiter le nombre de lots"
         lot_limit_section_subtitle: "Si vous le souhaitez, vous pouvez ajuster le nombre de lots auxquels une entreprise peut candidater."
@@ -391,9 +520,34 @@ fr:
         sidebar_typology_label: "Typologie"
         how_it_works_title: "Comment ça fonctionne"
         how_it_works_step_1: "Vérifiez les types transmis par la plateforme"
-        how_it_works_step_2: "Limitez le nombre de lots si nécessaire"
-        how_it_works_step_3: "Passez à la configuration des candidatures"
+        how_it_works_step_2: "Modifiez les types de lots si nécessaires"
+        how_it_works_step_3: "Limitez le nombre de lots si nécessaire"
+        how_it_works_step_4: "Passez à la configuration des candidatures"
+        column_lot: "Lot"
+        select_lot: "Sélectionner le lot %{name}"
         submit: "Configurer les candidatures"
+        edit_lot_types_button: "Modifier les types de lot"
+        checkbox_column_label: "Sélection"
+        select_all: "Tout sélectionner"
+        deselect_all: "Tout désélectionner"
+        type_picker_title: "Affecter un type aux lots sélectionnés"
+        type_picker_no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
+        type_picker_apply: "Appliquer le nouveau type"
+        type_picker_cancel: "Annuler"
+      form_config:
+        title: "Configurez le formulaire de candidature"
+        subtitle: "Configurez les pièces justificatives attendues dans le cadre de la candidature à votre marché."
+        banner: "Vous n'avez qu'un seul formulaire de candidature à configurer, Passe Marché se charge de transmettre votre configuration pour les différents lots."
+        form_block_title: "Formulaire de candidature à configurer"
+        configure_button: "Configurer"
+        scope_commun_badge: "Commun"
+        lots_section_title: "Liste des lots"
+        lots_count:
+          one: "1 lot"
+          other: "%{count} lots"
+        edit_lots_label: "Modifier la sélection des lots"
+        sidebar_buyer_label: "Acheteur"
+        sidebar_typology_label: "Typologie"
       generic_step:
         optional_question: Souhaitez-vous demander des renseignements complémentaires ?
         yes_option: Oui
@@ -405,11 +559,11 @@ fr:
             optional_fields_description: Vous pouvez sélectionner une ou plusieurs informations complémentaires qui seront demandées aux candidats
           motifs_exclusion:
             title: "Les motifs d'exclusion"
-            box_title: "Motifs d'exclusion obligatoire"
-            box_content_html: "Le candidat attestera sur son honneur ne pas entrer dans l'un des cas d'exclusion prévus aux articles L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique ou, s'il s'agit d'un marché de défense et de sécurité, aux articles L2341-1 à L2341-3 ou aux articles L2141-7 à L2141-10 du code de la commande publique et informera l'acheteur de tout changement de situation sans délai. Sauf pour les marchés de défense et de sécurité, l'acheteur ne pourra exiger que du seul candidat attributaire les justificatifs prouvant sa conformité aux exigences posées par les L. 2141-1 à L. 2141-5 ou aux articles L. 2141-7 à L. 2141-10 du code de la commande publique."
-            box_additional_content_html: "Si ces informations sont disponibles, elles seront récupérées automatiquement."
+            box_title: "Motifs d'exclusion obligatoires et facultatives"
+            box_content_html: "Conformément à l'article R2144-4 du CCP, \"L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché.\" Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
             optional_fields_title: Les motifs d'exclusion facultative
             optional_fields_description: Vous pouvez sélectionner un ou plusieurs motifs d'exclusion facultative en considération de l'objet du marché ou à ses conditions d'exécution.
+            optional_question: Souhaitez-vous demander d'autres motifs d'exclusion facultative ?
           capacite_economique_financiere:
             title: Les renseignements complémentaires relatifs aux capacités économiques et financières des candidats
             subtitle: Ces documents et informations sont facultatifs, si vous les sélectionnez, ils seront demandés aux candidats
@@ -455,25 +609,163 @@ fr:
         p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
         p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
+        motifs_exclusion_reminder_title: "Rappel concernant les motifs d'exclusion :"
+        motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
 
   candidate:
+    locked_applications:
+      title: "Candidature verrouillée"
+      heading: "Vous ne pouvez plus modifier votre candidature"
+      explanation: "Le mandataire a transmis la candidature du groupement, vous ne pouvez donc plus modifier votre candidature. Seul le mandataire peut vous permettre de la modifier."
+      contact_hint: "Pour toutes questions, contactez le mandataire ou la plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
+    deadline_passed:
+      title: "Date limite dépassée"
+      heading: "Vous ne pouvez plus modifier votre candidature"
+      explanation: "La date limite de réception des candidatures est dépassée, vous ne pouvez donc plus modifier votre candidature."
+      contact_hint: "Pour toutes questions, contactez la plateforme de marché."
+      return_to_platform: "Revenir sur la plateforme de marché"
+    dashboard:
+      title: "Mes candidatures"
+      summary:
+        in_progress: "Candidatures en cours"
+        completed: "Candidatures terminées"
+      application:
+        kind:
+          mandataire: "Candidature en groupement · Mandataire"
+          co_traitant: "Candidature en groupement · Co-traitant"
+          individual: "Candidature individuelle"
+        mandataire: "Mandataire : %{name}"
+        lots_count:
+          one: "1 lot"
+          other: "%{count} lots"
+        modified_on: "Modifiée le %{date}"
+        submitted_on: "Déposée le %{date}"
+        sent_to_mandataire_on: "Transmise le %{date}"
+        status:
+          in_progress: "En cours"
+          submitted: "Transmise à la plateforme"
+          sent_to_mandataire: "Transmise au mandataire"
+          deadline_passed: "Date limite dépassée"
+        delete_modal:
+          title: "Supprimer la candidature"
+          body: "Vous êtes sur le point de supprimer cette candidature, l'ensemble des éléments que vous avez complétés seront perdus. Êtes-vous sûr de vouloir la supprimer ?"
+          confirm: "Supprimer"
+          cancel: "Annuler"
+          close: "Fermer"
+      actions:
+        edit: "Modifier"
+        view: "Consulter"
+        delete: "Supprimer"
+        follow_up: "Suivre le groupement"
+    application_consultations:
+      submitted_on: "Déposée le %{date}"
+      back_to_dashboard: "Retour à mes candidatures"
+      download_attestation: "Télécharger l'attestation de candidature"
+      not_found: "Candidature introuvable"
+      not_accessible: "Cette candidature n'est pas consultable"
+    application_modes:
+      title: "Comment souhaitez-vous candidater ?"
+      continue: "Continuer"
+      continue_readonly: "Continuer"
+      info_box:
+        title: "Le co-traitant n'est pas un sous-traitant"
+        body: "Co-traitance ou sous-traitance ? En groupement (co-traitance), chaque membre répond directement à l'acheteur et ses capacités sont évaluées. En sous-traitance, le lien est uniquement avec le titulaire. Si vos partenaires sont des sous-traitants, ils ne sont pas à déclarer ici."
+      already_mandataire_box:
+        title: "Vous êtes déjà mandataire d'un groupement sur ce marché"
+        body: "Vous ne pouvez pas être mandataire de plusieurs groupements à la fois, vous pouvez uniquement candidater seul sur ce marché."
+      solo:
+        label: "Candidater seul"
+        hint: "Je réponds à ce marché en mon nom propre"
+      groupement:
+        label: "Candidater en groupement"
+        hint: "Je suis mandataire du groupement, mon entreprise coordonne un groupement d'opérateurs économiques"
+      mixte:
+        label: "Candidater seul et en groupement"
+        hint: "Je réponds seul sur certains lots et je suis mandataire du groupement sur d'autres"
+    grouping_invitations:
+      title: "Invitation au groupement"
+      pending: "Votre invitation est en cours de traitement."
+    grouping_legal_types:
+      title: "Le type de groupement"
+      step_current: "Étape 1 sur 3"
+      step_next: "Étape suivante :"
+      step_next_label: "Les membres du groupement"
+      question: "Quel est le type du groupement ?"
+      alert: "Lorsque vous aurez validé la composition du groupement, si vous souhaitez modifier le type de groupement alors il vous faudra recommencer une candidature de zéro."
+      continue: "Continuer"
+      continue_readonly: "Continuer"
+      back: "Précédent"
+      most_common_badge: "LE PLUS COURANT"
+      conjoint:
+        label: "Conjoint"
+        hint: "Votre entreprise réalisera la partie du marché qui lui sera attribuée et sera responsable uniquement de cette partie vis-à-vis de l'acheteur."
+      solidaire:
+        label: "Solidaire"
+        hint: "Votre entreprise sera responsable de l'exécution de la totalité du marché vis-à-vis de l'acheteur. En cas de défaillance d'un membre, les autres membres, y compris votre entreprise, pourront être tenus d'exécuter les obligations du contrat."
+      conjoint_mandataire_solidaire:
+        label: "Conjoint + mandataire solidaire"
+        hint: "Chaque membre est responsable de sa propre part du marché. En revanche, le mandataire est solidaire des autres membres : si l'un d'eux est défaillant, seul le mandataire devra répondre de ses obligations vis-à-vis de l'acheteur."
+    grouping_compositions:
+      title: "Les membres du groupement"
+      step_current: "Étape 2 sur 3"
+      step_next: "Étape suivante :"
+      step_next_label: "Confirmation de la composition"
+      intro: "Ajoutez les co-traitants qui candidateront avec vous. Les invitations ne partiront qu'après confirmation de la composition."
+      table_company: "Entreprise"
+      table_email: "Email"
+      table_role: "Rôle"
+      table_status: "Statut des invitations"
+      company_unknown: "Entreprise"
+      role_mandataire: "MANDATAIRE"
+      role_co_traitant: "CO-TRAITANT"
+      status_not_sent: "NON ENVOYÉ"
+      status_sent: "ENVOYÉ"
+      no_co_traitant_line1: "Aucun co-traitant dans le groupement pour l'instant."
+      no_co_traitant_line2: "Ajoutez au moins un co-traitant ci-dessous pour pouvoir continuer."
+      add_member_title: "Ajouter un co-traitant"
+      siret_label: "Numéro de SIRET"
+      siret_hint: "Consultez"
+      siret_hint_link: "l'annuaire des entreprises"
+      email_label: "Email du contact"
+      email_hint: "Destinataire de l'invitation"
+      add_button: "Ajouter au groupement"
+      remove_button: "Retirer"
+      removal_error_title: "Impossible de retirer ce co-traitant"
+      removal_modal:
+        close: "Fermer"
+        title: "Retirer un co-traitant du groupement ?"
+        body: "Si vous retirez ce co-traitant, il ne pourra plus accéder au groupement et à sa candidature. Si sa candidature a été initiée, elle sera supprimée et ne sera pas transmise à l'acheteur."
+        confirm_question: "Êtes-vous sûr de vouloir le retirer ?"
+        confirm: "Retirer le membre du groupement"
+        cancel: "Annuler"
+      back: "Précédent"
+      continue: "Continuer"
+      success: "Le groupement a été créé et les invitations ont été envoyées"
+      confirm:
+        title: "Récapitulatif du groupement"
+        step_current: "Étape 3 sur 3"
+        step_next_label: "Confirmation de la composition"
+        legal_type_label: "Type de groupement :"
+        modify: "Modifier la composition"
+        submit: "Confirmer et envoyer les invitations"
     lot_selection:
       title: "Sélectionnez un ou plusieurs lot(s)"
-      subtitle: "Sélectionnez un ou plusieurs lots pour lequel/lesquels vous souhaitez soumettre une candidature."
+      subtitle: "Sélectionnez le ou les lots pour lequel/lesquels vous souhaitez soumettre une candidature."
+      co_traitant_title: "Sélectionnez les lots de votre candidature"
+      co_traitant_subtitle: "Le mandataire a pré-sélectionné les lots proposés au groupement. Choisissez parmi eux ceux sur lesquels vous souhaitez vous engager."
+      co_traitant_how_it_works_step_1: "Le mandataire a pré-sélectionné les lots auxquels le groupement va répondre"
+      co_traitant_how_it_works_step_2: "Sélectionnez les lots pour lesquels vous souhaitez soumettre une candidature"
+      co_traitant_how_it_works_step_3: "Complétez les informations spécifiques au type de lot"
+      co_traitant_how_it_works_step_4: "Soumettez votre candidature (vous pouvez le faire même si toutes les informations n'ont pas été complétées)"
+      co_traitant_how_it_works_step_5: "Le mandataire se charge de transmettre la candidature du groupement"
       submit: "Transmettre ma candidature"
+      next: "Suivant"
       market_info_title: "Informations du marché"
       buyer_label: "Acheteur"
-      how_it_works_title: "Comment ça fonctionne"
-      how_it_works_step_1: "Sélectionnez vos lots"
-      how_it_works_step_2: "Complétez le formulaire de candidature"
-      how_it_works_step_3: "Soumettez votre candidature"
       market_type_label: "Typologie"
       deadline_label: "Date limite"
-      application_form_title: "Formulaire de candidature"
-      prepare: "Préparer"
-      modify: "Modifier"
-      fields_count: "%{filled}/%{total} champs complétés"
-      progress_title: "Avancement des candidatures"
+      selected_lots_title: "Liste des lots sélectionnés"
       no_lot_selected: "Aucun lot sélectionné pour le moment"
       select_all: "Tout sélectionner"
       deselect_all: "Tout désélectionner"
@@ -481,10 +773,9 @@ fr:
         one: "1 lot"
         other: "%{count} lots"
       available_lots_count:
-        one: "1 lot"
-        other: "%{count} lots"
+        one: "1 lot disponible"
+        other: "%{count} lots disponibles"
       lot_number: "Lot %{number}"
-      single_form_notice: "Vous n'avez qu'un seul formulaire de candidature à compléter, Passe Marché se charge de transmettre votre candidature pour les différents lots."
       lot_limit_notice:
         one: "L'acheteur a limité le nombre de lot auxquels vous pouvez candidater : %{count} lot maximum"
         other: "L'acheteur a limité le nombre de lots auxquels vous pouvez candidater : %{count} lots maximum"
@@ -494,15 +785,144 @@ fr:
       lot_limit_exceeded_notice:
         one: "Vous avez atteint la limite : %{count} lot maximum autorisé"
         other: "Vous avez atteint la limite : %{count} lots maximum autorisés."
+      prepare_title: "Préparez votre dossier de candidature"
+      prepare_subtitle: "Votre dossier est organisé selon les types de lots sélectionnés. Complétez chaque section à votre rythme."
+      single_form_notice: "Vous n'avez qu'un seul formulaire de candidature à compléter, Passe Marché se charge de transmettre votre candidature pour les différents lots."
+      lots_list_title: "Liste des lots"
+      edit_lots: "Modifier les lots"
+      application_form_title: "Formulaire de candidature"
+      fields_count: "%{filled}/%{total} champs complétés"
+      start: "Compléter"
+      modify: "Modifier"
+      how_it_works_title: "Comment ça fonctionne"
+      how_it_works_step_1: "Complétez le formulaire de candidature"
+      how_it_works_step_2: "Soumettez votre candidature (vous pouvez soumettre même si toutes les informations n'ont pas été complétées)"
+    lot_selection_modes:
+      title: "Sélectionnez les lots pour la candidature"
+      subtitle_mixte: "Sélectionnez les lots auxquels vous allez candidater seul ou en groupement."
+      subtitle_groupement: "Sélectionnez les lots auxquels le groupement va candidater."
+      rc_notice_title: "En cas de doute, consultez le règlement de consultation"
+      rc_notice_body: "Votre acheteur a peut-être indiqué des règles concernant la gestion des lots dans le règlement de consultation, consultez le"
+      rc_notice_link: "via ce lien"
+      group_title_prefix: "Pour les lots de type"
+      apply_to_typology: "Appliquer à toute la typologie :"
+      apply_to_typology_placeholder: "Choisissez une option"
+      solo: "Seul"
+      groupement: "En groupement"
+      none: "Ne pas répondre"
+      lot_column_header: "Lot"
+      name_column_header: "Nom du lot"
+      lot_number: "Lot %{number}"
+      banner_text: "Vous devez sélectionner au moins un lot \"Seul\" et un lot \"En groupement\" pour continuer."
+      back: "Précédent"
+      continue: "Continuer"
+      removal_modal:
+        close: "Fermer"
+        title_single: "Retirer le lot %{number} du groupement ?"
+        title_multiple: "Retirer les lots %{numbers} du groupement ?"
+        body: "Si vous confirmez le retrait, les candidatures des co-traitants en cours seront modifiées afin de retirer les informations correspondantes."
+        body_warning: "Attention, la suppression des informations correspondantes est définitive. Le retrait est impossible si un co-traitant a déjà soumis sa candidature sur ce lot."
+        confirm: "Confirmer le retrait du lot"
+        cancel: "Annuler"
+    grouping_dashboard:
+      title: "Suivi & soumission des candidatures"
+      subtitle: "Vous pouvez suivre l'avancement des co-traitants et compléter votre formulaire de candidature."
+      market_info_title: "Les informations du marché"
+      market_name_label: "Nom du marché"
+      buyer_label: "Acheteur"
+      deadline_label: "Date limite de remise"
+      lots_section_title: "Les lots du marché"
+      lots_toggle_label: "Liste des lots pré-sélectionnés par le mandataire"
+      edit_lots: "Modifier les lots"
+      no_lot_selected: "Aucun lot sélectionné pour le moment"
+      lot_number: "Lot %{number}"
+      lots_count:
+        one: "1 lot"
+        other: "%{count} lots"
+      lots_table_lot: "Lot"
+      lots_table_typology: "Typologie"
+      lots_table_name: "Nom du lot"
+      members_section_title: "Les membres du groupement"
+      edit_members: "Modifier les membres"
+      table_company: "Entreprise"
+      table_role: "Rôle"
+      table_status: "Statut"
+      table_declared_lots: "Lots déclarés"
+      table_actions: "Actions"
+      role_mandataire: "MANDATAIRE"
+      role_co_traitant: "CO-TRAITANT"
+      role_self_mandataire: "VOUS : MANDATAIRE"
+      role_self_co_traitant: "VOUS : CO-TRAITANT"
+      status_invited: "Invité"
+      status_to_prepare: "À préparer"
+      status_in_progress: "En cours"
+      status_completed: "Complété"
+      status_submitted: "Transmise"
+      declared_lots_not_provided: "Non renseigné"
+      declared_lots_all: "Tous les lots"
+      action_edit: "Modifier ma candidature"
+      action_consult: "Consulter le formulaire"
+      action_prepare: "Préparer ma candidature"
+      action_copy_link: "Copier le lien"
+      copy_link_success: "Lien copié"
+      submission_section_title: "Soumission des candidatures"
+      submission_pending_title: "Des candidatures sont incomplètes"
+      submission_pending_body: "Nous vous conseillons de compléter les candidatures, vous pouvez cependant soumettre la candidature du groupement mais cela peut impacter vos chances d'être retenus."
+      submission_ready_title: "Tous les membres ont complété leur candidature"
+      submission_ready_body: "Vous pouvez soumettre la candidature du groupement."
+      submission_done_title: "La candidature du groupement a été transmise à la plateforme de marché"
+      submission_done_body: "Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez consulter l'attestation de candidature depuis l'écran de confirmation."
+      co_traitant_submission_done_title: "Votre candidature a été transmise"
+      co_traitant_submission_done_body: "Le mandataire a transmis la candidature du groupement à la plateforme de marché. Vous ne pouvez plus modifier votre candidature."
+      co_traitant_deadline_passed_title: "Date limite dépassée"
+      co_traitant_deadline_passed_body: "La date limite de réception des candidatures est dépassée, vous ne pouvez donc plus modifier votre candidature. Pour toutes questions, contactez le mandataire."
+      submit_full: "Soumettre la candidature"
+      submit_partial: "Soumettre sans la totalité des candidatures"
+      solo_application_title: "Candidature individuelle"
+      solo_application_name: "Ma candidature individuelle"
+      groupement_application_title: "Candidature en groupement"
+      prepare_my_application: "Préparer ma candidature"
+    grouping_submissions:
+      partial_modal:
+        title: "Soumettre sans la candidature de tous les co-traitants ?"
+        body_html: "Un ou plusieurs membres du groupement n'ont pas complété les renseignements ou fourni les documents qui les concernent. En tant que mandataire, vous pouvez choisir de transmettre la candidature en l'état ou de ne pas la transmettre tant que tous les membres n'ont pas complété leur dossier.<br><br>Cette décision relève de votre responsabilité. En effet, une candidature incomplète est susceptible d'être déclarée irrecevable, c'est-à-dire que votre groupement pourra être systématiquement éliminé par l'acheteur, conformément à l'article R. 2144-7 du code de la commande publique."
+        cancel: "Annuler"
+        confirm: "Confirmer la soumission"
+        close: "Fermer"
+      confirmation:
+        title: "La candidature a été transmise !"
+        body: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché."
+        attestation_hint: "Vous pouvez télécharger votre attestation de candidature qui vous servira de preuve de dépôt."
+        co_traitants_notified: "Les co-traitants ont également été informés par email de la soumission de la candidature du groupement."
+        download_attestation: "Télécharger l'attestation de candidature"
+        back_to_editor: "Revenir sur ma plateforme de marché"
+        sync_failed:
+          title: "La transmission à l'acheteur a échoué"
+          body_html: "Votre candidature a bien été soumise, mais sa transmission automatique à l'acheteur a échoué. Notre équipe a été alertée et va y remédier."
+      submission_failed: "La soumission de la candidature du groupement a échoué"
     validations:
       siret_blank: "Veuillez renseigner votre numéro de SIRET"
       siret_invalid: "Le numéro de SIRET saisi est invalide"
+      siret_same_as_mandataire: "Ce numéro de SIRET est celui de votre entreprise, vous faites déjà partie du groupement"
       email_blank: "Veuillez renseigner votre adresse email"
       email_invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
+      already_mandataire: "Vous êtes déjà mandataire d'un groupement sur ce marché"
+      application_mode_invalid: "Le mode de candidature sélectionné n'est pas valide"
+      grouping_not_found: "Aucun groupement trouvé pour cette candidature"
+      legal_type_invalid: "Le type de groupement sélectionné n'est pas valide"
+      legal_type_locked: "Le type de groupement ne peut plus être modifié une fois les invitations envoyées aux co-traitants"
+      grouping_member_not_found: "Ce co-traitant n'a pas été trouvé dans le groupement"
+      grouping_member_already_completed: "Ce co-traitant a déjà soumis sa candidature, il ne peut plus être retiré"
+      no_co_traitant: "Veuillez ajouter au moins un co-traitant avant de continuer"
+      groupement_application_not_found: "Aucune candidature en groupement trouvée"
+      lot_ids_invalid: "Un ou plusieurs lots sélectionnés n'appartiennent pas à ce marché"
+      lot_selection_mode_incomplete: "Vous devez sélectionner au moins un lot \"Seul\" et un lot \"En groupement\" pour continuer."
+      completed_co_traitant_application: "Un co-traitant a déjà soumis sa candidature sur un lot retiré, il n'est plus possible de modifier cette répartition"
     request_magic_link:
       no_application_found: "Aucune candidature trouvée pour ce numéro SIRET"
       no_market_context: "Veuillez accéder à Passe Marché depuis votre plateforme de marchés publics"
-      email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
+      invitation_not_found: "Cette invitation n'a pas été trouvée"
+      reconnection_email_mismatch: "L'adresse email ne correspond pas à celle utilisée lors de la création de la candidature"
     sessions:
       new:
         title: "Bienvenue,"
@@ -519,8 +939,10 @@ fr:
         title: "Vérifiez vos emails"
         message: "Un lien de connexion a été envoyé. Il est valable 30 minutes."
         connection_market_intro: "Ce lien vous permettra de reprendre votre candidature pour le marché :"
+        magic_link_direct_access: "Accéder directement (lien magique)"
       invalid_token: "Ce lien de connexion est invalide ou a expiré."
     shared:
+      save_draft: "Sauvegarder en brouillon"
       welcome: "Bienvenue,"
       siret_label: "Votre numéro de SIRET"
       siret_hint: "Ce numéro a été fourni par la plateforme de marchés publics et ne peut pas être modifié"
@@ -539,8 +961,8 @@ fr:
       intro: "%{editor} vous permet de candidater rapidement aux marchés publics."
     sync_status:
       title_suffix: "Synchronisation de la candidature"
-      success_title: "Votre candidature a été transmise !"
-      success_message: "Nous avons transmis automatiquement toutes les informations nécessaires à l'acheteur. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
+      success_title: "Votre candidature a été transmise à la plateforme de marché !"
+      success_message: "Nous avons transmis automatiquement toutes les informations nécessaires à votre plateforme de marché. Pour finaliser votre dépôt, retournez sur votre plateforme de marché. Vous pouvez télécharger votre attestation de candidature qui vous servira comme preuve de dépôt."
       download_attestation: "Télécharger mon attestation de candidature"
       return_to_editor: "Retourner sur %{editor}"
       error_title: "Erreur inattendue"
@@ -553,6 +975,10 @@ fr:
       success_image_alt: "Synchronisation réussie"
       error_image_alt: "Erreur de synchronisation"
       loading_aria_label: "Synchronisation en cours..."
+      grouping_member_title: "Votre candidature a été transmise à la plateforme de marché !"
+      co_traitant_title: "Votre candidature a été transmise !"
+      co_traitant_message: "Nous avons transmis automatiquement toutes les informations nécessaires au mandataire."
+      back_to_grouping_dashboard: "Revenir sur le suivi du groupement"
     attachments:
       delete_confirm: "Êtes-vous sûr de vouloir supprimer ce fichier ?"
       delete_success: "Fichier supprimé avec succès"
@@ -566,6 +992,8 @@ fr:
         p1: "Cette attestation certifie que la candidature référencée ci-dessus a été soumise avec succès dans le système Passe Marché à la date et heure indiquées. Ce document constitue une preuve officielle de dépôt de candidature et peut être présenté aux autorités compétentes si nécessaire."
         p2: "Les informations récupérées automatiquement sont à jour à la date d'émission de l'attestation et reflètent l'état des bases de données sources. En cas d'inexactitude, le candidat a la possibilité de demander la rectification de ses données auprès des organismes à l'origine de ces données."
         p3: "Le candidat atteste sur l'honneur de l'exactitude des rectifications qu'il a opérées et des informations saisies manuellement. Elles pourront faire l'objet de vérifications supplémentaires."
+        motifs_exclusion_reminder_title: "Rappel concernant les motifs d'exclusion :"
+        motifs_exclusion_reminder_body: "Conformément à l'article R2144-4 du CCP, « L'acheteur ne peut exiger que du seul candidat auquel il est envisagé d'attribuer le marché qu'il justifie ne pas relever d'un motif d'exclusion de la procédure de passation du marché. » Ainsi, le contrôle de ces justificatifs récupérés automatiquement n'intervient qu'au stade de l'attribution, auprès du seul attributaire pressenti. A la phase candidature, l'attestation sur l'honneur du candidat qu'il n'entre dans aucun des cas de motif d'exclusion suffit (article R. 2143-3 du CCP)."
     market_applications:
       form_fields:
         capacite_economique_financiere_assurance_risques_professionnels:
@@ -587,20 +1015,87 @@ fr:
             average_staff: "Effectif moyen"
             management_staff: "Personnel d'encadrement"
         realisations_livraisons:
+          new_item_title: "Nouvelle réalisation"
+          item_title: "Réalisation %{number}"
+          delete_button: "cette réalisation"
           labels:
             resume: "Résumé du travail effectué"
             date_debut: "Date de début"
             date_fin: "Date de fin"
-            montant: "Montant (€)"
-            description: "Description détaillée"
-            attestation_bonne_execution: "Attestation de bonne exécution"
+            montant: "Montant (EUR)"
+            description: "Description détaillée de la réalisation"
+            attestation_bonne_execution: "Attestations de bonne exécution"
           hints:
             resume: "Une phrase courte résumant le projet"
-            montant: "Montant en euros"
-            description: "Décrivez en détail la réalisation"
-      market_application_completed_cannot_edit: "Votre candidature a déjà été complétée et ne peut plus être modifiée."
+            description: "Décrivez en détail les travaux effectués, les destinataires, et les résultats obtenus"
+            attestation_bonne_execution: "Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo. Vous pouvez joindre plusieurs fichiers."
+          placeholders:
+            resume: "ex: Construction d'un bâtiment municipal"
+            montant: "ex: 500000"
+            description: "ex: Construction complète d'un bâtiment municipal de 1200m² incluant gros œuvre, second œuvre et finitions."
+          display:
+            item_title: "Réalisation %{number}"
+            resume_label: "Résumé :"
+            period_label: "Période :"
+            period_from: "Du %{date}"
+            period_to: "au %{date}"
+            montant_label: "Montant :"
+            description_label: "Description :"
+            attestation_label:
+              one: "Attestation :"
+              other: "Attestations :"
+        capacites_techniques_professionnelles_outillage_echantillons:
+          new_item_title: "Nouvel échantillon"
+          item_title: "Échantillon %{number}"
+          delete_button: "cet échantillon"
+          labels:
+            description: "Description de l'échantillon"
+            fichiers: "Fichiers (photos, documents)"
+          hints:
+            description: "Décrivez l'échantillon, la photographie ou la fourniture que vous souhaitez présenter"
+            fichiers: "Format accepté : PDF, JPG, PNG. Taille maximale : 10 Mo par fichier. Vous pouvez joindre plusieurs fichiers."
+          placeholders:
+            description: "ex: Échantillon de mobilier urbain conforme aux normes PMR, dimensions 120x80cm, matériau acier inoxydable"
+        presentation_intervenants:
+          new_item_title: "Nouvelle personne"
+          item_title: "Personne %{number}"
+          delete_button: "cette personne"
+          labels:
+            nom: "Nom"
+            prenoms: "Prénoms"
+            titres: "Titres d'études et professionnels"
+            cv_attachment: "Ajouter un CV"
+          hints:
+            titres: "Diplômes, certifications, expériences professionnelles"
+            cv_attachment: "Format accepté : PDF, DOC, DOCX. Taille maximale : 10 Mo."
+          placeholders:
+            nom: "ex: Dupont"
+            prenoms: "ex: Jean Pierre"
+            titres: "ex: Ingénieur informatique, Master en gestion de projet"
+          display:
+            item_title: "Personne %{number}"
+            nom_label: "Nom :"
+            prenoms_label: "Prénoms :"
+            titres_label: "Titres :"
+            cv_label: "CV :"
+            associated_documents_title: "Documents associés"
+          upload_list_title: "Téléchargez une liste des intervenants"
+        file_or_textarea:
+          default_description: "Description"
+        inline_url_input:
+          url_label: "URL"
+          certificate_help_intro: "Vous pouvez trouver ce certificat via"
+          certificate_help_link: "ce lien"
+          period_label: "Période :"
+          issue_date_label: "Date de délivrance :"
+          validity_duration_label: "Durée de validité :"
+      delete_success: "Votre candidature a bien été supprimée."
+      delete_failure: "Une erreur est survenue, la candidature n'a pas pu être supprimée."
       sync_retry_initiated: "La synchronisation a été relancée."
       completion_error: "Une erreur s'est produite lors de la finalisation de votre candidature. Veuillez réessayer."
+      grouping_locked_error: "La candidature du groupement a déjà été soumise ou la date limite est dépassée : votre partie ne peut plus être modifiée ni transmise."
+      draft_saved: "Votre brouillon a été sauvegardé."
+      draft_failed: "Votre brouillon n’a pas pu être sauvegardé, veuillez corriger les erreurs ci-dessous."
       insee_api_error: "Impossible de récupérer les informations de votre entreprise : %{error}"
       rne_api_error: "Impossible de récupérer les informations RNE de votre entreprise : %{error}"
       qualibat_api_error: "Impossible de récupérer la certification Qualibat de votre entreprise : %{error}"
@@ -620,7 +1115,7 @@ fr:
             body: "Les motifs d'exclusion obligatoires s’imposent à l’acheteur. Lorsqu’un candidat se trouve dans l’un de ces cas, l’acheteur est tenu d’écarter sa candidature, sous réserve des mesures d’auto-apurement prévues par le code de la commande publique."
           condamnations_penales:
             title: "Condamnations pénales visées"
-            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive pour :"
+            body: "Votre entreprise ou l’un de ses dirigeants ne doit pas avoir fait l’objet d’une condamnation définitive, notamment pour :"
             tags:
               - "Trafic de stupéfiants"
               - "Traite des êtres humains"
@@ -636,10 +1131,10 @@ fr:
               - "Association de malfaiteurs"
           situation_entreprise:
             title: "Situation de l'entreprise"
-            body: "Sont également exclus : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
+            body: "Sont également exclus, notamment : les entreprises en liquidation judiciaire, les dirigeants en faillite personnelle ou sous interdiction de gérer, ainsi que les entreprises condamnées pour travail dissimulé, marchandage, prêt illicite de main-d’œuvre, emploi d’étrangers non autorisés, discrimination, ou manquement à l’égalité professionnelle."
           manquements_fiscaux:
             title: "Manquements fiscaux"
-            body: "L’exclusion s’applique aussi en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
+            body: "L’exclusion s’applique notamment en cas de sanction administrative sur un contrat public antérieur, ou de condamnation pour fraude fiscale, obstacle au contrôle fiscal, ou délivrance de faux documents fiscaux."
           presomption_entente:
             title: "Présomption d'entente"
             body: "S’il y a des indices prouvant qu’il y a eu accord entre elle et d’autres opérateurs économiques en vue de fausser la concurrence."
@@ -788,6 +1283,9 @@ fr:
   api:
     errors:
       defense_market_not_allowed: "La création de marchés de défense nécessite une autorisation préalable. Veuillez contacter l'administrateur pour activer cette fonctionnalité."
+      market_not_completed: "Le marché n'a pas encore été configuré."
+      market_already_published: "Le marché a déjà été publié."
+      market_not_published: "La consultation n'est pas encore publiée, vous ne pouvez pas candidater à ce marché."
     insee:
       ess:
         is_ess: "L'entreprise est une ESS - données issues d'une source officielle"
@@ -898,8 +1396,10 @@ fr:
         webhook_config: "Configuration Webhook"
         completion_webhook_url: "URL de webhook de complétion"
         completion_webhook_hint: "URL HTTPS où seront envoyées les notifications de complétion de marché"
-        redirect_url: "URL de redirection"
-        redirect_url_hint: "URL de redirection après complétion. Les paramètres market_identifier et application_identifier seront automatiquement ajoutés."
+        buyer_return_url: "URL de retour acheteur"
+        buyer_return_url_hint: "URL de retour vers la plateforme acheteur après configuration du marché. Le paramètre market_identifier sera automatiquement ajouté."
+        candidate_return_url: "URL de retour candidat"
+        candidate_return_url_hint: "URL de retour vers la plateforme acheteur après dépôt de candidature. Les paramètres market_identifier et application_identifier seront automatiquement ajoutés."
         webhook_secret: "Secret webhook"
         webhook_secret_hint: "Secret utilisé pour signer les payloads (HMAC-SHA256)"
         generate_new_secret: "Générer un nouveau secret"
@@ -918,7 +1418,8 @@ fr:
         client_secret: "Client Secret :"
         webhook_config: "Configuration Webhook"
         webhook_url: "URL de webhook :"
-        redirect_url: "URL de redirection :"
+        buyer_return_url: "URL de retour acheteur :"
+        candidate_return_url: "URL de retour candidat :"
         secret_configured: "Secret configuré :"
         webhook_not_configured: "Webhook non configuré"
         confirm_delete: "Êtes-vous sûr de vouloir supprimer cet éditeur ?"
@@ -957,6 +1458,7 @@ fr:
       import_preview:
         title: "Prévisualisation de l'import"
         summary: "%{creates} création(s), %{updates} modification(s), %{deletes} archivage(s)"
+        create_badge: "Création"
         creates_title:
           one: "%{count} création"
           other: "%{count} créations"
@@ -1240,6 +1742,7 @@ fr:
       messages:
         record_invalid: "La validation a échoué : %{errors}"
         cannot_be_alone: "ne peut pas être seul"
+        same_as_mandataire: "correspond au SIRET du mandataire, vous faites déjà partie du groupement"
         inclusion: "n'est pas inclus dans la liste des valeurs autorisées"
         invalid: "n'est pas valide"
         blank: "ne peut pas être vide"
@@ -1272,11 +1775,14 @@ fr:
         invalid: "Les données fournies ne sont pas valides"
       models:
         public_market:
+          same_typology_required: "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+          no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
           attributes:
             name:
               blank: "Le nom du marché ne peut pas être vide"
             deadline:
               blank: "La date limite ne peut pas être vide"
+              out_of_range: "La date limite doit être comprise entre 2000 et 2099"
             market_type:
               blank: "Le type de marché ne peut pas être vide"
             market_types:
@@ -1293,6 +1799,18 @@ fr:
           attributes:
             siret:
               invalid: "Le numéro de SIRET saisi est invalide ou non reconnu, veuillez vérifier votre saisie."
+            application_mode:
+              immutable: "ne peut plus être modifié une fois choisi"
+        grouping_member:
+          attributes:
+            siret:
+              blank: "Veuillez renseigner votre numéro de SIRET"
+              invalid: "Le numéro de SIRET saisi est invalide"
+              same_as_mandataire: "Ce numéro de SIRET est celui de votre entreprise, vous faites déjà partie du groupement"
+              taken: "Ce numéro de SIRET a déjà été ajouté au groupement"
+            email:
+              blank: "Veuillez renseigner votre adresse email"
+              invalid: "L'adresse email doit avoir un format valide (exemple@domaine.com)"
         market_attribute_response:
           attributes:
             documents:
@@ -1337,9 +1855,12 @@ fr:
             completion_webhook_url:
               invalid_url: "L'URL de webhook de completion n'est pas valide"
               https_required: "L'URL de webhook de completion doit utiliser HTTPS en production"
-            redirect_url:
-              invalid_url: "L'URL de redirection n'est pas valide"
-              https_required: "L'URL de redirection doit utiliser HTTPS en production"
+            buyer_return_url:
+              invalid_url: "L'URL de retour acheteur n'est pas valide"
+              https_required: "L'URL de retour acheteur doit utiliser HTTPS en production"
+            candidate_return_url:
+              invalid_url: "L'URL de retour candidat n'est pas valide"
+              https_required: "L'URL de retour candidat doit utiliser HTTPS en production"
       attributes:
         # Generic attribute names that can be used across models
         name: "nom"
@@ -1355,7 +1876,8 @@ fr:
         client_id: "identifiant client"
         client_secret: "secret client"
         completion_webhook_url: "URL de webhook"
-        redirect_url: "URL de redirection"
+        buyer_return_url: "URL de retour acheteur"
+        candidate_return_url: "URL de retour candidat"
         cpv_code: "code CPV"
         checked: "case à cocher"
         file: "fichier"

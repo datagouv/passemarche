@@ -1,0 +1,13 @@
+<%= render 'candidate/shared/confirmation_modal',
+      id: "removal-modal-#{member.id}",
+      title: t('candidate.grouping_compositions.removal_modal.title'),
+      confirm_path: grouping_composition_member_candidate_market_application_path(market_application.identifier, member),
+      confirm_method: :delete,
+      confirm_form: { data: { turbo_stream: true } },
+      confirm_label: t('candidate.grouping_compositions.removal_modal.confirm'),
+      cancel_label: t('candidate.grouping_compositions.removal_modal.cancel'),
+      close_label: t('candidate.grouping_compositions.removal_modal.close') do %>
+  <%= render 'candidate/grouping_compositions/removal_errors', errors: nil, member_id: member.id %>
+  <p><%= t('candidate.grouping_compositions.removal_modal.body') %></p>
+  <p><%= t('candidate.grouping_compositions.removal_modal.confirm_question') %></p>
+<% end %>

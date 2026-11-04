@@ -33,6 +33,18 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
 
   subject(:presenter) { described_class.new(market_application) }
 
+  describe '#market_types_label' do
+    it 'returns localized market type codes joined by comma' do
+      label = presenter.market_types_label
+      expect(label).to be_a(String)
+      expect(label).to be_present
+    end
+
+    it 'memoizes the result' do
+      expect(presenter.market_types_label).to equal(presenter.market_types_label)
+    end
+  end
+
   describe '#stepper_steps' do
     it 'returns categories plus summary as symbols' do
       expected_steps = %i[identite_entreprise exclusion_criteria economic_capacities summary]
@@ -307,6 +319,28 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
       end
     end
 
+    context 'when the mandatory motifs_exclusion attribute belongs to a lot type the candidate did not declare' do
+      let!(:services_type) { MarketType.find_or_create_by!(code: 'services') }
+      let!(:works_type) { MarketType.find_or_create_by!(code: 'works') }
+
+      before do
+        motifs_market.update!(market_type_codes: %w[works services])
+        motifs_application.lots = [create(:lot, public_market: motifs_market, market_type: services_type)]
+        create(:market_attribute,
+          key: 'motifs_exclusion_works_only',
+          mandatory: true,
+          category_key: 'motifs_exclusion',
+          subcategory_key: 'motifs_exclusion_fiscales',
+          input_type: :file_upload,
+          public_markets: [motifs_market],
+          market_types: [works_type])
+      end
+
+      it 'returns false' do
+        expect(motifs_presenter.missing_mandatory_motifs_exclusion?).to be false
+      end
+    end
+
     context 'when there are no motifs_exclusion attributes at all' do
       let(:no_motifs_market) { create(:public_market, :completed, editor:) }
       let(:no_motifs_application) { create(:market_application, public_market: no_motifs_market) }
@@ -519,6 +553,148 @@ RSpec.describe MarketApplicationPresenter, type: :presenter do
 
       expect(response_for_active).to be_present
       expect(response_for_deleted).to be_present
+    end
+  end
+
+  describe 'multi-type lot methods' do
+    let(:works_type)    { MarketType.find_or_create_by!(code: 'works') }
+    let(:services_type) { MarketType.find_or_create_by!(code: 'services') }
+
+    let(:multi_type_market) do
+      works_type
+      services_type
+      create(:public_market, :completed, editor:).tap do |pm|
+        pm.market_type_codes = %w[works services]
+        pm.save!
+      end
+    end
+
+    let!(:common_attr) do
+      create(:market_attribute,
+        key: 'common_field',
+        category_key: 'common_cat',
+        subcategory_key: 'common_sub',
+        public_markets: [multi_type_market],
+        market_types: [works_type, services_type])
+    end
+
+    let!(:works_attr) do
+      create(:market_attribute,
+        key: 'works_field',
+        category_key: 'works_cat',
+        subcategory_key: 'works_sub',
+        public_markets: [multi_type_market],
+        market_types: [works_type])
+    end
+
+    let!(:services_attr) do
+      create(:market_attribute,
+        key: 'services_field',
+        category_key: 'services_cat',
+        subcategory_key: 'services_sub',
+        public_markets: [multi_type_market],
+        market_types: [services_type])
+    end
+
+    let(:lot_works)    { create(:lot, public_market: multi_type_market, market_type: works_type) }
+    let(:lot_services) { create(:lot, public_market: multi_type_market, market_type: services_type) }
+
+    let(:multi_application) do
+      app = create(:market_application, public_market: multi_type_market)
+      app.lots = [lot_works, lot_services]
+      app
+    end
+
+    subject(:multi_presenter) { described_class.new(multi_application) }
+
+    describe '#multi_type_selected_lots?' do
+      it 'returns true when selected lots have different types' do
+        expect(multi_presenter.multi_type_selected_lots?).to be true
+      end
+
+      it 'returns false when only one lot type is selected' do
+        single_app = create(:market_application, public_market: multi_type_market)
+        single_app.lots = [lot_works]
+        presenter = described_class.new(single_app)
+        expect(presenter.multi_type_selected_lots?).to be false
+      end
+    end
+
+    describe 'filtering attributes by declared lot types' do
+      let(:services_application) do
+        app = create(:market_application, public_market: multi_type_market)
+        app.lots = [lot_services]
+        app
+      end
+
+      let(:services_presenter) { described_class.new(services_application) }
+
+      it 'hides the attributes of lot types the candidate did not declare' do
+        fields = services_presenter.fields_by_category_and_subcategory
+
+        expect(fields.keys).to include('services_cat')
+        expect(fields.keys).not_to include('works_cat')
+      end
+
+      it 'keeps the attributes shared with a declared lot type' do
+        expect(services_presenter.responses_for_category('common_cat').map(&:market_attribute))
+          .to contain_exactly(common_attr)
+      end
+
+      it 'removes the steps of lot types the candidate did not declare' do
+        expect(services_presenter.wizard_steps).to include(:services_sub)
+        expect(services_presenter.wizard_steps).not_to include(:works_sub)
+      end
+
+      it 'ignores optional attributes of lot types the candidate did not declare' do
+        works_attr.update!(mandatory: false)
+        services_attr.update!(mandatory: true)
+        common_attr.update!(mandatory: true)
+
+        expect(services_presenter.optional_market_attributes?).to be false
+      end
+
+      it 'keeps every attribute when lots of each type are declared' do
+        expect(multi_presenter.fields_by_category_and_subcategory.keys)
+          .to include('common_cat', 'works_cat', 'services_cat')
+      end
+    end
+
+    describe '#lots_by_effective_type' do
+      it 'groups selected lots by their effective market type' do
+        result = multi_presenter.lots_by_effective_type
+        expect(result.keys).to contain_exactly(works_type, services_type)
+        expect(result[works_type]).to contain_exactly(lot_works)
+        expect(result[services_type]).to contain_exactly(lot_services)
+      end
+    end
+
+    describe '#lots_by_type_sorted' do
+      it 'groups all public market lots by effective type' do
+        result = multi_presenter.lots_by_type_sorted
+        expect(result.keys).to include(works_type, services_type)
+      end
+    end
+
+    describe '#scopes_for_attribute' do
+      it 'returns [:commun] for an attribute shared across all selected lot types' do
+        expect(multi_presenter.scopes_for_attribute(common_attr)).to eq([:commun])
+      end
+
+      it 'returns [:works] for a works-specific attribute' do
+        expect(multi_presenter.scopes_for_attribute(works_attr)).to eq([:works])
+      end
+
+      it 'returns [:services] for a services-specific attribute' do
+        expect(multi_presenter.scopes_for_attribute(services_attr)).to eq([:services])
+      end
+
+      it 'returns [] when the application is not multi-type' do
+        single_app = create(:market_application, public_market: multi_type_market)
+        single_app.lots = [lot_works]
+        single_presenter = described_class.new(single_app)
+        expect(single_presenter.scopes_for_attribute(common_attr)).to eq([])
+      end
     end
   end
 end

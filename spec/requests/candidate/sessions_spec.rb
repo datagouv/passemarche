@@ -12,6 +12,7 @@ RSpec.describe 'Candidate::Sessions', type: :request do
   before do
     allow(SiretValidator).to receive(:valid?).and_call_original
     allow(SiretValidator).to receive(:valid?).with(valid_siret).and_return(true)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
   end
 
   describe 'GET #new' do
@@ -105,6 +106,95 @@ RSpec.describe 'Candidate::Sessions', type: :request do
           params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
 
         expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context 'when already authenticated as a different user' do
+      let(:other_user) { create(:user, authentication_token_sent_at: Time.current) }
+      let(:other_market) { create(:public_market, :completed, editor:) }
+      let(:other_application) { create(:market_application, public_market: other_market) }
+
+      before do
+        allow(SiretValidator).to receive(:valid?).with(other_application.siret).and_return(true)
+        token = other_user.generate_token_for(:magic_link)
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: other_application.identifier }
+      end
+
+      it 'clears the existing session so the old user is no longer current' do
+        post candidate_sessions_path,
+          params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
+
+        expect(session[:user_id]).to be_nil
+      end
+
+      it 'clears the existing market_application_identifier from session' do
+        post candidate_sessions_path,
+          params: { email: user.email, siret: valid_siret, market_application_id: market_application.identifier }
+
+        expect(session[:market_application_identifier]).to be_nil
+      end
+    end
+
+    context 'when coming from a grouping invitation' do
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: market_application, legal_type: :conjoint) }
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: '13002526500013', email: 'co-traitant@example.com',
+          invitation_token: 'valid-token-123', invitation_token_created_at: Time.current)
+      end
+
+      before { allow(SiretValidator).to receive(:valid?).with(grouping_member.siret).and_return(true) }
+
+      it 'creates the market application only on submission with the matching email' do
+        expect do
+          post candidate_sessions_path,
+            params: { email: grouping_member.email, siret: grouping_member.siret, invitation_token: grouping_member.invitation_token }
+        end.to change(MarketApplication, :count).by(1)
+
+        application = MarketApplication.last
+        expect(application.siret).to eq(grouping_member.siret)
+        expect(grouping_member.reload.market_application).to eq(application)
+      end
+
+      it 'redirects to sent path' do
+        post candidate_sessions_path,
+          params: { email: grouping_member.email, siret: grouping_member.siret, invitation_token: grouping_member.invitation_token }
+
+        expect(response).to redirect_to(sent_candidate_sessions_path)
+      end
+
+      context 'when the submitted email does not match the invitation' do
+        it 'does not create a market application' do
+          expect do
+            post candidate_sessions_path,
+              params: { email: 'someone-else@example.com', siret: grouping_member.siret, invitation_token: grouping_member.invitation_token }
+          end.not_to change(MarketApplication, :count)
+        end
+
+        it 'returns unprocessable_content' do
+          post candidate_sessions_path,
+            params: { email: 'someone-else@example.com', siret: grouping_member.siret, invitation_token: grouping_member.invitation_token }
+
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+      end
+
+      context 'when the invitation token no longer matches a valid invitation' do
+        before { grouping_member.grouping.update!(submitted_at: Time.current) }
+
+        it 'does not create a market application' do
+          expect do
+            post candidate_sessions_path,
+              params: { email: grouping_member.email, siret: grouping_member.siret, invitation_token: grouping_member.invitation_token }
+          end.not_to change(MarketApplication, :count)
+        end
+
+        it 'shows the invitation not found message' do
+          post candidate_sessions_path,
+            params: { email: grouping_member.email, siret: grouping_member.siret, invitation_token: grouping_member.invitation_token }
+
+          expect(CGI.unescapeHTML(response.body)).to include(I18n.t('candidate.request_magic_link.invitation_not_found'))
+        end
       end
     end
   end
@@ -212,6 +302,116 @@ RSpec.describe 'Candidate::Sessions', type: :request do
       end
     end
 
+    context 'when the groupement feature flag is enabled' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'redirects to the application mode choice screen when no mode is chosen yet' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
+      end
+
+      it 'redirects to company_identification when a mode is already chosen (RG5/CA-5)' do
+        market_application.update!(application_mode: :solo)
+
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :company_identification)
+        )
+      end
+
+      context 'when the application is the solo side of a mixte candidacy without a user yet' do
+        let!(:groupement_application) do
+          create(:market_application, public_market: market_application.public_market, siret: market_application.siret,
+            application_mode: :groupement)
+        end
+
+        before { market_application.update!(application_mode: :solo) }
+
+        it 'also links the user to the groupement counterpart' do
+          expect do
+            get verify_candidate_sessions_path,
+              params: { token:, market_application_id: market_application.identifier }
+          end.to change { groupement_application.reload.user_id }.from(nil).to(user.id)
+        end
+      end
+
+      context 'when the application is the groupement side of a mixte candidacy without a user yet' do
+        let!(:solo_application) do
+          create(:market_application, public_market: market_application.public_market, siret: market_application.siret,
+            application_mode: :solo)
+        end
+
+        before { market_application.update!(application_mode: :groupement) }
+
+        it 'also links the user to the solo counterpart' do
+          expect do
+            get verify_candidate_sessions_path,
+              params: { token:, market_application_id: market_application.identifier }
+          end.to change { solo_application.reload.user_id }.from(nil).to(user.id)
+        end
+      end
+
+      context 'when the application belongs to a co_traitant of a confirmed grouping' do
+        let(:mandataire_application) do
+          create(:market_application, public_market: market_application.public_market, siret: '80245139600098',
+            application_mode: :groupement)
+        end
+        let(:grouping) do
+          create(:grouping, public_market: market_application.public_market, mandataire_market_application: mandataire_application,
+            legal_type: :conjoint)
+        end
+
+        before do
+          allow(SiretValidator).to receive(:valid?).with('80245139600098').and_return(true)
+          market_application.update!(application_mode: :groupement)
+          create(:grouping_member, :co_traitant, grouping:, siret: market_application.siret,
+            market_application:, invitation_token: 'seed-token', invitation_token_created_at: Time.current)
+        end
+
+        it 'redirects straight to the shared grouping dashboard' do
+          get verify_candidate_sessions_path,
+            params: { token:, market_application_id: market_application.identifier }
+
+          expect(response).to redirect_to(
+            grouping_dashboard_candidate_market_application_path(market_application.identifier)
+          )
+        end
+      end
+    end
+
+    context 'when another candidate is already signed in and opens a co_traitant magic link' do
+      let(:other_user) { create(:user) }
+      let(:other_application) { create(:market_application, public_market:, siret: '80245139600098') }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: other_application, legal_type: :conjoint)
+      end
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: market_application.siret, market_application:,
+          invitation_token: 'co-traitant-token', invitation_token_created_at: Time.current, status: :invited)
+      end
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        grouping_member
+        sign_in_as_candidate(other_user, other_application)
+      end
+
+      it 'attributes the co_traitant connection to the co_traitant in the history' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        connection = grouping_member.versions.where(event: 'update').last
+        expect(connection.changeset['status']).to eq(%w[invited to_prepare])
+        expect(connection.whodunnit).to eq("user_#{user.id}")
+      end
+    end
+
     context 'when market has lots and no lots are selected' do
       let(:market_with_lots) { create(:public_market, :completed, editor:) }
       let(:application_with_lots) { create(:market_application, public_market: market_with_lots, siret: '73282932000074') }
@@ -264,6 +464,27 @@ RSpec.describe 'Candidate::Sessions', type: :request do
 
         expect(response).to redirect_to(
           candidate_sync_status_path(market_application.identifier)
+        )
+      end
+    end
+
+    context 'when the market_application is completed and belongs to a mandataire of a confirmed grouping' do
+      let(:grouping) { create(:grouping, mandataire_market_application: market_application) }
+
+      before do
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'sometoken',
+          invitation_token_created_at: Time.current)
+        market_application.update!(user:)
+        market_application.complete!
+      end
+
+      it 'redirects to the grouping dashboard instead of sync status' do
+        get verify_candidate_sessions_path,
+          params: { token:, market_application_id: market_application.identifier }
+
+        expect(response).to redirect_to(
+          grouping_dashboard_candidate_market_application_path(market_application.identifier)
         )
       end
     end

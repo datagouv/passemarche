@@ -4,15 +4,15 @@ on: [push]
 
 jobs:
   rubocop:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.4.5
+        ruby-version: 4.0.9
         bundler-cache: true
     
     - name: Install dependencies

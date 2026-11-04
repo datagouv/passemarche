@@ -3,10 +3,17 @@
 class MarketApplication < ApplicationRecord
   include Completable
   include Syncable
+  include GroupementWizardSteps
+  include ApplicableMarketAttributes
+
+  has_paper_trail on: %i[update], only: [:completed_at]
 
   belongs_to :public_market
   belongs_to :user, optional: true
   has_one :editor, through: :public_market
+  has_one :grouping_member, inverse_of: :market_application
+
+  enum :application_mode, { solo: 0, groupement: 1, mixte: 2 }, validate: { allow_nil: true }
 
   has_one_attached :attestation
   has_one_attached :buyer_attestation
@@ -19,24 +26,90 @@ class MarketApplication < ApplicationRecord
 
   attr_accessor :current_validation_step
 
+  normalizes :siret, with: ->(siret) { siret.strip }
+
   validates :identifier, presence: true, uniqueness: true
   validates :siret, presence: true, siret: true
   validates :attests_no_exclusion_motifs, inclusion: { in: [true, false] }, allow_nil: false
   validates :provider_user_id, length: { maximum: 255 }, allow_nil: true
   validate :market_must_be_completed
   validate :nested_attributes_valid
+  validate :application_mode_immutable, on: :update
 
   before_validation :generate_identifier, on: :create
+
+  scope :for_user, ->(user) { where(user:) }
+  scope :for_siret, ->(siret) { where(siret:) }
+  scope :outside_grouping, -> { where.missing(:grouping_member).where(application_mode: [nil, :solo, :mixte]) }
+  scope :matching_mode, ->(mode) { where(application_mode: mode.blank? || mode.to_s == 'solo' ? [nil, :solo] : mode) }
+
+  def in_progress?
+    !completed?
+  end
 
   def accessible_by?(user)
     user_id.nil? || user_id == user.id
   end
 
-  def find_authorized_document(attachment_id)
-    market_attribute_responses
-      .select { |r| r.class.file_attachable? }
-      .flat_map(&:documents)
-      .find { |doc| doc.id.to_s == attachment_id.to_s }
+  def part_of_grouping?
+    grouping_member.present?
+  end
+
+  def co_traitant_of_grouping?
+    !!grouping_member&.co_traitant?
+  end
+
+  def grouping_submitted?
+    !!grouping_member&.grouping&.submitted?
+  end
+
+  def lock_reason
+    return :grouping_submitted if grouping_submitted?
+    return :deadline_passed unless public_market.open?
+
+    :completed if completed? && !part_of_grouping?
+  end
+
+  def locked?
+    lock_reason.present?
+  end
+
+  def submitted_to_platform?
+    part_of_grouping? ? grouping_submitted? : completed?
+  end
+
+  def submitted_to_platform_at
+    return unless submitted_to_platform?
+
+    part_of_grouping? ? grouping_member.grouping.submitted_at : completed_at
+  end
+
+  def deletable?
+    !completed? && !groupement? && !part_of_grouping?
+  end
+
+  def with_grouping_edit_lock(&)
+    return transaction(&) unless grouping_member
+
+    grouping_member.with_edit_lock(&)
+  end
+
+  def with_grouping_lock(&)
+    return transaction(&) unless grouping_member
+
+    grouping_member.with_grouping_lock(&)
+  end
+
+  def groupement_counterpart
+    return nil if groupement?
+
+    MarketApplication.where(public_market:, siret:, application_mode: :groupement, user_id:).where.not(id:).first
+  end
+
+  def solo_counterpart
+    return nil if solo?
+
+    MarketApplication.where(public_market:, siret:, application_mode: :solo, user_id:).where.not(id:).first
   end
 
   def update_api_status(api_name, status:, fields_filled: 0)
@@ -50,13 +123,6 @@ class MarketApplication < ApplicationRecord
       self.api_fetch_status = updated_status
       save!
     end
-  end
-
-  def api_names_to_fetch
-    public_market.market_attributes
-      .where.not(api_name: nil)
-      .distinct
-      .pluck(:api_name)
   end
 
   def valid?(context = nil)
@@ -79,8 +145,16 @@ class MarketApplication < ApplicationRecord
     end
   end
 
+  def preloaded_market_attribute_responses
+    responses = market_attribute_responses.to_a
+    ActiveRecord::Associations::Preloader.new(records: responses, associations: :market_attribute).call
+    file_responses = responses.select { |response| response.respond_to?(:documents) }
+    ActiveRecord::Associations::Preloader.new(records: file_responses, associations: { documents_attachments: :blob }).call
+    responses
+  end
+
   def all_security_scans_complete?
-    file_responses = market_attribute_responses
+    file_responses = applicable_market_attribute_responses
       .select { |r| r.respond_to?(:documents) && r.documents.attached? }
 
     return true if file_responses.empty?
@@ -104,6 +178,12 @@ class MarketApplication < ApplicationRecord
     errors.add(:public_market, 'must be completed') unless public_market.sync_completed?
   end
 
+  def application_mode_immutable
+    return unless application_mode_in_database.present? && will_save_change_to_application_mode?
+
+    errors.add(:application_mode, :immutable)
+  end
+
   def nested_attributes_valid
     context = validation_context
     responses_to_validate = responses_for_context(context)
@@ -118,7 +198,7 @@ class MarketApplication < ApplicationRecord
 
   def responses_for_context(context)
     if context.blank? || context.to_s == 'summary'
-      market_attribute_responses.to_a
+      applicable_market_attribute_responses
     else
       responses_for_step(context)
     end
@@ -139,9 +219,9 @@ class MarketApplication < ApplicationRecord
   end
 
   def responses_for_subcategory(subcategory_key)
-    attribute_ids = public_market.market_attributes
-      .where(subcategory_key: subcategory_key.to_s)
-      .pluck(:id)
+    attribute_ids = applicable_market_attributes
+      .select { |market_attribute| market_attribute.subcategory_key == subcategory_key.to_s }
+      .map(&:id)
 
     market_attribute_responses.select { |r| attribute_ids.include?(r.market_attribute_id) }
   end

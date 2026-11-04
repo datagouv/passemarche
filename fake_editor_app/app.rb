@@ -152,6 +152,65 @@ class FakeEditorApp < Sinatra::Base
       erb :'buyer/market_detail'
     end
 
+    post '/markets/:identifier/update_deadline' do
+      @market = Market.find_by_identifier(params[:identifier])
+      current_token = Token.current_token
+
+      unless @market && current_token&.valid?
+        @error = "Marché non trouvé ou token invalide."
+        redirect '/buyer'
+        return
+      end
+
+      begin
+        client = FastTrackClient.new(ENV['CLIENT_ID'], ENV['CLIENT_SECRET'], ENV['FAST_TRACK_URL'])
+        result = client.update_public_market_deadline(current_token.access_token, @market.identifier, params[:deadline])
+        data = @market.data
+        data['deadline'] = result['deadline']
+        @market.update(market_data: data.to_json)
+        @success = "Date limite mise à jour."
+      rescue StandardError => e
+        @error = "Erreur : #{e.message}"
+      end
+
+      @market.reload
+      @applications = @market.applications
+      @current_token = current_token
+      @tab = 'overview'
+      erb :'buyer/market_detail'
+    end
+
+    post '/markets/:identifier/publish' do
+      current_token = Token.current_token
+
+      unless current_token&.valid?
+        @error = "Token d'accès non valide."
+        redirect "/buyer/markets/#{params[:identifier]}"
+        return
+      end
+
+      market = Market.find_by_identifier(params[:identifier])
+
+      unless market
+        @error = 'Marché non trouvé'
+        redirect '/buyer'
+        return
+      end
+
+      begin
+        @fast_track_client.publish_market(current_token.access_token, params[:identifier])
+        market.mark_published!
+        redirect "/buyer/markets/#{params[:identifier]}"
+      rescue StandardError => e
+        @error = "Erreur lors de la publication : #{e.message}"
+        @market = market
+        @applications = market.applications
+        @current_token = current_token
+        @tab = 'overview'
+        erb :'buyer/market_detail'
+      end
+    end
+
     get '/applications/:identifier' do
       @application = MarketApplication.find_by_identifier(params[:identifier])
 
@@ -175,14 +234,14 @@ class FakeEditorApp < Sinatra::Base
   namespace '/candidate' do
     get '' do
       @current_token = Token.current_token
-      @markets = Market.where(status: 'completed').order(:created_at).reverse
+      @markets = Market.where(status: %w[completed published]).order(:created_at).reverse
       @my_applications = MarketApplication.order(:created_at).reverse.limit(10)
       erb :'candidate/dashboard'
     end
 
     get '/markets' do
       @current_token = Token.current_token
-      @markets = Market.where(status: 'completed').order(:created_at).reverse
+      @markets = Market.where(status: %w[completed published]).order(:created_at).reverse
       erb :'candidate/markets_list'
     end
 

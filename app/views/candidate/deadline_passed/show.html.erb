@@ -1,0 +1,12 @@
+<% content_for :title, t('candidate.deadline_passed.title') %>
+
+<%= render Shared::ErrorPageComponent.new(
+  heading: t('candidate.deadline_passed.heading'),
+  paragraphs: [t('candidate.deadline_passed.explanation'), t('candidate.deadline_passed.contact_hint')]
+) do |error_page| %>
+  <% if (candidate_url = platform_return_url(@market_application)) %>
+    <% error_page.with_action do %>
+      <%= link_to t('candidate.deadline_passed.return_to_platform'), candidate_url, class: 'fr-btn' %>
+    <% end %>
+  <% end %>
+<% end %>

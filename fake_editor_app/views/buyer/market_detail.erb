@@ -17,6 +17,17 @@
       </div>
     </nav>
 
+    <% if @error %>
+      <div class="fr-alert fr-alert--error fr-mb-3w">
+        <p><%= @error %></p>
+      </div>
+    <% end %>
+    <% if @success %>
+      <div class="fr-alert fr-alert--success fr-mb-3w">
+        <p><%= @success %></p>
+      </div>
+    <% end %>
+
     <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
       <div class="fr-col">
         <h1><%= @market.name %></h1>
@@ -108,6 +119,12 @@
                           </span>
                         </td>
                       </tr>
+                      <% if @market.data['deadline'] %>
+                        <tr>
+                          <th scope="row">Date limite</th>
+                          <td><%= format_paris_time(DateTime.parse(@market.data['deadline'])) %></td>
+                        </tr>
+                      <% end %>
                       <tr>
                         <th scope="row">Créé le</th>
                         <td><%= format_paris_time(@market.created_at) %></td>
@@ -129,8 +146,8 @@
 
         <!-- Sidebar -->
         <div class="fr-col-12 fr-col-lg-4">
-          <!-- Actions rapides (only shown when market needs configuration) -->
-          <% if @market.status == 'created' && @market.configuration_url %>
+          <!-- Actions rapides -->
+          <% if @market.status != 'published' && @market.configuration_url %>
             <div class="fr-callout fr-mb-3w">
               <h3 class="fr-callout__title">
                 <span class="fr-icon-information-line fr-icon--sm" aria-hidden="true"></span>
@@ -142,8 +159,17 @@
                    rel="noopener external"
                    class="fr-btn fr-btn--sm fr-btn--primary">
                   <span class="fr-icon-settings-5-line" aria-hidden="true"></span>
-                  Configurer le marché
+                  <%= @market.status == 'completed' ? 'Modifier la configuration' : 'Configurer le marché' %>
                 </a>
+                <% if @market.status == 'completed' %>
+                  <form action="/buyer/markets/<%= @market.identifier %>/publish" method="post" style="display:inline;">
+                    <button type="submit" class="fr-btn fr-btn--sm fr-btn--secondary"
+                            onclick="return confirm('Êtes-vous sûr de vouloir publier ce marché ? La configuration sera verrouillée.')">
+                      <span class="fr-icon-lock-line" aria-hidden="true"></span>
+                      Publier la consultation
+                    </button>
+                  </form>
+                <% end %>
               </div>
             </div>
           <% end %>
@@ -162,6 +188,23 @@
               <% end %>
             </p>
           </div>
+
+          <!-- Modifier la deadline -->
+          <% if @market.status == 'completed' %>
+            <div class="fr-callout fr-mb-3w">
+              <h3 class="fr-callout__title">
+                <span class="fr-icon-calendar-line fr-icon--sm" aria-hidden="true"></span>
+                Date limite
+              </h3>
+              <form action="/buyer/markets/<%= @market.identifier %>/update_deadline" method="post">
+                <div class="fr-input-group">
+                  <label class="fr-label" for="deadline">Nouvelle date limite</label>
+                  <input class="fr-input" type="datetime-local" id="deadline" name="deadline" required>
+                </div>
+                <button type="submit" class="fr-btn fr-btn--sm fr-mt-1w">Mettre à jour</button>
+              </form>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

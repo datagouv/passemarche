@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 module Candidate
-  class SessionsController < ApplicationController
+  class SessionsController < Candidate::ApplicationController
+    include Candidate::WizardRoutable
+    include Candidate::MagicLinkSession
+
     skip_before_action :require_candidate_authentication
+    skip_before_action :set_paper_trail_whodunnit
 
     def new
       @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
@@ -11,17 +15,7 @@ module Candidate
     def create
       result = Candidate::RequestMagicLink.call(magic_link_request_params)
 
-      if result.success?
-        store_reconnection_context(result)
-        store_magic_link_url(result)
-        redirect_to sent_candidate_sessions_path
-      else
-        @errors = result.errors
-        @submitted_siret = params[:siret]
-        @submitted_email = params[:email]
-        @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
-        render 'candidate/sessions/new', status: :unprocessable_content
-      end
+      result.success? ? handle_magic_link_sent(result) : handle_magic_link_failed(result)
     end
 
     def sent
@@ -47,17 +41,52 @@ module Candidate
     private
 
     def sign_in_candidate(user, market_application)
-      reconnection = market_application.user_id.present?
-      market_application.update!(user:) unless reconnection
+      PaperTrail.request(whodunnit: ActionView::RecordIdentifier.dom_id(user)) do
+        reconnection = market_application.user_id.present?
+        link_candidate_to_application(user, market_application) unless reconnection
+        market_application.grouping_member&.mark_connected!
+      end
       session[:user_id] = user.id
       session[:market_application_identifier] = market_application.identifier
       redirect_to first_step_path(market_application)
     end
 
-    def first_step_path(market_application)
-      return candidate_sync_status_path(market_application.identifier) if market_application.completed?
+    def link_candidate_to_application(user, market_application)
+      counterpart = market_application.groupement_counterpart || market_application.solo_counterpart
+      market_application.update!(user:)
+      counterpart&.update!(user:)
+    end
 
-      company_identification_candidate_market_application_path(market_application.identifier)
+    def first_step_path(market_application)
+      dashboard_path = confirmed_grouping_dashboard_path(market_application)
+      return dashboard_path if dashboard_path
+
+      return completed_application_path(market_application) if market_application.completed?
+
+      next_required_wizard_step_path(market_application)
+    end
+
+    def completed_application_path(market_application)
+      return deadline_passed_candidate_market_application_path(market_application.identifier) unless market_application.public_market.open?
+
+      candidate_sync_status_path(market_application.identifier)
+    end
+
+    def handle_magic_link_sent(result)
+      clear_candidate_authentication_session
+      store_reconnection_context(result)
+      store_magic_link_url(result.magic_link_url)
+      redirect_to sent_candidate_sessions_path
+    end
+
+    def handle_magic_link_failed(result)
+      @errors = result.errors
+      @submitted_siret = params[:siret]
+      @submitted_email = params[:email]
+      @market_application = MarketApplication.find_by(identifier: params[:market_application_id])
+      @grouping_member = GroupingMember.find_by(invitation_token: params[:invitation_token])
+      @invitation_token = params[:invitation_token]
+      render 'candidate/sessions/new', status: :unprocessable_content
     end
 
     def magic_link_request_params
@@ -65,8 +94,7 @@ module Candidate
         email: params[:email],
         siret: params[:siret],
         market_application_id: params[:market_application_id],
-        host: request.host_with_port,
-        protocol: request.protocol
+        invitation_token: params[:invitation_token]
       }
     end
 
@@ -74,12 +102,6 @@ module Candidate
       return unless result.reconnection
 
       session[:reconnection_market_name] = result.market_application.public_market.name
-    end
-
-    def store_magic_link_url(result)
-      return unless Rails.env.sandbox? || Rails.env.development? || Rails.env.staging?
-
-      session[:magic_link_url] = result.magic_link_url
     end
 
     def invalid_token

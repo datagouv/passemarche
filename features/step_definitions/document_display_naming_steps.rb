@@ -55,29 +55,8 @@ When('I upload multiple files:') do |table|
 end
 
 When('I complete all remaining steps to reach summary') do
-  click_button 'Suivant'
-
-  # Navigate through any remaining steps until we reach summary
-  max_attempts = 10
-  attempts = 0
-
-  while attempts < max_attempts && current_path.exclude?('summary')
-    attempts += 1
-
-    # Fill in any required fields on current step
-    fill_in_current_step_fields
-
-    # Try to proceed to next step
-    if page.has_button?('Suivant', disabled: false)
-      click_button 'Suivant'
-    elsif page.has_button?('Continuer', disabled: false)
-      click_button 'Continuer'
-    else
-      break
-    end
-
-    sleep 0.2 # Small delay to allow page transitions
-  end
+  submit_step
+  navigate_to_summary
 end
 
 Then('I should see the original filename {string}') do |filename|
@@ -127,44 +106,6 @@ def stub_api_requests
     )
 end
 
-def fill_in_current_step_fields
-  fill_in_text_fields
-  fill_in_email_fields
-  fill_in_phone_fields
-  fill_in_textarea_fields
-  check_all_checkboxes
-end
-
-def fill_in_text_fields
-  page.all('input[type="text"]').each do |field|
-    next if field[:readonly] || field[:disabled] || field[:name]&.include?('siret')
-
-    field.set('Test Value') if field.value.blank?
-  end
-end
-
-def fill_in_email_fields
-  page.all('input[type="email"]').each { |field| field.set('test@example.com') if field.value.blank? }
-end
-
-def fill_in_phone_fields
-  page.all('input[type="tel"]').each { |field| field.set('01 23 45 67 89') if field.value.blank? }
-end
-
-def fill_in_textarea_fields
-  page.all('textarea').each { |field| field.set('Test description') if field.value.blank? }
-end
-
-def check_all_checkboxes
-  page.all('input[type="checkbox"]').each { |checkbox| checkbox.check unless checkbox.checked? }
-end
-
 def upload_required_files
-  page.all('input[type="file"]').each do |file_input|
-    next if file_input[:disabled]
-
-    test_file_path = Rails.root.join('tmp/test_file.pdf')
-    File.write(test_file_path, '%PDF-1.4 test content')
-    file_input.attach_file(test_file_path)
-  end
+  attach_test_files_to_all_inputs('test_file.pdf')
 end

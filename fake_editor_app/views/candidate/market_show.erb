@@ -173,7 +173,8 @@
                         name="siret"
                         placeholder="Ex: 12345678901234"
                         maxlength="14"
-                        pattern="[0-9]{14}">
+                        pattern="[0-9]{14}"
+>
                       <p class="fr-hint-text fr-text--xs">
                         Format : 14 chiffres sans espaces
                       </p>
@@ -189,10 +190,10 @@
                     <p>
                       <span class="fr-hint-text">
                         <strong>SIRET de test disponibles :</strong><br>
-                        • <code>30613890001294</code> - Administration publique ✓<br>
-                        • <code>77567227221138</code> - Croix Rouge Française (Association) ✓<br>
-                        • <code>42417936400023</code> - Association locale Alsace-Moselle ✓<br>
-                        • <code>00000000000000</code> - Erreur 404 (entité non trouvée) ✗
+                        • <a href="#siret" onclick="document.getElementById('siret').value='30613890001294'">30613890001294</a> Administration publique ✓<br>
+                        • <a href="#siret" onclick="document.getElementById('siret').value='77567227221138'">77567227221138</a> Croix Rouge Française (Association) ✓<br>
+                        • <a href="#siret" onclick="document.getElementById('siret').value='42417936400023'">42417936400023</a> Association locale Alsace-Moselle ✓<br>
+                        • <a href="#siret" onclick="document.getElementById('siret').value='00000000000000'">00000000000000</a> Erreur 404 (entité non trouvée) ✗
                       </span>
                       <span> Si un autre siret est fourni en paramètres, alors l'api renverra les données associées au siret 30613890001294</span>
                     </p>

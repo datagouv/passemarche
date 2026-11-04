@@ -1,40 +1,12 @@
 # frozen_string_literal: true
 
 Given('a public market with CARIF-OREF fields exists') do
-  @public_market = create(:public_market, :completed)
-
-  @qualiopi_attribute = create(:market_attribute,
-    key: 'capacites_techniques_professionnelles_certificats_qualiopi_france',
-    input_type: 'inline_file_upload',
-    api_name: 'carif_oref',
-    api_key: 'qualiopi',
-    category_key: 'capacites_techniques_professionnelles',
-    subcategory_key: 'capacites_techniques_professionnelles_certificats')
-  @qualiopi_attribute.public_markets << @public_market
-
-  @france_competence_attribute = create(:market_attribute,
-    key: 'capacites_techniques_professionnelles_certificats_france_competences',
-    input_type: 'inline_url_input',
-    api_name: 'carif_oref',
-    api_key: 'france_competence',
-    category_key: 'capacites_techniques_professionnelles',
-    subcategory_key: 'capacites_techniques_professionnelles_certificats')
-  @france_competence_attribute.public_markets << @public_market
-
-  # Add contact attribute so we can pass through steps
-  @contact_attribute = create(:market_attribute,
-    key: 'identite_entreprise_contact_email',
-    input_type: 'email_input',
-    category_key: 'identite_entreprise',
-    subcategory_key: 'identite_entreprise_contact')
-  @contact_attribute.public_markets << @public_market
-
-  @contact_phone_attribute = create(:market_attribute,
-    key: 'identite_entreprise_contact_telephone',
-    input_type: 'phone_input',
-    category_key: 'identite_entreprise',
-    subcategory_key: 'identite_entreprise_contact')
-  @contact_phone_attribute.public_markets << @public_market
+  @qualiopi_attribute, @france_competence_attribute = setup_market_with_attributes([
+    { key: 'capacites_techniques_professionnelles_certificats_qualiopi_france', input_type: 'inline_file_upload', api_name: 'carif_oref', api_key: 'qualiopi', category_key: 'capacites_techniques_professionnelles', subcategory_key: 'capacites_techniques_professionnelles_certificats' },
+    { key: 'capacites_techniques_professionnelles_certificats_france_competences', input_type: 'inline_url_input', api_name: 'carif_oref', api_key: 'france_competence', category_key: 'capacites_techniques_professionnelles', subcategory_key: 'capacites_techniques_professionnelles_certificats' },
+    { key: 'identite_entreprise_contact_email', input_type: 'email_input', category_key: 'identite_entreprise', subcategory_key: 'identite_entreprise_contact' },
+    { key: 'identite_entreprise_contact_telephone', input_type: 'phone_input', category_key: 'identite_entreprise', subcategory_key: 'identite_entreprise_contact' }
+  ])
 end
 
 Given('the CARIF-OREF API returns Qualiopi certification data') do
@@ -53,10 +25,7 @@ Given('the CARIF-OREF API returns an error') do
 end
 
 When('I start an application for the CARIF-OREF market') do
-  @market_application = create(:market_application,
-    public_market: @public_market,
-    siret: '12000101100010')
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application(siret: '12000101100010')
 end
 
 When('I fill in the SIRET for CARIF-OREF application') do

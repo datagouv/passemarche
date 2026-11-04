@@ -1,6 +1,6 @@
 # Passe Marché
 
-[![Ruby](https://img.shields.io/badge/Ruby-3.4.5-red.svg)](https://www.ruby-lang.org/) [![Rails](https://img.shields.io/badge/Rails-8.0.2-red.svg)](https://rubyonrails.org/) [![DSFR](https://img.shields.io/badge/DSFR-1.13.0-blue.svg)](https://www.systeme-de-design.gouv.fr/)
+[![Ruby](https://img.shields.io/badge/Ruby-4.0.9-red.svg)](https://www.ruby-lang.org/) [![Rails](https://img.shields.io/badge/Rails-8.0.2-red.svg)](https://rubyonrails.org/) [![DSFR](https://img.shields.io/badge/DSFR-1.13.0-blue.svg)](https://www.systeme-de-design.gouv.fr/)
 
 **Passe Marché** est une application Rails 8 qui simplifie les candidatures aux marchés publics pour les petites et moyennes entreprises (PME). Le projet vise à transformer les procédures d'appel d'offres complexes en un processus rationalisé et convivial, intégré aux plateformes d'achat existantes.
 
@@ -58,7 +58,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ### Requirements
 
-* ruby 3.4.5
+* ruby 4.0.9
 * postrgresql >= 15
 
 ### Backend
@@ -84,7 +84,7 @@ Faciliter l'accès des PME aux marchés publics français en :
 
 ## 📋 Prérequis
 
-* Ruby 3.4.5
+* Ruby 4.0.9
 * PostgreSQL 12+
 * Git
 
@@ -431,30 +431,7 @@ Le rapport est généré dans le dossier `coverage/` à la racine du projet. Il 
 
 ## 📚 Documentation
 
-La documentation technique est publiée sur GitBook. Tout nouveau fichier doit être référencé dans [`SUMMARY.md`](SUMMARY.md) pour y apparaître.
-
-
-### 🚀 Pour les Équipes Techniques
-
-* [**📖 Guide de Démarrage**](docs/00_guide_de_demarrage.md) - Navigation et glossaire de toute la documentation
-* [**🏃‍♂️ Démarrage Rapide**](docs/01_demarrage_rapide.md) - Intégration complète en 30 minutes
-
-### 📋 Documentation Technique Détaillée
-
-#### Authentification et Sécurité
-
-* [**🔐 Authentification OAuth2**](docs/02_authentification_oauth.md) - Flux Client Credentials, gestion tokens, sécurité
-* [**🔔 Webhooks**](docs/07_webhooks.md) - Notifications temps réel, signatures HMAC, retry intelligent
-
-#### Flux Métier
-
-* [**🏢 Flux Acheteur**](docs/03_flux_acheteur.md) - Création et configuration des marchés publics
-* [**👥 Flux Candidat**](docs/04_flux_candidat.md) - Soumission et finalisation des candidatures
-
-#### Références Techniques
-
-* [**⚙️ Référence API**](docs/05_reference_api.md) - Spécifications complètes des endpoints
-* [**🏗️ Schémas d'Intégration**](docs/06_schemas_integration.md) - Architecture et diagrammes techniques
+La documentation technique est sur [guides.data.gouv.fr](https://guides.data.gouv.fr/passe-marche). Source à éditer : [datagouv/guides.data.gouv.fr](https://github.com/datagouv/guides.data.gouv.fr), répertoire `passemarche/docs/`.
 
 ### 💡 Application de Démonstration
 

@@ -8,6 +8,8 @@
         <p class="fr-text--lg fr-mb-0">
           <% if @market_application %>
             <%= t('candidate.sessions.new.subtitle_with_editor', editor: @market_application.public_market.editor.name) %>
+          <% elsif @grouping_member %>
+            <%= t('candidate.sessions.new.subtitle_with_editor', editor: @grouping_member.public_market.editor.name) %>
           <% else %>
             <%= t('candidate.sessions.new.subtitle') %>
           <% end %>
@@ -42,6 +44,13 @@
                     <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
                     <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>
                     <%= form.text_field :siret, class: 'fr-input', readonly: true, value: @market_application.siret %>
+                  </div>
+                <% elsif @grouping_member %>
+                  <%= form.hidden_field :invitation_token, value: @invitation_token %>
+                  <div class="fr-input-group fr-input-group--disabled fr-mb-3w">
+                    <%= form.label :siret, t('candidate.sessions.new.siret_label'), class: 'fr-label' %>
+                    <span class="fr-hint-text"><%= t('candidate.sessions.new.siret_hint') %></span>
+                    <%= form.text_field :siret, class: 'fr-input', readonly: true, value: @grouping_member.siret %>
                   </div>
                 <% else %>
                   <div class="fr-input-group <%= 'fr-input-group--error' if siret_errors.present? %> fr-mb-3w">

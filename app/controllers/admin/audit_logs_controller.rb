@@ -24,7 +24,7 @@ class Admin::AuditLogsController < Admin::ApplicationController
     scope = PaperTrail::Version.where(item_type: 'MarketAttribute').order(created_at: :desc)
     scope = apply_query_filter(scope)
     scope = apply_date_filter(scope)
-    scope = scope.where(whodunnit: @filter_params[:admin_user_id]) if @filter_params[:admin_user_id].present?
+    scope = scope.where(whodunnit: "admin_user_#{@filter_params[:admin_user_id]}") if @filter_params[:admin_user_id].present?
     scope
   end
 

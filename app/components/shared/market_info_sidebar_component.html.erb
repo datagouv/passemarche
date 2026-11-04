@@ -1,0 +1,8 @@
+<dl class="buyer-market-info-sidebar">
+  <% rows.each do |row| %>
+    <div class="buyer-market-info-sidebar__row">
+      <dt class="fr-text--sm fr-text--mention-grey buyer-market-info-sidebar__term"><%= row.label %></dt>
+      <dd class="fr-text--sm fr-text--bold buyer-market-info-sidebar__description"><%= row.value %></dd>
+    </div>
+  <% end %>
+</dl>

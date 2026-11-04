@@ -1,0 +1,175 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe 'Candidate::GroupingInvitations', type: :request do
+  let(:editor) { create(:editor) }
+  let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:mandataire_application) do
+    create(:market_application, public_market:, siret: '73282932000074', application_mode: :groupement)
+  end
+  let(:grouping) do
+    create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+  end
+
+  before do
+    allow(SiretValidator).to receive(:valid?).and_return(true)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+  end
+
+  describe 'GET /candidate/grouping_invitations/:token' do
+    context 'when the token matches an invited grouping member' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: '13002526500013', email: 'co-traitant@example.com',
+          invitation_token: 'valid-token-123', invitation_token_created_at: Time.current)
+      end
+
+      it 'returns a successful response' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'displays the member siret as read-only information' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response.body).to include(grouping_member.siret)
+      end
+
+      it 'does not create a market application yet' do
+        token = grouping_member.invitation_token
+
+        expect do
+          get candidate_grouping_invitation_path(token)
+        end.not_to change(MarketApplication, :count)
+      end
+
+      it 'carries the invitation token in the identification form' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response.body).to include(grouping_member.invitation_token)
+      end
+    end
+
+    context 'when the member already has a market application' do
+      let(:existing_application) { create(:market_application, public_market:, siret: '13002526500013', application_mode: :groupement) }
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, siret: '13002526500013', email: 'co-traitant@example.com',
+          market_application: existing_application, invitation_token: 'valid-token-123', invitation_token_created_at: Time.current)
+      end
+
+      it 'reuses the existing market application' do
+        token = grouping_member.invitation_token
+
+        expect do
+          get candidate_grouping_invitation_path(token)
+        end.not_to change(MarketApplication, :count)
+      end
+    end
+
+    context 'when the token does not match any grouping member' do
+      it 'returns a 404' do
+        get candidate_grouping_invitation_path('unknown-token')
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'tells the visitor the grouping no longer exists' do
+        get candidate_grouping_invitation_path('unknown-token')
+
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_not_found.paragraphs').first)
+      end
+    end
+
+    context 'when the member has been removed from the grouping' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'removed-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before { grouping_member.destroy! }
+
+      it 'returns a gone status' do
+        get candidate_grouping_invitation_path('removed-token-123')
+
+        expect(response).to have_http_status(:gone)
+      end
+
+      it 'tells the visitor they are no longer part of the grouping' do
+        get candidate_grouping_invitation_path('removed-token-123')
+
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_removed.paragraphs').first)
+      end
+    end
+
+    context 'when the grouping of the removed member has been deleted' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'removed-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before do
+        grouping_member.destroy!
+        grouping.destroy!
+      end
+
+      it 'tells the visitor the grouping no longer exists' do
+        get candidate_grouping_invitation_path('removed-token-123')
+
+        expect(response).to have_http_status(:not_found)
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_not_found.paragraphs').first)
+      end
+    end
+
+    context 'when the groupement feature is disabled' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false) }
+
+      it 'returns a 404 even for a valid token' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when the invitation is expired' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
+          invitation_token_created_at: Time.current)
+      end
+
+      before { grouping.update!(submitted_at: Time.current) }
+
+      it 'returns a gone status' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response).to have_http_status(:gone)
+      end
+
+      it 'renders the expired invitation page' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('errors.pages.grouping_invitation_expired.heading'))
+      end
+    end
+
+    context 'when the co_traitant transmitted their form but the grouping is not submitted yet' do
+      let(:grouping_member) do
+        create(:grouping_member, :co_traitant, grouping:, invitation_token: 'valid-token-123',
+          invitation_token_created_at: Time.current, status: :completed,
+          market_application: create(:market_application, :completed, public_market:, application_mode: :groupement))
+      end
+
+      it 'still renders the login form' do
+        get candidate_grouping_invitation_path(grouping_member.invitation_token)
+
+        expect(response).to have_http_status(:ok)
+        expect(CGI.unescapeHTML(response.body)).not_to include(I18n.t('candidate.grouping_invitations.expired.heading'))
+      end
+    end
+  end
+end

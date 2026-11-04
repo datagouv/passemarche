@@ -20,7 +20,7 @@
         <div class="fr-alert fr-alert--info fr-mb-3w">
           <p class="fr-alert__title"><%= Rails.env.capitalize %></p>
           <p>
-            <%= link_to "Accéder directement (lien magique)", @magic_link_url, class: "fr-link" %>
+            <%= link_to t('candidate.sessions.sent.magic_link_direct_access'), @magic_link_url, class: "fr-link" %>
           </p>
         </div>
       <% end %>

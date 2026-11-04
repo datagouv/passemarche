@@ -17,7 +17,8 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   let(:completed_market_application) { create(:market_application, :completed, public_market:, siret: '73282932000074') }
 
   before do
-    allow_any_instance_of(ApplicationController).to receive(:current_candidate).and_return(candidate_user)
+    allow_any_instance_of(Candidate::ApplicationController).to receive(:current_candidate).and_return(candidate_user)
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
 
     create(:market_attribute, key: 'company_name', category_key: 'identite_entreprise', subcategory_key: 'market_information', public_markets: [public_market])
     create(:market_attribute, key: 'exclusion_question', category_key: 'exclusion_criteria', subcategory_key: 'exclusion_criteria', public_markets: [public_market])
@@ -44,6 +45,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
     )
 
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
 
     # Stub ActiveStorage download to prevent file system access in tests
     allow_any_instance_of(ActiveStorage::Blob).to receive(:download).and_return('fake pdf content')
@@ -92,6 +94,26 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
   end
 
   describe 'GET /candidate/market_applications/:identifier/:step' do
+    context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'redirects to the application mode choice screen instead of rendering the step' do
+        get "/candidate/market_applications/#{market_application.identifier}/summary"
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
+      end
+    end
+
+    context 'when the step is unknown' do
+      it 'responds with not found' do
+        get "/candidate/market_applications/#{market_application.identifier}/true"
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
     STEPS.each_with_index do |step, idx|
       context 'when application is not completed' do
         it "redirects correctly after #{step} step" do
@@ -117,7 +139,7 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
       get '/candidate/market_applications/NONEXISTENT/company_identification'
 
       expect(response).to have_http_status(:not_found)
-      expect(response.body).to include('La candidature recherchée n\'a pas été trouvée')
+      expect(response.body).to include('<h1 class="fr-h3">La candidature recherchée n&#39;a pas été trouvée</h1>')
     end
 
     it 'displays company_identification step' do
@@ -173,6 +195,62 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         expect(response).to have_http_status(:success)
         expect(response.body).to include(existing_email)
         expect(response.body).not_to include(candidate_user.email)
+      end
+    end
+  end
+
+  describe 'GET /candidate/market_applications/:identifier/api_data_recovery_status' do
+    it 'enqueues FetchApiDataCoordinatorJob when api_fetch_status is empty' do
+      public_market.market_attributes << create(:market_attribute, api_name: 'insee', api_key: 'siret')
+      market_application.update!(api_fetch_status: {})
+
+      expect do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+      end.to have_enqueued_job(FetchApiDataCoordinatorJob).with(market_application.id, %w[insee])
+    end
+
+    it 'does not enqueue FetchApiDataCoordinatorJob when api_fetch_status is already present' do
+      market_application.update!(api_fetch_status: { 'insee' => { 'status' => 'completed' } })
+
+      expect do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+      end.not_to have_enqueued_job(FetchApiDataCoordinatorJob)
+    end
+
+    context 'when the application belongs to a co_traitant' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        allow(SiretValidator).to receive(:valid?).and_return(true)
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret,
+          invitation_token_created_at: Time.current)
+      end
+
+      it 'points the previous button to the grouping dashboard instead of the company identification page' do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response.body).to include(
+          %(href="#{grouping_dashboard_candidate_market_application_path(market_application.identifier)}")
+        )
+        expect(response.body).not_to include(company_identification_candidate_market_application_path(market_application.identifier))
+      end
+
+      it 'points the previous button to the grouping dashboard even when the market has lots' do
+        mandataire_application.lots << create(:lot, public_market:)
+
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response.body).to include(
+          %(href="#{grouping_dashboard_candidate_market_application_path(market_application.identifier)}")
+        )
+        expect(response.body).not_to include(lot_selection_candidate_market_application_path(market_application.identifier))
       end
     end
   end
@@ -576,12 +654,153 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         end
 
         it 'enqueues webhook sync job' do
-          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(
-            market_application.id,
-            request_host: 'www.example.com',
-            request_protocol: 'http://'
-          )
+          expect(MarketApplicationWebhookJob).to have_been_enqueued.with(market_application.id)
         end
+      end
+    end
+  end
+
+  describe 'co_traitant wizard' do
+    let(:mandataire_application) do
+      create(:market_application, public_market:, siret: '80245139600099', application_mode: :groupement)
+    end
+    let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+    let(:co_traitant_application) do
+      create(:market_application, public_market:, siret: '80245139600021', application_mode: :groupement)
+    end
+    let(:dashboard_path) { grouping_dashboard_candidate_market_application_path(co_traitant_application.identifier) }
+
+    before do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      allow(SiretValidator).to receive(:valid?).and_return(true)
+      create(:grouping_member, :co_traitant, grouping:, siret: co_traitant_application.siret,
+        market_application: co_traitant_application, invitation_token: 'draft-token',
+        invitation_token_created_at: Time.current)
+    end
+
+    it 'redirects to the grouping dashboard with a notice after saving a step' do
+      patch step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria),
+        params: { draft: '1' }
+
+      expect(response).to redirect_to(dashboard_path)
+      expect(flash[:notice]).to eq(I18n.t('candidate.market_applications.draft_saved'))
+    end
+
+    it 'leaves the application uncompleted when saving the summary as draft' do
+      patch step_candidate_market_application_path(co_traitant_application.identifier, :summary),
+        params: { draft: '1' }
+
+      expect(response).to redirect_to(dashboard_path)
+      expect(co_traitant_application.reload).not_to be_completed
+    end
+
+    it 'offers the draft button on the form steps' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria)
+
+      expect(response.body).to include(I18n.t('candidate.shared.save_draft'))
+    end
+
+    it 'puts a default submit before the draft button so that Enter does not save a draft' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria)
+
+      expect(response.body.index('wizard-nav__default-submit')).to be < response.body.index('name="draft"')
+    end
+
+    it 'redirects to the transmission confirmation after completing the summary' do
+      patch step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+
+      expect(response).to redirect_to(candidate_sync_status_path(co_traitant_application.identifier))
+      expect(co_traitant_application.reload).to be_completed
+    end
+
+    it 'labels the summary submission as a transmission to the mandataire' do
+      get step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+
+      expect(response.body).to include(I18n.t('button.submit_to_mandataire'))
+    end
+
+    context 'once the co_traitant has transmitted its application to the mandataire' do
+      before do
+        co_traitant_application.complete!
+        co_traitant_application.grouping_member.mark_completed!
+        mandataire_application.update!(user: create(:user, email: 'mandataire@example.com'))
+      end
+
+      it 'can still open its form to edit it' do
+        get step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'moves the co_traitant back to in progress as soon as it saves a step' do
+        patch step_candidate_market_application_path(co_traitant_application.identifier, :market_information)
+
+        expect(co_traitant_application.grouping_member.reload).to be_status_in_progress
+      end
+
+      it 'notifies the mandataire of the modification when transmitting again' do
+        expect do
+          patch step_candidate_market_application_path(co_traitant_application.identifier, :summary)
+        end.to have_enqueued_mail(GroupingMemberCompletionMailer, :modified)
+
+        expect(response).to redirect_to(candidate_sync_status_path(co_traitant_application.identifier))
+      end
+    end
+
+    context 'once the mandataire has submitted the grouping' do
+      before { grouping.update!(submitted_at: Time.current, submission_mode: :partial) }
+
+      it 'redirects to the locked screen instead of the form' do
+        get step_candidate_market_application_path(co_traitant_application.identifier, :market_information)
+
+        expect(response).to redirect_to(locked_candidate_market_application_path(co_traitant_application.identifier))
+      end
+
+      it 'refuses any modification of the form' do
+        patch step_candidate_market_application_path(co_traitant_application.identifier, :exclusion_criteria),
+          params: { draft: '1' }
+
+        expect(response).to redirect_to(locked_candidate_market_application_path(co_traitant_application.identifier))
+      end
+    end
+  end
+
+  describe 'once the market deadline is over' do
+    before { public_market.update_column(:deadline, 1.day.ago) }
+
+    it 'redirects an application still being filled to the deadline passed screen' do
+      get step_candidate_market_application_path(market_application.identifier, :exclusion_criteria)
+
+      expect(response).to redirect_to(deadline_passed_candidate_market_application_path(market_application.identifier))
+    end
+  end
+
+  describe 'draft for a solo application' do
+    it 'ignores a draft request and follows the normal wizard' do
+      patch step_candidate_market_application_path(market_application.identifier, :exclusion_criteria),
+        params: { draft: '1' }
+
+      expect(response).not_to redirect_to(grouping_dashboard_candidate_market_application_path(market_application.identifier))
+      expect(flash[:notice]).not_to eq(I18n.t('candidate.market_applications.draft_saved'))
+    end
+
+    it 'is not offered' do
+      get step_candidate_market_application_path(market_application.identifier, :exclusion_criteria)
+
+      expect(response.body).not_to include(I18n.t('candidate.shared.save_draft'))
+    end
+  end
+
+  describe 'DELETE /candidate/market_applications/:identifier' do
+    context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'still allows deleting the application instead of redirecting to the mode choice screen' do
+        delete candidate_market_application_path(market_application.identifier)
+
+        expect(response).not_to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
       end
     end
   end

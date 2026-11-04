@@ -1,0 +1,10 @@
+<%= tag.button(select_text,
+      type: 'button',
+      class: 'fr-link fr-text--xs',
+      style: "text-decoration: underline;#{' display: none;' if display_none}",
+      data: {
+        action: action,
+        "#{target_controller}-target": target_name,
+        select_text: select_text,
+        deselect_text: deselect_text
+      }) %>

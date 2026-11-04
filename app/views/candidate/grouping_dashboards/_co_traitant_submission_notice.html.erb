@@ -1,0 +1,5 @@
+<section class="fr-mb-2w">
+  <%= render StatusNoticeComponent.new(title: t("candidate.grouping_dashboard.#{notice[:key]}_title"), color: notice[:color]) do %>
+    <%= t("candidate.grouping_dashboard.#{notice[:key]}_body") %>
+  <% end %>
+</section>

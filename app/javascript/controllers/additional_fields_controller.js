@@ -2,14 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["accordion", "submitButton", "yesOption", "noOption"]
-  static values = { category: String }
+  static values = { alreadyCompleted: Boolean }
 
   connect() {
+    this._boundHandleCheckboxChange = this._handleCheckboxChange.bind(this)
     this._initializeState()
   }
 
   showAdditionalFieldsAndEnableSubmit() {
-    this._saveSelection("yes")
     this._showAccordion()
     this._disableSubmit()
     this._addCheckboxListeners()
@@ -17,7 +17,6 @@ export default class extends Controller {
   }
 
   hideAdditionalFieldsAndEnableSubmit() {
-    this._saveSelection("no")
     this._hideAccordion()
     this._clearAllSelections()
     this._removeCheckboxListeners()
@@ -50,21 +49,21 @@ export default class extends Controller {
   _addCheckboxListeners() {
     const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
     checkboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', this._handleCheckboxChange.bind(this))
+      checkbox.addEventListener('change', this._boundHandleCheckboxChange)
     })
   }
 
   _removeCheckboxListeners() {
     const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
     checkboxes.forEach(checkbox => {
-      checkbox.removeEventListener('change', this._handleCheckboxChange.bind(this))
+      checkbox.removeEventListener('change', this._boundHandleCheckboxChange)
     })
   }
 
   _handleCheckboxChange() {
     const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
     const hasCheckedBoxes = Array.from(checkboxes).some(checkbox => checkbox.checked)
-    
+
     if (hasCheckedBoxes) {
       this._enableSubmit()
     } else {
@@ -75,16 +74,15 @@ export default class extends Controller {
   _initializeState() {
     const checkboxes = this.accordionTarget.querySelectorAll('input[type="checkbox"]')
     const hasPreCheckedBoxes = Array.from(checkboxes).some(checkbox => checkbox.checked)
-    const savedSelection = this._getSavedSelection()
 
-    if (hasPreCheckedBoxes || savedSelection === "yes") {
-      // Public market already has additional fields selected OR user previously clicked "Yes"
+    if (hasPreCheckedBoxes) {
+      // Public market already has additional fields selected
       this.yesOptionTarget.checked = true
       this._showAccordion()
       this._addCheckboxListeners()
       this._handleCheckboxChange()
-    } else if (savedSelection === "no") {
-      // User previously clicked "No"
+    } else if (this.alreadyCompletedValue) {
+      // Buyer already went through this step and selected no fields
       this.noOptionTarget.checked = true
       this._hideAccordion()
       this._enableSubmit()
@@ -93,22 +91,5 @@ export default class extends Controller {
       this._hideAccordion()
       this._disableSubmit()
     }
-  }
-
-  _storageKey() {
-    return `additional_fields_${this.categoryValue}`
-  }
-
-  _saveSelection(value) {
-    if (this.hasCategoryValue) {
-      sessionStorage.setItem(this._storageKey(), value)
-    }
-  }
-
-  _getSavedSelection() {
-    if (this.hasCategoryValue) {
-      return sessionStorage.getItem(this._storageKey())
-    }
-    return null
   }
 }

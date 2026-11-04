@@ -43,7 +43,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :public_markets, only: [:create] do
+      resources :public_markets, param: :identifier, only: %i[create update] do
+        post :publish, on: :member
+        get :configuration_summary, on: :member
         resources :market_applications, only: [:create]
       end
       resources :market_applications, only: [] do
@@ -56,6 +58,10 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+    patch 'public_markets/:identifier/lots',
+      to: 'lots#update_types',
+      as: :lot_types
+
     resources :public_markets, param: :identifier, only: [] do
       member do
         get ':id', to: 'public_markets#show', as: :step
@@ -66,20 +72,42 @@ Rails.application.routes.draw do
     end
 
     resources :sync_status, param: :identifier, only: [:show], path: 'public_markets/:identifier/sync_status'
+    resources :published, param: :identifier, only: [:show], path: 'public_markets/:identifier/published'
   end
 
   namespace :candidate do
+    get 'dashboard', to: 'dashboards#index', as: :dashboard
+    get 'grouping_invitations/:token', to: 'grouping_invitations#show', as: :grouping_invitation
+
     resource :sessions, only: %i[new create destroy] do
       get :verify
       get :sent
     end
 
-    resources :market_applications, param: :identifier, only: [] do
+    resources :market_applications, param: :identifier, only: [:destroy] do
       member do
+        get 'deadline_passed', to: 'deadline_passed#show', as: :deadline_passed
+        get 'locked', to: 'locked_applications#show', as: :locked
+        get 'application_mode', to: 'application_modes#show', as: :application_mode
+        patch 'application_mode', to: 'application_modes#update'
+        get 'lot_selection_mode', to: 'lot_selection_modes#show', as: :lot_selection_mode
+        patch 'lot_selection_mode', to: 'lot_selection_modes#update'
+        get 'grouping_legal_type', to: 'grouping_legal_types#show', as: :grouping_legal_type
+        patch 'grouping_legal_type', to: 'grouping_legal_types#update'
+        get 'grouping_composition', to: 'grouping_compositions#show', as: :grouping_composition
+        post 'grouping_composition/members', to: 'grouping_compositions#create_member', as: :grouping_composition_members
+        delete 'grouping_composition/members/:id', to: 'grouping_compositions#destroy_member', as: :grouping_composition_member
+        get 'grouping_composition_confirmation', to: 'grouping_composition_confirmations#show',
+          as: :grouping_composition_confirmation
+        patch 'grouping_composition_confirmation', to: 'grouping_composition_confirmations#update'
+        get 'suivi', to: 'grouping_dashboards#show', as: :grouping_dashboard
+        post 'grouping_submission', to: 'grouping_submissions#create', as: :grouping_submission
+        get 'grouping_submission', to: 'grouping_submissions#show'
         get 'company_identification', to: 'company_identifications#show', as: :company_identification
         patch 'company_identification', to: 'company_identifications#update'
         get 'lots', to: 'lot_selections#show', as: :lot_selection
         patch 'lots', to: 'lot_selections#update'
+        get 'consultation', to: 'application_consultations#show', as: :consultation
         get ':id', to: 'market_applications#show', as: :step
         put ':id', to: 'market_applications#update'
         patch ':id', to: 'market_applications#update'

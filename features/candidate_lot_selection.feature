@@ -19,11 +19,12 @@ Feature: Candidate lot selection
     When the candidate visits the lot selection step
     Then the candidate should be on the api data recovery status step
 
-  Scenario: Candidate can select lots and proceed to the next step
+  Scenario: Candidate can select lots and reach the preparation page
     When the candidate visits the lot selection step
     And the candidate selects the first lot
-    And the candidate submits the lot selection step
-    Then the candidate should be on the api data recovery status step
+    And the candidate clicks Suivant
+    Then the candidate should be on the lot selection step
+    And the candidate should see the preparation page
 
   Scenario: Candidate cannot proceed without selecting a lot
     When the candidate visits the lot selection step
@@ -31,17 +32,65 @@ Feature: Candidate lot selection
     Then the candidate should see an error about selecting at least one lot
     And the candidate should remain on the lot selection step
 
-  Scenario: Candidate cannot exceed lot_limit
+  @lot_limit
+  Scenario: Candidate cannot exceed lot_limit when the feature flag is enabled
+    Given the lot_limit feature flag is enabled
+    And the public market has a lot limit of 1
+    When the candidate visits the lot selection step
+    And the candidate selects all available lots
+    And the candidate submits the lot selection step without selecting any lot
+    Then the candidate should see an error about the lot limit
+    And the candidate should remain on the lot selection step
+
+  Scenario: Candidate can exceed lot_limit when the feature flag is disabled
     Given the public market has a lot limit of 1
     When the candidate visits the lot selection step
     And the candidate selects all available lots
-    And the candidate submits the lot selection step
-    Then the candidate should see an error about the lot limit
-    And the candidate should remain on the lot selection step
+    And the candidate clicks Suivant
+    Then the candidate should see the preparation page
+
+  Scenario: Preparation page shows Commencer when form not started
+    When the candidate visits the lot selection step
+    And the candidate selects the first lot
+    And the candidate clicks Suivant
+    Then the candidate should see the preparation page
+    And the candidate should see the complete button
+
+  Scenario: Preparation page shows how it works even when form is started
+    Given the candidate has already started the form
+    When the candidate visits the preparation page
+    Then the candidate should see the preparation page
+    And the candidate should see the how it works section
+    And the candidate should see the modify button
+
+  Scenario: Candidate can edit lots from the preparation page
+    When the candidate visits the lot selection step
+    And the candidate selects the first lot
+    And the candidate clicks Suivant
+    And the candidate clicks the edit lots button
+    Then the candidate should be on the lot selection step
 
   Scenario: Candidate is redirected to company identification when reconnecting
     When the candidate visits the lot selection step
     And the candidate selects the first lot
-    And the candidate submits the lot selection step
+    And the candidate clicks Suivant
     And the candidate reconnects to the application
     Then the candidate should be on the company identification step
+
+  @candidate_multi_type_lots
+  Scenario: Lots are grouped by type on the selection page for a multi-type market
+    Given a multi-type public market with lots exists
+    And a candidate starts a new application for the multi-type market
+    When the candidate visits the lot selection step
+    Then they should see lots grouped by type
+
+  @candidate_multi_type_lots
+  Scenario: Preparation page shows selected lot types as tags
+    Given a multi-type public market with lots exists
+    And a candidate starts a new application for the multi-type market
+    When the candidate visits the lot selection step
+    And the candidate selects one lot of each type
+    And the candidate clicks Suivant
+    Then the candidate should see the preparation page
+    And the preparation page should show the selected lot type tags
+

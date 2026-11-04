@@ -1,0 +1,51 @@
+<section class="fr-mb-3w">
+  <%= render Grouping::SectionTitleWithEditComponent.new(
+        title: t('candidate.grouping_dashboard.members_section_title'),
+        edit_path: presenter.viewing_as_co_traitant? ? nil : grouping_composition_candidate_market_application_path(market_application.identifier),
+        edit_title: t('candidate.grouping_dashboard.edit_members')) %>
+
+  <div class="fr-table fr-table--bordered fr-mb-3w">
+    <table class="grouping-dashboard-members-table">
+      <colgroup>
+        <col class="grouping-dashboard-members-table__col--company">
+        <col class="grouping-dashboard-members-table__col--role">
+        <col class="grouping-dashboard-members-table__col--status">
+        <col class="grouping-dashboard-members-table__col--lots">
+        <col class="grouping-dashboard-members-table__col--actions">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_company') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_role') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_status') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_declared_lots') %></th>
+          <th scope="col"><%= t('candidate.grouping_dashboard.table_actions') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% members.each do |member| %>
+          <tr id="grouping_member_row_<%= member.id %>">
+            <td>
+              <strong><%= presenter.member_display_name(member) %></strong><br>
+              <span class="fr-text--sm">SIRET <%= member.siret %></span>
+            </td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= presenter.member_role_badge_class(member) %>">
+                <%= presenter.member_role_label(member) %>
+              </span>
+            </td>
+            <td>
+              <span class="fr-badge fr-badge--sm <%= presenter.member_status_badge_class(member) %>">
+                <%= presenter.member_status_label(member) %>
+              </span>
+            </td>
+            <td><%= presenter.declared_lots_label(member) %></td>
+            <td>
+              <%= render Grouping::MemberActionsComponent.new(member:, market_application:, presenter:) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

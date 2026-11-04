@@ -11,6 +11,7 @@ RSpec.describe 'GET /api/v1/market_applications/:id/attestation', type: :request
 
   before do
     allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+    allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
   end
 
   describe 'with valid OAuth token' do

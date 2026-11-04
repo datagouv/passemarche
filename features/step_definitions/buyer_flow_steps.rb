@@ -5,11 +5,20 @@ When('I visit the setup page for my public market') do
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :setup)
 end
 
+When('I visit the step {string} of my public market') do |step_name|
+  @market_identifier ||= @last_api_response['identifier']
+  visit step_buyer_public_market_path(identifier: @market_identifier, id: step_name)
+end
+
+Then('I should see the page not found') do
+  expect(page.status_code).to eq(404)
+end
+
 When('I visit the first category page for my public market') do
   @market_identifier ||= @last_api_response['identifier']
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
-  special_steps = %i[setup lot_config summary]
+  special_steps = %i[setup lot_config form_config summary]
   @first_category = presenter.wizard_steps.find { |s| special_steps.exclude?(s) }
   visit step_buyer_public_market_path(identifier: @market_identifier, id: @first_category)
 end
@@ -34,7 +43,7 @@ When('I visit the summary page for my public market') do
   visit step_buyer_public_market_path(identifier: @market_identifier, id: :summary)
 end
 
-SPECIAL_WIZARD_STEPS = %i[setup lot_config summary].freeze
+SPECIAL_WIZARD_STEPS = %i[setup lot_config form_config summary].freeze
 
 When('I navigate through all category steps to summary') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
@@ -42,7 +51,12 @@ When('I navigate through all category steps to summary') do
 
   if presenter.wizard_steps.include?(:lot_config) &&
      page.current_path == step_buyer_public_market_path(@market_identifier, :lot_config)
-    find("input[name='lot_limit_enabled'][value='false']").click
+    find("input[name='lot_limit_enabled'][value='false']").click if page.has_selector?("input[name='lot_limit_enabled'][value='false']")
+    find('button[type="submit"]').click
+  end
+
+  if presenter.wizard_steps.include?(:form_config) &&
+     page.current_path == step_buyer_public_market_path(@market_identifier, :form_config)
     find('button[type="submit"]').click
   end
 
@@ -66,7 +80,7 @@ end
 Then('I should be on the first category page') do
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
   presenter = PublicMarketPresenter.new(public_market)
-  special_steps = %i[setup lot_config summary]
+  special_steps = %i[setup lot_config form_config summary]
   first_category = presenter.wizard_steps.find { |s| special_steps.exclude?(s) }
   expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, first_category))
 end

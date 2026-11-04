@@ -64,7 +64,7 @@ RSpec.describe Admin::AuditLogsHelper, type: :helper do
     let(:admin_user) { create(:admin_user) }
 
     it 'returns the admin email when whodunnit is set' do
-      version = instance_double(PaperTrail::Version, whodunnit: admin_user.id)
+      version = instance_double(PaperTrail::Version, whodunnit: "admin_user_#{admin_user.id}")
       expect(helper.version_admin_user(version)).to eq(admin_user.email)
     end
 

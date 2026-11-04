@@ -45,7 +45,8 @@ export default class extends Controller {
       const currentDataString = JSON.stringify(data)
 
       // Check if all APIs are completed
-      const allCompleted = data.api_fetch_status && Object.values(data.api_fetch_status).every(status =>
+      const apiStatuses = data.api_fetch_status ? Object.values(data.api_fetch_status) : []
+      const allCompleted = apiStatuses.length > 0 && apiStatuses.every(status =>
         status.status === 'completed' || status.status === 'failed'
       )
 

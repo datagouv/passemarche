@@ -12,13 +12,15 @@ RSpec.describe Editor, 'webhook configuration', type: :model do
 
         it 'accepts HTTP URLs' do
           editor.completion_webhook_url = 'http://example.com/webhook'
-          editor.redirect_url = 'http://example.com/success'
+          editor.buyer_return_url = 'http://example.com/buyer'
+          editor.candidate_return_url = 'http://example.com/candidate'
           expect(editor).to be_valid
         end
 
         it 'accepts HTTPS URLs' do
           editor.completion_webhook_url = 'https://example.com/webhook'
-          editor.redirect_url = 'https://example.com/success'
+          editor.buyer_return_url = 'https://example.com/buyer'
+          editor.candidate_return_url = 'https://example.com/candidate'
           expect(editor).to be_valid
         end
       end
@@ -32,15 +34,22 @@ RSpec.describe Editor, 'webhook configuration', type: :model do
           expect(editor.errors[:completion_webhook_url]).to include('L\'URL de webhook de completion doit utiliser HTTPS en production')
         end
 
-        it 'rejects HTTP URLs for redirect' do
-          editor.redirect_url = 'http://example.com/success'
+        it 'rejects HTTP URLs for buyer_return_url' do
+          editor.buyer_return_url = 'http://example.com/buyer'
           expect(editor).not_to be_valid
-          expect(editor.errors[:redirect_url]).to include('L\'URL de redirection doit utiliser HTTPS en production')
+          expect(editor.errors[:buyer_return_url]).to include("L'URL de retour acheteur doit utiliser HTTPS en production")
+        end
+
+        it 'rejects HTTP URLs for candidate_return_url' do
+          editor.candidate_return_url = 'http://example.com/candidate'
+          expect(editor).not_to be_valid
+          expect(editor.errors[:candidate_return_url]).to include("L'URL de retour candidat doit utiliser HTTPS en production")
         end
 
         it 'accepts HTTPS URLs' do
           editor.completion_webhook_url = 'https://example.com/webhook'
-          editor.redirect_url = 'https://example.com/success'
+          editor.buyer_return_url = 'https://example.com/buyer'
+          editor.candidate_return_url = 'https://example.com/candidate'
           expect(editor).to be_valid
         end
       end
@@ -53,7 +62,8 @@ RSpec.describe Editor, 'webhook configuration', type: :model do
 
       it 'allows blank URLs' do
         editor.completion_webhook_url = nil
-        editor.redirect_url = nil
+        editor.buyer_return_url = nil
+        editor.candidate_return_url = nil
         expect(editor).to be_valid
       end
     end

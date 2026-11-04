@@ -2,24 +2,13 @@
 
 class PublicMarketPresenter
   include SidemenuHelper
-  include MarketAttributeGrouping
+  include MarketPresenterConcern
+  include MultiTypeLotConcern
 
-  INITIAL_WIZARD_STEP = :setup
-  LOT_CONFIG_STEP = :lot_config
-  FINAL_WIZARD_STEP = :summary
+  delegate :wizard_steps, :stepper_steps, to: :wizard_steps_builder
 
   def initialize(public_market)
     @public_market = public_market
-  end
-
-  def wizard_steps
-    steps = [INITIAL_WIZARD_STEP]
-    steps << LOT_CONFIG_STEP if @public_market.lots.any?
-    steps + available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
-  end
-
-  def stepper_steps
-    available_category_keys.map(&:to_sym) + [FINAL_WIZARD_STEP]
   end
 
   def parent_category_for(step_key)
@@ -96,13 +85,7 @@ class PublicMarketPresenter
       .uniq
   end
 
-  def market_types_label
-    @public_market.market_type_codes.map { |c| I18n.t("market_types.#{c}", default: c.humanize) }.join(', ')
-  end
-
-  def market_types_label_with_source
-    "#{market_types_label} (#{I18n.t('market_types.source.platform')})"
-  end
+  delegate :multi_type_lots?, to: :@public_market
 
   def lots
     @lots ||= @public_market.lots.ordered.to_a
@@ -112,12 +95,28 @@ class PublicMarketPresenter
     lots.any?
   end
 
-  def source_types
-    I18n.t('source_types')
+  def picker_market_types
+    @picker_market_types ||= MarketType.where(code: %w[works services supplies]).index_by(&:code)
   end
 
-  def field_by_key(key)
-    MarketAttribute.find_by(key: key.to_s)
+  def lots_for_config
+    @lots_for_config ||= @public_market.lots.ordered
+      .includes(:platform_market_type, :market_type)
+      .to_a
+  end
+
+  def platform_type_banner_text
+    typed = lots_for_config.select(&:platform_market_type)
+    return nil if typed.none?
+
+    if typed.map(&:platform_market_type_id).uniq.one?
+      I18n.t('buyer.public_markets.lot_config.platform_banner_global_type',
+        platform: @public_market.editor.name,
+        type: I18n.t("market_types.#{typed.first.platform_market_type.code}"))
+    else
+      I18n.t('buyer.public_markets.lot_config.platform_banner_per_lot_type',
+        platform: @public_market.editor.name)
+    end
   end
 
   def available_mandatory_market_attributes
@@ -126,8 +125,19 @@ class PublicMarketPresenter
 
   private
 
+  def wizard_steps_builder
+    @wizard_steps_builder ||= PublicMarket::WizardStepsBuilder.new(
+      public_market: @public_market,
+      available_category_keys:
+    )
+  end
+
   def available_optional_market_attributes
     available_attributes.optional
+  end
+
+  def market_type_codes
+    @public_market.market_type_codes
   end
 
   def all_market_attributes
@@ -167,7 +177,7 @@ class PublicMarketPresenter
   def available_attributes_ordered_by_id
     @available_attributes_ordered_by_id ||= begin
       ids = MarketAttribute.joins(:market_types)
-        .where(market_types: { code: @public_market.market_type_codes })
+        .where(market_types: { code: @public_market.effective_market_type_codes })
         .where(deleted_at: nil)
         .select(:id)
         .distinct

@@ -4,6 +4,25 @@ require 'rails_helper'
 
 RSpec.describe Lot, type: :model do
   let(:public_market) { create(:public_market, :completed) }
+  describe 'effective_market_type' do
+    it 'returns the buyer type when set' do
+      platform_type = create(:market_type)
+      buyer_type = create(:market_type, :services)
+      lot = create(:lot, public_market:, platform_market_type: platform_type, market_type: buyer_type)
+      expect(lot.effective_market_type).to eq(buyer_type)
+    end
+
+    it 'returns the platform type when no buyer override' do
+      platform_type = create(:market_type)
+      lot = create(:lot, public_market:, platform_market_type: platform_type, market_type: nil)
+      expect(lot.effective_market_type).to eq(platform_type)
+    end
+
+    it 'returns nil when neither type is set' do
+      lot = create(:lot, public_market:, platform_market_type: nil)
+      expect(lot.effective_market_type).to be_nil
+    end
+  end
 
   describe 'validations' do
     it 'requires name to be present' do
@@ -84,6 +103,24 @@ RSpec.describe Lot, type: :model do
       lot_a = create(:lot, public_market:, position: 1)
 
       expect(described_class.ordered.to_a).to eq([lot_a, lot_b])
+    end
+  end
+
+  describe 'versioning' do
+    it 'creates a version on create' do
+      lot = create(:lot, public_market:)
+      expect(lot.versions.map(&:event)).to eq(['create'])
+    end
+
+    it 'creates a version on update' do
+      lot = create(:lot, public_market:, name: 'Lot initial')
+      lot.update!(name: 'Lot renommé')
+      expect(lot.versions.map(&:event)).to eq(%w[create update])
+    end
+
+    it 'does not create a version when only position changes' do
+      lot = create(:lot, public_market:)
+      expect { lot.update!(position: lot.position + 1) }.not_to(change { lot.versions.count })
     end
   end
 end

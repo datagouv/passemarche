@@ -42,6 +42,99 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
     end
 
+    context 'with market_information step for a grouping member' do
+      let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+      before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+      it 'marks the member as in progress' do
+        described_class.call(market_application, :market_information, {})
+
+        expect(market_application.grouping_member.reload).to be_status_in_progress
+      end
+    end
+
+    context 'when saving as draft' do
+      context 'when the application belongs to a grouping member' do
+        let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+        before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+        it 'saves a generic step and flags the result as draft' do
+          result = described_class.call(market_application, :contact, {}, draft: true)
+
+          expect(result[:success]).to be true
+          expect(result[:draft]).to be true
+        end
+
+        it 'warns that the draft could not be saved when the step is invalid' do
+          allow(market_application).to receive(:save).and_return(false)
+
+          result = described_class.call(market_application, :contact, {}, draft: true)
+
+          expect(result[:success]).to be false
+          expect(result[:flash_messages][:alert]).to eq(I18n.t('candidate.market_applications.draft_failed'))
+        end
+
+        it 'refuses to save the step once the grouping has been submitted' do
+          market_application.grouping_member.grouping.update!(submitted_at: Time.current)
+
+          result = described_class.call(market_application, :contact, {}, draft: true)
+
+          expect(result[:success]).to be false
+          expect(market_application.grouping_member.reload).not_to be_status_in_progress
+        end
+
+        context 'when a transmitted member adds a file to a step that fails validation' do
+          let(:market_attribute) do
+            create(:market_attribute, :file_upload, subcategory_key: 'contact', public_markets: [public_market])
+          end
+          let!(:response) do
+            create(:market_attribute_response_file_upload, market_application:, market_attribute:)
+          end
+          let(:blob) do
+            ActiveStorage::Blob.create_and_upload!(
+              io: StringIO.new('test content'),
+              filename: 'test.pdf',
+              content_type: 'application/pdf'
+            )
+          end
+          let(:params) do
+            ActionController::Parameters.new(
+              market_attribute_responses_attributes: {
+                '0' => {
+                  'id' => response.id.to_s,
+                  'market_attribute_id' => market_attribute.id.to_s,
+                  'type' => 'FileUpload',
+                  'files' => [blob.signed_id]
+                }
+              }
+            ).permit!
+          end
+
+          before do
+            market_application.grouping_member.update!(status: :completed)
+            allow(market_application).to receive(:save).and_return(false)
+          end
+
+          it 'keeps neither the new file nor the status change' do
+            described_class.call(market_application, :contact, params, draft: true)
+
+            expect(response.reload.documents).to be_empty
+            expect(market_application.grouping_member.reload).to be_status_completed
+          end
+        end
+
+        it 'does not complete the application from the summary' do
+          result = described_class.call(market_application, :summary, {}, draft: true)
+
+          expect(result[:draft]).to be true
+          expect(result[:completed]).to be_nil
+          expect(market_application.reload).not_to be_completed
+        end
+      end
+    end
+
     context 'with generic step' do
       let(:step) { :contact }
 
@@ -105,17 +198,29 @@ RSpec.describe MarketApplicationStepUpdateService do
       end
 
       it 'calls CompleteMarketApplication organizer' do
-        expect(CompleteMarketApplication).to receive(:call)
-          .with(market_application:, request_host: nil, request_protocol: nil)
+        expect(CompleteMarketApplication).to receive(:call).with(market_application:)
 
         described_class.call(market_application, :summary, {})
       end
 
-      it 'returns success with redirect' do
+      it 'returns a completed success' do
         result = described_class.call(market_application, :summary, {})
 
         expect(result[:success]).to be true
-        expect(result[:redirect]).to eq(:sync_status)
+        expect(result[:completed]).to be true
+      end
+
+      context 'when the application belongs to a grouping member' do
+        let(:market_application) { create(:market_application, public_market:, application_mode: :groupement) }
+
+        before { create(:grouping, public_market:, mandataire_market_application: market_application) }
+
+        it 'completes the application and its grouping member' do
+          result = described_class.call(market_application, :summary, {})
+
+          expect(result[:completed]).to be true
+          expect(market_application.grouping_member.reload).to be_status_completed
+        end
       end
 
       context 'when completion fails' do

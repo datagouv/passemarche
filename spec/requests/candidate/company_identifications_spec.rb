@@ -8,7 +8,10 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
   let(:market_application) { create(:market_application, public_market:, siret: '73282932000074') }
   let(:user) { create(:user) }
 
-  before { sign_in_as_candidate(user, market_application) }
+  before do
+    allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+    sign_in_as_candidate(user, market_application)
+  end
 
   describe 'GET /candidate/market_applications/:identifier/company_identification' do
     it 'returns ok' do
@@ -34,6 +37,18 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context 'when the groupement feature flag is enabled and no mode has been chosen yet' do
+      before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true) }
+
+      it 'redirects to the application mode choice screen instead of rendering the step' do
+        get company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          application_mode_candidate_market_application_path(market_application.identifier)
+        )
+      end
+    end
   end
 
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do
@@ -47,11 +62,12 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
       end
 
       it 'enqueues FetchApiDataCoordinatorJob when api_fetch_status is empty' do
+        public_market.market_attributes << create(:market_attribute, api_name: 'insee', api_key: 'siret')
         market_application.update!(api_fetch_status: {})
 
         expect do
           patch company_identification_candidate_market_application_path(market_application.identifier)
-        end.to have_enqueued_job(FetchApiDataCoordinatorJob).with(market_application.id)
+        end.to have_enqueued_job(FetchApiDataCoordinatorJob).with(market_application.id, %w[insee])
       end
 
       it 'does not enqueue FetchApiDataCoordinatorJob when api_fetch_status is already present' do
@@ -82,6 +98,84 @@ RSpec.describe 'Candidate::CompanyIdentifications', type: :request do
         patch company_identification_candidate_market_application_path(market_application.identifier)
 
         expect(response).to redirect_to(candidate_sync_status_path(market_application.identifier))
+      end
+    end
+
+    context 'when the co_traitant belongs to a solidaire grouping' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :solidaire)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+      let(:lot1) { create(:lot, public_market:) }
+      let(:lot2) { create(:lot, public_market:) }
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << lot1 << lot2
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'skips the company identification page since the invitation already confirmed the SIRET' do
+        get company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :api_data_recovery_status)
+        )
+      end
+
+      it 'skips the lot selection screen and redirects to api_data_recovery_status' do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          step_candidate_market_application_path(market_application.identifier, :api_data_recovery_status)
+        )
+      end
+
+      it "does not copy the mandataire's lots on the co_traitant application" do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(market_application.reload.lots).to be_empty
+      end
+    end
+
+    context 'when the co_traitant belongs to a conjoint grouping' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) do
+        create(:grouping, public_market:, mandataire_market_application: mandataire_application, legal_type: :conjoint)
+      end
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        mandataire_application.lots << create(:lot, public_market:)
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'skips the company identification page and goes straight to lot selection' do
+        get company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          lot_selection_candidate_market_application_path(market_application.identifier)
+        )
+      end
+
+      it 'redirects to lot selection like a regular groupement member' do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(response).to redirect_to(
+          lot_selection_candidate_market_application_path(market_application.identifier)
+        )
+      end
+
+      it 'does not pre-assign any lot' do
+        patch company_identification_candidate_market_application_path(market_application.identifier)
+
+        expect(market_application.reload.lots).to be_empty
       end
     end
   end

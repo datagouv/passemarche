@@ -140,7 +140,7 @@ bin/rails assets:precompile
 - Be sure that rubocop passes before stopping your work.
 - Be sure that tests you introduce pass before stopping your work.
 - Authorization should be done in the controller, not in the model/services.
-- Check docs/ for technical documentation if needed.
+- Technical documentation lives on guides.data.gouv.fr/passe-marche (source: github.com/datagouv/guides.data.gouv.fr, passemarche/ folder), not in this repo.
 
 ## Problem-Solving Together
 

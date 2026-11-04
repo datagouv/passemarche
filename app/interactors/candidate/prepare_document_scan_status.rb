@@ -30,7 +30,7 @@ module Candidate
     end
 
     def file_attribute_responses
-      market_application.market_attribute_responses
+      market_application.applicable_market_attribute_responses
         .select { |r| r.respond_to?(:documents) }
     end
   end

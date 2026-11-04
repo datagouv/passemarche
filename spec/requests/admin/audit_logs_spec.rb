@@ -27,7 +27,7 @@ RSpec.describe 'Admin::AuditLogs', type: :request do
 
     context 'with audit entries' do
       let!(:market_attribute) do
-        PaperTrail.request.whodunnit = admin_user.id
+        PaperTrail.request.whodunnit = "admin_user_#{admin_user.id}"
         create(:market_attribute, buyer_name: 'Test field')
       end
 
@@ -44,7 +44,7 @@ RSpec.describe 'Admin::AuditLogs', type: :request do
 
     context 'with text filter' do
       let!(:market_attribute) do
-        PaperTrail.request.whodunnit = admin_user.id
+        PaperTrail.request.whodunnit = "admin_user_#{admin_user.id}"
         create(:market_attribute, category_key: 'identite_entreprise', buyer_name: 'SIRET')
       end
 
@@ -71,7 +71,7 @@ RSpec.describe 'Admin::AuditLogs', type: :request do
 
   describe 'GET /admin/historique/:id' do
     let!(:market_attribute) do
-      PaperTrail.request.whodunnit = admin_user.id
+      PaperTrail.request.whodunnit = "admin_user_#{admin_user.id}"
       create(:market_attribute, buyer_name: 'Test field')
     end
 
@@ -90,7 +90,7 @@ RSpec.describe 'Admin::AuditLogs', type: :request do
 
     context 'with a modification version' do
       before do
-        PaperTrail.request.whodunnit = admin_user.id
+        PaperTrail.request.whodunnit = "admin_user_#{admin_user.id}"
         market_attribute.update!(buyer_name: 'Updated field')
       end
 

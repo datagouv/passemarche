@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+module Buyer
+  class LotsController < Buyer::ApplicationController
+    prepend_before_action :find_public_market
+    before_action :check_market_not_published
+
+    def update_types
+      market_type = MarketType.find_by(id: params[:market_type_id])
+      @updated_lot_ids = Array(params[:lot_ids]).map(&:to_i)
+
+      if @public_market.update_lot_types(@updated_lot_ids, market_type)
+        render turbo_stream: turbo_streams_for_updated_lots
+      else
+        render turbo_stream: turbo_stream_for_error, status: :unprocessable_content
+      end
+    end
+
+    private
+
+    def turbo_stream_for_error
+      turbo_stream.replace('lot_type_error',
+        partial: 'buyer/public_markets/lot_type_error',
+        locals: { message: @public_market.errors[:base].first })
+    end
+
+    def turbo_streams_for_updated_lots
+      @public_market.lots.ordered
+        .includes(:platform_market_type, :market_type)
+        .where(id: @updated_lot_ids)
+        .map do |lot|
+          turbo_stream.replace("lot_row_#{lot.id}", Buyer::LotRowComponent.new(lot:))
+        end
+    end
+
+    def find_public_market
+      @public_market = PublicMarket.find_by!(identifier: params[:identifier])
+    end
+
+    def check_market_not_published
+      return unless @public_market.published?
+
+      render_error_page(:public_market_published, status: :unprocessable_content)
+    end
+  end
+end

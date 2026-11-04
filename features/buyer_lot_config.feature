@@ -12,42 +12,67 @@ Feature: Buyer Lot Configuration Step
 
   Scenario: L'acheteur accède à la page de configuration des lots
     When I visit the lot_config page for my public market
-    Then I should see "Configurer le type de vos lots"
+    Then I should see "Configurez le type de vos lots"
     And I should see "Lot 1"
     And I should see "Lot 2"
     And I should see "Lot 3"
-    And I should see "Souhaitez-vous limiter le nombre de lots ?"
+
+  Scenario: La question de limitation des lots n'apparaît pas tant que la fonctionnalité est désactivée
+    When I visit the lot_config page for my public market
+    Then I should not see "Souhaitez-vous limiter le nombre de lots ?"
 
   Scenario: La page lot_config apparaît dans le wizard après le setup
     When I visit the setup page for my public market
     And I click on "Débuter l'activation de"
     Then I should be on the lot_config page
-    And I should see "Configurer le type de vos lots"
+    And I should see "Configurez le type de vos lots"
 
+  Scenario: La limite de lots n'apparaît pas dans le résumé si non définie
+    When I visit the summary page for my public market
+    Then the lot limit section should not be visible
+
+  Scenario: Navigation complète du wizard avec lots
+    When I visit the setup page for my public market
+    And I click on "Débuter l'activation de"
+    Then I should be on the lot_config page
+    When I submit the lot_config form
+    Then I should be on the form_config page
+    And I should see "Configurez le formulaire de candidature"
+
+  @lot_limit
+  Scenario: L'acheteur accède à la page de configuration des lots quand la fonctionnalité est activée
+    Given the lot_limit feature flag is enabled
+    When I visit the lot_config page for my public market
+    Then I should see "Souhaitez-vous limiter le nombre de lots ?"
+
+  @lot_limit
   Scenario: L'acheteur choisit de ne pas limiter les lots
+    Given the lot_limit feature flag is enabled
     When I visit the lot_config page for my public market
     And I choose "Non" for lot limit
     And I submit the lot_config form
     Then the public market should have no lot limit
 
+  @lot_limit
   Scenario: L'acheteur choisit de limiter les lots
+    Given the lot_limit feature flag is enabled
     When I visit the lot_config page for my public market
     And I choose "Oui" for lot limit
     And I set the lot limit to 2
     And I submit the lot_config form
     Then the public market should have a lot limit of 2
 
+  @lot_limit
   Scenario: La limite de lots apparaît dans le résumé
-    Given the buyer lot config public market has a lot limit of 2
+    Given the lot_limit feature flag is enabled
+    And the buyer lot config public market has a lot limit of 2
     When I visit the summary page for my public market
     Then I should see "Limite de lots par candidat"
     And I should see "2 lots maximum"
 
-  Scenario: La limite de lots n'apparaît pas dans le résumé si non définie
-    When I visit the summary page for my public market
-    Then the lot limit section should not be visible
-
+  @lot_limit
   Scenario: L'acheteur soumet sans renseigner le nombre de lots (Oui + champ vide)
+    Given the lot_limit feature flag is enabled
     When I visit the lot_config page for my public market
     And I choose "Oui" for lot limit
     And I submit the lot_config form
@@ -55,10 +80,96 @@ Feature: Buyer Lot Configuration Step
     And I should see "Veuillez indiquer le nombre maximum de lots."
     And the public market should have no lot limit
 
-  Scenario: Navigation complète du wizard avec lots
-    When I visit the setup page for my public market
-    And I click on "Débuter l'activation de"
+  Scenario: La page form_config affiche la liste des lots et le bouton Configurer
+    When I visit the form_config page for my public market
+    Then I should see "Configurez le formulaire de candidature"
+    And I should see "Formulaire de candidature à configurer"
+    And I should see "Configurer"
+
+  Scenario: Le bouton crayon sur form_config renvoie vers lot_config
+    When I visit the form_config page for my public market
+    And I click the edit lots button
     Then I should be on the lot_config page
-    When I choose "Non" for lot limit
-    And I submit the lot_config form
+
+  Scenario: Depuis form_config, Configurer mène à la première étape de catégorie
+    When I visit the form_config page for my public market
+    And I click on "Configurer"
     Then I should be on the first category page
+
+  @buyer_form_config_multi_type
+  Scenario: La page form_config affiche les types de lots pour un marché multi-types
+    Given I create a public market with lots of multiple types
+    When I visit the form_config page for my public market
+    Then I should see "Travaux"
+    And I should see "Services"
+    And I should see "Lot 1 - travaux"
+    And I should see "Formulaire de candidature à configurer"
+
+  @buyer_lot_type_picker @javascript
+  Scenario: Les cases à cocher et le picker sont masqués par défaut, apparaissent après clic sur Modifier
+    When I visit the lot_config page for my public market
+    Then the lot checkboxes should be hidden
+    And the type picker panel should be hidden
+    When I click on "Modifier les types de lot"
+    Then the lot checkboxes should be visible
+    And the type picker panel should be visible
+
+  @buyer_lot_type_picker @javascript
+  Scenario: L'acheteur modifie le type d'un lot sélectionné
+    Given the lots have platform type "works"
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    And I check the first lot checkbox
+    And I select the type "Services" in the type picker
+    And I click "Appliquer le nouveau type"
+    Then the first lot should have market type "services"
+    And I should see "SERVICES"
+
+  @buyer_lot_type_picker @javascript
+  Scenario: Annuler dans le TypePicker ferme le picker et remasque les cases
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    Then the type picker panel should be visible
+    When I click "Annuler"
+    Then the type picker panel should be hidden
+    And the lot checkboxes should be hidden
+
+  @buyer_lot_type_picker @javascript
+  Scenario: Tant qu'aucun lot n'est coché, les types sont inactifs et le message d'aide est affiché
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    Then the type options should be disabled
+    And the "Appliquer le nouveau type" button should be disabled
+    And I should see "Vous devez sélectionner au moins un lot pour lui attribuer un type"
+    When I check the first lot checkbox
+    Then the type options should be enabled
+    And the "Appliquer le nouveau type" button should be enabled
+    And I should not see "Vous devez sélectionner au moins un lot pour lui attribuer un type"
+    When I uncheck the first lot checkbox
+    Then the type options should be disabled
+    And the "Appliquer le nouveau type" button should be disabled
+
+  @buyer_lot_type_picker @javascript
+  Scenario: Le retrait d'un type de lot décoche automatiquement les exigences associées
+    Given I create a public market of typology "works" with lots of type "works" and "services"
+    And the market has a mandatory requirement for type "services"
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    And I check the lot checkbox for "Prestations SI"
+    And I select the type "Travaux" in the type picker
+    And I click "Appliquer le nouveau type"
+    Then the public market should not have the mandatory requirement anymore
+
+  @buyer_lot_type_picker @javascript
+  Scenario: L'acheteur ne peut pas retirer le dernier lot de la typologie du marché
+    Given I create a public market of typology "works" with a single lot of type "works"
+    When I visit the lot_config page for my public market
+    And I click on "Modifier les types de lot"
+    And I check the first lot checkbox
+    And I select the type "Services" in the type picker
+    And I click "Appliquer le nouveau type"
+    Then I should see "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
+    And the first lot should have market type "works"
+    And the type picker panel should be hidden
+    And the lot checkboxes should be hidden
+

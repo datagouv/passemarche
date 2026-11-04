@@ -47,7 +47,27 @@ class MarketAttributeResponse::CapaciteEconomiqueFinanciereChiffreAffairesGlobal
     end
   end
 
+  def reset_api_data!
+    stripped = strip_api_fields
+    if YEAR_KEYS.all? { |k| stripped[k].blank? }
+      destroy!
+    else
+      update!(value: stripped, source: :manual)
+    end
+  end
+
   private
+
+  def strip_api_fields
+    existing = (value || {}).deep_dup
+    api_fields = existing.delete('_api_fields') || {}
+    YEAR_KEYS.each do |year_key|
+      next unless existing[year_key].is_a?(Hash)
+
+      (api_fields[year_key] || []).each { |field| existing[year_key].delete(field) }
+    end
+    existing
+  end
 
   def coerce_field_value(field_name, val)
     if %w[turnover market_percentage].include?(field_name)

@@ -2,6 +2,7 @@
 
 class Api::V1::MarketApplicationsController < Api::V1::BaseController
   before_action :find_public_market, only: %i[create]
+  before_action :validate_public_market_published, only: %i[create]
   before_action :find_market_application, only: %i[attestation documents_package]
   before_action :validate_application_completed, only: %i[attestation documents_package]
   before_action :validate_attestation_available, only: %i[attestation]
@@ -15,7 +16,8 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
     )
 
     if result.success?
-      render json: success_response(result.market_application), status: :created
+      status = result.market_application.previously_new_record? ? :created : :ok
+      render json: success_response(result.market_application), status:
     else
       render json: { errors: result.errors }, status: :unprocessable_content
     end
@@ -38,11 +40,17 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   private
 
   def find_public_market
-    @public_market = current_editor.public_markets.find_by(identifier: params[:public_market_id])
+    @public_market = current_editor.public_markets.find_by(identifier: params[:public_market_identifier])
 
     return if @public_market
 
     render json: { error: 'Public market not found' }, status: :not_found
+  end
+
+  def validate_public_market_published
+    return if @public_market.published?
+
+    render json: { error: I18n.t('api.errors.market_not_published') }, status: :unprocessable_content
   end
 
   def find_market_application
@@ -67,11 +75,32 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def application_url_for(market_application)
-    Rails.application.routes.url_helpers.step_candidate_market_application_url(
-      market_application.identifier,
-      :company_identification,
-      host: request.host_with_port
-    )
+    target, step = market_application.next_required_wizard_step
+    return wizard_step_url(target, step) if target
+
+    mandataire_dashboard_url_for(market_application) ||
+      Rails.application.routes.url_helpers.step_candidate_market_application_url(
+        market_application.identifier,
+        :company_identification
+      )
+  end
+
+  def mandataire_dashboard_url_for(market_application)
+    grouping_application = market_application.confirmed_mandataire_grouping_application
+    return nil if grouping_application.nil?
+
+    Rails.application.routes.url_helpers.grouping_dashboard_candidate_market_application_url(grouping_application.identifier)
+  end
+
+  def wizard_step_url(market_application, step)
+    case step
+    when :application_mode
+      Rails.application.routes.url_helpers.application_mode_candidate_market_application_url(market_application.identifier)
+    when :lot_selection_mode
+      Rails.application.routes.url_helpers.lot_selection_mode_candidate_market_application_url(market_application.identifier)
+    when :grouping_legal_type
+      Rails.application.routes.url_helpers.grouping_legal_type_candidate_market_application_url(market_application.identifier)
+    end
   end
 
   def validate_application_completed

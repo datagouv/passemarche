@@ -310,4 +310,32 @@ RSpec.describe DocumentNamingService, type: :service do
       end
     end
   end
+
+  describe 'documents of attributes not applicable to the declared lots' do
+    let(:public_market) { create(:public_market, :completed, :multi_type) }
+    let(:works_attribute) do
+      create(:market_attribute, :file_upload, key: 'qualibat_certificate', public_markets: [public_market],
+        market_types: [MarketType.find_by!(code: 'works')])
+    end
+    let(:common_attribute) do
+      create(:market_attribute, :file_upload, key: 'kbis', public_markets: [public_market])
+    end
+
+    before do
+      [[works_attribute, 'qualibat.pdf'], [common_attribute, 'kbis.pdf']].each do |attribute, filename|
+        response = MarketAttributeResponse.build_for_attribute(attribute, market_application:)
+        response.documents.attach(io: StringIO.new('PDF'), filename:, content_type: 'application/pdf')
+        response.save!
+      end
+      market_application.lots = [public_market.lots.find_by!(name: 'Prestations SI')]
+    end
+
+    it 'leaves them out of the renamed documents' do
+      service = described_class.new(market_application)
+
+      expect(service.renamed_documents).to contain_exactly(
+        { original: 'kbis.pdf', system: 'user_01_01_kbis_kbis.pdf' }
+      )
+    end
+  end
 end

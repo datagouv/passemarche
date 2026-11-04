@@ -1,0 +1,15 @@
+<tr id="lot_row_<%= lot.id %>">
+  <td class="lot-config-table__selection-col"
+      data-lot-type-picker-target="checkboxColumn"
+      style="display: none;">
+    <%= label_tag "lot_#{lot.id}", class: 'fr-sr-only' do %>
+      <%= t('buyer.public_markets.lot_config.select_lot', name: lot.name) %>
+    <% end %>
+    <%= check_box_tag 'selected_lot_ids[]', lot.id, false,
+          id: "lot_#{lot.id}",
+          class: 'buyer-lot-type-picker__checkbox',
+          data: { action: 'change->lot-type-picker#toggle', 'lot-type-picker-target': 'checkbox' } %>
+  </td>
+  <td><%= t('buyer.public_markets.lot_config.lot_number', number: lot.position) %> - <%= lot.name %></td>
+  <td><%= render Buyer::LotTypeBadgeComponent.new(lot:) %></td>
+</tr>

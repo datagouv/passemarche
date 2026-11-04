@@ -44,12 +44,41 @@ RSpec.describe LotSelectionPolicy do
       end
     end
 
-    context 'when lot_limit is set' do
+    context 'when the market_application belongs to a co_traitant' do
+      let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
+      let(:grouping) { create(:grouping, public_market:, mandataire_market_application: mandataire_application) }
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      end
+
+      before do
+        mandataire_application.lots << lot1 << lot2
+        create(:grouping_member, :co_traitant, grouping:, market_application:, siret: market_application.siret)
+      end
+
+      it 'is valid when selected lots are within the groupement scope' do
+        policy = described_class.new(market_application, [lot1.id])
+
+        expect(policy.valid?).to be(true)
+      end
+
+      it 'is invalid when a selected lot is outside the groupement scope' do
+        policy = described_class.new(market_application, [lot1.id, lot3.id])
+
+        expect(policy.valid?).to be(false)
+        expect(policy.errors[:base]).to include(
+          I18n.t('activemodel.errors.models.lot_selection_policy.attributes.base.lot_outside_groupement_scope')
+        )
+      end
+    end
+
+    context 'when lot_limit is set and the feature flag is enabled' do
       before do
         lot1
         lot2
         lot3
         public_market.update!(lot_limit: 2)
+        allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(true)
       end
 
       it 'is valid when selected lots count equals the limit' do
@@ -71,6 +100,22 @@ RSpec.describe LotSelectionPolicy do
         expect(policy.errors[:base]).to include(
           I18n.t('activemodel.errors.models.lot_selection_policy.attributes.base.lot_limit_exceeded', limit: 2, count: 3)
         )
+      end
+    end
+
+    context 'when lot_limit is set but the feature flag is disabled' do
+      before do
+        lot1
+        lot2
+        lot3
+        public_market.update!(lot_limit: 2)
+        allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(false)
+      end
+
+      it 'is valid even when selected lots count exceeds the limit' do
+        policy = described_class.new(market_application, [lot1.id, lot2.id, lot3.id])
+
+        expect(policy.valid?).to be(true)
       end
     end
   end

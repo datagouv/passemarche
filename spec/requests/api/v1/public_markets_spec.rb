@@ -52,7 +52,7 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       it 'returns the configuration URL' do
         json_response = response.parsed_body
         identifier = json_response['identifier']
-        expected_url = "http://www.example.com/buyer/public_markets/#{identifier}/setup"
+        expected_url = "http://example.com/buyer/public_markets/#{identifier}/setup"
         expect(json_response['configuration_url']).to eq(expected_url)
       end
 
@@ -172,6 +172,22 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       it 'returns validation errors' do
         json_response = response.parsed_body
         expect(json_response['errors'][:editor]).to include('Editor not found')
+      end
+    end
+
+    context 'with an out of range deadline' do
+      before do
+        post '/api/v1/public_markets',
+          params: market_params.deep_merge(public_market: { deadline: '99999-01-01T00:00:00Z' }).to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status with a deadline error' do
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body['errors']).to have_key('deadline')
       end
     end
 
@@ -418,6 +434,345 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
           public_market = PublicMarket.find_by(identifier: json_response['identifier'])
           expect(public_market.defense_industry?).to be(false)
         end
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/public_markets/:identifier' do
+    let(:new_deadline) { 2.months.from_now.utc.iso8601 }
+    let(:public_market) { create(:public_market, editor:) }
+
+    context 'with valid OAuth token and valid deadline' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the identifier and updated deadline' do
+        json_response = response.parsed_body
+        expect(json_response['identifier']).to eq(public_market.identifier)
+        expect(json_response['deadline']).to eq(new_deadline)
+      end
+
+      it 'updates the deadline in the database' do
+        expect(public_market.reload.deadline.utc.iso8601).to eq(new_deadline)
+      end
+
+      it 'creates a PaperTrail version for the update' do
+        versions = public_market.reload.versions
+        expect(versions.map(&:event)).to include('update')
+      end
+
+      it 'does not enqueue a configuration summary PDF regeneration for a non-completed market' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).not_to have_been_enqueued
+      end
+    end
+
+    context 'when the market is already completed' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'enqueues a configuration summary PDF regeneration job' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob)
+          .to have_been_enqueued.with(public_market.id)
+      end
+    end
+
+    context 'when the update fails validation on an already completed market' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: '' } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'does not enqueue a configuration summary PDF regeneration job' do
+        expect(GeneratePublicMarketConfigurationSummaryPdfJob).not_to have_been_enqueued
+      end
+    end
+
+    context 'with missing deadline' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: '' } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns deadline validation error' do
+        json_response = response.parsed_body
+        expect(json_response['errors']).to have_key('deadline')
+      end
+    end
+
+    context 'with an out of range deadline' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}",
+          params: { public_market: { deadline: '-5225-09-30T23:50:39Z' } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity status with a deadline error' do
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body['errors']).to have_key('deadline')
+      end
+    end
+
+    context 'without OAuth token' do
+      before do
+        patch "/api/v1/public_markets/#{public_market.identifier}"
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with unknown identifier' do
+      before do
+        patch '/api/v1/public_markets/UNKNOWN-ID',
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'with a market belonging to another editor' do
+      let(:other_editor) do
+        Editor.create!(
+          name: 'Other Editor',
+          client_id: 'other_client_id',
+          client_secret: 'other_client_secret',
+          authorized: true,
+          active: true
+        )
+      end
+      let(:other_market) { create(:public_market, editor: other_editor) }
+
+      before do
+        patch "/api/v1/public_markets/#{other_market.identifier}",
+          params: { public_market: { deadline: new_deadline } }.to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe 'POST /api/v1/public_markets/:identifier/publish' do
+    let(:headers) do
+      {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      }
+    end
+
+    context 'with a completed, non-published market' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the identifier and published_at' do
+        json_response = response.parsed_body
+        expect(json_response['identifier']).to eq(public_market.identifier)
+        expect(json_response['published_at']).to be_present
+      end
+
+      it 'sets published_at in the database' do
+        expect(public_market.reload.published_at).to be_present
+      end
+    end
+
+    context 'with a non-completed market' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns an error message' do
+        json_response = response.parsed_body
+        expect(json_response['errors']['base']).to include(I18n.t('api.errors.market_not_completed'))
+      end
+    end
+
+    context 'with an already published market' do
+      let(:public_market) { create(:public_market, :published, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'returns an error message' do
+        json_response = response.parsed_body
+        expect(json_response['errors']['base']).to include(I18n.t('api.errors.market_already_published'))
+      end
+    end
+
+    context 'without OAuth token' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish" }
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with a market belonging to another editor' do
+      let(:other_editor) do
+        Editor.create!(
+          name: 'Other Editor',
+          client_id: 'other_client_id',
+          client_secret: 'other_client_secret',
+          authorized: true,
+          active: true
+        )
+      end
+      let(:public_market) { create(:public_market, :completed, editor: other_editor) }
+
+      before { post "/api/v1/public_markets/#{public_market.identifier}/publish", headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe 'GET /api/v1/public_markets/:identifier/configuration_summary' do
+    let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
+
+    context 'when the configuration summary is attached' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before do
+        public_market.configuration_summary.attach(
+          io: StringIO.new('fake pdf content'),
+          filename: "configuration_summary_#{public_market.identifier}.pdf",
+          content_type: 'application/pdf'
+        )
+        get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary", headers:
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the PDF content type' do
+        expect(response.media_type).to eq('application/pdf')
+      end
+
+      it 'returns the PDF as an attachment' do
+        expect(response.headers['Content-Disposition']).to include('attachment')
+        expect(response.headers['Content-Disposition']).to include("configuration_summary_#{public_market.identifier}.pdf")
+      end
+
+      it 'returns the PDF content' do
+        expect(response.body).to eq('fake pdf content')
+      end
+    end
+
+    context 'when the configuration summary is not attached' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before { get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary", headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns an error message' do
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq('Configuration summary not available')
+      end
+    end
+
+    context 'without OAuth token' do
+      let(:public_market) { create(:public_market, editor:) }
+
+      before { get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary" }
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with unknown identifier' do
+      before { get '/api/v1/public_markets/UNKNOWN-ID/configuration_summary', headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'with a market belonging to another editor' do
+      let(:other_editor) do
+        Editor.create!(
+          name: 'Other Editor',
+          client_id: 'other_client_id',
+          client_secret: 'other_client_secret',
+          authorized: true,
+          active: true
+        )
+      end
+      let(:public_market) { create(:public_market, editor: other_editor) }
+
+      before { get "/api/v1/public_markets/#{public_market.identifier}/configuration_summary", headers: }
+
+      it 'returns not found status' do
+        expect(response).to have_http_status(:not_found)
       end
     end
   end

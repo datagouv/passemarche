@@ -4,13 +4,8 @@ World(FactoryBot::Syntax::Methods)
 
 # Background steps
 Given('a public market with capacites_techniques_professionnelles_outillage_echantillons field exists') do
-  @editor = create(:editor, :authorized_and_active)
-  @public_market = create(:public_market, :completed, editor: @editor)
-
-  @echantillons_attr = MarketAttribute.find_or_initialize_by(
-    key: 'capacites_techniques_professionnelles_outillage_echantillons'
-  )
-  @echantillons_attr.assign_attributes(
+  @echantillons_attr = setup_market_with_attribute(
+    key: 'capacites_techniques_professionnelles_outillage_echantillons',
     input_type: 'capacites_techniques_professionnelles_outillage_echantillons',
     category_key: 'capacites_techniques_professionnelles',
     subcategory_key: 'capacites_techniques_professionnelles_outillage',
@@ -18,18 +13,10 @@ Given('a public market with capacites_techniques_professionnelles_outillage_echa
     candidate_name: 'Illustration des réalisations : échantillons, photographie ou description des fournitures',
     candidate_description: 'Ajoutez des échantillons, photos ou descriptions pour démontrer la conformité, la qualité des fournitures proposées et illustrer vos réalisations.'
   )
-  @echantillons_attr.save!
-  @echantillons_attr.public_markets << @public_market unless @echantillons_attr.public_markets.include?(@public_market)
-
-  # Verify the attribute is mandatory for this test
-  raise 'MarketAttribute not properly configured' unless @echantillons_attr.reload.mandatory?
 end
 
 Given('a candidate starts an application for this echantillons market') do
-  @market_application = create(:market_application,
-    public_market: @public_market,
-    siret: '73282932000074')
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application
 end
 
 # Navigation steps

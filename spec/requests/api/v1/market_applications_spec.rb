@@ -4,8 +4,10 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::MarketApplications', type: :request do
   let(:editor) { create(:editor, :authorized_and_active) }
-  let(:public_market) { create(:public_market, :completed, editor:) }
+  let(:public_market) { create(:public_market, :published, editor:) }
   let(:access_token) { oauth_access_token_for(editor) }
+
+  before { allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false) }
 
   describe 'POST /api/v1/public_markets/:public_market_id/market_applications' do
     let(:valid_siret) { '73282932000074' }
@@ -20,6 +22,8 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
     end
 
     it 'creates market application successfully' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+
       post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
         params: valid_params,
         headers: { 'Authorization' => "Bearer #{access_token}" },
@@ -79,6 +83,70 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       json_response = response.parsed_body
       expect(json_response['errors']).to have_key('provider_user_id')
+    end
+
+    it 'points the application_url to the application mode choice screen when the groupement feature flag is enabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:created)
+      json_response = response.parsed_body
+      expect(json_response['application_url']).to include('/application_mode')
+      expect(json_response['application_url']).not_to include('/company_identification')
+    end
+
+    it 'still points to company_identification when the existing application already has a mode' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      create(:market_application, public_market:, siret: valid_siret, application_mode: :solo)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      expect(json_response['application_url']).to include('/company_identification')
+    end
+
+    it 'points to the groupement counterpart grouping_legal_type step when the existing application is mixte' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      solo_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :solo)
+      groupement_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :groupement)
+      create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: nil)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      expect(json_response['identifier']).to eq(solo_application.identifier)
+      expect(json_response['application_url']).to include("/#{groupement_application.identifier}/grouping_legal_type")
+    end
+
+    it 'points to the grouping dashboard when the mandataire composition is confirmed' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      solo_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :solo)
+      groupement_application = create(:market_application, public_market:, siret: valid_siret, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: groupement_application, legal_type: :solidaire)
+      create(:grouping_member, :co_traitant, grouping:, siret: '80245139600021', invitation_token: 'token',
+        invitation_token_created_at: Time.current)
+
+      post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+        params: valid_params,
+        headers: { 'Authorization' => "Bearer #{access_token}" },
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json_response = response.parsed_body
+      expect(json_response['identifier']).to eq(solo_application.identifier)
+      expect(json_response['application_url']).to include("/#{groupement_application.identifier}/suivi")
     end
 
     it 'returns error when public market not found' do
@@ -145,6 +213,30 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
       expect(response).to have_http_status(:unauthorized)
     end
+
+    context 'when public market is not published' do
+      let(:public_market) { create(:public_market, :completed, editor:) }
+
+      it 'rejects the application creation' do
+        post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+          params: valid_params,
+          headers: { 'Authorization' => "Bearer #{access_token}" },
+          as: :json
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json_response = response.parsed_body
+        expect(json_response['error']).to eq(I18n.t('api.errors.market_not_published'))
+      end
+
+      it 'does not create a market application in database' do
+        expect do
+          post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+            params: valid_params,
+            headers: { 'Authorization' => "Bearer #{access_token}" },
+            as: :json
+        end.not_to change(MarketApplication, :count)
+      end
+    end
   end
 
   describe 'GET /api/v1/market_applications/:id/documents_package' do
@@ -152,6 +244,7 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
 
     before do
       allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
+      allow(PdfWatermarkService).to receive(:call) { |pdf_content| pdf_content }
       allow(Zip::OutputStream).to receive(:write_buffer).and_yield(double('zip_stream', put_next_entry: nil, write: nil)).and_return(double('zip_buffer', string: 'fake zip content'))
     end
 

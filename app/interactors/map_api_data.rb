@@ -25,15 +25,14 @@ class MapApiData < ApplicationInteractor
   end
 
   def api_attributes
-    context.market_application.public_market.market_attributes
-      .where(api_name: context.api_name)
-      .where.not(api_name: nil)
+    context.market_application.applicable_market_attributes
+      .select { |market_attribute| market_attribute.api_name.present? && market_attribute.api_name == context.api_name }
   end
 
   def create_or_update_response(market_attribute)
     response = find_or_initialize_response(market_attribute)
     value = populate_response_value(response, market_attribute)
-    response.source = :auto unless response.manual_after_api_failure?
+    response.source = :auto
     save_response(response, value)
   end
 
@@ -99,7 +98,8 @@ class MapApiData < ApplicationInteractor
 
   def handle_radio_with_file_and_text(response, value)
     response.hidden = value['hidden'] == true
-    response.value = value.except('hidden')
+    response.radio_choice = value['radio_choice']
+    response.text = value['text'] if response.radio_yes?
   end
 
   def handle_default_text(response, value)
@@ -112,9 +112,29 @@ class MapApiData < ApplicationInteractor
 
   def assign_parsed_json_value(response, value)
     parsed_data = JSON.parse(value)
-    response.value = parsed_data
+    response.value = merge_with_existing_value(response, parsed_data)
   rescue JSON::ParserError
     response.text = value
+  end
+
+  def merge_with_existing_value(response, api_data)
+    existing = response.value
+    return api_data if existing.blank? || !existing.is_a?(Hash)
+
+    api_fields = api_data['_api_fields'] || {}
+
+    existing.merge(api_data) do |key, existing_val, api_val|
+      next api_val if key == '_api_fields'
+      next api_val unless existing_val.is_a?(Hash) && api_val.is_a?(Hash)
+
+      merge_year_fields(existing_val, api_val, api_fields[key] || [])
+    end
+  end
+
+  def merge_year_fields(existing_val, api_val, year_api_fields)
+    existing_val.merge(api_val) do |field, existing_field_val, api_field_val|
+      year_api_fields.include?(field) ? api_field_val : existing_field_val
+    end
   end
 
   def opqibi_structured_data?(market_attribute)
@@ -143,6 +163,7 @@ class MapApiData < ApplicationInteractor
 
   def attach_document_to_response(response, document_hash)
     return unless response.respond_to?(:documents)
+    return unless valid_document_source_metadata?(document_hash)
 
     existing_document = response.documents.find do |doc|
       doc.metadata['api_name'] == context.api_name
@@ -154,6 +175,7 @@ class MapApiData < ApplicationInteractor
 
   def attach_documents_to_response(response, documents_array)
     return unless response.respond_to?(:documents)
+    return unless documents_array.all? { |document_hash| valid_document_source_metadata?(document_hash) }
 
     if documents_have_source_metadata?(documents_array)
       purge_documents_by_source(response, documents_array)
@@ -164,6 +186,17 @@ class MapApiData < ApplicationInteractor
     documents_array.each do |document_hash|
       response.documents.attach(document_hash)
     end
+  end
+
+  def valid_document_source_metadata?(document_hash)
+    source = document_hash.dig(:metadata, :source)
+    return true if source&.start_with?('api_')
+
+    context.fail!(
+      error: "Document hash for api_name=#{context.api_name} is missing metadata[:source] (\"api_...\"); " \
+             'the file would be misidentified as a manual upload.'
+    )
+    false
   end
 
   def documents_have_source_metadata?(document_hashes)

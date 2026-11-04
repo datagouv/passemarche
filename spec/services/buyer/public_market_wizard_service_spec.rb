@@ -17,6 +17,7 @@ RSpec.describe Buyer::PublicMarketWizardService do
   before do
     supplies_market_type.market_attributes << [mandatory_attribute, optional_attribute]
     defense_market_type.market_attributes << [mandatory_attribute]
+    allow_any_instance_of(WickedPdf).to receive(:pdf_from_string).and_return('fake pdf content')
   end
 
   describe '.call' do
@@ -158,6 +159,27 @@ RSpec.describe Buyer::PublicMarketWizardService do
         expect(public_market.reload.market_attributes).to include(mandatory_attribute, other_category_attr)
         expect(public_market.reload.market_attributes).not_to include(optional_attribute)
       end
+
+      it 'remembers the category was visited with no fields selected' do
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(Buyer::RecentOptionalCategoryVisit.visited?(public_market, :test_category)).to be true
+      end
+
+      it 'remembers the category was visited even when fields are selected' do
+        params = { selected_attribute_keys: [optional_attribute.key] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(Buyer::RecentOptionalCategoryVisit.visited?(public_market, :test_category)).to be true
+      end
+
+      it 'does not mark other categories as visited' do
+        params = { selected_attribute_keys: [] }
+        described_class.call(public_market, :test_category, params)
+
+        expect(Buyer::RecentOptionalCategoryVisit.visited?(public_market, :other_category)).to be false
+      end
     end
 
     context 'with lot_config step' do
@@ -170,20 +192,26 @@ RSpec.describe Buyer::PublicMarketWizardService do
         expect(public_market.reload.lot_limit).to be_nil
       end
 
-      it 'sets lot_limit when enabled with a value' do
-        create(:lot, public_market:)
-        result = described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '1' })
+      context 'when the lot_limit feature flag is enabled' do
+        before do
+          allow(FeatureFlags::LotLimit).to receive(:enabled?).and_return(true)
+        end
 
-        expect(result).to eq(public_market)
-        expect(public_market.reload.lot_limit).to eq(1)
-      end
+        it 'sets lot_limit when enabled with a value' do
+          create(:lot, public_market:)
+          result = described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '1' })
 
-      it 'raises RecordInvalid when enabled but lot_limit is blank' do
-        expect do
-          described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '' })
-        end.to raise_error(ActiveRecord::RecordInvalid)
+          expect(result).to eq(public_market)
+          expect(public_market.reload.lot_limit).to eq(1)
+        end
 
-        expect(public_market.errors[:lot_limit]).to include('Veuillez indiquer le nombre maximum de lots.')
+        it 'raises RecordInvalid when enabled but lot_limit is blank' do
+          expect do
+            described_class.call(public_market, :lot_config, { lot_limit_enabled: 'true', lot_limit: '' })
+          end.to raise_error(ActiveRecord::RecordInvalid)
+
+          expect(public_market.errors[:lot_limit]).to include('Veuillez indiquer le nombre maximum de lots.')
+        end
       end
     end
 
@@ -197,10 +225,43 @@ RSpec.describe Buyer::PublicMarketWizardService do
         expect(public_market.reload.completed?).to be true
       end
 
-      it 'enqueues webhook sync job' do
+      it 'enqueues the configuration summary PDF generation job' do
         expect do
           described_class.call(public_market, :summary, {})
-        end.to have_enqueued_job(PublicMarketWebhookJob).with(public_market.id)
+        end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob).with(public_market.id)
+      end
+
+      it 'does not enqueue the webhook sync job directly' do
+        expect do
+          described_class.call(public_market, :summary, {})
+        end.not_to have_enqueued_job(PublicMarketWebhookJob)
+      end
+
+      context 'when market was already completed (re-submission)' do
+        let(:public_market) { create(:public_market, :completed, editor:, market_type_codes: ['supplies']) }
+
+        it 're-stamps completed_at' do
+          original_completed_at = public_market.completed_at
+
+          travel_to 1.hour.from_now do
+            described_class.call(public_market, :summary, {})
+            expect(public_market.reload.completed_at).to be > original_completed_at
+          end
+        end
+
+        it 'resets sync_status to sync_pending' do
+          expect(public_market.sync_status).to eq('sync_completed')
+
+          described_class.call(public_market, :summary, {})
+
+          expect(public_market.reload.sync_status).to eq('sync_pending')
+        end
+
+        it 'enqueues a new configuration summary PDF generation job' do
+          expect do
+            described_class.call(public_market, :summary, {})
+          end.to have_enqueued_job(GeneratePublicMarketConfigurationSummaryPdfJob).with(public_market.id)
+        end
       end
     end
   end

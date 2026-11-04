@@ -44,7 +44,8 @@
                 <% if component_class %>
                   <%= render component_class.new(
                         market_attribute_response: response,
-                        form: form
+                        form: form,
+                        scopes: @presenter.scopes_for_attribute(response.market_attribute)
                       ) %>
                 <% else %>
                   <%= render "candidate/market_applications/market_attribute_responses/#{response.type.underscore}_form",

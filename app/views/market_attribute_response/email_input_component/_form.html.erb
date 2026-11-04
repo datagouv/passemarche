@@ -9,7 +9,7 @@
 
   <div class="fr-mb-2w">
     <label class="fr-label">
-      <%= component.field_label %>
+      <%= component.field_label_with_scope %>
     </label>
     <%= render component.source_badge_component %>
     <p class="fr-text--sm fr-text--mention-grey">
@@ -25,7 +25,7 @@
       <%= response_form.hidden_field :type %>
 
       <%= response_form.label :text, class: "fr-label" do %>
-        <%= component.field_label %>
+        <%= component.field_label_with_scope %>
         <%= render component.source_badge_component %>
       <% end %>
 

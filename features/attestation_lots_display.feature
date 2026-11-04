@@ -14,12 +14,13 @@ Feature: Lots display in candidate attestation
     When I visit the attestation summary page
     Then I should see "Liste des lots concernés par la candidature"
 
-  Scenario: Les informations du lot sont affichées
+  Scenario: Un message de renvoi vers l'annexe PDF est affiché sur la page web
     Given a candidate has selected lots for the attestation market
     When I visit the attestation summary page
     Then I should see "Lot 1"
-    And I should see "Titre :"
-    And I should see "Type :"
+    And I should see "figure en annexe de l'attestation de candidature"
+    And I should not see "Annexes"
+    And I should not see "Liste détaillée des lots concernés par la candidature"
 
   Scenario: Tous les lots sélectionnés apparaissent
     Given a candidate has selected two lots for the attestation market

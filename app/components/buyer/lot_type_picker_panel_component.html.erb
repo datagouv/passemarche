@@ -1,0 +1,37 @@
+<div data-lot-type-picker-target="panel" class="buyer-lot-type-picker-panel">
+  <p class="fr-text--md fr-text--bold fr-mb-2w">
+    <%= t('buyer.public_markets.lot_config.type_picker_title') %>
+  </p>
+  <p class="fr-text--sm fr-mb-2w" data-lot-type-picker-target="helpMessage">
+    <%= t('buyer.public_markets.lot_config.type_picker_no_lot_selected') %>
+  </p>
+  <div class="buyer-lot-type-picker-panel__options">
+    <% picker_options.each do |option| %>
+      <div class="lot-config-type-option buyer-lot-type-picker-panel__option">
+        <label class="buyer-lot-type-picker-panel__option-label">
+          <%= radio_button_tag :market_type_id, option[:market_type].id, false,
+                id: "market_type_#{option[:code]}",
+                disabled: true,
+                class: 'buyer-lot-type-picker-panel__option-radio',
+                data: { 'lot-type-picker-target': 'radio' } %>
+          <span class="buyer-lot-type-picker-panel__option-label-text"><%= t("market_types.#{option[:code]}") %></span>
+        </label>
+        <span class="lot-config-type-option__icon buyer-lot-type-picker-panel__option-icon"
+              style="background-color: <%= option[:background] %>;">
+          <%= image_tag option[:icon], alt: '', aria: { hidden: true }, width: 24, height: 24 %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+  <div class="buyer-lot-type-picker-panel__actions">
+    <%= button_tag t('buyer.public_markets.lot_config.type_picker_cancel'),
+          type: 'button',
+          class: 'fr-btn fr-btn--secondary buyer-lot-type-picker-panel__cancel-button',
+          data: { action: 'lot-type-picker#cancel' } %>
+    <%= button_tag t('buyer.public_markets.lot_config.type_picker_apply'),
+          type: 'button',
+          class: 'fr-btn fr-icon-check-line fr-btn--icon-right',
+          disabled: true,
+          data: { action: 'lot-type-picker#apply', 'lot-type-picker-target': 'applyButton' } %>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_19_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,13 +68,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
   create_table "editors", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "authorized", default: false, null: false
+    t.string "buyer_return_url"
     t.boolean "can_create_defense_markets", default: false, null: false
+    t.string "candidate_return_url"
     t.string "client_id", null: false
     t.string "client_secret", null: false
     t.string "completion_webhook_url"
     t.datetime "created_at", null: false
     t.string "name", null: false
-    t.string "redirect_url"
     t.datetime "updated_at", null: false
     t.string "webhook_secret"
     t.index ["client_id"], name: "index_editors_on_client_id", unique: true
@@ -82,13 +83,50 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
     t.index ["webhook_secret"], name: "index_editors_on_webhook_secret", unique: true, where: "(webhook_secret IS NOT NULL)"
   end
 
+  create_table "grouping_members", force: :cascade do |t|
+    t.string "company_name"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.bigint "grouping_id", null: false
+    t.string "invitation_token"
+    t.datetime "invitation_token_created_at"
+    t.bigint "market_application_id"
+    t.bigint "public_market_id", null: false
+    t.integer "role", null: false
+    t.string "siret", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["grouping_id", "siret"], name: "index_grouping_members_on_grouping_id_and_siret", unique: true
+    t.index ["grouping_id"], name: "index_grouping_members_on_grouping_id"
+    t.index ["grouping_id"], name: "index_grouping_members_on_grouping_id_single_mandataire", unique: true, where: "(role = 0)"
+    t.index ["invitation_token"], name: "index_grouping_members_on_invitation_token", unique: true
+    t.index ["market_application_id"], name: "index_grouping_members_on_market_application_id"
+    t.index ["public_market_id", "siret"], name: "index_grouping_members_on_market_and_mandataire_siret", unique: true, where: "(role = 0)"
+    t.index ["public_market_id"], name: "index_grouping_members_on_public_market_id"
+  end
+
+  create_table "groupings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "legal_type"
+    t.bigint "public_market_id", null: false
+    t.integer "submission_mode"
+    t.datetime "submitted_at"
+    t.integer "sync_status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["public_market_id"], name: "index_groupings_on_public_market_id"
+  end
+
   create_table "lots", force: :cascade do |t|
     t.string "cpv_code"
     t.datetime "created_at", null: false
+    t.bigint "market_type_id"
     t.string "name", null: false
+    t.bigint "platform_market_type_id"
     t.integer "position", default: 0, null: false
     t.bigint "public_market_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["market_type_id"], name: "index_lots_on_market_type_id"
+    t.index ["platform_market_type_id"], name: "index_lots_on_platform_market_type_id"
     t.index ["position"], name: "index_lots_on_position"
     t.index ["public_market_id"], name: "index_lots_on_public_market_id"
   end
@@ -105,6 +143,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
 
   create_table "market_applications", force: :cascade do |t|
     t.jsonb "api_fetch_status", default: {}, null: false
+    t.integer "application_mode"
     t.boolean "attests_no_exclusion_motifs", default: false, null: false
     t.datetime "completed_at"
     t.datetime "created_at", null: false
@@ -137,6 +176,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
     t.index ["market_attribute_id"], name: "index_market_attribute_responses_on_market_attribute_id"
   end
 
+  create_table "market_attribute_selections", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "market_attribute_id", null: false
+    t.bigint "public_market_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["market_attribute_id"], name: "index_market_attribute_selections_on_market_attribute_id"
+    t.index ["public_market_id", "market_attribute_id"], name: "index_market_attribute_selections_on_market_and_attribute", unique: true
+    t.index ["public_market_id"], name: "index_market_attribute_selections_on_public_market_id"
+  end
+
   create_table "market_attributes", force: :cascade do |t|
     t.string "api_key"
     t.string "api_name"
@@ -162,13 +211,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
     t.index ["mandatory"], name: "index_market_attributes_on_mandatory"
     t.index ["position"], name: "index_market_attributes_on_position"
     t.index ["subcategory_id"], name: "index_market_attributes_on_subcategory_id"
-  end
-
-  create_table "market_attributes_public_markets", id: false, force: :cascade do |t|
-    t.bigint "market_attribute_id", null: false
-    t.bigint "public_market_id", null: false
-    t.index ["market_attribute_id", "public_market_id"], name: "index_market_attributes_public_markets_lookup"
-    t.index ["public_market_id", "market_attribute_id"], name: "index_public_markets_attributes_unique", unique: true
   end
 
   create_table "market_attributes_types", id: false, force: :cascade do |t|
@@ -230,6 +272,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
   end
 
   create_table "public_markets", force: :cascade do |t|
+    t.string "buyer_name"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "deadline"
@@ -239,6 +282,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
     t.text "market_type_codes", default: [], array: true
     t.string "name"
     t.string "provider_user_id"
+    t.datetime "published_at"
     t.string "siret", null: false
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
@@ -407,18 +451,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
   create_table "versions", force: :cascade do |t|
     t.datetime "created_at"
     t.string "event", null: false
+    t.string "invitation_token_digest"
     t.bigint "item_id", null: false
     t.string "item_type", null: false
     t.text "object"
     t.text "object_changes"
-    t.bigint "whodunnit"
+    t.string "whodunnit"
     t.index ["created_at"], name: "index_versions_on_created_at"
+    t.index ["invitation_token_digest"], name: "index_versions_on_invitation_token_digest"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
     t.index ["whodunnit"], name: "index_versions_on_whodunnit"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "grouping_members", "groupings"
+  add_foreign_key "grouping_members", "market_applications"
+  add_foreign_key "grouping_members", "public_markets"
+  add_foreign_key "groupings", "public_markets"
+  add_foreign_key "lots", "market_types"
+  add_foreign_key "lots", "market_types", column: "platform_market_type_id"
   add_foreign_key "lots", "public_markets"
   add_foreign_key "market_application_lots", "lots"
   add_foreign_key "market_application_lots", "market_applications"
@@ -426,6 +478,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_154352) do
   add_foreign_key "market_applications", "users"
   add_foreign_key "market_attribute_responses", "market_applications"
   add_foreign_key "market_attribute_responses", "market_attributes"
+  add_foreign_key "market_attribute_selections", "market_attributes"
+  add_foreign_key "market_attribute_selections", "public_markets"
   add_foreign_key "market_attributes", "subcategories"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

@@ -1,0 +1,177 @@
+/*
+ * Styles for the grouping (co-traitance) flow: legal type selection,
+ * member composition form and members table.
+ */
+
+.grouping-legal-type-stepper {
+  display: flex;
+  gap: 8px;
+}
+
+.grouping-legal-type-stepper__step {
+  flex: 1;
+  height: 4px;
+  background-color: var(--border-default-grey);
+}
+
+.grouping-legal-type-stepper__step--done {
+  background-color: var(--background-action-high-blue-france);
+}
+
+.grouping-legal-type-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.grouping-legal-type-actions .fr-btn[aria-disabled="true"] {
+  background-color: var(--background-disabled-grey);
+  color: var(--text-disabled-grey);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.grouping-member-form {
+  background-color: var(--background-alt-blue-france);
+  border-left: 4px solid var(--border-plain-blue-france);
+  padding: 32px 40px;
+}
+
+#grouping_members_table .fr-table,
+#grouping_members_table .fr-table__wrapper,
+#grouping_members_table .fr-table__container,
+#grouping_members_table .fr-table__content {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  border: none !important;
+}
+
+#grouping_members_table table {
+  display: table !important;
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  border: 1px solid var(--light-decisions-border-border-default-grey, #ddd) !important;
+}
+
+#grouping_members_table th,
+#grouping_members_table td {
+  border: none !important;
+  background-image: none !important;
+  border-bottom: 1px solid var(--light-decisions-border-border-default-grey, #ddd) !important;
+}
+
+#grouping_members_table thead,
+#grouping_members_table tbody,
+#grouping_members_table tbody::after,
+#grouping_members_table thead::after {
+  background-image: none !important;
+}
+
+#grouping_members_table tbody tr {
+  background-color: var(--background-default-grey, #fff) !important;
+}
+
+/* =============================================
+   Grouping components
+   ============================================= */
+
+.grouping-dashboard-container {
+  max-width: 960px;
+}
+
+.grouping-bordered-block__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-default-grey, #ddd);
+}
+
+.grouping-section-title-with-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grouping-member-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.grouping-solo-application-section__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.grouping-submission-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.grouping-dashboard-lots-table__col--number {
+  width: 20%;
+}
+
+.grouping-dashboard-lots-table__col--typology {
+  width: 30%;
+}
+
+.grouping-dashboard-lots-table__col--name {
+  width: 50%;
+}
+
+/* Dashboard members table */
+.grouping-dashboard-members-table__col--company {
+  width: 26%;
+}
+
+.grouping-dashboard-members-table__col--role,
+.grouping-dashboard-members-table__col--status,
+.grouping-dashboard-members-table__col--lots {
+  width: 14%;
+}
+
+.grouping-dashboard-members-table__col--actions {
+  width: 32%;
+}
+
+/* Composition members table */
+.grouping-composition-members-table__col--company {
+  width: 32%;
+}
+
+.grouping-composition-members-table__col--email {
+  width: 25%;
+}
+
+.grouping-composition-members-table__col--role {
+  width: 15%;
+}
+
+.grouping-composition-members-table__col--status {
+  width: 28%;
+}
+
+.grouping-composition-members-table__col--status-editable {
+  width: 15%;
+}
+
+.grouping-composition-members-table__col--actions {
+  width: 13%;
+}
+
+.grouping-composition-members-table__empty-row {
+  background-color: var(--background-default-grey, #fff);
+  border-top: 1px solid var(--light-decisions-border-border-default-grey, #ddd);
+  vertical-align: middle;
+  color: var(--light-decisions-text-text-mention-grey, #666);
+  text-align: center;
+  font-family: Marianne;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}

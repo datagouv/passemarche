@@ -4,25 +4,19 @@ World(FactoryBot::Syntax::Methods)
 
 # Background steps
 Given('a public market with presentation_intervenants field exists') do
-  @editor = create(:editor, :authorized_and_active)
-  @public_market = create(:public_market, :completed, editor: @editor)
-
-  @cv_intervenants_attr = MarketAttribute.find_or_create_by(key: 'capacites_techniques_professionnelles_effectifs_cv_intervenants') do |attr|
-    attr.input_type = 'presentation_intervenants'
-    attr.category_key = 'capacites_techniques_professionnelles'
-    attr.subcategory_key = 'capacites_techniques_professionnelles_effectifs'
-    attr.mandatory = true
-    attr.candidate_name = "Présentation de l'équipe qui est susceptible d'être affectée à la réalisation/exécution du contrat"
-    attr.candidate_description = "Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
-  end
-  @cv_intervenants_attr.public_markets << @public_market unless @cv_intervenants_attr.public_markets.include?(@public_market)
+  @cv_intervenants_attr = setup_market_with_attribute(
+    key: 'capacites_techniques_professionnelles_effectifs_cv_intervenants',
+    input_type: 'presentation_intervenants',
+    category_key: 'capacites_techniques_professionnelles',
+    subcategory_key: 'capacites_techniques_professionnelles_effectifs',
+    mandatory: true,
+    candidate_name: "Présentation de l'équipe qui est susceptible d'être affectée à la réalisation/exécution du contrat",
+    candidate_description: "Téléchargez la liste des intervenants qui participeront au projet. Si vous ne disposez pas de cette liste, décrivez manuellement l'équipe mobilisée pour le marché : rôles, compétences et expériences. Vous pouvez également joindre les CV des intervenants afin de mettre en valeur leurs qualifications."
+  )
 end
 
 Given('a candidate starts an application for this technical capacities market') do
-  @market_application = create(:market_application,
-    public_market: @public_market,
-    siret: '73282932000074')
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application
 end
 
 # Navigation steps

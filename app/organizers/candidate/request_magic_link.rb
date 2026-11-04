@@ -4,7 +4,7 @@ module Candidate
   class RequestMagicLink < ApplicationOrganizer
     organize ValidateEmailFormat,
       ValidateSiret,
-      ResolveMarketApplicationForReconnection,
+      FindMarketApplication,
       FindOrCreateUser,
       GenerateAndSendMagicLink
   end

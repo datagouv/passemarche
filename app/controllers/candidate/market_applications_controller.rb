@@ -4,14 +4,17 @@ module Candidate
   class MarketApplicationsController < Candidate::ApplicationController
     include Wicked::Wizard
     include Candidate::MarketApplicationGuard
+    include Candidate::ApplicationModeGuard
 
     prepend_before_action :set_steps
     prepend_before_action :find_market_application
     before_action :set_wizard_steps
-    skip_before_action :check_application_not_completed, only: [:retry_sync]
+    skip_before_action :check_application_editable, only: %i[retry_sync destroy]
+    skip_before_action :redirect_to_application_mode_choice, only: %i[destroy]
 
     def show
       if step == :api_data_recovery_status
+        Candidate::EnqueueApiDataFetch.call(market_application: @market_application)
         @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application)
         @back_path = back_path_before_wizard
       end
@@ -24,14 +27,19 @@ module Candidate
 
     def update
       result = MarketApplicationStepUpdateService.call(
-        @market_application,
-        step.to_sym,
-        market_application_params,
-        request_host: request.host_with_port,
-        request_protocol: request.protocol
+        @market_application, step.to_sym, market_application_params, draft: draft_requested?
       )
 
       handle_service_result(result)
+    end
+
+    def destroy
+      result = DeleteMarketApplication.call(market_application: @market_application)
+
+      return redirect_to candidate_dashboard_path, alert: t('candidate.market_applications.delete_failure') unless result.success?
+
+      update_session_after_deletion(result.next_application)
+      redirect_to after_deletion_path(result.next_application), notice: t('candidate.market_applications.delete_success')
     end
 
     def retry_sync
@@ -42,21 +50,53 @@ module Candidate
 
     private
 
+    def update_session_after_deletion(next_application)
+      if next_application
+        session[:market_application_identifier] = next_application.identifier
+      else
+        clear_candidate_authentication_session
+      end
+    end
+
+    def after_deletion_path(next_application)
+      next_application ? candidate_dashboard_path : root_path
+    end
+
     def handle_service_result(result)
       # Apply flash messages from service
       result[:flash_messages].each do |key, value|
         flash.now[key] = value
       end
 
-      if result[:redirect] == :sync_status
-        redirect_to candidate_sync_status_path(@market_application.identifier)
-      elsif result[:success]
+      return redirect_to completion_redirect_path if result[:completed]
+      return redirect_after_draft if result[:draft] && result[:success]
+
+      render_step_result(result[:success])
+    end
+
+    def render_step_result(success)
+      if success
         render_wizard(@market_application)
       elsif custom_view_exists?
         render_wizard(nil, status: :unprocessable_entity)
       else
         render 'generic_step', locals: { step: }, status: :unprocessable_content
       end
+    end
+
+    def completion_redirect_path
+      return candidate_sync_status_path(@market_application.identifier) if @market_application.co_traitant_of_grouping?
+
+      locked_application_redirect_path
+    end
+
+    def draft_requested?
+      params[:draft].present? && @market_application.part_of_grouping?
+    end
+
+    def redirect_after_draft
+      redirect_to grouping_member_dashboard_path(@market_application) || wizard_path,
+        notice: t('candidate.market_applications.draft_saved')
     end
 
     def set_wizard_steps
@@ -75,9 +115,6 @@ module Candidate
           market_attribute_responses: :market_attribute
         )
         .find_by!(identifier: params[:identifier])
-    rescue ActiveRecord::RecordNotFound
-      @market_application = nil
-      render plain: 'La candidature recherchée n\'a pas été trouvée', status: :not_found
     end
 
     def presenter
@@ -107,11 +144,9 @@ module Candidate
     end
 
     def back_path_before_wizard
-      if @market_application.public_market.lots.any?
-        lot_selection_candidate_market_application_path(@market_application.identifier)
-      else
-        company_identification_candidate_market_application_path(@market_application.identifier)
-      end
+      return wizard_step_path(@market_application, :lot_selection) if @market_application.step_after_company_identification == :lot_selection
+
+      form_hub_path(@market_application)
     end
 
     def finish_wizard_path

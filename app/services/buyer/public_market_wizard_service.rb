@@ -14,6 +14,8 @@ module Buyer
         handle_setup_step
       when :lot_config
         handle_lot_config_step
+      when :form_config
+        public_market
       when :summary
         complete_market
       else
@@ -55,6 +57,7 @@ module Buyer
 
     def handle_category_step
       accumulate_optional_fields
+      Buyer::RecentOptionalCategoryVisit.mark_visited(public_market, step)
       public_market
     end
 
@@ -83,8 +86,10 @@ module Buyer
       keys_to_remove = available_keys - selected_keys
       return if keys_to_remove.empty?
 
-      attributes_to_remove = public_market.market_attributes.where(key: keys_to_remove)
-      public_market.market_attributes.delete(attributes_to_remove)
+      public_market.market_attribute_selections
+        .joins(:market_attribute)
+        .where(market_attribute: { key: keys_to_remove })
+        .destroy_all
     end
 
     def add_new_optional_fields(valid_keys)
@@ -97,9 +102,12 @@ module Buyer
     end
 
     def complete_market
-      public_market.complete!
+      public_market.update!(
+        completed_at: Time.zone.now,
+        sync_status: :sync_pending
+      )
 
-      PublicMarketWebhookJob.perform_later(public_market.id)
+      GeneratePublicMarketConfigurationSummaryPdfJob.perform_later(public_market.id)
 
       public_market
     end

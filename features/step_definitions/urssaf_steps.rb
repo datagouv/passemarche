@@ -3,34 +3,21 @@
 require 'webmock/cucumber'
 
 Given('a market attribute exists for URSSAF attestation vigilance') do
-  @editor = create(:editor)
-  @public_market = create(:public_market, :completed, editor: @editor)
+  @editor ||= create(:editor)
+  @public_market ||= create(:public_market, :completed, editor: @editor)
 
   [
-    {
-      key: 'motifs_exclusion_fiscales_et_sociales_declarations_cotisations_sociales',
-      category_key: 'motifs_exclusion_fiscales_et_sociales',
-      subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
-      candidate_name: 'Cotisations sociales'
-    },
-    {
-      key: 'motifs_exclusion_fiscales_et_sociales_travailleurs_handicapes',
-      category_key: 'motifs_exclusion_fiscales_et_sociales',
-      subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
-      candidate_name: 'Emploi de travailleurs handicapés'
-    }
+    { key: 'motifs_exclusion_fiscales_et_sociales_declarations_cotisations_sociales', candidate_name: 'Cotisations sociales' },
+    { key: 'motifs_exclusion_fiscales_et_sociales_travailleurs_handicapes', candidate_name: 'Emploi de travailleurs handicapés' }
   ].each do |attrs|
-    create(
-      :market_attribute,
-      :file_upload,
+    create(:market_attribute, :file_upload,
       key: attrs[:key],
       api_name: 'urssaf_attestation_vigilance',
       api_key: 'document',
-      category_key: attrs[:category_key],
-      subcategory_key: attrs[:subcategory_key],
+      category_key: 'motifs_exclusion_fiscales_et_sociales',
+      subcategory_key: 'motifs_exclusion_fiscales_et_sociales',
       candidate_name: attrs[:candidate_name],
-      public_markets: [@public_market]
-    )
+      public_markets: [@public_market])
   end
 end
 
@@ -39,12 +26,7 @@ Given('a market attribute exists for URSSAF travailleurs handicapés') do
 end
 
 Given(/^a candidate starts an application for this market \(urssaf\)$/) do
-  @market_application = create(
-    :market_application,
-    public_market: @public_market,
-    siret: '41816609600069'
-  )
-  authenticate_as_candidate_for(@market_application)
+  start_candidate_application(siret: '41816609600069')
 end
 
 Given('the URSSAF API will return a valid attestation') do
