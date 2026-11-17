@@ -13,6 +13,8 @@ module Candidate
     skip_before_action :redirect_to_application_mode_choice, only: %i[destroy]
 
     def show
+      Candidate::StartMarketApplication.call(market_application: @market_application) if step == :market_information
+
       if step == :api_data_recovery_status
         Candidate::EnqueueApiDataFetch.call(market_application: @market_application)
         @api_block_status_presenter = ApiBlockStatusPresenter.new(@market_application)

@@ -62,6 +62,12 @@ RSpec.describe ResetMarketApplication, type: :interactor do
         expect(market_application.reload.attests_no_exclusion_motifs).to be false
       end
 
+      it 'resets started_at so that the next edit notifies the platform again' do
+        market_application.update!(started_at: 1.day.ago)
+        subject
+        expect(market_application.reload.started_at).to be_nil
+      end
+
       it 'destroys API responses' do
         subject
         expect(MarketAttributeResponse.exists?(api_response.id)).to be false

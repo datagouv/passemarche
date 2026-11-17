@@ -26,6 +26,7 @@ class ResetMarketApplication < ApplicationInteractor
   def reset_application_state
     market_application.update!(
       completed_at: nil,
+      started_at: nil,
       sync_status: :sync_pending,
       api_fetch_status: {},
       attests_no_exclusion_motifs: false

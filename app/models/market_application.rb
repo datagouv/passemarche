@@ -164,6 +164,18 @@ class MarketApplication < ApplicationRecord
     end
   end
 
+  def mark_started!
+    return false if started_at?
+
+    now = Time.current.floor(6)
+    started_rows = self.class.where(id:, started_at: nil).update_all(started_at: now, updated_at: now) # rubocop:disable Rails/SkipsModelValidations
+    return false unless started_rows == 1
+
+    self.started_at = now
+    clear_attribute_changes([:started_at])
+    true
+  end
+
   private
 
   def generate_identifier
