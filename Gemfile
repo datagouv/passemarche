@@ -51,7 +51,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'rspec-rails', '~> 8.0'
+  gem 'rspec-rails', '~> 8.1'
   gem 'rubocop-rails-omakase', require: false
   gem 'wkhtmltopdf-binary'
 end
