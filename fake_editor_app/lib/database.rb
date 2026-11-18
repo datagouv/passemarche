@@ -254,6 +254,15 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
     )
   end
 
+  def mark_started!(webhook_data)
+    update(
+      status: 'started',
+      completed_at: nil,
+      webhook_payload: webhook_data.to_json,
+      webhook_received_at: DateTime.now
+    )
+  end
+
   def store_webhook_payload!(webhook_data)
     update(
       webhook_payload: webhook_data.to_json,
@@ -292,7 +301,8 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
   # User-friendly display methods
   def status_label
     case status
-    when 'created' then 'En cours'
+    when 'created' then 'Créée'
+    when 'started' then 'En cours'
     when 'completed' then 'Terminée'
     else status
     end
@@ -300,7 +310,8 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
 
   def status_icon
     case status
-    when 'created' then '⏳'
+    when 'created' then '🆕'
+    when 'started' then '⏳'
     when 'completed' then '✅'
     else '❓'
     end
@@ -308,7 +319,8 @@ class MarketApplication < Sequel::Model(DB[:market_applications])
 
   def status_color
     case status
-    when 'created' then 'info'
+    when 'created' then 'new'
+    when 'started' then 'info'
     when 'completed' then 'success'
     else 'new'
     end

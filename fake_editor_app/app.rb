@@ -465,6 +465,8 @@ class FakeEditorApp < Sinatra::Base
     case event_type
     when 'market.completed'
       handle_market_completion(webhook_data)
+    when 'market_application.started'
+      handle_application_start(webhook_data)
     when 'market_application.completed'
       handle_application_completion(webhook_data)
     else
@@ -502,6 +504,18 @@ class FakeEditorApp < Sinatra::Base
       puts '🔍 Debug: Webhook payload stored for debugging'
     else
       puts "⚠️  Webhook received for unknown market: #{market_data['identifier']}"
+    end
+  end
+
+  def handle_application_start(webhook_data)
+    identifier = webhook_data['market_application']['identifier']
+    application = MarketApplication.find_by_identifier(identifier)
+
+    if application
+      application.mark_started!(webhook_data)
+      puts "⏳ Application #{identifier} started for market #{webhook_data['market_identifier']}"
+    else
+      puts "⚠️ Unknown application: #{identifier}"
     end
   end
 

@@ -997,6 +997,32 @@ RSpec.describe MarketApplication, type: :model do
     end
   end
 
+  describe '#mark_started!' do
+    let(:market_application) { create(:market_application, public_market:) }
+
+    it 'marks the application as started' do
+      freeze_time do
+        expect(market_application.mark_started!).to be(true)
+        expect(market_application.reload.started_at).to eq(Time.current)
+      end
+    end
+
+    it 'keeps the first start date when called again' do
+      market_application.mark_started!
+      first_started_at = market_application.reload.started_at
+
+      travel(1.hour) { expect(market_application.mark_started!).to be(false) }
+      expect(market_application.reload.started_at).to eq(first_started_at)
+    end
+
+    it 'does not start the application twice when another request started it first' do
+      stale_copy = MarketApplication.find(market_application.id)
+      market_application.mark_started!
+
+      expect(stale_copy.mark_started!).to be(false)
+    end
+  end
+
   describe '#deletable?' do
     before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 
