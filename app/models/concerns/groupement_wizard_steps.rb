@@ -91,13 +91,15 @@ module GroupementWizardSteps
 
   def step_after_application_mode
     target = groupement_counterpart || self
-    return [target, :company_identification] unless target.groupement?
+    return [target, target.step_after_company_identification] unless target.groupement?
     return [target, :lot_selection_mode] if target.public_market.lots.any?
 
     [target, :grouping_legal_type]
   end
 
   def company_identification_required?
+    return false if FeatureFlags::Groupement.enabled?
+
     !groupement?
   end
 

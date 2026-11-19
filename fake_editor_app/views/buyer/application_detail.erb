@@ -184,7 +184,7 @@
               À propos
             </h3>
             <p class="fr-callout__text fr-text--sm">
-              <% if @application.status == 'created' %>
+              <% if @application.status != 'completed' %>
                 Cette candidature est en cours de remplissage par le candidat.
                 Les documents seront disponibles une fois la soumission effectuée.
               <% else %>

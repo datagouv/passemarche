@@ -652,10 +652,17 @@ RSpec.describe MarketApplication, type: :model do
   end
 
   describe '#step_after_application_mode' do
-    it 'returns company_identification when the mode is solo' do
+    it 'skips the welcome page and returns api_data_recovery_status when the mode is solo on a market without lots' do
       application = create(:market_application, public_market:, application_mode: :solo)
 
-      expect(application.step_after_application_mode).to eq([application, :company_identification])
+      expect(application.step_after_application_mode).to eq([application, :api_data_recovery_status])
+    end
+
+    it 'skips the welcome page and returns lot_selection when the mode is solo on a market with lots' do
+      application = create(:market_application, public_market:, application_mode: :solo)
+      create(:lot, public_market:)
+
+      expect(application.step_after_application_mode).to eq([application, :lot_selection])
     end
 
     it 'returns lot_selection_mode on the groupement counterpart when the market has lots' do
@@ -688,19 +695,28 @@ RSpec.describe MarketApplication, type: :model do
   describe '#company_identification_required?' do
     before { allow(SiretValidator).to receive(:valid?).and_return(true) }
 
-    it 'is true for a solo application' do
-      application = create(:market_application, public_market:, application_mode: :solo)
+    it 'is true for an application when the groupement feature flag is disabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(false)
+      application = create(:market_application, public_market:)
 
       expect(application.company_identification_required?).to be(true)
     end
 
-    it 'is true for the solo counterpart of a mixed application' do
+    it 'is false for a solo application when the groupement feature flag is enabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+      application = create(:market_application, public_market:, application_mode: :solo)
+
+      expect(application.company_identification_required?).to be(false)
+    end
+
+    it 'is false for the solo counterpart of a mixed application when the groupement feature flag is enabled' do
+      allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
       siret = '73282932000074'
       solo = create(:market_application, public_market:, siret:, application_mode: :solo)
       groupement = create(:market_application, public_market:, siret:, application_mode: :groupement)
       create(:grouping, public_market:, mandataire_market_application: groupement)
 
-      expect(solo.company_identification_required?).to be(true)
+      expect(solo.company_identification_required?).to be(false)
     end
 
     it 'is false for the mandataire of a grouping' do
@@ -994,6 +1010,32 @@ RSpec.describe MarketApplication, type: :model do
         expect(market_application.reload).to be_submitted_to_platform
         expect(market_application.submitted_to_platform_at).to eq(submitted_at)
       end
+    end
+  end
+
+  describe '#mark_started!' do
+    let(:market_application) { create(:market_application, public_market:) }
+
+    it 'marks the application as started' do
+      freeze_time do
+        expect(market_application.mark_started!).to be(true)
+        expect(market_application.reload.started_at).to eq(Time.current)
+      end
+    end
+
+    it 'keeps the first start date when called again' do
+      market_application.mark_started!
+      first_started_at = market_application.reload.started_at
+
+      travel(1.hour) { expect(market_application.mark_started!).to be(false) }
+      expect(market_application.reload.started_at).to eq(first_started_at)
+    end
+
+    it 'does not start the application twice when another request started it first' do
+      stale_copy = MarketApplication.find(market_application.id)
+      market_application.mark_started!
+
+      expect(stale_copy.mark_started!).to be(false)
     end
   end
 

@@ -204,7 +204,7 @@
               Besoin d'aide ?
             </h3>
             <p class="fr-callout__text fr-text--sm">
-              <% if @application.status == 'created' %>
+              <% if @application.status != 'completed' %>
                 Vous pouvez reprendre votre candidature dans Passe Marché à tout moment.
                 Vos données sont automatiquement sauvegardées.
               <% else %>

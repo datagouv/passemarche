@@ -68,6 +68,8 @@ Feature: Passe Marché Home Page
     And I should see "Paramétrez votre marché"
     And I should see "Bénéficiez d'un accompagnement clair"
     And I should see "Recevez des candidatures prêtes à être traitées"
+    And I should see "Configurez votre marché en quelques minutes, Passe Marché s'occupe du reste."
+    And I should not see "Lorem"
 
   Scenario: Buyer homepage displays data examples section
     Given I am on the buyer home page

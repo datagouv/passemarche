@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_17_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -154,6 +154,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_090000) do
     t.integer "sync_status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.datetime "started_at"
     t.index ["identifier"], name: "index_market_applications_on_identifier", unique: true
     t.index ["provider_user_id"], name: "index_market_applications_on_provider_user_id"
     t.index ["public_market_id"], name: "index_market_applications_on_public_market_id"

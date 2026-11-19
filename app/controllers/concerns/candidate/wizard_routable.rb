@@ -24,7 +24,9 @@ module Candidate
     def form_hub_path(market_application)
       return wizard_step_path(market_application, :company_identification) if market_application.company_identification_required?
 
-      confirmed_grouping_dashboard_path(market_application) || candidate_dashboard_path
+      confirmed_grouping_dashboard_path(market_application) ||
+        application_mode_back_path(market_application) ||
+        candidate_dashboard_path
     end
 
     def next_required_wizard_step_path(market_application)
@@ -33,6 +35,12 @@ module Candidate
 
       confirmed_grouping_dashboard_path(market_application) ||
         company_identification_candidate_market_application_path(market_application.identifier)
+    end
+
+    def application_mode_back_path(market_application)
+      return nil unless FeatureFlags::Groupement.enabled? && market_application.solo?
+
+      application_mode_candidate_market_application_path(market_application.identifier, readonly: true)
     end
 
     def grouping_member_dashboard_path(market_application)

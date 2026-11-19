@@ -257,12 +257,14 @@ RSpec.describe 'Candidate::ApplicationModes', type: :request do
     context 'when the mode is not groupement/mixte (solo)' do
       before { market_application.update!(application_mode: :solo) }
 
-      it 'points the continue link to company_identification' do
+      it 'points the continue link past the welcome page, to api_data_recovery_status' do
         get wizard_step_path(market_application, :application_mode), params: { readonly: true }
 
         rendered = Nokogiri::HTML(response.body)
         link = rendered.at_css('a.fr-icon-arrow-right-line')
-        expect(link['href']).to eq(company_identification_candidate_market_application_path(market_application.identifier))
+        expect(link['href']).to eq(
+          step_candidate_market_application_path(market_application.identifier, :api_data_recovery_status)
+        )
       end
     end
 
