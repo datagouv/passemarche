@@ -253,6 +253,34 @@ RSpec.describe 'Candidate::MarketApplications', type: :request do
         expect(response.body).not_to include(lot_selection_candidate_market_application_path(market_application.identifier))
       end
     end
+
+    context 'when the application is solo and the groupement feature flag is enabled' do
+      before do
+        allow(FeatureFlags::Groupement).to receive(:enabled?).and_return(true)
+        market_application.update!(application_mode: :solo)
+      end
+
+      it 'points the previous button to the read-only application mode choice instead of the welcome page' do
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response.body).to include(
+          %(href="#{application_mode_candidate_market_application_path(market_application.identifier, readonly: true)}")
+        )
+        expect(response.body).not_to include(company_identification_candidate_market_application_path(market_application.identifier))
+      end
+    end
+
+    context 'when the application is solo and the groupement feature flag is disabled' do
+      it 'keeps the previous button on the welcome page' do
+        market_application.update!(application_mode: :solo)
+
+        get "/candidate/market_applications/#{market_application.identifier}/api_data_recovery_status"
+
+        expect(response.body).to include(
+          %(href="#{company_identification_candidate_market_application_path(market_application.identifier)}")
+        )
+      end
+    end
   end
 
   describe 'PATCH /candidate/market_applications/:identifier/company_identification' do

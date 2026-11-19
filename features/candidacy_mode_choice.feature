@@ -26,7 +26,8 @@ Feature: Candidate chooses their candidacy mode
   Scenario: Candidate chooses to apply alone
     When I visit the magic link
     And I choose the candidacy mode "solo"
-    Then I should be on the company identification step
+    Then the candidate should be on the api data recovery status step
+    And I should not see "Bienvenue"
     And my application mode should be "solo"
 
   @javascript
@@ -57,8 +58,14 @@ Feature: Candidate chooses their candidacy mode
   Scenario: The choice screen is never shown again once a mode is chosen
     Given the candidate application already has the mode "solo"
     When I visit the magic link
-    Then I should be on the company identification step
+    Then the candidate should be on the api data recovery status step
     And I should not see "Comment souhaitez-vous candidater ?"
+
+  Scenario: The welcome page is skipped for a solo application once the mode is chosen
+    Given the candidate application already has the mode "solo"
+    And I visit the magic link
+    When I visit the company identification step
+    Then the candidate should be on the api data recovery status step
 
   Scenario: A SIRET already mandataire of a groupement on this market cannot start another one
     Given the SIRET is already mandataire of a groupement on this market
