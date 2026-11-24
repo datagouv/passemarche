@@ -147,6 +147,10 @@ RSpec.describe CreatePublicMarket, type: :interactor do
         supplies = MarketType.find_by(code: 'supplies')
         expect(result.public_market.lots.map(&:platform_market_type)).to all(eq(supplies))
       end
+
+      it 'does not lock the lot types' do
+        expect(subject.public_market).not_to be_lot_types_locked
+      end
     end
 
     context 'with lots having a per-lot type' do
@@ -165,6 +169,60 @@ RSpec.describe CreatePublicMarket, type: :interactor do
         result = subject
         types = result.public_market.lots.ordered.map { |l| l.platform_market_type.code }
         expect(types).to eq(%w[supplies works])
+      end
+
+      it 'locks the lot types' do
+        expect(subject.public_market).to be_lot_types_locked
+      end
+    end
+
+    context 'with a type sent for only some lots' do
+      subject do
+        described_class.call(editor:, params: valid_params.merge(lots: [
+          { name: 'Lot 1', lot_type_code: 'supplies' },
+          { name: 'Lot 2' }
+        ]))
+      end
+
+      it 'does not lock the lot types' do
+        expect(subject.public_market).not_to be_lot_types_locked
+      end
+
+      it 'falls back to the market type for the untyped lot' do
+        expect(subject.public_market.lots.ordered.last.platform_market_type.code).to eq('supplies')
+      end
+    end
+
+    context 'with an unknown lot type code' do
+      subject do
+        described_class.call(editor:, params: valid_params.merge(lots: [
+          { name: 'Lot 1', lot_type_code: 'supplies' },
+          { name: 'Lot 2', lot_type_code: 'travaux' }
+        ]))
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
+      end
+
+      it 'does not create the market' do
+        expect { subject }.not_to change(PublicMarket, :count)
+      end
+
+      it 'names the faulty lot and code' do
+        expect(subject.errors[:lots]).to contain_exactly(a_string_including('Lot 2', 'travaux'))
+      end
+    end
+
+    context 'with a market type code that is not a lot type' do
+      before { MarketType.find_or_create_by(code: 'defense') }
+
+      subject do
+        described_class.call(editor:, params: valid_params.merge(lots: [{ name: 'Lot 1', lot_type_code: 'defense' }]))
+      end
+
+      it 'fails' do
+        expect(subject).to be_failure
       end
     end
 
@@ -236,6 +294,10 @@ RSpec.describe CreatePublicMarket, type: :interactor do
 
       it 'creates no lots' do
         expect { subject }.not_to change(Lot, :count)
+      end
+
+      it 'does not lock the lot types' do
+        expect(subject.public_market).not_to be_lot_types_locked
       end
     end
   end

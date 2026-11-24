@@ -246,6 +246,22 @@ RSpec.describe 'API::V1::PublicMarkets', type: :request do
       end
     end
 
+    context 'with an unknown lot_type_code' do
+      before do
+        post '/api/v1/public_markets',
+          params: market_params.deep_merge(public_market: { lots: [{ name: 'Lot 1', lot_type_code: 'travaux' }] }).to_json,
+          headers: {
+            'Authorization' => "Bearer #{access_token}",
+            'Content-Type' => 'application/json'
+          }
+      end
+
+      it 'returns unprocessable entity with the faulty lot' do
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body.dig('errors', 'lots')).to contain_exactly(a_string_including('Lot 1', 'travaux'))
+      end
+    end
+
     context 'with missing SIRET' do
       let(:invalid_params) do
         {

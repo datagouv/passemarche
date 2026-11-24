@@ -1286,6 +1286,7 @@ en:
       market_not_completed: "The tender has not yet been configured."
       market_already_published: "The tender has already been published."
       market_not_published: "The tender has not yet been published; you cannot apply for it."
+      invalid_lot_type_code: "Lot %{position}: the type \"%{code}\" is not recognised (accepted values: %{accepted_codes})"
     insee:
       ess:
         is_ess: "The company is an ESS - data from an official source"
@@ -1777,6 +1778,7 @@ en:
         public_market:
           same_typology_required: "You cannot change the type of this lot; at least one of the lots must be of the same type as the tender."
           no_lot_selected: "You must select at least one lot to assign it a type"
+          lot_types_locked: "The lot types were sent by the platform and cannot be changed."
           attributes:
             name:
               blank: "The tender name cannot be blank"

@@ -3,6 +3,8 @@
 class MarketType < ApplicationRecord
   include UniqueAssociationValidator
 
+  LOT_TYPE_CODES = %w[works services supplies].freeze
+
   has_and_belongs_to_many :market_attributes
 
   validates :code, presence: true, uniqueness: true
