@@ -68,6 +68,21 @@ RSpec.describe PublicMarketWebhookJob, type: :job do
           ))
       end
 
+      it 'sends back the platform type when the lot types are locked' do
+        public_market.update!(lot_types_locked: true)
+        lot = create(:lot, public_market:, platform_market_type: market_type)
+        public_market.update_lot_types([lot.id], other_market_type)
+
+        described_class.perform_now(public_market.id)
+
+        expect(WebMock).to have_requested(:post, editor.completion_webhook_url)
+          .with(body: hash_including(
+            'market' => hash_including(
+              'lots' => [hash_including('market_type_code' => 'supplies')]
+            )
+          ))
+      end
+
       it 'includes cpv_code when present' do
         create(:lot, public_market:, cpv_code: '30213100-6', platform_market_type: market_type)
 

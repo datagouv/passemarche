@@ -55,6 +55,24 @@ RSpec.describe 'Buyer::Lots', type: :request do
       end
     end
 
+    context 'when the lot types were sent by the platform' do
+      let(:public_market) { create(:public_market, :lot_types_locked, editor:, market_type_codes: [works_type.code]) }
+
+      before do
+        patch buyer_lot_types_path(public_market.identifier),
+          params: { lot_ids: [lot1.id], market_type_id: services_type.id },
+          headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+      end
+
+      it 'returns unprocessable entity' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'keeps the platform type' do
+        expect(lot1.reload.effective_market_type).to eq(works_type)
+      end
+    end
+
     context 'when the market is completed but not published' do
       let(:public_market) { create(:public_market, :completed, editor:, market_type_codes: [works_type.code]) }
 

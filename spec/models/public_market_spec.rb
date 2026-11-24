@@ -509,6 +509,28 @@ RSpec.describe PublicMarket, type: :model do
       end
     end
 
+    context 'quand les types de lots ont été transmis par la plateforme' do
+      before { market.update!(lot_types_locked: true) }
+
+      it 'refuse la modification' do
+        result = market.update_lot_types([lot.id], works_type)
+
+        expect(result).to be false
+      end
+
+      it 'ne modifie pas le type du lot' do
+        market.update_lot_types([lot.id], works_type)
+
+        expect(lot.reload.effective_market_type).to eq(services_type)
+      end
+
+      it 'explique que les types sont verrouillés' do
+        market.update_lot_types([lot.id], works_type)
+
+        expect(market.errors.details[:base]).to include(error: :lot_types_locked)
+      end
+    end
+
     context 'quand un autre lot conserve la typologie du marché' do
       it 'autorise la modification' do
         result = market.update_lot_types([lot.id], works_type)
