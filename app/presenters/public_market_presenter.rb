@@ -105,6 +105,10 @@ class PublicMarketPresenter
       .to_a
   end
 
+  def lot_config_step?
+    wizard_steps.include?(PublicMarket::WizardStepsBuilder::LOT_CONFIG_STEP)
+  end
+
   def platform_type_banner_text
     typed = lots_for_config.select(&:platform_market_type)
     return nil if typed.none?

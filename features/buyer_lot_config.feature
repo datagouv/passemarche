@@ -39,6 +39,19 @@ Feature: Buyer Lot Configuration Step
     Then I should be on the form_config page
     And I should see "Configurez le formulaire de candidature"
 
+  Scenario: Les types transmis par la plateforme font passer directement à la configuration du formulaire
+    Given I create a public market whose lot types are sent by the platform
+    When I visit the setup page for my public market
+    And I click on "Débuter l'activation de"
+    Then I should be on the form_config page
+    And I should see "Lot 1 - travaux"
+    And I should not see the edit lots button
+
+  Scenario: L'accès direct à l'écran des lots redirige quand les types sont transmis par la plateforme
+    Given I create a public market whose lot types are sent by the platform
+    When I visit the lot_config page for my public market
+    Then I should be on the form_config page
+
   @lot_limit
   Scenario: L'acheteur accède à la page de configuration des lots quand la fonctionnalité est activée
     Given the lot_limit feature flag is enabled

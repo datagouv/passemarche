@@ -22,7 +22,10 @@ class PublicMarket::WizardStepsBuilder
   private
 
   def lot_steps
-    @public_market.lots.any? ? [LOT_CONFIG_STEP, FORM_CONFIG_STEP] : []
+    return [] if @public_market.lots.none?
+    return [FORM_CONFIG_STEP] if @public_market.lot_types_locked?
+
+    [LOT_CONFIG_STEP, FORM_CONFIG_STEP]
   end
 
   def category_steps

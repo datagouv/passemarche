@@ -55,6 +55,42 @@ RSpec.describe 'Buyer::PublicMarkets', type: :request do
     end
   end
 
+  describe 'lot_config step when the lot types were sent by the platform' do
+    let(:public_market) do
+      create(:public_market, :lot_types_locked, editor:, market_type_codes: [supplies_type.code])
+    end
+    let(:form_config_path) { step_buyer_public_market_path(public_market.identifier, :form_config) }
+
+    before { create(:lot, public_market:, platform_market_type: supplies_type) }
+
+    it 'redirects GET to form_config' do
+      get step_buyer_public_market_path(public_market.identifier, :lot_config)
+
+      expect(response).to redirect_to(form_config_path)
+    end
+
+    it 'redirects PATCH to form_config without saving' do
+      expect do
+        patch step_buyer_public_market_path(public_market.identifier, :lot_config),
+          params: { lot_limit_enabled: 'true', lot_limit: '1' }
+      end.not_to(change { public_market.reload.lot_limit })
+
+      expect(response).to redirect_to(form_config_path)
+    end
+
+    it 'leads from setup to form_config' do
+      patch step_buyer_public_market_path(public_market.identifier, :setup)
+
+      expect(response).to redirect_to(form_config_path)
+    end
+
+    it 'hides the edit lots link on form_config' do
+      get form_config_path
+
+      expect(response.body).not_to include(step_buyer_public_market_path(public_market.identifier, :lot_config))
+    end
+  end
+
   describe 'PATCH /buyer/public_markets/:identifier/setup' do
     context 'when updating from setup step' do
       it 'adds all mandatory attributes from associated market types' do

@@ -29,6 +29,13 @@ Given('I create a public market of typology {string} with a single lot of type {
   @market_identifier = public_market.identifier
 end
 
+Given('I create a public market whose lot types are sent by the platform') do
+  works_type = MarketType.find_or_create_by!(code: 'works')
+  public_market = create(:public_market, :lot_types_locked, editor: @editor, name: 'Marché PLACE', market_type_codes: ['works'])
+  create(:lot, public_market:, name: 'Gros œuvre', platform_market_type: works_type)
+  @market_identifier = public_market.identifier
+end
+
 Given('the market has a mandatory requirement for type {string}') do |type|
   market_type = MarketType.find_or_create_by!(code: type)
   public_market = PublicMarket.find_by!(identifier: @market_identifier)
@@ -87,6 +94,10 @@ end
 Then('I should be on the form_config page') do
   @market_identifier ||= @last_api_response['identifier']
   expect(page).to have_current_path(step_buyer_public_market_path(@market_identifier, :form_config))
+end
+
+Then('I should not see the edit lots button') do
+  expect(page).to have_no_css("a[aria-label='#{I18n.t('buyer.public_markets.form_config.edit_lots_label')}']")
 end
 
 When('I click the edit lots button') do
