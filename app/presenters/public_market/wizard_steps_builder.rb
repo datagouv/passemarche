@@ -19,11 +19,15 @@ class PublicMarket::WizardStepsBuilder
     category_steps + [FINAL_STEP]
   end
 
+  def lot_config_skipped?
+    @public_market.lot_types_locked?
+  end
+
   private
 
   def lot_steps
     return [] if @public_market.lots.none?
-    return [FORM_CONFIG_STEP] if @public_market.lot_types_locked?
+    return [FORM_CONFIG_STEP] if lot_config_skipped?
 
     [LOT_CONFIG_STEP, FORM_CONFIG_STEP]
   end

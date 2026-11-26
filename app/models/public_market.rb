@@ -101,7 +101,7 @@ class PublicMarket < ApplicationRecord
   end
 
   def market_typology_codes
-    market_type_codes.reject { |code| code == 'defense' }
+    market_type_codes & MarketType::LOT_TYPE_CODES
   end
 
   def removes_last_lot_of_market_typology?(updated_lots, new_market_type)
