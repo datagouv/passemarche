@@ -5,6 +5,7 @@ module Buyer
     include Wicked::Wizard
 
     prepend_before_action :set_dynamic_steps, except: [:retry_sync]
+    prepend_before_action :redirect_skipped_lot_config, only: %i[show update]
     prepend_before_action :initialize_presenter, except: [:retry_sync]
     prepend_before_action :find_public_market
     before_action :check_market_not_published, except: [:retry_sync]
@@ -88,6 +89,14 @@ module Buyer
       return unless @public_market.published?
 
       redirect_to buyer_published_path(@public_market.identifier)
+    end
+
+    def redirect_skipped_lot_config
+      return unless params[:id] == PublicMarket::WizardStepsBuilder::LOT_CONFIG_STEP.to_s
+      return unless @presenter.lot_config_skipped?
+
+      redirect_to step_buyer_public_market_path(@public_market.identifier,
+        PublicMarket::WizardStepsBuilder::FORM_CONFIG_STEP)
     end
 
     def initialize_presenter

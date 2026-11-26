@@ -26,10 +26,12 @@
         <h2 class="fr-text--md fr-text--bold" style="margin: 0;">
           <%= t('buyer.public_markets.form_config.lots_section_title') %>
         </h2>
-        <%= link_to step_buyer_public_market_path(identifier: @public_market.identifier, id: :lot_config),
-              class: 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-line',
-              title: t('buyer.public_markets.form_config.edit_lots_label'),
-              aria: { label: t('buyer.public_markets.form_config.edit_lots_label') } do %>
+        <% if @presenter.lot_config_step? %>
+          <%= link_to step_buyer_public_market_path(identifier: @public_market.identifier, id: :lot_config),
+                class: 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-line',
+                title: t('buyer.public_markets.form_config.edit_lots_label'),
+                aria: { label: t('buyer.public_markets.form_config.edit_lots_label') } do %>
+          <% end %>
         <% end %>
       </div>
       <hr style="border: none; border-top: 1px solid var(--border-default-grey); margin: 0 0 0.75rem 0;">

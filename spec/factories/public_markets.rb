@@ -27,6 +27,10 @@ FactoryBot.define do
       sync_status { :sync_completed }
     end
 
+    trait :lot_types_locked do
+      lot_types_locked { true }
+    end
+
     trait :with_provider_user_id do
       provider_user_id { 'editor-user-123' }
     end

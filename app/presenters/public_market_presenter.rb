@@ -5,7 +5,7 @@ class PublicMarketPresenter
   include MarketPresenterConcern
   include MultiTypeLotConcern
 
-  delegate :wizard_steps, :stepper_steps, to: :wizard_steps_builder
+  delegate :wizard_steps, :stepper_steps, :lot_config_skipped?, to: :wizard_steps_builder
 
   def initialize(public_market)
     @public_market = public_market
@@ -96,13 +96,17 @@ class PublicMarketPresenter
   end
 
   def picker_market_types
-    @picker_market_types ||= MarketType.where(code: %w[works services supplies]).index_by(&:code)
+    @picker_market_types ||= MarketType.where(code: MarketType::LOT_TYPE_CODES).index_by(&:code)
   end
 
   def lots_for_config
     @lots_for_config ||= @public_market.lots.ordered
       .includes(:platform_market_type, :market_type)
       .to_a
+  end
+
+  def lot_config_step?
+    wizard_steps.include?(PublicMarket::WizardStepsBuilder::LOT_CONFIG_STEP)
   end
 
   def platform_type_banner_text

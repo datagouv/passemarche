@@ -174,6 +174,21 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       end
     end
 
+    context 'when the lot types were sent by the platform' do
+      before do
+        create(:lot, public_market:)
+        public_market.update!(lot_types_locked: true)
+      end
+
+      it 'skips :lot_config' do
+        expect(presenter.wizard_steps).not_to include(:lot_config)
+      end
+
+      it 'goes straight from :setup to :form_config' do
+        expect(presenter.wizard_steps.first(2)).to eq(%i[setup form_config])
+      end
+    end
+
     context 'when the market has no lots' do
       it 'does not include :lot_config' do
         expect(presenter.wizard_steps).not_to include(:lot_config)
@@ -475,6 +490,20 @@ RSpec.describe PublicMarketPresenter, type: :presenter do
       lot1 = create(:lot, public_market:, position: 2)
       lot2 = create(:lot, public_market:, position: 1)
       expect(presenter.lots_for_config).to eq([lot2, lot1])
+    end
+  end
+
+  describe '#lot_config_step?' do
+    before { create(:lot, public_market:) }
+
+    it 'is true when the buyer can configure the lot types' do
+      expect(presenter.lot_config_step?).to be true
+    end
+
+    it 'is false when the lot types were sent by the platform' do
+      public_market.update!(lot_types_locked: true)
+
+      expect(presenter.lot_config_step?).to be false
     end
   end
 

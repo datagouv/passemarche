@@ -556,7 +556,9 @@ class FakeEditorApp < Sinatra::Base
       next if name.empty?
 
       cpv_code = lot[:cpv_code].to_s.strip
-      { name:, cpv_code: cpv_code.empty? ? nil : cpv_code }.compact
+      lot_type_code = lot[:lot_type_code].to_s.strip
+      { name:, cpv_code: cpv_code.empty? ? nil : cpv_code,
+        lot_type_code: lot_type_code.empty? ? nil : lot_type_code }.compact
     end
   end
 

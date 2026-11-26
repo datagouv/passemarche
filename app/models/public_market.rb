@@ -68,8 +68,7 @@ class PublicMarket < ApplicationRecord
   def update_lot_types(lot_ids, market_type)
     errors.clear
     updated_lots = lots.where(id: lot_ids).includes(:market_type, :platform_market_type).to_a
-    return reject_lot_type_change(:no_lot_selected) if updated_lots.empty?
-    return reject_lot_type_change(:same_typology_required) if removes_last_lot_of_market_typology?(updated_lots, market_type)
+    return false unless lot_type_change_allowed?(updated_lots, market_type)
 
     transaction do
       updated_lots.each do |lot|
@@ -102,7 +101,7 @@ class PublicMarket < ApplicationRecord
   end
 
   def market_typology_codes
-    market_type_codes.reject { |code| code == 'defense' }
+    market_type_codes & MarketType::LOT_TYPE_CODES
   end
 
   def removes_last_lot_of_market_typology?(updated_lots, new_market_type)
@@ -119,6 +118,14 @@ class PublicMarket < ApplicationRecord
 
   def any_lot_of_type?(lots_array, type_code)
     lots_array.any? { |lot| lot.effective_market_type&.code == type_code }
+  end
+
+  def lot_type_change_allowed?(updated_lots, market_type)
+    return reject_lot_type_change(:lot_types_locked) if lot_types_locked?
+    return reject_lot_type_change(:no_lot_selected) if updated_lots.empty?
+    return reject_lot_type_change(:same_typology_required) if removes_last_lot_of_market_typology?(updated_lots, market_type)
+
+    true
   end
 
   def reject_lot_type_change(reason)

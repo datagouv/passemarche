@@ -87,6 +87,13 @@
                       placeholder="Ex: 30213100-6"
                       style="flex:1; min-width:0;"
                       title="Code CPV (format: 8 chiffres-tiret-1 chiffre, ex: 30213100-6)">
+                    <select class="fr-select" name="lots[][lot_type_code]" style="flex:1; min-width:0;" title="Type du lot (lot_type_code)">
+                      <option value="">Type non transmis</option>
+                      <option value="works">Travaux</option>
+                      <option value="services">Services</option>
+                      <option value="supplies">Fournitures</option>
+                      <option value="invalide">Valeur invalide (test)</option>
+                    </select>
                     <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="display:none; flex-shrink:0;">
                       Supprimer
                     </button>
@@ -218,6 +225,13 @@
       row.innerHTML =
         '<input class="fr-input" type="text" name="lots[][name]" placeholder="Ex: Lot ' + n + ' - Nom du lot" style="flex:2; min-width:0;">' +
         '<input class="fr-input" type="text" name="lots[][cpv_code]" placeholder="Ex: 30213100-6" style="flex:1; min-width:0;" title="Code CPV (format: 8 chiffres-tiret-1 chiffre, ex: 30213100-6)">' +
+        '<select class="fr-select" name="lots[][lot_type_code]" style="flex:1; min-width:0;" title="Type du lot (lot_type_code)">' +
+        '<option value="">Type non transmis</option>' +
+        '<option value="works">Travaux</option>' +
+        '<option value="services">Services</option>' +
+        '<option value="supplies">Fournitures</option>' +
+        '<option value="invalide">Valeur invalide (test)</option>' +
+        '</select>' +
         '<button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm remove-lot" style="flex-shrink:0;">Supprimer</button>';
       container.appendChild(row);
       updateRemoveButtons();

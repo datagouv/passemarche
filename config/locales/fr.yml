@@ -1286,6 +1286,7 @@ fr:
       market_not_completed: "Le marché n'a pas encore été configuré."
       market_already_published: "Le marché a déjà été publié."
       market_not_published: "La consultation n'est pas encore publiée, vous ne pouvez pas candidater à ce marché."
+      invalid_lot_type_code: "Lot %{position} : le type « %{code} » n'est pas reconnu (valeurs acceptées : %{accepted_codes})"
     insee:
       ess:
         is_ess: "L'entreprise est une ESS - données issues d'une source officielle"
@@ -1777,6 +1778,7 @@ fr:
         public_market:
           same_typology_required: "Vous ne pouvez pas modifier le type de ce lot, au moins un des lots doit être de la même typologie que celle du marché."
           no_lot_selected: "Vous devez sélectionner au moins un lot pour lui attribuer un type"
+          lot_types_locked: "Le type des lots a été transmis par la plateforme et ne peut pas être modifié."
           attributes:
             name:
               blank: "Le nom du marché ne peut pas être vide"
