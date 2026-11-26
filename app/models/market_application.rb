@@ -121,7 +121,7 @@ class MarketApplication < ApplicationRecord
         'updated_at' => Time.current.iso8601
       }
       self.api_fetch_status = updated_status
-      save!
+      save!(validate: false)
     end
   end
 

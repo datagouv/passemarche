@@ -242,6 +242,8 @@ en:
               no_lot_selected: "You must select at least one lot"
               lot_limit_exceeded: "You cannot select more than %{limit} lot(s) (you selected %{count})"
               lot_outside_groupement_scope: "You can only select lots pre-selected by the grouping's mandataire"
+              lot_outside_market: "One or more selected lots do not belong to this market"
+              invalid_lot_id: "One or more lot identifiers are not valid"
 
   errors:
     pages:
@@ -1287,6 +1289,8 @@ en:
       market_already_published: "The tender has already been published."
       market_not_published: "The tender has not yet been published; you cannot apply for it."
       invalid_lot_type_code: "Lot %{position}: the type \"%{code}\" is not recognised (accepted values: %{accepted_codes})"
+      platform_application_mode_invalid: "The application type (application_mode) is required when lots are transmitted: \"solo\" or \"groupement\""
+      platform_lots_after_deadline: "The submission deadline has passed: the lots of this application can no longer be changed"
     insee:
       ess:
         is_ess: "The company is an ESS - data from an official source"

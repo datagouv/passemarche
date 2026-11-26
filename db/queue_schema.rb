@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_19_102524) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -148,6 +148,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_19_102524) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.string "identifier", null: false
+    t.datetime "lots_changed_by_platform_at"
+    t.boolean "lots_locked", default: false, null: false
     t.string "provider_user_id"
     t.bigint "public_market_id", null: false
     t.string "siret", limit: 14

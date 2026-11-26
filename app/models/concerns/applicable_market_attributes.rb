@@ -47,15 +47,46 @@ module ApplicableMarketAttributes
     end
   end
 
+  def replace_lots_from_platform!(lot_ids)
+    previous_type_codes = lots.any? ? applicable_market_type_codes : nil
+
+    transaction do
+      update_declared_lots!(lot_ids)
+      assign_platform_lock(previous_type_codes)
+      save!(validate: false)
+    end
+  end
+
+  def unlock_platform_lots!
+    self.lots_locked = false
+    self.lots_changed_by_platform_at = nil
+    save!(validate: false)
+  end
+
   def purge_inapplicable_data!
     market_attribute_responses.where.not(market_attribute_id: applicable_market_attribute_ids).destroy_all
     market_attribute_responses.reset
 
     applicable_api_fetch_status = api_fetch_status.slice(*api_names_to_fetch)
-    update!(api_fetch_status: applicable_api_fetch_status) if applicable_api_fetch_status != api_fetch_status
+    return if applicable_api_fetch_status == api_fetch_status
+
+    self.api_fetch_status = applicable_api_fetch_status
+    save!(validate: false)
   end
 
   private
+
+  def assign_platform_lock(previous_type_codes)
+    self.lots_locked = true
+    self.application_mode = :solo if application_mode.nil?
+    self.lots_changed_by_platform_at = Time.current if new_lot_types_since?(previous_type_codes)
+  end
+
+  def new_lot_types_since?(previous_type_codes)
+    return false if previous_type_codes.nil?
+
+    (applicable_market_type_codes - previous_type_codes).any?
+  end
 
   def declared_lot_types
     declared_lots.includes(:market_type, :platform_market_type).map(&:effective_market_type)

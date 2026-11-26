@@ -2,6 +2,7 @@
 
 class FetchApiDataCoordinatorJob < ApplicationJob
   queue_as :default
+  self.enqueue_after_transaction_commit = true
 
   API_JOBS = [
     FetchInseeDataJob,
