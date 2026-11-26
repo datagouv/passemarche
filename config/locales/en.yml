@@ -207,6 +207,9 @@ en:
       market_type: "Tender type"
       no_market_type: "No tender type defined"
       no_documents_configured: "No documents configured as required for this tender."
+    platform_lots_notices:
+      locked: "These lots were chosen on your procurement platform. To change them, go back to your platform."
+      new_lot_types: "Your procurement platform added lots of a new type: additional information is required."
     application_lots_summary:
       title: "List of lots covered by the application"
       lot_number: "Lot %{number}"

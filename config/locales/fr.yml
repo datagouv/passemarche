@@ -207,6 +207,9 @@ fr:
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
       no_documents_configured: "Aucun document requis configuré pour ce marché."
+    platform_lots_notices:
+      locked: "Ces lots ont été choisis sur votre plateforme de marché. Pour les modifier, rendez-vous sur votre plateforme."
+      new_lot_types: "Votre plateforme de marché a ajouté des lots d'un nouveau type : de nouvelles informations vous sont demandées."
     application_lots_summary:
       title: "Liste des lots concernés par la candidature"
       lot_number: "Lot %{number}"

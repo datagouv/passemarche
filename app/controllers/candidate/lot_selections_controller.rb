@@ -10,12 +10,12 @@ module Candidate
 
     def show
       @presenter = MarketApplicationPresenter.new(@market_application)
-      @editing = !@presenter.solidaire_co_traitant? && (!@presenter.lots_saved? || params[:edit].present?)
+      @editing = @presenter.lot_selection_editable? && (!@presenter.lots_saved? || params[:edit].present?)
     end
 
     def update
       return handle_final_submit if params[:final_submit].present?
-      return redirect_to_lot_selection if @market_application.solidaire_co_traitant?
+      return redirect_to_lot_selection unless @market_application.lot_selection_editable?
 
       policy = LotSelectionPolicy.new(@market_application, lot_ids_param)
 
@@ -62,7 +62,7 @@ module Candidate
     def render_lot_selection_error(errors)
       @errors = errors
       @presenter = MarketApplicationPresenter.new(@market_application)
-      @editing = !@presenter.solidaire_co_traitant?
+      @editing = @presenter.lot_selection_editable?
       render :show, status: :unprocessable_content
     end
 

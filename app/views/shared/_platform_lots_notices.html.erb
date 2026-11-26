@@ -1,0 +1,6 @@
+<% if presenter.lots_changed_by_platform? %>
+  <%= render 'shared/notice', notice_text: t('shared.platform_lots_notices.new_lot_types') %>
+<% end %>
+<% if presenter.lots_locked? %>
+  <%= render 'shared/notice', notice_text: t('shared.platform_lots_notices.locked') %>
+<% end %>
