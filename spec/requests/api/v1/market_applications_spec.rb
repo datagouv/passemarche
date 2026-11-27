@@ -214,6 +214,86 @@ RSpec.describe 'Api::V1::MarketApplications', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
+    context 'when the platform transmits the chosen lots' do
+      let(:public_market) { create(:public_market, :published, :multi_type, editor:) }
+      let(:lot) { public_market.lots.find_by!(name: 'Gros œuvre') }
+
+      def post_application(lot_ids, application_mode: 'solo')
+        post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+          params: { market_application: { siret: valid_siret, application_mode:, lot_ids: } },
+          headers: { 'Authorization' => "Bearer #{access_token}" },
+          as: :json
+      end
+
+      it 'creates the application with the transmitted lots locked' do
+        post_application([lot.id])
+
+        expect(response).to have_http_status(:created)
+        application = MarketApplication.find_by!(identifier: response.parsed_body['identifier'])
+        expect(application.lots).to contain_exactly(lot)
+        expect(application).to be_lots_locked
+      end
+
+      it 'rejects a lot that does not belong to the market' do
+        foreign_lot = create(:lot)
+
+        expect { post_application([lot.id, foreign_lot.id]) }.not_to change(MarketApplication, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body.dig('errors', 'lot_ids')).to include(
+          I18n.t('activemodel.errors.models.lot_selection_policy.attributes.base.lot_outside_market')
+        )
+      end
+
+      it 'rejects lots transmitted without the application mode' do
+        post "/api/v1/public_markets/#{public_market.identifier}/market_applications",
+          params: { market_application: { siret: valid_siret, lot_ids: [lot.id] } },
+          headers: { 'Authorization' => "Bearer #{access_token}" },
+          as: :json
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body.dig('errors', 'application_mode')).to be_present
+      end
+
+      it 'ignores the lots of a grouping application' do
+        post_application([lot.id], application_mode: 'groupement')
+
+        expect(response).to have_http_status(:created)
+        application = MarketApplication.find_by!(identifier: response.parsed_body['identifier'])
+        expect(application.lots).to be_empty
+        expect(application.application_mode).to be_nil
+      end
+
+      it 'declares a lot transmitted twice only once' do
+        post_application([lot.id, lot.id])
+
+        expect(response).to have_http_status(:created)
+        application = MarketApplication.find_by!(identifier: response.parsed_body['identifier'])
+        expect(application.lots).to contain_exactly(lot)
+      end
+
+      it 'rejects a value that is not a lot identifier' do
+        expect { post_application(['abc', lot.id]) }.not_to change(MarketApplication, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body.dig('errors', 'lot_ids')).to include(
+          I18n.t('activemodel.errors.models.lot_selection_policy.attributes.base.invalid_lot_id')
+        )
+      end
+
+      it 'rejects a boolean mixed with a valid lot instead of failing' do
+        expect { post_application([lot.id, true]) }.not_to change(MarketApplication, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body.dig('errors', 'lot_ids')).to include(
+          I18n.t('activemodel.errors.models.lot_selection_policy.attributes.base.invalid_lot_id')
+        )
+      end
+
+      it 'rejects lot_ids that are not a list' do
+        expect { post_application(lot.id) }.not_to change(MarketApplication, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.parsed_body.dig('errors', 'lot_ids')).to be_present
+      end
+    end
+
     context 'when public market is not published' do
       let(:public_market) { create(:public_market, :completed, editor:) }
 

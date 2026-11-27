@@ -15,6 +15,7 @@
     <% if @presenter.lots_saved? %>
       <div class="fr-mb-4w">
         <%= render 'shared/application_lots_summary', presenter: @presenter %>
+        <%= render 'shared/platform_lots_notices', presenter: @presenter %>
       </div>
     <% end %>
     <% if @presenter %>

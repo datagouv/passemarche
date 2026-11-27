@@ -103,8 +103,16 @@ module GroupementWizardSteps
     !groupement?
   end
 
+  def lot_selection_editable?
+    !lots_locked? && !solidaire_co_traitant?
+  end
+
+  def lots_changed_by_platform?
+    lots_changed_by_platform_at.present?
+  end
+
   def step_after_company_identification
-    return :api_data_recovery_status if solidaire_co_traitant?
+    return :api_data_recovery_status unless lot_selection_editable?
     return :lot_selection if public_market.lots.any?
 
     :api_data_recovery_status

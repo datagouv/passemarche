@@ -34,6 +34,7 @@ class CreateMarketApplication < ApplicationInteractor
 
     if application.save
       context.market_application = application
+      context.created = true
     else
       context.fail!(errors: errors_from(application))
     end

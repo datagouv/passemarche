@@ -23,6 +23,12 @@ RSpec.describe MarkApplicationAsCompleted, type: :interactor do
         result = subject
         expect(result.completed_at).to be_within(1.second).of(Time.current)
       end
+
+      it 'stops warning about the lots changed by the platform' do
+        market_application.update!(lots_changed_by_platform_at: 1.hour.ago)
+
+        expect { subject }.to change { market_application.reload.lots_changed_by_platform_at }.to(nil)
+      end
     end
 
     context 'when market application is already completed' do

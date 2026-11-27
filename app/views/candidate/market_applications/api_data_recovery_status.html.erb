@@ -13,6 +13,8 @@
         <%= t('candidate.market_applications.api_data_recovery_status.description') %>
       </p>
 
+      <%= render 'shared/platform_lots_notices', presenter: @presenter %>
+
       <div class="fr-mb-4w">
         <p class="fr-text--lg fr-p-3w fr-mb-2w fr-background-alt--blue-france fr-text-title--blue-france" style="display: flex; align-items: center; gap: 0.75rem;">
           <%= image_tag "icon-warning-triangle.svg", width: 32, height: 32, aria: { hidden: true }, style: "flex-shrink: 0;" %>

@@ -167,6 +167,8 @@
       </div>
     </div>
 
+    <%= render 'shared/platform_lots_notices', presenter: @presenter %>
+
     <div class="fr-grid-row fr-grid-row--gutters">
 
       <%# Sidebar gauche %>
@@ -179,7 +181,7 @@
               <%= t('candidate.lot_selection.lots_list_title') %>
               <span style="font-weight: normal; color: var(--text-mention-grey);">(<%= @presenter.selected_lots.size %>)</span>
             </h2>
-            <% unless @presenter.solidaire_co_traitant? %>
+            <% if @presenter.lot_selection_editable? %>
               <%= link_to lot_selection_candidate_market_application_path(@market_application.identifier, edit: 1),
                     class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-edit-fill",
                     title: t('candidate.lot_selection.edit_lots'),

@@ -207,6 +207,9 @@ fr:
       market_type: "Typologie de marché"
       no_market_type: "Aucun type de marché défini"
       no_documents_configured: "Aucun document requis configuré pour ce marché."
+    platform_lots_notices:
+      locked: "Ces lots ont été choisis sur votre plateforme de marché. Pour les modifier, rendez-vous sur votre plateforme."
+      new_lot_types: "Votre plateforme de marché a ajouté des lots d'un nouveau type : de nouvelles informations vous sont demandées."
     application_lots_summary:
       title: "Liste des lots concernés par la candidature"
       lot_number: "Lot %{number}"
@@ -242,6 +245,8 @@ fr:
               no_lot_selected: "Vous devez sélectionner au moins un lot"
               lot_limit_exceeded: "Vous ne pouvez pas sélectionner plus de %{limit} lot(s) (vous en avez sélectionné %{count})"
               lot_outside_groupement_scope: "Vous ne pouvez sélectionner que des lots pré-sélectionnés par le mandataire du groupement"
+              lot_outside_market: "Un ou plusieurs lots sélectionnés n'appartiennent pas à ce marché"
+              invalid_lot_id: "Un ou plusieurs identifiants de lot ne sont pas valides"
 
   errors:
     pages:
@@ -1287,6 +1292,8 @@ fr:
       market_already_published: "Le marché a déjà été publié."
       market_not_published: "La consultation n'est pas encore publiée, vous ne pouvez pas candidater à ce marché."
       invalid_lot_type_code: "Lot %{position} : le type « %{code} » n'est pas reconnu (valeurs acceptées : %{accepted_codes})"
+      platform_application_mode_invalid: "Le type de candidature (application_mode) est obligatoire quand des lots sont transmis : « solo » ou « groupement »"
+      platform_lots_after_deadline: "La date limite de dépôt est dépassée : les lots de cette candidature ne peuvent plus être modifiés"
     insee:
       ess:
         is_ess: "L'entreprise est une ESS - données issues d'une source officielle"

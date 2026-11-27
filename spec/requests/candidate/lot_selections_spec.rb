@@ -74,6 +74,34 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
       end
     end
 
+    context 'when the lots were transmitted by the platform' do
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '73282932000074', lots: [lot], lots_locked: true)
+      end
+
+      it 'shows the transmitted lots without offering to edit them' do
+        get lot_selection_candidate_market_application_path(market_application.identifier, edit: 1)
+
+        expect(response.body).to include(lot.name)
+        expect(response.body).not_to include(I18n.t('candidate.lot_selection.edit_lots'))
+        expect(response.body).not_to include('market_application[lot_ids][]')
+      end
+
+      it 'tells the candidate to change the lots on the platform' do
+        get lot_selection_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).to include(I18n.t('shared.platform_lots_notices.locked'))
+      end
+
+      it 'warns the candidate when the platform added a new lot type' do
+        market_application.update!(lots_changed_by_platform_at: Time.current)
+
+        get lot_selection_candidate_market_application_path(market_application.identifier)
+
+        expect(response.body).to include(I18n.t('shared.platform_lots_notices.new_lot_types'))
+      end
+    end
+
     context 'when the market_application belongs to a co_traitant of a solidaire grouping' do
       let(:mandataire_application) { create(:market_application, public_market:, application_mode: :groupement) }
       let(:grouping) do
@@ -174,6 +202,21 @@ RSpec.describe 'Candidate::LotSelections', type: :request do
           params: { market_application: { lot_ids: [lot.id] } }
 
         expect(market_application.grouping_member.reload).to be_status_in_progress
+      end
+    end
+
+    context 'when the lots were transmitted by the platform' do
+      let(:other_lot) { create(:lot, public_market:, name: 'Lot 2') }
+      let(:market_application) do
+        create(:market_application, public_market:, siret: '73282932000074', lots: [lot], lots_locked: true)
+      end
+
+      it 'keeps the transmitted lots' do
+        patch lot_selection_candidate_market_application_path(market_application.identifier),
+          params: { market_application: { lot_ids: [other_lot.id] } }
+
+        expect(response).to redirect_to(lot_selection_candidate_market_application_path(market_application.identifier))
+        expect(market_application.reload.lots).to contain_exactly(lot)
       end
     end
 

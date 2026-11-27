@@ -7,9 +7,9 @@ class MarketApplicationPresenter
   include MultiTypeLotConcern
 
   delegate :name, :siret, to: :public_market, prefix: :market
-  delegate :attestation, :solidaire_co_traitant?, to: :@market_application
+  delegate :attestation, :solidaire_co_traitant?, :part_of_grouping?, :co_traitant_of_grouping?,
+    :lot_selection_editable?, :lots_locked?, :lots_changed_by_platform?, to: :@market_application
   delegate :attached?, to: :attestation, prefix: true
-  delegate :part_of_grouping?, :co_traitant_of_grouping?, to: :@market_application
 
   INITIAL_WIZARD_STEPS = %i[api_data_recovery_status market_information].freeze
   FINAL_WIZARD_STEP = :summary

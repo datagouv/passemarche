@@ -9,14 +9,15 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   before_action :validate_documents_package_available, only: %i[documents_package]
 
   def create
-    result = CreateMarketApplication.call(
+    result = CreatePlatformMarketApplication.call(
       public_market: @public_market,
       siret: market_application_params[:siret],
-      provider_user_id: market_application_params[:provider_user_id]
+      provider_user_id: market_application_params[:provider_user_id],
+      **transmitted_lots
     )
 
     if result.success?
-      status = result.market_application.previously_new_record? ? :created : :ok
+      status = result.created ? :created : :ok
       render json: success_response(result.market_application), status:
     else
       render json: { errors: result.errors }, status: :unprocessable_content
@@ -64,7 +65,16 @@ class Api::V1::MarketApplicationsController < Api::V1::BaseController
   end
 
   def market_application_params
-    params.fetch(:market_application, {}).permit(:siret, :provider_user_id)
+    params.fetch(:market_application, {}).permit(:siret, :provider_user_id, :application_mode, lot_ids: [])
+  end
+
+  def transmitted_lots
+    return {} unless params.fetch(:market_application, {}).key?(:lot_ids)
+
+    {
+      lot_ids: Array(market_application_params[:lot_ids]),
+      platform_application_mode: market_application_params[:application_mode]
+    }
   end
 
   def success_response(market_application)

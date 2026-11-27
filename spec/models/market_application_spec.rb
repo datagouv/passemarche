@@ -762,6 +762,39 @@ RSpec.describe MarketApplication, type: :model do
 
       expect(application.step_after_company_identification).to eq(:api_data_recovery_status)
     end
+
+    it 'returns api_data_recovery_status when the lots were transmitted by the platform' do
+      lot = create(:lot, public_market:)
+      application = create(:market_application, public_market:, lots_locked: true, lots: [lot])
+
+      expect(application.step_after_company_identification).to eq(:api_data_recovery_status)
+    end
+  end
+
+  describe '#lot_selection_editable?' do
+    before { allow(SiretValidator).to receive(:valid?).and_return(true) }
+
+    it 'returns true when the lots were chosen in Passe Marché' do
+      application = create(:market_application, public_market:)
+
+      expect(application.lot_selection_editable?).to be true
+    end
+
+    it 'returns false when the lots were transmitted by the platform' do
+      application = create(:market_application, public_market:, lots_locked: true)
+
+      expect(application.lot_selection_editable?).to be false
+    end
+
+    it 'returns false for a solidaire co_traitant' do
+      mandataire_application = create(:market_application, public_market:, application_mode: :groupement)
+      grouping = create(:grouping, public_market:, mandataire_market_application: mandataire_application,
+        legal_type: :solidaire)
+      application = create(:market_application, public_market:, siret: '80245139601003', application_mode: :groupement)
+      create(:grouping_member, :co_traitant, grouping:, market_application: application, siret: application.siret)
+
+      expect(application.lot_selection_editable?).to be false
+    end
   end
 
   describe '#applicable_market_type_codes' do
